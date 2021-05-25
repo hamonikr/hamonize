@@ -25,6 +25,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/yeji0407"><img src="https://avatars.githubusercontent.com/u/55476302?v=4?s=100" width="100px;" alt=""/><br /><sub><b>yeji0407</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=yeji0407" title="Code">💻</a></td>
     <td align="center"><a href="https://hamonikr.org"><img src="https://avatars.githubusercontent.com/u/405502?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kevin Kim</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=chaeya" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/jullee96"><img src="https://avatars.githubusercontent.com/u/66409676?v=4?s=100" width="100px;" alt=""/><br /><sub><b>julie lee</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=jullee96" title="Code">💻</a></td>
   </tr>
 </table>
 
