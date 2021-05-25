@@ -7,6 +7,6 @@
 \# 1) 바이너리로 빌드된 파일 바로 실행
 <br><b>sudo ./electron-quick-start</b>
     
-\# 2) 소스 빌드된 파일 바로 실행
+\# 2) 소스 빌드 
 <br><b>sudo node main.js</b> 
 
