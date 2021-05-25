@@ -1,4 +1,7 @@
 # HAMONIZE
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 ## 개요
 하모나이즈는 하모니카PC를 사용하는 조직에서 전사적 관리를 필요로 하는 경우를 지원하기 위한 솔루션입니다.
 
@@ -19,3 +22,23 @@
 ### 아키텍처
 
 ![architecture](./img/architecture.png)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/yeji0407"><img src="https://avatars.githubusercontent.com/u/55476302?v=4?s=100" width="100px;" alt=""/><br /><sub><b>yeji0407</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=yeji0407" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
