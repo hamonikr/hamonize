@@ -1,4 +1,20 @@
 # HAMONIZE
+
+![GitHub
+License](https://img.shields.io/github/license/hamonikr/hamonize)
+![GitHub repo
+size](https://img.shields.io/github/repo-size/hamonikr/hamonize)
+
+![GitHub
+contributors](https://img.shields.io/github/contributors/hamonikr/hamonize)
+![GitHub
+stars](https://img.shields.io/github/stars/hamonikr/hamonize?style=social)
+![GitHub
+forks](https://img.shields.io/github/forks/hamonikr/hamonize?style=social)
+![GitHub
+issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
+
+
 ## 개요
 하모나이즈는 하모니카PC를 사용하는 조직에서 전사적 관리를 필요로 하는 경우를 지원하기 위한 솔루션입니다.
 
