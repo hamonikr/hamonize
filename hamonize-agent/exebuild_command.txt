@@ -1,0 +1,7 @@
+./node_modules/.bin/electron-packager ./ TestApp --platform-win43 \
+--out dist \
+--prune
+
+
+sudo ./node_modules/.bin/electron-packager ./ agent.AppImage --platform=linux --arch x64 --out dist --prune
+
