@@ -57,3 +57,6 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 ### 아키텍처
 
 ![architecture](./img/architecture.png)
+
+## 라이선스
+* [hamonize-agent 라이선스 문서](https://github.com/hamonikr/hamonize/blob/master/hamonize-agent/NOTICE.md)
