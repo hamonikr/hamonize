@@ -1,0 +1,46 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH HAMONIZE-SERVICE 1 2018-12-07 Hamonize
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+hamonize-service \- Hamonize Service
+.SH SYNOPSIS
+.B hamonize-service
+.br
+.SH DESCRIPTION
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics,
+.\" respectively.
+\fBHAMONIZE-SERVICE\fR is a non-graphical service application which monitors
+user sessions on a computer and starts Hamonize Server instances within
+these sessions.
+.PP
+The service and its server subprocesses are required to run on all
+computers including teacher computers.
+
+.SH SEE ALSO
+hamonize-server(1), hamonize-configurator(1), hamonize-auth-helper(8)
+.PP
+https://veyon.io/
+
+.SH AUTHOR
+Hamonize has been written by Invesume Inc.
+Veyon has been written by Tobias Junghans.
+.PP
+This manual page has been written by Tobias Junghans and updated by Mike
+Gabriel. It was originally written for the Debian project (but may be
+used by others).

@@ -1,0 +1,91 @@
+INSTALLING AND SETTING UP VEYON FOR USE
+=======================================
+
+Please note that all instructions in this file apply to the Linux version of
+Veyon. Users of the Windows version of Veyon should run the installer which will
+guide you through the installation. Afterwards the graphical Veyon Configurator
+helps to set up Veyon.
+
+For further information you can also take a look at Veyon administrator manual:
+
+	http://docs.veyon.io/en/latest/admin/index.html
+
+
+Installing Veyon
+----------------
+
+Requirements:
+
+First you should download the necessary packages depending on your
+Linux distribution. If there're no packages for your distribution,
+try to build Veyon yourself. See according section in README file
+for details.
+
+If there're unfulfilled requirements, your package management system (dpkg,
+RPM etc.) will complain about it.
+
+
+Installing:
+
+First you have to install the necessary packages on your computer(s).
+On clients you only have to install the packages veyon:
+
+on DPKG-based systems:
+
+        dpkg -i  hamonize...deb
+
+on RPM-based systems:
+
+	rpm -i  hamonize...rpm
+
+Of course, if your linux distribution has available such package you can install it from repositories:
+
+	apt install hamonize
+
+	dnf install hamonize
+
+
+Essentially, there are 3 main apps in package:
+
+-  hamonize-configurator
+-  hamonize-service
+-  hamonize-master
+
+
+On the master computer you must be sure to have installed veyon-master.
+On clients computers remove veyon-master if you installed it.
+
+
+
+Setup a Veyon client
+--------------------
+
+On clients you have to make sure that the Veyon Service is being started when
+either X is started or a user logs on. There're several methods to achieve this
+(this is why it's not done automatically when installing the package):
+
+1. Add the appropriate command ("hamonize-service &") to /etc/X11/xinit/xinitrc or
+   add an according desktop file to /etc/xdg/autostart.
+   This method isn't recommend, because ICA then runs with the user's
+   privileges -> the user is able to kill ICA and get out of teacher's
+   control.
+
+2. add "hamonize-service &" to /etc/X11/xdm/Xsetup. On some systems, this
+   doesn't take effect, so either edit /etc/kde4/kdm/Xsetup or
+   /etc/X11/gdm/Xsetup
+
+You can easily test whether all is fine by running telnet on port 11100 of the
+according compter.
+
+example:
+
+	telnet 192.168.1.2 11100
+
+
+You should see something like "RFB 003.008".
+
+
+Setting up and configuring Veyon
+---------------------------------
+
+Please refer to the official Hamonize Administrator Manual at http://docs.veyon.io/en/latest/admin/index.html

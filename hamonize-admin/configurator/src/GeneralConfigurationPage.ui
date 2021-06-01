@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GeneralConfigurationPage</class>
+ <widget class="QWidget" name="GeneralConfigurationPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>425</width>
+    <height>615</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_14">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="groupBox_11">
+     <property name="title">
+      <string>User interface</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_13">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_39">
+        <property name="text">
+         <string>Language:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="uiLanguage">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+        <item>
+         <property name="text">
+          <string>Use system language setting</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QLineEdit" name="applicationName">
+        <property name="text">
+         <string>Hamonize</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Authentication</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Method:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="authenticationMethod">
+        <item>
+         <property name="text">
+          <string>Logon authentication</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Key file authentication</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="testAuthenticationButton">
+        <property name="text">
+         <string>Test</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../core/resources/core.qrc">
+          <normaloff>:/core/dialog-ok-apply.png</normaloff>:/core/dialog-ok-apply.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_12">
+     <property name="title">
+      <string>Network object directory</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_14" columnstretch="0,1">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Backend:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="networkObjectDirectoryPlugin"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_40">
+        <property name="text">
+         <string>Update interval:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="networkObjectDirectoryUpdateInterval">
+        <property name="suffix">
+         <string> seconds</string>
+        </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>3600</number>
+        </property>
+        <property name="value">
+         <number>600</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_7">
+     <property name="title">
+      <string>Logging</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Log file directory</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="logFileDirectory"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QToolButton" name="openLogFileDirectory">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../core/resources/core.qrc">
+            <normaloff>:/core/document-open.png</normaloff>:/core/document-open.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Log level</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="logLevel">
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToContents</enum>
+          </property>
+          <item>
+           <property name="text">
+            <string>Nothing</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Only critical messages</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Errors and critical messages</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Warnings and errors</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Information, warnings and errors</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Debug messages and everything else</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="logFileRotationCount">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="suffix">
+           <string>x</string>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>10</number>
+          </property>
+          <property name="value">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="logFileRotationEnabled">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Rotate log files</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="logFileSizeLimit">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="suffix">
+           <string> MB</string>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>999</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="logFileSizeLimitEnabled">
+          <property name="text">
+           <string>Limit log file size</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="logToStdErr">
+        <property name="text">
+         <string>Log to standard error output</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="logToSystem">
+        <property name="text">
+         <string>Write to logging system of operating system</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <spacer name="horizontalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clearLogFiles">
+          <property name="text">
+           <string>Clear all log files</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../core/resources/core.qrc">
+            <normaloff>:/core/edit-delete.png</normaloff>:/core/edit-delete.png</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>applicationName</tabstop>
+  <tabstop>uiLanguage</tabstop>
+  <tabstop>authenticationMethod</tabstop>
+  <tabstop>testAuthenticationButton</tabstop>
+  <tabstop>networkObjectDirectoryPlugin</tabstop>
+  <tabstop>networkObjectDirectoryUpdateInterval</tabstop>
+  <tabstop>logFileDirectory</tabstop>
+  <tabstop>openLogFileDirectory</tabstop>
+  <tabstop>logLevel</tabstop>
+  <tabstop>logFileSizeLimitEnabled</tabstop>
+  <tabstop>logFileSizeLimit</tabstop>
+  <tabstop>logFileRotationEnabled</tabstop>
+  <tabstop>logFileRotationCount</tabstop>
+  <tabstop>logToStdErr</tabstop>
+  <tabstop>logToSystem</tabstop>
+  <tabstop>clearLogFiles</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../core/resources/core.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>logFileSizeLimitEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>logFileSizeLimit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>308</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>408</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logFileSizeLimitEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>logFileRotationEnabled</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>138</x>
+     <y>381</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>129</x>
+     <y>436</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logFileRotationEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>logFileRotationCount</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>129</x>
+     <y>436</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>658</x>
+     <y>437</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/builtindirectory" >
+        <file>builtindirectory.png</file>
+    </qresource>
+</RCC>

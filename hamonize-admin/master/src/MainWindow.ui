@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1377</width>
+    <height>692</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../core/resources/core.qrc">
+    <normaloff>:/core/icon64.png</normaloff>:/core/icon64.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="centralLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="ComputerMonitoringWidget" name="computerMonitoringWidget" native="true">
+      <widget class="QToolButton" name="autoFitButton">
+       <property name="geometry">
+        <rect>
+         <x>790</x>
+         <y>570</y>
+         <width>69</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Adjust optimal size</string>
+       </property>
+       <property name="text">
+        <string>Auto</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/master.qrc">
+         <normaloff>:/master/zoom-fit-best.png</normaloff>:/master/zoom-fit-best.png</iconset>
+       </property>
+      </widget>
+      <widget class="QSlider" name="gridSizeSlider">
+       <property name="geometry">
+        <rect>
+         <x>660</x>
+         <y>580</y>
+         <width>111</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>50</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
+       <property name="pageStep">
+        <number>50</number>
+       </property>
+       <property name="value">
+        <number>150</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="computerSelectPanelButton">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>570</y>
+         <width>227</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Locations &amp; computers</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/master.qrc">
+         <normaloff>:/master/applications-education.png</normaloff>:/master/applications-education.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
+      </widget>
+      <widget class="QToolButton" name="screenshotManagementPanelButton">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>570</y>
+         <width>158</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Screenshots</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/master.qrc">
+         <normaloff>:/master/camera-photo.png</normaloff>:/master/camera-photo.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonTextBesideIcon</enum>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
+      </widget>
+      <widget class="QLabel" name="spacerLabel1">
+       <property name="geometry">
+        <rect>
+         <x>430</x>
+         <y>570</y>
+         <width>31</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="aboutButton">
+       <property name="geometry">
+        <rect>
+         <x>1230</x>
+         <y>570</y>
+         <width>71</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>About Hamonize</string>
+       </property>
+       <property name="text">
+        <string>About</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../core/resources/core.qrc">
+         <normaloff>:/core/help-about.png</normaloff>:/core/help-about.png</iconset>
+       </property>
+      </widget>
+      <widget class="QLabel" name="spacerLabel3">
+       <property name="geometry">
+        <rect>
+         <x>840</x>
+         <y>570</y>
+         <width>99</width>
+         <height>30</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="filterLineEdit">
+       <property name="geometry">
+        <rect>
+         <x>480</x>
+         <y>570</y>
+         <width>113</width>
+         <height>38</height>
+        </rect>
+       </property>
+       <property name="placeholderText">
+        <string>Search users and computers</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="spacerLabel2">
+       <property name="geometry">
+        <rect>
+         <x>610</x>
+         <y>570</y>
+         <width>31</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="alignComputersButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>1100</x>
+         <y>570</y>
+         <width>69</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Align computers to grid</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/master.qrc">
+         <normaloff>:/master/align-grid.png</normaloff>:/master/align-grid.png</iconset>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="useCustomComputerArrangementButton">
+       <property name="geometry">
+        <rect>
+         <x>960</x>
+         <y>570</y>
+         <width>69</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Use custom computer arrangement</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/master.qrc">
+         <normaloff>:/master/exchange-positions-zorder.png</normaloff>:/master/exchange-positions-zorder.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="spacerLabel4">
+       <property name="geometry">
+        <rect>
+         <x>1110</x>
+         <y>570</y>
+         <width>99</width>
+         <height>30</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QToolButton" name="filterPoweredOnComputersButton">
+       <property name="geometry">
+        <rect>
+         <x>580</x>
+         <y>570</y>
+         <width>69</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Only show powered on computers</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/master.qrc">
+         <normaloff>:/master/powered-on.png</normaloff>:/master/powered-on.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="MainToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MainToolBar</class>
+   <extends>QToolBar</extends>
+   <header>MainToolBar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComputerMonitoringWidget</class>
+   <extends>QWidget</extends>
+   <header>ComputerMonitoringWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../core/resources/core.qrc"/>
+  <include location="../resources/master.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>aboutButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showAboutDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>968</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>494</x>
+     <y>346</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>useCustomComputerArrangementButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>alignComputersButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>994</x>
+     <y>615</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1134</x>
+     <y>615</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>showAboutDialog()</slot>
+ </slots>
+ <buttongroups>
+  <buttongroup name="buttonGroup">
+   <property name="exclusive">
+    <bool>false</bool>
+   </property>
+  </buttongroup>
+ </buttongroups>
+</ui>
