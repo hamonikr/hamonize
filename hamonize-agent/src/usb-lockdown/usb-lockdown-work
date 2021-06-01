@@ -1,0 +1,20 @@
+#!/bin/bash
+
+LOGFILE="/tmp/usb-lockdown.log"
+
+# 장치 차단 및 차단 해제
+case $1 in
+    lockdown)
+        # 장치의 유형별로 전체 차단
+        if [ -f "/sys${DEVPATH%/*}/authorized" ]; then
+            echo 0 | tee /sys${DEVPATH%/*}/authorized | tee -a $LOGFILE
+        fi
+    ;;
+
+    allow)
+        # 특정 장치의 USB 허용
+        if [ -f "/sys${DEVPATH%/*}/authorized" ]; then
+            echo 1 | tee /sys${DEVPATH%/*}/authorized | tee -a $LOGFILE
+        fi
+    ;;
+esac
