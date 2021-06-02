@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MasterConfigurationPage</class>
+ <widget class="QWidget" name="MasterConfigurationPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>598</width>
+    <height>517</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_6">
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Basic settings</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Directories</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <property name="leftMargin">
+           <number>10</number>
+          </property>
+          <property name="horizontalSpacing">
+           <number>10</number>
+          </property>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="openUserConfigurationDirectory">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../core/resources/core.qrc">
+              <normaloff>:/core/document-open.png</normaloff>:/core/document-open.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>User configuration</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="userConfigurationDirectory"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Screenshots</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="screenshotDirectory"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="openScreenshotDirectory">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../core/resources/core.qrc">
+              <normaloff>:/core/document-open.png</normaloff>:/core/document-open.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>User interface</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Text color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QComboBox" name="computerDisplayRoleContent">
+            <item>
+             <property name="text">
+              <string>User and computer name</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Only user name</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Only computer name</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Computer thumbnail caption</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="computerMonitoringUpdateInterval">
+            <property name="suffix">
+             <string> ms</string>
+            </property>
+            <property name="minimum">
+             <number>250</number>
+            </property>
+            <property name="maximum">
+             <number>60000</number>
+            </property>
+            <property name="singleStep">
+             <number>250</number>
+            </property>
+            <property name="value">
+             <number>1000</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="computerMonitoringTextColor"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="computerMonitoringBackgroundColor"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Background color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Thumbnail update interval</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Sort order</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="computerMonitoringSortOrder">
+            <item>
+             <property name="text">
+              <string>Computer and user name</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Only user name</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Only computer name</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Behaviour</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Program start</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QCheckBox" name="accessControlForMasterEnabled">
+            <property name="text">
+             <string>Perform access control</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="autoSelectCurrentLocation">
+            <property name="text">
+             <string>Automatically select current location</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="autoAdjustGridSize">
+            <property name="text">
+             <string>Automatically adjust computer thumbnail size</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="autoOpenComputerSelectPanel">
+            <property name="text">
+             <string>Automatically open computer select panel</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_6">
+         <property name="title">
+          <string>Computer locations</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="showCurrentLocationOnly">
+            <property name="text">
+             <string>Show current location only</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="allowAddingHiddenLocations">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Allow adding hidden locations manually</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="localComputerHidden">
+            <property name="text">
+             <string>Hide local computer</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="hideEmptyLocations">
+            <property name="text">
+             <string>Hide empty locations</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="computerFilterHidden">
+            <property name="text">
+             <string>Hide computer filter field</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Modes and features</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+          <item row="0" column="0" colspan="2">
+           <widget class="QCheckBox" name="enforceSelectedModeForClients">
+            <property name="text">
+             <string>Enforce selected mode for client computers</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="confirmUnsafeActions">
+            <property name="toolTip">
+             <string>Actions such as rebooting or powering down computers</string>
+            </property>
+            <property name="text">
+             <string>Show confirmation dialog for potentially unsafe actions</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="computerDoubleClickFeature"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Feature on computer double click:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Features</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>All features</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Disabled features</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QListWidget" name="allFeaturesListWidget"/>
+         </item>
+         <item row="1" column="1">
+          <layout class="QVBoxLayout" name="verticalLayout_18">
+           <item>
+            <spacer name="verticalSpacer_15">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QToolButton" name="disableFeatureButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../resources/configurator.qrc">
+               <normaloff>:/configurator/go-next.png</normaloff>:/configurator/go-next.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="enableFeatureButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../resources/configurator.qrc">
+               <normaloff>:/configurator/go-previous.png</normaloff>:/configurator/go-previous.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_16">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="2">
+          <widget class="QListWidget" name="disabledFeaturesListWidget"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>userConfigurationDirectory</tabstop>
+  <tabstop>screenshotDirectory</tabstop>
+  <tabstop>openUserConfigurationDirectory</tabstop>
+  <tabstop>openScreenshotDirectory</tabstop>
+  <tabstop>computerMonitoringUpdateInterval</tabstop>
+  <tabstop>computerMonitoringBackgroundColor</tabstop>
+  <tabstop>computerMonitoringTextColor</tabstop>
+  <tabstop>computerDisplayRoleContent</tabstop>
+  <tabstop>computerMonitoringSortOrder</tabstop>
+  <tabstop>accessControlForMasterEnabled</tabstop>
+  <tabstop>autoSelectCurrentLocation</tabstop>
+  <tabstop>autoAdjustGridSize</tabstop>
+  <tabstop>autoOpenComputerSelectPanel</tabstop>
+  <tabstop>showCurrentLocationOnly</tabstop>
+  <tabstop>allowAddingHiddenLocations</tabstop>
+  <tabstop>localComputerHidden</tabstop>
+  <tabstop>hideEmptyLocations</tabstop>
+  <tabstop>computerFilterHidden</tabstop>
+  <tabstop>enforceSelectedModeForClients</tabstop>
+  <tabstop>computerDoubleClickFeature</tabstop>
+  <tabstop>allFeaturesListWidget</tabstop>
+  <tabstop>disableFeatureButton</tabstop>
+  <tabstop>enableFeatureButton</tabstop>
+  <tabstop>disabledFeaturesListWidget</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../../core/resources/core.qrc"/>
+  <include location="../resources/configurator.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>showCurrentLocationOnly</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>allowAddingHiddenLocations</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>380</x>
+     <y>343</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>380</x>
+     <y>389</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>allFeaturesListWidget</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>MasterConfigurationPage</receiver>
+   <slot>disableFeature()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>224</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>413</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>disabledFeaturesListWidget</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>MasterConfigurationPage</receiver>
+   <slot>enableFeature()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>664</x>
+     <y>682</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>413</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>disableFeatureButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MasterConfigurationPage</receiver>
+   <slot>disableFeature()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>723</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>413</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enableFeatureButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MasterConfigurationPage</receiver>
+   <slot>enableFeature()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>766</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>413</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>enableFeature()</slot>
+  <slot>disableFeature()</slot>
+ </slots>
+</ui>

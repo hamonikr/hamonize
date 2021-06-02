@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowTitle">
+   <string>Veyon Configurator</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/configurator.qrc">
+    <normaloff>:/configurator/hamonize-configurator.png</normaloff>:/configurator/hamonize-configurator.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="centralLayout" columnstretch="0,1">
+    <item row="0" column="1">
+     <widget class="QStackedWidget" name="configPages">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="GeneralConfigurationPage" name="generalConfigurationPage"/>
+      <widget class="ServiceConfigurationPage" name="serviceConfigurationPage"/>
+      <widget class="MasterConfigurationPage" name="masterConfigurationPage"/>
+      <widget class="AccessControlPage" name="accessControlPage"/>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QListWidget" name="pageSelector">
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>48</width>
+        <height>48</height>
+       </size>
+      </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <property name="viewMode">
+       <enum>QListView::ListMode</enum>
+      </property>
+      <property name="uniformItemSizes">
+       <bool>true</bool>
+      </property>
+      <property name="currentRow">
+       <number>0</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>General</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/configurator.qrc">
+         <normaloff>:/configurator/configure-shortcuts.png</normaloff>:/configurator/configure-shortcuts.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Service</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/configurator.qrc">
+         <normaloff>:/configurator/application-x-sharedlib.png</normaloff>:/configurator/application-x-sharedlib.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Master</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/configurator.qrc">
+         <normaloff>:/configurator/application-x-ms-dos-executable.png</normaloff>:/configurator/application-x-ms-dos-executable.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Access control</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources/configurator.qrc">
+         <normaloff>:/configurator/network-vpn.png</normaloff>:/configurator/network-vpn.png</iconset>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Apply|QDialogButtonBox::Reset</set>
+      </property>
+      <property name="centerButtons">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionLoadSettings"/>
+    <addaction name="actionSaveSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionResetConfiguration"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAboutVeyon"/>
+    <addaction name="actionAboutQt"/>
+   </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="viewModeStandard"/>
+    <addaction name="viewModeAdvanced"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_View"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionSaveSettings">
+   <property name="icon">
+    <iconset resource="../../core/resources/core.qrc">
+     <normaloff>:/core/document-save.png</normaloff>:/core/document-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save settings to file</string>
+   </property>
+   <property name="toolTip">
+    <string>Save settings to file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionLoadSettings">
+   <property name="icon">
+    <iconset resource="../../core/resources/core.qrc">
+     <normaloff>:/core/document-open.png</normaloff>:/core/document-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>L&amp;oad settings from file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionAboutVeyon">
+   <property name="icon">
+    <iconset resource="../../core/resources/core.qrc">
+     <normaloff>:/core/help-about.png</normaloff>:/core/help-about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Veyon</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionResetConfiguration">
+   <property name="icon">
+    <iconset resource="../../core/resources/core.qrc">
+     <normaloff>:/core/edit-delete.png</normaloff>:/core/edit-delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset configuration</string>
+   </property>
+  </action>
+  <action name="viewModeStandard">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Standard</string>
+   </property>
+  </action>
+  <action name="viewModeAdvanced">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Advanced</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AccessControlPage</class>
+   <extends>QWidget</extends>
+   <header>AccessControlPage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GeneralConfigurationPage</class>
+   <extends>QWidget</extends>
+   <header>GeneralConfigurationPage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MasterConfigurationPage</class>
+   <extends>QWidget</extends>
+   <header>MasterConfigurationPage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ServiceConfigurationPage</class>
+   <extends>QWidget</extends>
+   <header>ServiceConfigurationPage.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../core/resources/core.qrc"/>
+  <include location="../resources/configurator.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pageSelector</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>configPages</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>108</x>
+     <y>301</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAboutVeyon</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>aboutVeyon()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>357</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>357</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionResetConfiguration</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>resetConfiguration()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>680</x>
+     <y>426</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>aboutVeyon()</slot>
+  <slot>resetConfiguration()</slot>
+ </slots>
+</ui>

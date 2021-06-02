@@ -1,0 +1,12 @@
+.vagrant/*
+b/*
+.DS_Store
+*.qm
+*.swp
+CMakeLists.txt.u*
+svg
+Makefile
+plugins/extra
+build/
+build-win/
+b/

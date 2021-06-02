@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/ldap" >
+        <file>user-group-properties.png</file>
+        <file>computer.png</file>
+        <file>configure.png</file>
+        <file>distribute-vertical-margin.png</file>
+        <file>application-x-kexi-connectiondata.png</file>
+        <file>attribute.png</file>
+        <file>folder-stash.png</file>
+    </qresource>
+</RCC>
