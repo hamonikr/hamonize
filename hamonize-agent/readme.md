@@ -1,12 +1,28 @@
 # Hamonize-agent
 
-### 빌드방법
-\# 필요 의존성 설치(hamonize-agent 디렉토리에서 실행)
-<br><b>npm install</b>
+### 데비안 패키징 방법
+1) hamonize-agent/ 위치에서 
+<br><b>dpkg-buildpackage -T clean</b>
+<br><b>dpkg-buildpackage -b -us -uc -ui</b> 
 
-\# 1) 바이너리로 빌드된 파일 바로 실행
-<br><b>sudo ./electron-quick-start</b>
+<br></br>
+### 소스 빌드방법
+1) src/ 위치에서
+<br><b>npm install</b>
     
-\# 2) 소스 빌드 
-<br><b>sudo node main.js</b> 
+2) 소스 빌드하기 
+<br><b>npm run start</b> 
+
+<br></br>
+### 필수 디렉토리
+- hamonize-agent 설치되는 위치 : /usr/share/hamonize-agent/
+- log 파일 저장되는 위치 : /var/log/hamonize/agentJob
+- hamonize-center와 연동되는 파일들 위치 : /etc/hamonize/
+
+** .keep 파일은 빈 디렉토리 유지차 만든 파일 
+
+<br></br>
+### 로그확인
+- agent 전체 로그 : tail -f /var/log/hamonize/agentJob/agentjob.log.{해당 date}
+- 업데이트 정책 로그 : tail -f /var/log/hamonize/agentJob/updp.log
 

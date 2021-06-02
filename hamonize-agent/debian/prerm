@@ -1,0 +1,18 @@
+#!/bin/bash
+systemctl stop hamonize-agent
+systemctl disable hamonize-agent
+#systemctl daemon-reload
+sudo rm -r /etc/systemd/system/hamonize-agent.service
+
+systemctl daemon-reload
+
+rm -fr /usr/share/hamonize-agent
+#cd /usr/share/hamonize-agent/
+
+#if [ -d node_modules ]; then 
+#	rm -r node_modules
+#fi
+
+#if [ -e *.log ]; then
+#	rm *.log
+#fi

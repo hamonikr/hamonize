@@ -1,0 +1,49 @@
+{
+  "name": "hamonize-agent",
+  "version": "1.0.0",
+  "description": "A hamonize-agent application",
+  "main": "main.js",
+  "scripts": {
+    "start": "sudo node main.js",
+    "clean": "rm -rf node_modules/ ./hamonize-agent",
+    "build": "pkg . "
+  },
+  "bin": {
+    "hamonize-agent": "./main.js"
+  },
+  "pkg": {
+    "scripts": "*.js",
+    "assets": [
+      "shell/*",
+      "usb-lockdown/*",
+      "./node_modules/**/*"
+    ],
+    "targets": [
+      "node14-linux-x64"
+    ]
+  },
+  "repository": "https://github.com/hamonikr/hamonize",
+  "keywords": [
+    "hamonize-agent"
+  ],
+  "author": "hamonikr",
+  "license": "Apache-2.0",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "dependencies": {
+    "date-utils": "^1.2.21",
+    "fs": "^0.0.2",
+    "ip": "^1.1.5",
+    "node-fetch": "^2.6.1",
+    "node-schedule": "^2.0.0",
+    "ping": "^0.4.1",
+    "pkg": "^5.2.1",
+    "request": "^2.88.2",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.5"
+  }
+}
