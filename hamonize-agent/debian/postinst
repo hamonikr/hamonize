@@ -3,9 +3,6 @@
 uuid=`cat /etc/machine-id`
 echo "$uuid" >> /etc/hamonize/uuid
 
-# install jq
-sudo apt install jq
-
 # hamonize-agent service start 
 sudo systemctl daemon-reload
 sudo systemctl enable hamonize-agent
