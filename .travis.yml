@@ -1,0 +1,35 @@
+dist: focal
+sudo: required
+
+jobs:
+    include:
+        - language : node_js
+          node_js : 10
+          before_script:
+            - sudo apt-get update -qq
+            - sudo apt-get install debhelper npm
+          script : 
+            - cd hamonize-agent/
+            - sudo dpkg-buildpackage -T clean
+            - sudo dpkg-buildpackage -b -us -uc -ui
+            - export JOB="agent"
+        - language : cpp
+          before_script:
+            - git submodule init
+            - git submodule update
+            - sudo apt-get update -qq
+            - sudo apt-get install g++ make cmake qtbase5-dev qtbase5-dev-tools qttools5-dev qttools5-dev-tools libqca-qt5-2-plugins xorg-dev libxtst-dev libjpeg-dev zlib1g-dev libssl-dev libpam0g-dev libprocps-dev liblzo2-dev libqca-qt5-2-dev libldap2-dev libsasl2-dev fakeroot
+          script : 
+            - cd hamonize-admin/ && mkdir build && cd build
+            - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+            - fakeroot make package
+            - mv *.deb ../../ && cd ..
+            - export JOB="admin"
+
+after_success:
+    - cd ..
+    - sh travis/push.sh
+
+env:
+  global:
+    secure : "EkQeZ5STEDLYTHR3dvOalxlczNo46T1EBrnPh9ZQm7sxHbkE0ILBfbrR1kVf77s+pi7ViOwd/d1yioyCII7FwJQpJL+xRaLcGxNOcG0j3C04ALktxKzvRpnDRjcW05Z20L8BfbfLDw+310T3sekxkDNEMa+INerPnHFhe8BmSd1tx2b59r2LVBnr8qKNd2bAONRtTPP071FjoayMDv5zMmnnoZqvomdNneDxTndlMvgY39i6QZp+srHOlkcsgyR1lkwD/I1IHG6ibk0g+U2dnIOlQOIWaK3qOaI0wIg5Rb69Y77Xpvr0b7CxcVtdZUUnqx0ptm7MNgrTXqCWRwr2YyAlL8BASZ1GUnhsRK51MzWlU3tIejIDVuGjbENR34s0lPufdpuLsHccMpbe1D92mcgo4nuFhe99io2EziFW6TLVuvFu8spEhkpGRsaDUDr6QHNVmHfcJZbYlOPVAQGcr7ytfgpyXEQO2hp0+tDhCeyEVjLXjLenoUqjlbPa9gwuDpzffsJnAhRfluHg7r8UOp6dCebNFWM1ikrl9RZjvJbzXgEwTHw0RsUNHVWvTi5N0cNjlLEWklLJSHjvtwlzq9fsQV1xyDycBQFNYliAAmDi2y4ttUxjYzPxQj3HWfXF6KDz0qWw+I5UFoonZyUWKEG3actUaDBA3iLny2ZVFVY="
