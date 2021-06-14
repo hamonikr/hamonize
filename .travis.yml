@@ -1,3 +1,6 @@
+branches:
+    only:
+        - release
 dist: focal
 sudo: required
 
@@ -12,7 +15,6 @@ jobs:
             - cd hamonize-agent/
             - sudo dpkg-buildpackage -T clean
             - sudo dpkg-buildpackage -b -us -uc -ui
-            - export JOB="agent"
         - language : cpp
           before_script:
             - git submodule init
@@ -24,12 +26,17 @@ jobs:
             - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
             - fakeroot make package
             - mv *.deb ../../ && cd ..
-            - export JOB="admin"
+before_deploy:
+    - git config --local user.name "Hamonikr"
+    - git config --local user.email "hamonikr@gmail.com"
+    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+    - git tag ${TRAVIS_TAG}
+deploy:
+    provider: releases
+    api_key: 
+        secure: "pbslZvpfbnwltJf0wKnQCfSUbxD8rLzMSby5PdriZ7ilzNcsZFetNHBr0xLCgTUOtxpG87JfXOgyrK14g7wYDlZ5SkXso6UHGC74fK4m55JTPDkPOvRaBB8I1J/umzZBDfp/UJLu1JhTC0uP7IKmbB2Gh1r3FE5LbiiiXE+/uZw7s4uACR0c/gV+TFroXGDUyvH7LxtHS9APGRdOEy4JlmxbxiCM2Q9+XAdYQAOllazYGo1UP+CnTaYIZrh0Zsbp5QAYUeu40mz/EK4EVecz9+M1N5j4TI4fvAl07Uglt/c07wcOJL6ryB48KmAMsS3W4kfBAPd1pcTCfOsFxy81/jiq3lcZWqyuwHf3RvbNqqzs2J2DNN6Pp7zjR94Ci7V9wZJfdWF3RkJtw5gGl0tUidkj0ntLon2mXJF0nWeW3vdsFNpQ2dm8m1FM95CwknOBvDSGwzl73SFxi4YjRAqX3IB+/SQluPa6XDklvFgcoqs+mvE2vZs3qSk0STvbPl7OwjpPwz8zT7KWfAz13aKi8eKkLAl2TSdqjiNkr3aR4TuS2YQo5qVWuiotiCjlVVUFn+8FWPtpD4yJwV3QKNVi3CbKyczFdAORojyLx0IiiBy8Sm45LnlZGu63YT25syUvpRFlWhc4SL2pxqYiE2eMv9+EuVGGWvbjO/dtUPHdkx8="
+    file_glob: true
+    file: ../*.deb
+    skip_cleanup: true
+    draft: true
 
-after_success:
-    - cd ..
-    - sh travis/push.sh
-
-env:
-  global:
-    secure : "EkQeZ5STEDLYTHR3dvOalxlczNo46T1EBrnPh9ZQm7sxHbkE0ILBfbrR1kVf77s+pi7ViOwd/d1yioyCII7FwJQpJL+xRaLcGxNOcG0j3C04ALktxKzvRpnDRjcW05Z20L8BfbfLDw+310T3sekxkDNEMa+INerPnHFhe8BmSd1tx2b59r2LVBnr8qKNd2bAONRtTPP071FjoayMDv5zMmnnoZqvomdNneDxTndlMvgY39i6QZp+srHOlkcsgyR1lkwD/I1IHG6ibk0g+U2dnIOlQOIWaK3qOaI0wIg5Rb69Y77Xpvr0b7CxcVtdZUUnqx0ptm7MNgrTXqCWRwr2YyAlL8BASZ1GUnhsRK51MzWlU3tIejIDVuGjbENR34s0lPufdpuLsHccMpbe1D92mcgo4nuFhe99io2EziFW6TLVuvFu8spEhkpGRsaDUDr6QHNVmHfcJZbYlOPVAQGcr7ytfgpyXEQO2hp0+tDhCeyEVjLXjLenoUqjlbPa9gwuDpzffsJnAhRfluHg7r8UOp6dCebNFWM1ikrl9RZjvJbzXgEwTHw0RsUNHVWvTi5N0cNjlLEWklLJSHjvtwlzq9fsQV1xyDycBQFNYliAAmDi2y4ttUxjYzPxQj3HWfXF6KDz0qWw+I5UFoonZyUWKEG3actUaDBA3iLny2ZVFVY="
