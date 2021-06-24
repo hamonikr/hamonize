@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+.btn { font-weight: bold; }
+
+.lnb .search-container { display: block }
+
+#formDiv { 
+	border: 4px solid #bbb;
+	margin: auto;
+	margin-top: 60px; 
+	padding: 20px;
+	width: 480px;
+	position: relative;
+}
+#formDiv > div {
+	display: inline-block;
+	min-width: 250px;
+	width: 100%;
+}
+
+#formDiv > .formDivTxt {
+	margin-bottom: 20px; 
+	width: 100%;
+}
+
+.rightDiv { margin-top: 20px; }
+
+form strong { 
+	display: inline-block; 
+	margin-bottom: 5px;
+}
+
+.form-control { margin-bottom: 13px; }
+
+#week { text-align: center; }
+
+.form-check-inline .form-check-input {
+	height: 18px;
+	width: 18px;
+}
+
+.btnDiv {
+	margin-top: 20px;
+	text-align: center; 
+	width: 100%;
+}

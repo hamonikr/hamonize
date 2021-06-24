@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.IGetAgentDeviceMapper">
+	
+	<select id="getAgentWorkYn" parameterType="com.model.GetAgentDeviceVo" resultType="Integer">
+		SELECT 
+		   count(*) AS cnt
+		FROM tbl_device_agent_job TA JOIN tbl_device_applc TB ON TA.dvc_seq = TB.seq 
+		WHERE TA.org_seq = #{org_seq}
+			AND pcm_uuid = #{pcm_uuid} 
+	</select>
+	
+	<select id="getAgentOldSeq" parameterType="com.model.GetAgentDeviceVo" resultType="com.model.GetAgentDeviceVo">
+		select * 
+		from tbl_device_agent_job
+		where org_seq = #{org_seq} 
+		and pcm_uuid = #{pcm_uuid} 
+		order by insert_dt desc limit 1
+	</select>
+	
+	<insert id="setInsertSelect" parameterType="com.model.GetAgentDeviceVo" >
+		INSERT INTO
+    		tbl_device_agent_job (sm_seq, dvc_seq, org_seq,  pcm_uuid, pcm_name, insert_dt   )
+		
+		SELECT arr[i]::int,
+		    pa_seq, 
+		    #{org_seq} as org_seq,
+		    #{pcm_uuid}  as pcm_uuid,
+		    (select sm_name from tbl_security_mngr where sm_gubun = 'D' and sm_seq = arr[i]::int),
+		    now()
+		    
+		FROM (
+		  SELECT generate_series(1, array_upper(arr, 1)) AS i, arr, pa_seq
+		  FROM (
+		    select 
+		        regexp_split_to_array(CASE WHEN ppm_seq = ''  THEN '0' ELSE ppm_seq END, ',') arr,
+		        seq as pa_seq
+		    from tbl_device_applc
+		    where org_seq = #{org_seq} 
+		    OFFSET 0 limit 1
+		    ) t
+		) t
+
+	</insert>
+
+	
+	<select id="getListDevicePolicy" parameterType="com.model.GetAgentDeviceVo" resultType="com.model.GetAgentDeviceVo">
+		  SELECT 
+				seq, 
+				org_seq, 
+				insert_dt, 
+				dvc_seq as pa_seq, 
+				(CASE WHEN ppm_seq = ''  THEN '0' ELSE ppm_seq END ) as ppm_seq 
+			FROM tbl_device_applc_history
+			where
+				org_seq = #{org_seq}
+			    and dvc_seq = #{dvc_seq}::int
+			
+			
+			UNION all 
+			
+			(SELECT 
+				seq, 
+				org_seq, 
+				insert_dt, 
+				dvc_seq as pa_seq, 
+				(CASE WHEN ppm_seq = ''  THEN '0' ELSE ppm_seq END ) as ppm_seq 
+			FROM tbl_device_applc_history
+			where
+				org_seq = #{org_seq}
+			    and insert_dt  &lt;  now()
+			order by insert_dt desc
+			OFFSET 0 limit 1
+			)
+	</select>
+	
+	<select id="getAgentInitWorkData" parameterType="com.model.GetAgentDeviceVo" resultType="com.model.GetAgentDeviceVo">
+		
+		SELECT 
+		    CASE 
+		        WHEN TB.pcm_uuid is null  THEN 'INS'
+		        ELSE 'NOINS'  
+		    END AS gubun,
+		    TA.sm_seq as pcm_seq,
+		    TA.org_seq,
+		    TA.dvc_seq as pa_seq,
+		    TA.pcm_uuid,
+		    TA.pcm_name,
+		    TA.insert_dt,
+		    TB.dvc_seq as old_pa_seq,
+		    TB.pcm_uuid as old_pcm_uuid,
+    		( select sm_device_code from tbl_security_mngr where sm_seq = TA.sm_seq) as device_code
+		FROM tbl_device_agent_job TA LEFT OUTER JOIN 
+		(
+		    SELECT * 
+		    FROM tbl_device_agent_job 
+		    WHERE dvc_seq = #{old_pa_seq}
+		    	AND pcm_uuid = #{pcm_uuid}
+		) TB on TA.sm_seq = TB.sm_seq
+		WHERE 
+		    TA.org_seq = #{org_seq}
+		    and TA.dvc_seq in ( #{new_pa_seq}, #{old_pa_seq} )
+		    and TA.sm_seq  in ( ${ppm_seq} )
+			and TB.pcm_uuid is null
+			and TA.pcm_uuid = #{pcm_uuid}
+			and TA.pcm_name is not null
+		
+		 
+		    
+	</select>
+	
+
+	<select id="getAgentWorkData" parameterType="com.model.GetAgentDeviceVo" resultType="com.model.GetAgentDeviceVo">
+		
+		SELECT 
+		    CASE 
+		        WHEN TB.pcm_uuid is null  THEN 'DEL'
+		        ELSE 'NOINS'  
+		    END AS gubun,
+		    TA.sm_seq as pcm_seq,
+		    TA.org_seq,
+		    TA.dvc_seq as pa_seq,
+		    TA.pcm_uuid,
+		    TA.pcm_name,
+		    TA.insert_dt,
+		    TB.dvc_seq as old_pa_seq,
+		    TB.pcm_uuid as old_pcm_uuid,
+    		( select sm_device_code from tbl_security_mngr where sm_seq = TA.sm_seq) as device_code
+		FROM tbl_device_agent_job TA LEFT OUTER JOIN 
+		(
+		    SELECT * 
+		    FROM tbl_device_agent_job 
+		    WHERE dvc_seq = #{old_pa_seq}
+		    	AND pcm_uuid = #{pcm_uuid}
+		) TB on TA.sm_seq = TB.sm_seq
+		WHERE 
+		    TA.org_seq = #{org_seq}
+		    and TA.dvc_seq in ( #{new_pa_seq}, #{old_pa_seq} )
+		    and TA.sm_seq  in ( ${ppm_seq} )
+			and TB.pcm_uuid is null
+			and TA.pcm_uuid = #{pcm_uuid}
+			and TA.pcm_name is not null
+		
+		UNION ALL 
+		
+		SELECT 
+		    'INS' as gubun,
+		    TA.sm_seq as pcm_seq,
+		    TA.org_seq,
+		    TA.dvc_seq as pa_seq,
+		    TA.pcm_uuid,
+		    TA.pcm_name,
+		    TA.insert_dt,
+		    TB.dvc_seq as old_pa_seq,
+		    TB.pcm_uuid as old_pcm_uuid,
+    		( select sm_device_code from tbl_security_mngr where sm_seq = TA.sm_seq) as device_code
+		FROM tbl_device_agent_job TA LEFT OUTER JOIN 
+		(
+		    SELECT * 
+		    FROM tbl_device_agent_job 
+		    WHERE dvc_seq = #{old_pa_seq}
+		    	AND pcm_uuid = #{pcm_uuid}
+		) TB on TA.sm_seq = TB.sm_seq
+		WHERE 
+		    TA.org_seq = #{org_seq}
+		    and TA.dvc_seq in ( #{new_pa_seq}, #{old_pa_seq} )
+		    and TA.sm_seq not  in (${ppm_seq} )
+			and TA.pcm_name is not null
+	    	AND TA.pcm_uuid = #{pcm_uuid}
+		    
+		    
+	</select>
+	
+
+	
+		
+	
+	<select id="getListProgrm" parameterType="com.model.GetAgentDeviceVo" resultType="com.model.GetAgentDeviceVo">
+		SELECT 
+	        (select pcm_name from tbl_program_mngr where pcm_seq::char = arr[i]) as progrm_nm
+	    FROM (
+	      SELECT generate_series(1, array_upper(arr, 1)) AS i, arr
+	      FROM (
+	      	SELECT
+	      		regexp_split_to_array(#{arrPpmSeq}, ',') arr 
+	        ) t
+	    ) t
+			
+	
+	</select>
+	
+		
+	
+	
+	
+</mapper>

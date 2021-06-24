@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+.body { 
+	margin: 0; 
+	padding: 0 30px;
+}
+
+#managementDiv {
+	float: right;
+}
+#managementDiv .btn ,
+.subMenuDiv .btn {
+	font-weight: bold;
+	font-size: 13px;
+	padding: 4px 12px;
+}
+
+.subMenuDiv { margin-bottom: 10px; }
+.form-control {
+	padding: 4px 12px;
+	width: 200px;
+}

@@ -1,0 +1,161 @@
+
+#pop_wrap{width:400px; height:320px; border:5px solid #4F8AC6; overflow:hidden; box-sizing:border-box;}
+#pop_wrap h1{
+	width:100%; line-height:3em; 
+	font-size:1.2em; font-weight:bold;
+	padding:0 10px;
+	background:#4F8AC6; color:#fff;
+}
+/* ----------------------------------사용자 비밀번호 찾기 팝업_입력 페이지-----------------------------*/
+#pop_wrap #user_privacy{ padding:20px 20px 0 20px;}
+#pop_wrap #user_privacy ul{}
+#pop_wrap #user_privacy ul  li{margin-bottom:15px;}
+#pop_wrap #user_privacy ul  li label{font-size:0.9em; font-weight:bold; color:#555;}
+#pop_wrap #user_privacy ul  li input{
+	width:100%; height:35px; border:0 none;
+	margin-top:5px; border-radius:10px; padding-left:45px;
+	box-sizing:border-box;
+	font-size:0.81em;
+}
+#pop_wrap #user_privacy ul  li:nth-of-type(1) input{background:#EDEDED url(../img/bgicon_gray_id.jpg)left top no-repeat; color:#888; }
+#pop_wrap #user_privacy ul  li:nth-of-type(2) input{background:#EDEDED url(../img/bgicon_gray_name.jpg)left top no-repeat; color:#888;}
+
+#pop_wrap #line{border-top:1px solid #ccc; margin:20px;}
+#pop_wrap #privacy_bt{float:right; margin:0 20px;}
+#pop_wrap #privacy_bt p{
+	float:left; 
+	border-radius:8px; 
+	margin-left:5px;
+}
+#pop_wrap #privacy_bt p:nth-of-type(1){background:#4F8AC6;}
+#pop_wrap #privacy_bt p:nth-of-type(2){background:#262626;}
+#pop_wrap #privacy_bt p a{
+	text-align:center; color:#fff; line-height:40px;
+	font-size:0.9em; font-weight:bold;
+	display:block;
+	padding:0 15px;
+}
+/* ----------------------------------사용자 비밀번호 찾기 팝업_확인 페이지-----------------------------*/
+#pop_wrap #user_confirm{ padding:30px 20px 0 110px; height:150px;background:url(../img/lock_bg.jpg)25px 30px no-repeat;}
+#pop_wrap #user_confirm p{line-height:1.5em; letter-spacing:-0.02em; font-size:0.81em;}
+#pop_wrap #user_confirm p:nth-of-type(1){margin-bottom:15px;}
+#pop_wrap #line{border-top:1px solid #ccc; margin:20px;}
+
+#pop_wrap #confirm_bt{float:right; margin:0 20px;}
+#pop_wrap #confirm_bt p{
+	float:left; 
+	border-radius:8px; 
+	margin-left:5px;
+	background:#4F8AC6;
+}
+#pop_wrap #confirm_bt p a{
+	text-align:center; color:#fff; line-height:40px;
+	font-size:0.9em; font-weight:bold;
+	display:block;
+	padding:0 15px;
+}
+
+/* ----------------------------------사용자 그룹 검색 팝업_입력 페이지-----------------------------*/
+#pop_sg_wrap{width:400px; height:500px; border:5px solid #4F8AC6; overflow:hidden; box-sizing:border-box;}
+#pop_sg_wrap h1{
+	width:100%; line-height:3em; 
+	font-size:1.2em; font-weight:bold;
+	padding:0 10px;
+	background:#4F8AC6; color:#fff;
+}
+#pop_sg_wrap #pop_search_group{ padding:20px 20px 0 20px;}
+/* 사용자그룹 검색목록 */
+#pop_sg_wrap #pop_search_group p{font-size:0.9em; font-weight:bold; color:#555;}
+#pop_sg_wrap #pop_search_group .table_style1{margin: 20px 0;}
+#pop_sg_wrap #pop_search_group .table_style1 table{
+	border-collapse: separate;
+    font-size:0.9em; text-align: left; line-height: 1.2em;
+    border-top: 1px solid #ccc;
+}
+#pop_sg_wrap #pop_search_group .table_style1 table tr:hover th,.table_style1 table tr:hover td{ background:#E4EDF2;}
+#pop_sg_wrap #pop_search_group .table_style1 table tr th{
+	width:25px; padding: 10px;
+    font-weight: bold; vertical-align: top; text-align:center;
+    border-bottom: 1px solid #ccc; background: #f1f1f1;
+}
+#pop_sg_wrap #pop_search_group .table_style1 table tr td{
+	padding: 10px;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;}
+/* 선택된 그룹명과 비번입력창 */
+#pop_sg_wrap #pop_search_group ul{}
+#pop_sg_wrap #pop_search_group ul  li{margin-bottom:15px;}
+#pop_sg_wrap #pop_search_group ul  li label{font-size:0.9em; font-weight:bold; color:#555;}
+#pop_sg_wrap #pop_search_group ul  li input{
+	width:100%; height:35px; border:0 none;
+	margin-top:5px; border-radius:10px; padding-left:45px;
+	box-sizing:border-box;
+	font-size:0.81em;
+}
+#pop_sg_wrap #pop_search_group ul  li:nth-of-type(1) input{background:#EDEDED url(../img/bgicon_gray_group.jpg)left top no-repeat; color:#888; }
+#pop_sg_wrap #pop_search_group ul  li:nth-of-type(2) input{background:#EDEDED url(../img/bgicon_gray_pw.jpg)left top no-repeat; color:#888;}
+
+#pop_sg_wrap #privacy_bt{float:right; margin:0 20px;}
+#pop_sg_wrap #privacy_bt p{
+	float:left; 
+	border-radius:8px; 
+	margin-left:5px;
+}
+#pop_sg_wrap #privacy_bt p:nth-of-type(1){background:#4F8AC6;}
+#pop_sg_wrap #privacy_bt p:nth-of-type(2){background:#262626;}
+#pop_sg_wrap #privacy_bt p a{
+	text-align:center; color:#fff; line-height:40px;
+	font-size:0.9em; font-weight:bold;
+	display:block;
+	padding:0 15px;
+}
+/* ----------------------------------결제 입금안내 페이지-----------------------------*/
+#pop_pay_wrap{width:400px; height:600px; border:5px solid #4F8AC6; overflow:hidden; box-sizing:border-box;}
+#pop_pay_wrap h1{
+	width:100%; line-height:3em; 
+	font-size:1.2em; font-weight:bold;
+	padding:0 10px;
+	background:#4F8AC6; color:#fff;
+}
+#pop_pay_wrap #pop_payment{}
+/* 입금정보 테이블 */
+#pop_pay_wrap #pop_payment .table_paystyle{overflow:hidden; padding:10px 10px 0 10px;}
+#pop_pay_wrap #pop_payment .table_paystyle table{
+    font-size:0.81em; text-align: left; line-height: 1.2em;
+    border-top: 3px solid #333;
+	border-bottom: 3px solid #333;
+	width:100%;
+}
+#pop_pay_wrap #pop_payment .table_paystyle table tr th{
+	width:100px; padding: 8px;
+    font-weight: bold; vertical-align: top; text-align:center;
+    border-bottom: 1px solid #ccc; background: #f1f1f1;
+}
+#pop_pay_wrap #pop_payment .table_paystyle table tr td{
+	padding: 8px;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+}
+#pop_pay_wrap #pop_payment .table_paystyle p{
+	font-size:0.9em; font-weight:bold;
+	color:#333; margin:20px 0; 
+	line-height:1.2em;
+}
+/* 하단에 구매,취소버튼 */
+#pop_pay_wrap #privacy_bt{float:right;  margin:0 10px; }
+#pop_pay_wrap #privacy_bt p{
+	float:left; 
+	border-radius:8px; 
+	margin-left:5px;
+}
+#pop_pay_wrap #privacy_bt p:nth-of-type(1){background:#4F8AC6;}
+#pop_pay_wrap #privacy_bt p:nth-of-type(2){background:#262626;}
+#pop_pay_wrap #privacy_bt p a{
+	text-align:center; color:#fff; line-height:40px;
+	font-size:0.9em; font-weight:bold;
+	display:block;
+	padding:0 15px;
+}
+
+
+

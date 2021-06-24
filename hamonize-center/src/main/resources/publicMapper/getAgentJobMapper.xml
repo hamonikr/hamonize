@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.IGetAgentJobMapper">
+
+
+
+	<select id="getAgentJobPcUUID" resultType="com.model.GetAgentJobVo" parameterType="com.model.GetAgentJobVo" >
+		
+		select 
+		    seq,
+		    p_seq,
+		    org_nm
+		from tbl_org 
+		where seq =  (
+		    SELECT org_seq
+		    FROM public.tbl_pc_mangr
+		    where pc_uuid =  #{pc_uuid}
+		)
+				
+	</select>
+	
+	
+	<select id="getAgentJobPcUUIDInBACKUP" resultType="com.model.GetAgentJobVo" parameterType="com.model.GetAgentJobVo" >
+		
+		select
+		    TA.seq as org_seq,
+		    TB.seq as seq,
+		    TB.pc_uuid
+		from tbl_org TA join tbl_pc_mangr TB on TA.seq = TB.org_seq
+		where TA.seq = (SELECT org_seq FROM public.tbl_pc_mangr where pc_uuid = #{pc_uuid})
+   		 and TB.pc_uuid = #{pc_uuid}
+	</select>
+	
+	
+	<insert id="insertBackupInfo" parameterType="com.model.CurlPcBackupVo">
+		INSERT INTO
+			tbl_backup_recovery_mngr
+				(
+					br_org_seq, 
+					br_backup_path, 
+					br_backup_iso_dt, 
+					br_backup_gubun,
+					sgb_seq,
+					br_backup_name
+				)
+			VALUES ( 
+				#{br_org_seq} ,
+				#{br_backup_path} , 
+				to_timestamp(#{br_backup_iso_dt}, 'YYYY-MM-DD HH24:MI:SS') ,
+				#{br_backup_gubun} ,
+				#{sgb_seq}, 
+				#{bk_name} 
+			)
+				
+	</insert>
+	
+<!-- //#############################################################  -->	
+<!-- //###################  truncate    ######################  -->	
+<!-- //#############################################################  -->
+
+
+<select id="getAgentJobList" resultType="com.model.GetAgentJobVo">
+		SELECT 
+			*		
+		FROM 
+			tbl_agent_job
+		
+	</select>
+	
+	
+		
+<!-- 보안 -->
+	<select id="selectSecurityInAgentJob" parameterType="com.model.HmSecurityVo" resultType="com.model.HmSecurityVo">
+		select 
+			syseq,
+			pcm_seq,
+			syname,
+			systatus,
+			org_seq
+		from tbl_security_agentjob
+		where org_seq = #{org_seq} 
+	</select>	
+	
+	<insert id="selectInsertSecurityInAgentJob" parameterType="com.model.HmSecurityVo" >
+		INSERT INTO
+    		tbl_security_agentjob (pcm_seq, syname, systatus, org_seq, sm_gubun, sm_port)  
+		select sm_seq, sm_name, 'Y', #{org_seq} , sm_gubun, sm_port
+		from tbl_security_mngr
+		where sm_seq in ( 
+			<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
+		        ${orgpcmseq[index]}
+	        </foreach>
+            )    
+	</insert>
+
+	<select id="securityAgentY" parameterType="com.model.HmSecurityVo" resultType="com.model.HmSecurityVo">
+		select  
+			ta.sm_seq, 
+			ta.sm_gubun,
+			ta.sm_port,
+			trim(ta.sm_name) as sm_name, 
+			trim(tb.systatus) as pcm_status
+		from tbl_security_mngr ta left outer join 
+		(
+			select  pcm_seq, syname , systatus 
+			from  tbl_security_agentjob 
+			where org_seq = '3'
+		) tb on ta.sm_seq = tb.pcm_seq
+		where ta.sm_seq  in ( 
+						<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
+					        ${orgpcmseq[index]}
+					       </foreach>
+			          )
+	</select>
+
+
+	<select id="securityAgentN" parameterType="com.model.HmSecurityVo" resultType="com.model.HmSecurityVo">
+		select 
+			pcm_seq, 
+			sm_gubun,
+			sm_port,
+			syname as pcm_name, 
+			systatus as pcm_status
+		from tbl_security_agentjob
+		where org_seq = '3'
+		    and pcm_seq not  in ( 
+						<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
+					        ${orgpcmseq[index]}
+					       </foreach>
+					       )
+	
+	</select>
+	
+		
+	<insert id="securityAgentInsert" parameterType="com.model.HmprogramVo">
+		INSERT INTO tbl_security_agentjob (
+    		pcm_seq, 
+    		syname, 
+    		systatus, 
+    		org_seq
+    	)
+    	values(
+    		#{pcm_seq}, 
+    		#{pcm_name}, 
+    		'Y', 
+    		#{org_seq}
+    	) 
+					 
+	</insert>
+	
+	<delete id="securityAgentDel" parameterType="com.model.HmprogramVo">
+		DELETE FROM tbl_security_agentjob 
+		WHERE 
+				pcm_seq = #{pcm_seq}
+				and org_seq = #{org_seq} 
+	</delete>
+	
+	
+<!--  -->
+
+	<insert id="programAgentInsert" parameterType="com.model.HmprogramVo">
+		INSERT INTO tbl_progrm_agentjbo (
+    		pcm_seq, 
+    		pname, 
+    		pstatus, 
+    		org_seq
+    	)
+    	values(
+    		#{pcm_seq}, 
+    		#{pcm_name}, 
+    		'Y', 
+    		#{org_seq}
+    	) 
+				 
+	</insert>
+	
+	<delete id="programAgentDel" parameterType="com.model.HmprogramVo">
+		DELETE FROM tbl_progrm_agentjbo 
+		WHERE 
+				pcm_seq = #{pcm_seq}
+				and org_seq = #{org_seq} 
+	</delete>
+	<select id="programAgentY" parameterType="com.model.HmprogramVo" resultType="com.model.HmprogramVo">
+		select  
+			ta.pcm_seq, 
+			ta.pcm_name, 
+			tb.pstatus as pcm_status
+		from tbl_program_mngr ta left outer join 
+		(
+			select  pcm_seq, pname , pstatus 
+			from  tbl_progrm_agentjbo 
+			where org_seq = '3'
+		) tb on ta.pcm_seq = tb.pcm_seq
+		where ta.pcm_seq  in ( 
+						<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
+					        ${orgpcmseq[index]}
+					       </foreach>
+			          )
+	</select>
+	
+	
+	<select id="programAgentN" parameterType="com.model.HmprogramVo" resultType="com.model.HmprogramVo">
+		select 
+			pcm_seq, 
+			pname as pcm_name, 
+			pstatus as pcm_status
+		from tbl_progrm_agentjbo
+		where org_seq = '3'
+		    and pcm_seq not  in ( 
+						<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
+					        ${orgpcmseq[index]}
+					       </foreach>
+					       )
+	
+	</select>
+	
+	
+
+
+	<select id="selectProgrmInAgentJob" parameterType="com.model.HmprogramVo" resultType="com.model.HmprogramVo">
+		select *
+			from tbl_progrm_agentjbo
+			where org_seq = #{org_seq} 
+	</select>
+
+	<insert id="selectInsertProgrmInAgentJob" parameterType="com.model.HmprogramVo" >
+		INSERT INTO
+    	tbl_progrm_agentjbo (pcm_seq, pname, pstatus, org_seq)  
+		select pcm_seq, pcm_name, 'Y', #{org_seq} 
+			from tbl_program_mngr
+			where pcm_seq in ( 
+				<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
+			        ${orgpcmseq[index]}
+		        </foreach>
+	            )    
+	</insert>
+
+
+	
+	<!-- 유해사이트 -->
+	<select id="nxssListInfo" resultType="com.model.BlockingNxssInfoVo" parameterType="hashmap">
+		SELECT 
+			 sma_seq, 
+			 sma_domain, 
+			 sma_info
+		FROM 
+			tbl_site_mngr_applc
+		<where>
+			sma_gubun='B' 
+		</where> 
+		ORDER BY sma_seq DESC
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<update id="setAgentJobPcPolocy" parameterType="com.model.GetAgentJobVo">
+		UPDATE public.tbl_agent_job
+			SET aj_return_val= 'Y'
+		WHERE 
+			aj_seq = (
+			    select 
+		    	    a.aj_seq
+				from tbl_agent_job a, tbl_progrm_policy_applc b
+				where a.aj_table_seq = b.ppa_seq
+				    and b.ppa_org_seq = #{upper_org_code}
+				    and a.aj_return_val ='N'
+		)		    
+	</update>
+	
+	<select id="getAgentJobPcPolocy" resultType="com.model.GetAgentJobVo">
+		select 
+		    a.aj_seq,
+		    a.aj_return_val,
+		    a.aj_table_gubun,
+		    a.aj_table_seq,
+		    b.ppa_pcm_seq
+		from tbl_agent_job a, tbl_progrm_policy_applc b
+		where a.aj_table_seq = b.ppa_seq
+		    and b.ppa_org_seq = #{upper_org_code}
+		    and a.aj_return_val ='N'
+	</select>
+
+
+	<update id="setAgentJobPcBackup" parameterType="com.model.GetAgentJobVo">
+		UPDATE public.tbl_agent_job
+			SET aj_return_val= 'Y'
+		WHERE 
+			aj_seq = (
+			    select
+					a.aj_seq
+				from
+				    tbl_agent_job a
+				    ,tbl_backup_applc b
+				where a.aj_table_seq = b.bac_seq
+					and b.bac_org_seq = #{upper_org_code}
+				    and a.aj_return_val = 'N'
+		)		    
+	</update>
+	
+	<select id="getAgentJobPcBackup" resultType="com.model.GetAgentJobVo">
+		select
+			a.aj_seq
+		    ,a.aj_return_val
+		    ,a.aj_table_gubun
+		    ,a.aj_table_seq
+		    ,b.*
+		from
+		    tbl_agent_job a
+		    ,tbl_backup_applc b
+		where a.aj_table_seq = b.bac_seq
+			and b.bac_org_seq = #{upper_org_code}
+		    and a.aj_return_val = 'N'
+	</select>
+	
+	
+ 
+
+
+	<delete id="getAgentJobDelete" parameterType="com.model.GetAgentJobVo">
+		DELETE 
+			FROM tbl_agent_job
+	</delete>
+	
+	
+	
+</mapper>

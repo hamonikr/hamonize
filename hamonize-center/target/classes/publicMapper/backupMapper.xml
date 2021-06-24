@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mapper.IBackupMapper">
+
+<insert id="backupSave" parameterType="java.util.HashMap">
+		WITH rows AS (
+			INSERT INTO TBL_BACKUP_APPLC 
+					( ORG_SEQ									   
+					, BAC_CYCLE_OPTION
+					, BAC_CYCLE_TIME
+					, BAC_GUBUN) VALUES
+					<foreach collection="data" item="item" separator=",">
+	            (#{item.org_seq},#{bac_cycle_option},#{bac_cycle_time},#{bac_gubun})
+	        		</foreach>
+		RETURNING bac_seq, org_seq, bac_cycle_option, bac_cycle_time, bac_gubun
+		)   
+		INSERT INTO tbl_backup_applc_history (bac_seq, org_seq, bac_cycle_option, bac_cycle_time, bac_gubun, insert_dt  )
+		SELECT bac_seq, org_seq, bac_cycle_option, bac_cycle_time, bac_gubun, now() FROM rows 		        	
+	</insert>
+	
+	<delete id="backupDelete" parameterType="java.util.HashMap">
+	DELETE FROM TBL_BACKUP_APPLC WHERE ORG_SEQ IN (
+	<foreach collection="data" item="item" separator=",">
+            #{item.org_seq}
+        		</foreach>
+	)
+	</delete>
+	
+	<select id="backupApplcView" resultType="com.model.BackupVo" parameterType="com.model.BackupVo" >
+ 			SELECT ORG_SEQ,BAC_CYCLE_OPTION,BAC_CYCLE_TIME,BAC_GUBUN
+ 			FROM 
+ 			TBL_BACKUP_APPLC 
+ 			WHERE ORG_SEQ = #{org_seq}
+	</select>
+	
+	<select id="backupRCApplcView" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+ 			SELECT 
+ 				sgb_seq, sgb_pc_status, sgb_pc_cpu, sgb_pc_memory, sgb_pc_disk, sgb_pc_macaddress, 
+ 				sgb_pc_ip, first_date, last_date, sgb_pc_hostname, sgb_pc_guid, org_seq, sgb_pc_disk_id, sgb_pc_cpu_id, sgb_pc_uuid 
+ 			FROM tbl_pc_mangr
+ 			WHERE ORG_SEQ = #{org_seq}
+	</select>
+	
+	<select id="backupRecoveryList" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+ 			SELECT br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, sgb_seq 
+ 				FROM tbl_backup_recovery_mngr
+ 			WHERE SGB_SEQ = #{sgb_seq}
+	</select>
+	
+	<insert id="backupRecoverySave" parameterType="java.util.HashMap">
+	INSERT INTO TBL_RECOVERY_APPLC 
+				( SEQ									   
+				, SGB_SEQ
+				, ORG_SEQ
+				, BR_SEQ) VALUES
+            ((SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_RECOVERY_APPLC),#{sgb_seq},#{org_seq},#{br_seq})
+	</insert>
+	
+	<insert id="backupRecoveryLogSave" parameterType="java.util.HashMap">
+	INSERT INTO TBL_RECOVERY_LOG 
+				( RL_ORG_SEQ
+				, RL_BR_SEQ
+				, RL_SGB_SEQ
+				, RL_STATUS
+				) VALUES
+            (#{org_seq},#{br_seq},#{sgb_seq},'N')
+	</insert>
+	
+	<delete id="backupRecoveryDelete" parameterType="java.util.HashMap">
+	DELETE FROM TBL_RECOVERY_APPLC 
+		WHERE SGB_SEQ = #{sgb_seq}
+	</delete>
+
+</mapper>

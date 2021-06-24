@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IRestoreRecoveryMapper">
+	
+	<select id="recoveryList" parameterType="com.model.RecoveryVo" resultType="com.model.RecoveryVo">
+		SELECT 
+			br_seq,
+			br_org_seq,
+			br_backup_iso_dt,
+			br_backup_path
+		FROM
+			tbl_backup_recovery_mngr
+		WHERE
+			br_org_seq = #{selectOrgName}
+	</select>
+	
+	
+	<select id="pcList" parameterType="com.model.RecoveryVo" resultType="com.model.PcMangrVo">
+		SELECT 
+			sgb_seq,
+			sgb_pc_hostname
+		FROM
+			tbl_pc_mangr
+		<if test="selectOrgName != null">
+			WHERE
+				org_seq=#{selectOrgName}::bigint
+		</if>
+	</select>
+	
+	<insert id="recoveryInfoInsert" parameterType="com.model.RecoveryVo">
+		INSERT INTO
+			tbl_recovery_log
+				(
+					rl_org_seq,
+					rl_br_seq,
+					rl_status
+				)
+			VALUES 
+				<foreach collection="pcCheckedList" item="item" separator="," index="idx">
+					( ${pcCheckedList[idx]}::bigint , #{recoveryChecked}::bigint , 'N' )
+				</foreach>
+	</insert>
+	
+</mapper>
+<!-- open="(" close=")" -->
+<!-- <foreach collection="list" item="item" separator="," index="idx"> -->

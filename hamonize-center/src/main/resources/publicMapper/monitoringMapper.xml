@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IMonitoringMapper">
+	
+	<insert id="inserPcInfo" parameterType="com.model.PcMangrVo">
+        INSERT 
+        	INTO tbl_pc_mangr
+        	(
+				pc_status, 
+				pc_cpu, 
+				pc_memory, 
+				pc_disk, 
+				pc_macaddress, 
+				pc_ip, 
+				pc_hostname, 
+				pc_guid, 
+				pc_uuid, 
+				org_seq, 
+				pc_disk_id, 
+				pc_cpu_id,
+				first_date, 
+				last_date
+        	) 
+        	VALUES(
+		        #{pc_status}, 
+				#{pc_cpu},
+				#{pc_memory}, 
+				#{pc_disk},
+				#{pc_macaddress}, 
+				#{pc_ip},
+				#{pc_hostname}, 
+				#{pc_guid}, 
+				#{pc_uuid}, 
+				(select seq from tbl_org_base where trim(org_nm) = #{deptname}),
+				#{pc_disk_id}, 
+				#{pc_cpu_id},
+		        now(),
+				now() 
+	        )
+	</insert>
+
+	<!-- PcController.mngrListInfo -->
+	<select id="pcListInfo" resultType="java.util.HashMap"  parameterType="java.util.HashMap">
+		SELECT 
+			a.seq,
+			a.pc_hostname,
+			a.pc_uuid,
+			b.pc_status
+		FROM tbl_pc_mangr a 
+			left outer join 
+			tbl_pc_influxdata b 
+			on upper(a.pc_uuid) = upper(b.pc_uuid)
+		<where>
+			a.pc_os = 'H'
+		<if test="org_seq != 1 ">
+			and	org_seq in (
+				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+		    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+		    from tbl_org a
+		    where a.seq = #{org_seq}
+		    union all
+		    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+		    from tbl_org a, search_org so 
+		    where a.p_seq = so.seq and not cycle)
+		    select seq
+		    from search_org
+			)
+		</if>
+			order by pc_status
+		</where>
+		 
+	</select>
+		
+	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">
+		SELECT 
+			count(*)  as tbl_cnt
+		FROM tbl_pc_mangr
+		<where>
+			<if test="selectOrgSeq != null and selectOrgSeq != '' ">
+					org_seq = #{selectOrgSeq}
+			</if>
+		</where>
+	</select>
+	
+		
+</mapper>

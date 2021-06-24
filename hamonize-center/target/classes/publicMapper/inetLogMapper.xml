@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IInetLogMapper">
+
+
+
+ <insert id="inetLogInsert" parameterType="com.model.InetLogVo">   
+		INSERT INTO 
+			tbl_inet_log (
+			    user_id, 
+			    pc_ip, 
+			    cnnc_url, 
+			    pc_uuid, 
+			    hostname, 
+			    state, 
+			    reg_dt,
+			    insert_dt
+			)
+			VALUES
+			(
+			    #{user_id}, 
+			    #{pc_ip}, 
+			    #{cnnc_url}, 
+			    #{pc_uuid}, 
+			    #{hostname}, 
+			    #{state}, 
+			    TO_TIMESTAMP(#{reg_dt},'YYYY-MM-DD HH24:MI:SS.MS') ,
+			    now()
+			)
+	</insert>
+	
+	
+</mapper>

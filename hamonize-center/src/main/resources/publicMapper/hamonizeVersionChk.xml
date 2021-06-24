@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IHamonizeVersionChkMapper">
+
+	
+	
+	<select id="getHamonizeAgentInfoOnPc" resultType="com.model.hamonizeVersionChkVo" parameterType="com.model.hamonizeVersionChkVo">
+		SELECT *
+		FROM tbl_hamonize_version_chk
+		<where>
+			pcuuid = #{pcuuid}
+		</where>
+	</select>
+	
+	
+	
+	
+	
+	<insert id="setHamonizeAgentIfnoOnPc" parameterType="com.model.hamonizeVersionChkVo">
+	
+		INSERT INTO 
+		tbl_hamonize_version_chk (
+			debname, 
+			debversion, 
+			debstatus, 
+			pcuuid, 
+			insert_dt 
+		)VALUES (
+			#{debname}, 
+			#{debversion}, 
+			#{debstatus}, 
+			#{pcuuid},
+			now() 
+		)
+	
+	</insert>
+	
+ 	<update id="updateHamonizeAgentIfnoOnPc" parameterType="com.model.hamonizeVersionChkVo">
+		UPDATE tbl_hamonize_version_chk
+			<set> 
+				last_dt = now()
+				<if test="debversion != null and debversion != '' "> , debversion = #{debversion}</if>
+				<if test="debstatus != null and debstatus != '' "> , debstatus = #{debstatus}</if>
+			</set>
+		<where>
+				pcuuid= #{pcuuid}			
+		</where>				 	
+	</update>
+		
+	
+</mapper>

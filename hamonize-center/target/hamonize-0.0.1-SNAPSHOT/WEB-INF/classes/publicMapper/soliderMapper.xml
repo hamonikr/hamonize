@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.ISoliderMapper">
+	
+	
+	<!-- MemberController.selectUsreInfo -->
+	<select id="selectUsreInfo" resultType="com.model.SoliderVo" parameterType="com.model.SoliderVo">
+		SELECT 
+		    TA.idx, 
+		    TA.number, 
+		    TA.id, 
+		    TA.pw, 
+		    TA.name, 
+		    to_char(TA.insert_dt, 'YYYY-MM-DD') as insert_dt, 
+		    to_char(TA.update_dt, 'YYYY-MM-DD') as update_dt, 
+		    TA.kind, 
+		    TA.rank, 
+		    TA.discharge_dt, 
+		    TA.group_orgcode,
+		    ( SELECT orgname from tbl_org_base where orgcode = TA.group_orgcode  ) AS orgname
+		FROM tbl_soldier TA
+		WHERE TA.idx = #{idx}
+	</select>
+	
+	
+	
+	<select id="soliderListInfo" resultType="com.model.SoliderVo" parameterType="hashmap">
+		SELECT 
+			TA.idx, 
+			TA.number, 
+			TA.id, 
+			TA.pw, 
+			TA.name, 
+			to_char(TA.insert_dt, 'YYYY-MM-DD') as insert_dt, 
+			to_char(TA.update_dt, 'YYYY-MM-DD') as update_dt, 
+			TA.kind, 
+			TA.rank, 
+			TA.discharge_dt, 
+			TA.group_orgcode, 
+			( SELECT orgname from tbl_org_base where orgcode = TA.group_orgcode  ) AS orgname
+		FROM public.tbl_soldier TA
+		<where>
+		
+		
+		<if test="soliderVo.oeg_seq != null and soliderVo.oeg_seq != '' ">
+				group_orgcode = #{soliderVo.oeg_seq}
+				<!-- mnge_id like CONCAT('%', #{soliderVo.selectOrgName}, '%') -->
+		</if>
+		
+		
+		<!-- 
+		<if test="mngeVo.keyWord != null and mngeVo.keyWord != '' ">
+			<if test="mngeVo.keyWord eq 'id' " >
+				mnge_id like CONCAT('%', #{mngeVo.txtSearch}, '%')
+			</if>
+			<if test="mngeVo.keyWord eq 'name' " >
+				mnge_nm like CONCAT('%', #{mngeVo.txtSearch}, '%')
+			</if>
+		</if> -->
+		</where> 
+		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
+	</select>
+	
+	
+	<select id="countSoliderListInfo" parameterType="com.model.SoliderVo" resultType="Integer">
+		SELECT 
+			count(*)  as tbl_cnt
+		FROM tbl_soldier
+		<where>
+		<!-- <if test="keyWord != null and keyWord != '' ">
+			<if test="keyWord eq 'id' " >
+				mnge_id like CONCAT('%', #{txtSearch}, '%')
+			</if>
+			<if test="keyWord eq 'name' " >
+				mnge_nm like CONCAT('%', #{txtSearch}, '%')
+			</if>
+		</if> -->
+		</where>
+	</select>
+	
+	
+	
+	
+	
+	
+</mapper>

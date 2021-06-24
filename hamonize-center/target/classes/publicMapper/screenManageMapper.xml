@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IScreenManageMapper">
+
+<insert id="saveFile" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ORG_SCREEN
+        (
+        	SEQ, ORG_SEQ, FILEREALNAME, FILEMAKENAME, FILEPATH , FILESIZE , INSERT_DT
+        )
+        VALUES 
+        (
+        	(SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_ORG_SCREEN)
+        	, #{org_seq}
+        	, #{filerealname}
+        	, #{filemakename}
+        	, #{filepath}
+        	, #{filesize}
+        	, now()
+        )
+    </insert>
+    
+<select id="screenView" parameterType="com.model.OrgVo" resultType="com.model.FileVO">
+		SELECT * FROM TBL_ORG_SCREEN
+		WHERE ORG_SEQ = #{seq}
+		ORDER BY INSERT_DT DESC
+		LIMIT 1
+</select>
+
+</mapper>
+

@@ -1,0 +1,231 @@
+@CHARSET "UTF-8";
+/**
+  * Writing day : 2019.04.18 
+  * Modifying day : 2019.04.18 
+  * Writer : LukeHan(LukeHan1128@gmail.com)
+  */
+/* @import url(./google_noto+sans.css); */
+
+
+.btn {
+	background-color: transparent;
+	border: 1px solid transparent;
+	border-radius: .25rem;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	padding: .375rem .75rem;
+	text-align: center;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	user-select: none;
+	vertical-align: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	
+	color: #fff;
+	background-color: #03bd9e;
+	border-color: rgba(0,0,0,0);
+}
+
+.btn:hover {
+	background-color: #02957b;
+	color: #fff;
+}
+
+.form-control {
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: .25rem;
+	color: #495057;
+	/* display: block; */
+	font-size: 1rem;
+	font-weight: 400;
+	/* height: calc(1.5em + .75rem + 2px); */
+	line-height: 1.5;
+	padding: .375rem .75rem;
+	transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	vertical-align: middle;
+	width: calc(100% - 25px);
+}
+
+.body { 
+	margin-top: -50px; 
+    margin-left: -7px;
+	min-width: 1400px;
+	width: 100%; 
+}
+
+.body.haveGroup { 
+	border-left: 1px solid #ccc;
+    display: inline-block;
+    min-height: 100%;
+    padding-left: 25px;
+    vertical-align: top;
+    /* width: calc(100% - 350px);  */
+}
+
+.header { height: 72px; }
+.header .logo a {
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.icon.logo {
+	font-size: 25px;
+	height: 32px;
+	width: auto;
+}
+.icon.logo img {
+	display: inline-block;
+    margin-top: -6px;
+	vertical-align: middle;
+	width: 30px;
+}
+
+.contents { margin-top: 70px; }
+.contents .title { 
+	font-size: 13px;
+	font-weight: normal; 
+}
+.component-header { padding: 5px 0 10px 0; }
+
+.code-html.contents {
+	margin-top: 30px;
+	width: 100%; 
+}
+
+/****** side menu ******/
+.lnb { 
+    background-color: #fff;
+	border-right: 1px solid #ccc;
+    display: inline-block;
+    left: 0;
+    min-width: 212px;
+    overflow-x: hidden;
+    overflow-y: auto; 
+    position: relative;
+	width: 340px;
+    z-index: 9;
+}
+
+
+/* 그룹메뉴 상단 버튼 */
+.tree_area .btn:hover { color: white }
+
+
+/* 콘텐트 테두리 및 그림자 */
+.form-style-10.boxDiv {
+	width: 100%;
+    padding: 30px;
+    margin: 40px auto;
+    background: #FFF;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+    -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+    -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+}
+
+/* 콘텐트 내용 - 선택박스 부분 */
+.inner-wrap {
+	padding: 30px;
+	background: #F8F8F8;
+	border-radius: 6px;
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+/* 콘텐트 내용 하단 */
+.btn_area .col-md-2 {
+	padding: 5px;
+}
+
+/* 콘텐트 내용 하단 버튼 */
+.btn_area .btn { width: 100% }
+.btn_area .btn:hover { color: white }
+
+/* 메뉴 텍스트 */
+.section {
+	color: #2A88AD;
+	margin-bottom: 5px;
+	width: 100%;
+}
+
+/* 메뉴 숫자 */
+.numTxt {
+	background: #2A88AD;
+	padding: 5px 10px 5px 10px;
+	position: absolute;
+	border-radius: 50%;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border: 4px solid #fff;
+	font-size: 14px;
+	margin-left: -45px;
+	color: #fff;
+	margin-top: -3px;
+}
+
+/* search */
+.search-box {
+	border-bottom: 1px solid #ccc;
+	padding: 15px 27px 14px 44px;
+}
+.lnb .btn-search {
+	left: 21px;
+	position: absolute;
+	top: 14px;
+}
+.btn-search .icon {
+	display: inline-block;
+	margin: 3px;
+	position: relative;
+}
+.btn-search, .btn-search .icon{
+	height: 20px;
+	width: 20px;
+}
+.btn-search .stick{
+	background-color: #999;
+	left: 10px;
+	top: 8px;
+	width: 2px;
+	-webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+}
+.btn-search .oval, .btn-search .stick {
+	display: inline-block;
+	height: 7px;
+	position: absolute;
+}
+.btn-search .oval {
+	border-radius: 50%;
+	border: 2px solid #999;
+	left: 0;
+	top: 0; 
+	width: 7px;
+}
+.search-box input { 
+	height: 18px;
+	font-size: 16px;
+	color: #222;
+	width: 100%;
+}
+
+
+/* tree */
+#tree .tui-checkbox { display: none }
+
+
+/* content title */
+#contentTitle {
+	font-size: 25px;
+	font-weight: bold;
+	margin-top: 10px;
+}

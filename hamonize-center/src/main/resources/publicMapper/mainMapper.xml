@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.mapper.IMainMapper">
+		<select id = "wCount" resultType="int">
+		select count(*) from tbl_pc_amt_json where UPPER(pc_os) = 'W';
+		</select> 
+		
+		<select id = "hCount" resultType="int">
+		select count(*) from tbl_pc_amt_json where UPPER(pc_os) = 'H';
+		</select>
+		
+		<select id="inetLogConnect" resultType="HashMap">
+		<![CDATA[
+		SELECT
+		    split_part( replace(cnnc_url, 'www.','')::text, '/', 3) as cnnc_url
+		    ,round(100.0 * COUNT(*) / sum(COUNT(*)) over (),0) as per
+		    ,COUNT(*) as count
+		    ,to_char(NOW(),'yyyymmdd') as date_to
+			,to_char(NOW() - INTERVAL '30 DAYS','yyyymmdd') as date_fr
+		  FROM
+		    tbl_inet_log
+		  where
+		    cnnc_url != '-c'
+		    AND to_char(reg_dt,'yyyymmdd') >= to_char(now() - INTERVAL '30 DAYS','yyyymmdd')
+		    AND to_char(reg_dt,'yyyymmdd') <= to_char(now(),'yyyymmdd')
+		    AND state = 'connect' 
+		  GROUP BY
+		    -- split_part(cnnc_url::text, '/', 3) 
+		    split_part( replace(cnnc_url, 'www.','')::text, '/', 3)
+		  HAVING
+		    COUNT(*) > 1  
+		    order by
+    	count desc
+    	]]>
+    	<if test="offset == 0">
+    	 limit 5
+    	</if>
+    	<if test="offset != 0">
+    	OFFSET #{offset} LIMIT 5
+    	</if>
+	</select>
+	
+	<select id="inetLogIlligal" resultType="HashMap">
+		<![CDATA[
+		SELECT
+		    split_part( replace(cnnc_url, 'www.','')::text, '/', 3) as cnnc_url
+		    ,round(100.0 * COUNT(*) / sum(COUNT(*)) over (),0) as per
+		    ,COUNT(*) as count
+		    ,to_char(NOW(),'yyyymmdd') as date_to
+			,to_char(NOW() - INTERVAL '30 DAYS','yyyymmdd') as date_fr
+		  FROM
+		    tbl_inet_log
+		  where
+		    cnnc_url != '-c'
+		    and reg_dt >= DATE(now() - INTERVAL '30 DAYS')
+		    AND reg_dt <= DATE(now())
+		    AND state = 'Illegal' 
+		  GROUP BY
+		    -- split_part(cnnc_url::text, '/', 3) 
+		    split_part( replace(cnnc_url, 'www.','')::text, '/', 3)
+		  HAVING
+		    COUNT(*) > 1
+		  order by
+    	count desc
+    	]]>
+    	<if test="offset == 0">
+    	 limit 5
+    	</if>
+    	<if test="offset != 0">
+    	OFFSET #{offset} LIMIT 5
+    	</if>
+	</select>
+	
+	<select id="hsidoCount" resultType="HashMap">
+		select
+		ta.sido,
+		ta.pc_cnt,
+		ta.xpoint,
+		ta.ypoint,
+		sum(ta.t_cnt) as t_sum
+		from (
+		select
+		distinct
+		a.sido,
+		a.seq,
+		COUNT(*)
+		OVER(PARTITION BY a.sido) as pc_cnt,
+		(select count(org_seq) from
+		tbl_tchnlgy where org_seq::int in
+		(a.seq) ) as t_cnt
+		,a.xpoint
+		,a.ypoint
+		from tbl_org
+		a, tbl_pc_mangr b
+		where 1=1
+		and a.seq = b.org_seq
+		) ta
+		group by ta.sido,
+		ta.pc_cnt,ta.xpoint,ta.ypoint
+	</select>
+	
+	<select id="pcUseSidoCount" resultType="java.util.HashMap"
+		parameterType="java.util.HashMap">
+		select
+		ta.sido,
+		ta.gugun,
+		ta.pc_cnt,
+		ta.pc_uuid,
+		ta.xpoint,
+		ta.ypoint
+		from (
+		select
+		distinct
+		a.sido,
+		a.gugun,
+		a.seq,
+		COUNT(*) OVER(PARTITION BY a.sido) as pc_cnt
+		,b.pc_uuid
+		,a.xpoint
+		,a.ypoint
+		from tbl_org a, tbl_pc_mangr b, tbl_pc_influxdata c
+		where 1=1
+		and a.seq = b.org_seq
+		and upper(b.pc_uuid) = upper(c.pc_uuid)
+		) ta
+		where ta.xpoint is not null
+		group by ta.sido, ta.gugun, ta.pc_cnt, ta.pc_uuid,ta.xpoint,ta.ypoint
+	</select>
+
+
+	<select id="pcTotalSidoCount" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		select
+			ta.sido,
+			ta.gugun,
+			ta.pc_cnt,
+			ta.pc_uuid,
+			ta.xpoint,
+			ta.ypoint
+		from (
+			select
+				distinct
+				a.sido,
+				a.gugun,
+				a.seq,
+				COUNT(*) OVER(PARTITION BY a.sido) as pc_cnt
+				,b.pc_uuid
+				,a.xpoint
+				,a.ypoint
+			from tbl_org a, tbl_pc_mangr b
+			where 1=1
+				and a.seq = b.org_seq
+				and UPPER(b.pc_os) = 'H'
+		) ta
+		where ta.xpoint is not null
+		group by ta.sido, ta.gugun, ta.pc_cnt, ta.pc_uuid,ta.xpoint,ta.ypoint
+	</select>
+		
+		
+	<select id="sidoCount" resultType="HashMap">
+		select
+			ta.sido,
+			ta.pc_cnt,
+			sum(ta.t_cnt) as t_sum
+		from (
+			select
+				distinct
+				a.sido,
+				a.seq,
+				COUNT(*) OVER(PARTITION BY a.sido) as pc_cnt,
+				(
+					select count(org_seq) 
+					from
+						tbl_tchnlgy 
+					where org_seq::int in (a.seq) 
+				) as t_cnt
+			from tbl_org a, tbl_pc_mangr b
+			where 1=1 and a.seq = b.org_seq
+		) ta
+		group by ta.sido, ta.pc_cnt
+	</select>
+
+	<select id="gugunCount" resultType="HashMap" parameterType="HashMap">
+		select
+		ta.gugun,
+		ta.pc_cnt
+		, sum(ta.t_cnt) as t_sum
+		from (
+		select
+		distinct
+		a.gugun,
+		a.seq,
+		COUNT(*) OVER(PARTITION BY a.gugun) as
+		pc_cnt,
+		(select count(org_seq) from tbl_tchnlgy where
+		org_seq::int in
+		(a.seq) and STATUS != '답변완료') as t_cnt
+		from
+		tbl_org a, tbl_pc_mangr b
+		where 1=1
+		and a.seq = b.org_seq
+		and a.sido = #{sido}
+		) ta
+		group by ta.gugun, ta.pc_cnt
+	</select>
+
+	<!-- 시도 기술문의 -->
+	<select id="tcngSidoCount" resultType="HashMap">
+		SELECT (SELECT SIDO FROM
+		TBL_ORG WHERE SEQ = ORG_SEQ::int) AS SIDO,
+		COUNT(*)
+		FROM
+		TBL_TCHNLGY WHERE status != '답변완료'
+		GROUP BY SIDO
+	</select>
+	<!-- 구군 기술문의 -->
+	<select id="tcngGugunCount" resultType="HashMap"
+		parameterType="HashMap">
+		SELECT (SELECT GUGUN FROM TBL_ORG WHERE SEQ =
+		ORG_SEQ::int) AS GUGUN,
+		COUNT(*)
+		FROM TBL_TCHNLGY
+		WHERE (SELECT SIDO
+		FROM TBL_ORG WHERE SEQ = ORG_SEQ::int) = #{sido} and STATUS
+		!= '답변완료'
+		GROUP BY GUGUN;
+	</select>
+
+
+</mapper>

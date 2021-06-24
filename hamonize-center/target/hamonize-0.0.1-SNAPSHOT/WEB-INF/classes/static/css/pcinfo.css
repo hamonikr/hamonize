@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+#contentTitle { position: absolute; }
+
+#cpu_chart, 
+#memory_chart, 
+#network_chart, 
+#disk_chart {
+	display: inline-block;
+}
+
+.statusInfo {
+    text-align: right;
+}

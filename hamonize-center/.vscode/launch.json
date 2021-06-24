@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-HamoeyesApplication<hamonize>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.HamoeyesApplication",
+            "projectName": "hamonize",
+            "vmArgs": ["-Djava.net.preferIPv4Stack=true","-Djava.security.egd=file:/dev/./urandom "] 
+        }
+
+    ]
+}

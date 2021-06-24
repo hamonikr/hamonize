@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IHmProgrmUpdtMapper">
+	
+	
+	
+	<select id="ListHmProgrmUpdt" resultType="com.model.HmProgrmUpdtVo" parameterType="hashmap">
+		SELECT 
+			 pu_seq,
+			 pu_name,
+			 pu_status,
+			 pu_dc
+		FROM tbl_progrm_udpt
+		ORDER  BY pu_seq desc
+		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
+		
+	</select>
+	
+	
+	<select id="countHmProgrmUpdt" parameterType="com.model.HmProgrmUpdtVo" resultType="Integer">
+		SELECT 
+			count(*)  as tbl_cnt
+		FROM tbl_progrm_udpt
+	</select>
+	
+	
+	
+	<insert id="InsertHmProgrmUpdt"  parameterType="com.model.HmProgrmUpdtVo">
+		WITH rows AS (
+	        INSERT 
+	        	INTO tbl_progrm_policy_applc
+	        	(
+					ppa_org_seq,
+					ppa_pcm_seq,
+					ppa_gubun
+	        	) 
+	        	VALUES
+	        	 <foreach collection="orgNmCheckedList" item="item" separator="," index="index" > 
+			        ( ${orgNmCheckedList[index]} , #{ppa_pcm_seq}, 'U')
+		        </foreach>
+		  	RETURNING ppa_seq
+	    )    	
+	    INSERT INTO tbl_agent_job (aj_table_seq, insert_dt, aj_return_val, aj_table_gubun) SELECT ppa_seq, now(), 'N', 'UPDT' FROM rows 
+	</insert>
+	
+	
+	<delete id="deleteHmProgrmUpdt" parameterType="com.model.HmProgrmUpdtVo">
+		DELETE 
+			FROM tbl_progrm_policy_applc
+		WHERE 
+			ppa_org_seq 
+		IN 
+			<foreach collection="orgNmCheckedList" item="item" separator="," index="index" open="(" close=")">
+				'${orgNmCheckedList[index]}'
+			</foreach>
+			and ppa_gubun = 'U'
+	</delete>
+	
+	<select id="selectHmProgrmUpdt" parameterType="com.model.HmProgrmUpdtVo" resultType="com.model.HmProgrmUpdtVo">
+		SELECT 
+			ppa_pcm_seq
+		FROM
+			tbl_progrm_policy_applc
+		WHERE
+			ppa_org_seq = #{selectOrgName}
+			AND ppa_gubun = 'U'
+	</select>
+	
+	
+	<select id="selectHmUpdateAgentJob" parameterType="com.model.HmProgrmUpdtVo" resultType="com.model.HmProgrmUpdtVo">
+		select STRING_AGG( pu_name || '-' || pu_status, ',' ) AS pcm_name 
+		from tbl_progrm_udpt
+		where pu_seq in ( 
+		<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
+	        ${orgpcmseq[index]}
+        </foreach>
+            )    
+            and pu_status is not null  and pu_status != ''
+	</select>
+	
+	
+</mapper>
+<!-- open="(" close=")" -->
+<!-- <foreach collection="list" item="item" separator="," index="idx"> -->

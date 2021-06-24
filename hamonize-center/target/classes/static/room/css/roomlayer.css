@@ -1,0 +1,49 @@
+#overlay {
+	background: url(/room/img/security_2.jpg);
+}
+	
+.participant canvas {
+    width: 100%;
+    height: auto;
+}
+			
+.participant.main  {
+	width: 83%;
+	margin-left: 14%;
+	float:left;
+	position: absolute;
+	left: 0;
+	clear: left;
+	/* top: -300px; */
+	z-index: 100000;
+	min-width: 1150px;
+}
+.participant{
+	float:right; position:relative;
+}
+.tmpmain{
+	float:right; position:relative;
+	left : 0;
+}
+
+.participant.sub {
+	background:#3a3a3a;
+	position: relative;
+	clear:left;
+	float:left;
+	width: 170px;
+	height: 130px;
+	left: 0;
+	bottom:0px;
+	margin-left: 5px;
+	/* top: 100px; */
+	z-index: 100001;
+	border: 1px;
+	margin: 3px;
+}
+
+.participant.sub video  {
+	background:#3a3a3a;
+	position:absolute;top:0;left:0;width:100%;height:100%;text-align:center; 
+	border: 2px groove;
+}
