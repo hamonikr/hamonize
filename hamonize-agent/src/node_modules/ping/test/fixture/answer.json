@@ -1,0 +1,304 @@
+{
+  "macos_en_sample1": {
+    "inputHost": "whatever",
+    "host": "google.com",
+    "numeric_host": "172.217.24.46",
+    "alive": true,
+    "output": "PING google.com (172.217.24.46): 56 data bytes\n64 bytes from 172.217.24.46: icmp_seq=0 ttl=54 time=5.371 ms\n64 bytes from 172.217.24.46: icmp_seq=1 ttl=54 time=4.269 ms\n64 bytes from 172.217.24.46: icmp_seq=2 ttl=54 time=4.970 ms\n64 bytes from 172.217.24.46: icmp_seq=3 ttl=54 time=5.228 ms\n\n--- google.com ping statistics ---\n4 packets transmitted, 4 packets received, 0.0% packet loss\nround-trip min/avg/max/stddev = 4.269/4.960/5.371/0.424 ms\n",
+    "time": 5.371,
+    "times": [
+      5.371,
+      4.269,
+      4.97,
+      5.228
+    ],
+    "min": "4.269",
+    "max": "5.371",
+    "avg": "4.960",
+    "packetLoss": "0.000",
+    "stddev": "0.424"
+  },
+  "linux_en_sample1": {
+    "inputHost": "whatever",
+    "host": "localhost",
+    "numeric_host": "127.0.0.1",
+    "alive": true,
+    "output": "PING localhost (127.0.0.1) 56(84) bytes of data.\n64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.022 ms\n64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.027 ms\n64 bytes from localhost (127.0.0.1): icmp_seq=3 ttl=64 time=0.029 ms\n64 bytes from localhost (127.0.0.1): icmp_seq=4 ttl=64 time=0.030 ms\n\n--- localhost ping statistics ---\n4 packets transmitted, 4 received, 0% packet loss, time 2999ms\nrtt min/avg/max/mdev = 0.022/0.027/0.030/0.003 ms\n",
+    "time": 0.022,
+    "times": [
+      0.022,
+      0.027,
+      0.029,
+      0.03
+    ],
+    "min": "0.022",
+    "max": "0.030",
+    "avg": "0.027",
+    "stddev": "0.003",
+    "packetLoss": "0.000"
+  },
+  "linux_en_sample2": {
+    "inputHost": "whatever",
+    "host": "10.48.249.8",
+    "numeric_host": "10.48.249.8",
+    "alive": true,
+    "output": "PING 10.48.249.8 (10.48.249.8) 56(84) bytes of data.\n64 bytes from 10.48.249.8: icmp_seq=1 ttl=64 time=2.98 ms\n64 bytes from 10.48.249.8: icmp_seq=2 ttl=64 time=0.890 ms\n64 bytes from 10.48.249.8: icmp_seq=3 ttl=64 time=0.711 ms\n64 bytes from 10.48.249.8: icmp_seq=4 ttl=64 time=0.863 ms\n64 bytes from 10.48.249.8: icmp_seq=5 ttl=64 time=1.20 ms\nping: sendmsg: Network is unreachable\nping: sendmsg: Network is unreachable\nping: sendmsg: Network is unreachable\n64 bytes from 10.48.249.8: icmp_seq=14 ttl=64 time=797 ms\n64 bytes from 10.48.249.8: icmp_seq=15 ttl=64 time=3.86 ms\n64 bytes from 10.48.249.8: icmp_seq=16 ttl=64 time=1.62 ms\n64 bytes from 10.48.249.8: icmp_seq=17 ttl=64 time=0.702 ms\n64 bytes from 10.48.249.8: icmp_seq=18 ttl=64 time=0.783 ms\n64 bytes from 10.48.249.8: icmp_seq=19 ttl=64 time=0.646 ms\n\n--- 10.48.249.8 ping statistics ---\n19 packets transmitted, 11 received, 42% packet loss, time 18195ms\nrtt min/avg/max/mdev = 0.646/73.819/797.744/228.927 ms\n",
+    "time": 2.98,
+    "times": [
+      2.98,
+      0.89,
+      0.711,
+      0.863,
+      1.2,
+      797,
+      3.86,
+      1.62,
+      0.702,
+      0.783,
+      0.646
+    ],
+    "min": "0.646",
+    "max": "797.744",
+    "avg": "73.819",
+    "packetLoss": "42.000",
+    "stddev": "228.927"
+  },
+  "linux_en_sample3": {
+    "inputHost": "whatever",
+    "host": "10.48.249.150",
+    "numeric_host": "10.48.249.150",
+    "alive": false,
+    "output": "PING 10.48.249.150 (10.48.249.150) 56(84) bytes of data.\nFrom 10.48.249.95 icmp_seq=1 Destination Host Unreachable\nFrom 10.48.249.95 icmp_seq=2 Destination Host Unreachable\nFrom 10.48.249.95 icmp_seq=3 Destination Host Unreachable\n\n--- 10.48.249.150 ping statistics ---\n5 packets transmitted, 0 received, +3 errors, 100% packet loss, time 4079ms\n",
+    "time": "unknown",
+    "times": [],
+    "min": "unknown",
+    "max": "unknown",
+    "avg": "unknown",
+    "packetLoss": "100.000",
+    "stddev": "unknown"
+  },
+  "linux_en_v6_sample1": {
+    "inputHost": "whatever",
+    "host": "2606:4700:4700::1111",
+    "numeric_host": "2606:4700:4700::1111",
+    "alive": true,
+    "output": "PING 2606:4700:4700::1111(2606:4700:4700::1111) 56 data bytes\n64 bytes from 2606:4700:4700::1111: icmp_seq=1 ttl=57 time=0.672 ms\n64 bytes from 2606:4700:4700::1111: icmp_seq=2 ttl=57 time=1.00 ms\n\n--- 2606:4700:4700::1111 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 0.672/0.840/1.009/0.170 ms\n",
+    "time": 0.672,
+    "times": [
+      0.672,
+      1.00
+    ],
+    "min": "0.672",
+    "max": "1.009",
+    "avg": "0.840",
+    "packetLoss": "0.000",
+    "stddev": "0.170"
+  },
+  "linux_en_v6_sample2": {
+    "inputHost": "whatever",
+    "host": "one.one.one.one",
+    "numeric_host": "2606:4700:4700::1111",
+    "alive": true,
+    "output": "PING one.one.one.one(one.one.one.one (2606:4700:4700::1111)) 56 data bytes\n64 bytes from one.one.one.one (2606:4700:4700::1111): icmp_seq=1 ttl=60 time=1.66 ms\n64 bytes from one.one.one.one (2606:4700:4700::1111): icmp_seq=2 ttl=60 time=1.42 ms\n\n--- one.one.one.one ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1001ms\nrtt min/avg/max/mdev = 1.429/1.546/1.663/0.117 ms\n",
+    "time": 1.66,
+    "times": [
+      1.66,
+      1.42
+    ],
+    "min": "1.429",
+    "max": "1.663",
+    "avg": "1.546",
+    "packetLoss": "0.000",
+    "stddev": "0.117"
+  },
+  "window_en_sample1": {
+    "inputHost": "whatever",
+    "host": "www.some-domain.com",
+    "numeric_host": "127.0.0.1",
+    "alive": true,
+    "output": "Pinging www.some-domain.com [127.0.0.1] with 32 bytes of\nReply from 127.0.0.1: bytes=32 time=564ms TTL=237\nReply from 127.0.0.1: bytes=32 time=555ms TTL=237\nReply from 127.0.0.1: bytes=32 time=554ms TTL=237\nReply from 127.0.0.1: bytes=32 time=548ms TTL=237\n\nPing statistics for 127.0.0.1:\n   Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)\n   Approximate round trip times in milli-seconds:\n      Minimum = 548ms, Maximum = 564ms, Average = 555ms\n",
+    "time": 564,
+    "times": [
+      564,
+      555,
+      554,
+      548
+    ],
+    "min": "548.000",
+    "max": "564.000",
+    "avg": "555.000",
+    "stddev": "5.723",
+    "packetLoss": "0.000",
+    "stddev": "5.723"
+  },
+  "window_fr_sample1": {
+    "inputHost": "whatever",
+    "host": "127.0.0.1",
+    "numeric_host": "127.0.0.1",
+    "alive": true,
+    "output": "Envoi d’une requete 'Ping' 127.0.0.1 avec 32 octets de donnees :\nReponse de 127.0.0.1 : octets=32 temps<1ms TTL=128\nReponse de 127.0.0.1 : octets=32 temps<1ms TTL=128\nReponse de 127.0.0.1 : octets=32 temps<1ms TTL=128\nReponse de 127.0.0.1 : octets=32 temps<1ms TTL=128\n\nStatistiques Ping pour 127.0.0.1:\nPaquets : envoyes = 4, recus = 4, perdus = 0 (perte 0%),\nDuree approximative des boucles en millisecondes :\nMinimum = 0ms, Maximum = 0ms, Moyenne = 0ms\n",
+    "time": 1,
+    "times": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "min": "0.000",
+    "max": "0.000",
+    "avg": "0.000",
+    "stddev": "1.000",
+    "packetLoss": "0.000"
+  },
+  "window_fr_sample2": {
+    "inputHost": "whatever",
+    "host": "8.8.8.8",
+    "numeric_host": "8.8.8.8",
+    "alive": true,
+    "output": "Envoi d’une requete 'Ping' 8.8.8.8 avec 32 octets de donnees :\nReponse de 8.8.8.8 : octets=32 temps=6 ms TTL=58\nReponse de 8.8.8.8 : octets=32 temps=6 ms TTL=58\nReponse de 8.8.8.8 : octets=32 temps=6 ms TTL=58\nReponse de 8.8.8.8 : octets=32 temps=6 ms TTL=58\n\nStatistiques Ping pour 8.8.8.8:\nPaquets : envoyes = 4, recus = 4, perdus = 0 (perte 0%),\nDuree approximative des boucles en millisecondes :\nMinimum = 6ms, Maximum = 6ms, Moyenne = 6ms\n",
+    "time": 6,
+    "times": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "min": "6.000",
+    "max": "6.000",
+    "avg": "6.000",
+    "stddev": "0.000",
+    "packetLoss": "0.000"
+  },
+  "window_ja_sample1": {
+    "inputHost": "whatever",
+    "host": "google.com",
+    "numeric_host": "216.58.197.142",
+    "alive": true,
+    "output": "google.com [216.58.197.142]に ping を送信しています 32 バイトのデータ:\n216.58.197.142 からの応答: バイト数 =32 時間 =7ms TTL=55\n216.58.197.142 からの応答: バイト数 =32 時間 =5ms TTL=55\n216.58.197.142 からの応答: バイト数 =32 時間 =4ms TTL=55\n216.58.197.142 からの応答: バイト数 =32 時間 =4ms TTL=55\n\n216.58.197.142 の ping 統計:\n    パケット数: 送信 = 4、受信 = 4、損失 = 0 (0% の損失)、\nラウンド トリップの概算時間 (ミリ秒):\n    最小 = 4ms、最大 = 7ms、平均 = 5ms\n",
+    "time": 7,
+    "times": [
+      7,
+      5,
+      4,
+      4
+    ],
+    "min": "4.000",
+    "max": "7.000",
+    "avg": "5.000",
+    "stddev": "1.225",
+    "packetLoss": "0.000"
+  },
+  "window_ja_sample2": {
+    "inputHost": "whatever",
+    "host": "8.8.8.8",
+    "numeric_host": "8.8.8.8",
+    "alive": true,
+    "output": "8.8.8.8 に ping を送信しています 32 バイトのデータ:\n8.8.8.8 からの応答: バイト数 =32 時間 =4ms TTL=58\n8.8.8.8 からの応答: バイト数 =32 時間 =4ms TTL=58\n8.8.8.8 からの応答: バイト数 =32 時間 =5ms TTL=58\n8.8.8.8 からの応答: バイト数 =32 時間 =6ms TTL=58\n\n8.8.8.8 の ping 統計:\n    パケット数: 送信 = 4、受信 = 4、損失 = 0 (0% の損失)、\nラウンド トリップの概算時間 (ミリ秒):\n    最小 = 4ms、最大 = 6ms、平均 = 4ms\n",
+    "time": 4,
+    "times": [
+      4,
+      4,
+      5,
+      6
+    ],
+    "min": "4.000",
+    "max": "6.000",
+    "avg": "4.000",
+    "stddev": "1.118",
+    "packetLoss": "0.000"
+  },
+  "window_zh_sample1": {
+    "inputHost": "whatever",
+    "host": "google.com",
+    "numeric_host": "216.58.203.14",
+    "alive": true,
+    "output": "Ping google.com [216.58.203.14] (使用 32 位元組的資料):\n回覆自 216.58.203.14: 位元組=32 時間=2ms TTL=54\n回覆自 216.58.203.14: 位元組=32 時間=2ms TTL=54\n回覆自 216.58.203.14: 位元組=32 時間=3ms TTL=54\n回覆自 216.58.203.14: 位元組=32 時間=3ms TTL=54\n\n216.58.203.14 的 Ping 統計資料:\n    封包: 已傳送 = 4，已收到 = 4, 已遺失 = 0 (0% 遺失)，\n    大約的來回時間 (毫秒):\n        最小值 = 2ms，最大值 = 3ms，平均 = 2ms\n",
+    "time": 2,
+    "times": [
+      2,
+      2,
+      3,
+      3
+    ],
+    "min": "2.000",
+    "max": "3.000",
+    "avg": "2.000",
+    "stddev": "0.707",
+    "packetLoss": "0.000"
+  },
+  "window_zh_sample2": {
+    "inputHost": "whatever",
+    "host": "google.com",
+    "numeric_host": "216.58.203.14",
+    "alive": true,
+    "output": "\nPing google.com [216.58.203.14] (使用 32 位元組的資料):\n回覆自 216.58.203.14: 位元組=32 時間=2ms TTL=54\n回覆自 216.58.203.14: 位元組=32 時間=2ms TTL=54\n回覆自 216.58.203.14: 位元組=32 時間=3ms TTL=54\n回覆自 216.58.203.14: 位元組=32 時間=3ms TTL=54\n\n216.58.203.14 的 Ping 統計資料:\n    封包: 已傳送 = 4，已收到 = 4, 已遺失 = 0 (0% 遺失)，\n    大約的來回時間 (毫秒):\n        最小值 = 2ms，最大值 = 3ms，平均 = 2ms\n",
+    "time": 2,
+    "times": [
+      2,
+      2,
+      3,
+      3
+    ],
+    "min": "2.000",
+    "max": "3.000",
+    "avg": "2.000",
+    "stddev": "0.707",
+    "packetLoss": "0.000"
+  },
+  "window_zh_sample3": {
+    "inputHost": "whatever",
+    "host": "127.0.0.1",
+    "numeric_host": "127.0.0.1",
+    "alive": true,
+    "output": "\nPing 127.0.0.1 (使用 32 位元組的資料):\n回覆自 127.0.0.1: 位元組=32 時間<1ms TTL=128\n回覆自 127.0.0.1: 位元組=32 時間<1ms TTL=128\n回覆自 127.0.0.1: 位元組=32 時間<1ms TTL=128\n回覆自 127.0.0.1: 位元組=32 時間<1ms TTL=128\n\n127.0.0.1 的 Ping 統計資料:\n    封包: 已傳送 = 4，已收到 = 4, 已遺失 = 0 (0% 遺失)，\n    大約的來回時間 (毫秒):\n        最小值 = 0ms，最大值 = 0ms，平均 = 0ms\n",
+    "time": 1,
+    "times": [
+      1,
+      1,
+      1,
+      1
+    ],
+    "min": "0.000",
+    "max": "0.000",
+    "avg": "0.000",
+    "stddev": "1.000",
+    "packetLoss": "0.000"
+  },
+  "window_ru_sample1": {
+    "inputHost": "whatever",
+    "host": "8.8.8.8",
+    "numeric_host": "8.8.8.8",
+    "alive": true,
+    "output": "Обмен пакетами с 8.8.8.8 по с 32 байтами данных:\nОтвет от 8.8.8.8: число байт=32 время=37мс TTL=55\nОтвет от 8.8.8.8: число байт=32 время=33мс TTL=55\nОтвет от 8.8.8.8: число байт=32 время=38мс TTL=55\nОтвет от 8.8.8.8: число байт=32 время=34мс TTL=55\n\nСтатистика Ping для 8.8.8.8:\n    Пакетов: отправлено = 4, получено = 4, потеряно = 0\n    (0% потерь)\nПриблизительное время приема-передачи в мс:\n    Минимальное = 33мсек, Максимальное = 38 мсек, Среднее = 35 мсек",
+    "time": 37,
+    "times": [
+      37,
+      33,
+      38,
+      34
+    ],
+    "min": "33.000",
+    "max": "38.000",
+    "avg": "35.000",
+    "stddev": "2.121",
+    "packetLoss": "0.000"
+  },
+  "window_de_v6_sample": {
+    "inputHost": "whatever",
+    "host": "google.de",
+    "alive": true,
+    "output": "Ping wird ausgeführt für google.de [2a00:1450:4001:810::2003] von 3001:4cb0:0:f282:ddf1:bec9:1e0:bfa9 mit 32 Bytes Daten:\nAntwort von 2a00:1450:4001:810::2003: Zeit=11ms\nAntwort von 2a00:1450:4001:810::2003: Zeit=11ms\nAntwort von 2a00:1450:4001:810::2003: Zeit=18ms\nAntwort von 2a00:1450:4001:810::2003: Zeit=11ms\n\nPing-Statistik für 2a00:1450:4001:810::2003:\n    Pakete: Gesendet = 4, Empfangen = 4, Verloren = 0\n    (0% Verlust),\nCa. Zeitangaben in Millisek.:\n    Minimum = 11ms, Maximum = 18ms, Mittelwert = 12ms\n",
+    "time": 11,
+    "times": [
+        11,
+        11,
+        18,
+        11
+    ],
+    "min": "11.000",
+    "max": "18.000",
+    "avg": "12.000",
+    "packetLoss": "0.000",
+    "stddev": "3.122",
+    "numeric_host": "2a00:1450:4001:810::2003" }
+}

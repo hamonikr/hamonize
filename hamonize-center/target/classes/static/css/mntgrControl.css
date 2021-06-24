@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+#contentTitle { position: absolute; }
+
+.statusInfo { 
+	text-align: right;
+}
+.pc_info_div { 
+	background-color: #03bd9e;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	margin-bottom: 5px;
+	margin-right: 5px;
+	padding: 10px;
+	text-align: center;
+	height: 20px;
+	width: 108px;
+}
+.pc_info_off {
+	background-color: #aaa;
+}
+.pc_info_err {
+	background-color: #ff5583;
+}
+
+.pc_controll_btn {
+	margin-top: 10px;
+}
+.statusInfo >.pc_info_div { 
+	cursor: default; 
+	margin-bottom: 0px;
+}

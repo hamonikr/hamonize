@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.IGetAgentNxssMapper">
+	
+	<select id="getAgentWorkYn" parameterType="com.model.GetAgentNxssVo" resultType="com.model.GetAgentNxssVo">
+		
+		select 
+		    TA.*,
+		    TB.sma_history_seq,
+		    TB.pc_uuid,
+		    TB.insert_dt
+		from (
+		    SELECT 
+		    	MAX(sma_seq) as sma_seq,
+		    	(SELECT MAX(seq) FROM tbl_site_mngr_applc_history) AS hist_seq
+		    FROM  tbl_site_mngr_applc
+		) TA    
+		left outer join  tbl_site_agent_job TB on TA.sma_seq = TB.sma_seq
+		where TB.pc_uuid = #{pcm_uuid} 
+		order by  seq desc 
+		limit 1
+
+		
+	</select>
+	
+	<!-- select 
+		    TC.sma_seq,
+		    TC.seq as nxsshistory_seq,
+		    TD.seq as agent_seq
+		from (
+		    select 
+		        TA.sma_seq,
+		        TB.seq 
+		    from tbl_site_mngr_applc TA 
+		    left outer join tbl_site_mngr_applc_history TB
+		    on TA.sma_seq = TB.seq 
+		    order by  TA.sma_seq desc 
+		    limit 1
+		) TC
+		left outer join  tbl_site_agent_job TD on TC.sma_seq = TD.sma_seq
+		where TD.pc_uuid = #{pcm_uuid} -->
+		
+		
+		
+	<insert id="setInsertSelect" parameterType="com.model.GetAgentNxssVo" >
+		INSERT INTO 
+    		tbl_site_agent_job(sma_seq, sma_history_seq, pc_uuid, insert_dt )
+		
+		
+		SELECT 
+			MAX(sma_seq) ,
+			(SELECT MAX(seq) FROM tbl_site_mngr_applc_history) AS seq,
+		    #{pcm_uuid} as pc_uuid,
+		    now()    
+		FROM  tbl_site_mngr_applc
+				
+	</insert>
+
+	
+	<select id="getListNxssPolicy" parameterType="com.model.GetAgentNxssVo" resultType="com.model.GetAgentNxssVo">
+		SELECT 
+			sma_seq, 
+			sma_domain, 
+			sma_gubun,
+			sma_info
+		FROM public.tbl_site_mngr_applc
+		ORDER BY sma_seq DESC;
+	</select>
+	
+
+</mapper>

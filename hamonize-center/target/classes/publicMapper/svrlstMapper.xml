@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.mapper.ISvrlstMapper">
+	
+	<delete id="svrlstDelete" parameterType="com.model.SvrlstVo">
+		delete from tbl_svrlst 
+		where seq in (${chkdel})
+		
+	</delete>
+	
+	<select id="getSvrlstDataList" resultType="com.model.SvrlstVo" parameterType="com.model.SvrlstVo">
+		SELECT 
+			seq, 
+			svr_nm, 
+			svr_domain, 
+			svr_ip, 
+			  
+			CASE 
+				WHEN svr_port is null  THEN 'N'
+				WHEN svr_port = ''  THEN 'N'
+	            ELSE svr_port
+	       END as svr_port,
+			svr_dc, 
+			insert_dt 
+		FROM tbl_svrlst
+	</select>
+	
+	
+	<select id="getSvrlstList" resultType="com.model.SvrlstVo" parameterType="hashmap">
+		SELECT 
+			seq, 
+			svr_nm, 
+			svr_domain, 
+			svr_ip, 
+			svr_dc, 
+			insert_dt 
+		FROM tbl_svrlst
+		order by insert_dt desc
+		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
+	</select>
+	
+	
+	<select id="countSvrlstListInfo" parameterType="com.model.SvrlstVo" resultType="Integer">
+		SELECT 
+			count(*)  as tbl_cnt
+		FROM tbl_svrlst
+	</select>
+	
+	
+	<insert id="svrlstInsert" parameterType="com.model.SvrlstVo">
+        INSERT 
+        	INTO tbl_svrlst
+        	(
+				svr_nm, 
+				svr_domain, 
+				svr_ip, 
+				svr_port, 
+				svr_dc, 
+				insert_dt 
+        	) 
+        	VALUES(
+		        #{svr_nm},
+				#{svr_domain}, 
+				#{svr_ip}, 
+				#{svr_port}, 
+				#{svr_dc}, 
+				now() 
+	        )
+	</insert>
+	
+
+</mapper>

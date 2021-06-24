@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.IOrgMapper">
+	
+	
+	<select id="getSgbName" resultType="com.model.OrgVo">
+		SELECT *
+		FROM tbl_org
+		WHERE seq = (select org_seq from public.tbl_pc_mangr where sgb_pc_uuid = #{sgb_pc_uuid} )
+	</select>
+	
+	
+	<select id="selectGroupInfo" resultType="com.model.OrgVo"  parameterType="com.model.OrgVo">
+		SELECT 
+			*
+		FROM tbl_org
+		<where>
+				trim(org_nm) = #{org_nm}
+		</where>
+	</select>
+	
+	<select id="groupUpperCode" resultType="com.model.OrgVo" parameterType="com.model.OrgVo">
+		select  
+		STRING_AGG( 'OU=' || TA.org_nm, ',' ORDER BY TA.seq DESC)   AS org_nm 
+		from (
+		WITH RECURSIVE T AS
+		(
+		    SELECT A.*
+		    FROM tbl_org A
+		    where A.seq = #{seq}
+		
+		    UNION ALL
+		    
+		   SELECT A.*
+		    FROM tbl_org A,  T
+		    
+		    WHERE A.seq = T.p_seq
+		)
+		SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+		order by T.seq asc
+		
+		) TA
+	
+	</select>
+	
+	<select id="groupNewUpperCode" resultType="com.model.OrgVo" parameterType="com.model.OrgVo">
+		select  
+		STRING_AGG( 'OU=' || TA.org_nm, ',' ORDER BY TA.seq DESC)   AS org_nm 
+		from (
+		WITH RECURSIVE T AS
+		(
+		    SELECT A.*
+		    FROM tbl_org A
+		    where A.seq = #{p_seq}
+		
+		    UNION ALL
+		    
+		   SELECT A.*
+		    FROM tbl_org A,  T
+		    
+		    WHERE A.seq = T.p_seq
+		)
+		SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+		order by T.seq asc
+		
+		) TA
+	
+	</select>
+	
+	<select id="orgOldNm" resultType="com.model.OrgVo" parameterType="com.model.OrgVo">
+		SELECT ORG_NM FROM TBL_ORG WHERE SEQ = #{seq}
+	
+	</select>
+
+	<!-- 조직목록 -->
+	<select id="orgList" resultType="com.model.OrgVo">
+	<![CDATA[ 
+		with recursive search_org(seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.p_seq = 0
+			union all
+			select b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and not cycle)
+		select seq,p_seq,org_nm,org_ordr,section,level,path
+		from search_org order by level,org_ordr
+    ]]>	
+	</select>
+	
+	<select id="orgChoose" resultType="com.model.OrgVo">
+	<![CDATA[ 
+		select * from tbl_org order by seq asc
+    ]]>	
+	</select>
+	
+	<select id="orgView" parameterType="com.model.OrgVo" resultType="com.model.OrgVo">
+	<![CDATA[ 
+	
+		SELECT A.SEQ
+			, A.P_SEQ
+			, A.ORG_ORDR
+			, A.ORG_NM
+			, A.ORG_ORDR
+			, A.writer_id			
+			, A.SECTION
+			, A.P_ORG_NM
+			, A.ALL_ORG_NM
+			, A.SIDO
+			, A.GUGUN
+			, A.ORG_NUM
+		FROM TBL_ORG A
+		WHERE A.SEQ = #{seq}
+	]]>	
+	</select>
+	
+	<!-- 조직등록 -->
+	<update id="orgSave" parameterType="com.model.OrgVo">
+		WITH upsert AS (UPDATE TBL_ORG  SET
+				P_SEQ			= #{p_seq}				 
+				, ORG_ORDR		= #{org_ordr}		
+				, ORG_NM		= #{org_nm}		
+				, P_ORG_NM		= #{p_org_nm}
+				, writer_id		= #{writer_id}		
+				, INS_DATE		= now()    
+				, WRITER_IP		= #{writer_ip}		
+				, UPDATE_WRITER_ID		= #{writer_id}		
+				, UPD_DATE		= now()	
+				, UPDATE_WRITER_IP		= #{writer_ip} 
+				, SIDO		= #{sido} 
+				, GUGUN		= #{gugun} 
+				, SECTION		= #{section} 
+				, ALL_ORG_NM		= (select  
+					STRING_AGG(TA.org_nm, '|' ORDER BY TA.seq ASC) || '|' || #{org_nm}   AS all_org_nm 
+					from (
+					WITH RECURSIVE T AS
+					(
+					    SELECT A.*
+					    FROM tbl_org A
+					    where A.seq = #{p_seq}
+					
+					    UNION ALL
+					    
+					   SELECT A.*
+					    FROM tbl_org A,  T
+					    
+					    WHERE A.seq = T.p_seq
+					)
+					SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+					order by T.seq asc
+					
+					) TA )
+				WHERE SEQ = #{seq}	 RETURNING *)
+				INSERT INTO TBL_ORG (	
+				SEQ						
+				, P_SEQ										   
+				, ORG_ORDR						 
+				, ORG_NM						
+				, P_ORG_NM						  
+				, writer_id						
+				, INS_DATE						
+				, WRITER_IP						
+				, UPDATE_WRITER_ID				
+				, UPD_DATE						
+				, UPDATE_WRITER_IP				
+				, SIDO						
+				, GUGUN						
+				, SECTION
+				, ALL_ORG_NM
+				)
+				SELECT (SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_ORG)
+				,#{p_seq},#{org_ordr},#{org_nm},#{p_org_nm},#{writer_id},now()
+				,#{writer_ip},#{writer_id},now(),#{writer_ip},#{sido},#{gugun},#{section},
+				(select  
+					STRING_AGG(TA.org_nm, '|' ORDER BY TA.seq ASC) || '|' || #{org_nm}   AS all_org_nm 
+					from (
+					WITH RECURSIVE T AS
+					(
+					    SELECT A.*
+					    FROM tbl_org A
+					    where A.seq = #{p_seq}
+					
+					    UNION ALL
+					    
+					   SELECT A.*
+					    FROM tbl_org A,  T
+					    
+					    WHERE A.seq = T.p_seq
+					)
+					SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+					order by T.seq asc
+					
+					) TA )
+				 WHERE NOT EXISTS (SELECT * FROM upsert)
+	</update>
+	
+	<!-- 조직삭제 -->
+	<delete id="orgDelete" parameterType="com.model.OrgVo">
+		DELETE FROM TBL_ORG
+			WHERE SEQ IN
+			(
+				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+    from tbl_org a
+    where a.seq = #{seq}
+    union all
+    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+    from tbl_org a, search_org so 
+    where a.p_seq = so.seq and not cycle)
+    select seq
+    from search_org
+			)	
+	</delete>
+	
+	<select id="getOrgLastSeq" resultType="com.model.OrgVo">
+		SELECT COALESCE(max(seq),0) AS seq FROM TBL_ORG
+	</select>
+
+	<delete id="groupSelectDelete" parameterType="com.model.GroupVo">
+		DELETE FROM 
+			tbl_org_base 
+		WHERE 
+			orgcode=#{orgcode} 
+	</delete>
+	
+	<!-- <select id="selectGroupInfo" resultType="com.model.GroupVo"  parameterType="com.model.GroupVo">
+		SELECT 
+			orgname, 
+			orgstep, 
+			orguppercode, 
+			orgcode,
+			group_gubun 
+		FROM tbl_org_base
+		<where>
+				trim(orgname) = #{orgname}
+		</where>
+	</select>
+	
+	<select id="groupUpperCode" resultType="com.model.GroupVo" parameterType="com.model.GroupVo">
+		select  
+		STRING_AGG( 'OU=' || TA.orgname, ',' ORDER BY TA.orgstep DESC)   AS orgname 
+		from (
+		WITH RECURSIVE T AS
+		(
+		    SELECT A.orgname
+		         ,A.orguppercode
+		         ,A.orgcode
+		         ,A.orgstep
+		    FROM tbl_org_base A
+		    where A.orgcode =   #{orgcode} 
+		
+		    UNION ALL
+		    
+		   SELECT A.orgname
+		         ,A.orguppercode
+		         ,A.orgcode
+		         ,A.orgstep
+		    FROM tbl_org_base A,  T
+		    
+		    WHERE A.orgcode = T.orguppercode
+		)
+		SELECT * FROM T 
+		order by T.orgstep asc
+		
+		) TA
+
+		
+	</select> -->
+	
+	<!-- SELECT 
+			'OU=' 
+			|| (select orgname from tbl_org_base where orgcode = #{orgcode}  )
+			|| ', OU=' || (select orgname from tbl_org_base where orgcode = #{orguppercode} )
+			|| STRING_AGG( ', OU=' || orgname, ' ' ORDER BY orgstep DESC) 
+			|| ', OU=' || (SELECT orgname from tbl_org_base where orguppercode ='000000000000000000000000000000' ) AS orgname 
+		FROM tbl_org_base 
+  		where 
+  			orgcode like substr( #{orgcode} , 0, 5) || '%'
+  		  	and  orgstep::int &lt; (#{orgstep}-1)
+  		  	 -->
+	
+	<select id="groupChk"  parameterType="com.model.GroupVo" resultType="com.model.GroupVo">
+		select 
+	        count(*) as orgUpCnt
+	    from tbl_org_base 
+	    where 
+	        orguppercode = #{orgcode} 
+	</select>
+	
+</mapper>

@@ -1,0 +1,11 @@
+{
+  "hints": [],
+  "groups": [],
+  "properties": [
+    {
+      "name": "ldap.id",
+      "description": "A description for 'ldap.id'",
+      "type": "java.lang.String"
+    }
+  ]
+}

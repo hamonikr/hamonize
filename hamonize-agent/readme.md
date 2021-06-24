@@ -26,3 +26,11 @@
 - agent 전체 로그 : tail -f /var/log/hamonize/agentJob/agentjob.log.{해당 date}
 - 업데이트 정책 로그 : tail -f /var/log/hamonize/agentJob/updp.log
 
+
+### apt 저장소 추가
+```
+wget -qO - http://106.254.251.74:28081/hamonize.pubkey.gpg | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] http://106.254.251.74:28081 hamonize main"
+
+```

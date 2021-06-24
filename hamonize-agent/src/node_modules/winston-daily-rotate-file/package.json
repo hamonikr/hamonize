@@ -1,0 +1,48 @@
+{
+  "name": "winston-daily-rotate-file",
+  "version": "4.5.5",
+  "description": "A transport for winston which logs to a rotating file each day.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">=8"
+  },
+  "scripts": {
+    "test": "mocha && eslint .",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:winstonjs/winston-daily-rotate-file.git"
+  },
+  "keywords": [
+    "winston",
+    "daily-rotate-file",
+    "log-rotate",
+    "logrotate"
+  ],
+  "author": "Charlie Robbins <charlie.robbins@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winstonjs/winston-daily-rotate-file/issues"
+  },
+  "homepage": "https://github.com/winstonjs/winston-daily-rotate-file#readme",
+  "peerDependencies": {
+    "winston": "^3"
+  },
+  "devDependencies": {
+    "chai": "4.2.0",
+    "eslint": "^6.0.1",
+    "eslint-plugin-node": "^11.0.0",
+    "mocha": "^7.1.1",
+    "moment": "^2.24.0",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "file-stream-rotator": "^0.5.7",
+    "object-hash": "^2.0.1",
+    "triple-beam": "^1.3.0",
+    "winston-transport": "^4.4.0"
+  }
+}

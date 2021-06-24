@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IActAgentFirewallMapper">
+	
+	<insert id="insertActAgentFirewall" parameterType="com.model.ActAgentFirewallVo">
+        INSERT 
+        	INTO tbl_act_firewall_log
+        	(
+				uuid, 
+		        hostname,
+				status,		        
+				status_yn,		        
+		        datetime,
+				retport,
+				orgseq,
+		        ins_date
+        	) 
+        	VALUES( 
+        		#{uuid}, 
+				#{hostname},
+				#{status}, 
+				#{status_yn}, 
+				#{datetime},
+				#{retport}, 
+				#{orgseq}, 
+				now()
+			) 
+
+	</insert>
+	
+
+		
+			
+</mapper>

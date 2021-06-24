@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.IAttributeMapper">
+<!-- 	<cache flushInterval="1000" /> -->
+
+<!--  attrCode 새로 발급 max count -->
+	<select id="getMaxAttrCode" parameterType="com.model.AttributeVo" resultType="String">
+		SELECT
+			coalesce(max(attr_value_code::int), 0) +1 AS attr_value_code
+		FROM
+			tbl_comm_code
+		WHERE 
+			attr_code = #{attr_code}
+	</select>
+	
+	
+<!--   attrCode 새로 발급 -->
+	<insert id="save" parameterType="com.model.AttributeVo">
+		INSERT INTO tbl_comm_code(
+			attr_code,
+			attr_name,
+			attr_value_code,
+			attr_value_name
+		)
+		VALUES (
+			LPAD(#{attr_code}, 3, '0'),
+			#{attr_name},
+			LPAD(#{attr_value_code}, 3, '0'),
+			#{attr_value_name}
+		)
+	</insert>
+
+
+	<!-- MngrController.commcodeListInfo -->
+	<select id="commcodeListInfo" resultType="com.model.AttributeVo" parameterType="com.model.AttributeVo">
+		SELECT 
+			 attr_code,
+			attr_name,
+			attr_value_code,
+			attr_value_name
+		FROM tbl_comm_code
+		<where>
+			attr_code = #{attr_code}		
+		</where> 
+		ORDER BY attr_value_code asc 
+	</select>
+
+</mapper>

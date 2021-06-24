@@ -1,0 +1,59 @@
+{
+  "author": "danielzzz <daniel@zelisko.net> (http://daniel.zelisko.net)",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "contributors": [
+    "Mond Wan <mondwan.1015@gmail.com>",
+    "dougluce <doug@tenousiperochhelical.con.com>",
+    "weihua44",
+    "GermanBluefox",
+    "mabukar",
+    "microacup <xiangmain@gmail.com>",
+    "Andrew Fadeev",
+    "Joshua Pruitt <firefly777@gmail.com>",
+    "Stephan van Rooij <stephan@svrooij.nl> (http://svrooij.nl)",
+    "Krispin Schulz <krispinone@googlemail.com> (http://kr1sp1n.io)",
+    "Kathy Hill",
+    "mrMuppet",
+    "Adam Heath <adam@adamheath.me> (http://www.adamheath.me)",
+    "BlessJah <blessjah@jacekowski.org>",
+    "jritsema"
+  ],
+  "name": "ping",
+  "description": "a simple wrapper for ping",
+  "version": "0.4.1",
+  "homepage": "http://github.com/danielzzz/node-ping",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/danielzzz/node-ping.git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "q": "1.x",
+    "underscore": "^1.12.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "chai": "4.2.0",
+    "eslint": "^7.16.0",
+    "eslint-plugin-jsdoc": "^30.7.9",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-eslint": "^6.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "glob": "^7.1.6",
+    "grunt": "^1.3.0",
+    "grunt-mocha-test": "^0.13.3",
+    "gruntify-eslint": "^5.0.0",
+    "mocha": "^8.2.1",
+    "sinon": "9.2.2"
+  },
+  "main": "index.js"
+}

@@ -1,0 +1,12 @@
+/etc/hamonize/backup/backupInfo.hm
+/etc/hamonize/firewall/firewallInfo.hm
+/etc/hamonize/progrm/progrm.hm
+/etc/hamonize/propertiesJob/propertiesInfo.hm
+/etc/hamonize/propertiesJob/sgbInitJob.sh
+/etc/hamonize/recovery/recoveryInfo.hm
+/etc/hamonize/security/device.hm
+/etc/hamonize/siteblock/illegalUrls.ini
+/etc/hamonize/siteblock/siteblock.ini
+/etc/hamonize/updt/updtInfo.hm
+/etc/hamonize/uuid
+/etc/systemd/system/hamonize-agent.service
