@@ -1,0 +1,144 @@
+/*--------------------
+폼 style
+----------------------*/
+
+input[type=text], input[type=password] {
+    box-sizing: border-box; 
+    -webkit-appearance:none;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px; 
+    background-color:#fff; 
+    vertical-align: middle;
+    font-family:'Noto Sans KR', Helvetica, '맑은 고딕', sans-serif;
+    
+}
+
+
+input:focus { outline: none;}
+input:-webkit-autofill {-webkit-box-shadow: 0 0 0 1000px white inset;}
+label {font-weight: 400!important; }
+.labelzero {font-size:0;margin:0; padding:0}
+
+/* placeholder */
+input::placeholder{color: #bbb}
+input::-webkit-input-placeholder {color:#bbb; }
+input::-moz-placeholder          {color:#bbb;}
+input:-moz-placeholder           {color:#bbb;}
+input:-ms-input-placeholder      {color:#bbb;}
+textarea::-webkit-input-placeholder {color:#bbb;}
+textarea::-moz-placeholder          {color:#bbb;}
+textarea:-moz-placeholder           {color:#bbb;}
+textarea:-ms-input-placeholder      {color:#bbb;}
+input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {color:transparent; } 
+input:focus:-moz-placeholder, textarea:focus:-moz-placeholder { color:transparent; } 
+input:focus::-moz-placeholder, textarea:focus::-moz-placeholder {color:transparent; } 
+input:focus:-ms-input-placeholder, textarea:focus:-ms-input-placeholder { color:transparent; }
+
+
+
+
+/* bottom line input */
+
+.input_type1 {border:1px solid #ccc; height:35px;font-size:14px; padding-left:10px;margin:3px 1px; color:#555}
+.input_type1:focus {border:1px solid #5c93d6; background:#fff} 
+
+
+textarea {
+    overflow: auto; border:1px solid #ccc; 
+    font-family:'Noto Sans KR', Helvetica, '맑은 고딕', sans-serif;  font-size:14px; color:#555;
+    padding:10px; width:98%;-webkit-appearance:none;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;
+    min-height: 7d0px;
+} 
+
+
+/* 셀렉트 */
+select::-ms-expand{display:none;}
+select {
+-webkit-appearance: none;-moz-appearance: none;appearance: none; 
+vertical-align: middle;
+-webkit-box-shadow:none;
+box-shadow:none;
+box-sizing:border-box;
+border-radius: 3px;
+background:#fff url(/images/icon_sel.png) no-repeat;
+font-size:14px;
+-webkit-background-size: 10px auto;
+background-size: 10px auto;
+background-position:right 10px top 15px;
+color:#555;
+height:35px; 
+font-family:'Noto Sans KR', Helvetica, '맑은 고딕', sans-serif;
+}
+textarea, select:focus{ outline: none; } 
+
+/* 기본 */
+.sel_type1  {border:1px solid #ccc; color:#555;padding:0 30px 0 10px; height:35px;  min-width: 150px; margin:3px 1px;  } 
+
+
+
+
+/* 체크박스 라디오  */
+input[type=checkbox] {display:none;}
+input[type=checkbox] + label:before {content:"";display:inline-block;width:20px;height:20px;background: url("/images/icon_check.png") no-repeat 0 0;vertical-align:middle; background-size: 20px; margin-right:10px }
+input[type=checkbox]:checked + label:before {content:"";background: url("/images/icon_checked.png") no-repeat 0 0; background-size: 20px}
+
+/*
+input[type=radio] {display:none;}
+input[type=radio] + label:before {content:"";display:inline-block;width:20px;height:20px;background: url("/images/icon_radio.png") no-repeat 0 0;vertical-align:middle; background-size: 20px; margin-right:10px; margin-bottom:2px}
+input[type=radio]:checked + label:before {content:"";background: url("/images/icon_radio_on.png") no-repeat 0 0; background-size: 20px; }
+*/
+
+
+
+input[type=checkbox].check2 {display:none;}
+input[type=checkbox].check2 + label:before {content:"";display:inline-block;width:20px;height:20px;background: url("/images/icon_check2.png") no-repeat 0 0;vertical-align:middle; background-size: 20px; margin-right:10px }
+input[type=checkbox].check2:checked + label:before {content:"";background: url("/images/icon_checked.png") no-repeat 0 0; background-size: 20px}
+
+
+
+/* 파일찾기  */
+.fileBox .fileName {display:inline-block;width:50%;height:35px;padding-left:10px;margin-right:5px;line-height:35px;border:1px solid #ccc;vertical-align:middle; font-size:14px; color:#555}
+.fileBox .btn_file {display:inline-block;background-color: #7f8592; color:#fff; width:100px;height:35px;line-height:35px;text-align:center;vertical-align:middle; border-radius: 3px;  margin-right:10px}
+.fileBox input[type="file"] {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.fileBox .btn_type3 {width:30px; font-size:16px;}
+.fileBox .btn_file:hover {background-color: #333; cursor: pointer} 
+
+
+/* 버튼 */
+button {
+border:0;
+-webkit-transition-duration: 0.4s; transition-duration: 0.4s;
+-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;
+cursor: pointer;
+display: inline-block;
+vertical-align:middle; 
+text-align: center;
+box-sizing: border-box;
+font-family:'Noto Sans KR', Helvetica, '맑은 고딕', sans-serif;
+}
+button:focus { outline: none;}
+
+
+.btn_log1 {background-color: #9174d9; color:#fff; line-height: 20px; padding:0 15px; height:30px;  font-size:13px; border-radius:30px; margin-left:5px}
+.btn_log1:hover  {background-color: #46307d; }
+
+.btn_log2 {background-color: #3e3a39; color:#fff; line-height: 20px; padding:0 15px; height:30px;  font-size:13px; border-radius:30px; margin-left:5px}
+.btn_log2:hover  {background-color: #000; }
+
+/* 흰배경 */
+.btn_type1 {background-color: #fff; color:#555; line-height: 30px; padding:0 20px; height:35px;  font-size:13px; border:1px solid #ddd; margin:3px 1px;  }
+.btn_type1:hover  {background-color: #ddd; }
+.btn_type1.current{background-color:#7f8592; color:#fff; border:1px solid #7f8592;}
+
+/* light blue */
+.btn_type2 {background-color: #51b7d6; color:#fff; line-height: 50px; padding:0 20px; height:50px;  font-size:15px; border:1px solid #48b2d2; margin:3px 1px;  }
+.btn_type2:hover  {background-color: #3ba2c0; border:1px solid #3ba2c0;}
+
+/* 그레이 작은버튼 */
+.btn_type3 {background-color: #7f8592; color:#fff; line-height: 35px; padding:0 10px; height:35px;  font-size:13px; border:1px solid #7f8592;margin:3px 1px;   }
+.btn_type3:hover  {background-color: #333;border:1px solid #000;  }
+
+
+.btn_type4 {background-color: #7f8592; color:#fff; line-height: 30px; padding:0 10px; height:30px;  font-size:13px; border:1px solid #7f8592;margin:3px 1px;  border: 0; border-radius: 3px }
+.btn_type4:hover  {background-color: #333; }

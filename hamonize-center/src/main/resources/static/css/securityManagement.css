@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+* { box-sizing: unset; }
+
+.navbar { padding: 0; }
+.header { background-color: #282153 !important; }
+.header:hover { background-color: #fff !important; }
+.logo a { 
+	color: #fff;
+	font-weight: 700;
+}
+.logo a:hover { color: #fff; }
+a:hover { text-decoration: none; } 
+
+#contentTitle {  }
+
+#secuList { min-width: 1100px; }
+
+.columnDiv { 
+	background-color: #ddd; 
+	/* color: white; */
+	font-weight: bold;
+	margin-bottom: 10px;
+	min-width: 1100px;
+	padding: 10px;
+}
+.columnDiv div {
+	display: inline-block;
+	text-align: center;
+}
+
+#searchDiv { 
+	float: right; 
+	margin-top: -5px;
+}
+#searchIpt { 
+	box-sizing: border-box;
+	display: inline-block;
+	padding: 4px 20px;
+	width: 200px; 
+}
+
+.custom-control {
+	background-color: #eee;
+	border: 1px solid #ddd;
+	margin-bottom: 10px;
+	padding: 10px 10px 10px 50px;
+}
+.custom-control-input { display: none; }
+.custom-control-input:checked~.custom-control-label::before {
+	border-color: #03bd9e;
+	background-color: #03bd9e;
+}
+
+.custom-control-label {
+	display: inline-block;
+	vertical-align: middle;
+	width: 100%;
+}
+.custom-control-label div { 
+	display: inline-block; 
+	vertical-align: middle;
+}
+.custom-control-label .nameDiv { 
+	min-width: 250px;
+	width: 25%; 
+}
+.custom-control-label .infoDiv { 
+	min-width: 550px;
+	width: 75%; 
+}

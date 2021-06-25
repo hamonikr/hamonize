@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IEqualsHwMapper">
+
+
+
+ <insert id="sgbPcHWInfoInsert" parameterType="com.model.EqualsHwVo">   
+		INSERT INTO 
+			tbl_pc_change_info (
+			    pc_cpu, 
+			    pc_memory, 
+			    pc_macaddress, 
+			    pc_ip, 
+			    pc_hostname, 
+			    pc_cpu_id, 
+			    pc_uuid, 
+			    org_seq, 
+			    pc_disk,
+			    pc_disk_id,
+			    pc_user,
+			    insert_dt
+			)
+			VALUES
+			(
+			    #{pc_cpu},
+			    #{pc_memory}, 
+			    #{pc_macaddress}, 
+			    #{pc_ip},
+			    #{pc_hostname}, 
+			    #{pc_cpu_id}, 
+			    #{pc_uuid},
+			    #{org_seq},
+			    #{pc_disk},
+			    #{pc_disk_id},
+			    #{pc_user},
+			    NOW()
+			)
+	</insert>
+	
+	
+	<update id="sgbPcMngrModify" parameterType="com.model.EqualsHwVo">
+		
+		update tbl_pc_mangr
+			set pc_status = 'N'
+		where pc_uuid = #{pc_uuid}
+
+	</update>
+	
+	
+
+</mapper>

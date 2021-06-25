@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IPolicyNxssMapper">
+
+<select id="programList" resultType="com.model.PolicyNxssVo">
+		SELECT 
+			 pcm_seq, 
+			 pcm_name, 
+			 pcm_status,
+			 pcm_dc
+		FROM tbl_program_mngr
+		ORDER  BY pcm_seq desc
+	</select>
+
+
+</mapper>
+

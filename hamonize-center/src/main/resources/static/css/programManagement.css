@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+* { box-sizing: unset; }
+
+.navbar { padding: 0; }
+.header { background-color: #282153 !important; }
+.header:hover { background-color: #fff !important; }
+.logo a { 
+	color: #fff;
+	font-weight: 700;
+}
+.logo a:hover { color: #fff; }
+a:hover { text-decoration: none; } 
+
+#contentTitle {  }
+
+#searchDiv { 
+	float: right; 
+	margin-top: -5px;
+}
+#searchIpt { 
+	box-sizing: border-box;
+	display: inline-block;
+	padding: 4px 20px;
+	width: 200px; 
+}
+
+.custom-control {
+	background-color: #eee;
+	border: 1px solid #ddd;
+	margin-bottom: 10px;
+	padding: 10px 10px 10px 50px;
+}
+.custom-control-input { display: none; }
+.custom-control-input:checked~.custom-control-label::before {
+	border-color: #03bd9e;
+	background-color: #03bd9e;
+}
