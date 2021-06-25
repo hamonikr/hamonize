@@ -3,7 +3,7 @@
 <b>Hamonize-center 설치</b>
 
 1 단계 : 코드 받기<br>
-2 단계 : 데이터베이스 만들기<br>
+2 단계 : 필요서버 구성하기<br>
 3 단계 : 개발환경 구성하기<br>
 
 <br>
@@ -14,9 +14,60 @@
 <b>git clone https://github.com/hamonikr/hamonize.git </b><br><br>
 
 
-**2 단계 : 도커로 데이터베이스 구성하기**<br>
+**2 단계 : 필요서버 구성하기**<br>
+1) 데이터 베이스 생성
+- postsql 유저 생성
+```
+create user ivs;
+alter role ivs superuser createdb;
+alter user ivs with password {your-own-db-pw} // 자신만의 db패스워드를 설정해주세요
+
+```
+
+- hamonize-center는 기본 SQL 스키마를 제공하고 있습니다.
 - DB 스키마 파일 위치 : db/hamonize_center.sql 
-<br><br> 
+- 다음 명령어를 통해 hamonize-center에 sql 내용을 create 할 수 있습니다.
+
+```
+psql -h localhost -U ivs -W -d hamonize_center -f db/hamonize_center.sql
+```
+- localhost : IP를 적어주는 곳입니다 (default : localhost)
+- user_name : postgresql 계정 이름을 적어주는 곳입니다 (default : 센터와 연동을 위해 ivs 로 설정 필요. ivs 유저를 만들어주세요)
+- database_name : postgresql 데이터베이스 이름을 적어주는 곳입니다.(default : hamonize_center 로 설정 필요)
+
+<br>
+
+2) 데이터 베이스 접속
+- 터미널로 데이터 베이스를 접속하는 방법입니다.
+- 데이터베이스 접속 프로그램을 사용하면 더욱 편하게 사용하실 수 있습니다. (DBeaver, tadpole)
+```
+psql -h localhost -p port -U ivs -d hamonize_center
+```
+<br>
+
+
+<br> 
+
+2) ldap 서버 구성하기
+- 도커 설치 : Docker version 20.10.5, build 55c4c88
+
+- docker로 ldap 실행하기 
+```
+docker run -it -p 389:389 -p 636:636 \
+--name ldap-service \
+--hostname ldap.hamonize.com \
+--env LDAP_ORGANISATION="invesume" \
+--env LDAP_DOMAIN="ldap.hamonize.com" \
+--env LDAP_ADMIN_PASSWORD="{your own ldap password}" \
+--detach osixia/openldap:1.5.0
+
+```
+
+- docker 생성 테스트 
+```
+ldapsearch -x -H ldap://{your own ldap ip}:389 -b dc=ldap,dc=hamonize,dc=com -D "cn=admin,dc=ldap,dc=hamonize,dc=com" -w {your own ldap password}
+
+```
 
 **3 단계 : 개발환경 구성하기**
 - IDE 에서 실행<br>
@@ -39,41 +90,47 @@ Run > Configuration > Arguments > VM arguments:
 ```
 <br>
 
-<<<<<<< HEAD
-3) 웹브라우저에서 실행
+3) config.properties 민감정보 파일 설정 - hamonize-center/env/에 위치 
+- env/config.properties 파일 위치를 사용하는 ${user.home}/ 위치에 옮겨둔다(디폴트 설정)
+
+** 변경하고싶으면 GlobalPropertySource.java 파일에서 위치를 원하는 곳으로 변경해둔다
 
 ```
-http://localhost:8080/
+@PropertySources({
+    @PropertySource( value = "file:${user.home}/env/config.properties", ignoreResourceNotFound = true)
+})
+... 
 ```
-
-- WAS에서 실행 <br>
-=======
-3) env/config.properties 파일에 생성한 postgresql 서버 ip 적어준다 파일의 위치는 기본적으로 홈디렉토리 위치에 위치시킨다. 
+- 2단계에서 생성한 db 서버 정보등 입력
 ```
 ## PostgreSQL
 spring.db1.datasource.primary.jndi-name=jdbc/postgresqldb
 spring.db1.datasource.driverClassName=org.postgresql.Driver
-spring.db1.datasource.url=jdbc:postgresql://{postgresql-vpnip}:5432/hamonize_center
+# 10.8.0.5 is example vpn ip
+spring.db1.datasource.url=jdbc:postgresql://{your own db ip}:5432/hamonize_center
 # default db admin user
-spring.db1.datasource.username=ivs
-spring.db1.datasource.password={db 생성시 사용한 비밀번호}
+spring.db1.datasource.username={your own db id}
+spring.db1.datasource.password={your own db pw}
 
-```
-** 변경을 원할 경우 src/main/java/com/GlobalPropertySource.java 파일의 PropertySource 위치를 변경시켜준다.
-```
+## ldap 
+ldap.urls=ldap://{your own ldap ip}
+ldap.password={your own ldap pw}
 
-@Configuration
-@PropertySources({
-    @PropertySource( value = "file:${user.home}/env/config.properties", ignoreResourceNotFound = true)
-   })
-public class GlobalPropertySource {
-    //db
-    ....
+## influxdb server
+spring.influxdb.url= http://{your own influxdb ip}
+spring.influxdb.database=telegraf
+spring.influxdb.username={your own influxdb id}
+spring.influxdb.password={your own influxdb pw}
 ```
 
+<br>
+4) 웹브라우저에서 실행
 
-- WAS에서 실행할 경우 <br>
->>>>>>> 5248dfb25a384b3cc6f9a5530fe0c467b1499cd7
+```
+http://localhost:8080/
+```
+<br>
+- WAS에서 실행 <br>
 
 1) Java VM 을 구동할 때 다음 옵션을 추가
 
@@ -94,8 +151,35 @@ JAVA_OPTS="-Djava.net.preferIPv4Stack=true"
 ...		
 ```
 
+3) jndi 설정
+- server.xml
 
-
+```
+...
+<GlobalNamingResources>
+<Resource name="jdbc/postgresqldb"
+    auth="Container"
+    type="javax.sql.DataSource"
+    driverClassName="org.postgresql.Driver"
+    url="jdbc:postgresql://{your own db ip}/hamonize_center"
+    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    username="{your own db id}"
+    password="{your own db pw}"
+    maxActive="100"
+    maxWait="10000"
+    timeBetweenEvictionRunsMillis="60000"
+    minEvictableIdleTimeMillis="300000"/>
+</GlobalNamingResources>
+...
+```
+- context.xml 설정 추가
+```
+<Context>
+    <ResourceLink name="jdbc/postgresqldb" global="jdbc/postgresqldb" type="javax.sql.DataSource" />
+</Context>
+...
+````
+<br>
 - docker로 실행할 경우<br>
 ```
 ```

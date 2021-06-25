@@ -2,6 +2,8 @@ package com.util;
 
 import java.util.Properties;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.naming.AuthenticationException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -16,49 +18,32 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import com.model.LdapVO;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
 public class LDAPConnection {
-
-	@Autowired
-	LdapVO ldap;
-    // @Value("${ldap.ip}")
-	// private String ldapUrl; 
-	
-	// @Value("${ldap.id}")
-	// private String ldapAdminUser; 
-	
-	// @Value("${ldap.password}")
-	// private String ldapAdminPasswd; 
-	
 	private DirContext dc = null; 
+
+	public static void main(String url, String password) throws NamingException {
+		LDAPConnection con = new LDAPConnection();
+		con.connection(url, password);
+		System.out.println("start--->");
+		//con.searchUsers();
+		System.out.println("\nou List");
+		con.searchGroups();
+		System.out.println("\n<---end");
+	}
 	
-        public static void main() throws NamingException {
-            LDAPConnection con = new LDAPConnection();
-            con.connection();
-            System.out.println("start--->");
-            //con.searchUsers();
-			System.out.println("\nou List");
-			con.searchGroups();
-            System.out.println("\n<---end");
-        }
-
-    public void connection(){
+	
+    public void connection(String url, String password){
         Properties env = new Properties();
-		
-		System.out.println("ldap url : " +"ldap://10.8.0.6:389");
+
+		System.out.println("ldap url : " +url.trim());
+		System.out.println("ldap password : " +password.trim());
 		System.out.println("ldapAdminUser : " +"cn=admin,dc=ldap,dc=hamonize,dc=com");
-		System.out.println("ldapAdminPasswd : " +"exitem08");
-
-
-        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, "ldap://10.8.0.6:389");
+		
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, url.trim());
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
         env.put(Context.SECURITY_PRINCIPAL, "cn=admin,dc=ldap,dc=hamonize,dc=com");
-        env.put(Context.SECURITY_CREDENTIALS, "exitem08");
+        env.put(Context.SECURITY_CREDENTIALS, password.trim());
         
 		System.out.println("env---? " + env);    	
 		

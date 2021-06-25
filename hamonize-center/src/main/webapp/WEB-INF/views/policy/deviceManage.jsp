@@ -7,7 +7,6 @@
 <!-- jquery alert -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-<!-- <link rel="stylesheet" href="/css/materialize.css"> -->
 
 <script src="/js/materialize.js"></script>
 <script type="text/javascript">
@@ -38,12 +37,6 @@
 				showRenameBtn: false
 			},
 			callback: {
-				/* beforeDrag: beforeDrag,
-				beforeDrop: beforeDrop,
-				beforeDragOpen: beforeDragOpen,
-				onDrag: onDrag,
-				onDrop: onDrop,
-				onExpand: onExpand,*/
 				beforeClick: beforeClick,
 				onCheck: onCheck,
 				onClick: onClick
@@ -180,19 +173,7 @@ function setCheck() {
 function fnManage(){
 	$("#popup").show();
 	$("#bg_fix").show();
-	/* var _width = '800';
-    var _height = '950';
- 
-    // 팝업을 가운데 위치시키기 위해 아래와 같이 값 구하기
-    var _left = Math.ceil(( window.screen.width - _width )/2);
-    var _top = Math.ceil(( window.screen.width - _height )/2);
-	var option = "width="+_width+", height="+_height+",left="+_left;
-	option += ",top=0,menubar=no,status=no,toolbar=no,directories=no,fullscreen=yes,resizeable=no";
-	var childWindow = window.open("fManagePop","",option);
-		$('body').click(function() {
- 		 	childWindow.focus();
-		});
-	//window.open("dManagePop","",option); */
+
 }
 function hide_layer(){
 	$("#popup").hide();
@@ -201,12 +182,7 @@ function hide_layer(){
 
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
-	
-	/* if($("#org_nm").val()==""){
-		alert("부대명을 입력해주세요.");
-		return false;
-	} */
-	if(confirm("하위부대 및 사지방이 있다면 하위부대 및 사지방도 전부 적용됩니다 적용하시겠습니까?")){
+	if(confirm("하위부문 및 부서가 있다면 하위부문 및 부서에도 전부 적용됩니다 적용하시겠습니까?")){
 	var ppm_seq = "";
     $('input:checkbox[name=sm_seq]').each(function(i) {
        if($(this).is(':checked'))
@@ -218,7 +194,6 @@ function fnSave(){
 	var nodes = zTree.getCheckedNodes(true);
 	var nodeLength=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var queryArr=[];
-   // alert('선택 노트 갯수 : ' + nodes.length);
     
     $.each(zTree.transformToArray(zTree.getNodes()) && nodes,function(i,v){
     	if(i>=0){
@@ -227,7 +202,6 @@ function fnSave(){
 			nodeLength[eval(v.level-1)]++;
 			 var data={
 					 "org_seq": v.id
-					//,"name":v.name //확인용도
 			} 
 
 			queryArr.push(data);

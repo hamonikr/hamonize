@@ -35,41 +35,42 @@ public class AppConfig {
         return new TomcatEmbeddedServletContainerFactory() {
 
             @Override
-            protected TomcatEmbeddedServletContainer getTomcatEmbeddedServletContainer(
-                    Tomcat tomcat) {
+            protected TomcatEmbeddedServletContainer getTomcatEmbeddedServletContainer(Tomcat tomcat) {
                 tomcat.enableNaming();
                 return super.getTomcatEmbeddedServletContainer(tomcat);
             }
 
-            // 개발서버용
 
-            // @Override                   // create JNDI resource
-            // protected void postProcessContext(Context context) {
-            //     ContextResource resource = new ContextResource();
-            //     resource.setName(globalPropertySource.getJndiName());
-            //     resource.setType(DataSource.class.getName());
-            //     resource.setProperty("driverClassName", globalPropertySource.getDriverClassName());
-            //     resource.setProperty("url", globalPropertySource.getUrl());
-            //     resource.setProperty("username", globalPropertySource.getUsername());
-            //     resource.setProperty("password", globalPropertySource.getPassword());
-            //     resource.setProperty("factory", "org.apache.tomcat.jdbc.pool.DataSourceFactory");
-            //     context.getNamingResources().addResource(resource);
-            // }
-            
-            // 테스트 서버용
-            
             @Override                   // create JNDI resource
             protected void postProcessContext(Context context) {
+                System.out.println("globalPropertySource.getJndiName() >> "+ globalPropertySource.getJndiName());
+                System.out.println("globalPropertySource.ldapUrl() >> "+ globalPropertySource.getLdapUrl());
+                
                 ContextResource resource = new ContextResource();
-                resource.setName("jdbc/postgresqldb");
+                resource.setName(globalPropertySource.getJndiName());
                 resource.setType(DataSource.class.getName());
-                resource.setProperty("driverClassName", "org.postgresql.Driver");
-                resource.setProperty("url", "jdbc:postgresql://10.8.0.5:5432/hamonize_center");
-                resource.setProperty("username", "ivs");
-                resource.setProperty("password","password");
+                resource.setProperty("driverClassName", globalPropertySource.getDriverClassName());
+                resource.setProperty("url", globalPropertySource.getUrl());
+                resource.setProperty("username", globalPropertySource.getUsername());
+                resource.setProperty("password", globalPropertySource.getPassword());
                 resource.setProperty("factory", "org.apache.tomcat.jdbc.pool.DataSourceFactory");
                 context.getNamingResources().addResource(resource);
             }
+            
+            // 테스트 서버용
+            
+            // @Override                   // create JNDI resource
+            // protected void postProcessContext(Context context) {
+            //     ContextResource resource = new ContextResource();
+            //     resource.setName("jdbc/postgresqldb");
+            //     resource.setType(DataSource.class.getName());
+            //     resource.setProperty("driverClassName", "org.postgresql.Driver");
+            //     resource.setProperty("url", "jdbc:postgresql://10.8.0.5:5432/hamonize_center");
+            //     resource.setProperty("username", "ivs");
+            //     resource.setProperty("password","password");
+            //     resource.setProperty("factory", "org.apache.tomcat.jdbc.pool.DataSourceFactory");
+            //     context.getNamingResources().addResource(resource);
+            // }
         };
     }
 	 @Bean(name = "dataSource", destroyMethod = "")

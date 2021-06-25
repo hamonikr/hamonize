@@ -14,10 +14,6 @@ public class UpdtPolicyVo{
 	private String pc_uuid;
 	
 	
-	
-	
-	
-	
 	@Override
 	public String toString() {
 		return "UpdtPolicyVo [debname=" + debname + ", arrDebname=" + Arrays.toString(arrDebname) + ", state=" + state

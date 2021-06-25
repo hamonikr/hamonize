@@ -46,10 +46,6 @@ public class CurlInetLogController {
 	        System.out.println("Error reading JSON string: " + e.toString());
 	    }
 	    
-//	    String tmp = " {\"inetval\":[{\"userid\":\"user01\"},{\"pcuuid\":\"pcuuid01\"},{\"hostname\":\"hostname01\"},{\"pcip\":\"192.168.0.185\"},{\"url\":\"-c\"},{\"regdt\":\"2020-01-21 23:46:55\"},{\"state\":\"Illiegal\"}]}";
-//	    String tmp = " {\"inetval\":[{\"userid\":\"user01\",\"pcuuid\":\"pcuuid01\",\"hostname\":\"hostname01\",\"pcip\":\"1921680185\",\"url\":\"-c\",\"regdt\":\"2019-08-01 23:46:55\",\"state\":\"Illiegal\"}]}";
-	    
-	    
 	    
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString() );

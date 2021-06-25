@@ -35,7 +35,7 @@ import com.model.HmSecurityVo;
 import com.model.HmprogramVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
-import com.util.AdLdapUtils;
+//import com.util.AdLdapUtils;
 
 @RestController
 @RequestMapping("/hmsvc")
@@ -366,18 +366,19 @@ public class CurlController {
             hdVo.setPc_ip(tempObj.get("ipaddr").toString());
             hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
             hdVo.setPc_hostname(tempObj.get("hostname").toString());
-            hdVo.setPc_os(tempObj.get("sgbpcos").toString());
+            hdVo.setPc_os(tempObj.get("pcos").toString());
             hdVo.setPc_memory(tempObj.get("memory").toString() +"G");
-            hdVo.setDeptname(tempObj.get("sgbname").toString());
-            hdVo.setDeptpcname(tempObj.get("sgbpcname").toString());           
+            hdVo.setDeptname(tempObj.get("deptname").toString());
+            hdVo.setDeptpcname(tempObj.get("pcname").toString());           
         }
         
         int retVal = pcMangrMapper.inserPcInfo(hdVo);
-        AdLdapUtils aldp = new AdLdapUtils();
-    	String retOU = aldp.adComputerSearchUseCn(hdVo.getDeptpcname());
-    	System.out.println("retOU=============="+ retOU);
-    	Boolean isBool = aldp.computerModify( retOU, hdVo.getDeptpcname() , hdVo.getPc_macaddress());
-    	System.out.println("isBool === " + isBool);
+        // AdLdapUtils aldp = new AdLdapUtils();
+    	// String retOU = aldp.adComputerSearchUseCn(hdVo.getDeptpcname());
+    	// System.out.println("retOU=============="+ retOU);
+    	// Boolean isBool = aldp.computerModify( retOU, hdVo.getDeptpcname() , hdVo.getPc_macaddress());
+    	Boolean isBool=true;
+		System.out.println("isBool === " + isBool);
         
         return isBool+"";
 	}
@@ -423,11 +424,11 @@ public class CurlController {
         System.out.println("pcMacModify hdVo======="+ hdVo.toString());
         
         String output = "";
-    	AdLdapUtils aldp = new AdLdapUtils();
-    	String retOU = aldp.adComputerSearchUseCn(hdVo.getDeptname());
-    	System.out.println("retOU=============="+ retOU);
-    	Boolean isBool = aldp.computerModify( retOU, hdVo.getDeptname() , hdVo.getPc_macaddress());
-    	System.out.println("isBool === " + isBool);
+    	// AdLdapUtils aldp = new AdLdapUtils();
+    	// String retOU = aldp.adComputerSearchUseCn(hdVo.getDeptname());
+    	// System.out.println("retOU=============="+ retOU);
+    	// Boolean isBool = aldp.computerModify( retOU, hdVo.getDeptname() , hdVo.getPc_macaddress());
+    	// System.out.println("isBool === " + isBool);
         	
         return output;
 	}
@@ -511,9 +512,9 @@ public class CurlController {
         	pcMangrMapper.pcIpchnLog(hdVo);
         	
         	
-        	AdLdapUtils aldp = new AdLdapUtils();
-        	String retOU = aldp.adComputerSearchUseCn(hdVo.getPc_hostname());
-        	Boolean isBool = aldp.computerModify( retOU, hdVo.getPc_hostname() , hdVo.getPc_macaddress());
+        	// AdLdapUtils aldp = new AdLdapUtils();
+        	// String retOU = aldp.adComputerSearchUseCn(hdVo.getPc_hostname());
+        	// Boolean isBool = aldp.computerModify( retOU, hdVo.getPc_hostname() , hdVo.getPc_macaddress());
         	
         }
         System.out.println("sgbpcloginout info === "+ hdVo.toString());

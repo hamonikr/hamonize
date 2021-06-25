@@ -181,12 +181,8 @@ function setCheck() {
 
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
-	
-	/* if($("#org_nm").val()==""){
-		alert("부대명을 입력해주세요.");
-		return false;
-	} */
-	if(confirm("하위부대 및 사지방이 있다면 하위부대 및 사지방도 전부 적용됩니다 적용하시겠습니까?")){
+
+	if(confirm("하위부문 및 부서가 있다면 하위부문 및 부서에도 전부 적용됩니다 적용하시겠습니까?")){
 	var ppm_seq = "";
     $('input:checkbox[name=pu_seq]').each(function(i) {
        if($(this).is(':checked'))

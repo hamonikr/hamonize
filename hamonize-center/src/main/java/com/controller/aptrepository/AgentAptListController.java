@@ -23,8 +23,8 @@ import java.net.URL;
 public class AgentAptListController {
 	
 	
-	  @Value("${apt.ip}") 
-	  private static String aptIp;
+	@Value("${apt.ip}") 
+	private static String aptIp;
 	 
 
 	public static void main(String[] args) {

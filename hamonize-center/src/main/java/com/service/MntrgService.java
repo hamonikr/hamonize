@@ -13,7 +13,6 @@ import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.stereotype.Service;
-
 import com.mapper.IPcMangrMapper;
 import com.model.CpuDataVo;
 import com.model.PcDataVo;
@@ -68,7 +67,7 @@ public class MntrgService {
 		// Query cpu_query = QueryBuilder
 		// 		.newQuery(
 		// 				"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-		// 		.forDatabase("collectd").create();
+		// 		.forDatabase("telegraf").create();
 		Query cpu_query = QueryBuilder
 		.newQuery(
 				"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
@@ -93,7 +92,7 @@ public class MntrgService {
 		Object jObj = null;
 		Query mem_query = QueryBuilder.newQuery(
 						"SELECT value, host FROM memory_value where type='percent'and type_instance='used' and host='"+host+"' order by time desc limit 1")
-				.forDatabase("collectd").create();
+				.forDatabase("telegraf").create();
 
 		QueryResult results = influxDBTemplate.query(mem_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
@@ -168,7 +167,7 @@ public class MntrgService {
 		JSONArray jsonArray = new JSONArray();
 		Object jObj = null;
 		Query cpu_query = QueryBuilder.newQuery("SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-		        .forDatabase("collectd")
+		        .forDatabase("telegraf")
 		        .bind("host", hostName)
 		        .create();
 		
@@ -197,7 +196,7 @@ public class MntrgService {
 		JSONArray jsonArray = new JSONArray();
 		Object jObj = null;
 		Query cpu_query = QueryBuilder.newQuery("SELECT time, value FROM cpu_value where host = $host and time >= now() - 10s order by time desc LIMIT 1")
-				.forDatabase("collectd")
+				.forDatabase("telegraf")
 				.bind("host", "localhost")
 //		        .bind("host", "inv.ivs.ad.com")
 				.create();
@@ -221,7 +220,7 @@ public class MntrgService {
 		Object jObj = null;
 
 		Query cpu_query = QueryBuilder.newQuery("SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-		        .forDatabase("collectd")
+		        .forDatabase("telegraf")
 		        .create();
 		QueryResult results = influxDBTemplate.query(cpu_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper(); // thread-safe - can be reused

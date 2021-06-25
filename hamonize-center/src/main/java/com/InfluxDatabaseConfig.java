@@ -6,16 +6,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.influxdb.DefaultInfluxDBTemplate;
 import org.springframework.data.influxdb.InfluxDBConnectionFactory;
-import org.springframework.data.influxdb.InfluxDBProperties;
 import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.data.influxdb.converter.PointConverter;
 
 @Configuration
-@EnableConfigurationProperties(InfluxDBProperties.class)
+@EnableConfigurationProperties(InfluxDBPropertiesCustom.class)
 public class InfluxDatabaseConfig {
 
 	@Bean
-	public InfluxDBConnectionFactory connectionFactory(final InfluxDBProperties properties) {
+	public InfluxDBConnectionFactory connectionFactory(final InfluxDBPropertiesCustom properties) {
+        System.out.println("InfluxDBConnectionFactory properties >> "+properties.getUrl());
+        System.out.println("InfluxDBConnectionFactory properties >> "+properties.getDatabase());
+        System.out.println("InfluxDBConnectionFactory properties >> "+properties.getUsername());
+
 		return new InfluxDBConnectionFactory(properties);
 	}
 	

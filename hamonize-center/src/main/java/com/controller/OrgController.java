@@ -2,7 +2,6 @@ package com.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.model.OrgVo;
 import com.service.IpManagementService;
@@ -28,16 +28,15 @@ import com.util.LDAPConnection;
 @Controller
 @RequestMapping("/org/orgManage")
 public class OrgController {
-	
+	@Autowired
+	GlobalPropertySource gs;
+
 	@Autowired
 	private OrgService oService;
 	
 	@Autowired
 	private IOrgMapper oMapper;
 	
-	@Autowired
-	private IpManagementService iService;
-
 	/*
 	 * 부서관리 페이지
 	 * 
@@ -48,7 +47,6 @@ public class OrgController {
 	@RequestMapping(params="!type")
 	public String orgList(HttpSession session, Model model,HttpServletRequest request) {
 		JSONArray jsonArray = new JSONArray();
-		
 
 		try {
 			// 저장된 조직 정보 출력 
@@ -64,8 +62,9 @@ public class OrgController {
 		LDAPConnection con = new LDAPConnection();
 		System.out.println("LDAPConnection ----> start....");
 		//con.connection();
+		
 		try {
-			con.main();
+			con.main(gs.getLdapUrl(), gs.getLdapPassword());
 		} catch (NamingException e1) {
 			e1.printStackTrace();
 		}

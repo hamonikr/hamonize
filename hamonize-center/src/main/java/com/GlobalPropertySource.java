@@ -5,10 +5,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString
+@Setter
+@Getter
 @Configuration
 @PropertySources({
     @PropertySource( value = "file:${user.home}/env/config.properties", ignoreResourceNotFound = true)
-   })
+})
 public class GlobalPropertySource {
     //db
     @Value("${spring.db1.datasource.primary.jndi-name}")
@@ -26,28 +33,11 @@ public class GlobalPropertySource {
     @Value("${spring.db1.datasource.password}")
     private String password;
 
-    public String getJndiName() {
-        return jndiName;
-    }   
-    
-    public String getDriverClassName() {
-        return driverClassName;
-    }   
-    
-    public String getUrl() {
-        return url;
-    }
+    @Value("${ldap.urls}")
+    private String ldapUrl;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    
-    
-
+    @Value("${ldap.password}")
+    private String ldapPassword;
+ 
 }
 

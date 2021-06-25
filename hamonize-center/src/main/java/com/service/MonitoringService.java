@@ -44,10 +44,9 @@ public class MonitoringService {
 		Object jObj = null;
 
 		Query cpu_query = QueryBuilder.newQuery(
-				"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-				.forDatabase("collectd").create();
-
-		//QueryResult results = influxDBTemplate.query(cpu_query);
+			"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
+			.forDatabase("telegraf").create();
+			
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 		long start = System.currentTimeMillis();
 		System.out.println("startTime===="+start);
@@ -84,7 +83,7 @@ public class MonitoringService {
 	 * 
 	 * Query mem_query = QueryBuilder.newQuery(
 	 * "insert memory_value,host='HamoniKR-03000200-0400-0500-0006-0007000080009' type='percent' type_instance='dd' value='32'"
-	 * ) .forDatabase("collectd").create();
+	 * ) .forDatabase("telegraf").create();
 	 * 
 	 * String[] aa = {"used","buffered","cached","free","slab_recl","slab_unrecl"};
 	 * for(int j = 0; j < 15000000;j++) { for(int i=0;i<aa.length;i++) { Point point
@@ -104,7 +103,7 @@ public class MonitoringService {
 		/*
 		 * Query cpu_query = QueryBuilder .newQuery(
 		 * "SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')"
-		 * ) .forDatabase("collectd").create();
+		 * ) .forDatabase("telegraf").create();
 		 */
 
 		Query mem_query = QueryBuilder
@@ -152,13 +151,13 @@ public class MonitoringService {
 		/*
 		 * Query cpu_query = QueryBuilder .newQuery(
 		 * "SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')"
-		 * ) .forDatabase("collectd").create();
+		 * ) .forDatabase("telegraf").create();
 		 */
 
 		Query cpu_query = QueryBuilder
 				.newQuery("SELECT ROUND(mean(value)) as value FROM cpu_value WHERE type_instance = 'user' AND type = 'percent' and time > now() -20s and host='"+host+ "'"
 						+ "order by time desc")
-				.forDatabase("collectd").create();
+				.forDatabase("telegraf").create();
 		QueryResult results = influxDBTemplate.query(cpu_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 

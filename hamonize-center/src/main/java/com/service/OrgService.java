@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.model.OrgVo;
 import com.util.AdLdapUtils;
@@ -16,6 +17,8 @@ import com.util.LDAPConnection;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class OrgService {
+	@Autowired
+	GlobalPropertySource gs;
 	
 	@Autowired
 	private IOrgMapper orgMapper;
@@ -67,7 +70,7 @@ public class OrgService {
 		
 		//AdLdapUtils adUtils = new AdLdapUtils();
 		LDAPConnection con = new LDAPConnection();
-		con.connection();
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		
 		if(result == 1) {
 			try {

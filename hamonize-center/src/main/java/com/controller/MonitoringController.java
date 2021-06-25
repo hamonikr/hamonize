@@ -134,17 +134,8 @@ public class MonitoringController {
 		 vo = pcmp.pcDetailInfo(vo);
 		 System.out.println("vo===="+vo.toString());
 
-		 //String[] sp = uuid.split("-");
-		//uuid = sp[0]+"-"+sp[1]+"-"+sp[2]+"-"+sp[3]+"-"+sp[4]+"-"+sp[5].substring(0,3);
 		}
-		//System.out.println("111==="+uuid);
-		
-		  //List<PcMemoryDataVo> list = mService.getMemory(uuid); JSONObject mem = new
-		  //JSONObject(); for(int i=0;i<list.size();i++) {
-		  //System.out.println("zzz======="+list.get(i).getValue()); 
-		  //mem.put("memory",list.get(i).getValue()); } System.out.println("mem==="+mem);
-		 
-		//model.addAttribute("data",mem);
+	
 		model.addAttribute("uuid",uuid);
 		model.addAttribute("pcvo",vo);
 		
