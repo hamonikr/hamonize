@@ -264,7 +264,9 @@ function getNxssDataCall(uuid){
 	var setUrl = "http://"+centerUrl+"/getAgent/nxss?name="+uuid;
 	console.log("Nxss Job : "+setUrl)
 	http.get(setUrl, (res) => {
-		res.on('data', (data) => {
+		let data = '';
+		res.on('data', (chunk) => { data += chunk; });
+		res.on('end', () => {
 				log.info("//== Nxss data is : " + data);
 				if( data != 'nodata'  ){
 					fnNxssJob(data);
