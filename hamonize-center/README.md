@@ -181,6 +181,14 @@ JAVA_OPTS="-Djava.net.preferIPv4Stack=true"
 ````
 <br>
 - docker로 실행할 경우<br>
+1. docker-compose.yml 파일이 있는 경로로 이동합니다.
+
 ```
+cd docker_was	
 ```
 
+2. docker-compose 를 통해 웹과 DB 컨테이너를 생성, 구동합니다.
+
+```
+docker-compose up -d	
+```

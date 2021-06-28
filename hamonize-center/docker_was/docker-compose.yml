@@ -1,0 +1,23 @@
+version : '3'
+services : 
+    web:
+        build: ./web
+        volumes:
+            - ./web/logs:/usr/local/tomcat/logs
+        ports:
+            - "8080:8080"
+    db:
+        image: postgres:10.16
+        environment:
+            POSTGRES_USER : ivs
+            POSTGRES_PASSWORD : password
+            POSTGRES_DB : hamonize_center
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./sql:/docker-entrypoint-initdb.d
+            - psql-data:/var/lib/postgresql/data
+
+volumes:
+    hamonize_center.sql:
+    psql-data:
