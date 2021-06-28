@@ -180,7 +180,4 @@ JAVA_OPTS="-Djava.net.preferIPv4Stack=true"
 ...
 ````
 <br>
-- docker로 실행할 경우<br>
-```
-```
 
