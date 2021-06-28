@@ -60,6 +60,8 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 ![architecture](./img/Hamonize_architecture.png)
 
 ## 라이선스
+* [hamonize-center 라이선스 문서](https://github.com/hamonikr/hamonize/blob/master/hamonize-center/NOTICE.md)
+
 * [hamonize-agent 라이선스 문서](https://github.com/hamonikr/hamonize/blob/master/hamonize-agent/NOTICE.md)
 
 * [hamonize-admin 라이선스 문서](https://github.com/hamonikr/hamonize/blob/master/hamonize-admin/COPYING)
