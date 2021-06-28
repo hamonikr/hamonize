@@ -180,7 +180,9 @@ JAVA_OPTS="-Djava.net.preferIPv4Stack=true"
 ...
 ````
 <br>
-- docker로 실행할 경우<br>
+
+<b>Docker로 구성하기</b>
+
 1. docker-compose.yml 파일이 있는 경로로 이동합니다.
 
 ```
