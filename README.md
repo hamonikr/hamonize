@@ -58,7 +58,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
  - docker로 디렉토리 서버 구축 : openldap
  - docker로 pc의 logging 서버 구축 : telegraf + influxdb + grafana를 사용하여 **윈도우** 및 **리눅스** 디바이스들에서 시계열 데이터를 수집하여 출력 (예정) 
  
-센터에 대한 자세한 내용은 **[여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-center)**에서 확인해볼 수 있습니다
+센터에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-center)에서 확인해볼 수 있습니다
  
 ### AGENT
 하드웨어 변경 감사, 사용자 로그전송, 주요 프로그램 보호, 보안정책 구현, 매체제어 관리
@@ -69,7 +69,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 - Node.JS로 윈도우 H/W 디바이스를 제어(예정)
 - Node.JS 프로젝트를 Windows 어플리케이션 패키징(예정)
 
-에이전트에 대한 자세한 내용은 **[여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent)**에서 확인해볼 수 있습니다
+에이전트에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent)에서 확인해볼 수 있습니다
 
 
 ### ADMIN
