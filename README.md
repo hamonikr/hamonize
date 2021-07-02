@@ -50,10 +50,32 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 ## 주요기능
 ### CENTER 
  자산관리, 사용자관리, 모니터링, 보안관리, 백업 및 복구, 로그감사, 매체제어, 통계 및 보고서, 업데이트 관리, 프로그램 관리
-### ADMIN
- 하드웨어 감사, 원격파일전송, 세션잠금 관리, 원격전원관리, 모니터링, 스크린 브로드캐스팅, 원격프로그램 실행, 원격화면캡쳐, 실시간 메시지 전송, 디렉토리서비스 연동, 바이오스 제어, 원격운영체제 설치, 원격 시리얼 콘솔, 원격데스크톱, 스케쥴 부팅
+ 
+ #### 사용기술
+ - spring boot + maven 를 사용하여 편리한 라이브러리 관리 
+ - docker로 was(tomcat) 서버 구축
+ - docker로 postgresql 서버 구축
+ - docker로 디렉토리 서버 구축 : openldap
+ - docker로 pc의 logging 서버 구축 : telegraf + influxdb + grafana를 사용하여 **윈도우** 및 **리눅스** 디바이스들에서 시계열 데이터를 수집하여 출력 (예정) 
+ 
+센터에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-center)에서 확인해볼 수 있습니다
+ 
 ### AGENT
 하드웨어 변경 감사, 사용자 로그전송, 주요 프로그램 보호, 보안정책 구현, 매체제어 관리
+ 
+ #### 사용기술
+- Node.JS + shellscript 로 **리눅스** H/W 디바이스를 제어
+- Node.JS 프로젝트를 데비안 소스 패키징
+- Node.JS로 윈도우 H/W 디바이스를 제어(예정)
+- Node.JS 프로젝트를 Windows 어플리케이션 패키징(예정)
+
+에이전트에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent)에서 확인해볼 수 있습니다
+
+
+### ADMIN
+ 하드웨어 감사, 원격파일전송, 세션잠금 관리, 원격전원관리, 모니터링, 스크린 브로드캐스팅, 원격프로그램 실행, 원격화면캡쳐, 실시간 메시지 전송, 디렉토리서비스 연동, 바이오스 제어, 원격운영체제 설치, 원격 시리얼 콘솔, 원격데스크톱, 스케쥴 부팅
+ 
+ #### 사용기술
 
 ### 아키텍처
 

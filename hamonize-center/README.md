@@ -1,5 +1,9 @@
 # Hamonize-center
 
+<b>Hamonize-center 데모 서버</b><br>
+[하모나이즈 센터](http://106.254.251.74:28080/)
+
+
 <b>Hamonize-center 설치</b>
 
 1 단계 : 코드 받기<br>
