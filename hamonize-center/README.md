@@ -1,7 +1,7 @@
 # Hamonize-center
 
 <b>Hamonize-center 데모 서버</b><br>
-[하모나이즈 센터](http://106.254.251.74:28080/){:target="_blank"}
+[하모나이즈 센터](http://106.254.251.74:28080/)
 
 
 <b>Hamonize-center 설치</b>
@@ -13,7 +13,7 @@
 <br>
 
 **1 단계 : 코드 받기**<br>
-현재/최신 릴리스는 항상 [깃헙 소스저장소](https://github.com/hamonikr/hamonize){:target="_blank"}에서 페이지 에서 찾을 수 있습니다. 
+현재/최신 릴리스는 항상 [깃헙 소스저장소](https://github.com/hamonikr/hamonize)에서 페이지 에서 찾을 수 있습니다. 
 
 <b>git clone https://github.com/hamonikr/hamonize.git </b><br><br>
 
