@@ -103,7 +103,7 @@ public class CurlController {
 	            hdVo.setPc_ip(tempObj.get("ipaddr").toString().trim());
 	            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString().trim());
 	            hdVo.setPc_hostname(tempObj.get("hostname").toString());
-	            hdVo.setPc_os(tempObj.get("pcos").toString());
+	            hdVo.setPc_os(tempObj.get("pcos").toString().trim());
 	            hdVo.setPc_memory(tempObj.get("memory").toString().trim() +"G");
 	            hdVo.setDeptname(tempObj.get("deptname").toString());	// 대대번
 	            hdVo.setPcname(tempObj.get("pcname").toString());	// pc 일련번호
@@ -113,28 +113,29 @@ public class CurlController {
 	            
 	       }
 		   
-		  System.out.println("user 사번 >> "+ hdVo.getSabun());
-		  System.out.println("user 이름 >> "+ hdVo.getUsername());
-		  
-	      int DuplserverPc = pcMangrMapper.inserPcInfoChk(hdVo);
-	      System.out.println("DuplserverPc===="+DuplserverPc +"===>"+ hdVo.getPc_vpnip() );
-	       
-	      PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
-	      System.out.println("orgNumChkVo===="+orgNumChkVo);
-	      if( orgNumChkVo != null  ) {
-	    	  hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
-	       }else {
-	    	   hdVo.setOrg_seq(8307); 
-	       }
-	      
-	       
-	      if(DuplserverPc >= 1 ) {
-	    	  	retVal = pcMangrMapper.updatePcinfo(hdVo);
-	        	System.out.println("update retVal=== " + retVal);
-	      }else {
-	        	retVal = pcMangrMapper.inserPcInfo(hdVo);
-		      	System.out.println("insert retVal=== " + retVal);
-	      }
+			System.out.println("user 사번 >> "+ hdVo.getSabun());
+			System.out.println("user 이름 >> "+ hdVo.getUsername());
+
+			int DuplserverPc = pcMangrMapper.inserPcInfoChk(hdVo);
+			System.out.println("DuplserverPc===="+DuplserverPc +"===>"+ hdVo.getPc_vpnip() );
+
+			PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
+			System.out.println("orgNumChkVo===="+orgNumChkVo);
+
+			if( orgNumChkVo != null  ) {
+				hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
+			}else {
+				hdVo.setOrg_seq(8307); 
+			}
+
+
+			if(DuplserverPc >= 1 ) {
+				retVal = pcMangrMapper.updatePcinfo(hdVo);
+				System.out.println("update retVal=== " + retVal);
+			}else {
+				retVal = pcMangrMapper.inserPcInfo(hdVo);
+				System.out.println("insert retVal=== " + retVal);
+				}
 	        
 	        
 	    }catch(Exception e) {
@@ -363,7 +364,7 @@ public class CurlController {
             
     		
 	        int insertRetVal = packageInfoMapper.insertPackageInfo(insertDataMap);
-	    //    System.out.println("insertRetVal===="+insertRetVal);
+	    //  System.out.println("insertRetVal===="+insertRetVal);
     		
 	        
 	    }catch(Exception e) {
