@@ -121,4 +121,19 @@ public class UserController {
 
 	}
 
+	@RequestMapping("/userAdd")
+	public String userSave(Model model, @RequestParam Map<String, Object> params) {
+		
+		return "/user/userAdd";
+	}
+
+	@RequestMapping("/idDuplCheck")
+	@ResponseBody
+	public int idDuplCheck(Model model,UserVo vo) throws Exception{
+		int result = 0;
+		result = userSerivce.userIdCheck(vo);
+		return result;
+		
+	}
+	
 }

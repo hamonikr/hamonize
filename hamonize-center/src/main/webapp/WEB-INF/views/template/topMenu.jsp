@@ -73,7 +73,7 @@
  <div class="hamo_header">
  <div class="admin_info">
             <ul class="admin_sinfo">
-                <li>
+                <%-- <li>
                     <div class="dropdown">
                         <div class="notic">
                             <img src="/images/icon_alarm.png" />
@@ -82,7 +82,7 @@
                         <div class="dropdown_content" id="pcChange">
                         </div>
                     </div>
-                </li>
+                </li> --%>
                 <li><div class="dropdown">
                         <div class="notic">
                             <img src="/images/icon_setting.png" />
@@ -91,7 +91,6 @@
                         <div class="dropdown_content" >
                             <a href="/admin/list.do">관리자 관리</a>
                             <a href="/admin/managerlist.do">부서 관리</a>
-                            <a href="/gplcs/jsonInsertPc.do">AMT개통정보등록</a>
                             <a href="/gplcs/ipManagement.do">사이트 IP 관리</a>
                             <%-- <a href="/research/research.do">통계</a> --%>
                         </div>
@@ -126,7 +125,7 @@
                 </li>
                   <li><a href="/auditLog/pcUserLog">로그감사</a>
  	              	<ul class="last">
-                        <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li>
+                        <%-- <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li> --%>
                         <%-- <li><a href="/auditLog/iNetLog">인터넷 사용로그</a></li> --%>
                         <li><a href="/auditLog/prcssBlockLog">프로세스 차단로그</a></li>
                         <%-- <li><a href="/auditLog/pcChangeLog">하드웨어 변경로그</a></li> --%>

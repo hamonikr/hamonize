@@ -77,7 +77,7 @@ text-decoration: none;
 	];
 	
 	$(document).ready(function(){
-		setNav('사용자정보');
+		setNav('사용자 정보');
 		$("#txtSearch").keydown(function(key) {
 			if (key.keyCode == 13) {
 				key.preventDefault();
@@ -125,10 +125,16 @@ text-decoration: none;
 							strHtml += "<td>"+agrs[i].user_id+"</td>";
 							strHtml += "<td>"+agrs[i].rank+"</td>";
 							strHtml += "<td>"+agrs[i].user_name+"</td>";
-							strHtml += "<td>"+agrs[i].user_gunbun+"</td>";
-							strHtml += "<td>"+agrs[i].insert_dt+"</td>";
-							strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							strHtml += "<td>"+agrs[i].user_sabun+"</td>";
+							strHtml += "<td>"+agrs[i].ins_date+"</td>";
+							if(agrs[i].discharge_dt == null){
+								strHtml += "<td> - </td>";
+							}else{
+								strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							}
+							
 							strHtml += "</tr>";				
+							
 							}
 						}else{
 							strHtml += "<tr data-code=''><td colspan='10' style='text-align:center;'class='mdl-data-table__cell--non-numeric'>등록된 데이터가 없습니다.</td></tr>"
@@ -201,9 +207,14 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							strHtml += "<td>"+agrs[i].user_id+"</td>";
 							strHtml += "<td>"+agrs[i].rank+"</td>";
 							strHtml += "<td>"+agrs[i].user_name+"</td>";
-							strHtml += "<td>"+agrs[i].user_gunbun+"</td>";
-							strHtml += "<td>"+agrs[i].insert_dt+"</td>";
-							strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							strHtml += "<td>"+agrs[i].user_sabun+"</td>";
+							strHtml += "<td>"+agrs[i].ins_date+"</td>";
+							if(agrs[i].discharge_dt == null){
+								strHtml += "<td> - </td>";
+							}else{
+								strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							}
+
 							strHtml += "</tr>";
 							}
 						}else{
@@ -270,7 +281,7 @@ function userView(idx){
 function fnSave(){
 	
 	if($("#org_nm").val()==""){
-		alert("부대명을 입력해주세요.");
+		alert("부서명을 입력해주세요.");
 		return false;
 	}
 	
@@ -345,7 +356,7 @@ function searchView(viewName, page){
 		            <li>Home</li>
 		            <li>Location</li>
 		        </ul>
-		        <h2 class="tree_head">사용자정보</h2>
+		        <h2 class="tree_head">사용자 정보</h2>
 		
 		        <ul class="view_action">
 		            <li><input type="radio" name="1" id="expandAllBtn"><label for="expandAllBtn">전체열기</label> </li>
@@ -365,15 +376,23 @@ function searchView(viewName, page){
       <div class="right_box">
       
          <ul class="search_area">
-            <li>
-               <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
+        	 <li>
+              <%-- <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
               <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
                ~
               <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
-              <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-              <%-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
-              <div id="count"></div>
+              <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a> 
+              <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button>
+               --%>
+			  <div id="count"></div>
             </li>
+			<li>
+				<div>
+		            <button type="button" class="btn_type3" onclick="location.href='/user/userAdd'" id="userSave"> 사용자 추가</button>
+					<button type="button" class="btn_type3" id="userDel"> 사용자 삭제</button>
+				</div>
+			</li>
+
             <li>
                <!-- 검색 -->
               <div class="top_search">

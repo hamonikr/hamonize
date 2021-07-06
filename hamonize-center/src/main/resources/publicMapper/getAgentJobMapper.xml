@@ -41,7 +41,7 @@
 					br_backup_path, 
 					br_backup_iso_dt, 
 					br_backup_gubun,
-					sgb_seq,
+					dept_seq,
 					br_backup_name
 				)
 			VALUES ( 
@@ -49,7 +49,7 @@
 				#{br_backup_path} , 
 				to_timestamp(#{br_backup_iso_dt}, 'YYYY-MM-DD HH24:MI:SS') ,
 				#{br_backup_gubun} ,
-				#{sgb_seq}, 
+				#{dept_seq}, 
 				#{bk_name} 
 			)
 				

@@ -215,5 +215,17 @@
 		</where>
 	</select>
 	
+	<!-- 사용자 정보 유효성 체크 -->
+	<select id="userIdCheck" parameterType="com.model.UserVo"	resultType="Integer">
+		SELECT COUNT(USER_ID)
+		FROM TBL_USER
+		WHERE USER_ID = #{user_id}
+	</select>
+
+	<select id="userSabunCheck" parameterType="com.model.UserVo"	resultType="Integer">
+		SELECT COUNT(sabun)
+		FROM TBL_USER
+		WHERE user_sabun = #{sabun}
+	</select>
 		
 </mapper>

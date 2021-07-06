@@ -226,12 +226,17 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					$(".board_view tbody").append(shtml);
 				}else{
 					$("#trOrg_num").remove();
-					 $("#trSido").remove();
-					 $("#trGugun").remove();
-					 $("#trPseq").remove();
-					 var shtml = "<tr id='trOrg_num'><th>부문번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부문번호를 적으세요'/></td></tr>";
-						  shtml += "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
-						$(".board_view tbody").append(shtml);
+					$("#trSido").remove();
+					$("#trGugun").remove();
+					$("#trPseq").remove();
+					 
+					// var shtml = "<tr id='trOrg_num'><th>부문번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부문번호를 적으세요'/></td></tr>";
+					
+					// shtml += "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
+					var shtml = "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
+
+					
+					$(".board_view tbody").append(shtml);
 				}
 				//$('form[name=frm] input[name=p_org_nm]').val(agrs.p_org_nm);
 				$('form[name=frm] input[name=p_org_nm]').val($(pSpan).text());
@@ -263,12 +268,13 @@ function setCheck() {
 
 //부문 추가
  function addOrgcht(e) {
-	 $("#trOrg_num").remove();
-	 $("#trSido").remove();
-	 $("#trGugun").remove();
-	 $("#trPseq").remove();
-	 var shtml = "<tr id='trOrg_num'><th>부문번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부문번호를 적으세요'/></td></tr>";
-		$(".board_view tbody").append(shtml);
+	$("#trOrg_num").remove();
+	$("#trSido").remove();
+	$("#trGugun").remove();
+	$("#trPseq").remove();
+	//var shtml = "<tr id='trOrg_num'><th>부문번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부문번호를 적으세요'/></td></tr>";
+	var shtml = "";
+	$(".board_view tbody").append(shtml);
 		
 		var zTree = $.fn.zTree.getZTreeObj("tree"),
 		isParent = e.data.isParent,
@@ -349,6 +355,7 @@ function setCheck() {
 		
 		//부서 삭제 
  function removeOrgcht(e) {
+	 	var all_org_nm = $("#all_org_nm").val();
 		var zTree = $.fn.zTree.getZTreeObj("tree"),
 		nodes = zTree.getSelectedNodes(),
 		treeNode = nodes[0];
@@ -365,6 +372,7 @@ function setCheck() {
 						,p_seq:treeNode.pId
 						,org_ordr:treeNode.od
 						,org_nm:$("#org_nm").val()
+						,all_org_nm:$("#all_org_nm").val()
 					},
 					function(result){
 						console.log("result===="+result);
@@ -449,8 +457,8 @@ function fnSave(){
                 </div>
                 <div class="tree_btn">
                     <button type="button" class="btn_type3" id="btnAddOrg" name="btnAddOrg">+ 부문추가</button>
-                    <button type="button" class="btn_type3" id="btnDelOrg" name="btnDelOrg">- 부문삭제</button>
                     <button type="button" class="btn_type3" id="btnAddOrg_s" name="btnAddOrg_s">+ 부서추가</button>
+                	<button type="button" class="btn_type3" id="btnDelOrg" name="btnDelOrg">- 삭제</button>
                 </div>
                 
             </div>

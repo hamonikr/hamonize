@@ -31,7 +31,7 @@
 	<select id="dayUseUser" resultType="hashmap" parameterType="com.model.ResearchVo">
 	<![CDATA[
 		select count(*)as user_count, to_char(login_dt,'yyyy-mm-dd') as login_dt from tbl_loginout where to_char(login_dt,'yyyymmdd') >= #{date_fr} and to_char(login_dt,'yyyymmdd') <= #{date_to} 
-	and (select org_seq from tbl_pc_mangr a where a.sgb_pc_uuid = uuid) in (with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+	and (select org_seq from tbl_pc_mangr a where a.pc_uuid = uuid) in (with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
     from tbl_org a
     where a.seq = #{org_seq}
@@ -49,7 +49,7 @@
 	<select id="distionctDayUseUser" resultType="hashmap" parameterType="com.model.ResearchVo">
 	<![CDATA[
 		select count(distinct sidx) as user_count, to_char(login_dt,'yyyy-mm-dd') as login_dt from tbl_loginout where to_char(login_dt,'yyyymmdd') >= #{date_fr} and to_char(login_dt,'yyyymmdd') <= #{date_to} 
-	and (select org_seq from tbl_pc_mangr a where a.sgb_pc_uuid = uuid) in (with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+	and (select org_seq from tbl_pc_mangr a where a.pc_uuid = uuid) in (with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
     from tbl_org a
     where a.seq = #{org_seq}
@@ -74,7 +74,7 @@
   where
     to_char(login_dt, 'yyyymmdd') >= #{date_fr} and to_char(login_dt, 'yyyymmdd') <= #{date_to}
     and to_char(age(logout_dt,login_dt), 'HH24:MI:SS.MS') is not null
-    and (select org_seq from tbl_pc_mangr a where a.sgb_pc_uuid = uuid) in (with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+    and (select org_seq from tbl_pc_mangr a where a.pc_uuid = uuid) in (with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
     from tbl_org a
     where a.seq = #{org_seq}
@@ -92,7 +92,7 @@
 	<select id="pcCountUnit" resultType="hashmap" parameterType="com.model.ResearchVo">
 	<![CDATA[
 		select a.org_seq, a.count, b.org_nm, b.all_org_nm from 
-		(select org_seq ,count(*) from public.tbl_pc_mangr where sgb_pc_os = 'H' group by org_seq) as a
+		(select org_seq ,count(*) from public.tbl_pc_mangr where pc_os = 'H' group by org_seq) as a
 		inner join
 		(select * from public.tbl_org where section = 'S') as b on a.org_seq = b.seq
     ]]>
@@ -102,7 +102,7 @@
 	<![CDATA[
 		select count(distinct uuid) as pc_count, to_char(login_dt,'yyyy-mm-dd')as login_dt from tbl_loginout where to_char(login_dt,'yyyymmdd') >= #{date_fr}   
 		and to_char(login_dt,'yyyymmdd') <= #{date_to}
-		and (select org_seq from tbl_pc_mangr a where a.sgb_pc_uuid = uuid) 
+		and (select org_seq from tbl_pc_mangr a where a.pc_uuid = uuid) 
 		in 
 		(with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) 
 		as ( select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false    
@@ -122,7 +122,7 @@
 	<![CDATA[
 		select count(distinct sidx) as user_count, to_char(login_dt,'yyyy-mm-dd')as login_dt from tbl_loginout where to_char(login_dt,'yyyymmdd') >= #{date_fr}   
 		and to_char(login_dt,'yyyymmdd') <= #{date_to}
-		and (select org_seq from tbl_pc_mangr a where a.sgb_pc_uuid = uuid) 
+		and (select org_seq from tbl_pc_mangr a where a.pc_uuid = uuid) 
 		in 
 		(with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) 
 		as ( select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false    
@@ -347,34 +347,6 @@
 	
 	
 	
-	
-	<!-- PcController.mngrListInfo -->
-	<!-- <select id="pcListInfo" resultType="com.model.PcMangrVo" parameterType="hashmap">
-		SELECT 
-			sgb_seq, 
-			sgb_pc_status, 
-			sgb_pc_cpu, 
-			sgb_pc_memory, 
-			sgb_pc_disk, 
-			sgb_pc_macaddress, 
-			sgb_pc_guid, 
-			sgb_pc_ip, 
-			first_date, 
-			last_date,
-			sgb_pc_hostname 
-		FROM tbl_pc_mangr
-
-		<where>
-			
-			<if test="pcMangrVo.selectOrgSeq != null and pcMangrVo.selectOrgSeq != '' ">
-					org_seq = #{pcMangrVo.selectOrgSeq}
-			</if>
-		
-		</where> 
-		order by sgb_seq desc
-		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
-	</select> -->
 	
 	
 	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">

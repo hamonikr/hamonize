@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.model.OrgVo;
-import com.util.AdLdapUtils;
+//import com.util.AdLdapUtils;
 import com.util.LDAPConnection;
 
 @Service
@@ -29,6 +29,7 @@ public class OrgService {
 		
 		try {
 			orglist = orgMapper.orgList(orgvo);
+			
 			for (int i = 0; i < orglist.size(); i++) {	 
 	            JSONObject data = new JSONObject();
 	            data.put("seq", orglist.get(i).getSeq());
@@ -38,7 +39,7 @@ public class OrgService {
 	            data.put("section", orglist.get(i).getSection());
 	            data.put("level", orglist.get(i).getLevel());
 	            jsonArray.add(i, data);   
-	 }
+			}
 			
 			
 		} catch (Exception e) {
@@ -54,35 +55,61 @@ public class OrgService {
 	
 	public int orgSave(OrgVo orgvo) {
 		System.out.println("--- orgService > orgSave working--- ");
+	
 		//수정전 이름 불러오기
 		OrgVo oldOrgVo = new OrgVo();
 		OrgVo orgPath = new OrgVo();
 		OrgVo newOrgPath = new OrgVo();
+		
+		OrgVo newAllOrgName = new OrgVo();
+		String newAllOrgNm="";
 		
 		if(orgvo.getSeq() != null) {
 			oldOrgVo = orgMapper.orgOldNm(orgvo);
 			orgPath = orgMapper.groupUpperCode(orgvo);
 			newOrgPath = orgMapper.groupNewUpperCode(orgvo);
 		}
-
+	
 		int result = orgMapper.orgSave(orgvo);
-		System.out.println(" 저장 여부 result======"+result);
-		
-		//AdLdapUtils adUtils = new AdLdapUtils();
+		System.out.println(" 저장 여부 result======"+result);		
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-		
+
 		if(result == 1) {
 			try {
-				con.addOu(orgvo.getOrg_nm());
+				System.out.println("----신규저장----");
+				
+				// ldap 저장
+				con.addOu(orgvo);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-				// if("S".equals(orgvo.getSection()) ){
-				// 	con.OuModify(getOrg_nm());
-				// }
+
 		}else if (result == 0){
-			System.out.println("db 저장 실패");
+			System.out.println("----수정----");
+			System.out.println("수정전 org name >> " + oldOrgVo.getOrg_nm());
+			
+			if(oldOrgVo.getOrg_nm()!=null){ // 수정
+					List<OrgVo> list = orgMapper.searchChildDept(orgvo);
+					System.out.println("list size >> "+ list.size());
+
+					for(int i=0;i<list.size();i++){
+						System.out.println("하위 list --> seq : "+list.get(i).getSeq()+" path : " +list.get(i).getAll_org_nm());
+						newAllOrgNm = list.get(i).getAll_org_nm().replace(oldOrgVo.getOrg_nm(), orgvo.getOrg_nm());
+						newAllOrgName.setAll_org_nm(newAllOrgNm);
+						newAllOrgName.setSeq(list.get(i).getSeq());
+
+						System.out.println("newAllOrgName > "+newAllOrgName.toString());
+
+						int uptResult = orgMapper.allOrgNmUpdate(newAllOrgName);
+					}
+
+					// ldap 서버 업데이트
+				con.updateOu(oldOrgVo , orgvo);
+			} else{ 
+				System.out.println("수정할 사항 없음");
+			}
 		}
 
 		// if(result == 1) {
@@ -130,6 +157,10 @@ public class OrgService {
 		OrgVo upGroupInfo = orgMapper.groupUpperCode(orgvo);
 		String check = "";
 		
+		LDAPConnection con = new LDAPConnection();
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+		con.deleteOu(orgvo);
+
 		// ldap
 		// try {
 		// 	check = adUtils.ouDelete(orgvo.getOrg_nm());
