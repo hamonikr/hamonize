@@ -76,6 +76,12 @@ This project follows the [all-contributors](https://github.com/all-contributors/
  하드웨어 감사, 원격파일전송, 세션잠금 관리, 원격전원관리, 모니터링, 스크린 브로드캐스팅, 원격프로그램 실행, 원격화면캡쳐, 실시간 메시지 전송, 디렉토리서비스 연동, 바이오스 제어, 원격운영체제 설치, 원격 시리얼 콘솔, 원격데스크톱, 스케쥴 부팅
  
  #### 사용기술
+- c++과 c 언어 사용, cmake와 ninja를 통한 빌드
+- 각종 mingw 패키지를 통한 윈도우 크로스 컴파일 방식 사용
+- Qt5를 사용한 데이스크톱 애플리케이션
+- OpenLDAP과의 연동으로 조직 정보 활용
+
+어드민에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-admin)에서 확인해볼 수 있습니다
 
 ### 아키텍처
 
