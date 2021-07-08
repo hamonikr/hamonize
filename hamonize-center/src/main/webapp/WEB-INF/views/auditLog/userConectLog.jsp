@@ -105,14 +105,14 @@
 					$.each(data.list, function(index, value) {
 						var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
 
-						gbInnerHtml += "<tr data-code='" + value.sgb_seq + "' data-guidcode='" + value.sgb_pc_guid + "'>";
+						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 						gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-						gbInnerHtml += "<td>"+value.sgb_pc_hostname+"</td>";
-						gbInnerHtml += "<td>"+value.sgb_pc_ip+"</td>";
-						gbInnerHtml += "<td>"+value.sgb_pc_macaddress+"</td>"; 
-						gbInnerHtml += "<td>"+value.sgb_pc_disk+"</td>"; 
-						gbInnerHtml += "<td>"+value.sgb_pc_cpu+"</td>"; 
-						gbInnerHtml += "<td>"+value.sgb_pc_memory+"</td>"; 
+						gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
+						gbInnerHtml += "<td>"+value.pc_ip+"</td>";
+						gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
+						gbInnerHtml += "<td>"+value.pc_disk+"</td>"; 
+						gbInnerHtml += "<td>"+value.pc_cpu+"</td>"; 
+						gbInnerHtml += "<td>"+value.pc_memory+"</td>"; 
 						gbInnerHtml += "</tr>";
 					
 					});	

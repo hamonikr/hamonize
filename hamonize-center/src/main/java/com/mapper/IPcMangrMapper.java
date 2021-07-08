@@ -15,8 +15,6 @@ public interface IPcMangrMapper {
 	
 	public int countPcListInfo(PcMangrVo vo);
 	
-	public int inserPcInfo(PcMangrVo vo);
-	
 	public int changeStts(PcMangrVo vo);
 	
 	public int requestCount();
@@ -60,6 +58,15 @@ public interface IPcMangrMapper {
 	
 	//정책배포결과 카운트
 	public List<Map<String, Object>> pcPolicyList(Map<String, Object> map);
+	
+	public int inserPcInfo(PcMangrVo vo);
+
+	public int inserPcInfoChk(PcMangrVo vo);
+
+	public int updateVpnInfo(PcMangrVo vo);
+
+	public PcMangrVo chkPcOrgNum(PcMangrVo vo);
+	
 	
 
 	

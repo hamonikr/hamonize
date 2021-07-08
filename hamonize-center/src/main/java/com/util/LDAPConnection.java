@@ -18,6 +18,8 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import com.model.OrgVo;
+
 public class LDAPConnection {
 	private DirContext dc = null; 
 
@@ -31,7 +33,8 @@ public class LDAPConnection {
 		System.out.println("\n<---end");
 	}
 	
-	
+	/* connection */
+
     public void connection(String url, String password){
         Properties env = new Properties();
 
@@ -48,8 +51,8 @@ public class LDAPConnection {
 		System.out.println("env---? " + env);    	
 		
 		try {
-                dc = new InitialDirContext(env);
-                System.out.println("success");
+			dc = new InitialDirContext(env);
+			System.out.println("success");
         } catch (AuthenticationException ex) {
 			System.out.println(ex.getMessage());
 		} catch (NamingException e) {
@@ -57,12 +60,15 @@ public class LDAPConnection {
         }
     }
 
+	/* search */
+
     public void searchUsers() throws NamingException {
 		//String searchFilter = "(uid=1)"; //  for one user
 		//String searchFilter = "(&(uid=1)(cn=Smith))"; // and condition 
 		//String searchFilter = "(|(uid=1)(uid=2)(cn=Smith))"; // or condition
         String searchFilter = "(&(objectClass=inetOrgPerson))";
 		
+
 		String[] reqAtt = { "cn", "sn","employeeNumber" };
 		//String[] reqAtt = { "cn", "sn","uid" };
 		
@@ -125,22 +131,54 @@ public class LDAPConnection {
 			System.out.println(result.getNameInNamespace());
 			System.out.println(attr.get("cn"));
 			System.out.println(attr.get("sn"));
+			System.out.println("----------------------");
 		}
 
 	}
-	public  void addOu(String ouName) {
+
+	/* add */
+
+	public void addOu(OrgVo vo) {
+
+		String ouName = vo.getOrg_nm();
 		System.out.println("ouName======" + ouName);
 		Attributes attributes = new BasicAttributes();
 		Attribute attribute = new BasicAttribute("objectClass");
-		String baseDn = ",dc=ldap,dc=hamonize,dc=com";
-		String Dn = "ou="+ouName+baseDn;
+		String baseDn = "dc=ldap,dc=hamonize,dc=com";
+		String upperDn = "";
+
+		
+		String str = vo.getAll_org_nm();
+		System.out.println("str : "+ str.trim());
+		
+		String[] p_array = str.split("\\|");
+		System.out.println("array.length > "+p_array.length);
+		
+		if(p_array.length > 0){// 최상위 ou가 아닌경우
+			if(p_array.length ==1){
+				String subStr [] = vo.getP_org_nm().split("\\ -");
+				upperDn = "ou="+subStr[0]+",";
+			}else{
+				
+				for(int i=p_array.length-1;i>=0;i--) {
+					System.out.println(p_array[i]);
+					upperDn += "ou="+p_array[i]+",";
+				}
+			}
+
+			baseDn = upperDn + baseDn;
+
+		}else{ // 최상위 ou 
+			baseDn = ",dc=ldap,dc=hamonize,dc=com";
+		}
+
+		System.out.println("baseDn > "+ baseDn);
+		String Dn = "ou="+ouName+","+baseDn;
 		attribute.add("top");
 		attribute.add("organizationalUnit");
 		attributes.put(attribute);
 		attributes.put("ou", ouName);
 
-		// ou details
-		//attributes.put("ou", ouName);
 		try {
 			dc.createSubcontext(Dn, attributes);
 			System.out.println("success");
@@ -148,28 +186,6 @@ public class LDAPConnection {
 			System.out.println("fail");
 			e.printStackTrace();
 		}
-
-		// try {
-
-		// 	String username = ouName;
-
-		// 	//String baseDn = ",DC=adserver,DC=invesume,DC=com";
-		// 	String baseDn = AdLdapUtils.baseDn;
-		// 	//String serverIP = "adserver.invesume.com";
-		// 	String serverIP = AdLdapUtils.serverIP;
-
-		// 	String distinguishedName = username + baseDn;
-		// 	Attributes newAttributes = new BasicAttributes(true);
-		// 	Attribute oc = new BasicAttribute("objectclass");
-		// 	oc.add("top");
-		// 	oc.add("organizationalUnit");
-		// 	newAttributes.put(oc);
-		// 	System.out.println("Name: " + username + " Attributes: " + oc);
-		// 	ctx.createSubcontext(distinguishedName, newAttributes);
-
-		// } catch (Exception exception) {
-		// 	exception.printStackTrace();
-		// }
 
 	}
 
@@ -204,6 +220,43 @@ public class LDAPConnection {
 		}
 		
 	}
+
+	/* delete */
+	
+	public void deleteOu(OrgVo vo){
+		System.out.println("delete ou" + vo.getAll_org_nm());
+		String baseDn = "dc=ldap,dc=hamonize,dc=com";
+		String upperDn = "";
+
+		
+		String str = vo.getAll_org_nm();
+		System.out.println("str : "+ str.trim());
+		
+		String[] p_array = str.split("\\|");
+		System.out.println("array.length > "+p_array.length);
+		
+		if(p_array.length > 0){// 최상위 ou가 아닌경우
+			for(int i=p_array.length-1;i>=0;i--) {
+				System.out.println(p_array[i]);
+				upperDn += "ou="+p_array[i]+",";
+			}
+			baseDn = upperDn + baseDn;
+
+		} else{ // 최상위 ou 
+			baseDn = "ou="+vo.getOrg_nm()+",dc=ldap,dc=hamonize,dc=com";
+		}
+
+		System.out.println("baseDn > "+ baseDn);
+		
+		try {
+			dc.destroySubcontext(baseDn);
+			System.out.println("success");
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
 	public void deleteUser()
 	{
 		try {
@@ -247,7 +300,58 @@ public class LDAPConnection {
 		}
 	}
 	
-	/* use this to update user password */
+	/* update */
+	
+
+	public void updateOu(OrgVo oldVo, OrgVo newVo){
+		String baseDn = "dc=ldap,dc=hamonize,dc=com";
+		String upperDn = "";
+		
+		String newDn = "";
+		String oldDn = "";
+
+		System.out.println("old ou" + oldVo.getOrg_nm());
+		System.out.println("new ou" + newVo.getOrg_nm());
+		System.out.println("update all ou : " + newVo.getAll_org_nm());
+
+
+		String str = newVo.getAll_org_nm().trim();
+		System.out.println("str : "+ str);
+		
+		String[] p_array = str.split("\\|");
+
+		if(oldVo.getOrg_nm() != newVo.getOrg_nm()){
+			if(p_array.length > 0){// 최상위 ou가 아닌경우
+				for(int i=p_array.length-2;i>=0;i--) {
+					System.out.println(p_array[i]);
+					upperDn += "ou="+p_array[i]+",";
+				}
+
+				oldDn = "ou="+oldVo.getOrg_nm()+","+upperDn +baseDn;
+				newDn = "ou="+newVo.getOrg_nm()+","+upperDn +baseDn; 
+
+			} else{ // 최상위 ou 
+				newDn = "ou="+newVo.getOrg_nm()+",dc=ldap,dc=hamonize,dc=com";
+			}
+			System.out.println("oldDn > "+ oldDn);
+			System.out.println("newDn > "+ newDn);
+			
+			try {
+					// ModificationItem[] mods= new ModificationItem[1];
+					// mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("ou", newVo.getOrg_nm()));
+					dc.rename(oldDn,newDn);
+					
+
+					System.out.println("success");
+			} catch (NamingException e) {
+				e.printStackTrace();
+			}
+		}else{
+			System.out.println("업데이트할 사항 없음!");
+		}
+	}
+
+
 	public void updateUserPassword(String username, String password) {
 		try {
 			String dnBase=",ou=users,ou=system";

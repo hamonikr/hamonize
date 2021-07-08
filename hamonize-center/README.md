@@ -22,9 +22,9 @@
 1) 데이터 베이스 생성
 - postsql 유저 생성
 ```
-create user ivs;
-alter role ivs superuser createdb;
-alter user ivs with password {your-own-db-pw} // 자신만의 db패스워드를 설정해주세요
+create user hamonize;
+alter role hamonize superuser createdb;
+alter user hamonize with password {your-own-db-pw} // 자신만의 db패스워드를 설정해주세요
 
 ```
 
@@ -33,10 +33,10 @@ alter user ivs with password {your-own-db-pw} // 자신만의 db패스워드를 
 - 다음 명령어를 통해 hamonize-center에 sql 내용을 create 할 수 있습니다.
 
 ```
-psql -h localhost -U ivs -W -d hamonize_center -f db/hamonize_center.sql
+psql -h localhost -U hamonize -W -d hamonize_center -f db/hamonize_center.sql
 ```
 - localhost : IP를 적어주는 곳입니다 (default : localhost)
-- user_name : postgresql 계정 이름을 적어주는 곳입니다 (default : 센터와 연동을 위해 ivs 로 설정 필요. ivs 유저를 만들어주세요)
+- user_name : postgresql 계정 이름을 적어주는 곳입니다 (default : 센터와 연동을 위해 hamonize 로 설정 필요. hamonize 유저를 만들어주세요)
 - database_name : postgresql 데이터베이스 이름을 적어주는 곳입니다.(default : hamonize_center 로 설정 필요)
 
 <br>
@@ -45,7 +45,7 @@ psql -h localhost -U ivs -W -d hamonize_center -f db/hamonize_center.sql
 - 터미널로 데이터 베이스를 접속하는 방법입니다.
 - 데이터베이스 접속 프로그램을 사용하면 더욱 편하게 사용하실 수 있습니다. (DBeaver, tadpole)
 ```
-psql -h localhost -p port -U ivs -d hamonize_center
+psql -h localhost -p port -U hamonize -d hamonize_center
 ```
 <br>
 
@@ -60,8 +60,8 @@ psql -h localhost -p port -U ivs -d hamonize_center
 docker run -it -p 389:389 -p 636:636 \
 --name ldap-service \
 --hostname ldap.hamonize.com \
---env LDAP_ORGANISATION="invesume" \
---env LDAP_DOMAIN="ldap.hamonize.com" \
+--env LDAP_ORGANISATION="{your own org}" \
+--env LDAP_DOMAIN="hamonize.com" \
 --env LDAP_ADMIN_PASSWORD="{your own ldap password}" \
 --detach osixia/openldap:1.5.0
 
@@ -69,7 +69,7 @@ docker run -it -p 389:389 -p 636:636 \
 
 - docker 생성 테스트 
 ```
-ldapsearch -x -H ldap://{your own ldap ip}:389 -b dc=ldap,dc=hamonize,dc=com -D "cn=admin,dc=ldap,dc=hamonize,dc=com" -w {your own ldap password}
+ldapsearch -x -H ldap://{your own ldap ip}:389 -b dc=hamonize,dc=com -D "cn=admin,dc=hamonize,dc=com" -w {your own ldap password}
 
 ```
 
@@ -167,7 +167,7 @@ JAVA_OPTS="-Djava.net.preferIPv4Stack=true"
     driverClassName="org.postgresql.Driver"
     url="jdbc:postgresql://{your own db ip}/hamonize_center"
     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-    username="{your own db id}"
+    username="hamonize"
     password="{your own db pw}"
     maxActive="100"
     maxWait="10000"

@@ -61,35 +61,7 @@ transform: translate(-50%, -50%);
 	
 });
 	
-	/* function getMntrngList(page){
-		console.log("asd");
-		var url ='pcMngrList.proc';
-		//var keyWord = $("select[name=keyWord]").val();
-		//var vData = 'mntrngListCurrentPage=' + $("#mntrngListCurrentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val() + "&org_seq=" + $("#gbcdval").attr("data-orgseq");
-		var org_seq = $("#org_seq").val();
-		$.post(url,{org_seq:org_seq,pcMngrListCurrentPage:page},
-				function(result){
-						var agrs = result;
-						var strHtml ="";
-						for(var i =0; i< agrs.length;i++){
-							var uuid = agrs[i].sgb_pc_uuid;
-							strHtml += "<div class=\"mr-sm-3\">";
-							if(agrs[i].sgb_pc_status == "true"){
-								strHtml += "<div class=\"card text-white bg-success mb-3\" style=\"max-width: 18rem; width:150px;\">";
-								strHtml += '<div class="card-header"><a href="pcView.do?uuid='+uuid+'">'+agrs[i].sgb_pc_hostname+'</a></div>';
-							}else{
-								strHtml += "<div class=\"card text-white bg-dark mb-3\" style=\"max-width: 18rem; width:150px;\">";
-								strHtml += '<div class="card-header">'+agrs[i].sgb_pc_hostname+'</div>';
-							}
-							//strHtml += '<div class="card-header">'+agrs[i].sgb_pc_hostname+'</div>';
-							strHtml += '</div>';
-							strHtml += '</div>';
-						}
-						$("#mntrngList").append(strHtml);
-				});
-		
-		//callAjax('POST', url, vData, pcMngrGetSuccess, getError, 'json');
-	} */
+	
  
 function getPcMngrList(){
 	var url ='/pcMngr/pcMngrList.proc';
@@ -97,10 +69,6 @@ function getPcMngrList(){
 	var keyWord = $("select[name=keyWord]").val();
 	var vData = 'pcListInfoCurrentPage=' + $("#pcListInfoCurrentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val()+ "&org_seq=" + $("#org_seq").val()+ "&pc_change="+pc_change; 
 	callAjax('POST', url, vData, userpcMngrGetSuccess, getError, 'json');
-	/* $.post(url,{org_seq:1},
-			function(result){
-		
-	}); */
 }
 var userpcMngrGetSuccess = function(data, status, xhr, groupId){
 	var gbInnerHtml = "";
@@ -112,16 +80,16 @@ var userpcMngrGetSuccess = function(data, status, xhr, groupId){
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
 			
 			console.log("z"+value.pc_change)
-			gbInnerHtml += "<tr data-code='" + value.sgb_seq + "' data-guidcode='" + value.sgb_pc_guid + "'>";
+			gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 			gbInnerHtml += "<td>"+value.sgbsido+"</td>";
 			 gbInnerHtml += "<td>"+value.sgbname+"</td>"; 
-			gbInnerHtml += "<td><a href='#' onclick=\"javascript:show_layer('"+value.pc_change+"'," +value.sgb_seq+")\">"+value.sgb_pc_hostname+"</a></td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_ip+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_macaddress+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_disk+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_cpu+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_memory+"</td>";
+			gbInnerHtml += "<td><a href='#' onclick=\"javascript:show_layer('"+value.pc_change+"'," +value.seq+")\">"+value.pc_hostname+"</a></td>";
+			gbInnerHtml += "<td>"+value.pc_ip+"</td>";
+			gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_disk+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_cpu+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_memory+"</td>";
 			gbInnerHtml += "<td>"+value.first_date+"</td>";
 			if(value.pc_change == 'R')
 				gbInnerHtml += "<td>승인요청</td>";
@@ -158,13 +126,13 @@ var userpcMngrGetSuccess = function(data, status, xhr, groupId){
 	
 }
 
-function show_layer(sttus,sgb_seq){
+function show_layer(sttus,seq){
 	console.log("d"+sttus)
 	$("#popup").show();
 	$("#bg_fix").show();
-	$("#sgb_seq").val(sgb_seq);
+	$("#seq").val(seq);
 	
-	 $.post("getMovePcInfo", { pc_change : sttus , sgb_seq : sgb_seq }
+	 $.post("getMovePcInfo", { pc_change : sttus , seq : seq }
 	,function(result){
 		var agrs  = result;
 
@@ -181,26 +149,16 @@ function show_layer(sttus,sgb_seq){
     }); 
 
 	var shtml = "";
-	/* if(sttus == 'null' || sttus == 'C'){
-		shtml += "<button type=\"button\" onclick=\"fnChangeBtn('R')\" class=\"btn act\">신청</button>";
-		shtml += "<button type=\"button\" onclick=\"hide_layer()\" class=\"btn act\">닫기</button>";
-		
-	} */
 	if(sttus == 'R'){
-		shtml += "<button type=\"button\" class=\"btn_type3\" onclick=\"fnChangeBtn('P',"+sgb_seq+")\">승인</button>";
+		shtml += "<button type=\"button\" class=\"btn_type3\" onclick=\"fnChangeBtn('P',"+seq+")\">승인</button>";
 		
 	}
 	if(sttus == 'P'){
-		shtml += "<button type=\"button\" class=\"btn_type3\" onclick=\"fnChangeBtn('F',"+sgb_seq+")\">승인취소</button>";
+		shtml += "<button type=\"button\" class=\"btn_type3\" onclick=\"fnChangeBtn('F',"+seq+")\">승인취소</button>";
 		
 	}
 	$('#btn_area').empty();
 	$('#btn_area').append(shtml);
-	
-	//console.log($("#sttus").val())
-	//console.log($("#sgb_seq").val())
-	
-	//fnChangeBtn(sttus,sgb_seq);
 }
 function hide_layer(){
 	$("#popup").hide();
@@ -208,11 +166,11 @@ function hide_layer(){
 }
 
 //상태 버튼 변경
-function fnChangeBtn(sttus,sgb_seq){
+function fnChangeBtn(sttus,seq){
 	var move_org_nm = $("#move_org_nm").val();
 	if(sttus == 'P'){
 	if (confirm("PC이동을 승인하시겠습니까?")){    
-		$.post("changeStts", { pc_change : "P" , sgb_seq : sgb_seq ,move_org_nm : move_org_nm}
+		$.post("changeStts", { pc_change : "P" , seq : seq ,move_org_nm : move_org_nm}
 		,function(result){
 			if(result=="SUCCESS"){
 				alert("처리되었습니다.");
@@ -225,7 +183,7 @@ function fnChangeBtn(sttus,sgb_seq){
 	}
 	}else if(sttus == 'F'){
 		if (confirm("PC이동 승인 취소 하시겠습니까?")){    
-			$.post("changeStts", { pc_change : "R" , sgb_seq : sgb_seq ,move_org_nm : move_org_nm,sttus:sttus}
+			$.post("changeStts", { pc_change : "R" , seq : seq ,move_org_nm : move_org_nm,sttus:sttus}
 			,function(result){
 				if(result=="SUCCESS"){
 					alert("처리되었습니다.");

@@ -21,7 +21,7 @@
         	VALUES(
 		        #{pc_uuid}, 
 				#{pc_ip},
-				#{sgb_pc_vpnip},
+				#{pc_vpnip},
 				#{pc_macaddress}, 
 				#{old_pc_ip},
 				#{old_pc_vpnip}, 
@@ -32,16 +32,33 @@
 	        )
 	</insert>
 	
+	<select id="inserPcInfoChk" parameterType="com.model.PcMangrVo" resultType="Integer">
+		SELECT COUNT(*) FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid}
+	</select>
+	
+	
 	<update id="updatePcinfo" parameterType="com.model.PcMangrVo" >
 		update tbl_pc_mangr
 		set 	pc_ip = #{pc_ip},
-				sgb_pc_vpnip = #{sgb_pc_vpnip},
+				pc_vpnip = #{pc_vpnip},
 				pc_macaddress = #{pc_macaddress}
 		where pc_uuid = #{pc_uuid}
 	</update>
-		
+	
+	<update id="updateVpnInfo" parameterType="com.model.PcMangrVo" >
+		update tbl_pc_mangr
+		set 	
+			pc_vpnip = #{pc_vpnip},
+			last_date = now()
+		where pc_uuid = #{pc_uuid}
+	</update>
+
+	<select id="chkPcOrgNum" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
+		select * from tbl_org where trim(org_num) = #{deptname}
+	</select>
+	
 	<select id="chkPcinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
-		select seq, pc_uuid, pc_ip, sgb_pc_vpnip, pc_macaddress
+		select seq, pc_uuid, pc_ip, pc_vpnip, pc_macaddress
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid}
 	</select>
@@ -54,9 +71,7 @@
 		group by org_seq;
 	</select>
 		
-	
-
-
+	<!-- pc 정보 저장 -->
 	<insert id="inserPcInfo" parameterType="com.model.PcMangrVo">
         INSERT 
         	INTO tbl_pc_mangr
@@ -67,7 +82,7 @@
 				pc_disk, 
 				pc_macaddress, 
 				pc_ip, 
-				sgb_pc_vpnip, 
+				pc_vpnip, 
 				pc_hostname, 
 				pc_guid, 
 				pc_uuid,
@@ -86,18 +101,18 @@
 				#{pc_disk},
 				#{pc_macaddress}, 
 				#{pc_ip},
-				#{sgb_pc_vpnip},
-				#{sgbpcname}  ,
+				#{pc_vpnip},
+				#{pcname}  ,
 				#{pc_guid}, 
 				#{pc_uuid},
 				#{pc_os},
-				(select seq from tbl_org where trim(org_nm) = #{sgbname}),
+				(select seq from tbl_org where trim(org_nm) = #{deptname}),
 				#{pc_disk_id}, 
 				#{pc_cpu_id},
-				#{sgbpcname},
+				#{pcname},
 		        now(),
 				now() 
-				 WHERE NOT EXISTS (SELECT * FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid})
+				WHERE NOT EXISTS (SELECT * FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid})
 
 	</insert>
 	
@@ -215,8 +230,8 @@
 			last_date,
 			pc_hostname,
 			pc_change,
-			(select org_nm from tbl_org where seq = org_seq)as sgbname,
-			(select sido from tbl_org where seq = org_seq) as sgbsido
+			(select org_nm from tbl_org where seq = org_seq)as deptname,
+			(select sido from tbl_org where seq = org_seq) as deptsido
 		FROM tbl_pc_mangr
 
 		<where>
@@ -385,7 +400,7 @@
 				,pc_os
 				,FIRST_DATE)
 		<foreach collection="data" item="item" index="index">
-			SELECT #{item.pc_hostname},#{item.pc_ip},#{item.pc_macaddress},(select seq from tbl_org where org_nm = #{item.sgbname}),#{item.pc_os},to_date(#{item.date},'yyyymmdd')
+			SELECT #{item.pc_hostname},#{item.pc_ip},#{item.pc_macaddress},(select seq from tbl_org where org_nm = #{item.deptname}),#{item.pc_os},to_date(#{item.date},'yyyymmdd')
 			WHERE NOT EXISTS (SELECT * FROM TBL_PC_AMT_JSON WHERE pc_hostname = #{item.pc_hostname})
 			<if test="last > index+1">
 			UNION ALL

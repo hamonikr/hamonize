@@ -13,7 +13,7 @@ public class BackupVo {
 	private String bac_gubun;
 	
 	//복구관리
-	private Integer sgb_seq;
+	private Integer dept_seq;
 	private String br_backup_path;
 	private Date br_backup_iso_dt;
 	private String br_backup_gubun;
@@ -49,11 +49,11 @@ public class BackupVo {
 	public void setBac_gubun(String bac_gubun) {
 		this.bac_gubun = bac_gubun;
 	}
-	public Integer getSgb_seq() {
-		return sgb_seq;
+	public Integer getDept_seq() {
+		return dept_seq;
 	}
-	public void setSgb_seq(Integer sgb_seq) {
-		this.sgb_seq = sgb_seq;
+	public void setDept_seq(Integer dept_seq) {
+		this.dept_seq = dept_seq;
 	}
 	public String getBr_backup_path() {
 		return br_backup_path;

@@ -18,8 +18,8 @@ CREATE TABLE public.tbl_act_backup_recovery_log (
 
 -- Permissions
 
-ALTER TABLE public.tbl_act_backup_recovery_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_act_backup_recovery_log TO ivs;
+ALTER TABLE public.tbl_act_backup_recovery_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_act_backup_recovery_log TO hamonize;
 
 
 -- public.tbl_act_device_log definition
@@ -44,8 +44,8 @@ COMMENT ON TABLE public.tbl_act_device_log IS '디바이스 허용 배포 결과
 
 -- Permissions
 
-ALTER TABLE public.tbl_act_device_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_act_device_log TO ivs;
+ALTER TABLE public.tbl_act_device_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_act_device_log TO hamonize;
 
 
 -- public.tbl_act_firewall_log definition
@@ -70,8 +70,8 @@ COMMENT ON TABLE public.tbl_act_firewall_log IS '방화벽 정책 배포 결과'
 
 -- Permissions
 
-ALTER TABLE public.tbl_act_firewall_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_act_firewall_log TO ivs;
+ALTER TABLE public.tbl_act_firewall_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_act_firewall_log TO hamonize;
 
 
 -- public.tbl_act_nxss_log definition
@@ -94,8 +94,8 @@ COMMENT ON TABLE public.tbl_act_nxss_log IS '유해사이트 차단 배포 결�
 
 -- Permissions
 
-ALTER TABLE public.tbl_act_nxss_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_act_nxss_log TO ivs;
+ALTER TABLE public.tbl_act_nxss_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_act_nxss_log TO hamonize;
 
 
 -- public.tbl_act_progrm_log definition
@@ -120,8 +120,8 @@ COMMENT ON TABLE public.tbl_act_progrm_log IS '프로그램 업데이트 배포 
 
 -- Permissions
 
-ALTER TABLE public.tbl_act_progrm_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_act_progrm_log TO ivs;
+ALTER TABLE public.tbl_act_progrm_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_act_progrm_log TO hamonize;
 
 
 -- public.tbl_admin_login_history definition
@@ -147,8 +147,8 @@ COMMENT ON COLUMN public.tbl_admin_login_history.time_spent IS '머문 시간';
 
 -- Permissions
 
-ALTER TABLE public.tbl_admin_login_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_admin_login_history TO ivs;
+ALTER TABLE public.tbl_admin_login_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_admin_login_history TO hamonize;
 
 
 -- public.tbl_admin_user definition
@@ -171,8 +171,8 @@ COMMENT ON TABLE public.tbl_admin_user IS '관리자 정보';
 
 -- Permissions
 
-ALTER TABLE public.tbl_admin_user OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_admin_user TO ivs;
+ALTER TABLE public.tbl_admin_user OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_admin_user TO hamonize;
 
 
 -- public.tbl_agent_job definition
@@ -185,7 +185,7 @@ CREATE TABLE public.tbl_agent_job (
 	seq bigserial NOT NULL,
 	ins_date timestamp NULL,
 	aj_return_val varchar NULL,
-	aj_table_gubun varchar(50) NULL,
+	aj_table_sabun varchar(50) NULL,
 	ppa_seq varchar(500) NULL,
 	aj_ppa_org_seq varchar(100) NULL,
 	aj_table_seq int8 NULL,
@@ -195,8 +195,8 @@ COMMENT ON TABLE public.tbl_agent_job IS 'agent 정책파일';
 
 -- Permissions
 
-ALTER TABLE public.tbl_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_agent_job TO ivs;
+ALTER TABLE public.tbl_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_agent_job TO hamonize;
 
 
 -- public.tbl_answer definition
@@ -219,8 +219,8 @@ COMMENT ON TABLE public.tbl_answer IS '댓글';
 
 -- Permissions
 
-ALTER TABLE public.tbl_answer OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_answer TO ivs;
+ALTER TABLE public.tbl_answer OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_answer TO hamonize;
 
 
 -- public.tbl_backup_agent_job definition
@@ -243,8 +243,8 @@ COMMENT ON TABLE public.tbl_backup_agent_job IS '에이전트 백업';
 
 -- Permissions
 
-ALTER TABLE public.tbl_backup_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_backup_agent_job TO ivs;
+ALTER TABLE public.tbl_backup_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_backup_agent_job TO hamonize;
 
 
 -- public.tbl_backup_applc definition
@@ -265,8 +265,8 @@ COMMENT ON TABLE public.tbl_backup_applc IS '백업주기 설정';
 
 -- Permissions
 
-ALTER TABLE public.tbl_backup_applc OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_backup_applc TO ivs;
+ALTER TABLE public.tbl_backup_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_backup_applc TO hamonize;
 
 
 -- public.tbl_backup_applc_history definition
@@ -289,8 +289,8 @@ COMMENT ON TABLE public.tbl_backup_applc_history IS '백업주기 히스토리';
 
 -- Permissions
 
-ALTER TABLE public.tbl_backup_applc_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_backup_applc_history TO ivs;
+ALTER TABLE public.tbl_backup_applc_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_backup_applc_history TO hamonize;
 
 
 -- public.tbl_backup_recovery_mngr definition
@@ -306,15 +306,15 @@ CREATE TABLE public.tbl_backup_recovery_mngr (
 	br_backup_iso_dt timestamp NULL DEFAULT now(),
 	br_backup_gubun varchar(10) NULL,
 	br_backup_name varchar(100) NULL,
-	object_seq int8 NULL,
+	dept_seq int8 NULL,
 	CONSTRAINT tbl_backup_recovery_mngr_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_backup_recovery_mngr IS '백업 이미지 정보 테이블';
 
 -- Permissions
 
-ALTER TABLE public.tbl_backup_recovery_mngr OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_backup_recovery_mngr TO ivs;
+ALTER TABLE public.tbl_backup_recovery_mngr OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_backup_recovery_mngr TO hamonize;
 
 
 -- public.tbl_board_files definition
@@ -337,8 +337,8 @@ CREATE TABLE public.tbl_board_files (
 
 -- Permissions
 
-ALTER TABLE public.tbl_board_files OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_board_files TO ivs;
+ALTER TABLE public.tbl_board_files OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_board_files TO hamonize;
 
 
 -- public.tbl_comm_code definition
@@ -359,8 +359,8 @@ COMMENT ON TABLE public.tbl_comm_code IS '공통코드관리';
 
 -- Permissions
 
-ALTER TABLE public.tbl_comm_code OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_comm_code TO ivs;
+ALTER TABLE public.tbl_comm_code OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_comm_code TO hamonize;
 
 
 -- public.tbl_device_agent_job definition
@@ -384,8 +384,8 @@ COMMENT ON TABLE public.tbl_device_agent_job IS '에이전트 디바이스 비�
 
 -- Permissions
 
-ALTER TABLE public.tbl_device_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_device_agent_job TO ivs;
+ALTER TABLE public.tbl_device_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_device_agent_job TO hamonize;
 
 
 -- public.tbl_device_applc definition
@@ -408,8 +408,8 @@ COMMENT ON COLUMN public.tbl_device_applc.ppm_seq IS '디바이스 번호';
 
 -- Permissions
 
-ALTER TABLE public.tbl_device_applc OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_device_applc TO ivs;
+ALTER TABLE public.tbl_device_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_device_applc TO hamonize;
 
 
 -- public.tbl_device_applc_history definition
@@ -430,8 +430,8 @@ COMMENT ON TABLE public.tbl_device_applc_history IS '디바이스 정책 로그'
 
 -- Permissions
 
-ALTER TABLE public.tbl_device_applc_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_device_applc_history TO ivs;
+ALTER TABLE public.tbl_device_applc_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_device_applc_history TO hamonize;
 
 
 -- public.tbl_files definition
@@ -454,8 +454,8 @@ CREATE TABLE public.tbl_files (
 
 -- Permissions
 
-ALTER TABLE public.tbl_files OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_files TO ivs;
+ALTER TABLE public.tbl_files OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_files TO hamonize;
 
 
 -- public.tbl_frwl_agent_job definition
@@ -483,8 +483,8 @@ COMMENT ON COLUMN public.tbl_frwl_agent_job.pcm_uuid IS 'PC 관리번호';
 
 -- Permissions
 
-ALTER TABLE public.tbl_frwl_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_frwl_agent_job TO ivs;
+ALTER TABLE public.tbl_frwl_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_frwl_agent_job TO hamonize;
 
 
 -- public.tbl_frwl_applc definition
@@ -508,8 +508,8 @@ COMMENT ON COLUMN public.tbl_frwl_applc.seq IS '시리얼 번호';
 
 -- Permissions
 
-ALTER TABLE public.tbl_frwl_applc OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_frwl_applc TO ivs;
+ALTER TABLE public.tbl_frwl_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_frwl_applc TO hamonize;
 
 
 -- public.tbl_frwl_applc_history definition
@@ -530,8 +530,8 @@ COMMENT ON TABLE public.tbl_frwl_applc_history IS '방화벽 정책 적용 로�
 
 -- Permissions
 
-ALTER TABLE public.tbl_frwl_applc_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_frwl_applc_history TO ivs;
+ALTER TABLE public.tbl_frwl_applc_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_frwl_applc_history TO hamonize;
 
 
 -- public.tbl_hamonize_version_chk definition
@@ -554,8 +554,8 @@ COMMENT ON TABLE public.tbl_hamonize_version_chk IS '하모나이즈 버전 체�
 
 -- Permissions
 
-ALTER TABLE public.tbl_hamonize_version_chk OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_hamonize_version_chk TO ivs;
+ALTER TABLE public.tbl_hamonize_version_chk OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_hamonize_version_chk TO hamonize;
 
 
 -- public.tbl_inet_log definition
@@ -593,8 +593,8 @@ COMMENT ON COLUMN public.tbl_inet_log.insert_dt IS '사용일';
 
 -- Permissions
 
-ALTER TABLE public.tbl_inet_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_inet_log TO ivs;
+ALTER TABLE public.tbl_inet_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_inet_log TO hamonize;
 
 
 -- public.tbl_ip definition
@@ -617,8 +617,8 @@ COMMENT ON TABLE public.tbl_ip IS '클라우드컴퓨팅 통합관제시스템 �
 
 -- Permissions
 
-ALTER TABLE public.tbl_ip OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_ip TO ivs;
+ALTER TABLE public.tbl_ip OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_ip TO hamonize;
 
 
 -- public.tbl_loginout definition
@@ -647,8 +647,8 @@ COMMENT ON COLUMN public.tbl_loginout.uuid IS 'PC 관리번호';
 
 -- Permissions
 
-ALTER TABLE public.tbl_loginout OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_loginout TO ivs;
+ALTER TABLE public.tbl_loginout OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_loginout TO hamonize;
 
 
 -- public.tbl_manager definition
@@ -691,8 +691,8 @@ COMMENT ON COLUMN public.tbl_manager.general_yn IS '최상위 부문 관리자 �
 
 -- Permissions
 
-ALTER TABLE public.tbl_manager OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_manager TO ivs;
+ALTER TABLE public.tbl_manager OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_manager TO hamonize;
 
 
 -- public.tbl_manager_orgseq definition
@@ -710,8 +710,8 @@ COMMENT ON TABLE public.tbl_manager_orgseq IS '(미사용)';
 
 -- Permissions
 
-ALTER TABLE public.tbl_manager_orgseq OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_manager_orgseq TO ivs;
+ALTER TABLE public.tbl_manager_orgseq OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_manager_orgseq TO hamonize;
 
 
 -- public.tbl_notice definition
@@ -738,8 +738,8 @@ COMMENT ON TABLE public.tbl_notice IS '공지사항';
 
 -- Permissions
 
-ALTER TABLE public.tbl_notice OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_notice TO ivs;
+ALTER TABLE public.tbl_notice OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_notice TO hamonize;
 
 
 -- public.tbl_object definition
@@ -774,8 +774,8 @@ CREATE TABLE public.tbl_object (
 
 -- Permissions
 
-ALTER TABLE public.tbl_object OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_object TO ivs;
+ALTER TABLE public.tbl_object OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_object TO hamonize;
 
 
 -- public.tbl_org definition
@@ -786,20 +786,20 @@ GRANT ALL ON TABLE public.tbl_object TO ivs;
 
 CREATE TABLE public.tbl_org (
 	seq serial NOT NULL,
-	p_seq int8 NULL,
-	org_nm varchar(100) NULL,
-	org_ordr int4 NULL,
+	p_seq int8 NULL, -- 상위부서번호
+	org_nm varchar(100) NULL, -- 부문명/부서명
+	org_ordr int4 NULL, -- 부서순서
 	writer_id varchar(30) NULL,
 	ins_date date NULL,
 	writer_ip varchar(30) NULL,
 	update_writer_id varchar(30) NULL,
 	upd_date date NULL,
 	update_writer_ip varchar(30) NULL,
-	"section" varchar(100) NULL,
-	p_org_nm varchar(100) NULL,
-	sido varchar(100) NULL,
-	gugun varchar(100) NULL,
-	org_num varchar(100) NULL,
+	"section" varchar(100) NULL, -- 부서여부
+	p_org_nm varchar(100) NULL, -- 상위부문명
+	sido varchar(100) NULL, -- 지역(시/도)
+	gugun varchar(100) NULL, -- 지역(구/군)
+	org_num varchar(100) NULL, -- 부서번호
 	xpoint varchar(100) NULL,
 	ypoint varchar(100) NULL,
 	all_org_nm varchar(300) NULL, -- 전체경로
@@ -809,12 +809,20 @@ COMMENT ON TABLE public.tbl_org IS '조직 정보';
 
 -- Column comments
 
+COMMENT ON COLUMN public.tbl_org.p_seq IS '상위부서번호';
+COMMENT ON COLUMN public.tbl_org.org_nm IS '부문명/부서명';
+COMMENT ON COLUMN public.tbl_org.org_ordr IS '부서순서';
+COMMENT ON COLUMN public.tbl_org."section" IS '부서여부';
+COMMENT ON COLUMN public.tbl_org.p_org_nm IS '상위부문명';
+COMMENT ON COLUMN public.tbl_org.sido IS '지역(시/도)';
+COMMENT ON COLUMN public.tbl_org.gugun IS '지역(구/군)';
+COMMENT ON COLUMN public.tbl_org.org_num IS '부서번호';
 COMMENT ON COLUMN public.tbl_org.all_org_nm IS '전체경로';
 
 -- Permissions
 
-ALTER TABLE public.tbl_org OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_org TO ivs;
+ALTER TABLE public.tbl_org OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_org TO hamonize;
 
 
 -- public.tbl_pc_amt_json definition
@@ -824,7 +832,7 @@ GRANT ALL ON TABLE public.tbl_org TO ivs;
 -- DROP TABLE public.tbl_pc_amt_json;
 
 CREATE TABLE public.tbl_pc_amt_json (
-	seq int8 NOT NULL DEFAULT nextval('tbl_pc_amt_json_seq'::regclass),
+	seq bigserial NOT NULL,
 	pc_status varchar(300) NULL,
 	pc_cpu varchar(300) NULL,
 	pc_memory varchar(300) NULL,
@@ -849,8 +857,8 @@ COMMENT ON TABLE public.tbl_pc_amt_json IS '(미사용)';
 
 -- Permissions
 
-ALTER TABLE public.tbl_pc_amt_json OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_pc_amt_json TO ivs;
+ALTER TABLE public.tbl_pc_amt_json OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_pc_amt_json TO hamonize;
 
 
 -- public.tbl_pc_block definition
@@ -872,8 +880,8 @@ COMMENT ON TABLE public.tbl_pc_block IS '(미사용)';
 
 -- Permissions
 
-ALTER TABLE public.tbl_pc_block OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_pc_block TO ivs;
+ALTER TABLE public.tbl_pc_block OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_pc_block TO hamonize;
 
 
 -- public.tbl_pc_change_info definition
@@ -918,8 +926,8 @@ COMMENT ON COLUMN public.tbl_pc_change_info.pc_user IS '사용자 아이디';
 
 -- Permissions
 
-ALTER TABLE public.tbl_pc_change_info OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_pc_change_info TO ivs;
+ALTER TABLE public.tbl_pc_change_info OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_pc_change_info TO hamonize;
 
 
 -- public.tbl_pc_influxdata definition
@@ -943,8 +951,8 @@ COMMENT ON COLUMN public.tbl_pc_influxdata.pc_status IS '사용여부';
 
 -- Permissions
 
-ALTER TABLE public.tbl_pc_influxdata OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_pc_influxdata TO ivs;
+ALTER TABLE public.tbl_pc_influxdata OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_pc_influxdata TO hamonize;
 
 
 -- public.tbl_pc_mangr definition
@@ -1000,8 +1008,8 @@ COMMENT ON COLUMN public.tbl_pc_mangr.pc_os IS 'OS 구분';
 
 -- Permissions
 
-ALTER TABLE public.tbl_pc_mangr OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_pc_mangr TO ivs;
+ALTER TABLE public.tbl_pc_mangr OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_pc_mangr TO hamonize;
 
 
 -- public.tbl_pc_mangr_history definition
@@ -1011,7 +1019,7 @@ GRANT ALL ON TABLE public.tbl_pc_mangr TO ivs;
 -- DROP TABLE public.tbl_pc_mangr_history;
 
 CREATE TABLE public.tbl_pc_mangr_history (
-	seq int8 NOT NULL DEFAULT nextval('tbl_pc_mangr_history_seq'::regclass), -- 시리얼번호
+	seq bigserial NOT NULL, -- 시리얼번호
 	pc_seq int8 NOT NULL, -- pc 번호
 	pc_status varchar(300) NULL,
 	pc_cpu varchar(300) NULL, -- cpu
@@ -1059,8 +1067,8 @@ COMMENT ON COLUMN public.tbl_pc_mangr_history.pc_os IS 'os구분';
 
 -- Permissions
 
-ALTER TABLE public.tbl_pc_mangr_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_pc_mangr_history TO ivs;
+ALTER TABLE public.tbl_pc_mangr_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_pc_mangr_history TO hamonize;
 
 
 -- public.tbl_prcss_block_log definition
@@ -1085,8 +1093,8 @@ COMMENT ON TABLE public.tbl_prcss_block_log IS '프로그램 차단 로그';
 
 -- Permissions
 
-ALTER TABLE public.tbl_prcss_block_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_prcss_block_log TO ivs;
+ALTER TABLE public.tbl_prcss_block_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_prcss_block_log TO hamonize;
 
 
 -- public.tbl_program_mngr definition
@@ -1096,10 +1104,10 @@ GRANT ALL ON TABLE public.tbl_prcss_block_log TO ivs;
 -- DROP TABLE public.tbl_program_mngr;
 
 CREATE TABLE public.tbl_program_mngr (
+	pcm_seq bigserial NOT NULL, -- 시리얼번호
 	pcm_name varchar(500) NULL, -- 프로그램명
 	pcm_status varchar(10) NULL,
 	pcm_dc varchar(500) NULL, -- 프로그램설명
-	pcm_seq bigserial NULL, -- 시리얼번호
 	pcm_path varchar(100) NULL,
 	insert_dt timestamp NULL -- 등록일
 );
@@ -1114,8 +1122,8 @@ COMMENT ON COLUMN public.tbl_program_mngr.insert_dt IS '등록일';
 
 -- Permissions
 
-ALTER TABLE public.tbl_program_mngr OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_program_mngr TO ivs;
+ALTER TABLE public.tbl_program_mngr OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_program_mngr TO hamonize;
 
 
 -- public.tbl_progrm_agent_job definition
@@ -1148,8 +1156,8 @@ COMMENT ON COLUMN public.tbl_progrm_agent_job.pcm_name IS '프로그램명';
 
 -- Permissions
 
-ALTER TABLE public.tbl_progrm_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_progrm_agent_job TO ivs;
+ALTER TABLE public.tbl_progrm_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_progrm_agent_job TO hamonize;
 
 
 -- public.tbl_progrm_applc definition
@@ -1168,8 +1176,8 @@ COMMENT ON TABLE public.tbl_progrm_applc IS '프로그램 적용 테이블';
 
 -- Permissions
 
-ALTER TABLE public.tbl_progrm_applc OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_progrm_applc TO ivs;
+ALTER TABLE public.tbl_progrm_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_progrm_applc TO hamonize;
 
 
 -- public.tbl_progrm_applc_history definition
@@ -1190,8 +1198,8 @@ COMMENT ON TABLE public.tbl_progrm_applc_history IS '프로그램 적용 히스�
 
 -- Permissions
 
-ALTER TABLE public.tbl_progrm_applc_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_progrm_applc_history TO ivs;
+ALTER TABLE public.tbl_progrm_applc_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_progrm_applc_history TO hamonize;
 
 
 -- public.tbl_progrm_udpt definition
@@ -1201,7 +1209,7 @@ GRANT ALL ON TABLE public.tbl_progrm_applc_history TO ivs;
 -- DROP TABLE public.tbl_progrm_udpt;
 
 CREATE TABLE public.tbl_progrm_udpt (
-	pu_seq int8 NOT NULL DEFAULT nextval('tbl_progrm_udpt_seq_seq1'::regclass), -- 시리얼 번호
+	pu_seq bigserial NOT NULL, -- 시리얼 번호
 	pu_name varchar(100) NULL, -- 프로그램명
 	pu_status varchar(10) NULL, -- 작업 상태값 (I-insert,U-update)
 	pu_dc varchar(500) NULL, -- 설명
@@ -1228,8 +1236,8 @@ COMMENT ON COLUMN public.tbl_progrm_udpt.base_deb_yn IS '설치파일유무';
 
 -- Permissions
 
-ALTER TABLE public.tbl_progrm_udpt OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_progrm_udpt TO ivs;
+ALTER TABLE public.tbl_progrm_udpt OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_progrm_udpt TO hamonize;
 
 
 -- public.tbl_recovery_agent_job definition
@@ -1261,8 +1269,8 @@ COMMENT ON COLUMN public.tbl_recovery_agent_job.pc_seq IS 'PC 번호';
 
 -- Permissions
 
-ALTER TABLE public.tbl_recovery_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_recovery_agent_job TO ivs;
+ALTER TABLE public.tbl_recovery_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_recovery_agent_job TO hamonize;
 
 
 -- public.tbl_recovery_applc definition
@@ -1289,8 +1297,8 @@ COMMENT ON COLUMN public.tbl_recovery_applc.br_seq IS '백업 이미지 시퀀�
 
 -- Permissions
 
-ALTER TABLE public.tbl_recovery_applc OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_recovery_applc TO ivs;
+ALTER TABLE public.tbl_recovery_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_recovery_applc TO hamonize;
 
 
 -- public.tbl_recovery_applc_history definition
@@ -1315,8 +1323,8 @@ COMMENT ON COLUMN public.tbl_recovery_applc_history.insert_dt IS '복원일';
 
 -- Permissions
 
-ALTER TABLE public.tbl_recovery_applc_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_recovery_applc_history TO ivs;
+ALTER TABLE public.tbl_recovery_applc_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_recovery_applc_history TO hamonize;
 
 
 -- public.tbl_recovery_log definition
@@ -1343,8 +1351,8 @@ COMMENT ON COLUMN public.tbl_recovery_log.pc_seq IS '복구pc번호';
 
 -- Permissions
 
-ALTER TABLE public.tbl_recovery_log OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_recovery_log TO ivs;
+ALTER TABLE public.tbl_recovery_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_recovery_log TO hamonize;
 
 
 -- public.tbl_security_agentjob definition
@@ -1366,8 +1374,8 @@ CREATE TABLE public.tbl_security_agentjob (
 
 -- Permissions
 
-ALTER TABLE public.tbl_security_agentjob OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_security_agentjob TO ivs;
+ALTER TABLE public.tbl_security_agentjob OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_security_agentjob TO hamonize;
 
 
 -- public.tbl_security_mngr definition
@@ -1377,7 +1385,7 @@ GRANT ALL ON TABLE public.tbl_security_agentjob TO ivs;
 -- DROP TABLE public.tbl_security_mngr;
 
 CREATE TABLE public.tbl_security_mngr (
-	sm_seq int4 NOT NULL DEFAULT nextval('tbl_security_mngr_seq_seq1'::regclass), -- 시리얼 번호
+	sm_seq bigserial NOT NULL , -- 시리얼 번호
 	sm_name varchar(50) NULL, -- 시리얼 번호
 	sm_status varchar(10) NULL,
 	sm_dc varchar(100) NULL, -- 시리얼 번호
@@ -1399,8 +1407,8 @@ COMMENT ON COLUMN public.tbl_security_mngr.sm_device_code IS '벤더코드/제�
 
 -- Permissions
 
-ALTER TABLE public.tbl_security_mngr OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_security_mngr TO ivs;
+ALTER TABLE public.tbl_security_mngr OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_security_mngr TO hamonize;
 
 
 -- public.tbl_site_agent_job definition
@@ -1421,8 +1429,8 @@ COMMENT ON TABLE public.tbl_site_agent_job IS '유해사이트 에이전트 작�
 
 -- Permissions
 
-ALTER TABLE public.tbl_site_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_site_agent_job TO ivs;
+ALTER TABLE public.tbl_site_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_site_agent_job TO hamonize;
 
 
 -- public.tbl_site_mngr_applc definition
@@ -1432,7 +1440,7 @@ GRANT ALL ON TABLE public.tbl_site_agent_job TO ivs;
 -- DROP TABLE public.tbl_site_mngr_applc;
 
 CREATE TABLE public.tbl_site_mngr_applc (
-	sma_seq int4 NOT NULL DEFAULT nextval('tbl_site_mngr_applc_seq_seq1'::regclass), -- 시리얼 번호
+	sma_seq bigserial NOT NULL , -- 시리얼 번호
 	sma_ipaddress varchar(50) NULL, -- 사이트IP관리-IP주소
 	sma_macaddress varchar(100) NULL, -- 사이트IP관리-맥어드레스
 	sma_domain varchar(200) NULL, -- 유해사이트-주소
@@ -1457,8 +1465,8 @@ COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_gubun IS '분류 A:허용사이
 
 -- Permissions
 
-ALTER TABLE public.tbl_site_mngr_applc OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_site_mngr_applc TO ivs;
+ALTER TABLE public.tbl_site_mngr_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_site_mngr_applc TO hamonize;
 
 
 -- public.tbl_site_mngr_applc_history definition
@@ -1487,8 +1495,8 @@ COMMENT ON COLUMN public.tbl_site_mngr_applc_history.sma_status IS '상태값';
 
 -- Permissions
 
-ALTER TABLE public.tbl_site_mngr_applc_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_site_mngr_applc_history TO ivs;
+ALTER TABLE public.tbl_site_mngr_applc_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_site_mngr_applc_history TO hamonize;
 
 
 -- public.tbl_svrlst definition
@@ -1511,8 +1519,8 @@ COMMENT ON TABLE public.tbl_svrlst IS '서버 정보';
 
 -- Permissions
 
-ALTER TABLE public.tbl_svrlst OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_svrlst TO ivs;
+ALTER TABLE public.tbl_svrlst OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_svrlst TO hamonize;
 
 
 -- public.tbl_tchnlgy definition
@@ -1551,8 +1559,8 @@ COMMENT ON COLUMN public.tbl_tchnlgy.state IS '상태값';
 
 -- Permissions
 
-ALTER TABLE public.tbl_tchnlgy OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_tchnlgy TO ivs;
+ALTER TABLE public.tbl_tchnlgy OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_tchnlgy TO hamonize;
 
 
 -- public.tbl_unauthroized definition
@@ -1575,8 +1583,8 @@ CREATE TABLE public.tbl_unauthroized (
 
 -- Permissions
 
-ALTER TABLE public.tbl_unauthroized OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_unauthroized TO ivs;
+ALTER TABLE public.tbl_unauthroized OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_unauthroized TO hamonize;
 
 
 -- public.tbl_updt_agent_job definition
@@ -1611,8 +1619,8 @@ COMMENT ON COLUMN public.tbl_updt_agent_job.insert_dt IS '등록일';
 
 -- Permissions
 
-ALTER TABLE public.tbl_updt_agent_job OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_updt_agent_job TO ivs;
+ALTER TABLE public.tbl_updt_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_updt_agent_job TO hamonize;
 
 
 -- public.tbl_updt_applc definition
@@ -1631,8 +1639,8 @@ COMMENT ON TABLE public.tbl_updt_applc IS '업데이트 적용 테이블';
 
 -- Permissions
 
-ALTER TABLE public.tbl_updt_applc OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_updt_applc TO ivs;
+ALTER TABLE public.tbl_updt_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_updt_applc TO hamonize;
 
 
 -- public.tbl_updt_applc_history definition
@@ -1653,8 +1661,8 @@ COMMENT ON TABLE public.tbl_updt_applc_history IS '업데이트 정책 히스토
 
 -- Permissions
 
-ALTER TABLE public.tbl_updt_applc_history OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_updt_applc_history TO ivs;
+ALTER TABLE public.tbl_updt_applc_history OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_updt_applc_history TO hamonize;
 
 
 -- public.tbl_updt_policy_action_result definition
@@ -1690,8 +1698,8 @@ COMMENT ON COLUMN public.tbl_updt_policy_action_result.debver IS '패키지 버�
 
 -- Permissions
 
-ALTER TABLE public.tbl_updt_policy_action_result OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_updt_policy_action_result TO ivs;
+ALTER TABLE public.tbl_updt_policy_action_result OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_updt_policy_action_result TO hamonize;
 
 
 -- public.tbl_user definition
@@ -1737,584 +1745,7 @@ COMMENT ON COLUMN public.tbl_user.discharge_dt IS '퇴사일';
 
 -- Permissions
 
-ALTER TABLE public.tbl_user OWNER TO ivs;
-GRANT ALL ON TABLE public.tbl_user TO ivs;
+ALTER TABLE public.tbl_user OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_user TO hamonize;
 
 
-INSERT INTO public.tbl_admin_login_history (user_id,conn_ip,login_date,logout_date,time_spent) VALUES
-	 ('ivs','192.168.0.146','2021-06-23 05:34:34.206617',NULL,NULL),
-	 ('ivs','192.168.0.146','2021-06-23 07:10:54.757181',NULL,NULL),
-	 ('ivs','192.168.0.146','2021-06-23 07:11:07.419726',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 16:19:31.181803',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 16:21:34.363202',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 16:21:35.984577',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 16:40:33.030163',NULL,NULL),
-	 ('ivs','61.32.208.27','2021-06-23 07:57:58.596665',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 17:13:30.920336','2021-06-23 17:15:31.965882','00:02:01.045546'),
-	 ('ivs','127.0.0.1','2021-06-23 17:17:05.967269',NULL,NULL);
-INSERT INTO public.tbl_admin_login_history (user_id,conn_ip,login_date,logout_date,time_spent) VALUES
-	 ('ivs','192.168.0.146','2021-06-23 08:26:09.69427',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 17:31:53.840597',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 18:24:25.388361',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 18:38:32.969645',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 18:38:35.570258',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 19:40:50.592971',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 19:45:47.347905',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 20:09:16.080897',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 20:09:22.733207',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 20:09:24.510965',NULL,NULL);
-INSERT INTO public.tbl_admin_login_history (user_id,conn_ip,login_date,logout_date,time_spent) VALUES
-	 ('ivs','127.0.0.1','2021-06-23 20:11:19.352581',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 20:11:21.885742',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 20:13:13.168237',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 20:22:15.216557',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 20:36:28.863178',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:07:07.829751',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:07:13.60163',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:08:36.09485',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:09:57.881127',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:35:47.594761',NULL,NULL);
-INSERT INTO public.tbl_admin_login_history (user_id,conn_ip,login_date,logout_date,time_spent) VALUES
-	 ('ivs','127.0.0.1','2021-06-23 21:41:09.389536',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:59:55.826495',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:59:55.989323',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 21:59:56.196751',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 22:00:03.854192',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 22:00:11.856638',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 22:09:19.540737',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-23 22:10:05.87516',NULL,NULL),
-	 ('ivs','192.168.0.146','2021-06-24 01:19:57.171802',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 10:29:21.740579',NULL,NULL);
-INSERT INTO public.tbl_admin_login_history (user_id,conn_ip,login_date,logout_date,time_spent) VALUES
-	 ('ivs','127.0.0.1','2021-06-24 10:43:07.436635',NULL,NULL),
-	 ('ivs','61.32.208.27','2021-06-24 01:47:54.271115',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 10:59:43.297726',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 11:13:41.684182',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 11:37:49.162261',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 11:44:45.945594',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 11:52:14.031666',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 11:52:14.335397',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 12:13:22.557749',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 12:37:14.295444',NULL,NULL);
-INSERT INTO public.tbl_admin_login_history (user_id,conn_ip,login_date,logout_date,time_spent) VALUES
-	 ('ivs','127.0.0.1','2021-06-24 13:18:02.446228',NULL,NULL),
-	 ('ivs','127.0.0.1','2021-06-24 14:14:33.850204',NULL,NULL);INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,upd_date,gubun) VALUES
-	 ('ivs','관리자','518c84bc0dc5d7830ea10a5958343e5c706c057e1197318a8b07ae5aa624b04a','관리자','2021-06-15 14:18:14','2021-06-15 14:18:14','A'),
-	 ('admin','관리자계정','c1a6dc631dfed24284f30e9517b305a995985bb7c95cde85be1f640275e97ae9','개발','2021-06-17 16:58:28.063635',NULL,'A');INSERT INTO public.tbl_device_agent_job (sm_seq,org_seq,dvc_seq,pcm_uuid,pcm_name,status,insert_dt) VALUES
-	 (3,4,3,'2c6777e5d8a349fb92a14e65ad961447','USB',NULL,'2021-06-24 14:20:20.013209');INSERT INTO public.tbl_device_applc (org_seq,ppm_seq) VALUES
-	 (4,'3');INSERT INTO public.tbl_device_applc_history (org_seq,ppm_seq,dvc_seq,insert_dt) VALUES
-	 (4,'3',3,'2021-06-24 14:20:14.049201');INSERT INTO public.tbl_frwl_agent_job (sm_seq,org_seq,fa_seq,pcm_uuid,pcm_name,status,insert_dt) VALUES
-	 (NULL,4,11,'2c6777e5d8a349fb92a14e65ad961447',NULL,NULL,'2021-06-24 12:50:59.656686'),
-	 (NULL,4,12,'2c6777e5d8a349fb92a14e65ad961447','test',NULL,'2021-06-24 14:14:55.933021'),
-	 (NULL,4,15,'2c6777e5d8a349fb92a14e65ad961447','test2',NULL,'2021-06-24 14:17:16.495316');INSERT INTO public.tbl_frwl_applc (org_seq,ppm_seq) VALUES
-	 (4,'5,6');INSERT INTO public.tbl_frwl_applc_history (org_seq,insert_dt,frwl_seq,ppm_seq) VALUES
-	 (4,'2021-06-24 14:14:53.885338',12,'4'),
-	 (4,'2021-06-24 14:15:27.726917',13,'4,5'),
-	 (4,'2021-06-24 14:15:28.623472',14,'4,5'),
-	 (4,'2021-06-24 14:17:08.191505',15,'5'),
-	 (4,'2021-06-24 14:18:30.006117',16,'5,6');INSERT INTO public.tbl_hamonize_version_chk (debname,debversion,debstatus,pcuuid,insert_dt,last_dt) VALUES
-	 ('hamonize-agent','1.0.0','running','a928a9b1b25048caa132c3d4804cd43b','2021-06-23 18:41:35.287464+09',NULL),
-	 ('hamonize-agent','1.0.0','running','2c6777e5d8a349fb92a14e65ad961447','2021-06-23 18:42:26.476275+09','2021-06-24 14:17:17+09');INSERT INTO public.tbl_ip (ipaddress,gubun,info,ins_date,upd_date,macaddress) VALUES
-	 ('127.0.0.1','Y','localhost','2021-06-15','2021-06-15',NULL),
-	 ('192.168.0.*','Y','내부망','2021-06-15','2021-06-15',NULL),
-	 ('61.32.208.27','Y','invesume','2021-06-15','2021-06-15',NULL),
-	 ('10.8.0.*','Y','VPN','2021-06-21','2021-06-21',NULL),
-	 ('172.17.0.*','Y','Docker','2021-06-21','2021-06-21',NULL);INSERT INTO public.tbl_org (p_seq,org_nm,org_ordr,writer_id,ins_date,writer_ip,update_writer_id,upd_date,update_writer_ip,"section",p_org_nm,sido,gugun,org_num,xpoint,ypoint,all_org_nm) VALUES
-	 (1,'test_under',1,NULL,'2021-06-23',NULL,NULL,'2021-06-23',NULL,'S','test - 1','영등포구','서울시',NULL,NULL,NULL,'test|test_under'),
-	 (0,'test',NULL,NULL,'2021-06-23',NULL,NULL,'2021-06-23',NULL,'','',NULL,NULL,NULL,NULL,NULL,NULL),
-	 (1,'test_dept',2,NULL,'2021-06-23',NULL,NULL,'2021-06-23',NULL,'','test - 1',NULL,NULL,NULL,NULL,NULL,'test|test_dept'),
-	 (3,'test_lee',1,NULL,'2021-06-23',NULL,NULL,'2021-06-23',NULL,'S','test_dept - 3','서울','서초구',NULL,NULL,NULL,'test|testdept|test_lee');INSERT INTO public.tbl_pc_block (seq,org_seq,block_dt,unblock_dt,status,pc_ip,insert_dt) VALUES
-	 (2,NULL,NULL,NULL,'Y',NULL,'2021-06-24 12:22:57.269446');INSERT INTO public.tbl_pc_influxdata (pc_uuid,insert_dt,pc_status) VALUES
-	 ('a928a9b1b25048caa132c3d4804cd43b','2021-06-23 12:15:47','true'),
-	 ('2c6777e5d8a349fb92a14e65ad961447','2021-06-23 12:15:47','true');INSERT INTO public.tbl_pc_mangr (pc_status,pc_cpu,pc_memory,pc_disk,pc_macaddress,pc_ip,first_date,last_date,pc_hostname,pc_guid,org_seq,pc_disk_id,pc_cpu_id,pc_uuid,pc_change,pc_vpnip,pc_sn,pc_os) VALUES
-	 ('N','Intel(R) Core(TM) i5-8500 CPU @ 3.00GHz','3.60G      ','SAMSUNG MZ7LN128HAHQ-00000        ','10:02:b5:02:b3:bd','192.168.0.212','2021-06-23 18:09:23','2021-06-23 18:09:23','hamolee',NULL,4,NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447',NULL,NULL,'hamolee','H');INSERT INTO public.tbl_program_mngr (pcm_name,pcm_status,pcm_dc,pcm_path,insert_dt) VALUES
-	 ('htop',NULL,NULL,NULL,'0202-06-24 00:00:00');INSERT INTO public.tbl_progrm_agent_job (pcm_seq,org_seq,pa_seq,pcm_uuid,pcm_name,insert_dt,status) VALUES
-	 (1,4,1,'2c6777e5d8a349fb92a14e65ad961447','htop','2021-06-24 14:35:41.99456',NULL),
-	 (0,4,2,'2c6777e5d8a349fb92a14e65ad961447',NULL,'2021-06-24 14:36:36.673194',NULL);INSERT INTO public.tbl_progrm_applc (org_seq,ppm_seq) VALUES
-	 (4,'');INSERT INTO public.tbl_progrm_applc_history (pa_seq,org_seq,ppm_seq,insert_dt) VALUES
-	 (1,4,'1','2021-06-24 14:34:28.685953'),
-	 (2,4,'','2021-06-24 14:36:24.580959');INSERT INTO public.tbl_progrm_udpt (pu_name,pu_status,pu_dc,status,deb_apply_name,deb_new_version,deb_now_version,base_deb_yn) VALUES
-	 ('hamonize','I',NULL,'N','hamonize','4.2.0.0',NULL,'Y'),
-	 ('atom','I',NULL,'N','atom','1.57.0',NULL,'Y'),
-	 ('atom-beta','I',NULL,'N','atom-beta','1.58.0-beta0',NULL,'Y'),
-	 ('atom-nightly','I',NULL,'N','atom-nightly','1.59.0-nightly11',NULL,'Y'),
-	 ('htop','I',NULL,'N','htop','2.2.0-2build1',NULL,'Y'),
-	 ('skypeforlinux','I',NULL,'N','skypeforlinux','8.73.0.92',NULL,'Y'),
-	 ('yarn','I',NULL,'N','yarn','1.22.5-1',NULL,'Y');INSERT INTO public.tbl_security_mngr (sm_name,sm_status,sm_dc,sm_port,sm_gubun,sm_device_code) VALUES
-	 ('USB',NULL,'Kingston USB',NULL,'D','0951:1666'),
-	 ('test',NULL,'test','11100','P',NULL),
-	 ('test2',NULL,'11112','11112','P',NULL),
-	 ('test3',NULL,'test','11113','P',NULL);INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:39:09.130865'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:39:46.090778'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:39:46.842725'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:39:56.887045'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:40:07.089567'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:40:18.301324'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:40:29.256188'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:40:37.30942'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:40:47.352191'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:40:57.434736');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:41:07.47215'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:41:26.688993'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:41:27.612669'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:41:37.690633'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:05.124862'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:07.821269'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:08.425174'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:17.834467'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:37.895905'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:41.702277');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:47.950419'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:42:58.388859'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:43:08.010763'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:43:18.025311'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:43:29.437029'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:43:38.114979'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:43:48.149531'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:43:59.260424'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:44:08.494094'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:44:18.29249');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:44:38.38469'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:44:42.716724'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:44:48.441017'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:45:04.03096'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:45:08.533844'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:45:19.020808'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:45:34.176135'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:45:48.730739'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:46:05.484243'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:46:08.789749');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:46:18.824561'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:46:38.911387'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:46:42.347217'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:46:48.950144'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:47:00.471684'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:47:09.040714'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:47:26.398643'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:47:34.821247'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:47:39.160596'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:47:49.217313');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:48:12.711792'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:48:13.229582'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:48:19.344611'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:48:29.384317'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:48:46.247524'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:51:29.086529'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:51:35.0692'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:51:45.616002'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:51:55.19646'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:52:05.213051');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:52:15.254484'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:52:25.303178'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:52:52.534426'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:52:55.471091'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:53:02.762876'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:53:05.495856'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:53:15.564731'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:53:25.599505'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:53:35.63007'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:53:45.686822');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:53:56.58226'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 19:54:05.833521'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:09:11.896374'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:09:21.699305'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:09:29.991238'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:09:40.424765'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:09:50.028356'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:11:22.572444'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:11:30.517513'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:11:40.542863');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:11:50.570417'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:12:02.969662'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:12:11.806453'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:12:20.715439'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:12:30.750937'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:12:51.709597'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:13:11.24484'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:13:20.974518'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:13:36.025846'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:13:41.072892');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:13:52.537973'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:14:01.140684'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:14:18.144709'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:14:21.204497'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:14:31.273571'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:14:41.962537'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:15:01.41534'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:15:04.992243'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:15:11.473105'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:15:21.485781');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:15:38.011027'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:15:41.562467'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:15:51.641991'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:16:01.669929'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:16:17.434549'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:16:22.473634'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:16:31.789112'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:16:50.974945'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:16:51.842419'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:17:02.787286');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:17:12.375836'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:17:21.989032'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:17:32.016538'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:17:44.540551'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:17:52.055215'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:18:02.091209'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:18:22.161643'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:18:25.953697'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:18:32.192962'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:18:49.755326');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:18:52.273971'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:19:02.323549'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:19:20.479878'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:19:22.414123'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:19:33.255439'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:19:44.796653'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:19:52.509703'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:20:02.54546'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:20:18.751885'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:20:22.635081');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:20:32.639254'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:20:53.668341'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:20:53.742091'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 20:21:02.725462'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:12:36.15261'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:12:40.004775'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:12:49.412748'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:12:59.447593'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:13:19.60786'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:13:20.95485');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:13:29.667658'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:13:39.696443'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:14:05.53434'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:14:09.860143'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:14:17.01765'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:14:19.885198'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:14:30.377312'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:14:39.96576'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:14:49.993319'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:15:00.322818');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:19:14.521449'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:24:13.747233'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:24:13.867393'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:24:32.437675'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:24:33.93345'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:24:43.973955'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:24:54.442938'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:25:04.915845'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:25:14.067857'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:25:24.10749');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:25:36.844062'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:25:51.323917'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:25:54.176989'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:26:04.193151'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:26:21.230805'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:26:24.225177'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:26:35.099185'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:26:44.287188'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:26:54.305712'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:27:08.026789');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:27:14.357911'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:27:24.404926'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:27:35.037067'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:27:44.467392'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:27:58.66723'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:28:04.803008'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:28:14.528927'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:28:24.539852'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:28:35.563349'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:28:53.807673');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:28:54.60488'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:29:05.920207'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:29:14.648283'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:29:24.672105'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:29:37.116715'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:29:44.718102'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:29:54.760759'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:30:04.981579'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:30:14.783693'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:30:26.935187');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:30:34.815723'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:30:44.83073'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:30:55.387377'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:31:04.877813'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:31:20.842947'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:31:25.988417'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:31:34.960413'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:31:44.98289'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:31:54.994312'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:32:09.907374');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:32:15.78874'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:32:25.054765'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:32:35.082637'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:32:55.121218'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:32:55.214638'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:33:05.840963'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:33:15.168519'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:33:25.201467'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:33:35.215016'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:33:45.232534');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:34:03.058408'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:34:05.276934'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:34:15.306888'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:34:25.340476'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:34:36.642689'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:34:45.373932'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:34:56.301926'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:35:05.437026'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:35:28.049209'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:35:31.377676');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:35:46.178152'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:35:55.521965'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:36:05.575523'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:36:15.592041'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:36:25.621461'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:36:38.082213'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:36:45.643317'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:36:55.68196'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:37:07.402887'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:37:15.721765');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:37:25.720899'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:37:48.84578'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:37:51.152072'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:37:59.334633'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:38:05.826606'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:38:16.538308'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:38:25.858663'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:38:35.923855'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:38:51.822794'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:38:55.952828');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:39:13.579135'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:39:15.973387'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:39:26.240299'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:39:36.017132'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:39:46.053369'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:40:04.020391'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:40:06.096492'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:40:16.111409'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:40:26.130672'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:40:37.227059');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:40:56.402571'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:41:12.886483'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:41:16.285231'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 21:41:32.267182'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:11:46.877125'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:11:57.770159'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:12:06.904679'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:12:16.929292'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:12:26.963016'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:12:37.001864');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:12:47.027351'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:12:57.064733'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:13:07.112971'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:13:17.161321'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:13:27.175045'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-23 22:13:37.193105'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:42:27.427426'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:42:41.370408'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:42:52.95117'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:43:03.706772');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:43:20.232909'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:43:29.206905'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:43:39.916317'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:43:50.720093'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:44:11.482258'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:44:14.764852'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:44:23.708431'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:44:34.193141'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:44:44.953974'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:45:15.79699');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:45:19.274951'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:45:23.118612'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:45:26.439054'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:45:43.855917'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:46:06.103571'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:46:21.438607'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:46:23.020139'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:46:33.036627'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:46:43.047746'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:46:59.107188');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:47:02.23273'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:47:12.259736'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:47:23.138588'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:47:32.282065'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:47:42.304985'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:47:59.275761'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:48:02.335436'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:48:12.356029'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:48:22.959267'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:48:33.258343');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:48:42.408901'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:49:03.948284'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:49:05.922364'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:49:12.467766'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:49:48.333688'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:49:53.744824'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:50:03.77527'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:50:13.801253'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:50:27.243313'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:50:33.897591');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:50:43.957843'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:50:54.461713'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:51:03.981956'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:51:14.001781'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:51:24.036269'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:51:34.749027'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:51:44.071749'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:51:54.119708'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:52:12.200846'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:52:14.185405');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:52:24.205992'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:52:34.234101'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:52:55.328794'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:52:58.026389'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:53:04.310439'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:53:14.331684'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:53:31.305374'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:53:34.382307'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:53:44.406703'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:53:54.465671');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:54:07.817123'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:54:14.489403'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:54:54.557291'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:55:01.153651'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:55:05.021423'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:55:14.603723'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:55:35.426'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:55:44.698622'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:55:54.738709'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:56:13.097341');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:56:14.758836'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:56:44.824953'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:56:54.884947'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:57:24.940937'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:57:41.924929'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:57:44.979091'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:58:06.073125'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:58:15.051288'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:58:25.110522'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:58:42.343264');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:58:45.185703'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:59:09.08973'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:59:15.246733'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:00:06.33744'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:00:15.367976'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:00:28.417166'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:00:35.411044'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:01:46.688554'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:01:54.142086'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:54:24.52819');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:54:45.0924'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:55:24.639112'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:56:25.441215'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:56:39.457758'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:57:11.97372'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:57:14.929146'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:57:55.237044'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:58:55.212983'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:59:25.681881'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:59:35.286904');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 12:59:55.822043'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:00:06.023245'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:00:45.446965'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:00:56.100381'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:01:05.475341'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 13:02:04.176888'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:14:42.743122'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:14:45.894624'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:14:55.934454'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:15:13.967717');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:15:15.976363'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:15:26.274871'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:15:36.020363'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:17:05.917347'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:17:16.497605'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:17:28.134564'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:17:36.541059'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:17:46.561347'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:17:56.577257'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:18:06.601347');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:18:16.612342'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:18:26.626798'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:18:38.111731'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:18:53.470566'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:19:04.262284'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:19:25.005771'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:19:33.292334'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:19:35.731353'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:19:46.467416'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:19:57.227402');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:20:07.973339'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:20:20.024218'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:20:30.478284'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:20:41.215842'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:35:40.714319'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:35:50.945611'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:36:11.748693'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:36:16.048581'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:36:22.454454'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:36:33.855711');
-INSERT INTO public.tbl_site_agent_job (sma_seq,sma_history_seq,pc_uuid,insert_dt) VALUES
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:36:50.102832'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:37:02.093185'),
-	 (NULL,NULL,'2c6777e5d8a349fb92a14e65ad961447','2021-06-24 14:37:13.781306');INSERT INTO public.tbl_updt_agent_job (pu_seq,org_seq,updt_ap_seq,pcm_uuid,pcm_name,status,insert_dt) VALUES
-	 (0,4,4,'2c6777e5d8a349fb92a14e65ad961447',NULL,NULL,'2021-06-23 18:37:55.258747'),
-	 (1,4,5,'2c6777e5d8a349fb92a14e65ad961447','hamonize',NULL,'2021-06-23 19:46:05.548106'),
-	 (0,4,6,'2c6777e5d8a349fb92a14e65ad961447',NULL,NULL,'2021-06-23 19:53:02.766694'),
-	 (1,4,7,'2c6777e5d8a349fb92a14e65ad961447','hamonize',NULL,'2021-06-23 19:53:45.693913'),
-	 (0,4,8,'2c6777e5d8a349fb92a14e65ad961447',NULL,NULL,'2021-06-23 22:11:46.880073'),
-	 (5,4,9,'2c6777e5d8a349fb92a14e65ad961447','htop',NULL,'2021-06-24 12:43:18.129407'),
-	 (2,4,9,'2c6777e5d8a349fb92a14e65ad961447','atom',NULL,'2021-06-24 12:43:18.129407');INSERT INTO public.tbl_updt_applc (org_seq,ppm_seq) VALUES
-	 (2,'0'),
-	 (4,'5,2');INSERT INTO public.tbl_updt_applc_history (org_seq,ppm_seq,updt_seq,insert_dt) VALUES
-	 (2,'0',1,'2021-06-23 17:18:44.210531'),
-	 (2,'0',2,'2021-06-23 17:32:39.423439'),
-	 (4,'0',3,'2021-06-23 17:38:25.826102'),
-	 (4,'',4,'2021-06-23 18:06:07.730574'),
-	 (4,'1',5,'2021-06-23 19:46:02.896326'),
-	 (4,'',6,'2021-06-23 19:53:01.717511'),
-	 (4,'1',7,'2021-06-23 19:53:41.643305'),
-	 (4,'',8,'2021-06-23 22:11:25.257027'),
-	 (4,'5,2',9,'2021-06-24 12:43:13.886402');INSERT INTO public.tbl_updt_policy_action_result (debname,state,"path",gubun,pc_uuid,org_seq,insert_dt,debver) VALUES
-	 ('hamonize','1','','DELETE','2c6777e5d8a349fb92a14e65ad961447',4,'2021-06-23 22:11:53.208208+09','');

@@ -502,17 +502,7 @@ function fnSave(){
 			alert("삭제 되었습니다.");
 			getListAddDeleteVer();
         	fromReset();
-			/* $.alert({
-			    title: 'Alert!',
-			    content:  '정상적으로 삭제되었습니다!',
-			    buttons: {
-			        확인: function(){
-			        	//deleteDeviceSuccess(data, status, xhr, groupId);
-			        	getListAddDeleteVer();
-			        	fromReset();
-			        }
-			    }
-			}); */
+			
 		}
 		
 		// 전송
@@ -572,21 +562,16 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 				gbInnerHtml += "<tr data-code='" + value.sm_seq + "'>";
 				gbInnerHtml += "<td class='t_left'>";
 			if(value.ppm_seq == value.sm_seq){
-				gbInnerHtml += "<input type='checkbox' id=d"+no+" class='form-control' disabled><label for=d"+no+" class='dook'></label></td>";
+				gbInnerHtml += "<input type='checkbox' id=d"+no+" class='form-control' ><label for=d"+no+" class='dook'></label></td>";
 			}else{
 				gbInnerHtml += "<input type='checkbox' id=d"+no+" class='form-control'><label for=d"+no+" class='dook'></label></td>";	
 			}
 				gbInnerHtml += "<td><span>"+no+"</span>";
-				/* if(value.ppm_seq == value.sm_seq){
-					gbInnerHtml += '<input type="checkbox" class="form-control" disabled></td>';
-				}else{
-					gbInnerHtml += '<input type="checkbox" class="form-control"></td>';	
-				} */
+			
 			gbInnerHtml += "<td>"+value.sm_name+"</td>";
 			gbInnerHtml += "<td>"+code[0]+"</td>";
 			gbInnerHtml += "<td>"+code[1]+"</td>";
 			gbInnerHtml += "<td>"+value.sm_dc+"</td>";
-			/*gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_insert_dt+"</td>";*/
 			gbInnerHtml += "</tr>";
 			
 		});	 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.mapper.IGroupMapper;
 import com.model.GroupVo;
-import com.util.AdLdapUtils;
+// import com.util.AdLdapUtils;
 import com.util.Constant;
 import com.util.StringUtil;
 
@@ -204,12 +204,12 @@ public class GroupService {
 			System.out.println("create===" + reqVo);
 			GroupVo upGroupInfo = groupMapper.groupUpperCode(reqVo);
 			System.out.println("upGroupInfo========"+upGroupInfo);
-			AdLdapUtils adUtils = new AdLdapUtils();
+			// AdLdapUtils adUtils = new AdLdapUtils();
 			
-			adUtils.adOuCreate(upGroupInfo.getOrgname());
+			// adUtils.adOuCreate(upGroupInfo.getOrgname());
 			
 			if( "sgb".equals(reqVo.getGroup_gubun()) ){
-				adUtils.sgbOuModify(upGroupInfo.getOrgname());
+				// adUtils.sgbOuModify(upGroupInfo.getOrgname());
 			}
 			System.out.println("upGroupInfo.getOrgname()====="+ upGroupInfo.getOrgname());
 

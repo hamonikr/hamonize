@@ -14,14 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IGetAgentJobMapper;
-import com.mapper.IGetAgentRecoveryMapper;
 import com.mapper.ISvrlstMapper;
-import com.model.BlockingNxssInfoVo;
-import com.model.GetAgentFirewallVo;
 import com.model.GetAgentJobVo;
-import com.model.GetAgentRecoveryVo;
 import com.model.SvrlstVo;
-import com.model.UnauthorizedVo;
 
 @RestController
 @RequestMapping("/getAgent")
@@ -102,9 +97,9 @@ public class CurlSgbPropertiesController {
 	
 	
 
-	public int sgbUUID(String sgbUuid) {
+	public int deptUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = agentVo.getSeq();
 		return segSeq;

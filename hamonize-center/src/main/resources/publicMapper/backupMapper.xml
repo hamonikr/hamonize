@@ -35,40 +35,40 @@
 	
 	<select id="backupRCApplcView" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
  			SELECT 
- 				sgb_seq, sgb_pc_status, sgb_pc_cpu, sgb_pc_memory, sgb_pc_disk, sgb_pc_macaddress, 
- 				sgb_pc_ip, first_date, last_date, sgb_pc_hostname, sgb_pc_guid, org_seq, sgb_pc_disk_id, sgb_pc_cpu_id, sgb_pc_uuid 
+			 	seq, pc_status, pc_cpu, pc_memory, pc_disk, pc_macaddress, 
+ 				pc_ip, first_date, last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid 
  			FROM tbl_pc_mangr
  			WHERE ORG_SEQ = #{org_seq}
 	</select>
 	
 	<select id="backupRecoveryList" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
- 			SELECT br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, sgb_seq 
+ 			SELECT br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq 
  				FROM tbl_backup_recovery_mngr
- 			WHERE SGB_SEQ = #{sgb_seq}
+ 			WHERE dept_seq = #{dept_seq}
 	</select>
 	
 	<insert id="backupRecoverySave" parameterType="java.util.HashMap">
 	INSERT INTO TBL_RECOVERY_APPLC 
 				( SEQ									   
-				, SGB_SEQ
+				, dept_seq
 				, ORG_SEQ
 				, BR_SEQ) VALUES
-            ((SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_RECOVERY_APPLC),#{sgb_seq},#{org_seq},#{br_seq})
+            ((SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_RECOVERY_APPLC),#{dept_seq},#{org_seq},#{br_seq})
 	</insert>
 	
 	<insert id="backupRecoveryLogSave" parameterType="java.util.HashMap">
 	INSERT INTO TBL_RECOVERY_LOG 
-				( RL_ORG_SEQ
-				, RL_BR_SEQ
-				, RL_SGB_SEQ
-				, RL_STATUS
+				( ORG_SEQ
+				, BR_SEQ
+				, pc_seq
+				, STATUS
 				) VALUES
-            (#{org_seq},#{br_seq},#{sgb_seq},'N')
+            (#{org_seq},#{br_seq},#{pc_seq},'N')
 	</insert>
 	
 	<delete id="backupRecoveryDelete" parameterType="java.util.HashMap">
 	DELETE FROM TBL_RECOVERY_APPLC 
-		WHERE SGB_SEQ = #{sgb_seq}
+		WHERE pc_seq = #{pc_seq}
 	</delete>
 
 </mapper>

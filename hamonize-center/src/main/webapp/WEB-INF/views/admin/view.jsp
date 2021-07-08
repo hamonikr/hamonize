@@ -280,7 +280,7 @@
             
             <!-- content list -->
             <div class="con_box">
-              <h2>관리자 등록관리</h2>
+              <h2>관리자 정보 수정</h2>
               <ul class="location">
                   <li>Home</li>
                   <li>Location</li>
@@ -289,16 +289,14 @@
                 <div class="board_view mT20">
                     <table>
                         <colgroup>
-                            <col style="width:15%;" />
-                            <col style="width:35%;" />
-                            <col style="width:15%;" />
-                            <col style="width:35%;" />
+                            <col style="width:30%;" />
+                            <col style="width:70%;" />
                             <col />
                         </colgroup>
                         <tbody>
                             <tr>
                                 <th>ID</th>
-                                <td colspan="3">
+                                <td>
                                     <label for="user_id" class="none"></label>
                                     <input type="text" name="user_id" id="user_id" value="${result.user_id}" class="input_type1 w50" <c:if test="${result.user_id ne null}">readonly</c:if>/>
                                     <c:if test="${result.user_id eq null}"><button type="button" class="btn_type1" onclick="goIdCheck()"> 중복아이디 검색</button></c:if>
@@ -314,12 +312,11 @@
                             <tr>
                                 <th>* 성명</th>
                                 <td><label for="user_name" class="none"></label><input type="text" name="user_name" id="user_name" value="${result.user_name}" class="input_type1 w100" /></td>
-                                <th>* 담당부서</th>
-                                <td><label for="dept_name" class="none"></label><input type="text" name="dept_name" id="dept_name" value="${result.dept_name}" class="input_type1 w100" /></td>
+                                
                             <tr>
                             <tr>
                                 <th>* 비밀번호</th>
-                                <td colspan="3">
+                                <td>
                                     <label for="pass_wd" class="none"></label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" />
                                     ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상
                                 </td>

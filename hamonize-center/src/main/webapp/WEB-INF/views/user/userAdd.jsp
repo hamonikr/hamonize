@@ -1,228 +1,341 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
-<link rel="stylesheet" type="text/css" href="/css/template/tui-grid.css" />
-<link rel="stylesheet" type="text/css" href="/css/template/tui-pagination.css" />
-<!-- <link rel="stylesheet" type="text/css" href="/css/tdemo.css" /> -->
-  
 
+ <script type="text/javascript">
+ $(function() {	
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="/js/common.js"></script>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
-<link rel="stylesheet" href="/css/materialize.css">
-<script src="/js/materialize.js"></script>
-
-       
-<script type="text/javascript">
-
-	var data = <%= request.getAttribute("gList") %>;
-	$(document).ready(function(){
-		// 그룹 클릭
-		$('.groupLabel').on('click', function(){
-			group_label_fnt(this);
+		$('#user_id').change(function() { 
+			$('#id_check').val('');
 		});
-		
 	});
+	var mailFilter = /^[_a-zA-Z0-9-\.]+@[\.a-zA-Z0-9-]+\.[a-zA-Z]+$/;
+	var phoneFilter = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+	var pwdFilter = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 	
-	function group_label_fnt(doc){
-		var $lavel = $(doc).parent('div').parent('li').find('.groupLabel');
-		var $defaultStep = $(doc).data("value");
-		var formText = '';
+	function goSave(){
 		
-		// 초기화
-		$('#insert').css('display', 'block');
+		if(vaildCheck()) return false;
+		var gubun = $("#gubun option:checked").val();
+		$('#gubun').val(gubun);
+		console.log($('#gubun').val());
+
+		var msg = "저장하시겠습니까?";
+	    if(!confirm(msg)){
+	    	return false;
+	    }
+	    
+		$.ajax({
+			type:"POST",
+			url: "<c:url value='save.do'/>",
+			data :  $("#frm").serialize(),
+			dataType : "json",
+			success: function(data, textStatus, jqXHR){
+			   alert('성공적으로 저장 되었습니다.');
+			   location.href = "list.do";
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("저장시 에러 : "+" "+ textStatus);
+			}
+		});	
+	}
+
+	function vaildCheck()
+	{
+		if($('#user_id').val() == '')
+		{
+			alert('아이디는 필수 입력 입니다.');
+			$('#user_id').focus();
+			return true;
+		}
 		
-		$("#orgname").val("");
-		$("#orgname_upcode").val($(doc).data("upcode") );
-		$("#orgname").val( $(doc).text() );
-		$( "#orgnameLabel" ).addClass( "active" );
-		$('#element_to_pop_up').bPopup().close();
+		 if($('#id_check').val() == '')
+		{
+			alert('아이디 중복 체크를 확인해 주세요.');
+			$('#idCheck').focus();
+			return true;
+		} 
+		 
+		if($(':radio[name="gubun"]:checked').length < 1)
+		{
+			alert('활성여부는 필수 입력 입니다.');
+			$('#gubun').focus();
+			return true;
+		}
+		
+		if($('#pass_wd').val() == '')
+		{
+			alert('비밀번호는 필수 입력 입니다.');
+			$('#pass_wd').focus();
+			return true;
+		}
+		
+		if($('#pass_wd_cfm').val() == '')
+		{
+			alert('비밀번호 확인은 필수 입력 입니다.');
+			$('#pass_wd_cfm').focus();
+			return true;
+		}
+		
+		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
+		{
+			alert('비밀번호와 비밀번호 확인이 다릅니다.');
+			$('#pass_wd_cfm').focus();
+			return true;
+		}
+		console.log("chkpasswd==="+$('#pass_wd').val().search(pwdFilter));
+		 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
+		{
+			 console.log("chkpasswd==="+$('#pass_wd').val().search (pwdFilter));
+			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
+			$('#pwd_no').val('');
+			$('#pwd_no').focus();
+			return true;
+		} 
+		
+		 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
+		{
+			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
+			$('#pwd_no_cfm').val('');
+			$('#pwd_no_cfm').focus();
+			return true;
+		} 
+		
+		if($('#user_name').val() == '')
+		{
+			alert('성명은 필수 입력 입니다.');
+			$('#user_name').focus();
+			return true;
+		}
+		
+	}
+
+	 function goIdCheck()
+	{
+		if($('#user_id').val() == '')
+		{
+			alert('아이디를 입력해 주세요.');
+			$('#user_id').focus();
+			return;
+		}
+		
+		$.ajax({
+			type:"POST",
+			url: "<c:url value='idDuplCheck.do'/>",
+			data :  $("#frm").serialize(),
+			dataType : "json",
+			success: function(data, textStatus, jqXHR){
+				console.log(data)
+			  if(data == 1)
+			  {
+				  alert("[ "+$('#user_id').val()+" ] 이미 중복된 아이디입니다.다시 확인해 하세요.");
+				  $('#user_id').val('');
+				  $('#user_id').focus();
+				  return;
+			  }
+			  else
+			  {
+				  alert("사용 가능한 아이디 입니다.");
+				  $('#id_check').val('S');
+			  }
+			  
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("idCheckError : "+" "+ textStatus);
+			}
+		});	
+	} 
+
+	function goModify(){
+		//alert($('#deptno option:selected').text());
+		var gubun = $("#gubun option:checked").val();
+		$('#gubun').val(gubun);
+
+		if($('#pass_wd').val() == '')
+		{
+			alert('비밀번호는 필수 입력 입니다. 다시 입력해주시기 바랍니다.');
+			$('#pass_wd').focus();
+			return true;
+		}
+		
+		if($('#pass_wd_cfm').val() == '')
+		{
+			alert('비밀번호 확인은 필수 입력 입니다. 다시 입력해주시기 바랍니다.');
+			$('#pass_wd_cfm').focus();
+			return true;
+		}
+		
+		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
+		{
+			alert('비밀번호와 비밀번호 확인이 다릅니다.');
+			$('#pass_wd_cfm').focus();
+			return true;
+		}
+		console.log("passwd==="+$('#pass_wd').val())
+		if($('#pass_wd').val() != '')
+		{
+			 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
+			{
+				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
+				$('#pass_wd').val('');
+				$('#pass_wd').focus();
+				return true;
+			} 
+		}
+		
+		if($('#pass_wd_cfm').val() != '')
+		{
+			 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
+			{
+				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
+				$('#pass_wd_cfm').val('');
+				$('#pass_wd_cfm').focus();
+				return true;
+			} 
+		}
+		var msg = "${result.user_name}(${result.user_id})님 정보를 수정하시겠습니까?";
+	    if(!confirm(msg)){
+	    	return false;
+	    }
+	    
+		$.ajax({
+			type:"POST",
+			url: "<c:url value='modify.do'/>",
+			data :  $("#frm").serialize(),
+			dataType : "json",
+			success: function(data, textStatus, jqXHR){
+			   alert('성공적으로 수정 되었습니다.');
+			   location.href = "list.do";
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("수정시 에러 : "+" "+ textStatus);
+			}
+		});	
 	}
 	
+	function goDelete(){
+		var msg = "삭제하시겠습니까?";
+	    if(!confirm(msg)){
+	    	return false;
+	    }	
+		$.ajax({
+			type:"POST",
+			url: "<c:url value='delete.do'/>",
+			data :  $("#frm").serialize(),
+			dataType : "json",
+			success: function(data, textStatus, jqXHR){
+			   alert('성공적으로 삭제 되었습니다.');
+			   location.href = "list.do";
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert("삭제시 에러 : "+" "+ textStatus);
+			}
+		});	
+	}
 </script>    
+<body>
 
- <style> 
-.contentLayer {
-  max-width: 1000px;
-  margin: 0 auto;
-  margin-top: 30px;
- /*  margin: auto;
-  padding: 10px; */
-}
-</style>
-
-<body >
 	<%@ include file="../template/topMenu.jsp" %>
 	<%@ include file="../template/topNav.jsp" %>
-	<!-- content body -->
-	<section class=" contentLayer">
-		<article>
-			<div class="code-html ">  
-		
-			<input type="text" name="orgname_upcode" id="orgname_upcode" value="">
-			
-			<div class="row">
-	        	<div class="input-field col s6">
-	            	<input id="orgname" name="orgname" type="text" data-length="10" >
-	            	<label for="orgname" id="orgnameLabel">부대</label>
-	          	</div>
-	          	<div class="input-field col s6">
-	            	<input id="input_text" type="text" data-length="10">
-	            	<label for="input_text">나라사랑카드</label>
-	          	</div>
-	        </div>
-	        
-	        <div class="row">
-	        	
-	        	<div class="input-field col s6">
-	            	<input id="number" type="text" data-length="10">
-	            	<label for="number">군번</label>
-	          	</div>
-	          	<div class="input-field col s12">
-	          		<select class=" " id="mentor_area_zone" name="mentor_area_zone" >
-						<c:forEach var="item" items="${retAttributeRankVo}">
-							<option value="${item.attr_value_code }">${item.attr_value_name}</option>
-						</c:forEach>
-					</select> 
-	    			
-	    			<label>계급</label>
-	  			</div>
-	        </div>
-
-	        <div class="row">
-	        	
-	        	<div class="input-field col s6">
-	            	<input id="name" type="text" data-length="10">
-	            	<label for="name">성명</label>
-	          	</div>
-	          	<div class="input-field col s6">
-	            	<input id="id" type="text" data-length="10">
-	            	<label for="id">아이디</label>
-	          	</div>
-	        </div>
-
-	        <div class="row">
-	        	
-	        	<div class="input-field col s6">
-	            	<input id="pw" type="text" data-length="10">
-	            	<label for="pw">비밀번호</label>
-	          	</div>
-	        	<div class="input-field col s6">
-	            	<input id="pw" type="text" data-length="10">
-	            	<label for="pw">비밀번호확인</label>
-	          	</div>
-	        </div>
-
-	        <div class="row">
-	        	<div class="input-field col s6">
-	            	<input id="discharge_dt" type="text" data-length="10">
-	            	<label for="discharge_dt">전역일</label>
-	          	</div>
-	        </div>
-		
-			
-		
-			
-		<div id="contentUpdateBtn">
-      			<button type="button" class="btn btn-outline-success" name="cmCreate"  id="cmCreate" ><span class="fa fa-check" ></span> Success</button>
-	        <button type="button" class="btn btn-outline-info" name="cmCreateCanCel" id="cmCreateCanCel"><span class="fa fa-check"></span> Info</button>
-		</div>
-
-</div>
-
-
-</article>
-</section>
-
-<script src="/js/jquery.bpopup.min.js"></script>
-<style>
-#element_to_pop_up { 
-    background-color:#fff;
-    border-radius:15px;
-    color:#000;
-    display:none; 
-    padding:20px;
-    min-width:400px;
-    min-height: 180px;
-    margin-top:10%;
-}
-.b-close{
-    cursor:pointer;
-    position:absolute;
-    right:10px;
-    top:5px;
-}
-
-</style>
-
-<!-- Element to pop up -->
-<div id="element_to_pop_up">
-    <a class="b-close">x</a>
-    <div class="row">부대선택</div>
-    <div class="row"><%@ include file="../template/groupMenuPopup.jsp" %></div>
-</div>
-
-
-<script type="text/javascript">
-   
-//부대 팝업
-;(function($) {
-    $(function() {
-        $('#orgname').bind('click', function(e) {
-            e.preventDefault();
-            $('#element_to_pop_up').bPopup({
-                modalClose: false,
-                opacity: 0.6,
-                positionStyle: 'fixed' //'fixed' or 'absolute'
-            });
-        });
-    });
-})(jQuery);
-
-
-  
-$(document).ready(function() {
-
-	// select box init
-	$('select').formSelect();
 	
-	//$('input[name=cmCreate]').click(function() {
-	$('#cmCreate').click(function() {
-		// editor contents 
-		var contents = document.querySelector("#noti_contents");
-        // contents.value = editor.getMarkdown(); //markdown 저장
-        contents.value = editor.getHtml(); //html 저장
-        alert(contents.value);
-	        
-		$.ajax({
-			url : '/notice/notiWrite.proc',
-			type: 'POST',
-			data:$("form").serialize(),
-			success : function(res) { 
-				if(msg.LOGIN_SUCCESS == res){
-//					alert(res);
-					location.href='/soldier/info?uID='+$soldierId;
-					$('#responseId').val($soldierId).change();
-				}else{
-					$('#textInfo').text(res);
-				}
-			},
-			error:function(request,status,error){
-				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				$('#textInfo').text(msg.AJAX_FAIL);
-			}
-		});
-		
-	});
-	
-	
- 	
-	
-});
-</script>	
+
+<form id="frm" name="frm" action="" method="post">
+<input type="hidden" id="id_check" name="id_check" />
+<!-- content -->
+    <div class="hamo_container">
+        <div class="content_con">
+
+            
+            <!-- content list -->
+            <div class="con_box">
+              <h2>사용자 등록</h2>
+              <ul class="location">
+                  <li>Home</li>
+                  <li>Location</li>
+              </ul>
+
+                <div class="board_view mT20">
+                    <table>
+                        <colgroup>
+                            <col style="width:30%;" />
+                            <col style="width:70%;" />
+                            <col />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>* ID</th>
+                                <td colspan="3">
+                                    <label for="user_id" class="none"></label>
+                                    <input type="text" name="user_id" id="user_id" value="${result.user_id}" class="input_type1 w50" <c:if test="${result.user_id ne null}">readonly</c:if>/>
+                                    <c:if test="${result.user_id eq null}"><button type="button" class="btn_type1" onclick="goIdCheck()"> 중복아이디 검색</button></c:if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 활성여부</th>
+                                <td colspan="3">
+                                    <input type="radio" name="gubun" id="gubunA" value="A" <c:if test="${result.gubun eq 'A' }">checked</c:if> /><label for="gubunA" class="pR20">활성</label>
+                                    <input type="radio" name="gubun" id="gubunD" value="D" <c:if test="${result.gubun eq 'D' }">checked</c:if> /><label for="gubunD">비활성</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 성명</th>
+                                <td><label for="user_name" class="none"></label><input type="text" name="user_name" id="user_name" value="${result.user_name}" class="input_type1 w100" /></td>
+                                
+                            </tr>
+							<tr>
+								<th>* 부서</th>
+								<td><label for="dept_name" class="none"></label><input type="text" name="dept_name" id="dept_name" value="${result.dept_name}" class="input_type1 w100" /></td>
+							</tr>
+							<tr>
+								<th>* 사번</th>
+								<td><label for="dept_name" class="none"></label><input type="text" name="sabun" id="sabun" value="${result.sabun}" class="input_type1 w100" /></td>
+							</tr>
+							<tr>
+								<th>* 직급</th>
+								<td><label for="dept_name" class="none"></label><input type="text" name="rank" id="rank" value="${result.rank}" class="input_type1 w100" /></td>
+							</tr>
+                            <tr>
+								<th>* 입사일</th>
+								<td><label for="dept_name" class="none"></label><input type="text" name="dept_name" id="dept_name" value="${result.dept_name}" class="input_type1 w100" /></td>
+								</tr>
+                            
+							<tr>
+                                <th>* 비밀번호</th>
+                                <td >
+                                    <label for="pass_wd" class="none"></label>
+									<input type="password" name="pass_wd" id="pass_wd" class="input_type1  w100" />
+                                    ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상
+                                </td>
+                            </tr>
+							<tr>    
+								<th>* 비밀번호 확인</th>
+								<td>
+                                    <label for="pass_wd_cfm" class="none">
+									</label><input type="password" name="pass_wd_cfm" id="pass_wd_cfm" class="input_type1 w100" />
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div><!-- //List -->
+                <div class="t_center mT20">
+                <c:choose> 
+					<c:when test="${result.user_id == null}"> 
+                    <button type="button" class="btn_type2" onclick="goSave()"> 등록</button>
+                    </c:when>
+                    <c:otherwise>
+                    <button type="button" class="btn_type2" onclick="goModify()"> 수정</button>
+                    <button type="button" class="btn_type2" onclick="goDelete()"> 삭제</button>
+                    </c:otherwise>
+                    </c:choose>
+                    <button type="button" class="btn_type2" onclick="location.href='userList'"> 목록</button>
+                </div>
+            </div><!-- //con_box -->
+        </div>
+    </div><!-- //content -->
+    </form>
+
+
+<%@ include file="../template/footer.jsp" %>
+
 </body>
 </html>
