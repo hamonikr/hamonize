@@ -114,6 +114,24 @@
 		WHERE A.SEQ = #{seq}
 	]]>	
 	</select>
+
+	<select id="orgTmpView" parameterType="com.model.OrgVo" resultType="com.model.OrgVo">
+			SELECT A.SEQ
+				, A.P_SEQ
+				, A.ORG_ORDR
+				, A.ORG_NM
+				, A.ORG_ORDR
+				, A.writer_id			
+				, A.SECTION
+				, A.P_ORG_NM
+				, A.ALL_ORG_NM
+				, A.SIDO
+				, A.GUGUN
+				, A.ORG_NUM
+			FROM TBL_ORG A
+			WHERE A.SEQ = 
+	</select>
+	
 	
 	<!-- 조직등록 -->
 	<update id="orgSave" parameterType="com.model.OrgVo">

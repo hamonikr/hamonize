@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,7 +26,7 @@ import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.UserService;
-import com.util.CmmnExcelService;
+import com.util.StringUtil;
 
 @Controller
 @RequestMapping("/user")
@@ -80,50 +82,30 @@ public class UserController {
 		return dataMap;
 	}
 	
-	@RequestMapping("/userListExcel")
-	public CmmnExcelService userListExcel(UserVo vo, PagingVo pagingVo,HttpServletRequest request, HttpServletResponse response, ModelMap model,
-    	@RequestParam Map<String, String> params) throws Exception {
-		
-		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
-		// 페이징
-		pagingVo.setCurrentPage(vo.getListInfoCurrentPage());
-		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
-
-		int cnt = Integer.parseInt(userMapper.countListInfo(vo) + "");
-		pagingVo.setTotalRecordSize(cnt);
-		pagingVo = PagingUtil.setPaging(pagingVo);
-		
-		vo.setDate_fr(vo.getDate_fr().toString().replaceAll("/", "-"));
-		vo.setDate_to(vo.getDate_to().toString().replaceAll("/", "-"));
-
-		List<Map<String, Object>> list = userMapper.userListExcel(vo);
-		
-		String[] head ={"번호","소속부문","부서번호","ID","직급","성명","사번","입사일","퇴사일"};
-		String[] column ={"rownum","p_org_nm","org_nm","user_id","rank","user_name","user_gunbun","enlistment_dt","discharge_dt"};
-		jsonObject.put("header", head);		  // Excel 상단
-		jsonObject.put("column", column);		  // Excel 상단
-		jsonObject.put("excelName","사용자정보리스트");    // Excel 파일명
-		jsonObject.put("list", list);          // Excel Data
-		
-		model.addAttribute("data", jsonObject);
-		return new CmmnExcelService();
-    }
-
-	@ResponseBody
-	@RequestMapping(value = "/userView")
-	public UserVo userView(UserVo vo, Model model) throws Exception {
+	@RequestMapping(value = "/view/{seq}")
+	public String userView(@PathVariable("seq") int seq, UserVo vo, Model model) throws Exception {
+		System.out.println("user seq : "+ seq);
+		OrgVo ovo = new OrgVo();
 
 		UserVo uvo = userSerivce.userView(vo);
-		model.addAttribute("result", uvo);
 
-		return uvo;
+		System.out.println("org name : "+uvo.getOrg_nm());
+		System.out.println("org seq : "+uvo.getOrg_seq());
+
+		List<OrgVo> list = userSerivce.getOrgList(ovo);
+
+		model.addAttribute("result", uvo);
+		model.addAttribute("olist", list);
+
+		return "/user/userAdd";
 
 	}
 
 	@RequestMapping("/userAdd")
-	public String userSave(Model model, @RequestParam Map<String, Object> params) {
-		
+	public String userAddView(Model model, OrgVo vo) {		
+		List<OrgVo> list = userSerivce.getOrgList(vo);
+		model.addAttribute("olist", list);
+
 		return "/user/userAdd";
 	}
 
@@ -131,7 +113,51 @@ public class UserController {
 	@ResponseBody
 	public int idDuplCheck(Model model,UserVo vo) throws Exception{
 		int result = 0;
+		System.out.println("user id check-- > "+ vo.getUser_id());
+		
 		result = userSerivce.userIdCheck(vo);
+		return result;
+		
+	}
+
+	@RequestMapping("/userSave")
+	public String save(Model model, UserVo vo) {
+		int result = userSerivce.userSave(vo);
+
+		if(result>=1){
+			System.out.println("user 저장 성공 >> "+ result);
+		}else{
+			System.out.println("user 저장 실패 >> "+ result);
+		}
+
+		return "redirect:/user/userList";
+	}
+
+
+	@RequestMapping("/modify")
+	@ResponseBody
+	public int modify(Model model, UserVo vo) throws Exception {
+		int result=0;
+		System.out.println("vo : " +vo.toString());
+		result = userSerivce.userModify(vo);
+		return result;
+		
+	}
+	
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public int delete(Model model, @RequestParam(value = "seqs[]") List<Integer> list ) throws Exception{
+		int result =0;
+		List<UserVo> voList = new ArrayList<> ();
+	
+		for(int i=0;i<list.size();i++){
+			UserVo tmp = new UserVo();
+			tmp.setSeq(list.get(i));
+			voList.add(tmp);
+		}
+		System.out.println("user 수정---");
+		result = userSerivce.userDelete(voList);
+	
 		return result;
 		
 	}

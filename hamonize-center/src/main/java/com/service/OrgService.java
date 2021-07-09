@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.model.OrgVo;
-//import com.util.AdLdapUtils;
 import com.util.LDAPConnection;
 
 @Service
@@ -69,40 +68,39 @@ public class OrgService {
 			orgPath = orgMapper.groupUpperCode(orgvo);
 			newOrgPath = orgMapper.groupNewUpperCode(orgvo);
 		}
-	
+		System.out.println("orgvo p_seq > " + orgvo.getP_seq());
+		
+		if(orgvo.getP_seq() == null){//최상위 회사의 부서일 경우
+			orgvo.setP_seq(0);
+		
+		}
 		int result = orgMapper.orgSave(orgvo);
+				
 		System.out.println(" 저장 여부 result======"+result);		
+		
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
 		if(result == 1) {
 			try {
-				System.out.println("----신규저장----");
-				
 				// ldap 저장
-				con.addOu(orgvo);
-				
+				System.out.println("----신규저장----");
+				con.addOu(orgvo);				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}else if (result == 0){
-			System.out.println("----수정----");
-			System.out.println("수정전 org name >> " + oldOrgVo.getOrg_nm());
-			
+			System.out.println("----수정----");			
 			if(oldOrgVo.getOrg_nm()!=null){ // 수정
 					List<OrgVo> list = orgMapper.searchChildDept(orgvo);
-					System.out.println("list size >> "+ list.size());
 
 					for(int i=0;i<list.size();i++){
-						System.out.println("하위 list --> seq : "+list.get(i).getSeq()+" path : " +list.get(i).getAll_org_nm());
 						newAllOrgNm = list.get(i).getAll_org_nm().replace(oldOrgVo.getOrg_nm(), orgvo.getOrg_nm());
 						newAllOrgName.setAll_org_nm(newAllOrgNm);
 						newAllOrgName.setSeq(list.get(i).getSeq());
 
-						System.out.println("newAllOrgName > "+newAllOrgName.toString());
-
-						int uptResult = orgMapper.allOrgNmUpdate(newAllOrgName);
+						orgMapper.allOrgNmUpdate(newAllOrgName);
 					}
 
 					// ldap 서버 업데이트
@@ -111,80 +109,20 @@ public class OrgService {
 				System.out.println("수정할 사항 없음");
 			}
 		}
-
-		// if(result == 1) {
-		// 	OrgVo seqOrg = orgMapper.getOrgLastSeq();
-		// 	OrgVo upGroupInfo = orgMapper.groupUpperCode(seqOrg);
-			
-		// 	//ldap
-		// 	// try {
-		// 	// 	adUtils.adOuCreate(upGroupInfo.getOrg_nm());
-		// 	// } catch (Exception e) {
-		// 	// 	e.printStackTrace();
-		// 	// }
-		// 	// 	if("S".equals(orgvo.getSection()) ){
-		// 	// 		adUtils.sgbOuModify(upGroupInfo.getOrg_nm());
-		// 	// 	}
-
-		// }else if (result == 0) {
-		// 	String oldOrgNm = oldOrgVo.getOrg_nm().replaceAll("/","").replaceAll("_","").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("\\+", "").replaceAll(" ", "");
-		// 	String orgNm = orgvo.getOrg_nm().replaceAll("/","").replaceAll("_","").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("\\+", "").replaceAll(" ", "");
-		// 	String oldOrgPath = orgPath.getOrg_nm();
-		// 	String neworgPath = "OU="+orgNm+",";
-			
-		// 	neworgPath += newOrgPath.getOrg_nm();
-			
-		// 	System.out.println("neworgPath====="+neworgPath);
-		// 	System.out.println("oldOrgPath====="+oldOrgPath);
-			
-		// 	//adUtils.ouRename(oldOrgNm, orgNm,oldOrgPath);
-		// 	// try {
-		// 	// 	adUtils.ouPathMove(oldOrgPath,neworgPath);
-		// 	// } catch (Exception e) {
-		// 	// 	e.printStackTrace();
-		// 	// 	System.out.println("==========error===========");
-		// 	// 	throw new RuntimeException(e);
-		// 	// }
-			
-		// }
 		
 		return result;
 		
 	}
 	
-	public int orgDelete(OrgVo orgvo) throws Exception{
-		//AdLdapUtils adUtils = new AdLdapUtils();
-		OrgVo upGroupInfo = orgMapper.groupUpperCode(orgvo);
-		String check = "";
-		
+	public int orgDelete(OrgVo orgvo) throws Exception{	
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		con.deleteOu(orgvo);
 
-		// ldap
-		// try {
-		// 	check = adUtils.ouDelete(orgvo.getOrg_nm());
-		// }catch(Exception e) {
-		// 	e.printStackTrace();
-		// 	System.out.println("==========error===========");
-		// 	throw new RuntimeException(e);
-		// }
-		
 		int result = 0;
 		
 		result = orgMapper.orgDelete(orgvo);
-		
-		// if("noaction".equals(check)) {
-		// 	return result;
-		// }else {
-		// 	result = orgMapper.orgDelete(orgvo);
-		// }
-
-		System.out.println("getorg_nm=-===="+orgvo.getOrg_nm());
-		System.out.println("result====="+result);
 		return result;
-		
-		
 	}
 	
 
