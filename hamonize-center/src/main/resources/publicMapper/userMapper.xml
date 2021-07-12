@@ -10,7 +10,7 @@
 			a.user_id, 
 			a.pass_wd, 
 			a.user_name, 
-			to_char(a.ins_date, 'YYYY-MM-DD') as ins_date, 
+			ins_date, 
 			to_char(a.upd_date, 'YYYY-MM-DD') as upd_date, 
 			a.kind,
 			case when a.rank = '002' then '사원'
@@ -74,68 +74,6 @@
 		 OFFSET #{limitStart} LIMIT #{recordSize}
 	</select>
 	
-	<!-- <select id="userListExcel" resultType="hashmap" parameterType="com.model.UserVo">
-		SELECT 
-		(ROW_NUMBER() OVER()) AS rownum,
-			a.seq, 
-			a.user_sabun, 
-			a.user_id, 
-			a.pass_wd, 
-			a.user_name, 
-			to_char(a.ins_date, 'YYYY-MM-DD') as ins_date, 
-			to_char(a.upd_date, 'YYYY-MM-DD') as upd_date, 
-			a.kind,
-			case when a.rank = '002' then '이병'
-			when a.rank = '003' then '일병'
-			when a.rank = '004' then '상병'
-			when a.rank = '005' then '병장' 
-			else ''
-			end as rank , 
-			a.discharge_dt, 
-			a.org_seq,
-			(select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) as p_org_nm,
-			(select org_nm from tbl_org where seq = (select seq from tbl_org b where a.org_seq = b.seq)) as org_nm
-		FROM tbl_user a
-
-		<where>
-		1=1
-		<if test="org_seq != null and org_seq != ''">
-			and a.org_seq in (
-			with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-				from tbl_org a
-				where a.seq = #{org_seq}
-				union all
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and not cycle)
-				select seq
-				from search_org
-			)
-		</if>
-		<if test="txtSearch != null " >
-			<if test="keyWord == 1 " >
-				and a.user_name like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 2 " >
-				and a.user_id like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 3 " >
-				and (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 4 " >
-				and a.user_sabun like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 0 " >
-				and (a.user_name like '%' || #{txtSearch} || '%'
-				or a.user_id like '%' || #{txtSearch} || '%'
-				or a.user_sabun like '%' || #{txtSearch} || '%'
-				or (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%')
-			</if>
-		</if>
-		</where>
-		order by enlistment_dt asc 
-	</select> -->
 	
 	<select id="countListInfo" parameterType="com.model.UserVo" resultType="Integer">
 	select count(*) as tbl_cnt
@@ -177,7 +115,7 @@
 		</if>
 		</where>
 	</select>
-	
+<!-- 
 	<select id="userView" resultType="com.model.UserVo"  parameterType="com.model.UserVo">
 		SELECT 
 			a.seq, 
@@ -185,13 +123,15 @@
 			a.user_id, 
 			a.pass_wd, 
 			a.user_name, 
-			to_char(a.ins_date, 'YYYY-MM-DD') as ins_date, 
+			ins_date,
+			email,
+			tel, 
 			to_char(a.upd_date, 'YYYY-MM-DD') as upd_date, 
 			a.kind,
-			case when a.rank = '002' then '이병'
-			when a.rank = '003' then '일병'
-			when a.rank = '004' then '상병'
-			when a.rank = '005' then '병장' 
+			case when a.rank = '002' then '사원'
+			when a.rank = '003' then '대리'
+			when a.rank = '004' then '과장'
+			when a.rank = '005' then '부장' 
 			else ''
 			end as rank , 
 			a.discharge_dt, 
@@ -200,8 +140,34 @@
 		FROM tbl_user a
 		<where>
 				a.seq = #{seq}
-		</where>
-		 
+		</where>	 
+	</select> -->
+
+	<select id="userView" resultType="com.model.UserVo"  parameterType="com.model.UserVo">
+		SELECT 
+			a.seq, 
+			a.user_sabun, 
+			a.user_id, 
+			a.pass_wd, 
+			a.user_name, 
+			ins_date,
+			email,
+			tel, 
+			to_char(a.upd_date, 'YYYY-MM-DD') as upd_date, 
+			a.kind,
+			case when a.rank = '002' then '사원'
+			when a.rank = '003' then '대리'
+			when a.rank = '004' then '과장'
+			when a.rank = '005' then '부장' 
+			else ''
+			end as rank , 
+			a.discharge_dt, 
+			a.org_seq,
+			(select org_nm from tbl_org where seq = (select seq from tbl_org b where a.org_seq = b.seq)) as org_nm
+		FROM tbl_user a
+		<where>
+				a.seq = #{seq}
+		</where>	 
 	</select>
 	
 	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">
@@ -216,16 +182,96 @@
 	</select>
 	
 	<!-- 사용자 정보 유효성 체크 -->
-	<select id="userIdCheck" parameterType="com.model.UserVo"	resultType="Integer">
+	<select id="userIdCheck" parameterType="com.model.UserVo" resultType="Integer">
 		SELECT COUNT(USER_ID)
 		FROM TBL_USER
 		WHERE USER_ID = #{user_id}
 	</select>
 
-	<select id="userSabunCheck" parameterType="com.model.UserVo"	resultType="Integer">
+	<select id="userSabunCheck" parameterType="com.model.UserVo" resultType="Integer">
 		SELECT COUNT(sabun)
 		FROM TBL_USER
 		WHERE user_sabun = #{sabun}
 	</select>
-		
+
+	<insert id="userSave" parameterType="com.model.UserVo" >
+		insert into 
+		TBL_USER(
+			user_id,
+			pass_wd,
+			user_name,
+			kind,
+			rank,
+			email,
+			tel,
+			org_seq,
+			position,
+			user_sabun,
+			ins_date
+		)
+		values(
+			#{user_id},
+			#{pass_wd},
+			#{user_name},
+			#{kind},
+			#{rank},
+			#{email},
+			#{tel},
+			#{org_seq},
+			#{position},
+			#{user_sabun},
+			#{ins_date}
+		)
+
+	</insert> 
+
+	<delete id="userDelete" parameterType="java.util.List"> 
+		DELETE FROM TBL_USER 
+		WHERE seq IN
+		<foreach collection="list" item="item"  index="i" open="(" separator="," close=")"> 
+			#{item.seq}
+		</foreach>
+			 
+	</delete>
+
+	<update id="userModify" parameterType="com.model.UserVo">
+		UPDATE TBL_USER
+		SET 
+		user_id = #{user_id},
+		<if test="pass_wd != null">
+			pass_wd = #{pass_wd},
+		</if>
+		user_name = #{user_name},
+		kind = #{kind},
+		rank = #{rank},
+		email = #{email},
+		tel = #{tel},		
+		org_seq = #{org_seq},
+		position = #{position},
+		user_sabun = #{user_sabun},
+		upd_date = now()
+		WHERE user_id = #{user_id}
+	</update>
+	
+	<select id="getUserOrgPath" parameterType="Integer" resultType="com.model.OrgVo"> 
+		select distinct a.all_org_nm, a.org_nm , a.p_seq 
+		from tbl_org a left outer join tbl_user b on a.seq = b.org_seq 
+		where b.org_seq in (
+			select org_seq 
+			from tbl_user 
+			where seq = #{seq}
+		)
+	</select>
+
+	<select id="getUserNewOrgPath" parameterType="Integer" resultType="com.model.OrgVo"> 
+		select all_org_nm 
+		from tbl_org 
+		where seq = #{seq}
+	</select>
+	
+	<select id="getUserInfo" parameterType="Integer" resultType="com.model.UserVo"> 
+		select * from tbl_user tu 
+		where seq = #{seq}
+	</select>
+	
 </mapper>

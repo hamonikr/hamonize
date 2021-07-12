@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.model.PcMangrVo;
+import com.model.UserVo;
 
 public interface IPcMangrMapper {
 	
@@ -23,6 +24,8 @@ public interface IPcMangrMapper {
 	
 	public PcMangrVo chkPcinfo(PcMangrVo vo);
 	
+	public UserVo chkUserSabun(PcMangrVo vo);
+
 	public int updatePcinfo(PcMangrVo vo);
 
 	public int pcIpchnLog(PcMangrVo vo);

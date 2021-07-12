@@ -161,7 +161,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
 
 					gbInnerHtml += "<tr data-code='" + value.seq + "' data-status='" + value.status + "'>";
-					gbInnerHtml += "<td><input type='checkbox' name='' id="+no+" class='form-control' value='"+value.status+"'><label for="+no+" class='dook'></label></td>";
+					gbInnerHtml += "<td><input type='checkbox' name='' id="+no+" class='form-control' value='"+value.status+"' onclick='getCheckboxValue(event)'><label for="+no+" class='dook'></label></td>";
 					if(value.status == 'N')
 						gbInnerHtml += "<td>비활성</td>";
 					else
@@ -448,6 +448,6 @@ function updateBlockList(){
 	<%@ include file="../template/grid.jsp" %>
 	<%@ include file="../template/footer.jsp" %>
 	
-	
 </body>
+
 </html>
