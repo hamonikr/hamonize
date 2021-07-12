@@ -78,8 +78,8 @@
            <form id="mainform" name="mainform" action="" method="post" onsubmit="fn_signIn();return false;">
            <input type="hidden" name="user_ip" id="user_ip" class="input_type1" />
            <ul class="memberin">
-               <li> <label for="">아이디</label><input type="text" name="user_id" id="user_id" class="input_type1" value=""  placeholder="ID" /></li>
-               <li> <label for="">비밀번호</label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" value="" placeholder="Password" /></li>
+               <li> <label for="">아이디</label><input type="text" name="user_id" id="user_id" class="input_type1" value="ivs"  placeholder="ID" /></li>
+               <li> <label for="">비밀번호</label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" value="exitem08**" placeholder="Password" /></li>
                <li> <button type="submit" class="btn_type2"> LOGIN </button></li>
            </ul> 
            </form>     

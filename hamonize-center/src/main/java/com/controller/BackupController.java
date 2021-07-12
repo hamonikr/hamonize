@@ -134,10 +134,10 @@ public class BackupController {
 		  	if(!resultSet.isEmpty()) {
 		  	for(int i = 0; i < resultSet.size();i++) {
 		  		JSONObject jo = new JSONObject();
-		  		jo.put("sgb_seq", resultSet.get(i).get("sgb_seq").toString());
+		  		jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
 		  		jo.put("org_seq", resultSet.get(i).get("org_seq").toString());
-		  		jo.put("sgb_pc_uuid", resultSet.get(i).get("sgb_pc_uuid").toString());
-		  		jo.put("sgb_pc_hostname", resultSet.get(i).get("sgb_pc_hostname").toString());
+		  		jo.put("pc_uuid", resultSet.get(i).get("pc_uuid").toString());
+		  		jo.put("pc_hostname", resultSet.get(i).get("pc_hostname").toString());
 		  		result.add(jo);
 		  		System.out.println(resultSet.get(i));
 		  		}
@@ -153,12 +153,12 @@ public class BackupController {
 		public JSONArray backupRCList(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
 		  	JSONArray result = new JSONArray();
 		  	List<Map<String, Object>> resultSet;
-		  	params.put("sgb_seq", Integer.parseInt(params.get("sgb_seq").toString()));
+		  	params.put("dept_seq", Integer.parseInt(params.get("dept_seq").toString()));
 		  	resultSet = bService.backupRecoveryList(params);
 		  	if(!resultSet.isEmpty()) {
 		  	for(int i = 0; i < resultSet.size();i++) {
 		  		JSONObject jo = new JSONObject();
-		  		jo.put("sgb_seq", resultSet.get(i).get("sgb_seq").toString());
+		  		jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
 		  		jo.put("br_org_seq", resultSet.get(i).get("br_org_seq").toString());
 		  		jo.put("br_backup_iso_dt", resultSet.get(i).get("br_backup_iso_dt").toString());
 		  		jo.put("br_backup_gubun", resultSet.get(i).get("br_backup_gubun").toString());
@@ -177,7 +177,7 @@ public class BackupController {
 	  @ResponseBody
 	  @RequestMapping("backupRCSave")
 		public String backupRCSave(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
-		  params.put("sgb_seq", Integer.parseInt(params.get("sgb_seq").toString()));
+		  params.put("dept_seq", Integer.parseInt(params.get("dept_seq").toString()));
 		  params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		  params.put("br_seq", Integer.parseInt(params.get("br_seq").toString()));
 		/*

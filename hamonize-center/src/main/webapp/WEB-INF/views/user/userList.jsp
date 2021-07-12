@@ -77,7 +77,7 @@ text-decoration: none;
 	];
 	
 	$(document).ready(function(){
-		setNav('사용자정보');
+		setNav('사용자 정보');
 		$("#txtSearch").keydown(function(key) {
 			if (key.keyCode == 13) {
 				key.preventDefault();
@@ -92,10 +92,6 @@ text-decoration: none;
 	$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 	getUserList($("#listInfoCurrentPage").val());
 	
-	$("#excelBtn").on("click",function(){
-		location.href="userListExcel?org_seq="+$("#org_seq").val()+"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val()+"&txtSearch="+$("#txtSearch").val()+"&keyWord="+$("#keyWord").val();
-	});
-	
 });
 	
 	function getUserList(num){
@@ -105,9 +101,10 @@ text-decoration: none;
 		var txtSearch = $("input[name=txtSearch]").val();
 		var org_seq = $('#org_seq').val();
 		if(org_seq == "" ){
-		org_seq = 1;
+			org_seq = 1;
 		}
 		var url ='/user/eachList';
+		
 		$.post(url,{org_seq:org_seq,listInfoCurrentPage:num,keyWord:keyWord,txtSearch:txtSearch},
 				function(result){
 						var agrs = result.data;
@@ -119,16 +116,23 @@ text-decoration: none;
 							var no = paging.totalRecordSize -(i ) - ((paging.currentPage-1)*10);
 							
 							strHtml += "<tr>";
+							strHtml += "<td><input type='checkbox' name='chk' id='"+agrs[i].seq+"' class='form-control' value='"+agrs[i].seq+"'><label for='"+agrs[i].seq+"' class='dook'></label></td>";
 							strHtml += "<td>"+no+"</td>";
 							strHtml += "<td>"+agrs[i].p_org_nm+"</td>";
 							strHtml += "<td>"+agrs[i].org_nm+"</td>";
-							strHtml += "<td>"+agrs[i].user_id+"</td>";
+							strHtml += "<td><a style='text-decoration: underline;' href='/user/view/"+agrs[i].seq+"''>"+agrs[i].user_id+"</a></td>";
 							strHtml += "<td>"+agrs[i].rank+"</td>";
 							strHtml += "<td>"+agrs[i].user_name+"</td>";
-							strHtml += "<td>"+agrs[i].user_gunbun+"</td>";
-							strHtml += "<td>"+agrs[i].insert_dt+"</td>";
-							strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							strHtml += "<td>"+agrs[i].user_sabun+"</td>";
+							strHtml += "<td>"+agrs[i].ins_date+"</td>";
+							if(agrs[i].discharge_dt == null){
+								strHtml += "<td> - </td>";
+							}else{
+								strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							}
+							
 							strHtml += "</tr>";				
+							
 							}
 						}else{
 							strHtml += "<tr data-code=''><td colspan='10' style='text-align:center;'class='mdl-data-table__cell--non-numeric'>등록된 데이터가 없습니다.</td></tr>"
@@ -195,15 +199,23 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							var no = paging.totalRecordSize -(i ) - ((paging.currentPage-1)*10);
 							
 							strHtml += "<tr>";
+							gbInnerHtml += "<td><input type='checkbox' name='chk' id="+no+" class='form-control' value='"+value.seq+"'><label for="+no+" class='dook'></label></td>";
+
 							strHtml += "<td>"+no+"</td>";
 							strHtml += "<td>"+agrs[i].p_org_nm+"</td>";
 							strHtml += "<td>"+agrs[i].org_nm+"</td>";
 							strHtml += "<td>"+agrs[i].user_id+"</td>";
 							strHtml += "<td>"+agrs[i].rank+"</td>";
 							strHtml += "<td>"+agrs[i].user_name+"</td>";
-							strHtml += "<td>"+agrs[i].user_gunbun+"</td>";
-							strHtml += "<td>"+agrs[i].insert_dt+"</td>";
-							strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							strHtml += "<td>"+agrs[i].user_sabun+"</td>";
+							strHtml += "<td>"+agrs[i].ins_date+"</td>";
+							
+							if(agrs[i].discharge_dt == null){
+								strHtml += "<td> - </td>";
+							}else{
+								strHtml += "<td>"+agrs[i].discharge_dt+"</td>";
+							}
+
 							strHtml += "</tr>";
 							}
 						}else{
@@ -245,16 +257,15 @@ function setCheck() {
 	showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
 }
 
-function userView(idx){
-	$.post('/user/userView',{idx:idx},
+function userView(seq){
+	$.post('/user/userView',{seq:seq},
 			function(result){
 					var agrs = result;
 					$("#org_nm").val($.trim(agrs.org_nm));
 					$("#rank").val($.trim(agrs.rank));
 					$("#user_name").val($.trim(agrs.user_name));
 					$("#user_id").val($.trim(agrs.user_id));
-					$("#narasarang_no").val($.trim(agrs.narasarang_no));
-					$("#user_gunbun").val($.trim(agrs.user_gunbun));
+					$("#user_sabun").val($.trim(agrs.user_sabun));
 					$("#insert_dt").val($.trim(agrs.insert_dt));
 					$("#discharge_dt").val($.trim(agrs.discharge_dt));					
 					$('#element_to_pop_up').bPopup({
@@ -270,7 +281,7 @@ function userView(idx){
 function fnSave(){
 	
 	if($("#org_nm").val()==""){
-		alert("부대명을 입력해주세요.");
+		alert("부서명을 입력해주세요.");
 		return false;
 	}
 	
@@ -345,7 +356,7 @@ function searchView(viewName, page){
 		            <li>Home</li>
 		            <li>Location</li>
 		        </ul>
-		        <h2 class="tree_head">사용자정보</h2>
+		        <h2 class="tree_head">사용자 정보</h2>
 		
 		        <ul class="view_action">
 		            <li><input type="radio" name="1" id="expandAllBtn"><label for="expandAllBtn">전체열기</label> </li>
@@ -365,21 +376,22 @@ function searchView(viewName, page){
       <div class="right_box">
       
          <ul class="search_area">
-            <li>
-               <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
-              <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-               ~
-              <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
-              <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-              <%-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
-              <div id="count"></div>
+        	 <li>
+			  <div id="count"></div>
             </li>
+			<li>
+				<div>
+		            <button type="button" class="btn_type3" onclick="location.href='/user/userAdd'" id="userSave"> 사용자 추가</button>
+					<button type="button" class="btn_type3" id="userDel" onclick="goDelete()"> 사용자 삭제</button>
+				</div>
+			</li>
+
             <li>
                <!-- 검색 -->
               <div class="top_search">
               <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
                   <option value="0">전체</option>
-                  <option value="1">성명</option>
+                  <option value="1">이름</option>
                   <option value="2">ID</option>
                   <option value="3">소속부문</option>
                   <option value="4">사번</option>
@@ -394,9 +406,10 @@ function searchView(viewName, page){
       			<div class="board_list mT20">
                     <table>
                         <colgroup>
-                            <col style="width:7%;" />
-                            <col style="width:25%;" />
-                            <col style="width:10%;" />
+                            <col style="width:5%;" />
+                            <col style="width:5%;" />
+                            <col style="width:15%;" />
+                            <col style="width:15%;" />
                             <col style="width:10%;" />
                             <col style="width:10%;" />
                             <col style="width:10%;" />
@@ -406,12 +419,13 @@ function searchView(viewName, page){
                         </colgroup>
                         <thead>
                             <tr>
+								<th>선택</th>
                                 <th>번호</th>
                                 <th>소속부문</th>
                                 <th>부서</th>
                                 <th>ID</th>
                                 <th>직급</th>
-                                <th>성명</th>
+                                <th>이름</th>
                                 <th>사번</th>
                                 <th>입사일</th>
                                 <th>퇴사일</th>
@@ -432,8 +446,51 @@ function searchView(viewName, page){
     
 	<%@ include file="../template/grid.jsp" %>
 	<%@ include file="../template/footer.jsp" %>
-	
-	
 </body>
+
+<script>
+function goDelete(){
+	console.log("--delete user func--");
+	var chk = document.getElementsByName("chk");
+	var chked = [];
+	
+	for(var i=0;i<chk.length;i++){
+		if(chk[i].checked ==true){
+			chked.push(chk[i].value);
+		}		
+	}
+
+	if(chked.length==0){
+		alert('삭제할 사용자를 선택해주세요');
+	}else{
+		console.log("chked.length : "+chked.length);
+		for(var j=0;j<chked.length;j++){
+			console.log("retVal : "+ chked[j]);		
+		}
+
+		$.ajax({
+			url: '/user/delete',
+			type: 'post',
+			data: {
+					seqs :chked
+			},
+			success: function(data){
+				alert("retVal.. "+ data);
+				if(data==1){
+					alert("사용자를 삭제하였습니다.. "+ data);
+					location.reload();
+				}
+				
+			},
+			error: function (request, status, error){
+				alert("error!!");
+				
+			}
+		});
+	}
+}	
+
+</script>
+
 </html>
 	

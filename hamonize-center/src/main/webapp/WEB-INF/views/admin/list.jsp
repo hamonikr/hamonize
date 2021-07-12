@@ -162,8 +162,6 @@
                                     <th>번호</th>
                                     <th>ID</th>
                                     <th>성명</th>
-                                    <th>담당부서</th>
-                                    <th>등록일</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -172,19 +170,16 @@
 								      <th scope="row">${paging.totalRecordSize - ((paging.currentPage-1) * paging.recordSize + status.index)}</th>
 								      <td><a href="javascript:view('${list.user_id}')">${list.user_id}</a></td>
 								      <td>${list.user_name}</td>
-								      <td>${list.dept_name}</td>
-								       <fmt:parseDate var="dateString" value="${list.insert_dt}" pattern="yyyy-MM-dd HH:mm:ss" />
-								      <td><fmt:formatDate value="${dateString}" pattern="yyyy-MM-dd" /></td>
-								      <!-- <input type="hidden" id="adminListInfoCurrentPage" name="adminListInfoCurrentPage" value="1" class="form-control" > -->
+								      
 								    </tr>
 								</c:forEach>
                                 
                             </tbody>
                         </table>
                     </div><!-- //List -->
-                    <div class="right mT20">
+                    <%-- <div class="right mT20">
                         <button type="button" class="btn_type2" onclick="location.href='view.do'"> 관리자 등록</button>
-                    </div>
+                    </div> --%>
                     <!-- page number -->
                     <div class="page_num"> 
                     </div>
@@ -193,37 +188,6 @@
         </div><!-- //content -->
 
 </form>
-<%-- <p id="contentTitle">관리자등록관리</p>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">번호</th>
-      <th scope="col">ID</th>
-      <th scope="col">성명</th>
-      <th scope="col">담당부서</th>
-      <th scope="col">등록일</th>
-    </tr>
-  </thead>
-  <tbody>
-  <c:forEach var="list" items="${aList}" varStatus="status">
-    <tr>
-      <th scope="row">${paging.totalRecordSize - ((paging.currentPage-1) * paging.recordSize + status.index)}</th>
-      <td><a href="javascript:view('${list.user_id}')">${list.user_id}</a></td>
-      <td>${list.user_name}</td>
-      <td>${list.dept_name}</td>
-       <fmt:parseDate var="dateString" value="${list.insert_dt}" pattern="yyyy-MM-dd HH:mm:ss" />
-      <td><fmt:formatDate value="${dateString}" pattern="yyyy-MM-dd" /></td>
-      <!-- <input type="hidden" id="adminListInfoCurrentPage" name="adminListInfoCurrentPage" value="1" class="form-control" > -->
-    </tr>
-     </c:forEach>
-  </tbody>
-</table>
-<div class="btn_area">
-	<a href="<c:url value='view.do'/>" class="btn act">관리자등록</a>
-</div>
-<!-- 페이징 -->
-	<ul class="pagination" id="pagginationInList"></ul>
-</form> --%>
 
 <%@ include file="../template/footer.jsp" %>
 

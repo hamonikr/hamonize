@@ -36,9 +36,6 @@
 					enable: true
 				}
 			},
-			/* check: {
-				enable: true
-			}, */
 			edit: {
 				drag: {
 					/* autoExpandTrigger: true,
@@ -51,12 +48,6 @@
 				showRenameBtn: false
 			},
 			callback: {
-				//beforeDrag: beforeDrag,
-				//beforeDrop: beforeDrop,
-				//beforeDragOpen: beforeDragOpen,
-				//onDrag: onDrag,
-				//onDrop: onDrop,
-				//onExpand: onExpand,
 				beforeClick: beforeClick,
 				onClick: onClick
 			}
@@ -88,8 +79,6 @@
 	$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		
 	getList();
-	//등록버튼
-	//$("#btnSave").click(fnSave);
 	$("#excelBtn").on("click",function(){
 		location.href="pcUserLogExcel?org_seq="+$("#org_seq").val();
 		location.href="iNetLogExcel?org_seq="+$("#org_seq").val()+"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val()+"&txtSearch="+$("#txtSearch").val()+"&keyWord="+$("#keyWord").val();

@@ -194,90 +194,6 @@ var soliderGetSuccess = function(data, status, xhr, groupId){
 
 
 
-
-// PC관리 리스트
-/*var userpcMngrGetSuccess = function(data, status, xhr, groupId){
-	var gbInnerHtml = "";
-	var classGroupList = data.list;
-	$('#pageGrideInPcMngrListTb').empty();
-	
-	if( data.list.length > 0 ){
-		$.each(data.list, function(index, value) {
-			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-			
-			
-			gbInnerHtml += "<tr data-code='" + value.sgb_seq + "' data-guidcode='" + value.sgb_pc_guid + "'>";
-			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_hostname+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_ip+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_macaddress+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_disk+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_cpu+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_memory+"</td>"; 
-			gbInnerHtml += "</tr>";
-		
-		});	
-	}else{  
-		gbInnerHtml += "<tr><td colspan='8' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
-	}
-	
-	startPage = data.pagingVo.startPage;
-	endPage = data.pagingVo.endPage; 
-	totalPageSize = data.pagingVo.totalPageSize;
-	currentPage = data.pagingVo.currentPage;
-	totalRecordSize = data.pagingVo.totalRecordSize;
-	
-	var viewName='';
-	if(totalRecordSize > 0){
-		$("#pagginationInPcMngrList").html(getPaging(startPage,endPage,totalPageSize,currentPage,'\''+viewName+'\''));
-	}
-	$('#pageGrideInPcMngrListTb').append(gbInnerHtml);
-	
-}*/
-
-
-
-
-// 모니터링 리스트
-/*var pcMngrGetSuccess = function(data, status, xhr, groupId){
-	var gbInnerHtml = "";
-	var classGroupList = data.influxData;
-	
-	$('#mntrngList').empty();
-	
-	
-	
-	if( classGroupList != null  && classGroupList.length > 0 ){
-		
-//		console.log("data.influxData=="+ data.influxData);
-		console.log("classGroupList==="+ JSON.stringify(classGroupList));
-//		console.log("classGroupList.name ==="+ JSON.stringify(classGroupList[0]));
-//		console.log("classGroupList.columns ==="+ classGroupList[0].value);
-		
-		$.each(classGroupList, function(index, value) {
-			
-			
-			gbInnerHtml += '<div class="mr-sm-3">';
-			if( classGroupList[index].sgb_pc_status == "true" ){
-				gbInnerHtml += '<div class="card text-white bg-success mb-3" style="max-width: 18rem; width:150px;">';
-			}else{
-				gbInnerHtml += '<div class="card text-white bg-dark mb-3" style="max-width: 18rem; width:150px;">'; 
-			}
-			gbInnerHtml += '<div class="card-header">'+classGroupList[index].sgb_pc_hostname+'</div>';
-			//gbInnerHtml += '<div class="card-body"><h6 class="card-title">'+classGroupList[index].pcHostName+'</h6></div>';
-			//gbInnerHtml += '<div class="card-body"><h6 class="card-title">'+classGroupList[index].status +'</h6></div>';
-			gbInnerHtml += '</div>';
-			gbInnerHtml += '</div>';
-			
-		});	
-	}else{  
-		gbInnerHtml += "등록된 데이터가 없습니다.";
-	}
-	
-	$('#mntrngList').append(gbInnerHtml);
-	
-}*/
-
 // 사이트IP관리 리스트
 var ipMngrGetSuccess = function(data, status, xhr, groupId){
 	var gbInnerHtml = "";
@@ -298,14 +214,6 @@ var ipMngrGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td>"+value.sma_info+"</td>";
 			gbInnerHtml += "</tr>";
 			
-			/*gbInnerHtml += "<tr data-code='" + value.sma_seq + "'>";
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'><span>"+no+"</span>";
-			gbInnerHtml += '<input type="checkbox" class="form-control"></td>';
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_ipaddress+"</td>";
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_macaddress+"</td>";
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_info+"</td>";
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_insert_dt+"</td>";
-			gbInnerHtml += "</tr>";*/
 		});	 
 	}else{ 
 		gbInnerHtml += "<tr><td colspan='5'>등록된 정보가 없습니다. </td></tr>";
@@ -340,45 +248,6 @@ var deleteIpSuccess = function(data, status, xhr, groupId){
 	
 	callAjax('POST', url, vData, fnt, getError, 'json');
 }
-
-
-// 차단사이트관리 리스트
-/*var blockingNxssGetSuccess = function(data, status, xhr, groupId){
-	var gbInnerHtml = "";
-	var classGroupList = data.list;
-	
-	$('#pageGrideInMngrListTb').empty();
-	
-	if( data.list.length > 0 ){
-		$.each(data.list, function(index, value) {
-			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-			
-			gbInnerHtml += "<tr data-code='" + value.sma_seq + "'>";
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'><span>"+no+"</span>";
-			gbInnerHtml += '<input type="checkbox" class="form-control"></td>';
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_domain+"</td>";
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_info+"</td>";
-			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_insert_dt+"</td>";
-			gbInnerHtml += "</tr>";
-		});	 
-	}else{ 
-		gbInnerHtml += "<tr><td colspan='5'>등록된 정보가 없습니다. </td></tr>";
-	}
-	
-	startPage = data.pagingVo.startPage;
-	endPage = data.pagingVo.endPage; 
-	totalPageSize = data.pagingVo.totalPageSize;
-	currentPage = data.pagingVo.currentPage;
-	totalRecordSize = data.pagingVo.totalRecordSize;
-	
-	var viewName='classMngrList';
-	if(totalRecordSize > 0){
-		$("#pagginationInMngrList").html(getPaging(startPage,endPage,totalPageSize,currentPage,'\''+viewName+'\''));
-	}
-	$('#pageGrideInMngrListTb').append(gbInnerHtml);
-}*/
-
-
 
 // 유해사이트관리 삭제
 var deleteBlockingNxssSuccess = function(data, status, xhr, groupId){
@@ -436,8 +305,6 @@ var hmProgramGetSuccess = function(data, status, xhr, groupId){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
 			
-			// gbInnerHtml += "<tr data-code='" + value.idx + "'>";
-			
 			gbInnerHtml +='<div class="col-md-4">';
 			gbInnerHtml +='<div class="card bg-light mb-3" style="width: 100%">';
 			gbInnerHtml +='<div class="card-header">';
@@ -465,10 +332,6 @@ var hmProgramGetSuccess = function(data, status, xhr, groupId){
 	currentPage = data.pagingVo.currentPage;
 	totalRecordSize = data.pagingVo.totalRecordSize;
 	
-	/*var viewName='';
-	if(totalRecordSize > 0){
-		$("#pagginationInHmProgramList").html(getPaging(startPage,endPage,totalPageSize,currentPage,'\''+viewName+'\''));
-	}*/
 	$('#pageGrideInHmprogram').append(gbInnerHtml);
 	$('#pageGrideInSgbList').append(sgbInnerHtml);
 
@@ -651,9 +514,6 @@ var hmSecurityGetSuccess = function(data, status, xhr, groupId){
 				programInnerHtml += '</label>';
 				programInnerHtml += '</div>';
 				programInnerHtml += '</div>'; 
-				/*programInnerHtml += '<div class="card-body">';
-				programInnerHtml += '<p class="card-text">'+value.sm_dc+'</p>';  
-				programInnerHtml += '</div>';*/
 				programInnerHtml += '</div>';
 				programInnerHtml += '</div>';
 			}
@@ -678,9 +538,6 @@ var hmSecurityGetSuccess = function(data, status, xhr, groupId){
 				securityDeviceInnerHtml += '</label>';
 				securityDeviceInnerHtml += '</div>';
 				securityDeviceInnerHtml += '</div>'; 
-				/*securityDeviceInnerHtml += '<div class="card-body">';
-				securityDeviceInnerHtml += '<p class="card-text">'+value.sm_dc+'</p>';  
-				securityDeviceInnerHtml += '</div>';*/
 				securityDeviceInnerHtml += '</div>';
 				securityDeviceInnerHtml += '</div>';
 			}
@@ -841,8 +698,8 @@ var backupRecoveryGetSuccess = function(data, status, xhr, groupId){
 			sgbInnerHtml +='<div class="col-md-3">';
 			sgbInnerHtml +='<div class="card bg-light mb-3" style="width: 100%">';
 			sgbInnerHtml +='<div class="card-header"><label>';
-			sgbInnerHtml += '<input type="checkbox" value="' + value.sgb_seq + '">';
-			sgbInnerHtml +='<span class="form-check-sign" >'+value.sgb_pc_hostname+'</span>';
+			sgbInnerHtml += '<input type="checkbox" value="' + value.seq + '">';
+			sgbInnerHtml +='<span class="form-check-sign" >'+value.pc_hostname+'</span>';
 			sgbInnerHtml += '</label></div>';
 			sgbInnerHtml += '</div>';
 			sgbInnerHtml += '</div>';

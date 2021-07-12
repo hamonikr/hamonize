@@ -18,8 +18,8 @@
 	
 	<select id="pcList" parameterType="com.model.RecoveryVo" resultType="com.model.PcMangrVo">
 		SELECT 
-			sgb_seq,
-			sgb_pc_hostname
+			seq,
+			pc_hostname
 		FROM
 			tbl_pc_mangr
 		<if test="selectOrgName != null">
@@ -43,5 +43,3 @@
 	</insert>
 	
 </mapper>
-<!-- open="(" close=")" -->
-<!-- <foreach collection="list" item="item" separator="," index="idx"> -->

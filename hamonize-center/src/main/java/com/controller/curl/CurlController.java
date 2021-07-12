@@ -1,548 +1,286 @@
 package com.controller.curl;
 
 import java.io.BufferedReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mapper.IBackupCycleMapper;
+import com.GlobalPropertySource;
 import com.mapper.IGetAgentJobMapper;
-import com.mapper.IHmProgrmUpdtMapper;
-import com.mapper.IHmSecurityMapper;
-import com.mapper.IHmprogramMapper;
 import com.mapper.IOrgMapper;
+import com.mapper.IPackageInfoMapper;
 import com.mapper.IPcMangrMapper;
-import com.model.BackupCycleVo;
-import com.model.BlockingNxssInfoVo;
+import com.mapper.ISvrlstMapper;
 import com.model.GetAgentJobVo;
-import com.model.HmProgrmUpdtVo;
-import com.model.HmSecurityVo;
-import com.model.HmprogramVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
-//import com.util.AdLdapUtils;
+import com.model.PcPackageVo;
+import com.model.SvrlstVo;
+import com.model.UserVo;
+import com.util.LDAPConnection;
 
+
+/* connector가 돌때 데이터 가져오는 부분 */
 @RestController
 @RequestMapping("/hmsvc")
 public class CurlController {
 
-	
 	@Autowired
-	private IPcMangrMapper pcMangrMapper;
+	GlobalPropertySource gs;
 
 	@Autowired
 	private IOrgMapper orgMapper;
 	
 	@Autowired
+	private IPcMangrMapper pcMangrMapper;
+
+	@Autowired
 	private IGetAgentJobMapper agentJobMapper;
 
 	@Autowired
-	private IHmprogramMapper hmprogramMapper;
-	
-	@Autowired
-	private IHmProgrmUpdtMapper hmProgrmUpdtMapper;
+	private ISvrlstMapper svrlstMapper;
 
 	@Autowired
-	private IHmSecurityMapper hmSecurityMapper;
-	
-	@Autowired
-	private IBackupCycleMapper backupCycleMapper;
-	
+	private IPackageInfoMapper packageInfoMapper;	
+
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 
-	@RequestMapping("/test")
-	public String  greeqwewqting(@RequestParam(value = "name", required = false) String name) {
-		System.out.println(name);
+	
+	@RequestMapping("/test2")
+	public String  ssssrr(@RequestParam(value = "name", required = false) String name) {
 		String str = "PROGRM:hamonia, office";
 		return str;
 	}
 	
-	@RequestMapping("/getNxssList")
-	public String  getNxssList(@RequestParam(value = "name", required = false) String sgbUuid ) throws Exception {
-
-		// 출력 변수
-		String output = "";
-		List<BlockingNxssInfoVo> nxssVo = agentJobMapper.nxssListInfo();
-		for( BlockingNxssInfoVo bnif : nxssVo ){
-			output += bnif.getDomain() +"\n";
-		}
-		System.out.println("data==="+ output);
-		return output;
+	@RequestMapping("/test")
+	public String  greeqwewqting(@RequestBody HashMap<String, String> map)  {
+		System.out.println(map.get("retdata"));
+		String str = "PROGRM:hamonia, office";
+		return str;
 	}
 	
-	@RequestMapping("/getAgentBackupJob")
-	public String  getAgentProgrmJob(@RequestParam(value = "name", required = false) String sgbUuid ) throws Exception {
-		String output = "";
-		List<GetAgentJobVo> agentJobVo = agentJobMapper.getAgentJobList();
-		System.out.println("==="+ sgbUuid);
+	/* pc정보 저장 */
+	@Transactional
+	@RequestMapping("/setPcInfo")
+	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request)  throws Exception{
+		System.out.println("=============setpcinfo================");
+		
+		int retVal = 0;
+		
+		System.out.println("aaaaaa");
+	    try {
 
-		// uuid로 부문정보 가져오기
-		GetAgentJobVo agentVo = new GetAgentJobVo(); 
-		agentVo.setUuid(sgbUuid);
-		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		System.out.println("agentVo ==="+ agentVo );
-		
-		// 정책정보 가져오기
-		List<GetAgentJobVo> agentJobDataVo = agentJobMapper.getAgentJobPcBackup(agentVo);
-		System.out.println("agentJobDataVo==="+ agentJobDataVo);
-		
-		
-		for( int a=0; a<agentJobDataVo.size(); a++ ){
-			System.out.println("agentJobVo.get(a)getAj_seq=="+ agentJobDataVo.get(a).getAj_seq());
-			System.out.println("agentJobVo.get(a)getAj_table_gubun=="+ agentJobDataVo.get(a).getAj_table_gubun());
-			System.out.println("agentJobVo.get(a)getAj_table_seq=="+ agentJobDataVo.get(a).getAj_table_seq());
-			System.out.println("agentJobVo.get(a)getAj_return_val=="+ agentJobDataVo.get(a).getAj_return_val());
+	        JSONParser jsonParser = new JSONParser();
 			
+			System.out.println("bbbb");
+	        JSONObject jsonObj = (JSONObject) jsonParser.parse( retData.toString());
+	        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
+
+	        PcMangrVo hdVo = new PcMangrVo();
+	        System.out.println("hmdArray.size()==="+hmdArray.size());
+	        System.out.println("hmdArray===>> "+hmdArray.get(0).toString());
+	        
+
+	        for(int i=0 ; i<hmdArray.size() ; i++){
+	            JSONObject tempObj = (JSONObject) hmdArray.get(i);
+	        	
+	            hdVo.setPc_uuid(tempObj.get("uuid").toString());
+	            hdVo.setPc_cpu(tempObj.get("cpuid").toString().trim());
+	            hdVo.setPc_disk_id(tempObj.get("hddid").toString().trim());
+	            hdVo.setPc_disk(tempObj.get("hddinfo").toString().trim());
+	            hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
+	            hdVo.setPc_ip(tempObj.get("ipaddr").toString().trim());
+	            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString().trim());
+	            hdVo.setPc_hostname(tempObj.get("hostname").toString());
+	            hdVo.setPc_os(tempObj.get("pcos").toString().trim());
+	            hdVo.setPc_memory(tempObj.get("memory").toString().trim() +"G");
+	            hdVo.setDeptname(tempObj.get("deptname").toString());	// 부서이름
+	            hdVo.setPcname(tempObj.get("hostname").toString());	// pc cn
+	            hdVo.setSabun(tempObj.get("sabun").toString());	// 사번
+				hdVo.setUsername(tempObj.get("username").toString());	// 사용자 이름
+	            	
+	            
+	       }
+  		    System.out.println("user 조직이름 >> "+ hdVo.getDeptname());
+		   
+			System.out.println("user 사번 >> "+ hdVo.getSabun());
+			System.out.println("user 이름 >> "+ hdVo.getUsername());
+
+			int DuplserverPc = pcMangrMapper.inserPcInfoChk(hdVo);
+			System.out.println("DuplserverPc===="+DuplserverPc +"===>"+ hdVo.getPc_vpnip() );
+
+			PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
+			System.out.println("orgNumChkVo===="+orgNumChkVo);
 			
-			BackupCycleVo backupVo = new BackupCycleVo();
-			backupVo.setSelectOrgName(agentVo.getUpper_org_code());
-			backupVo = backupCycleMapper.backupCycleList(backupVo);
+			LDAPConnection con = new LDAPConnection();
+		   	con.connection(gs.getUrl(), gs.getLdapPassword());
 			
-			System.out.println("backupVo===="+ backupVo);
+			hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
+			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
+		    String dn ="";
+		    OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 			
-			output += agentJobDataVo.get(a).getAj_table_gubun()+ "-" + backupVo.getBac_cycle_option() +"-"+ backupVo.getBac_cycle_time();
-			
-		}
+		   hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+			if(DuplserverPc >= 1 ) {
+				retVal = pcMangrMapper.updatePcinfo(hdVo);
+				System.out.println("update retVal=== " + retVal);
+			}else {
+				retVal = pcMangrMapper.inserPcInfo(hdVo);
+				System.out.println("insert retVal=== " + retVal);
+				con.addPC(hdVo, sabunChkVo, dn);
+
+				}
+	        
+	        
+	    }catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
 		
-		System.out.println("backup == > " + output);
-		
-		return output;
+	    Boolean isAddPcInfo = true;
+	    if( retVal == 1 ) {
+	    	isAddPcInfo = true;
+	    }else {
+	    	isAddPcInfo = false;
+	    }
+        
+		System.out.println("isAddPcInfo==="+isAddPcInfo);
+		return isAddPcInfo;
 	}
 	
-	
-	
-	@RequestMapping("/getAgentJob")
-		public String  getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid, @RequestParam(value = "wget", required = false) String sgbWget ) throws Exception {
+	@RequestMapping("/pcInfoChkProc")
+	public Boolean pcInfoChkProc(@RequestBody String retData, HttpServletRequest request) {
+		System.out.println("pcInfoChkProc============");
+		int retVal = 0;
+		Boolean isExistOrg = false;
+		Boolean isExistSabun = false;
+		Boolean isExist = false;
 
-		// 출력 변수
+	    try {
+
+	        JSONParser jsonParser = new JSONParser();
+	        JSONObject jsonObj = (JSONObject) jsonParser.parse( retData.toString());
+	        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
+
+	        PcMangrVo hdVo = new PcMangrVo();
+	        System.out.println("hmdArray.size()==="+hmdArray.size());
+	        
+	        for(int i=0 ; i<hmdArray.size() ; i++){
+	            JSONObject tempObj = (JSONObject) hmdArray.get(i);
+	        	
+	            hdVo.setDeptname(tempObj.get("deptname").toString());	// 부서번호
+	            hdVo.setSabun(tempObj.get("sabun").toString());	// 사번
+				hdVo.setUsername(tempObj.get("username").toString());	// 사용자 이름
+	            
+	       }
+		   
+			System.out.println("user 사번 >> "+ hdVo.getSabun());
+			System.out.println("user 이름 >> "+ hdVo.getUsername());
+		        
+			PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
+			System.out.println("orgNumChkVo====org seq : "+orgNumChkVo.getOrg_seq());
+
+		   UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
+		   
+		   
+			if( orgNumChkVo != null  ) {
+				isExistOrg = true;
+				if(sabunChkVo != null ){
+					isExistSabun =true;
+				}else{
+					isExistSabun =false;
+				}
+			}else {
+				isExistOrg = false;
+			}
+		
+			isExist = isExistSabun && isExistOrg; 
+			System.out.println("isExist==="+isExist);
+		
+		}catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
+		
+        return isExist;
+	}
+
+	@RequestMapping("/setVpnUpdate")
+	public Boolean setVpnUpdate(@RequestBody String retData, HttpServletRequest request) {
+		
+		StringBuffer json = new StringBuffer();
+		int retVal = 0;
+		
+	    try {
+
+	        JSONParser jsonParser = new JSONParser();
+	        JSONObject jsonObj = (JSONObject) jsonParser.parse( retData.toString());
+	        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
+
+	        PcMangrVo hdVo = new PcMangrVo();
+	        System.out.println("hmdArray.size()==="+hmdArray.size());
+	        for(int i=0 ; i<hmdArray.size() ; i++){
+	            JSONObject tempObj = (JSONObject) hmdArray.get(i);
+	        	
+	            
+	            System.out.println("tempObj.get(\"uuid\").toString()==="+tempObj.get("uuid").toString());
+	            System.out.println("tempObj.get(\"vpnipaddr\").toString()==="+tempObj.get("vpnipaddr").toString());
+	            
+	            hdVo.setPc_uuid(tempObj.get("uuid").toString());
+	            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
+	            hdVo.setPc_hostname(tempObj.get("hostname").toString());
+	            
+	            System.out.println("hdVo==="+ hdVo.toString());
+	            
+	            
+	        }
+	        
+	    	   retVal = pcMangrMapper.updateVpnInfo(hdVo);
+	        	System.out.println("update retVal=== " + retVal);
+	        	
+	        
+	    }catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
+		
+	    Boolean isAddPcInfo = true;
+	    if( retVal == 1 ) {
+	    	isAddPcInfo = true;
+	    }else {
+	    	isAddPcInfo = false;
+	    }
+        System.out.println("isAddPcInfo==="+isAddPcInfo);
+		return isAddPcInfo;
+	}
+	
+
+	/*
+	 * 커넥터에서 기본 정보 셋팅 : vpn 연결후  센터 url을 통해 서버정보 get
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/commInfoData")
+	public String getAgentJob(HttpServletRequest request) throws Exception {
+
 		String output = "";
-		List<GetAgentJobVo> agentJobVo = agentJobMapper.getAgentJobList();
-		
-		System.out.println("==="+ sgbUuid +"=="+ sgbWget);
-		sgbUuid = sgbUuid.trim();
-		sgbWget = sgbWget.trim();
-		
-		// uuid로 부서정보 가져오기
-		GetAgentJobVo agentVo = new GetAgentJobVo(); 
-		agentVo.setUuid(sgbUuid);
-		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		System.out.println("agentVo ==="+ agentVo );
-		
-		// 정책정보 가져오기
-		List<GetAgentJobVo> agentJobDataVo = agentJobMapper.getAgentJobPcPolocy(agentVo);
-		System.out.println("agentJobDataVo==="+ agentJobDataVo);
-		if( "Y".equals(sgbWget) ){
-			agentJobMapper.setAgentJobPcPolocy(agentVo);
-		}
 		
 		JSONObject jsonObject = new JSONObject();
-		Boolean isProgramjob = false;
-		Boolean isUpdateJob = false;
-		Boolean isSecurityJob = false;
-		
-		
-		if( agentJobDataVo.size() > 0){
-			
-		
-			if( "PROGRM".equals(agentJobDataVo.get(0).getAj_table_gubun()) ){
-				isProgramjob = true;
-			}else if( "UPDT".equals(agentJobDataVo.get(0).getAj_table_gubun()) ){
-				isUpdateJob = true;
-			}else if( "SCRTY".equals(agentJobDataVo.get(0).getAj_table_gubun()) ){
-				isSecurityJob = true;
-			}
-			
-			System.out.println("isProgramjob===="+ isProgramjob);
-			System.out.println("isUpdateJob===="+ isUpdateJob);
-			System.out.println("isSecurityJob===="+ isSecurityJob);
-			
-			for( int a=0; a<agentJobDataVo.size(); a++ ){
-				System.out.println("agentJobVo.get(a)=="+ agentJobDataVo.get(a));
-				
-				String[] splitTmpPcmSeqVal = agentJobDataVo.get(a).getPpa_pcm_seq().split("\\{");
-				splitTmpPcmSeqVal = splitTmpPcmSeqVal[1].split("\\}");
-				splitTmpPcmSeqVal = splitTmpPcmSeqVal[0].split(",");
-				String convertTmp[] =new String[splitTmpPcmSeqVal.length]; ;
-				
-	
-				if( splitTmpPcmSeqVal.length > 0){
-					for( int i=0; i<splitTmpPcmSeqVal.length; i++ ){
-						System.out.println(i +"=="+ splitTmpPcmSeqVal[i]);
-						convertTmp[i] = splitTmpPcmSeqVal[i];
-					}
-				}
-				
-				if( isProgramjob ){
-					HmprogramVo hvo = new HmprogramVo();
-					hvo.setOrgpcmseq(convertTmp);
-					hvo = hmprogramMapper.selectHmProgrmAgentJob(hvo);
-				
-					output += agentJobDataVo.get(a).getAj_table_gubun()+ "=" + hvo.getPcm_name();
-					if( a > 0 ){
-						output +="<br>";
-					}
-				}else if( isUpdateJob ){
-					HmProgrmUpdtVo hvo = new HmProgrmUpdtVo();
-					hvo.setOrgpcmseq(convertTmp);
-					hvo = hmProgrmUpdtMapper.selectHmUpdateAgentJob(hvo);
-				
-					output += agentJobDataVo.get(a).getAj_table_gubun()+ "=" + hvo.getPcm_name();
-					if( a > 0 ){
-						output +="<br>";
-					}	
-				}else if( isSecurityJob ){
+		JSONObject jsonList = new JSONObject();
+		JSONArray itemList = new JSONArray();
 
-					HmSecurityVo hsvo = new HmSecurityVo();
-					hsvo.setOrgpcmseq(convertTmp);
-					hsvo = hmSecurityMapper.selectHmSecurityAgentJob(hsvo);
-				
-					hsvo.setOrgpcmseq(convertTmp);
-					hsvo.setOrg_seq(agentVo.getUpper_org_code());
-					
-					
-					List<HmSecurityVo> listPVO = agentJobMapper.selectSecurityInAgentJob(hsvo);
-					System.out.println("listPVO======"+ listPVO.size());
-					
-					
-					JSONArray newArray = new JSONArray();
-					JSONArray updArray = new JSONArray();
-					JSONObject news = new JSONObject();
-					JSONObject upds = new JSONObject();
-					
-
-					JSONObject response = new JSONObject(); 
-					
-					
-					if( listPVO.size() == 0  ){
-						agentJobMapper.selectInsertSecurityInAgentJob(hsvo);
-						List<HmSecurityVo> agentSEY = agentJobMapper.securityAgentY(hsvo);
-						
-						for(HmSecurityVo i : agentSEY){
-							System.out.println(i.getSm_name().trim() +"=="+ i.getSm_seq() +"=="+ i.getSm_status());
-							news.put(i.getSm_name(), i.getSm_gubun());
-						}
-						newArray.add(news);
-				        jsonObject.put("INS", newArray);
-				        
-					}else{
-						
-						List<HmSecurityVo> agentSyY = agentJobMapper.securityAgentY(hsvo);
-						List<HmSecurityVo> agentSyN = agentJobMapper.securityAgentN(hsvo);
-						JSONObject data = new JSONObject();
-						JSONObject data2 = new JSONObject();
-
-						String arrAgentSyY = "", arrAgentSyN="";
-						if (agentSyY.size() > 0) {
-							
-							for( int i=0; i<agentSyY.size(); i++ ){
-								
-								if (!"Y".equals(agentSyY.get(i).getPcm_status())) {
-									if( agentSyY.size() -1 == i ){
-										arrAgentSyY += agentSyY.get(i).getSm_name() +"-" + agentSyY.get(i).getSm_gubun() +"-" + agentSyY.get(i).getSm_port();	
-									}else {
-										arrAgentSyY += agentSyY.get(i).getSm_name() +"-" + agentSyY.get(i).getSm_gubun()+"-" + agentSyY.get(i).getSm_port() +",";
-									}
-								}
-							
-							}
-							response.put("INS", arrAgentSyY); 
-							
-						}						
-						
-						if (agentSyN.size() > 0) {
-
-							for (int i = 0; i < agentSyN.size(); i++) {
-
-									if (agentSyN.size() - 1 == i) {
-										arrAgentSyN += agentSyN.get(i).getPcm_name()+"-"+agentSyN.get(i).getSm_gubun()+"-" + agentSyN.get(i).getSm_port();
-									} else {
-										arrAgentSyN += agentSyN.get(i).getPcm_name()+"-"+agentSyN.get(i).getSm_gubun()+"-" + agentSyN.get(i).getSm_port() + ",";
-									}
-							}
-							response.put("UPD", arrAgentSyN);
-						
-						}			   
-						
-					}
-					System.out.println("response====="+ response.toString());
-					output = "SCRTY=" + response.toString();
-					
-					
-				}
-				
-				
-				
-				System.out.println(a + "-- " + output);
-			}
-		
-		}else {
-			output = "NODATA";
-		}
-		
-		return output;
-	}
-	
-
-	@RequestMapping("/getou")
-	public String  getou(@RequestParam(value = "name", required = false) String sgbnm ) throws Exception {
-		System.out.println("sgbnm==="+ sgbnm);
-		
-		OrgVo gvo = new OrgVo();
-		gvo.setOrg_nm(sgbnm);
-		gvo = orgMapper.selectGroupInfo( gvo );
-		
-		System.out.println("=========="+ gvo);
-		
-		String pbisJoinDN = null;
-		if( gvo == null ){
-			pbisJoinDN = "NOSGB";
-		}else{
-			
-			System.out.println("gvo.getOrguppercode()====="+ gvo.getP_seq());
-			
-			gvo.setSeq(gvo.getP_seq() );
-			System.out.println("==========> "+ gvo.getSeq());
-			OrgVo retOU = orgMapper.groupUpperCode(gvo);
-			pbisJoinDN = retOU.getOrg_nm().replaceAll(" ", "");
-			pbisJoinDN = "OU=" + gvo.getOrg_nm()+","+ pbisJoinDN;
-		}
-
-		pbisJoinDN = pbisJoinDN.replaceAll(" ", "");
-		System.out.println("=-==="+ pbisJoinDN);
-		
-		return pbisJoinDN;
-	}
-	
-	@RequestMapping("/process")
-	public String  process(HttpServletRequest request) throws Exception {
-		
-		StringBuffer json = new StringBuffer();
-	    String line = null;
-	 
-	    try {
-	        BufferedReader reader = request.getReader();
-	        while((line = reader.readLine()) != null) {
-	        	System.out.println("line===> "+ line);
-	            json.append(line);
-	        }
-	 
-	    }catch(Exception e) {
-	        System.out.println("Error reading JSON string: " + e.toString());
-	    }
-	    
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
-        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
-
-        System.out.println("=====client pc device info =====");
-        
-        PcMangrVo hdVo = new PcMangrVo();
-        for(int i=0 ; i<hmdArray.size() ; i++){
-            JSONObject tempObj = (JSONObject) hmdArray.get(i);
-
-			hdVo.setFirst_date(tempObj.get("datetime").toString());
-            hdVo.setPc_uuid(tempObj.get("uuid").toString());
-            hdVo.setPc_cpu_id(tempObj.get("cpuid").toString());
-            hdVo.setPc_cpu(tempObj.get("cpuinfo").toString());
-            hdVo.setPc_disk_id(tempObj.get("hddid").toString());
-            hdVo.setPc_disk(tempObj.get("hddinfo").toString());
-            hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
-            hdVo.setPc_ip(tempObj.get("ipaddr").toString());
-            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
-            hdVo.setPc_hostname(tempObj.get("hostname").toString());
-            hdVo.setPc_os(tempObj.get("pcos").toString());
-            hdVo.setPc_memory(tempObj.get("memory").toString() +"G");
-            hdVo.setDeptname(tempObj.get("deptname").toString());
-            hdVo.setDeptpcname(tempObj.get("pcname").toString());           
-        }
-        
-        int retVal = pcMangrMapper.inserPcInfo(hdVo);
-        // AdLdapUtils aldp = new AdLdapUtils();
-    	// String retOU = aldp.adComputerSearchUseCn(hdVo.getDeptpcname());
-    	// System.out.println("retOU=============="+ retOU);
-    	// Boolean isBool = aldp.computerModify( retOU, hdVo.getDeptpcname() , hdVo.getPc_macaddress());
-    	Boolean isBool=true;
-		System.out.println("isBool === " + isBool);
-        
-        return isBool+"";
-	}
-	
-	
-	@RequestMapping("/pcMacModify")
-	public String  pcMacModify(HttpServletRequest request) throws Exception {
-		
-		StringBuffer json = new StringBuffer();
-	    String line = null;
-	 
-	    try {
-	        BufferedReader reader = request.getReader();
-	        while((line = reader.readLine()) != null) {
-	        	System.out.println("line===> "+ line);
-	            json.append(line);
-	        }
-	 
-	    }catch(Exception e) {
-	        System.out.println("Error reading JSON string: " + e.toString());
-	    }
-	    
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
-        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
-
-        System.out.println("=====client pc device info =====");
-        
-        PcMangrVo hdVo = new PcMangrVo();
-        for(int i=0 ; i<hmdArray.size() ; i++){
-            JSONObject tempObj = (JSONObject) hmdArray.get(i);
-        	
-            hdVo.setFirst_date(tempObj.get("datetime").toString());
-            hdVo.setPc_uuid(tempObj.get("uuid").toString());
-            hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
-            hdVo.setPc_ip(tempObj.get("ipaddr").toString());
-            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
-            hdVo.setPc_hostname(tempObj.get("hostname").toString());
-            hdVo.setDeptname(tempObj.get("sgbname").toString());
-            
-        }
-        
-        System.out.println("pcMacModify hdVo======="+ hdVo.toString());
-        
-        String output = "";
-    	// AdLdapUtils aldp = new AdLdapUtils();
-    	// String retOU = aldp.adComputerSearchUseCn(hdVo.getDeptname());
-    	// System.out.println("retOU=============="+ retOU);
-    	// Boolean isBool = aldp.computerModify( retOU, hdVo.getDeptname() , hdVo.getPc_macaddress());
-    	// System.out.println("isBool === " + isBool);
-        	
-        return output;
-	}
-	
-	
-	
-	@RequestMapping("/getSgbNm")
-	public String  getSgbNm(@RequestParam(value = "name", required = false) String name) throws Exception {
-		String output="";
-
-        System.out.println("=====getSgbNm info =====" +name);
-     
-        OrgVo gvo = new OrgVo();
-        String retVal = "";
-        if(name == "" || name == null) {
-        	retVal = "NODATA";
-        }else {
-			gvo.setPc_uuid(name.trim());
-			gvo = orgMapper.getSgbName( gvo );
-			
-			if(gvo == null ) {
-				retVal = "NODATA";
-			}else {
-				retVal = gvo.getOrg_nm();		
-			}
-			
-        }
-       
-        return retVal;
-	}
-	
-	
-	
-	@RequestMapping("/sgbPcLoginout")
-	public String  sgbPcLoginout(HttpServletRequest request) throws Exception {		
-		StringBuffer json = new StringBuffer();
-	    String line = null;
-	 
-	    try {
-	        BufferedReader reader = request.getReader();
-	        while((line = reader.readLine()) != null) {
-	        	System.out.println("line===> "+ line);
-	            json.append(line);
-	        }
-	 
-	    }catch(Exception e) {
-	        System.out.println("Error reading JSON string: " + e.toString());
-	    }
-	    
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
-        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
-
-        System.out.println("=====client pc device info =====");
-        
-        PcMangrVo hdVo = new PcMangrVo();
-        for(int i=0 ; i<hmdArray.size() ; i++){
-            JSONObject tempObj = (JSONObject) hmdArray.get(i);
-        	
-            hdVo.setFirst_date(tempObj.get("datetime").toString());
-            hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
-            hdVo.setPc_ip(tempObj.get("ipaddr").toString());
-            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
-            hdVo.setPc_hostname(tempObj.get("hostname").toString());
-            hdVo.setPc_cpu_id(tempObj.get("user").toString());
-            hdVo.setPc_uuid(tempObj.get("pcuuid").toString());
-            hdVo.setStatus(tempObj.get("action").toString());
-        }
-
-        
-        PcMangrVo chkPcMangrVo = pcMangrMapper.chkPcinfo(hdVo);
-        
-        int retVal = 0;
-        if( !chkPcMangrVo.getPc_vpnip().equals(hdVo.getPc_vpnip())) {
-        	
-        	hdVo.setOld_pc_ip(chkPcMangrVo.getPc_ip());
-        	hdVo.setOld_pc_vpnip(chkPcMangrVo.getPc_vpnip());
-        	hdVo.setOld_pc_macaddr(chkPcMangrVo.getPc_macaddress());
-        
-        	retVal = pcMangrMapper.updatePcinfo(hdVo);
-        	pcMangrMapper.pcIpchnLog(hdVo);
-        	
-        	
-        	// AdLdapUtils aldp = new AdLdapUtils();
-        	// String retOU = aldp.adComputerSearchUseCn(hdVo.getPc_hostname());
-        	// Boolean isBool = aldp.computerModify( retOU, hdVo.getPc_hostname() , hdVo.getPc_macaddress());
-        	
-        }
-        System.out.println("sgbpcloginout info === "+ hdVo.toString());
-        
-        return "retval:"+retVal;
-	}
-
-	@RequestMapping("/getTime")
-	public String  getTime() throws Exception {
-
-			TimeZone time;
-			Date date = new Date();
-			DateFormat df = new SimpleDateFormat(
-
-					"yyyyMMdd HH:mm:ss");
-
-			time = TimeZone.getTimeZone("Asia/Seoul");
-
-			df.setTimeZone(time);
-
-			System.out.format("%s%n%s%n%n", time.getDisplayName(),
-					df.format(date));
-			return df.format(date);
-
-	}
-	
-	@RequestMapping("/prcssKill")
-	public void prcssKill(HttpServletRequest request) throws Exception {
 		
 		StringBuffer json = new StringBuffer();
 	    String line = null;
@@ -561,58 +299,168 @@ public class CurlController {
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
 		JSONArray inetvalArray = (JSONArray) jsonObj.get("events");
-		System.out.println("====> "+ jsonObj.get("events"));
+		JSONObject object = (JSONObject) inetvalArray.get(0);
+    	
+		System.out.println("====> "+ object.get("uuid").toString());
 
-		Map<String,Object> prcssList = new HashMap<String,Object>();
-        for(int i=0 ; i<inetvalArray.size() ; i++){
-            JSONObject tempObj = (JSONObject) inetvalArray.get(i);
-            prcssList.put("insert_dt",tempObj.get("datetime").toString());
-            prcssList.put("hostname",tempObj.get("hostname").toString());
-            prcssList.put("prcssname",tempObj.get("prcssname").toString());
-            prcssList.put("ipaddr",tempObj.get("ipaddr").toString());
-            prcssList.put("macaddr",tempObj.get("macaddr").toString());
-            prcssList.put("uuid",tempObj.get("uuid").toString());
-            prcssList.put("org_seq",sgbUUID(tempObj.get("uuid").toString()));
-            prcssList.put("user_id",tempObj.get("userid").toString());
-            
-        }
-        
-        
-        hmprogramMapper.prcssKillLog(prcssList);
-	}
-	
-	@RequestMapping("/getSgbBlockStatus")
-	public String  getSgbBlockStatus(@RequestParam(value = "name", required = false) String name) throws Exception {
-		String output="";
-        System.out.println("=====getSgbBlockStatus info =====" +name);
-        PcMangrVo vo = new PcMangrVo();
-        String retVal = "";
-        
-		if(name == "" || name == null) {
-        	retVal = "NODATA";
-        }else {
-        	vo.setPc_uuid(name.trim());
-        	System.out.println("getsgbuuid=="+vo.getPc_uuid());
-			vo = pcMangrMapper.getPcBlockStatus(vo);
-			retVal = vo.getStatus();
-        }
-        if(vo == null ) {
-			retVal = "NODATA";
-		}else {
-			retVal = vo.getStatus();		
+		List<SvrlstVo> svrlstVo = svrlstMapper.getSvrlstDataList();
+		
+
+		for( SvrlstVo svrlstData : svrlstVo ){
+			System.out.println("svrlstData===>=="+ svrlstData.getSvr_port()+"=="+ svrlstData.getSvr_domain() +"=="+ svrlstData.getSvr_ip());
+			
+			JSONObject tmpObject = new JSONObject();
+			
+			tmpObject.put("orgname", svrlstData.getSvr_nm());
+			tmpObject.put("orgdomain", svrlstData.getSvr_domain());
+			  
+			if( "N".equals(svrlstData.getSvr_port()) ) {
+				tmpObject.put("pcip", svrlstData.getSvr_ip());	
+			}else {
+				tmpObject.put("pcip", svrlstData.getSvr_ip() +":"+ svrlstData.getSvr_port());
+			}
+			
+			
+			itemList.add(tmpObject);
 		}
-        System.out.println("retVal===="+retVal);
-       
-        return retVal;
+		jsonObject.put("pcdata", itemList);
+
+		output = jsonObject.toJSONString();
+		
+		System.out.println("//===================================");
+		System.out.println("//commInfoData result data is : " + output);
+		System.out.println("//===================================");
+		
+		return output;
+	}
+
+	
+	
+
+	@RequestMapping("/getPackageInfo")
+	public Boolean getPackageInfo(@RequestBody String retData, @RequestParam Map<String, Object> params, HttpServletRequest request) {
+		
+		
+		StringBuffer json = new StringBuffer();
+		int retVal = 0;
+		
+	    try {
+
+	        JSONParser jsonParser = new JSONParser();
+	        System.out.println("retData.toString()========++++"+retData.toString());
+	        JSONObject jsonObj = (JSONObject) jsonParser.parse( retData.toString());
+	        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
+
+	        PcPackageVo pcPackageVo = new PcPackageVo();
+	        System.out.println("hmdArray.size()==="+hmdArray.size());
+	        
+	        PcPackageVo[] inputVo = new PcPackageVo[hmdArray.size()];
+	        for(int i=0 ; i<hmdArray.size() ; i++){
+	        	JSONObject tempObj = (JSONObject) hmdArray.get(i);
+	        	inputVo[i] = new PcPackageVo();
+	        	
+	        	
+	        	System.out.println("tempObj.get(\"pcuuid\").toString()==="+tempObj.get("pcuuid").toString());
+	        	System.out.println("tempObj.get(\"name\").toString()==="+tempObj.get("name").toString());
+	        	System.out.println("tempObj.get(\"version\").toString()==="+tempObj.get("version").toString());
+	        	System.out.println("tempObj.get(\"status\").toString()==="+tempObj.get("status").toString());
+	        	System.out.println("tempObj.get(\"short_description\").toString()==="+tempObj.get("short_description").toString());
+	        	
+	        	
+	        	inputVo[i].setUuid(tempObj.get("pcuuid").toString());
+	        	inputVo[i].setPackage_name(tempObj.get("name").toString());
+	        	inputVo[i].setPackage_version(tempObj.get("version").toString());
+	        	inputVo[i].setPackage_status(tempObj.get("status").toString());
+	        	inputVo[i].setPackage_desc("");
+	            
+	        	System.out.println("pcPackageVo=========+++"+ pcPackageVo.toString());
+	        	        	
+	        }
+	       
+	        Map<String, Object> insertDataMap = new HashMap<String, Object>();
+	        insertDataMap.put("list", inputVo);
+            
+    		
+	        int insertRetVal = packageInfoMapper.insertPackageInfo(insertDataMap);
+	    //  System.out.println("insertRetVal===="+insertRetVal);
+    		
+	        
+	    }catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
+		
+	    Boolean isAddPcInfo = true;
+		return isAddPcInfo;
 	}
 	
-	/*
-	 * 부서 UUID로 부문 seq 가져오기
-	 * 
-	 * @param sgbUuid
-	 * @return 부문seq
-	 */
-	public int sgbUUID(String uuid) {
+	
+	@RequestMapping("/pcInfoChange")
+	public String  pcLoginout(HttpServletRequest request) throws Exception {
+		System.out.println("pcInfoChange=====================");
+		
+		StringBuffer json = new StringBuffer();
+	    String line = null;
+	 
+	    try {
+	        BufferedReader reader = request.getReader();
+	        while((line = reader.readLine()) != null) {
+	        	System.out.println("line===> "+ line);
+	            json.append(line);
+	        }
+	 
+	    }catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
+	    
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
+        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
+
+        System.out.println("=PcInfoChange====client pc device info =====");
+        
+        PcMangrVo hdVo = new PcMangrVo();
+        for(int i=0 ; i<hmdArray.size() ; i++){
+            JSONObject tempObj = (JSONObject) hmdArray.get(i);
+        	
+            hdVo.setFirst_date(tempObj.get("datetime").toString());
+            hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
+            hdVo.setPc_ip(tempObj.get("ipaddr").toString());
+            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
+            hdVo.setPc_hostname(tempObj.get("hostname").toString());
+            hdVo.setPc_cpu_id(tempObj.get("CPUID").toString());
+            hdVo.setPc_uuid(tempObj.get("pcuuid").toString());
+            hdVo.setStatus(tempObj.get("action").toString());
+        }
+
+        
+        PcMangrVo chkPcMangrVo = pcMangrMapper.chkPcinfo(hdVo);
+        //System.out.println("pcInfoChange chkPcMangrVo===="+chkPcMangrVo.toString());
+        
+        int retVal = 0;
+        // if( !chkPcMangrVo.getPc_vpnip().equals(hdVo.getPc_vpnip())) {
+        	
+        // 	hdVo.setOld_pc_ip(chkPcMangrVo.getPc_ip());
+        // 	hdVo.setOld_pc_vpnip(chkPcMangrVo.getPc_vpnip());
+        // 	hdVo.setOld_pc_macaddr(chkPcMangrVo.getPc_macaddress());
+        
+        	retVal = pcMangrMapper.updatePcinfo(hdVo);
+        	System.out.println("PcInfoChange retVal====="+retVal);
+        	pcMangrMapper.pcIpchnLog(hdVo);
+      	
+        	
+//        	AdLdapUtils aldp = new AdLdapUtils();
+//        	String retOU = aldp.adComputerSearchUseCn(hdVo.getPc_hostname());
+//        	Boolean isBool = aldp.computerModify( retOU, hdVo.getPc_hostname() , hdVo.getPc_macaddress());
+        	
+//        }
+        System.out.println("pcloginout info === "+ hdVo.toString());
+        
+        return "retval:"+retVal;
+	}
+
+	
+	
+	public int pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);

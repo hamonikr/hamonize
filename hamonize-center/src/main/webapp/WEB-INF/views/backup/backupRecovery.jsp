@@ -108,18 +108,11 @@ input.radio {
 				showRenameBtn: false
 			},
 			callback: {
-				/* beforeDrag: beforeDrag,
-				beforeDrop: beforeDrop,
-				beforeDragOpen: beforeDragOpen,
-				onDrag: onDrag,
-				onDrop: onDrop,
-				onExpand: onExpand,*/
 				beforeClick: beforeClick,
 				onClick: onClick
 			}
 		};
 	var zNodes =[
-		/* { id:0, pId:"", name:"부대관리", open:true}, */
 		<c:forEach items="${oList}" var="data" varStatus="status" >
 		{ id:"${data.seq}", pId:"${data.p_seq}",
 			<c:if test="${data.section ne 'S'}">
@@ -155,12 +148,12 @@ input.radio {
 	 	$(this).children('input').prop('checked', true);
 		 $("#rc_list").empty();
 		 
-		 var sgb_seq = $("input:radio[name='sgb_seq']:checked").val();
-		 console.log("sgb_seq111=="+sgb_seq);
-		 console.log("sgb_seq222=="+sgb_seq);
+		 var seq = $("input:radio[name='seq']:checked").val();
+		 console.log("seq111=="+seq);
+		 console.log("seq222=="+seq);
 		 
 		 
-		 $.post("backupRCList.do",{sgb_seq:sgb_seq},
+		 $.post("backupRCList.do",{seq:seq},
 					function(result){
 							var agrs = result;
 							//console.log(agrs[0]);
@@ -234,33 +227,14 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							if( i == 0 ){ tmp = "checked"; }
 						
 							strHtml += "<p><label>";
-							strHtml += "<input type=\"radio\" class=\"radio2e\" name=\"sgb_seq\" id=\"sgb_seq"+i+"\" value='"+agrs[i].sgb_seq+"'/ style=\"display:block; padding-bottom:10px;\" >";
-							strHtml += agrs[i].sgb_pc_hostname+ "</label></p>";
-							//strHtml +="<label for=\"sgb_seq"+i+"\">";
-							//strHtml +=agrs[i].sgb_pc_hostname+"/"+agrs[i].sgb_seq+"</label>";
-							//strHtml += "<input type=\"radio\" name=\"sgb_seq\" id=\"sgb_seq"+i+"\" value='"+agrs[i].sgb_seq+"'/ >";
-							//strHtml += agrs[i].sgb_pc_hostname+"/"+agrs[i].sgb_seq+"</label>";
-
+							strHtml += "<input type=\"radio\" class=\"radio2e\" name=\"seq\" id=\"seq"+i+"\" value='"+agrs[i].seq+"'/ style=\"display:block; padding-bottom:10px;\" >";
+							strHtml += agrs[i].pc_hostname+ "</label></p>";
+						
 						}
 						strHtml += "</div>";
 						$("#pc_list").append(strHtml);
 						
-						//document.getElementById("pc_list").innerHTML = strHtml;
-						/* var bac_cycle_option = agrs.dataInfo.bac_cycle_option;
-						bac_cycle_option = bac_cycle_option.split(",");
-						for(var i=0; i < bac_cycle_option.length; i++){
-						 $('input:checkbox[name=bac_cycle_option]').each(function() {
-							 if($(this).val() == bac_cycle_option[i] ){
-								 $(this).prop("checked", true);
-								 console.log($(this).val() +"======"+ bac_cycle_option[i]);
-							 }
-						    });
-						} */
-							
-						//$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-		
-				});
+			});
 		}
 		
 		
@@ -278,21 +252,14 @@ function setCheck() {
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
 	
-	/* if($("#org_nm").val()==""){
-		alert("부대명을 입력해주세요.");
-		return false;
-	} */
-	
-	
-	
-	var sgb_seq = $('input[name="sgb_seq"]:checked').val();
+	var dept_seq = $('input[name="dept_seq"]:checked').val();
 	var br_seq = $('input[name="br_seq"]:checked').val();
 	var org_seq = $("#org_seq").val();
 	
-	console.log("sgb_seq===="+$('input[name="sgb_seq"]:checked').val());
+	console.log("dept_seq===="+$('input[name="dept_seq"]:checked').val());
 	console.log("br_seq===="+$('input[name="br_seq"]:checked').val());
 	console.log("org_seq===="+$("#org_seq").val());
-	if(sgb_seq == null){
+	if(dept_seq == null){
 		alert("pc를 선택해주세요.");
 		return false;
 	}
@@ -300,14 +267,11 @@ function fnSave(){
 		alert("백업본을 선택해주세요.");
 		return false;
 	}
-	$('form[name=frm] input[name=sgb_seq]').val(sgb_seq);
+	$('form[name=frm] input[name=dept_seq]').val(dept_seq);
 	$('form[name=frm] input[name=br_seq]').val(br_seq);
 	$('form[name=frm] input[name=org_seq]').val(org_seq);
 
-	 	//$('form[name=frm]').append("<input type='hidden' name='type' value='save' />");        
-	    //$('form[name=frm]').submit();
-	   // alert("정상적으로 저장되었습니다.");
-	  $.post("backupRCSave.do", {dataType:'json',sgb_seq:sgb_seq,
+	  $.post("backupRCSave.do", {dataType:'json',seq:seq,
 		  br_seq:br_seq,org_seq:org_seq}, 
 			 function(result){
 		if(result=="SUCCESS"){
@@ -352,7 +316,6 @@ function fnSave(){
                  <div class="board_view mT20">
                 <form name="frm" method="post" action="backupRCSave.do" class="row">
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
-								<!-- <input type="hidden" name="sgb_seq"  id="sgb_seq" value="" /> -->
 								<input type="hidden" name="br_seq"  id="br_seq" value="" />
                 <table>
                     <colgroup>

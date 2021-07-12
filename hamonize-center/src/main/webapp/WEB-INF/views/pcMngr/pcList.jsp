@@ -357,12 +357,12 @@ function searchView(viewName, page){
         
         <ul class="search_area">
           <li>
-           <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
+           <%-- <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
                 <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
                  ~
                 <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
                 <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                <%-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
+                <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
           </li>
           <li>
            <!-- 검색 -->

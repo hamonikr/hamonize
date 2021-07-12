@@ -23,7 +23,7 @@ public class HamonizeInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		// TODO Auto-generated method stub
+	
 		//ip체크
 		Map<String, Object> param = new HashMap<String, Object>();
 		try {
@@ -32,11 +32,7 @@ public class HamonizeInterceptor extends HandlerInterceptorAdapter {
 				 response.sendRedirect("/login/login");
 				 return false;
 			 }
-			// String user =(String)session.getAttribute("userSession");
-			 //if(user == null) {
-			///	response.sendRedirect("/login/login");
-			//	return false;
-			 //}
+	
 			 String clientIp = null;
 			 clientIp = request.getHeader("X-Forwarded-For");
 		        if (clientIp == null || clientIp.length() == 0 || "unknown".equalsIgnoreCase(clientIp)) { 
@@ -100,12 +96,7 @@ public class HamonizeInterceptor extends HandlerInterceptorAdapter {
     		return false;
 		}
 		int cnt = iService.ipCheck(param);
-		
-		// if(cnt <= 0) { 
-		// 	response.sendRedirect("/error-unAuthIp.html");
-		// 	return false;
-		// }
-
+	
 		}catch(NullPointerException e) {
 			e.printStackTrace();
 			System.out.println(e);
@@ -117,31 +108,13 @@ public class HamonizeInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		// TODO Auto-generated method stub
 		super.postHandle(request, response, handler, modelAndView);
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		// TODO Auto-generated method stub
 		super.afterCompletion(request, response, handler, ex);
 	}
-
-	/*
-	 * private Map<String, String> getRequestHeadersInMap(HttpServletRequest
-	 * request) {
-	 * 
-	 * Map<String, String> result = new HashMap<>();
-	 * 
-	 * Enumeration headerNames = request.getHeaderNames(); while
-	 * (headerNames.hasMoreElements()) { String key = (String)
-	 * headerNames.nextElement(); String value = request.getHeader(key);
-	 * result.put(key, value); }
-	 * 
-	 * return result; }
-	 */
-	
-
 	
 }

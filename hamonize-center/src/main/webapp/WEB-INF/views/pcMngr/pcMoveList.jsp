@@ -62,19 +62,19 @@ var userpcMngrGetSuccess = function(data, status, xhr, groupId){
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
 			
 			
-			gbInnerHtml += "<tr data-code='" + value.sgb_seq + "' data-guidcode='" + value.sgb_pc_guid + "'>";
+			gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-			gbInnerHtml += "<td>"+value.sgbname+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_hostname+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_ip+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_macaddress+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_disk+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_cpu+"</td>"; 
-			gbInnerHtml += "<td>"+value.sgb_pc_memory+"</td>";
+			gbInnerHtml += "<td>"+value.deptname+"</td>";
+			gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
+			gbInnerHtml += "<td>"+value.pc_ip+"</td>";
+			gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_disk+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_cpu+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_memory+"</td>";
 			if(value.pc_change == 'R')
-				gbInnerHtml += "<td><button type='button' onclick=\"javascript:fnChangeBtn('P',"+value.sgb_seq+")\">허용</button></td>";
+				gbInnerHtml += "<td><button type='button' onclick=\"javascript:fnChangeBtn('P',"+value.seq+")\">허용</button></td>";
 			else if(value.pc_change == 'P')
-				gbInnerHtml += "<td><button type='button' onclick=\"javascript:fnChangeBtn('R',"+value.sgb_seq+")\">허용취소</button></td>";
+				gbInnerHtml += "<td><button type='button' onclick=\"javascript:fnChangeBtn('R',"+value.seq+")\">허용취소</button></td>";
 			else
 				gbInnerHtml += "<td></td>"
 			gbInnerHtml += "</tr>";
@@ -104,10 +104,10 @@ var userpcMngrGetSuccess = function(data, status, xhr, groupId){
 	
 }
 
-function show_layer(sttus,sgb_seq){
+function show_layer(sttus,seq){
 	$("#layer_area").show();
 	//$("#sttus").val(sttus);
-	$("#sgb_seq").val(sgb_seq);
+	$("#seq").val(seq);
 
 	var shtml = "";
 	if(sttus == 'null' || sttus == 'C'){
@@ -128,20 +128,17 @@ function show_layer(sttus,sgb_seq){
 	$('#btn_area').empty();
 	$('#btn_area').append(shtml);
 	
-	//console.log($("#sttus").val())
-	//console.log($("#sgb_seq").val())
-	
-	//fnChangeBtn(sttus,sgb_seq);
+
 }
 function hide_layer(){
 	$("#layer_area").hide();
 }
 
 //상태 버튼 변경
-function fnChangeBtn(sttus,sgb_seq){
+function fnChangeBtn(sttus,seq){
 	if(sttus == 'P'){
 	if (confirm("PC하드웨어 변경을 허용하시겠습니까?")){    
-		$.post("changeStts", { pc_change : "P" , sgb_seq : sgb_seq }
+		$.post("changeStts", { pc_change : "P" , seq : seq }
 		,function(result){
 			if(result=="SUCCESS"){
 				alert("처리되었습니다.");
@@ -154,7 +151,7 @@ function fnChangeBtn(sttus,sgb_seq){
 	}
 	}else if(sttus == 'R'){
 		if (confirm("PC하드웨어 변경을 허용취소 하시겠습니까?")){    
-			$.post("changeStts", { pc_change : "R" , sgb_seq : sgb_seq }
+			$.post("changeStts", { pc_change : "R" , seq : seq }
 			,function(result){
 				if(result=="SUCCESS"){
 					alert("처리되었습니다.");

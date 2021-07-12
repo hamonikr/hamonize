@@ -46,27 +46,14 @@ public class CurlBackupController {
 		}
 		
 		System.out.println("===> "+ cbVo);
-
-//		valLoad==={       
-//			"events" : [ {       "datetime":"2019-06-27 23:09:16",       
-//			"uuid":"HamoniKR-5DDAC624-3298-46AC-80A6-38EF370EDDB2",      
-//			"name": "",       
-//			"hostname": "t05-vb",       
-//			"dir": "/timeshift/snapshots"      
-//			"gubun": "B"       } ]}
-		
 		
 		GetAgentJobVo agentVo = new GetAgentJobVo(); 
 		agentVo.setPc_uuid(cbVo.getBk_uuid());
 		agentVo.setSeq(cbVo.getBr_org_seq());
 		agentVo = agentJobMapper.getAgentJobPcUUIDInBACKUP(agentVo);
 		
-		//System.out.println("agentVo ==="+ agentVo.getOrg_seq() );
-		
-		
 		cbVo.setBr_org_seq( agentVo.getOrg_seq());
-		cbVo.setSgb_seq(agentVo.getSgb_seq());
-//		cbVo.setBr_backup_gubun("A");
+		cbVo.setDept_seq(agentVo.getDept_seq());
 		agentJobMapper.insertBackupInfo( cbVo );
 		
 		
