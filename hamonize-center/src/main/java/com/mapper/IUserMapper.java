@@ -26,6 +26,8 @@ public interface IUserMapper {
 
 	public OrgVo getUserOrgPath(int seq);
 
+	public OrgVo getUserNewOrgPath(int seq);
+
 	public UserVo getUserInfo(int seq);
 	
 }

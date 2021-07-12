@@ -3,6 +3,7 @@ package com.mapper;
 import java.util.List;
 
 import com.model.OrgVo;
+import com.model.PcMangrVo;
 
 public interface IOrgMapper {
 	
@@ -38,4 +39,8 @@ public interface IOrgMapper {
 	
 	// 하위 부문/부서 all_org_nm 업데이트
 	public int allOrgNmUpdate(OrgVo gvo);
+
+	public OrgVo getAllOrgNm(PcMangrVo vo);
+
+    public int deleteChildUser(OrgVo orgVo);
 }

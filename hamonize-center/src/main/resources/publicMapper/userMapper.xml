@@ -262,6 +262,12 @@
 			where seq = #{seq}
 		)
 	</select>
+
+	<select id="getUserNewOrgPath" parameterType="Integer" resultType="com.model.OrgVo"> 
+		select all_org_nm 
+		from tbl_org 
+		where seq = #{seq}
+	</select>
 	
 	<select id="getUserInfo" parameterType="Integer" resultType="com.model.UserVo"> 
 		select * from tbl_user tu 

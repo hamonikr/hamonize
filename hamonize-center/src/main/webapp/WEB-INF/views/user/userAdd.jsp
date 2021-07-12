@@ -370,7 +370,6 @@ function goSave(){
 $(function() {		
 	$("select").change(function(){
         var org_seq = $(this).children("option:selected").val();
-        alert(" 선택한 회사 seq값 - " + org_seq);
     });
 
 

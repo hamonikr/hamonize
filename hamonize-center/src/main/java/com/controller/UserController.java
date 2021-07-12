@@ -5,14 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,10 +19,9 @@ import com.mapper.IUserMapper;
 import com.model.OrgVo;
 import com.model.UserVo;
 import com.paging.PagingUtil;
-import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.UserService;
-import com.util.StringUtil;
+
 
 @Controller
 @RequestMapping("/user")
@@ -84,14 +79,9 @@ public class UserController {
 	
 	@RequestMapping(value = "/view/{seq}")
 	public String userView(@PathVariable("seq") int seq, UserVo vo, Model model) throws Exception {
-		System.out.println("user seq : "+ seq);
 		OrgVo ovo = new OrgVo();
 
 		UserVo uvo = userSerivce.userView(vo);
-
-		System.out.println("org name : "+uvo.getOrg_nm());
-		System.out.println("org seq : "+uvo.getOrg_seq());
-
 		List<OrgVo> list = userSerivce.getOrgList(ovo);
 
 		model.addAttribute("result", uvo);
@@ -112,23 +102,15 @@ public class UserController {
 	@RequestMapping("/idDuplCheck")
 	@ResponseBody
 	public int idDuplCheck(Model model,UserVo vo) throws Exception{
-		int result = 0;
-		System.out.println("user id check-- > "+ vo.getUser_id());
-		
+		int result = 0;	
 		result = userSerivce.userIdCheck(vo);
 		return result;
 		
 	}
 
 	@RequestMapping("/userSave")
-	public String save(Model model, UserVo vo) {
+	public String save(Model model, UserVo vo) throws Exception {
 		int result = userSerivce.userSave(vo);
-
-		if(result>=1){
-			System.out.println("user 저장 성공 >> "+ result);
-		}else{
-			System.out.println("user 저장 실패 >> "+ result);
-		}
 
 		return "redirect:/user/userList";
 	}

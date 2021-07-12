@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.model.OrgVo;
-import com.service.IpManagementService;
 import com.service.OrgService;
 import com.util.LDAPConnection;
 
@@ -62,7 +61,7 @@ public class OrgController {
 		System.out.println("LDAPConnection ----> start....");
 		
 		try {
-			con.main(gs.getLdapUrl(), gs.getLdapPassword());
+			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		} catch (NamingException e1) {
 			e1.printStackTrace();
 		}

@@ -2,6 +2,8 @@ package com.service;
 
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import com.model.OrgVo;
 import com.util.LDAPConnection;
 
 @Service
-@Transactional(rollbackFor = RuntimeException.class)
+@Transactional(rollbackFor = NamingException.class)
 public class OrgService {
 	@Autowired
 	GlobalPropertySource gs;
@@ -22,27 +24,21 @@ public class OrgService {
 	@Autowired
 	private IOrgMapper orgMapper;
 	
-	public JSONArray orgList(OrgVo orgvo){	
+	public JSONArray orgList(OrgVo orgvo) throws NamingException{	
 		List<OrgVo> orglist = null;
 		JSONArray jsonArray = new JSONArray();
 		
-		try {
-			orglist = orgMapper.orgList(orgvo);
-			
-			for (int i = 0; i < orglist.size(); i++) {	 
-	            JSONObject data = new JSONObject();
-	            data.put("seq", orglist.get(i).getSeq());
-	            data.put("p_seq", orglist.get(i).getP_seq());
-	            data.put("org_nm", orglist.get(i).getOrg_nm());
-	            data.put("org_ordr", orglist.get(i).getOrg_ordr());
-	            data.put("section", orglist.get(i).getSection());
-	            data.put("level", orglist.get(i).getLevel());
-	            jsonArray.add(i, data);   
-			}
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		orglist = orgMapper.orgList(orgvo);
+		
+		for (int i = 0; i < orglist.size(); i++) {	 
+		    JSONObject data = new JSONObject();
+		    data.put("seq", orglist.get(i).getSeq());
+		    data.put("p_seq", orglist.get(i).getP_seq());
+		    data.put("org_nm", orglist.get(i).getOrg_nm());
+		    data.put("org_ordr", orglist.get(i).getOrg_ordr());
+		    data.put("section", orglist.get(i).getSection());
+		    data.put("level", orglist.get(i).getLevel());
+		    jsonArray.add(i, data);   
 		}
 		return jsonArray;
 		
@@ -52,9 +48,7 @@ public class OrgService {
 		return orgMapper.orgView(orgvo);		
 	}
 	
-	public int orgSave(OrgVo orgvo) {
-		System.out.println("--- orgService > orgSave working--- ");
-	
+	public int orgSave(OrgVo orgvo) throws NamingException{
 		//수정전 이름 불러오기
 		OrgVo oldOrgVo = new OrgVo();
 		OrgVo orgPath = new OrgVo();
@@ -75,9 +69,7 @@ public class OrgService {
 		
 		}
 		int result = orgMapper.orgSave(orgvo);
-				
-		System.out.println(" 저장 여부 result======"+result);		
-		
+			
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
@@ -114,14 +106,22 @@ public class OrgService {
 		
 	}
 	
-	public int orgDelete(OrgVo orgvo) throws Exception{	
+	public int orgDelete(OrgVo orgvo) throws NamingException{	
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		con.deleteOu(orgvo);
 
 		int result = 0;
+		List <OrgVo> childOrg = orgMapper.searchChildDept(orgvo);
 		
+		for(int i=0;i<childOrg.size();i++){
+			System.out.println("childOrg 삭제할 하위의 seq "+ childOrg.get(i).getSeq());
+			orgMapper.deleteChildUser(childOrg.get(i));
+		}
+		orgMapper.deleteChildUser(orgvo);
+
 		result = orgMapper.orgDelete(orgvo);
+
 		return result;
 	}
 	

@@ -2,6 +2,9 @@ package com.service;
 
 import java.util.List;
 
+import javax.naming.NamingException;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import com.util.LDAPConnection;
 import com.util.SHA256Util;
 
 @Service
+@Transactional(rollbackOn = NamingException.class)
 public class UserService {
 	@Autowired
 	GlobalPropertySource gs;
@@ -32,7 +36,7 @@ public class UserService {
 		return userMapper.userView(vo);	
 	}
 	
-	public int userSave(UserVo vo) {
+	public int userSave(UserVo vo) throws NamingException {
 		int result=0;
 		LDAPConnection con = new LDAPConnection();
 		String dn ="";
@@ -57,10 +61,15 @@ public class UserService {
 				dn += ",ou="+p_array[i];
 			}
 
-			con.connection(gs.getLdapUrl(), gs.getLdapPassword());		
-			vo.setPass_wd(pw);
-			con.addUser(vo, dn, host);
-
+			try {
+				con.connection(gs.getLdapUrl(), gs.getLdapPassword());		
+				vo.setPass_wd(pw);	
+				con.addUser(vo, dn, host);
+	
+			} catch (NamingException e) {
+				System.out.println(e);
+			}
+			
 		}else{
 			System.out.println("db 저장 실패");
 
@@ -69,64 +78,63 @@ public class UserService {
 		return result;			
 	}
 	
-	public int userModify(UserVo vo) {
+	public int userModify(UserVo newVo) throws NamingException {
 		System.out.println("=== userModify ===");
 		int result = 0;
 		String host="";
-		String dn="";
-		OrgVo ovo = new OrgVo();
+		String oldDn="";
+		String newDn="";
+		String tmpPw =newVo.getPass_wd();
 		
-		String tmpPw =vo.getPass_wd();
-
-		System.out.println("변경하려는 유저의 seq : "+ vo.getSeq());
-		UserVo oldVo = userMapper.getUserInfo(vo.getSeq());
-
+		OrgVo ovo = new OrgVo();
+		UserVo oldVo = userMapper.getUserInfo(newVo.getSeq());
 
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-		
-		System.out.println("old org seq : " + oldVo.getOrg_seq());		
-		System.out.println("new org seq : " + vo.getOrg_seq());		
-
-
-		if(oldVo.getOrg_seq() != vo.getOrg_seq()){
-			System.out.println("-- 부서가 변경되는 경우 --");
-			ovo = userMapper.getUserOrgPath(oldVo.getSeq());
-			System.out.println("old ovo : "+ ovo.getAll_org_nm());			
+		ovo = userMapper.getUserOrgPath(newVo.getSeq());
+	
+	
+		if(oldVo.getOrg_seq() != newVo.getOrg_seq()){
+			OrgVo newOvo = userMapper.getUserNewOrgPath(newVo.getOrg_seq());
+			
+			String[] p_array =newOvo.getAll_org_nm().split("\\|");
+			for(int i=p_array.length-1;i>=0;i--){
+				host +="."+ p_array[i];
+				newDn += ",ou="+p_array[i];
+			}
 
 		} else{
-			System.out.println("-- 부서가 변경되지않는 경우 --");
-			ovo = userMapper.getUserOrgPath(vo.getSeq());
-			System.out.println("old ovo : "+ ovo.getAll_org_nm());
-
+			String[] p_array =ovo.getAll_org_nm().split("\\|");
+			for(int i=p_array.length-1;i>=0;i--){
+				host +="."+ p_array[i];
+			}
 		}
 
-		String[] p_array =ovo.getAll_org_nm().split("\\|");
-		for(int i=p_array.length-1;i>=0;i--){
-			host +="."+ p_array[i];
-			dn += ",ou="+p_array[i];
-		}	
+			String[] p_array =ovo.getAll_org_nm().split("\\|");
+			for(int i=p_array.length-1;i>=0;i--){
+				oldDn += ",ou="+p_array[i];
+			}
+			
 
-		if(vo.getPass_wd() != null || vo.getPass_wd() != "") {
-			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
+		if(newVo.getPass_wd() != null || newVo.getPass_wd() != "") {
+			newVo.setPass_wd(SHA256Util.getEncrypt(newVo.getPass_wd(), SHA256Util.generateSalt()));
 		}		
 
-		result = userMapper.userModify(vo);
+		result = userMapper.userModify(newVo);
 
 		if(result==1){
-			vo.setPass_wd(tmpPw);
+			newVo.setPass_wd(tmpPw);
 			System.out.println("---수정 성공---");
-			con.updateUser(oldVo, vo, dn, host);
-
+			con.updateUser(oldVo, newVo, oldDn, newDn, host);
+			
 		}else{
 			System.out.println("---수정 실패---");
-
 		}
 
 		return result;
 	}
 	
-	public int userDelete(List<UserVo> vo) {
+	public int userDelete(List<UserVo> vo) throws NamingException {
 		
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());		
@@ -135,13 +143,13 @@ public class UserService {
 			OrgVo ovo = new OrgVo();
 			UserVo uvo = new UserVo();
 			System.out.println(vo.get(i).getSeq());	
+
 			ovo = userMapper.getUserOrgPath(vo.get(i).getSeq());
 			uvo = userMapper.userView(vo.get(i));
 			
-			con.deleteUser(ovo,uvo);				
+			con.deleteUser(ovo,uvo);							
 		}
-		
-		
+			
 		int result = userMapper.userDelete(vo);
 		
 		if(result>=1){

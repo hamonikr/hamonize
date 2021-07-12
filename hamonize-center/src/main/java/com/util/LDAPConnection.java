@@ -18,19 +18,15 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
 import com.model.OrgVo;
+import com.model.PcMangrVo;
 import com.model.UserVo;
 
 public class LDAPConnection {
 	private DirContext dc = null; 
 
-	public static void main(String url, String password) throws NamingException {
-		LDAPConnection con = new LDAPConnection();
-		con.connection(url, password);
-	}
-	
 	/* connection */
 
-    public void connection(String url, String password){
+    public void connection(String url, String password) throws NamingException{
         Properties env = new Properties();
 
 		System.out.println("ldap url : " +url.trim());
@@ -124,7 +120,7 @@ public class LDAPConnection {
 	}
 
 	/* add */
-	public void addOu(OrgVo vo) {
+	public void addOu(OrgVo vo) throws NamingException{
 
 		String ouName = vo.getOrg_nm();
 		System.out.println("ouName======" + ouName);
@@ -195,7 +191,7 @@ public class LDAPConnection {
 	}
 
 
-	public void addUser(UserVo vo, String dn, String host) {
+	public void addUser(UserVo vo, String dn, String host) throws NamingException{
 		String addUser = "";
 		Attributes attributes = new BasicAttributes();
 		Attribute attribute = new BasicAttribute("objectclass","top");
@@ -224,6 +220,32 @@ public class LDAPConnection {
 		
 		try {
 			dc.createSubcontext(addUser, attributes);
+			System.out.println("success");
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void addPC(PcMangrVo pvo, UserVo uvo, String Dn) throws NamingException{
+		Attributes attributes = new BasicAttributes();
+		Attribute attribute = new BasicAttribute("objectclass","extensibleObject");
+		String dn ="";
+
+		attribute.add("device");
+		attribute.add("ipHost");
+		attributes.put(attribute);
+	
+		// user details
+		attributes.put("cn", pvo);
+		attributes.put("ipHostNumber", pvo.getPc_vpnip()); 
+		attributes.put("member", "uid="+uvo.getUser_sabun()+",ou=users"+Dn); // uid=test01,ou=users,ou=GroupA,dc=hamonize,dc=com
+		
+		dn = "cn="+pvo.getPc_hostname()+"ou=computers"+Dn;
+
+
+		try {
+			dc.createSubcontext(dn, attributes);
 			System.out.println("success");
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -295,7 +317,7 @@ public class LDAPConnection {
 	}
 	
 
-	public void deleteUser(OrgVo ovo, UserVo uvo){
+	public void deleteUser(OrgVo ovo, UserVo uvo) throws NamingException{
 		System.out.println("cn : "+ uvo.getUser_name());
 		System.out.println("All_org_nm : "+ ovo.getAll_org_nm());
 		
@@ -329,7 +351,7 @@ public class LDAPConnection {
 
 	/* update */
 
-	public void updateOu(OrgVo oldVo, OrgVo newVo){
+	public void updateOu(OrgVo oldVo, OrgVo newVo) throws NamingException{
 		String baseDn = "dc=hamonize,dc=com";
 		String upperDn = "";
 		
@@ -363,7 +385,7 @@ public class LDAPConnection {
 			try {
 					dc.rename(oldDn,newDn);
 					System.out.println("success");
-			} catch (NamingException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}else{
@@ -371,25 +393,14 @@ public class LDAPConnection {
 		}
 	}
 
-	public void updateUser(UserVo oldVo, UserVo newVo, String dn, String host){
-		String addUser="";
+	public void updateUser(UserVo oldVo, UserVo newVo, String oDn,String nDn, String host){
+		String oldDn="";
+		String newDn="";
+
 		host = newVo.getUser_name()+host;
-		System.out.println("host : "+host);
 
-		System.out.println("old org : " +oldVo.getOrg_seq());
-		System.out.println("new org : " +newVo.getOrg_seq());
+		ModificationItem[] mods = new ModificationItem[6];
 
-		if(oldVo.getOrg_seq() != newVo.getOrg_seq() ){
-			System.out.println("--부서 위치 변경하는 경우---");
-
-		}else{
-			System.out.println("--부서 위치 변경하는 경우---");
-
-		}
-
-		ModificationItem[] mods = new ModificationItem[7];
-
-		Attribute mod0 = new BasicAttribute("cn", newVo.getUser_name());
 		Attribute mod1 = new BasicAttribute("gidNumber", newVo.getOrg_seq().toString());
 		Attribute mod2 = new BasicAttribute("homeDirectory", "/home/"+newVo.getUser_name());
 		Attribute mod3 = new BasicAttribute("host", host);
@@ -397,23 +408,31 @@ public class LDAPConnection {
 		Attribute mod5 = new BasicAttribute("uidNumber", newVo.getUser_sabun());
 		Attribute mod6 = new BasicAttribute("uid", newVo.getUser_name());
 
-		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
-		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
-		mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
-		mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
-		mods[4] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod4);
-		mods[5] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod5);
-		mods[6] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod6);
+		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
+		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
+		mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
+		mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod4);
+		mods[4] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod5);
+		mods[5] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod6);
 
-		addUser = "cn="+oldVo.getUser_name()+",ou=users"+dn+",dc=hamonize,dc=com";
 
+		if(oldVo.getOrg_seq() != newVo.getOrg_seq() ){
+			newDn="cn="+newVo.getUser_name()+",ou=users"+nDn+",dc=hamonize,dc=com";
+			oldDn = "cn="+oldVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
+		}else{
+			newDn="cn="+newVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
+			oldDn = "cn="+oldVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
+		}
+
+		
 		try {
-			dc.modifyAttributes(addUser, mods);
+			
+			dc.modifyAttributes(oldDn, mods);
+			dc.rename(oldDn, newDn);
+
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
-
-
 
 
 	}
