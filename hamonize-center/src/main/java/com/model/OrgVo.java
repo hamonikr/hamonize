@@ -27,5 +27,4 @@ public class OrgVo {
 	private String pc_uuid;
 	private String level;
 
-
 }

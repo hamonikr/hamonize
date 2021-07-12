@@ -1,16 +1,13 @@
 package com.controller.curl;
 
 import java.io.BufferedReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,16 +18,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.GlobalPropertySource;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IOrgMapper;
 import com.mapper.IPackageInfoMapper;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
 import com.model.GetAgentJobVo;
+import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PcPackageVo;
-//import com.util.AdLdapUtils;
 import com.model.SvrlstVo;
+import com.model.UserVo;
+import com.util.LDAPConnection;
 
 
 /* connector가 돌때 데이터 가져오는 부분 */
@@ -38,7 +38,9 @@ import com.model.SvrlstVo;
 @RequestMapping("/hmsvc")
 public class CurlController {
 
-	
+	@Autowired
+	GlobalPropertySource gs;
+
 	@Autowired
 	private IOrgMapper orgMapper;
 	
@@ -72,8 +74,9 @@ public class CurlController {
 	}
 	
 	/* pc정보 저장 */
+	@Transactional
 	@RequestMapping("/setPcInfo")
-	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request) {
+	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request)  throws Exception{
 		System.out.println("=============setpcinfo================");
 		
 		int retVal = 0;
@@ -105,13 +108,14 @@ public class CurlController {
 	            hdVo.setPc_hostname(tempObj.get("hostname").toString());
 	            hdVo.setPc_os(tempObj.get("pcos").toString().trim());
 	            hdVo.setPc_memory(tempObj.get("memory").toString().trim() +"G");
-	            hdVo.setDeptname(tempObj.get("deptname").toString());	// 대대번
-	            hdVo.setPcname(tempObj.get("pcname").toString());	// pc 일련번호
+	            hdVo.setDeptname(tempObj.get("deptname").toString());	// 부서이름
+	            hdVo.setPcname(tempObj.get("hostname").toString());	// pc cn
 	            hdVo.setSabun(tempObj.get("sabun").toString());	// 사번
 				hdVo.setUsername(tempObj.get("username").toString());	// 사용자 이름
 	            	
 	            
 	       }
+  		    System.out.println("user 조직이름 >> "+ hdVo.getDeptname());
 		   
 			System.out.println("user 사번 >> "+ hdVo.getSabun());
 			System.out.println("user 이름 >> "+ hdVo.getUsername());
@@ -121,20 +125,24 @@ public class CurlController {
 
 			PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
 			System.out.println("orgNumChkVo===="+orgNumChkVo);
-
-			if( orgNumChkVo != null  ) {
-				hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
-			}else {
-				hdVo.setOrg_seq(8307); 
-			}
-
-
+			
+			LDAPConnection con = new LDAPConnection();
+		   	con.connection(gs.getUrl(), gs.getLdapPassword());
+			
+			hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
+			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
+		    String dn ="";
+		    OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
+			
+		   hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 			if(DuplserverPc >= 1 ) {
 				retVal = pcMangrMapper.updatePcinfo(hdVo);
 				System.out.println("update retVal=== " + retVal);
 			}else {
 				retVal = pcMangrMapper.inserPcInfo(hdVo);
 				System.out.println("insert retVal=== " + retVal);
+				con.addPC(hdVo, sabunChkVo, dn);
+
 				}
 	        
 	        
@@ -148,16 +156,18 @@ public class CurlController {
 	    }else {
 	    	isAddPcInfo = false;
 	    }
-        System.out.println("isAddPcInfo==="+isAddPcInfo);
+        
+		System.out.println("isAddPcInfo==="+isAddPcInfo);
 		return isAddPcInfo;
 	}
 	
 	@RequestMapping("/pcInfoChkProc")
 	public Boolean pcInfoChkProc(@RequestBody String retData, HttpServletRequest request) {
 		System.out.println("pcInfoChkProc============");
-		StringBuffer json = new StringBuffer();
 		int retVal = 0;
 		Boolean isExistOrg = false;
+		Boolean isExistSabun = false;
+		Boolean isExist = false;
 
 	    try {
 
@@ -181,22 +191,30 @@ public class CurlController {
 			System.out.println("user 이름 >> "+ hdVo.getUsername());
 		        
 			PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
-			System.out.println("orgNumChkVo===="+orgNumChkVo);
+			System.out.println("orgNumChkVo====org seq : "+orgNumChkVo.getOrg_seq());
 
-		
+		   UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
+		   
+		   
 			if( orgNumChkVo != null  ) {
 				isExistOrg = true;
+				if(sabunChkVo != null ){
+					isExistSabun =true;
+				}else{
+					isExistSabun =false;
+				}
 			}else {
 				isExistOrg = false;
 			}
 		
-			System.out.println("isExistOrg==="+isExistOrg);
+			isExist = isExistSabun && isExistOrg; 
+			System.out.println("isExist==="+isExist);
 		
 		}catch(Exception e) {
 	        System.out.println("Error reading JSON string: " + e.toString());
 	    }
 		
-        return isExistOrg;
+        return isExist;
 	}
 
 	@RequestMapping("/setVpnUpdate")

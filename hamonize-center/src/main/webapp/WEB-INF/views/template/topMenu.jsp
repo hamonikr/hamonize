@@ -115,14 +115,14 @@
                     </ul>
                 </li>
                   <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a>
- 	              	<%-- <ul class="last">
+ 	              	<ul class="last">
                         <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li> 
                         <li><a href="/auditLog/iNetLog">인터넷 사용로그</a></li>
                         <li><a href="/auditLog/prcssBlockLog">프로세스 차단로그</a></li>
                         <li><a href="/auditLog/pcChangeLog">하드웨어 변경로그</a></li>
                         <li><a href="/auditLog/unAuthLog">비인가 디바이스로그</a></li>
                         <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a></li>
-                   </ul> --%>
+                   </ul>
                 </li>
             </ul>
         </div>

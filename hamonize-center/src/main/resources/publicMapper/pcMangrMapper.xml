@@ -54,13 +54,21 @@
 	</update>
 
 	<select id="chkPcOrgNum" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
-		select * from tbl_org where trim(org_num) = #{deptname}
+		select *
+		from tbl_org 
+		where trim(org_nm) = #{deptname}
 	</select>
 	
 	<select id="chkPcinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
 		select seq, pc_uuid, pc_ip, pc_vpnip, pc_macaddress
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid}
+	</select>
+		
+	<select id="chkUserSabun" parameterType="com.model.PcMangrVo" resultType="com.model.UserVo">
+		select *
+		from tbl_user tu 
+		where trim(user_sabun) = #{sabun}
 	</select>
 		
 	
@@ -102,14 +110,14 @@
 				#{pc_macaddress}, 
 				#{pc_ip},
 				#{pc_vpnip},
-				#{pcname}  ,
+				#{pc_hostname}  ,
 				#{pc_guid}, 
 				#{pc_uuid},
 				#{pc_os},
 				(select seq from tbl_org where trim(org_nm) = #{deptname}),
 				#{pc_disk_id}, 
 				#{pc_cpu_id},
-				#{pcname},
+				#{pc_hostname},
 		        now(),
 				now() 
 				WHERE NOT EXISTS (SELECT * FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid})

@@ -18,9 +18,12 @@ public class UserVo extends PagingVo{
 	private String upd_date;
 	private String kind;
 	private String rank;
+	private String gubun;
+	private String email;
+	private String tel;
+
 	private String discharge_dt;
 	private Integer org_seq; 
-	private String narasarang_no; 
 	private String org_nm; 
 	private String P_org_nm; 
 
@@ -37,6 +40,5 @@ public class UserVo extends PagingVo{
 
 	private int ListInfoCurrentPage;
 
-	
 
 }

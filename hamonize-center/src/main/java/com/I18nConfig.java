@@ -28,9 +28,7 @@ public class I18nConfig extends WebMvcConfigurerAdapter
 			.excludePathPatterns("/getAgent/*")
 			.excludePathPatterns("/act/*")
 			.excludePathPatterns("/backup/*");
-			//.excludePathPatterns("/getAgentServer/*")
-			//.excludePathPatterns("/hmsvcServer/*")
-			//.excludePathPatterns("/actServer/*");
+		
 	}
 
 }

@@ -200,7 +200,7 @@ public class AdminController {
 	}
 	
 	
-	//사지방 관리자
+	//부서 관리자
 	@RequestMapping("/managerlist")
 	public String managerlist(HttpSession session, Model model,AdminVo vo) throws Exception{
 			List<AdminVo> list = new ArrayList<AdminVo>();
