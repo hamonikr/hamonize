@@ -192,14 +192,7 @@ public class AuditLogService {
 		List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
 		
 		try {
-			
-//			List<String> list = auditLogMapper.devicePackageList();
-//			for(String debname : list) {
-//				System.out.println("devicedebname===="+debname);
-//			}
-			
-			//jsonObject.put("debList", list);
-			//jsonObject.put("debListCnt", list.size());
+
 			jsonObject.put("uuid", params.get("pc_uuid"));
 			System.out.println("deviceparams...."+params);
 			System.out.println("deviceuuid======="+params.get("pc_uuid"));

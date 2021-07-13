@@ -232,12 +232,12 @@
 		order by T.seq asc 		
 	</select>
 
-	<!-- 하위 부서 경로 이름 업데이트 -->
-	<update id="getAllOrgNm" parameterType="com.model.PcMngrVo">
+	<!-- 하위 부서 경로 이름 가져오기 -->
+	<select id="getAllOrgNm" parameterType="Integer" resultType="com.model.OrgVo">
 		select all_org_nm
 		from tbl_org
-		where seq = #{org_seq} 
-	</update>
+		where seq = #{seq} 
+	</select>
 
 	<!-- 하위 부서 경로 이름 업데이트 -->
 	<update id="allOrgNmUpdate" parameterType="com.model.OrgVo">

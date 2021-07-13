@@ -216,7 +216,7 @@ public class LDAPConnection {
 		attributes.put("uidNumber", vo.getUser_sabun().toString());	
 		attributes.put("uid", vo.getUser_name());	
 
-		addUser = "cn="+vo.getUser_name()+",ou=users"+dn+",dc=hamonize,dc=com";
+		addUser = "uid="+vo.getUser_name()+",ou=users"+dn+",dc=hamonize,dc=com";
 		
 		try {
 			dc.createSubcontext(addUser, attributes);
@@ -227,22 +227,37 @@ public class LDAPConnection {
 
 	}
 
-	public void addPC(PcMangrVo pvo, UserVo uvo, String Dn) throws NamingException{
+	public void addPC(PcMangrVo pvo, UserVo uvo) throws NamingException{
 		Attributes attributes = new BasicAttributes();
-		Attribute attribute = new BasicAttribute("objectclass","extensibleObject");
+		Attribute attribute = new BasicAttribute("objectClass","ipHost");
 		String dn ="";
+		String cn ="";
+
+		String upperDn="";
+		String str = pvo.getAlldeptname();
+
+		String[] p_array = str.split("\\|");
+		for(int i= p_array.length-1; i>=0 ;i--){
+			System.out.println(p_array[i]);
+			upperDn += ",ou="+p_array[i];
+			cn += "."+p_array[i];
+		}
+		cn = uvo.getUser_name()+cn;
 
 		attribute.add("device");
-		attribute.add("ipHost");
+		attribute.add("extensibleObject");
 		attributes.put(attribute);
-	
-		// user details
-		attributes.put("cn", pvo);
-		attributes.put("ipHostNumber", pvo.getPc_vpnip()); 
-		attributes.put("member", "uid="+uvo.getUser_sabun()+",ou=users"+Dn); // uid=test01,ou=users,ou=GroupA,dc=hamonize,dc=com
 		
-		dn = "cn="+pvo.getPc_hostname()+"ou=computers"+Dn;
+		attributes.put("cn", pvo.getPc_hostname());
+		attributes.put("cn", cn);
 
+		attributes.put("ipHostNumber", pvo.getPc_vpnip().toString()); 
+		attributes.put("name", pvo.getPc_hostname()); 
+		
+		attributes.put("member", "uid="+uvo.getUser_name()+",ou=users"+upperDn); 
+		
+		
+		dn = "cn="+pvo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";
 
 		try {
 			dc.createSubcontext(dn, attributes);
@@ -439,3 +454,4 @@ public class LDAPConnection {
 
 
 }
+

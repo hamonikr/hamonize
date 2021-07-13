@@ -21,7 +21,7 @@
 	
 	<insert id="setInsertSelect" parameterType="com.model.GetAgentFirewallVo" >
 		INSERT INTO
-    		tbl_frwl_agent_job (seq, fa_seq, org_seq, pcm_uuid, pcm_name,  insert_dt )
+    		tbl_frwl_agent_job (sm_seq, fa_seq, org_seq, pcm_uuid, pcm_name,  insert_dt )
 		
 		SELECT arr[i]::int,
 		    pa_seq, 

@@ -111,6 +111,7 @@ text-decoration: none;
 						var paging = result.paging;
 						console.log(agrs);
 						var strHtml ="";
+					
 						if(agrs.length > 0){
 						for(var i =0; i< agrs.length;i++){
 							var no = paging.totalRecordSize -(i ) - ((paging.currentPage-1)*10);
@@ -199,7 +200,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							var no = paging.totalRecordSize -(i ) - ((paging.currentPage-1)*10);
 							
 							strHtml += "<tr>";
-							gbInnerHtml += "<td><input type='checkbox' name='chk' id="+no+" class='form-control' value='"+value.seq+"'><label for="+no+" class='dook'></label></td>";
+							strHtml += "<td><input type='checkbox' name='chk' id="+agrs[i].seq+" class='form-control' value='"+agrs[i].seq+"'><label for="+no+" class='dook'></label></td>";
+							//gbInnerHtml += "<td><input type='checkbox' name='chk' id="+no+" class='form-control' value='"+value.seq+"'><label for="+no+" class='dook'></label></td>";
 
 							strHtml += "<td>"+no+"</td>";
 							strHtml += "<td>"+agrs[i].p_org_nm+"</td>";
