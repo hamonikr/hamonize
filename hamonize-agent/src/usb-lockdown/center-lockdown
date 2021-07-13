@@ -64,5 +64,8 @@ EOF
     fi
 
     echo "--- Center Lockdown Start ---" | tee -a $LOGFILE
+    
+    # udev restart  
+    sudo systemctl restart udev.service 
 
 fi
