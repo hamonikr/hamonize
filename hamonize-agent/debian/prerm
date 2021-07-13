@@ -6,7 +6,14 @@ sudo rm -r /etc/systemd/system/hamonize-agent.service
 
 systemctl daemon-reload
 
+# remove device contol
+cd /usr/share/hamonize-agent/usb-lockdown
+make clean
+
+# delete hamonize-agent folder
 rm -fr /usr/share/hamonize-agent
+
+
 #cd /usr/share/hamonize-agent/
 
 #if [ -d node_modules ]; then 

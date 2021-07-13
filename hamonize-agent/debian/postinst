@@ -7,3 +7,8 @@ echo "$uuid" >> /etc/hamonize/uuid
 sudo systemctl daemon-reload
 sudo systemctl enable hamonize-agent
 sudo systemctl start hamonize-agent
+
+# install device control
+cd /usr/share/hamonize-agent/usb-lockdown
+make install
+/etc/init.d/udev restart
