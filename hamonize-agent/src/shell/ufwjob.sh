@@ -13,10 +13,6 @@ IVSC="http://${CENTERURL}/act/firewallAct"
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 echo "==============================[$DATETIME]=========================" >> $LOGFILE
 
-####sudo apt-get update > /dev/null
-###sudo apt-get install ufw >>$LOGFILE
-####sudo apt-get install iptables-persistent > /dev/null
-
 UFW_STATUS=`ufw status`
 
 echo "ufw status ====$UFW_STATUS" >>$LOGFILE
@@ -40,7 +36,6 @@ then
 	for I in $UFW_ALLOW;
 	do
 		sudo ufw allow $I 
-		#sudo iptables -I INPUT 1 -p tcp --dport $I -j ACCEPT
 
 		#policy port check & send to center
 		CHK_PORT=`ufw status 2>/dev/null  | grep $I | tail -1 | grep ALLOW | awk '{ print $1 }'`
@@ -100,7 +95,6 @@ then
         do
                 echo "deny==========$I" >>$LOGFILE
 		sudo ufw deny $I
-		#sudo iptables -D INPUT -p tcp --dport $I -j ACCEPT
 
 		#policy port check & send to center
                 CHK_PORT=`ufw status 2>/dev/null  | grep $I | tail -1 | grep DENY | awk '{ print $1 }'`
@@ -143,9 +137,3 @@ fi
 
 
 ufw reload >>$LOGFILE
-
-#ufw disable
-#sudo echo y | ufw reset 
-#ufw enable 
-
-#ufw reload > /dev/null

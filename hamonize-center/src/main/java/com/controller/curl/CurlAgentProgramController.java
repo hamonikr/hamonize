@@ -24,22 +24,22 @@ public class CurlAgentProgramController {
 	private IGetAgentProgrmMapper getAgentProgrmMapper;
 
 	@RequestMapping("/progrm")
-	public String getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid,
+	public String getAgentJob(@RequestParam(value = "name", required = false) String uuid,
 			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
 
 		// 출력 변수
 		String output = "";
-		sgbUuid = sgbUuid.trim();
+		uuid = uuid.trim();
 
 		// uuid로 부문정보 가져오기
-		int segSeq = sgbUUID(sgbUuid);
+		int segSeq = pcUUID(uuid);
 		if( segSeq == 0 ) {
 			return  "nodata";
 		}
 		
 		GetAgentProgrmVo getProgrmVo = new GetAgentProgrmVo();
 		getProgrmVo.setOrg_seq(segSeq);
-		getProgrmVo.setPcm_uuid(sgbUuid);
+		getProgrmVo.setPcm_uuid(uuid);
 
 		int chkProgrmPolicy = getAgentProgrmMapper.getAgentWorkYn(getProgrmVo);
 		boolean isAgentProgrmAction = false;
@@ -116,14 +116,6 @@ public class CurlAgentProgramController {
 		
 		List<GetAgentProgrmVo> outputDatga =getAgentProgrmMapper.getAgentWorkData(getProgrmVo);
 		
-		
-		/*
-		 * for( GetAgentProgrmVo set : outputDatga ) { System.out.println("----> "+
-		 * set.getGubun() +"=="+ set.getPcm_seq()+"=="+ set.getOrg_seq() +"=="+
-		 * set.getPa_seq() +"=="+ set.getPcm_uuid() +"=="+ set.getPcm_name() +"=="+
-		 * set.getInsert_dt() +"=="+ set.getOld_pa_seq() ); }
-		 */
-		
 		String arrAgentProgrmY = "", arrAgentProgrmN = "";
 		
 		if (outputDatga.size() > 0) {
@@ -171,12 +163,12 @@ public class CurlAgentProgramController {
 	/**
 	 * 부서 UUID로 부문 seq 가져오기
 	 * 
-	 * @param sgbUuid
+	 * @param pcuuid
 	 * @return 부문seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public int pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = 0;
 		if(agentVo != null ) {

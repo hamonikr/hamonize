@@ -555,12 +555,12 @@ public class AuditLogController {
 	public HashMap<String, Object> detailPolicy(@RequestParam HashMap<String, Object> params, HttpSession session) {
 		
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
+		System.out.println("params : "+ params.get("pc_uuid"));
 
 		try {
 			jsonObject.put("udpt", logService.udptList(params));
 			jsonObject.put("program", logService.programList(params));
 			jsonObject.put("device", logService.deviceList(params));
-			jsonObject.put("nxss", logService.nxssList(params));
 			jsonObject.put("firewall", logService.firewallList(params));
 		} catch (Exception e) {
 			jsonObject.put("success", false);

@@ -24,7 +24,7 @@
 			    #{info},
 			    #{pc_user}, 
 			    TO_TIMESTAMP(#{insert_dt},'YYYY-MM-DD HH24:MI:SS.MS'),
-			    (select org_seq from public.tbl_pc_mangr where sgb_pc_uuid = #{pc_uuid} ) 
+			    (select org_seq from public.tbl_pc_mangr where pc_uuid = #{pc_uuid} ) 
 			)
 	</insert>
 	

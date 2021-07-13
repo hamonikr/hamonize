@@ -507,7 +507,7 @@
 	
 	<select id="unAuthLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT
-			uuid, 
+			pc_uuid, 
 			vendor, 
 			product, 
 			info, 

@@ -41,10 +41,9 @@ public class CurlUpdtPolicyController {
 	    }catch(Exception e) {
 	        System.out.println("Error reading JSON string: " + e.toString());
 	    }
-	    //String test = "{\"insresert\":[{\"state\":\"1\",\"path\":\"\"}],\"updtresert\":[],\"delresert\":[],\"uuid\":\"69539dee19fb40f58b7e26453d8f9bb3\"}";
-	    JSONParser Parser = new JSONParser();  //여기서 에러
+	
+		JSONParser Parser = new JSONParser();  //여기서 에러
 	    JSONObject jsonObj = (JSONObject) Parser.parse(json.toString());
-	    //JSONObject jsonObj = (JSONObject) Parser.parse(test);
 	  
 	    
 	    /** ======================================
@@ -71,13 +70,7 @@ public class CurlUpdtPolicyController {
 		    	
 		    }  
 		    
-		    
-		    
-		    //System.out.println("====uuuuuu==="+ jsonObj.get("uuid").toString());
-		    // deb insert & program add
-//		    Map<String, Object> mapInsert = new HashMap<String, Object>();
-//		    mapInsert.put("list", updtVo);
-//		    updtPollicyMapper.updtInsertProgrm(mapInsert);
+		
 	    }
 	    
 	    
@@ -90,9 +83,6 @@ public class CurlUpdtPolicyController {
 	    if( updtArray.size() != 0 ) {
 		    for (int i = 0; i < updtArray.size(); i++) {          
 		    	JSONObject object = (JSONObject) updtArray.get(i);
-		    	//System.out.println("debname :" + object.get("debname"));   
-		    	//System.out.println("state : " + object.get("state"));   
-		    	//System.out.println("path" + object.get("path"));      
 		    	updtVo2[i] = new UpdtPolicyVo();
 		    	updtVo2[i].setDebname(object.getOrDefault("debname","").toString());
 		    	updtVo2[i].setDebver(object.getOrDefault("debver","").toString());
@@ -100,7 +90,6 @@ public class CurlUpdtPolicyController {
 		    	updtVo2[i].setPath(object.getOrDefault("path","").toString());
 		    	updtVo2[i].setGubun("UPGRADE");
 		    	updtVo2[i].setPc_uuid(jsonObj.getOrDefault("uuid","").toString());
-		    	//System.out.println("업데이트 결과 --- > "+updtVo2[i].toString()+"\n");
 		    }
 	    }
 	    
@@ -149,8 +138,6 @@ public class CurlUpdtPolicyController {
 	    if( updtVoSum.length != 0 ) {
 	    	updtPollicyMapper.updtPolicyActionResultInsert(map);
 	    }
-	    
-	    
 	   
 		
 	    return null;
