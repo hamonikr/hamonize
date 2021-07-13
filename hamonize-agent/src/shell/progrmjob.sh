@@ -1,17 +1,19 @@
 #!/bin/bash
 
 centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
-CENTERURL="http://${centerUrl}/hmsvc/updtpolicy"
-PCUUID=`cat /etc/hamonize/uuid`
+
+CENTERURL="http://${centerUrl}/act/progrmAct"
+DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
+HOSTNAME=`hostname`
+UUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/progrmjob.log"
 touch $LOGFILE
 
 
-
-echo "################### updt deb install ###########################"
+echo "################### Progrm block ###########################"
 
 UPDT_INS=`cat /etc/hamonize/progrm/progrm.hm | jq '.INS' | sed -e "s/\"//g" ` 
-echo "install file total  data=========$UPDT_INS" >>$LOGFILE
+echo "block program name =========> $UPDT_INS" >>$LOGFILE
 
 if [ "$UPDT_INS" != null ] 
 then
@@ -41,10 +43,10 @@ do
        	sudo chmod 644 $DO_FILE_PATH
 
       	PROGRM_CHMOD=`ls -al "$DO_FILE_PATH" | awk '{print $1}'`
-       	echo "PROGRM_CHMOD===$PROGRM_CHMOD" >>$LOGFILE
+       	echo "PROGRM_CHMOD===> $PROGRM_CHMOD" >>$LOGFILE
 
 
-        INSRET=$INSRET"{\"debname\":\"${I}\",\"state\":\"$PROGRM_CHMOD\"}"
+        INSRET=$INSRET"{\"uuid\":\"${UUID}\",\"hostname\":\"${HOSTNAME}\",\"status\":\"ins\",\"status_yn\":\"Y\",\"progrmname\":\"${I}\",\"datetime\":\"${DATETIME}\"}"
 
         if [ "$EC" -eq "$#" ]; then
                 INSRET=$INSRET","
@@ -61,7 +63,7 @@ fi
 
 
 echo "================================================================="
-echo "################### updt deb install ###########################"
+echo "################### progrm allow ###########################"
 
 UPDT_INS=`cat /etc/hamonize/progrm/progrm.hm | jq '.DEL' | sed -e "s/\"//g" `
 echo "install file total  data=========$UPDT_INS" >>$LOGFILE
@@ -94,7 +96,7 @@ do
 
 
 
-        DELRET=$DELRET"{\"debname\":\"${I}\",\"state\":\"$PROGRM_CHMOD\"}"
+        DELRET=$DELRET"{\"uuid\":\"${UUID}\",\"hostname\":\"${HOSTNAME}\",\"status\":\"del\",\"status_yn\":\"Y\",\"progrmname\":\"${I}\",\"datetime\":\"${DATETIME}\"}"
 
         if [ "$EC" -eq "$#" ]; then
                 DELRET=$DELRET","
@@ -112,18 +114,17 @@ fi
 
 echo "################## updt json data ############################"
 
-UPDT_JSON="{\
+PROGRM_JSON="{\
        \"insresert\":[$INSRET],\
        \"delresert\": [$DELRET],\
        \"uuid\": \"$PCUUID\"\
 }"
 
 
-echo $UPDT_JSON >>$LOGFILE
+echo $PROGRM_JSON >>$LOGFILE
 
+RETUPDT=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$PROGRM_JSON" $CENTERURL`
 
-#RETUPDT=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$UPDT_JSON" $CENTERURL`
-
-#echo $RETUPDT >> ${LOGFILE}
+echo $RETUPDT >> ${LOGFILE}
 
 

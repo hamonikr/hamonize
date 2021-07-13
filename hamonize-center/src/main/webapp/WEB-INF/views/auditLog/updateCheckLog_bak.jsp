@@ -134,7 +134,7 @@ function detail(uuid){
 	 $.post("detailPolicy.proc",{pc_uuid:uuid},
 			function(data){
 		 console.log("data.program.length11======"+data.program.length);
-		//if( data.udpt.length > 0){
+	
 			var shtml = "";
 			console.log("data.udpt.length======"+data.udpt.length);
 			shtml += "<table class=\"result_detail\" border=\"1\">";
@@ -164,9 +164,7 @@ function detail(uuid){
 			});	
 			shtml += "</tbody>";
 			shtml += "</table>";
-				//$(".right_box_r").append(shtml);
-		//}
-		//if(data.program.length > 0){  
+	
 			console.log("data.program.length======"+data.program.length);
 			console.log("data======"+data);
 			shtml += "<table class=\"result_detail\" border=\"1\">";

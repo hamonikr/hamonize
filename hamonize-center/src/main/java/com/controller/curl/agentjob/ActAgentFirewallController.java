@@ -88,8 +88,10 @@ public class ActAgentFirewallController {
             inputVo.setRetport(tempObj.get("retport").toString());
             
         }
-        
-        int uuid = sgbUUID(inputVo.getUuid());
+		
+		System.out.println("\n에이전트에서 받은 값 inputVo : "+ inputVo.toString());
+
+        int uuid = pcUUID(inputVo.getUuid());
         inputVo.setOrgseq(uuid);
         
         int retVal = actAgentFirewallMapper.insertActAgentFirewall(inputVo);
@@ -143,7 +145,7 @@ public class ActAgentFirewallController {
             
         }
         
-        int uuid = sgbUUID(inputVo.getUuid());
+        int uuid = pcUUID(inputVo.getUuid());
         inputVo.setOrgseq(uuid);
         
         int retVal = actAgentDeviceMapper.insertActAgentDevice(inputVo);
@@ -170,12 +172,17 @@ public class ActAgentFirewallController {
 	    String line = null;
 	 
 	    try {
+			System.out.println("\naaaaa\n");
 	        BufferedReader reader = request.getReader();
 	        while((line = reader.readLine()) != null) {
 	            json.append(line);
+				System.out.println("\nbbbbb\n");
+
 	        }
 	 
 	    }catch(Exception e) {
+			System.out.println("\ncccc\n");
+
 	        System.out.println("Error reading JSON string: " + e.toString());
 	    }
 	    
@@ -190,7 +197,9 @@ public class ActAgentFirewallController {
 	    
 	    JSONArray insArray = (JSONArray) jsonObj.get("insresert");
 	    ActAgentProgrmVo[] inputVo = new ActAgentProgrmVo[insArray.size()];
-	    if( insArray.size() != 0 ) {
+		System.out.println("\ndddd\n");
+
+		if( insArray.size() != 0 ) {
 		    for (int i = 0; i < insArray.size(); i++) {          
 		    	JSONObject tempObj = (JSONObject) insArray.get(i);
 		    	inputVo[i] = new ActAgentProgrmVo();
@@ -200,11 +209,11 @@ public class ActAgentFirewallController {
 				inputVo[i].setStatus_yn(tempObj.get("status_yn").toString());
 				inputVo[i].setProgrmname(tempObj.get("progrmname").toString());
 				inputVo[i].setDatetime(tempObj.get("datetime").toString());
-				inputVo[i].setOrgseq(sgbUUID(tempObj.get("uuid").toString().trim()));
+				inputVo[i].setOrgseq(pcUUID(tempObj.get("uuid").toString().trim()));
 		    }  
 	    }
 	    
-	    System.out.println("inputVo]======================================");
+	    System.out.println("에이전트 프로그램 정책 결과 : inputVo ======================================");
 		for (int i = 0; i < inputVo.length; i++) {
 			System.out.println("updtVo[i]=======" + inputVo[i].toString());
 		}
@@ -259,7 +268,7 @@ public class ActAgentFirewallController {
             
         }
         
-        int uuid = sgbUUID(inputVo.getUuid());
+        int uuid = pcUUID(inputVo.getUuid());
         inputVo.setOrgseq(uuid);
         
         int retVal = actAgentNxssMapper.insertActAgentNxss(inputVo);
@@ -312,7 +321,7 @@ public class ActAgentFirewallController {
             
         }
         
-        int uuid = sgbUUID(inputVo.getUuid());
+        int uuid = pcUUID(inputVo.getUuid());
         inputVo.setOrgseq(uuid);
         
         int retVal = getAgentRecoveryMapper.insertActAgentBackupRecovery(inputVo);
@@ -328,14 +337,14 @@ public class ActAgentFirewallController {
 	
 	
 	@RequestMapping("/checkRecovery")
-	public String chkeckRecovery(@RequestParam(value = "name", required = false) String sgbUuid,
+	public String chkeckRecovery(@RequestParam(value = "name", required = false) String uuid,
 			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
 		
 		String output = "";
 		ActAgentBackupRecoveryVo inputVo = new ActAgentBackupRecoveryVo();
-		int segSeq = sgbUUID(sgbUuid.trim());
+		int segSeq = pcUUID(uuid.trim());
 		
-		inputVo.setUuid(sgbUuid.trim());
+		inputVo.setUuid(uuid.trim());
 		inputVo.setOrgseq(segSeq);
 		System.out.println("segSeq=========>"+ segSeq);
 		if( segSeq == 0 ) {
@@ -380,12 +389,12 @@ public class ActAgentFirewallController {
 	/*
 	 * 부서 UUID로 부문 seq 가져오기
 	 * 
-	 * @param sgbUuid
+	 * @param pcuuid
 	 * @return 부문seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public int pcUUID(String pcuuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(pcuuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = 0;
 		if(agentVo != null ) {
