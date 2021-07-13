@@ -1,7 +1,6 @@
 VERSION		= 1.0.0
-PROG		= usb-unauthorized
-PROG2		= usb-lockdown-work
-PROG3		= center-lockdown
+PROG		= usb-lockdown-work
+PROG2		= center-lockdown
 CONF		= 30-usb-lockdown.rules
 SUDOCONF	= usb-lockdown
 bindir		= /usr/local/bin
@@ -14,13 +13,11 @@ MKDIR		= /bin/mkdir -p
 install:
 	$(INSTALL) -D -v -m 755 $(PROG) -t $(bindir)
 	$(INSTALL) -D -v -m 755 $(PROG2) -t $(bindir)
-	$(INSTALL) -D -v -m 755 $(PROG3) -t $(bindir)
 	$(INSTALL) -D -v -m 644 $(CONF) -t $(confdir)
 	$(INSTALL) -D -v -m 440 $(SUDOCONF) -t $(sudodir)
 clean:
 	-${RM} $(bindir)/$(PROG)
 	-${RM} $(bindir)/$(PROG2)
-	-${RM} $(bindir)/$(PROG3)
 	-${RM} $(confdir)/$(CONF)
 	-${RM} $(sudodir)/$(SUDOCONF)
 	
