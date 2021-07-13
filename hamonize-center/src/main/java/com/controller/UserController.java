@@ -62,7 +62,9 @@ public class UserController {
 		Map<String,Object> dataMap = new HashMap<String, Object>();
 		List<UserVo> list = new ArrayList<UserVo>();
 		vo.setOrg_seq(Integer.parseInt(params.get("org_seq").toString()));
-	
+		
+		System.out.println("선택된 org_seq : "+vo.getOrg_seq());
+
 		// 페이징
 		vo.setCurrentPage(vo.getListInfoCurrentPage());
 		vo = (UserVo) PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, vo);

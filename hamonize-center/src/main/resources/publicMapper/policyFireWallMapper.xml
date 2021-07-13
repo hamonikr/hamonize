@@ -22,6 +22,7 @@
 		
 	</insert>
 	
+	
 	<delete id="fireWallDelete" parameterType="java.util.HashMap">
 	DELETE FROM TBL_FRWL_APPLC WHERE ORG_SEQ IN (
 	<foreach collection="data" item="item" separator=",">

@@ -113,10 +113,6 @@ public class CurlController {
             
 	       }
 
-  		    System.out.println("user 조직이름 >> "+ hdVo.getDeptname());		   
-			System.out.println("user 사번 >> "+ hdVo.getSabun());
-			System.out.println("user 이름 >> "+ hdVo.getUsername());
-
 			int DuplserverPc = pcMangrMapper.inserPcInfoChk(hdVo);
 			System.out.println("DuplserverPc===="+DuplserverPc +"===>"+ hdVo.getPc_vpnip() );
 
@@ -131,14 +127,16 @@ public class CurlController {
 
 			OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
 			hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
 			if(DuplserverPc >= 1 ) {
 				retVal = pcMangrMapper.updatePcinfo(hdVo);
 				System.out.println("update retVal=== " + retVal);
+				con.addPC(hdVo, sabunChkVo);
+
 			}else {
 				retVal = pcMangrMapper.inserPcInfo(hdVo);
 				System.out.println("insert retVal=== " + retVal);
-				con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 				con.addPC(hdVo, sabunChkVo);
 			}
 	        

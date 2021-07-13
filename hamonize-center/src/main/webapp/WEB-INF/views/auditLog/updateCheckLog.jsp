@@ -29,8 +29,6 @@ caption {text-indent: 0; height: 30px; font-size: 16px; overflow: inherit;}
 .result_detail {margin-top: 20px; width: 100%}
 </style>
 <script type="text/javascript">
-//<![CDATA[
-//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -40,15 +38,8 @@ caption {text-indent: 0; height: 30px; font-size: 16px; overflow: inherit;}
 					enable: true
 				}
 			},
-			/* check: {
-				enable: true
-			}, */
 			edit: {
 				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
 				}, 
 				enable: true,
 				showRemoveBtn: false,
@@ -88,9 +79,7 @@ caption {text-indent: 0; height: 30px; font-size: 16px; overflow: inherit;}
 		
 	getList();
 	//등록버튼
-	//$("#btnSave").click(fnSave);
 	$("#excelBtn").on("click",function(){
-		//location.href="iNetLogExcel?org_seq="+$("#org_seq").val();
 		location.href="prcssBlockLogExcel?org_seq="+$("#org_seq").val()+"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val()+"&txtSearch="+$("#txtSearch").val()+"&keyWord="+$("#keyWord").val();
 	});
 	$("#txtSearch").keydown(function(key) {
@@ -130,7 +119,6 @@ function detail(uuid){
 	 $.post("detailPolicy.proc",{pc_uuid:uuid},
 			function(data){
 		 console.log("data.program.length11======"+data.program.length);
-		//if( data.udpt.length > 0){
 			var shtml = "";
 			console.log("data.udpt.length======"+data.udpt.length);
 			shtml += "<div class=\"content_bapo\">";

@@ -555,7 +555,7 @@ public class AuditLogController {
 	public HashMap<String, Object> detailPolicy(@RequestParam HashMap<String, Object> params, HttpSession session) {
 		
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
-		//System.out.println("logService.udptList---> "+logService.udptList(params).get(0));
+
 		try {
 			jsonObject.put("udpt", logService.udptList(params));
 			jsonObject.put("program", logService.programList(params));
