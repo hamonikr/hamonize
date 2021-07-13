@@ -80,8 +80,6 @@ public class CurlController {
 		System.out.println("=============setpcinfo================");
 		
 		int retVal = 0;
-		
-		System.out.println("aaaaaa");
 	    try {
 
 	        JSONParser jsonParser = new JSONParser();
@@ -98,25 +96,24 @@ public class CurlController {
 	        for(int i=0 ; i<hmdArray.size() ; i++){
 	            JSONObject tempObj = (JSONObject) hmdArray.get(i);
 	        	
-	            hdVo.setPc_uuid(tempObj.get("uuid").toString());
-	            hdVo.setPc_cpu(tempObj.get("cpuid").toString().trim());
-	            hdVo.setPc_disk_id(tempObj.get("hddid").toString().trim());
-	            hdVo.setPc_disk(tempObj.get("hddinfo").toString().trim());
-	            hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
-	            hdVo.setPc_ip(tempObj.get("ipaddr").toString().trim());
-	            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString().trim());
-	            hdVo.setPc_hostname(tempObj.get("hostname").toString());
 	            hdVo.setPc_os(tempObj.get("pcos").toString().trim());
 	            hdVo.setPc_memory(tempObj.get("memory").toString().trim() +"G");
+	            hdVo.setPc_cpu(tempObj.get("cpuid").toString().trim());
+	            hdVo.setPc_disk(tempObj.get("hddinfo").toString().trim());
+	            hdVo.setPc_disk_id(tempObj.get("hddid").toString().trim());
+	            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString().trim());
+				hdVo.setPc_uuid(tempObj.get("uuid").toString());
+				hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
 	            hdVo.setDeptname(tempObj.get("deptname").toString());	// 부서이름
-	            hdVo.setPcname(tempObj.get("hostname").toString());	// pc cn
-	            hdVo.setSabun(tempObj.get("sabun").toString());	// 사번
-				hdVo.setUsername(tempObj.get("username").toString());	// 사용자 이름
-	            	
-	            
+
+				hdVo.setSabun(tempObj.get("sabun").toString());	// 사번
+				hdVo.setPc_hostname(tempObj.get("hostname").toString().replaceAll(System.getProperty("line.separator"),""));
+	            hdVo.setPc_ip(tempObj.get("ipaddr").toString());
+				hdVo.setUsername(tempObj.get("username").toString());	// 사용자 이름	
+            
 	       }
-  		    System.out.println("user 조직이름 >> "+ hdVo.getDeptname());
-		   
+
+  		    System.out.println("user 조직이름 >> "+ hdVo.getDeptname());		   
 			System.out.println("user 사번 >> "+ hdVo.getSabun());
 			System.out.println("user 이름 >> "+ hdVo.getUsername());
 
@@ -127,24 +124,23 @@ public class CurlController {
 			System.out.println("orgNumChkVo===="+orgNumChkVo);
 			
 			LDAPConnection con = new LDAPConnection();
-		   	con.connection(gs.getUrl(), gs.getLdapPassword());
 			
 			hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
 			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
 		    String dn ="";
-		    OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
-			
-		   hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+
+			OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+			hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+
 			if(DuplserverPc >= 1 ) {
 				retVal = pcMangrMapper.updatePcinfo(hdVo);
 				System.out.println("update retVal=== " + retVal);
 			}else {
 				retVal = pcMangrMapper.inserPcInfo(hdVo);
 				System.out.println("insert retVal=== " + retVal);
-				con.addPC(hdVo, sabunChkVo, dn);
-
-				}
-	        
+				con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+				con.addPC(hdVo, sabunChkVo);
+			}
 	        
 	    }catch(Exception e) {
 	        System.out.println("Error reading JSON string: " + e.toString());
@@ -382,7 +378,6 @@ public class CurlController {
             
     		
 	        int insertRetVal = packageInfoMapper.insertPackageInfo(insertDataMap);
-	    //  System.out.println("insertRetVal===="+insertRetVal);
     		
 	        
 	    }catch(Exception e) {

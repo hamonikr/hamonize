@@ -40,7 +40,7 @@ public interface IOrgMapper {
 	// 하위 부문/부서 all_org_nm 업데이트
 	public int allOrgNmUpdate(OrgVo gvo);
 
-	public OrgVo getAllOrgNm(PcMangrVo vo);
+	public OrgVo getAllOrgNm(int seq);
 
     public int deleteChildUser(OrgVo orgVo);
 }
