@@ -1,5 +1,0 @@
-# Allow any user without requiring user authentication.
-
-Cmnd_Alias USBALERT = /usr/local/bin/usb-unauthorized, /usr/bin/notify-send
-
-ALL ALL = NOPASSWD:USBALERT

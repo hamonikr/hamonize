@@ -57,7 +57,7 @@ poller.onPoll(() => {
 	
 	getProgrmDataCall( uuidVal ); // o
 	getDeviceDataCall( uuidVal ); // o 
-	getNxssDataCall( uuidVal ); // 0
+	// getNxssDataCall( uuidVal ); // 0
 	getUpdtDataCall( uuidVal );	// o
 	getRecoveryDataCall( uuidVal );
 	getFirewallDataCall( uuidVal ); // o
@@ -506,7 +506,8 @@ function fnProgrmJob(retData){
 	log.info("//====================================");
 
 	var exec = require('child_process').exec;
-	exec('sudo sh /usr/share/hamonize-agent/shell/progrmjob.sh  ', function (err, stdout, stderr) {
+	// exec('sudo sh /usr/share/hamonize-agent/shell/progrmjob.sh  ', function (err, stdout, stderr) {
+	exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
 		log.info('//=====progrm  stdout: ' + stdout);
 		log.info('//=====progrm stderr: ' + stderr);
 
