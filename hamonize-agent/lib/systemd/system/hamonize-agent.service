@@ -23,5 +23,3 @@ SyslogIdentifier=hamonize-agent
 
 [Install]
 WantedBy=multi-user.target
-
-

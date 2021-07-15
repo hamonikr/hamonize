@@ -2,24 +2,13 @@
 systemctl stop hamonize-agent
 systemctl disable hamonize-agent
 #systemctl daemon-reload
-sudo rm -r /etc/systemd/system/hamonize-agent.service
+sudo rm -r /lib/systemd/system/hamonize-agent.service
 
 systemctl daemon-reload
 
 # remove device contol
-cd /usr/share/hamonize-agent/usb-lockdown
-make clean
+# cd /usr/share/hamonize-agent/usb-lockdown
+# make clean
 
 # delete hamonize-agent folder
 rm -fr /usr/share/hamonize-agent
-
-
-#cd /usr/share/hamonize-agent/
-
-#if [ -d node_modules ]; then 
-#	rm -r node_modules
-#fi
-
-#if [ -e *.log ]; then
-#	rm *.log
-#fi

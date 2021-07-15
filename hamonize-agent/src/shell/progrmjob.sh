@@ -23,7 +23,7 @@ EC=0
 INSRET=""
 OLD_IFS=$IFS;
 IFS=,;
-for I in $UPDT_INS;
+for I in $UPDT_INS; 
 do
 
 
@@ -96,7 +96,7 @@ do
 
 
 
-        DELRET=$DELRET"{\"uuid\":\"${UUID}\",\"hostname\":\"${HOSTNAME}\",\"status\":\"del\",\"status_yn\":\"Y\",\"progrmname\":\"${I}\",\"datetime\":\"${DATETIME}\"}"
+        DELRET=$DELRET"{\"uuid\":\"${UUID}\",\"hostname\":\"${HOSTNAME}\",\"status\":\"del\",\"status_yn\":\"N\",\"progrmname\":\"${I}\",\"datetime\":\"${DATETIME}\"}"
 
         if [ "$EC" -eq "$#" ]; then
                 DELRET=$DELRET","
