@@ -721,11 +721,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The import of CSV files is possible through the command line interface. For more information, see the &lt;a href=&quot;https://docs.hamonize.io/en/latest/admin/cli.html#network-object-directory&quot;&gt;online documentation&lt;/a&gt;.</source>
+        <source>New location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New location</source>
+        <source>The import of CSV files is possible through the command line interface. For more information, see the &lt;a href=&quot;https://docs.veyon.io/en/latest/admin/cli.html#network-object-directory&quot;&gt;online documentation&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1029,15 +1029,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Hamonize Server unreachable or not running</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>[no user]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Veyon Server unreachable or not running</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2471,10 +2471,6 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Basic LDAP/AD support for Hamonize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%1 (load computers and locations from LDAP/AD)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2496,6 +2492,10 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Configuring %1 as base DN and disabling naming context queries.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Basic LDAP/AD support for Veyon</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3578,11 +3578,11 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Interactive shell and script execution for Hamonize Control</source>
+        <source>Commands for shell functionalities</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Commands for shell functionalities</source>
+        <source>Interactive shell and script execution for Veyon Control</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3657,11 +3657,11 @@ Typically this is required to support terminal servers.</source>
 <context>
     <name>TestingCommandLinePlugin</name>
     <message>
-        <source>Test internal Hamonize components and functions</source>
+        <source>Commands for testing internal components and functions of Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Commands for testing internal components and functions of Hamonize</source>
+        <source>Test internal Veyon components and functions</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3792,7 +3792,7 @@ Typically this is required to support terminal servers.</source>
     </message>
 </context>
 <context>
-    <name>HamonizeCore</name>
+    <name>VeyonCore</name>
     <message>
         <source>[OK]</source>
         <translation type="unfinished"></translation>
@@ -3806,10 +3806,6 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Available commands:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Invalid arguments given</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3818,7 +3814,15 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Plugin not licensed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Unknown result!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Available commands:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3830,11 +3834,11 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Plugin not licensed</source>
+        <source>INFO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>INFO</source>
+        <source>WARNING</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3853,15 +3857,11 @@ Typically this is required to support terminal servers.</source>
         <source>EXAMPLES</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>WARNING</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
-    <name>HamonizeServiceControl</name>
+    <name>VeyonServiceControl</name>
     <message>
-        <source>Hamonize Service</source>
+        <source>Veyon Service</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

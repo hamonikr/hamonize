@@ -726,12 +726,12 @@ The public key is used on client computers to authenticate incoming connection r
         <translation>선택한 위치 삭제</translation>
     </message>
     <message>
-        <source>The import of CSV files is possible through the command line interface. For more information, see the &lt;a href=&quot;https://docs.hamonize.io/en/latest/admin/cli.html#network-object-directory&quot;&gt;online documentation&lt;/a&gt;.</source>
-        <translation>CSV 화일 불러오기는 커맨드라인 인터페이스로 가능합니다.  자세한 정보는, 다음 참조 &lt;a href=&quot;https://docs.hamonize.io/en/latest/admin/cli.html#network-object-directory&quot;&gt;온라인 문서&lt;/a&gt;.</translation>
-    </message>
-    <message>
         <source>New location</source>
         <translation>새로운 위치</translation>
+    </message>
+    <message>
+        <source>The import of CSV files is possible through the command line interface. For more information, see the &lt;a href=&quot;https://docs.veyon.io/en/latest/admin/cli.html#network-object-directory&quot;&gt;online documentation&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1034,15 +1034,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation>장소: %1</translation>
     </message>
     <message>
-        <source>Hamonize Server unreachable or not running</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>[no user]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Veyon Server unreachable or not running</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2493,10 +2493,6 @@ The public key is used on client computers to authenticate incoming connection r
         <translation>LDAP/AD 통합을 설정하거나 제어하는 명령어</translation>
     </message>
     <message>
-        <source>Basic LDAP/AD support for Hamonize</source>
-        <translation>Hamonize 기본 LDAP/AD 지원</translation>
-    </message>
-    <message>
         <source>%1 (load computers and locations from LDAP/AD)</source>
         <translation>%1 (LDAP/AD에서 컴퓨터와 위치를 가져옴)</translation>
     </message>
@@ -2519,6 +2515,10 @@ The public key is used on client computers to authenticate incoming connection r
     <message>
         <source>Configuring %1 as base DN and disabling naming context queries.</source>
         <translation>%1 을 기본 DN 으로 설정하고 네이밍 컨텍스트 조회를 비활성화 함.</translation>
+    </message>
+    <message>
+        <source>Basic LDAP/AD support for Veyon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3603,12 +3603,12 @@ Typically this is required to support terminal servers.</source>
         <translation>화일 &quot;%1&quot; 이 없음!</translation>
     </message>
     <message>
-        <source>Interactive shell and script execution for Hamonize Control</source>
-        <translation>Hamonize 제어용 대화형 쉘과 스크립트 실행</translation>
-    </message>
-    <message>
         <source>Commands for shell functionalities</source>
         <translation>쉘 기능용 명령어들</translation>
+    </message>
+    <message>
+        <source>Interactive shell and script execution for Veyon Control</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3682,12 +3682,12 @@ Typically this is required to support terminal servers.</source>
 <context>
     <name>TestingCommandLinePlugin</name>
     <message>
-        <source>Test internal Hamonize components and functions</source>
-        <translation>내부 Hamonize 컴포넌트 및 기능을 시험</translation>
-    </message>
-    <message>
         <source>Commands for testing internal components and functions of Hamonize</source>
         <translation>Hamonize의 내부 컴포넌트 및 기능을 시험하는 명령어들</translation>
+    </message>
+    <message>
+        <source>Test internal Veyon components and functions</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3817,77 +3817,77 @@ Typically this is required to support terminal servers.</source>
     </message>
 </context>
 <context>
-    <name>HamonizeCore</name>
+    <name>VeyonCore</name>
     <message>
         <source>[OK]</source>
-        <translation>[OK]</translation>
+        <translation type="unfinished">[OK]</translation>
     </message>
     <message>
         <source>[FAIL]</source>
-        <translation>[실패]</translation>
+        <translation type="unfinished">[실패]</translation>
     </message>
     <message>
         <source>Invalid command!</source>
-        <translation>잘못된 명령어</translation>
-    </message>
-    <message>
-        <source>Available commands:</source>
-        <translation>사용가능한 명령어:</translation>
+        <translation type="unfinished">잘못된 명령어</translation>
     </message>
     <message>
         <source>Invalid arguments given</source>
-        <translation>인자가 잘못됨</translation>
+        <translation type="unfinished">인자가 잘못됨</translation>
     </message>
     <message>
         <source>Not enough arguments given - use &quot;%1 help&quot; for more information</source>
-        <translation>필수 인자 미입력 - 자세한 정보는 %1 HELP를 사용하세요</translation>
-    </message>
-    <message>
-        <source>Unknown result!</source>
-        <translation>알수 없는 결과!</translation>
-    </message>
-    <message>
-        <source>Available modules:</source>
-        <translation>사용가능한 모듈</translation>
-    </message>
-    <message>
-        <source>No module specified or module not found - available modules are:</source>
-        <translation>모듈이 지정되지 않았거나 찾을 수 없음 - 사용가능한 모듈들은:</translation>
+        <translation type="unfinished">필수 인자 미입력 - 자세한 정보는 %1 HELP를 사용하세요</translation>
     </message>
     <message>
         <source>Plugin not licensed</source>
-        <translation>플러그인 라이센스 안됨</translation>
+        <translation type="unfinished">플러그인 라이센스 안됨</translation>
+    </message>
+    <message>
+        <source>Unknown result!</source>
+        <translation type="unfinished">알수 없는 결과!</translation>
+    </message>
+    <message>
+        <source>Available commands:</source>
+        <translation type="unfinished">사용가능한 명령어:</translation>
+    </message>
+    <message>
+        <source>Available modules:</source>
+        <translation type="unfinished">사용가능한 모듈</translation>
+    </message>
+    <message>
+        <source>No module specified or module not found - available modules are:</source>
+        <translation type="unfinished">모듈이 지정되지 않았거나 찾을 수 없음 - 사용가능한 모듈들은:</translation>
     </message>
     <message>
         <source>INFO</source>
-        <translation>정보</translation>
-    </message>
-    <message>
-        <source>ERROR</source>
-        <translation>에러</translation>
-    </message>
-    <message>
-        <source>USAGE</source>
-        <translation>사용법</translation>
-    </message>
-    <message>
-        <source>DESCRIPTION</source>
-        <translation>설명</translation>
-    </message>
-    <message>
-        <source>EXAMPLES</source>
-        <translation>예제</translation>
+        <translation type="unfinished">정보</translation>
     </message>
     <message>
         <source>WARNING</source>
-        <translation>경고</translation>
+        <translation type="unfinished">경고</translation>
+    </message>
+    <message>
+        <source>ERROR</source>
+        <translation type="unfinished">에러</translation>
+    </message>
+    <message>
+        <source>USAGE</source>
+        <translation type="unfinished">사용법</translation>
+    </message>
+    <message>
+        <source>DESCRIPTION</source>
+        <translation type="unfinished">설명</translation>
+    </message>
+    <message>
+        <source>EXAMPLES</source>
+        <translation type="unfinished">예제</translation>
     </message>
 </context>
 <context>
-    <name>HamonizeServiceControl</name>
+    <name>VeyonServiceControl</name>
     <message>
-        <source>Hamonize Service</source>
-        <translation>Hamonize Service</translation>
+        <source>Veyon Service</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
