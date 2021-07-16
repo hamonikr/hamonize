@@ -1,7 +1,7 @@
 /*
  * LdapDirectory.h - class representing the LDAP directory and providing access to directory entries
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,17 +25,18 @@
 #pragma once
 
 #include "LdapClient.h"
+#include "LdapCommon.h"
 #include "VeyonCore.h"
 
 class LdapConfiguration;
 class LdapClient;
 
-class LdapDirectory : public QObject
+class LDAP_COMMON_EXPORT LdapDirectory : public QObject
 {
 	Q_OBJECT
 public:
-	LdapDirectory( const LdapConfiguration& configuration, QObject* parent = nullptr );
-	~LdapDirectory() = default;
+	explicit LdapDirectory( const LdapConfiguration& configuration, QObject* parent = nullptr );
+	~LdapDirectory() override = default;
 
 	const QString& configInstanceId() const;
 
@@ -49,16 +50,21 @@ public:
 		return m_client;
 	}
 
+	QString usersDn();
+	QString groupsDn();
+	QString computersDn();
+	QString computerGroupsDn();
+
 	void disableAttributes();
 	void disableFilters();
 
-	QStringList users( const QString& filterValue = QString() );
-	QStringList groups( const QString& filterValue = QString() );
-	QStringList userGroups( const QString& filterValue = QString() );
-	QStringList computersByDisplayName( const QString& filterValue = QString() );
-	QStringList computersByHostName( const QString& filterValue = QString() );
-	QStringList computerGroups( const QString& filterValue = QString() );
-	QStringList computerLocations( const QString& filterValue = QString() );
+	QStringList users( const QString& filterValue = {} );
+	QStringList groups( const QString& filterValue = {} );
+	QStringList userGroups( const QString& filterValue = {} );
+	QStringList computersByDisplayName( const QString& filterValue = {} );
+	QStringList computersByHostName( const QString& filterValue = {} );
+	QStringList computerGroups( const QString& filterValue = {} );
+	QStringList computerLocations( const QString& filterValue = {} );
 
 	QStringList groupMembers( const QString& groupDn );
 	QStringList groupsOfUser( const QString& userDn );
@@ -76,11 +82,6 @@ public:
 
 	QString hostToLdapFormat( const QString& host );
 	QString computerObjectFromHost( const QString& host );
-
-	const QString& computersDn() const
-	{
-		return m_computersDn;
-	}
 
 	const QString& computersFilter() const
 	{

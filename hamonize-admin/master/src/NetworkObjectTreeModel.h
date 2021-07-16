@@ -1,7 +1,7 @@
 /*
  * NetworkObjectTreeModel.h - data model returning hierarchically grouped network objects
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,7 +32,7 @@ class NetworkObjectTreeModel : public NetworkObjectModel
 {
 	Q_OBJECT
 public:
-	NetworkObjectTreeModel( NetworkObjectDirectory* directory, QObject *parent = nullptr);
+	explicit NetworkObjectTreeModel( NetworkObjectDirectory* directory, QObject *parent = nullptr);
 
 	QModelIndex index( int row, int column,
 					   const QModelIndex& parent = QModelIndex() ) const override;

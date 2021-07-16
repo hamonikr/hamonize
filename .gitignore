@@ -10,3 +10,9 @@ plugins/extra
 build/
 build-win/
 b/
+hamonize-admin/.vagrant/*
+hamonize-admin/.DS_Store
+hamonize-admin/svg
+hamonize-admin/Makefile
+hamonize-admin/plugins/addons
+hamonize-admin/plugins/extra

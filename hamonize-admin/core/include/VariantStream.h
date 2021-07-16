@@ -1,7 +1,7 @@
 /*
  * VariantStream.h - read/write QVariant objects to/from QIODevice
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,7 +31,7 @@
 class VEYON_CORE_EXPORT VariantStream
 {
 public:
-	VariantStream( QIODevice* ioDevice );
+	explicit VariantStream( QIODevice* ioDevice );
 
 	QVariant read(); // Flawfinder: ignore
 

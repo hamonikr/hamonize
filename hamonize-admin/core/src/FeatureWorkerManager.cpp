@@ -1,7 +1,7 @@
 /*
  * FeatureWorkerManager.cpp - class for managing feature worker instances
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -41,7 +41,8 @@ FeatureWorkerManager::FeatureWorkerManager( VeyonServerInterface& server, Featur
 	QObject( parent ),
 	m_server( server ),
 	m_featureManager( featureManager ),
-	m_tcpServer( this )
+	m_tcpServer( this ),
+	m_workersMutex( QMutex::Recursive )
 {
 	connect( &m_tcpServer, &QTcpServer::newConnection,
 			 this, &FeatureWorkerManager::acceptConnection );
@@ -67,91 +68,108 @@ FeatureWorkerManager::~FeatureWorkerManager()
 	// properly shutdown all worker processes
 	while( m_workers.isEmpty() == false )
 	{
-		stopWorker( Feature( m_workers.firstKey() ) );
+		stopWorker( m_workers.firstKey() );
 	}
 }
 
 
 
-void FeatureWorkerManager::startWorker( const Feature& feature, WorkerProcessMode workerProcessMode )
+bool FeatureWorkerManager::startManagedSystemWorker( Feature::Uid featureUid )
 {
-    vInfo() << "hihoon: startWarker DC190609-224359";
-
-    if( thread() != QThread::currentThread() )
+	if( thread() != QThread::currentThread() )
 	{
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-		QMetaObject::invokeMethod( this, [=]() { startWorker( feature, workerProcessMode ); }, Qt::BlockingQueuedConnection );
-#else
-		QMetaObject::invokeMethod( this, "startWorker", Qt::BlockingQueuedConnection,
-								   Q_ARG( Feature, feature ),
-								   Q_ARG( WorkerProcessMode, workerProcessMode ) );
-#endif
-        vDebug() << " startWorker invoked";
-
-        return;
+		vCritical() << "thread mismatch for feature" << featureUid;
+		return false;
 	}
 
-    vDebug() << "currentThread NOT EQUAL";
-
-    stopWorker( feature );
-
-	const auto featureUid = feature.uid().toString();
+	stopWorker( featureUid );
 
 	Worker worker;
 
-	if( workerProcessMode == ManagedSystemProcess )
+	worker.process = new QProcess;
+	worker.process->setProcessChannelMode( QProcess::ForwardedChannels );
+
+	connect( worker.process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+			 worker.process, &QProcess::deleteLater );
+
+	vDebug() << "Starting managed system worker for feature" << featureUid;
+	if( qEnvironmentVariableIsSet("VEYON_VALGRIND_WORKERS") )
 	{
-		worker.process = new QProcess;
-		worker.process->setProcessChannelMode( QProcess::ForwardedChannels );
-
-		connect( worker.process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-				 worker.process, &QProcess::deleteLater );
-
-		vDebug() << "Starting worker (managed system process) for feature" << feature.name() << featureUid;
-		worker.process->start( VeyonCore::filesystem().workerFilePath(), { featureUid } );
+		worker.process->start( QStringLiteral("valgrind"),
+							   { QStringLiteral("--error-limit=no"),
+								 QStringLiteral("--leak-check=full"),
+								 QStringLiteral("--show-leak-kinds=all"),
+								 QStringLiteral("--log-file=valgrind-%1.log").arg(VeyonCore::formattedUuid(featureUid)),
+								 VeyonCore::filesystem().workerFilePath(), featureUid.toString() } );
 	}
 	else
 	{
-		vDebug() << "Starting worker (unmanaged session process) for feature" << feature.name() << featureUid;
-		VeyonCore::platform().coreFunctions().runProgramAsUser( VeyonCore::filesystem().workerFilePath(), { featureUid },
-																VeyonCore::platform().userFunctions().currentUser(),
-																VeyonCore::platform().coreFunctions().activeDesktopName() );
+		worker.process->start( VeyonCore::filesystem().workerFilePath(), { featureUid.toString() } );
 	}
 
 	m_workersMutex.lock();
-	m_workers[feature.uid()] = worker;
+	m_workers[featureUid] = worker;
 	m_workersMutex.unlock();
+
+	return true;
 }
 
 
 
-void FeatureWorkerManager::stopWorker( const Feature &feature )
+bool FeatureWorkerManager::startUnmanagedSessionWorker( Feature::Uid featureUid )
 {
-    vInfo() << "hihoon: stopWarker DC190609-224450";
-
 	if( thread() != QThread::currentThread() )
 	{
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-		QMetaObject::invokeMethod( this, [=]() { stopWorker( feature ); }, Qt::BlockingQueuedConnection );
-#else
-		QMetaObject::invokeMethod( this, "stopWorker", Qt::BlockingQueuedConnection,
-								   Q_ARG( Feature, feature ) );
-#endif
-        vDebug() << " stopWorker invoked";
-
-        return;
+		vCritical() << "thread mismatch for feature" << featureUid;
+		return false;
 	}
 
-    vDebug() << "currentThread NOT EQUAL";
+	stopWorker( featureUid );
+
+	Worker worker;
+
+	vDebug() << "Starting worker (unmanaged session process) for feature" << featureUid;
+
+	const auto currentUser = VeyonCore::platform().userFunctions().currentUser();
+	if( currentUser.isEmpty() )
+	{
+		vDebug() << "could not determine current user - probably a console session with logon screen";
+		return false;
+	}
+
+	const auto ret = VeyonCore::platform().coreFunctions().
+					 runProgramAsUser( VeyonCore::filesystem().workerFilePath(), { featureUid.toString() },
+									   currentUser,
+									   VeyonCore::platform().coreFunctions().activeDesktopName() );
+	if( ret == false )
+	{
+		return false;
+	}
 
 	m_workersMutex.lock();
+	m_workers[featureUid] = worker;
+	m_workersMutex.unlock();
 
-	if( m_workers.contains( feature.uid() ) )
+	return true;
+}
+
+
+
+bool FeatureWorkerManager::stopWorker( Feature::Uid featureUid )
+{
+	if( thread() != QThread::currentThread() )
 	{
-		vDebug() << "Stopping worker for feature" << feature.name() << feature.uid();
+		vCritical() << "thread mismatch for feature" << featureUid;
+		return false;
+	}
 
-		auto& worker = m_workers[feature.uid()];
+	QMutexLocker locker( &m_workersMutex );
+
+	if( m_workers.contains( featureUid ) )
+	{
+		vDebug() << "Stopping worker for feature" << featureUid;
+
+		auto& worker = m_workers[featureUid];
 
 		if( worker.socket )
 		{
@@ -171,34 +189,49 @@ void FeatureWorkerManager::stopWorker( const Feature &feature )
 			killTimer->start( 5000 );
 		}
 
-		m_workers.remove( feature.uid() );
-        vDebug() << "m_workers.remove (" << feature.uid() << ")";
+		m_workers.remove( featureUid );
 	}
 
-	m_workersMutex.unlock();
+	return false;
 }
 
 
 
-void FeatureWorkerManager::sendMessage( const FeatureMessage& message )
+void FeatureWorkerManager::sendMessageToManagedSystemWorker( const FeatureMessage& message )
 {
-    vDebug() << m_workers.size() << message.featureUid() << message.command() << message.arguments();
-	m_workersMutex.lock();
-
-	if( m_workers.contains( message.featureUid() ) )
+	if( isWorkerRunning( message.featureUid() ) == false &&
+		startManagedSystemWorker( message.featureUid() ) == false )
 	{
-		m_workers[message.featureUid()].pendingMessages.append( message );
+		vCritical() << "could not start managed system worker";
+		return;
 	}
 
-	m_workersMutex.unlock();
+	sendMessage( message );
+
 }
 
 
 
-bool FeatureWorkerManager::isWorkerRunning( const Feature& feature )
+void FeatureWorkerManager::sendMessageToUnmanagedSessionWorker( const FeatureMessage& message )
+{
+	if( isWorkerRunning( message.featureUid() ) == false &&
+		startUnmanagedSessionWorker( message.featureUid() ) == false )
+	{
+		vDebug() << "User session likely not yet available - retrying worker start";
+		QTimer::singleShot( UnmanagedSessionProcessRetryInterval, this,
+							[=]() { sendMessageToUnmanagedSessionWorker( message ); } );
+		return;
+	}
+
+	sendMessage( message );
+}
+
+
+
+bool FeatureWorkerManager::isWorkerRunning( Feature::Uid featureUid )
 {
 	QMutexLocker locker( &m_workersMutex );
-	return m_workers.contains( feature.uid() );
+	return m_workers.contains( featureUid );
 }
 
 
@@ -207,15 +240,7 @@ FeatureUidList FeatureWorkerManager::runningWorkers()
 {
 	QMutexLocker locker( &m_workersMutex );
 
-	FeatureUidList featureUidList;
-	featureUidList.reserve( m_workers.size() );
-
-	for( auto it = m_workers.begin(); it != m_workers.end(); ++it )
-	{
-		featureUidList.append( it.key().toString() );
-	}
-
-	return featureUidList;
+	return m_workers.keys();
 }
 
 
@@ -241,10 +266,6 @@ void FeatureWorkerManager::processConnection( QTcpSocket* socket )
 	FeatureMessage message;
 	message.receive( socket );
 
-    vDebug() << "message.featureUid() : " << message.featureUid();
-    vDebug() << "message.command()    : " << message.command();
-    vDebug() << "message.arguments()  : " << message.arguments();
-
 	m_workersMutex.lock();
 
 	// set socket information
@@ -253,7 +274,7 @@ void FeatureWorkerManager::processConnection( QTcpSocket* socket )
 		if( m_workers[message.featureUid()].socket.isNull() )
 		{
 			m_workers[message.featureUid()].socket = socket;
-            vDebug() << "Uid, socket : " << message.featureUid() << "," << socket;
+			sendPendingMessages();
 		}
 
 		m_workersMutex.unlock();
@@ -262,7 +283,6 @@ void FeatureWorkerManager::processConnection( QTcpSocket* socket )
 		{
 			m_featureManager.handleFeatureMessage( m_server, MessageContext( socket ), message );
 		}
-
 	}
 	else
 	{
@@ -276,21 +296,13 @@ void FeatureWorkerManager::processConnection( QTcpSocket* socket )
 
 void FeatureWorkerManager::closeConnection( QTcpSocket* socket )
 {
-    m_workersMutex.lock();
+	m_workersMutex.lock();
 
-//    if(m_workers.size() > 0)
-//    {
-//        if ( m_workers.find(Feature::Uid( "ccb535a2-1d24-4cc1-a709-8b47d2b2ac79" )).value().socket == socket  )
-//        {
-//            return;
-//        }
-//    }
-
-    for( auto it = m_workers.begin(); it != m_workers.end(); )
+	for( auto it = m_workers.begin(); it != m_workers.end(); )
 	{
 		if( it.value().socket == socket )
 		{
-            vDebug() << "removing worker after socket(" << socket << ") has been closed";
+			vDebug() << "removing worker after socket has been closed";
 			it = m_workers.erase( it );
 		}
 		else
@@ -306,10 +318,27 @@ void FeatureWorkerManager::closeConnection( QTcpSocket* socket )
 
 
 
+void FeatureWorkerManager::sendMessage( const FeatureMessage& message )
+{
+	m_workersMutex.lock();
+
+	if( m_workers.contains( message.featureUid() ) )
+	{
+		m_workers[message.featureUid()].pendingMessages.append( message );
+	}
+	else
+	{
+		vWarning() << "worker does not exist for feature" << message.featureUid();
+	}
+
+	m_workersMutex.unlock();
+}
+
+
+
 void FeatureWorkerManager::sendPendingMessages()
 {
-
-    m_workersMutex.lock();
+	m_workersMutex.lock();
 
 	for( auto it = m_workers.begin(); it != m_workers.end(); ++it )
 	{
@@ -317,9 +346,7 @@ void FeatureWorkerManager::sendPendingMessages()
 
 		while( worker.socket && worker.pendingMessages.isEmpty() == false )
 		{
-            vDebug() << "START";
-
-            worker.pendingMessages.first().send( worker.socket );
+			worker.pendingMessages.first().send( worker.socket );
 			worker.pendingMessages.removeFirst();
 		}
 	}

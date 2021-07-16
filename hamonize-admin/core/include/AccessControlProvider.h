@@ -1,7 +1,7 @@
 /*
  * AccessControlProvider.h - declaration of class AccessControlProvider
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,12 +33,11 @@ class NetworkObjectDirectory;
 class VEYON_CORE_EXPORT AccessControlProvider
 {
 public:
-	typedef enum AccessResults {
-		AccessDeny,
-		AccessAllow,
-		AccessToBeConfirmed,
-		AccessResultCount
-	} AccessResult;
+	enum class Access {
+		Deny,
+		Allow,
+		ToBeConfirmed,
+	} ;
 
 	AccessControlProvider();
 
@@ -46,8 +45,8 @@ public:
 	QStringList locations() const;
 	QStringList locationsOfComputer( const QString& computer ) const;
 
-	AccessResult checkAccess( const QString& accessingUser, const QString& accessingComputer,
-							  const QStringList& connectedUsers );
+	Access checkAccess( const QString& accessingUser, const QString& accessingComputer,
+						const QStringList& connectedUsers );
 
 	bool processAuthorizedGroups( const QString& accessingUser );
 

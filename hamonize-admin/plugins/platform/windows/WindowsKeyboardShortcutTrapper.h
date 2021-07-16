@@ -1,7 +1,7 @@
 /*
  * WindowsKeyboardShortcutTrapper.cpp - class for trapping shortcuts on Windows
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -46,7 +46,7 @@ private:
 	static QMutex s_refCntMutex;
 	static int s_refCnt;
 
-	bool m_enabled;
+	bool m_enabled{false};
 	QTimer m_pollTimer;
 
 } ;

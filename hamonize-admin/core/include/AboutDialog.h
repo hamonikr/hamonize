@@ -1,7 +1,7 @@
 /*
  * AboutDialog.h - declaration of AboutDialog class
  *
- * Copyright (c) 2011-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2011-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -37,10 +37,10 @@ class VEYON_CORE_EXPORT AboutDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	AboutDialog( QWidget *parent );
+	explicit AboutDialog( QWidget *parent );
 	~AboutDialog() override;
 
-private slots:
+private Q_SLOTS:
 	void openDonationWebsite();
 
 private:

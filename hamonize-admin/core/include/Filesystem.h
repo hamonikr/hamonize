@@ -1,7 +1,7 @@
 /*
  * Filesystem.h - filesystem related query and manipulation functions
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -28,8 +28,9 @@
 
 // clazy:excludeall=rule-of-three
 
-class VEYON_CORE_EXPORT Filesystem
+class VEYON_CORE_EXPORT Filesystem : public QObject
 {
+	Q_OBJECT
 public:
 	QString expandPath( QString path ) const;
 	QString shrinkPath( QString path ) const;
@@ -38,9 +39,12 @@ public:
 	QString privateKeyPath( const QString& name ) const;
 	QString publicKeyPath( const QString& name ) const;
 
+	QString screenshotDirectoryPath() const;
+
 	QString serverFilePath() const;
 	QString workerFilePath() const;
-    QString deskerFilePath() const;
 
+Q_SIGNALS:
+	void screenshotDirectoryModified();
 
 };

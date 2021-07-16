@@ -2,16 +2,15 @@
 !define COMP_NAME "Invesume Inc"
 !define WEB_SITE "https://www.invesume.com"
 !define VERSION "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@.@VERSION_BUILD@"
-!define COPYRIGHT "2004-2019 Invesume Inc / Tobias Junghans / Veyon Solutions"
+!define COPYRIGHT "2004-2021 Invesume Inc / Tobias Junghans"
 !define DESCRIPTION "Hamonize Installer"
-!define LICENSE_TXT "@CMAKE_SOURCE_DIR@/COPYING"
+!define LICENSE_TXT "COPYING"
 !define INSTALLER_NAME "hamonize-${VERSION}-@MINGW_PLATFORM@-setup.exe"
 !define MAIN_APP_EXE "hamonize-master.exe"
 !define INSTALL_TYPE "SetShellVarContext all"
 !define REG_ROOT "HKLM"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
 !define UNINSTALL_PATH "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
-!define PROGRAMDATA_PATH "C:\ProgramData\${APP_NAME}"
 
 ######################################################################
 
@@ -25,7 +24,7 @@ VIAddVersionKey "FileVersion"  "${VERSION}"
 
 ######################################################################
 
-SetCompressor /SOLID Lzma
+SetCompressor /SOLID lzma
 Name "${APP_NAME}"
 Caption "${APP_NAME} ${VERSION}"
 OutFile "${INSTALLER_NAME}"
@@ -33,7 +32,7 @@ BrandingText "${APP_NAME} ${VERSION}"
 XPStyle on
 InstallDirRegKey "${REG_ROOT}" "${REG_APP_PATH}" ""
 InstallDir "$PROGRAMFILES64\Hamonize"
-ShowInstDetails show
+ShowInstDetails hide
 RequestExecutionLevel admin
 
 ######################################################################
@@ -45,13 +44,13 @@ RequestExecutionLevel admin
 !define MUI_ABORTWARNING
 !define MUI_UNABORTWARNING
 
-!define MUI_WELCOMEFINISHPAGE_BITMAP "@CMAKE_SOURCE_DIR@/nsis/welcome-page.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP "@CMAKE_SOURCE_DIR@/nsis/welcome-page.bmp" 
+!define MUI_WELCOMEFINISHPAGE_BITMAP "nsis/welcome-page.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "nsis/welcome-page.bmp"
 
-!define MUI_ICON "@CMAKE_SOURCE_DIR@/nsis/installer.ico"
-!define MUI_UNICON "@CMAKE_SOURCE_DIR@/nsis/uninstaller.ico"
+!define MUI_ICON "nsis/installer.ico"
+!define MUI_UNICON "nsis/uninstaller.ico"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "@CMAKE_SOURCE_DIR@/nsis/header.bmp"
+!define MUI_HEADERIMAGE_BITMAP "nsis/header.bmp"
 !define MUI_HEADERIMAGE_RIGHT
 
 !define MUI_LANGDLL_REGISTRY_ROOT "${REG_ROOT}"
@@ -72,7 +71,7 @@ RequestExecutionLevel admin
 !define MUI_FINISHPAGE_RUN_TEXT "Run Hamonize Configurator now"
 !define MUI_FINISHPAGE_RUN_FUNCTION "RunConfigurator"
 !define MUI_FINISHPAGE_LINK "Support Hamonize project with a donation"
-!define MUI_FINISHPAGE_LINK_LOCATION "https://www.paypal.com/cgi-bin/webscr?item_name=Donation+to+Veyon+-+OpenSource+classroom+management&cmd=_donations&business=donate%40veyon.io"
+!define MUI_FINISHPAGE_LINK_LOCATION "https://www.paypal.com/cgi-bin/webscr?item_name=Donation+to+Hamonize+-+OpenSource+classroom+management&cmd=_donations&business=donate%40www.invesume.com"
 
 !insertmacro MUI_PAGE_FINISH
 
@@ -83,78 +82,67 @@ RequestExecutionLevel admin
 !insertmacro MUI_UNPAGE_FINISH
 
 !insertmacro MUI_LANGUAGE "English" ;first language is the default language
-#!insertmacro MUI_LANGUAGE "Afrikaans"
-#!insertmacro MUI_LANGUAGE "Albanian"
-#!insertmacro MUI_LANGUAGE "Arabic"
-#!insertmacro MUI_LANGUAGE "Basque"
-#!insertmacro MUI_LANGUAGE "Belarusian"
-#!insertmacro MUI_LANGUAGE "Bosnian"
-#!insertmacro MUI_LANGUAGE "Breton"
-#!insertmacro MUI_LANGUAGE "Bulgarian"
-#!insertmacro MUI_LANGUAGE "Catalan"
-#!insertmacro MUI_LANGUAGE "Croatian"
-#!insertmacro MUI_LANGUAGE "Czech"
-#!insertmacro MUI_LANGUAGE "Danish"
-#!insertmacro MUI_LANGUAGE "Dutch"
-#!insertmacro MUI_LANGUAGE "Esperanto"
-#!insertmacro MUI_LANGUAGE "Estonian"
-#!insertmacro MUI_LANGUAGE "Farsi"
-#!insertmacro MUI_LANGUAGE "Finnish"
-#!insertmacro MUI_LANGUAGE "French"
-#!insertmacro MUI_LANGUAGE "Galician"
+!insertmacro MUI_LANGUAGE "Afrikaans"
+!insertmacro MUI_LANGUAGE "Albanian"
+!insertmacro MUI_LANGUAGE "Arabic"
+!insertmacro MUI_LANGUAGE "Basque"
+!insertmacro MUI_LANGUAGE "Belarusian"
+!insertmacro MUI_LANGUAGE "Bosnian"
+!insertmacro MUI_LANGUAGE "Breton"
+!insertmacro MUI_LANGUAGE "Bulgarian"
+!insertmacro MUI_LANGUAGE "Catalan"
+!insertmacro MUI_LANGUAGE "Croatian"
+!insertmacro MUI_LANGUAGE "Czech"
+!insertmacro MUI_LANGUAGE "Danish"
+!insertmacro MUI_LANGUAGE "Dutch"
+!insertmacro MUI_LANGUAGE "Esperanto"
+!insertmacro MUI_LANGUAGE "Estonian"
+!insertmacro MUI_LANGUAGE "Farsi"
+!insertmacro MUI_LANGUAGE "Finnish"
+!insertmacro MUI_LANGUAGE "French"
+!insertmacro MUI_LANGUAGE "Galician"
 !insertmacro MUI_LANGUAGE "German"
-#!insertmacro MUI_LANGUAGE "Greek"
-#!insertmacro MUI_LANGUAGE "Hebrew"
-#!insertmacro MUI_LANGUAGE "Hungarian"
-#!insertmacro MUI_LANGUAGE "Icelandic"
-#!insertmacro MUI_LANGUAGE "Indonesian"
-#!insertmacro MUI_LANGUAGE "Irish"
-#!insertmacro MUI_LANGUAGE "Italian"
-#!insertmacro MUI_LANGUAGE "Japanese"
+!insertmacro MUI_LANGUAGE "Greek"
+!insertmacro MUI_LANGUAGE "Hebrew"
+!insertmacro MUI_LANGUAGE "Hungarian"
+!insertmacro MUI_LANGUAGE "Icelandic"
+!insertmacro MUI_LANGUAGE "Indonesian"
+!insertmacro MUI_LANGUAGE "Irish"
+!insertmacro MUI_LANGUAGE "Italian"
+!insertmacro MUI_LANGUAGE "Japanese"
 !insertmacro MUI_LANGUAGE "Korean"
-#!insertmacro MUI_LANGUAGE "Kurdish"
-#!insertmacro MUI_LANGUAGE "Latvian"
-#!insertmacro MUI_LANGUAGE "Lithuanian"
-#!insertmacro MUI_LANGUAGE "Luxembourgish"
-#!insertmacro MUI_LANGUAGE "Macedonian"
-#!insertmacro MUI_LANGUAGE "Malay"
-#!insertmacro MUI_LANGUAGE "Mongolian"
-#!insertmacro MUI_LANGUAGE "Norwegian"
-#!insertmacro MUI_LANGUAGE "NorwegianNynorsk"
-#!insertmacro MUI_LANGUAGE "Polish"
-#!insertmacro MUI_LANGUAGE "Portuguese"
-#!insertmacro MUI_LANGUAGE "PortugueseBR"
-#!insertmacro MUI_LANGUAGE "Romanian"
-#!insertmacro MUI_LANGUAGE "Russian"
-#!insertmacro MUI_LANGUAGE "Serbian"
-#!insertmacro MUI_LANGUAGE "SerbianLatin"
-#!insertmacro MUI_LANGUAGE "SimpChinese"
-#!insertmacro MUI_LANGUAGE "Slovak"
-#!insertmacro MUI_LANGUAGE "Slovenian"
-#!insertmacro MUI_LANGUAGE "Spanish"
-#!insertmacro MUI_LANGUAGE "SpanishInternational"
-#!insertmacro MUI_LANGUAGE "Swedish"
-#!insertmacro MUI_LANGUAGE "Thai"
-#!insertmacro MUI_LANGUAGE "TradChinese"
-#!insertmacro MUI_LANGUAGE "Turkish"
-#!insertmacro MUI_LANGUAGE "Ukrainian"
-#!insertmacro MUI_LANGUAGE "Uzbek"
-#!insertmacro MUI_LANGUAGE "Welsh"
+!insertmacro MUI_LANGUAGE "Kurdish"
+!insertmacro MUI_LANGUAGE "Latvian"
+!insertmacro MUI_LANGUAGE "Lithuanian"
+!insertmacro MUI_LANGUAGE "Luxembourgish"
+!insertmacro MUI_LANGUAGE "Macedonian"
+!insertmacro MUI_LANGUAGE "Malay"
+!insertmacro MUI_LANGUAGE "Mongolian"
+!insertmacro MUI_LANGUAGE "Norwegian"
+!insertmacro MUI_LANGUAGE "NorwegianNynorsk"
+!insertmacro MUI_LANGUAGE "Polish"
+!insertmacro MUI_LANGUAGE "Portuguese"
+!insertmacro MUI_LANGUAGE "PortugueseBR"
+!insertmacro MUI_LANGUAGE "Romanian"
+!insertmacro MUI_LANGUAGE "Russian"
+!insertmacro MUI_LANGUAGE "Serbian"
+!insertmacro MUI_LANGUAGE "SerbianLatin"
+!insertmacro MUI_LANGUAGE "SimpChinese"
+!insertmacro MUI_LANGUAGE "Slovak"
+!insertmacro MUI_LANGUAGE "Slovenian"
+!insertmacro MUI_LANGUAGE "Spanish"
+!insertmacro MUI_LANGUAGE "SpanishInternational"
+!insertmacro MUI_LANGUAGE "Swedish"
+!insertmacro MUI_LANGUAGE "Thai"
+!insertmacro MUI_LANGUAGE "TradChinese"
+!insertmacro MUI_LANGUAGE "Turkish"
+!insertmacro MUI_LANGUAGE "Ukrainian"
+!insertmacro MUI_LANGUAGE "Uzbek"
+!insertmacro MUI_LANGUAGE "Welsh"
 
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
 ######################################################################
-
-LangString DESC_SEC_SERVICE ${LANG_ENGLISH} "Hamonize service and common files required on all computers"
-LangString DESC_SEC_SERVICE ${LANG_GERMAN} "Hamonize-Dienst und gemeinsame Dateien, die auf allen Computern benötigt werden"
-LangString DESC_SEC_SERVICE ${LANG_KOREAN} "Hamonize service와 공통 파일은 모든 컴퓨터에서 필요합니다."
-LangString DESC_SEC_MASTER ${LANG_ENGLISH} "Master application for monitoring and controlling Hamonize client computers"
-LangString DESC_SEC_MASTER ${LANG_GERMAN} "Master-Applikation zum Beobachten und Steuern von Hamonize-Client-Computern"
-LangString DESC_SEC_MASTER ${LANG_KOREAN} "사용자 컴퓨터 모니터링과 관리하기위한 하모나이즈 Admin 프로그램"
-LangString DESC_SEC_INTERCEPTION ${LANG_ENGLISH} "Special input device driver required for intercepting keyboard shortcuts such as Ctrl+Alt+Del in screen lock mode"
-LangString DESC_SEC_INTERCEPTION ${LANG_GERMAN} "Spezieller Eingabegerätetreiber, der zum Abfangen von Tastenkombinationen wie Strg+Alt+Entf im Bildschirmsperr-Modus benötigt wird"
-LangString DESC_SEC_INTERCEPTION ${LANG_KOREAN} "Special input device driver required for intercepting keyboard shortcuts such as 로그인 시 Ctrl+Alt+Del 같은 특수 키조합 입력 장치를 사용할 수 있습니다."
-
 
 Section "Hamonize Service" SEC_SERVICE
 SectionIn RO
@@ -190,6 +178,9 @@ File "translations/*.qm"
 # QCA plugins
 SetOutPath "$INSTDIR\crypto"
 File "crypto/*.dll"
+# Qt image format plugin
+SetOutPath "$INSTDIR\imageformats"
+File "imageformats/qjpeg.dll"
 # Qt platform plugin
 SetOutPath "$INSTDIR\platforms"
 File "platforms/qwindows.dll"
@@ -213,7 +204,7 @@ ${EndIf}
 ExecWait '"$INSTDIR\hamonize-wcli.exe" service start'
 SectionEnd
 
-Section "Hamonize Admin" SEC_MASTER
+Section "Hamonize Master" SEC_MASTER
 ${INSTALL_TYPE}
 SetOutPath "$INSTDIR"
 File "hamonize-master.exe"
@@ -269,7 +260,7 @@ ${GetParameters} $R0
 ${GetOptions} $R0 "/NoStartMenuFolder" $R1
 ${If} ${Errors}
 CreateDirectory "$SMPROGRAMS\Hamonize"
-CreateShortCut "$SMPROGRAMS\Hamonize\Hamonize Configurator.lnk" "$INSTDIR\Hamonize-configurator.exe"
+CreateShortCut "$SMPROGRAMS\Hamonize\Hamonize Configurator.lnk" "$INSTDIR\hamonize-configurator.exe"
 CreateShortCut "$SMPROGRAMS\Hamonize\Uninstall Hamonize.lnk" "$INSTDIR\uninstall.exe"
 WriteIniStr "$INSTDIR\Hamonize website.url" "InternetShortcut" "URL" "${WEB_SITE}"
 CreateShortCut "$SMPROGRAMS\Hamonize\Hamonize Website.lnk" "$INSTDIR\Hamonize website.url"
@@ -307,6 +298,7 @@ Delete "$INSTDIR\*.dll"
 Delete "$INSTDIR\*.TXT"
 Delete "$INSTDIR\*.url"
 RmDir /r "$INSTDIR\crypto"
+RmDir /r "$INSTDIR\imageformats"
 RmDir /r "$INSTDIR\plugins"
 RmDir /r "$INSTDIR\platforms"
 RmDir /r "$INSTDIR\styles"
@@ -334,6 +326,13 @@ Function un.onInit
 FunctionEnd
 
 ######################################################################
+
+LangString DESC_SEC_SERVICE ${LANG_ENGLISH} "Hamonize service and common files required on all computers"
+LangString DESC_SEC_SERVICE ${LANG_GERMAN} "Hamonize-Dienst und gemeinsame Dateien, die auf allen Computern benötigt werden"
+LangString DESC_SEC_MASTER ${LANG_ENGLISH} "Master application for monitoring and controlling Hamonize client computers"
+LangString DESC_SEC_MASTER ${LANG_GERMAN} "Master-Applikation zum Beobachten und Steuern von Hamonize-Client-Computern"
+LangString DESC_SEC_INTERCEPTION ${LANG_ENGLISH} "Special input device driver required for intercepting keyboard shortcuts such as Ctrl+Alt+Del in screen lock mode"
+LangString DESC_SEC_INTERCEPTION ${LANG_GERMAN} "Spezieller Eingabegerätetreiber, der zum Abfangen von Tastenkombinationen wie Strg+Alt+Entf im Bildschirmsperr-Modus benötigt wird"
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SERVICE} $(DESC_SEC_SERVICE)

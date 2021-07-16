@@ -17,7 +17,7 @@
       <bool>false</bool>
      </property>
      <property name="placeholderText">
-      <string>e.g. Veyon</string>
+      <string>e.g. Hamonize</string>
      </property>
     </widget>
    </item>
@@ -51,7 +51,7 @@
    <item row="1" column="0" colspan="2">
     <widget class="QLineEdit" name="websiteLineEdit">
      <property name="placeholderText">
-      <string>e.g. www.veyon.io</string>
+      <string>e.g. www.hamonize.io</string>
      </property>
     </widget>
    </item>
@@ -84,6 +84,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>websiteLineEdit</tabstop>
+  <tabstop>rememberCheckBox</tabstop>
+  <tabstop>presetNameEdit</tabstop>
+ </tabstops>
  <resources>
   <include location="desktopservices.qrc"/>
  </resources>

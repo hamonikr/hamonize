@@ -1,7 +1,7 @@
 /*
  * PlatformServiceFunctions.h - interface class for platform plugins
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,12 +31,15 @@
 class PlatformServiceFunctions
 {
 public:
-	typedef enum StartModes {
-		StartModeDisabled,
-		StartModeManual,
-		StartModeAuto,
-		StartModeCount
-	} StartMode;
+	using ServiceEntryPoint = std::function<void(void)>;
+
+	enum class StartMode {
+		Disabled,
+		Manual,
+		Auto
+	} ;
+
+	virtual ~PlatformServiceFunctions() = default;
 
 	virtual QString veyonServiceName() const = 0;
 
@@ -48,7 +51,7 @@ public:
 						  StartMode startMode, const QString& displayName ) = 0;
 	virtual bool uninstall( const QString& name ) = 0;
 	virtual bool setStartMode( const QString& name, StartMode startMode ) = 0;
-	virtual bool runAsService( const QString& name, const std::function<void(void)>& serviceMain ) = 0;
+	virtual bool runAsService( const QString& name, const ServiceEntryPoint& serviceEntryPoint ) = 0;
 	virtual void manageServerInstances() = 0;
 
 };

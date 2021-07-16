@@ -1,7 +1,7 @@
 /*
  * TextMessageFeaturePlugin.cpp - implementation of TextMessageFeaturePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -38,7 +38,7 @@ TextMessageFeaturePlugin::TextMessageFeaturePlugin( QObject* parent ) :
 								   Feature::Action | Feature::AllComponents,
 								   Feature::Uid( "e75ae9c8-ac17-4d00-8f0d-019348346208" ),
 								   Feature::Uid(),
-								   tr( "Text message" ), QString(),
+								   tr( "Text message" ), {},
 								   tr( "Use this function to send a text message to all "
 									   "users e.g. to assign them new tasks." ),
 								   QStringLiteral(":/textmessage/dialog-information.png") ) ),
@@ -51,6 +51,33 @@ TextMessageFeaturePlugin::TextMessageFeaturePlugin( QObject* parent ) :
 const FeatureList &TextMessageFeaturePlugin::featureList() const
 {
 	return m_features;
+}
+
+
+
+bool TextMessageFeaturePlugin::controlFeature( Feature::Uid featureUid,
+											  Operation operation,
+											  const QVariantMap& arguments,
+											  const ComputerControlInterfaceList& computerControlInterfaces )
+{
+	if( operation != Operation::Start )
+	{
+		return false;
+	}
+
+	if( featureUid == m_textMessageFeature.uid() )
+	{
+		const auto text = arguments.value( argToString(Argument::Text) ).toString();
+		const auto icon = arguments.value( argToString(Argument::Icon) ).toInt();
+
+		sendFeatureMessage( FeatureMessage{ featureUid, ShowTextMessage }
+								.addArgument( Argument::Text, text )
+								.addArgument( Argument::Icon, icon ), computerControlInterfaces );
+
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -69,39 +96,17 @@ bool TextMessageFeaturePlugin::startFeature( VeyonMasterInterface& master, const
 
 	if( textMessage.isEmpty() == false )
 	{
-		FeatureMessage featureMessage( m_textMessageFeature.uid(), ShowTextMessage );
-		featureMessage.addArgument( MessageTextArgument, textMessage );
-		featureMessage.addArgument( MessageIcon, QMessageBox::Information );
-
-		sendFeatureMessage( featureMessage, computerControlInterfaces );
+		controlFeature( m_textMessageFeature.uid(), Operation::Start,
+						{
+							{ argToString(Argument::Text), textMessage },
+							{ argToString(Argument::Icon), QMessageBox::Information }
+						},
+						computerControlInterfaces );
 	}
 
 	return true;
 }
 
-
-
-bool TextMessageFeaturePlugin::stopFeature( VeyonMasterInterface& master, const Feature& feature,
-											const ComputerControlInterfaceList& computerControlInterfaces )
-{
-	Q_UNUSED(master);
-	Q_UNUSED(feature);
-	Q_UNUSED(computerControlInterfaces);
-
-	return false;
-}
-
-
-
-bool TextMessageFeaturePlugin::handleFeatureMessage( VeyonMasterInterface& master, const FeatureMessage& message,
-													 ComputerControlInterface::Pointer computerControlInterface )
-{
-	Q_UNUSED(master);
-	Q_UNUSED(message);
-	Q_UNUSED(computerControlInterface);
-
-	return false;
-}
 
 
 
@@ -114,11 +119,7 @@ bool TextMessageFeaturePlugin::handleFeatureMessage( VeyonServerInterface& serve
 	if( m_textMessageFeature.uid() == message.featureUid() )
 	{
 		// forward message to worker
-		if( server.featureWorkerManager().isWorkerRunning( m_textMessageFeature ) == false )
-		{
-			server.featureWorkerManager().startWorker( m_textMessageFeature, FeatureWorkerManager::UnmanagedSessionProcess );
-		}
-		server.featureWorkerManager().sendMessage( message );
+		server.featureWorkerManager().sendMessageToUnmanagedSessionWorker( message );
 
 		return true;
 	}
@@ -134,9 +135,9 @@ bool TextMessageFeaturePlugin::handleFeatureMessage( VeyonWorkerInterface& worke
 
 	if( message.featureUid() == m_textMessageFeature.uid() )
 	{
-		QMessageBox* messageBox = new QMessageBox( static_cast<QMessageBox::Icon>( message.argument( MessageIcon ).toInt() ),
+		QMessageBox* messageBox = new QMessageBox( static_cast<QMessageBox::Icon>( message.argument( Argument::Icon ).toInt() ),
 												   tr( "Message from teacher" ),
-												   message.argument( MessageTextArgument ).toString() );
+												   message.argument( Argument::Text ).toString() );
 		messageBox->show();
 
 		connect( messageBox, &QMessageBox::accepted, messageBox, &QMessageBox::deleteLater );

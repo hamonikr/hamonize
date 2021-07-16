@@ -1,7 +1,7 @@
 /*
  * WindowsServiceFunctions.cpp - implementation of WindowsServiceFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -29,7 +29,7 @@
 
 QString WindowsServiceFunctions::veyonServiceName() const
 {
-        return QStringLiteral("HamonizeService");
+	return QStringLiteral("VeyonService");
 }
 
 
@@ -63,10 +63,10 @@ bool WindowsServiceFunctions::stop( const QString& name )
 
 
 bool WindowsServiceFunctions::install( const QString& name, const QString& filePath,
-                                       StartMode startMode, const QString& displayName )
+									   StartMode startMode, const QString& displayName )
 {
 	return WindowsServiceControl( name ).install( filePath, displayName ) &&
-	        setStartMode( name, startMode );
+			setStartMode( name, startMode );
 }
 
 
@@ -85,9 +85,9 @@ bool WindowsServiceFunctions::setStartMode( const QString& name, PlatformService
 
 
 
-bool WindowsServiceFunctions::runAsService( const QString& name, const std::function<void(void)>& serviceMain )
+bool WindowsServiceFunctions::runAsService( const QString& name, const ServiceEntryPoint& serviceEntryPoint )
 {
-	WindowsServiceCore windowsServiceCore( name, serviceMain );
+	WindowsServiceCore windowsServiceCore( name, serviceEntryPoint );
 	return windowsServiceCore.runAsService();
 }
 
@@ -104,8 +104,8 @@ int WindowsServiceFunctions::windowsServiceStartType( PlatformServiceFunctions::
 {
 	switch( startMode )
 	{
-	case StartModeAuto: return SERVICE_AUTO_START;
-	case StartModeManual: return SERVICE_DEMAND_START;
+	case StartMode::Auto: return SERVICE_AUTO_START;
+	case StartMode::Manual: return SERVICE_DEMAND_START;
 	default: break;
 	}
 

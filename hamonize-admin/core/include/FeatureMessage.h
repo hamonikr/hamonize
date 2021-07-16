@@ -1,7 +1,7 @@
 /*
  * FeatureMessage.h - header for a message encapsulation class for features
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,10 +34,10 @@ class QIODevice;
 class VEYON_CORE_EXPORT FeatureMessage
 {
 public:
-	typedef quint32 MessageSize;
-	typedef Feature::Uid FeatureUid;
-	typedef qint32 Command;
-	typedef QMap<QString, QVariant> Arguments;
+	using MessageSize = quint32;
+	using FeatureUid = Feature::Uid;
+	using Command = qint32;
+	using Arguments = QVariantMap;
 
 	static constexpr unsigned char RfbMessageType = 41;
 
@@ -69,7 +69,7 @@ public:
 	{
 	}
 
-	~FeatureMessage() {}
+	~FeatureMessage() = default;
 
 	FeatureMessage& operator=( const FeatureMessage& other )
 	{
@@ -95,20 +95,23 @@ public:
 		return m_arguments;
 	}
 
-	FeatureMessage &addArgument( int index, const QVariant& value )
+	template<typename T = int>
+	FeatureMessage& addArgument( T index, const QVariant& value )
 	{
-		m_arguments[QString::number(index)] = value;
+		m_arguments[QString::number( static_cast<int>( index ) )] = value;
 		return *this;
 	}
 
-	QVariant argument( int index ) const
+	template<typename T = int>
+	QVariant argument( T index ) const
 	{
-		return m_arguments[QString::number(index)];
+		return m_arguments[QString::number( static_cast<int>( index ) )];
 	}
 
-	bool hasArgument( int index ) const
+	template<typename T = int>
+	bool hasArgument( T index ) const
 	{
-		return m_arguments.contains( QString::number( index ) );
+		return m_arguments.contains( QString::number( static_cast<int>( index ) ) );
 	}
 
 	bool send( QIODevice* ioDevice ) const;

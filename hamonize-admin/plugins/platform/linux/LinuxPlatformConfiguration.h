@@ -1,7 +1,7 @@
 /*
  * LinuxPlatformConfiguration.h - configuration values for LinuxPlatform plugin
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -28,6 +28,8 @@
 
 #define FOREACH_LINUX_PLATFORM_CONFIG_PROPERTY(OP) \
 	OP( LinuxPlatformConfiguration, m_configuration, QString, pamServiceName, setPamServiceName, "PamServiceName", "Linux", QString(), Configuration::Property::Flag::Advanced ) \
+	OP( LinuxPlatformConfiguration, m_configuration, int, minimumUserSessionLifetime, setMinimumUserSessionLifetime, "MinimumUserSessionLifetime", "Linux", 3, Configuration::Property::Flag::Advanced ) \
+	OP( LinuxPlatformConfiguration, m_configuration, QString, userLoginKeySequence, setUserLoginKeySequence, "UserLoginKeySequence", "Linux", QStringLiteral("%username%<Tab>%password%<Return>"), Configuration::Property::Flag::Advanced ) \
 
 
 DECLARE_CONFIG_PROXY(LinuxPlatformConfiguration, FOREACH_LINUX_PLATFORM_CONFIG_PROPERTY)

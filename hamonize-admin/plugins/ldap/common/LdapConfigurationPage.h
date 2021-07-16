@@ -1,7 +1,7 @@
 /*
  * LdapConfigurationPage.h - header for the LdapConfigurationPage class
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,6 +25,7 @@
 #pragma once
 
 #include "ConfigurationPage.h"
+#include "LdapCommon.h"
 
 class LdapConfiguration;
 class LdapDirectory;
@@ -35,11 +36,11 @@ class LdapConfigurationPage;
 
 class QLineEdit;
 
-class LdapConfigurationPage : public ConfigurationPage
+class LDAP_COMMON_EXPORT LdapConfigurationPage : public ConfigurationPage
 {
 	Q_OBJECT
 public:
-	LdapConfigurationPage( LdapConfiguration& configuration, QWidget* parent = nullptr );
+	explicit LdapConfigurationPage( LdapConfiguration& configuration, QWidget* parent = nullptr );
 	~LdapConfigurationPage() override;
 
 	void resetWidgets() override;

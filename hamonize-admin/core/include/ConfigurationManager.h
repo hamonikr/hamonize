@@ -1,7 +1,7 @@
 /*
  * ConfigurationManager.h - class for managing Veyon's configuration
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,7 +34,7 @@ class VEYON_CORE_EXPORT ConfigurationManager : public QObject
 {
 	Q_OBJECT
 public:
-	ConfigurationManager( QObject* parent = nullptr );
+	explicit ConfigurationManager( QObject* parent = nullptr );
 
 	bool clearConfiguration();
 	bool applyConfiguration();

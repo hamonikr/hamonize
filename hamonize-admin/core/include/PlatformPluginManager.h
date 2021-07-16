@@ -1,7 +1,7 @@
 /*
  * PlatformPluginManager.h - header file for PlatformPluginManager
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,7 +30,7 @@ class VEYON_CORE_EXPORT PlatformPluginManager : public QObject
 {
 	Q_OBJECT
 public:
-	PlatformPluginManager( PluginManager& pluginManager, QObject* parent = nullptr );
+	explicit PlatformPluginManager( PluginManager& pluginManager, QObject* parent = nullptr );
 
 	PlatformPluginInterface* platformPlugin()
 	{

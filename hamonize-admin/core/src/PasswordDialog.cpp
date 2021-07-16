@@ -1,7 +1,7 @@
 /*
  * PasswordDialog.cpp - dialog for querying logon credentials
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -65,9 +65,9 @@ QString PasswordDialog::username() const
 
 
 
-QString PasswordDialog::password() const
+CryptoCore::PlaintextPassword PasswordDialog::password() const
 {
-	return ui->password->text();
+	return ui->password->text().toUtf8();
 }
 
 

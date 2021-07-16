@@ -1,7 +1,7 @@
 /*
  * ComputerMonitoringWidget.h - provides a view with computer monitor thumbnails
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,66 +24,57 @@
 
 #pragma once
 
-#include "ComputerControlInterface.h"
+#include "ComputerMonitoringView.h"
+#include "FlexibleListView.h"
 
 #include <QWidget>
 
-class QMenu;
+class FlexibleListView;
 
-namespace Ui {
-class ComputerMonitoringWidget;
-}
-
-class ComputerSortFilterProxyModel;
-class VeyonMaster;
-
-class ComputerMonitoringWidget : public QWidget
+class ComputerMonitoringWidget : public FlexibleListView, public ComputerMonitoringView
 {
 	Q_OBJECT
 public:
-	enum {
-		MinimumComputerScreenSize = 50,
-		MaximumComputerScreenSize = 1000,
-		DefaultComputerScreenSize = 150
-	};
+	explicit ComputerMonitoringWidget( QWidget *parent = nullptr );
+	~ComputerMonitoringWidget() override = default;
 
-	ComputerMonitoringWidget( QWidget *parent = nullptr );
-	~ComputerMonitoringWidget() override;
+	ComputerControlInterfaceList selectedComputerControlInterfaces() const override;
 
-	void setVeyonMaster( VeyonMaster& masterCore );
+	void setUseCustomComputerPositions( bool enabled ) override;
+	void alignComputers() override;
 
-	ComputerControlInterfaceList selectedComputerControlInterfaces();
+	void showContextMenu( QPoint globalPos );
 
-	void setSearchFilter( const QString& searchFilter );
-	void setFilterPoweredOnComputers( bool enabled );
-	void setComputerScreenSize( int size );
-	void autoAdjustComputerScreenSize();
-	void setUseCustomComputerPositions( bool enabled );
-	void alignComputers();
+	void setIconSize( const QSize& size ) override;
 
-	void showContextMenu( QPoint pos );
+	void setIgnoreWheelEvent( bool enabled )
+	{
+		m_ignoreWheelEvent = enabled;
+	}
 
 private:
-	void runDoubleClickFeature( const QModelIndex& index );
-	void runFeature( const Feature& feature );
+	void setColors( const QColor& backgroundColor, const QColor& textColor ) override;
+	QJsonArray saveComputerPositions() override;
+	bool useCustomComputerPositions() override;
+	void loadComputerPositions( const QJsonArray& positions ) override;
 
-	ComputerSortFilterProxyModel& listModel();
+	bool performIconSizeAutoAdjust() override;
 
-	void showEvent( QShowEvent* event ) override;
-	void wheelEvent( QWheelEvent* event ) override;
-
-	FeatureUidList activeFeatures( const ComputerControlInterfaceList& computerControlInterfaces );
-
-	void populateFeatureMenu( const FeatureUidList& activeFeatures );
+	void populateFeatureMenu( const ComputerControlInterfaceList& computerControlInterfaces );
 	void addFeatureToMenu( const Feature& feature, const QString& label );
 	void addSubFeaturesToMenu( const Feature& parentFeature, const FeatureList& subFeatures, const QString& label );
 
-	Ui::ComputerMonitoringWidget *ui;
+	void runDoubleClickFeature( const QModelIndex& index );
 
-	VeyonMaster* m_master;
-	QMenu* m_featureMenu;
+	void resizeEvent( QResizeEvent* event ) override;
+	void showEvent( QShowEvent* event ) override;
+	void wheelEvent( QWheelEvent* event ) override;
 
-signals:
+	QMenu* m_featureMenu{};
+	bool m_ignoreWheelEvent{false};
+	bool m_ignoreResizeEvent{false};
+
+Q_SIGNALS:
 	void computerScreenSizeAdjusted( int size );
 
 };

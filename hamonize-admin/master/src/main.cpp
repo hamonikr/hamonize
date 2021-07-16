@@ -1,7 +1,7 @@
 /*
  * main.cpp - startup routine for Veyon Master Application
  *
- * Copyright (c) 2004-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2004-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -37,9 +37,7 @@ int main( int argc, char** argv )
 	QApplication app( argc, argv );
 	app.connect( &app, &QApplication::lastWindowClosed, &QApplication::quit );
 
-	// hihoon
-	// VeyonCore core( &app, QStringLiteral("Master") );
-	VeyonCore core( &app, QStringLiteral("Admin") );
+	VeyonCore core( &app, VeyonCore::Component::Master, QStringLiteral("Master") );
 
 #ifdef VEYON_DEBUG
 	if( qEnvironmentVariableIsSet( "VEYON_MASTER_CREATE_DOC_FIGURES") )

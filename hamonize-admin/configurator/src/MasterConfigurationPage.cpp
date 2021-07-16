@@ -1,7 +1,7 @@
 /*
  * MasterConfigurationPage.cpp - page for configuring master application
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -141,7 +141,8 @@ void MasterConfigurationPage::populateFeatureComboBox()
 
 	for( const auto& feature : m_featureManager.features() )
 	{
-		if( feature.testFlag( Feature::Master ) )
+		if( feature.testFlag( Feature::Master ) &&
+			feature.testFlag( Feature::Meta ) == false )
 		{
 			ui->computerDoubleClickFeature->addItem( QIcon( feature.iconUrl() ),
 													 feature.displayName(),
@@ -163,7 +164,8 @@ void MasterConfigurationPage::updateFeatureLists()
 	for( const auto& feature : qAsConst( m_featureManager.features() ) )
 	{
 		if( feature.testFlag( Feature::Master ) == false ||
-				feature == VeyonCore::builtinFeatures().monitoringMode().feature() )
+			feature.testFlag( Feature::Meta ) ||
+			feature == VeyonCore::builtinFeatures().monitoringMode().feature() )
 		{
 			continue;
 		}

@@ -1,7 +1,7 @@
 /*
  * X11VncConfigurationWidget.h - header for the X11VncConfigurationWidget class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -37,7 +37,7 @@ class X11VncConfigurationWidget : public QWidget
 	Q_OBJECT
 
 public:
-	X11VncConfigurationWidget( X11VncConfiguration& configuration, QWidget* parent = nullptr );
+	explicit X11VncConfigurationWidget( X11VncConfiguration& configuration, QWidget* parent = nullptr );
 	~X11VncConfigurationWidget() override;
 
 private:

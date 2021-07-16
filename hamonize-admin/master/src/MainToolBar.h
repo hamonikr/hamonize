@@ -1,7 +1,7 @@
 /*
  * MainToolBar.h - MainToolBar for MainWindow
  *
- * Copyright (c) 2007-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2007-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,7 +31,7 @@ class MainToolBar : public QToolBar
 {
 	Q_OBJECT
 public:
-	MainToolBar( QWidget* parent );
+	explicit MainToolBar( QWidget* parent );
 	~MainToolBar() override = default;
 
 

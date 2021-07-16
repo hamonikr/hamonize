@@ -1,7 +1,7 @@
 /*
  * FileTransferController.h - declaration of FileTransferController class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -44,7 +44,7 @@ public:
 	Q_DECLARE_FLAGS(Flags, Flag)
 	Q_FLAG(Flags)
 
-	FileTransferController( FileTransferPlugin* plugin );
+	explicit FileTransferController( FileTransferPlugin* plugin );
 	~FileTransferController() override;
 
 	void setFiles( const QStringList& files );
@@ -60,7 +60,7 @@ public:
 
 	bool isRunning() const;
 
-signals:
+Q_SIGNALS:
 	void errorOccured( const QString& message );
 	void filesChanged();
 	void progressChanged( int progress );

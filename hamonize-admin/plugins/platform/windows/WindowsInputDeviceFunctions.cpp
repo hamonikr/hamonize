@@ -1,7 +1,7 @@
 /*
  * WindowsInputDeviceFunctions.cpp - implementation of WindowsInputDeviceFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,10 +24,17 @@
 
 #include <windows.h>
 
+#include <QCoreApplication>
+#include <QProcess>
+
 #include "ConfigurationManager.h"
 #include "PlatformServiceFunctions.h"
+#include "VeyonConfiguration.h"
+#include "WindowsCoreFunctions.h"
 #include "WindowsInputDeviceFunctions.h"
 #include "WindowsKeyboardShortcutTrapper.h"
+#include "WindowsPlatformConfiguration.h"
+#include "WtsSessionManager.h"
 
 
 static int interception_is_any( InterceptionDevice device )
@@ -35,17 +42,6 @@ static int interception_is_any( InterceptionDevice device )
 	Q_UNUSED(device)
 
 	return true;
-}
-
-
-
-WindowsInputDeviceFunctions::WindowsInputDeviceFunctions() :
-	m_inputDevicesDisabled( false ),
-	m_interceptionContext( nullptr ),
-	m_hidServiceName( QStringLiteral("hidserv") ),
-	m_hidServiceStatusInitialized( false ),
-	m_hidServiceActivated( false )
-{
 }
 
 
@@ -95,30 +91,51 @@ KeyboardShortcutTrapper* WindowsInputDeviceFunctions::createKeyboardShortcutTrap
 
 void WindowsInputDeviceFunctions::checkInterceptionInstallation()
 {
-	const auto context = interception_create_context();
-	if( context )
+	if( VeyonCore::config().multiSessionModeEnabled() )
 	{
-		// a valid context means the interception driver is installed properly
-		// so nothing to do here
-		interception_destroy_context( context );
-	}
-	// try to (re)install interception driver
-	else if( installInterception() == false )
-	{
-		// failed to uninstall it so we can try to install it again on next reboot
 		uninstallInterception();
 	}
+	else if( WindowsPlatformConfiguration( &VeyonCore::config() ).useInterceptionDriver() )
+	{
+		const auto context = interception_create_context();
+		if( context )
+		{
+			// a valid context means the interception driver is installed properly
+			// so nothing to do here
+			interception_destroy_context( context );
+		}
+		// try to (re)install interception driver
+		else if( installInterception() == false )
+		{
+			// failed to uninstall it so we can try to install it again on next reboot
+			uninstallInterception();
+		}
+	}
+}
+
+
+
+void WindowsInputDeviceFunctions::stopOnScreenKeyboard()
+{
+	WindowsCoreFunctions::terminateProcess( WtsSessionManager::findProcessId( QStringLiteral("osk.exe") ) );
+	WindowsCoreFunctions::terminateProcess( WtsSessionManager::findProcessId( QStringLiteral("tabtip.exe") ) );
 }
 
 
 
 void WindowsInputDeviceFunctions::enableInterception()
 {
-	m_interceptionContext = interception_create_context();
+	if( WindowsPlatformConfiguration( &VeyonCore::config() ).useInterceptionDriver() )
+	{
+		m_interceptionContext = interception_create_context();
 
-	interception_set_filter( m_interceptionContext,
-							 interception_is_any,
-							 INTERCEPTION_FILTER_KEY_ALL | INTERCEPTION_FILTER_MOUSE_ALL );
+		if( m_interceptionContext )
+		{
+			interception_set_filter( m_interceptionContext,
+									 interception_is_any,
+									 INTERCEPTION_FILTER_KEY_ALL | INTERCEPTION_FILTER_MOUSE_ALL );
+		}
+	}
 }
 
 

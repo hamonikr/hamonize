@@ -1,7 +1,7 @@
 /*
  * CryptoCore.cpp - core functions for crypto features
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -54,7 +54,7 @@ CryptoCore::~CryptoCore()
 
 QByteArray CryptoCore::generateChallenge()
 {
-	BIGNUM * challengeBigNum = BN_new();
+	const auto challengeBigNum = BN_new();
 
 	if( challengeBigNum == nullptr )
 	{
@@ -73,25 +73,25 @@ QByteArray CryptoCore::generateChallenge()
 
 
 
-QString CryptoCore::encryptPassword( const QString& password ) const
+QString CryptoCore::encryptPassword( const PlaintextPassword& password ) const
 {
 	return QString::fromLatin1( m_defaultPrivateKey.toPublicKey().
-								encrypt( password.toUtf8(), DefaultEncryptionAlgorithm ).toByteArray().toHex() );
+								encrypt( password, DefaultEncryptionAlgorithm ).toByteArray().toHex() );
 }
 
 
 
-QString CryptoCore::decryptPassword( const QString& encryptedPassword ) const
+CryptoCore::PlaintextPassword CryptoCore::decryptPassword( const QString& encryptedPassword ) const
 {
-	SecureArray decryptedPassword;
+	PlaintextPassword decryptedPassword;
 
 	if( PrivateKey( m_defaultPrivateKey ).decrypt( QByteArray::fromHex( encryptedPassword.toUtf8() ),
 												   &decryptedPassword, DefaultEncryptionAlgorithm ) )
 	{
-		return QString::fromUtf8( decryptedPassword.toByteArray() );
+		return decryptedPassword;
 	}
 
 	vCritical() << "failed to decrypt password!";
 
-	return QString();
+	return {};
 }

@@ -1,7 +1,7 @@
 /*
  * VeyonAuthHelper.cpp - main file for Veyon Authentication Helper
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,9 +27,9 @@
 
 #include <security/pam_appl.h>
 
-
-static char* pam_username = nullptr;
-static char* pam_password = nullptr;
+static QByteArray pam_username; // clazy:exclude=non-pod-global-static
+static QByteArray pam_password; // clazy:exclude=non-pod-global-static
+static QByteArray pam_service; // clazy:exclude=non-pod-global-static
 
 static int pam_conv( int num_msg, const struct pam_message** msg, struct pam_response** resp, void * )
 {
@@ -46,11 +46,11 @@ static int pam_conv( int num_msg, const struct pam_message** msg, struct pam_res
 		{
 			case PAM_PROMPT_ECHO_ON:
 				reply[replies].resp_retcode = PAM_SUCCESS;
-				reply[replies].resp = pam_username;
+				reply[replies].resp = strdup( pam_username.constData() );
 				break;
 			case PAM_PROMPT_ECHO_OFF:
 				reply[replies].resp_retcode = PAM_SUCCESS;
-				reply[replies].resp = pam_password;
+				reply[replies].resp = strdup( pam_password.constData() );
 				break;
 			case PAM_TEXT_INFO:
 			case PAM_ERROR_MSG:
@@ -70,25 +70,21 @@ static int pam_conv( int num_msg, const struct pam_message** msg, struct pam_res
 
 int main()
 {
-	QString username, password, service;
 	QFile stdIn;
-	stdIn.open( 0, QFile::ReadOnly );
+	stdIn.open( 0, QFile::ReadOnly | QFile::Unbuffered );
 	QDataStream ds( &stdIn );
-	ds >> username;
-	ds >> password;
-	ds >> service;
+	ds >> pam_username;
+	ds >> pam_password;
+	ds >> pam_service;
 
-	if( service.isEmpty() )
+	if( pam_service.isEmpty() )
 	{
-		service = QStringLiteral("login");
+		pam_service = QByteArrayLiteral("login");
 	}
 
-	pam_username = qstrdup( username.toUtf8().constData() );
-	pam_password = qstrdup( password.toUtf8().constData() );
-
 	struct pam_conv pconv = { &pam_conv, nullptr };
-	pam_handle_t *pamh;
-	int err = pam_start( service.toUtf8().constData(), nullptr, &pconv, &pamh );
+	pam_handle_t* pamh = nullptr;
+	auto err = pam_start( pam_service.constData(), nullptr, &pconv, &pamh );
 	if( err == PAM_SUCCESS )
 	{
 		err = pam_authenticate( pamh, PAM_SILENT );
@@ -103,9 +99,6 @@ int main()
 	}
 
 	pam_end( pamh, err );
-
-	delete[] pam_username;
-	delete[] pam_password;
 
 	return err == PAM_SUCCESS ? 0 : -1;
 }

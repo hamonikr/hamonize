@@ -1,7 +1,7 @@
 /*
  * Configuration/Object.h - ConfigurationObject class
  *
- * Copyright (c) 2009-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2009-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,11 +36,11 @@ class VEYON_CORE_EXPORT Object : public QObject
 {
 	Q_OBJECT
 public:
-	typedef QMap<QString, QVariant> DataMap;
+	using DataMap = QMap<QString, QVariant>;
 
 	Object();
-	Object( Store::Backend backend, Store::Scope scope, const QString& storeName = QString() );
-	Object( Store* store );
+	Object( Store::Backend backend, Store::Scope scope, const QString& storeName = {} );
+	explicit Object( Store* store );
 	Object( const Object& );
 	~Object() override;
 
@@ -89,7 +89,7 @@ public:
 	}
 
 
-signals:
+Q_SIGNALS:
 	void configurationChanged();
 
 

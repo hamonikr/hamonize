@@ -1,7 +1,7 @@
 /*
  * VeyonConnection.cpp - implementation of VeyonConnection
  *
- * Copyright (c) 2008-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2008-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,7 +24,7 @@
 
 #include "rfb/rfbclient.h"
 
-#include "AuthenticationCredentials.h"
+#include "AuthenticationProxy.h"
 #include "CryptoCore.h"
 #include "PlatformUserFunctions.h"
 #include "SocketDevice.h"
@@ -75,6 +75,7 @@ VeyonConnection::VeyonConnection( VncConnection* vncConnection ):
 	}
 
 	connect( m_vncConnection, &VncConnection::connectionPrepared, this, &VeyonConnection::registerConnection, Qt::DirectConnection );
+	connect( m_vncConnection, &VncConnection::destroyed, this, &VeyonConnection::deleteLater );
 }
 
 
@@ -82,6 +83,8 @@ VeyonConnection::VeyonConnection( VncConnection* vncConnection ):
 VeyonConnection::~VeyonConnection()
 {
 	unregisterConnection();
+
+	delete m_authenticationProxy;
 }
 
 
@@ -112,10 +115,10 @@ bool VeyonConnection::handleServerMessage( rfbClient* client, uint8_t msg )
 			return false;
 		}
 
-//		vDebug() << "received feature message" << featureMessage.command()
-//			   << "with arguments" << featureMessage.arguments();
+		vDebug() << "received feature message" << featureMessage.command()
+			   << "with arguments" << featureMessage.arguments();
 
-		emit featureMessageReceived( featureMessage );
+		Q_EMIT featureMessageReceived( featureMessage );
 
 		return true;
 	}
@@ -152,20 +155,9 @@ void VeyonConnection::unregisterConnection()
 
 int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authScheme )
 {
-	/* hihoon LOG 확인 5900
-	vWarning() << "######  hihoon  ###### :???  authScheme: " << authScheme 
-										<< ", rfbSecTypeVeyon: " << rfbSecTypeVeyon ;
-
-	 [WARN] VeyonConnection: ######  hihoon  ###### :???  authScheme:  40 , rfbSecTypeVeyon:  (
-	*/
-
-        if(client->serverPort == 5900 || client->destPort == 5900) {
-            vDebug() << "###  hihoon  ###  server : " << client->serverHost << client->serverPort << " , dest : " << client->destHost << client->destPort;
-        }
-
 	if( authScheme != rfbSecTypeVeyon )
 	{
-		return FALSE;
+		return false;
 	}
 
 	hookPrepareAuthentication( client );
@@ -173,7 +165,7 @@ int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authSche
 	auto connection = static_cast<VeyonConnection *>( VncConnection::clientData( client, VeyonConnectionTag ) );
 	if( connection == nullptr )
 	{
-		return FALSE;
+		return false;
 	}
 
 	SocketDevice socketDevice( VncConnection::libvncClientDispatcher, client );
@@ -190,7 +182,14 @@ int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authSche
 		authTypes.append( QVariantHelper<RfbVeyonAuth::Type>::value( message.read() ) );
 	}
 
-        vDebug() << QThread::currentThreadId() << "received authentication types:" << authTypes;
+	auto proxy = connection->m_authenticationProxy;
+
+	if( proxy )
+	{
+		proxy->setAuthenticationTypes( authTypes );
+	}
+
+	vDebug() << QThread::currentThreadId() << "received authentication types:" << authTypes;
 
 	RfbVeyonAuth::Type chosenAuthType = RfbVeyonAuth::Token;
 	if( authTypes.count() > 0 )
@@ -210,16 +209,26 @@ int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authSche
 		}
 	}
 
-        vDebug() << QThread::currentThreadId() << "chose authentication type:" << authTypes;
+	if( proxy )
+	{
+		chosenAuthType = proxy->initCredentials();
+	}
+
+	if( chosenAuthType == RfbVeyonAuth::None )
+	{
+		return false;
+	}
+
+	vDebug() << QThread::currentThreadId() << "chose authentication type:" << authTypes;
 
 	VariantArrayMessage authReplyMessage( &socketDevice );
 
 	authReplyMessage.write( chosenAuthType );
 
 	// send username which is used when displaying an access confirm dialog
-	if( VeyonCore::authenticationCredentials().hasCredentials( AuthenticationCredentials::Type::UserLogon ) )
+	if( connection->authenticationCredentials().hasCredentials( AuthenticationCredentials::Type::UserLogon ) )
 	{
-		authReplyMessage.write( VeyonCore::authenticationCredentials().logonUsername() );
+		authReplyMessage.write( connection->authenticationCredentials().logonUsername() );
 	}
 	else
 	{
@@ -234,7 +243,7 @@ int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authSche
 	switch( chosenAuthType )
 	{
 	case RfbVeyonAuth::KeyFile:
-		if( VeyonCore::authenticationCredentials().hasCredentials( AuthenticationCredentials::Type::PrivateKey ) )
+		if( connection->authenticationCredentials().hasCredentials( AuthenticationCredentials::Type::PrivateKey ) )
 		{
 			VariantArrayMessage challengeReceiveMessage( &socketDevice );
 			challengeReceiveMessage.receive();
@@ -243,28 +252,24 @@ int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authSche
 			if( challenge.size() != CryptoCore::ChallengeSize )
 			{
 				vCritical() << QThread::currentThreadId() << "challenge size mismatch!";
-				return FALSE;
+				return false;
 			}
 
 			// create local copy of private key so we can modify it within our own thread
-			auto key = VeyonCore::authenticationCredentials().privateKey();
+			auto key = connection->authenticationCredentials().privateKey();
 			if( key.isNull() || key.canSign() == false )
 			{
 				vCritical() << QThread::currentThreadId() << "invalid private key!";
-				return FALSE;
+				return false;
 			}
 
 			const auto signature = key.signMessage( challenge, CryptoCore::DefaultSignatureAlgorithm );
 
 			VariantArrayMessage challengeResponseMessage( &socketDevice );
-			challengeResponseMessage.write( VeyonCore::instance()->authenticationKeyName() );
+			challengeResponseMessage.write( connection->authenticationCredentials().authenticationKeyName() );
 			challengeResponseMessage.write( signature );
 			challengeResponseMessage.send();
 		}
-		break;
-
-	case RfbVeyonAuth::HostWhiteList:
-		// nothing to do - we just get accepted because the host white list contains our IP
 		break;
 
 	case RfbVeyonAuth::Logon:
@@ -277,15 +282,15 @@ int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authSche
 		if( publicKey.canEncrypt() == false )
 		{
 			vCritical() << QThread::currentThreadId() << "can't encrypt with given public key!";
-			return FALSE;
+			return false;
 		}
 
-		CryptoCore::SecureArray plainTextPassword( VeyonCore::authenticationCredentials().logonPassword().toUtf8() );
+		CryptoCore::SecureArray plainTextPassword( connection->authenticationCredentials().logonPassword() );
 		CryptoCore::SecureArray encryptedPassword = publicKey.encrypt( plainTextPassword, CryptoCore::DefaultEncryptionAlgorithm );
 		if( encryptedPassword.isEmpty() )
 		{
 			vCritical() << QThread::currentThreadId() << "password encryption failed!";
-			return FALSE;
+			return false;
 		}
 
 		VariantArrayMessage passwordResponse( &socketDevice );
@@ -296,37 +301,18 @@ int8_t VeyonConnection::handleSecTypeVeyon( rfbClient* client, uint32_t authSche
 
 	case RfbVeyonAuth::Token:
 	{
-                vDebug() << "###  hihoon  ###: RfbVeyonAuth::Token" << &socketDevice;
 		VariantArrayMessage tokenAuthMessage( &socketDevice );
-		tokenAuthMessage.write( VeyonCore::authenticationCredentials().token() );
+		tokenAuthMessage.write( connection->authenticationCredentials().token().toByteArray() );
 		tokenAuthMessage.send();
 		break;
 	}
-
-    case RfbVeyonAuth::None:
-    {
-
-        VariantArrayMessage Message( &socketDevice );
-        Message.receive();
-
-        vDebug() << "###  hihoon  ### (RfbVeyonAuth::None) passwdResponse : " << Message.read();
-        VariantArrayMessage passwordResponse( &socketDevice );
-        vDebug() << "###  hihoon  ### (RfbVeyonAuth::None) passwdResponse : " << passwordResponse.read();
-        vDebug() << "###  hihoon  ### passwdResponse : " << &socketDevice;
-
-        //passwordResponse.write( encryptedPassword.toByteArray() );
-        //QVariant planPassword(QString("Exitem0*"));
-        //passwordResponse.write( planPassword.toBitArray() );
-        //passwordResponse.send();
-        break;
-}
 
 	default:
 		// nothing to do - we just get accepted
 		break;
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -340,4 +326,16 @@ void VeyonConnection::hookPrepareAuthentication( rfbClient* client )
 		// which means that the host is reachable
 		connection->setServerReachable();
 	}
+}
+
+
+
+AuthenticationCredentials VeyonConnection::authenticationCredentials() const
+{
+	if( m_authenticationProxy )
+	{
+		return m_authenticationProxy->credentials();
+	}
+
+	return VeyonCore::authenticationCredentials();
 }

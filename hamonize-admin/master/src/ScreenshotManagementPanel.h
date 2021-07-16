@@ -1,7 +1,7 @@
 /*
  * ScreenshotManagementPanel.h - declaration of screenshot management view
  *
- * Copyright (c) 2004-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2004-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,7 +24,9 @@
 
 #pragma once
 
-#include <QFileSystemModel>
+#include <QFileSystemWatcher>
+#include <QStringListModel>
+#include <QTimer>
 #include <QWidget>
 
 class QModelIndex;
@@ -38,7 +40,7 @@ class ScreenshotManagementPanel : public QWidget
 {
 	Q_OBJECT
 public:
-	ScreenshotManagementPanel( QWidget *parent );
+	explicit ScreenshotManagementPanel( QWidget *parent = nullptr );
 	~ScreenshotManagementPanel() override;
 
 	void setPreview( const Screenshot& screenshot );
@@ -47,13 +49,23 @@ protected:
 	void resizeEvent( QResizeEvent* event ) override;
 
 private:
-	void updateScreenshot( const QModelIndex &idx );
-	void screenshotDoubleClicked( const QModelIndex &idx );
+	void updateModel();
+
+	QString filePath( const QModelIndex& index ) const;
+
+	void updateScreenshot( const QModelIndex& index );
+	void screenshotDoubleClicked( const QModelIndex& index );
 
 	void showScreenshot();
 	void deleteScreenshot();
 
 	Ui::ScreenshotManagementPanel* ui;
-	QFileSystemModel m_fsModel;
+
+	QStringListModel m_model{this};
+	QFileSystemWatcher m_fsWatcher{this};
+
+	QTimer m_reloadTimer{this};
+
+	static constexpr auto FsModelResetDelay = 1000;
 
 } ;

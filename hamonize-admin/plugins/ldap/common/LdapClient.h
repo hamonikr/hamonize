@@ -1,7 +1,7 @@
 /*
  * LdapClient.h - class implementing an LDAP client
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,6 +27,8 @@
 #include <QObject>
 #include <QUrl>
 
+#include "LdapCommon.h"
+
 namespace KLDAP {
 class LdapConnection;
 class LdapOperation;
@@ -35,7 +37,7 @@ class LdapServer;
 
 class LdapConfiguration;
 
-class LdapClient : public QObject
+class LDAP_COMMON_EXPORT LdapClient : public QObject
 {
 	Q_OBJECT
 public:
@@ -64,10 +66,10 @@ public:
 	};
 	Q_ENUM(TLSVerifyMode)
 
-	typedef QMap<QString, QMap<QString, QStringList> > Objects;
+	using Objects = QMap<QString, QMap<QString, QStringList> >;
 
-	LdapClient( const LdapConfiguration& configuration, const QUrl& url = QUrl(), QObject* parent = nullptr );
-	~LdapClient();
+	explicit LdapClient( const LdapConfiguration& configuration, const QUrl& url = QUrl(), QObject* parent = nullptr );
+	~LdapClient() override;
 
 	const LdapConfiguration& configuration() const
 	{
@@ -99,12 +101,9 @@ public:
 
 	QStringList queryBaseDn();
 
-	QStringList queryNamingContexts( const QString& attribute = QString() );
+	QStringList queryNamingContexts( const QString& attribute = {} );
 
-	const QString& baseDn() const
-	{
-		return m_baseDn;
-	}
+	QString baseDn();
 
 	static QString parentDn( const QString& dn );
 	static QString stripBaseDn( const QString& dn, const QString& baseDn );
@@ -116,7 +115,7 @@ public:
 
 	static QString constructQueryFilter( const QString& filterAttribute,
 										 const QString& filterValue,
-										 const QString& extraFilter = QString() );
+										 const QString& extraFilter = {} );
 
 	static QString escapeFilterValue( const QString& filterValue );
 
@@ -125,6 +124,7 @@ public:
 private:
 	static constexpr int LdapQueryTimeout = 3000;
 	static constexpr int LdapConnectionTimeout = 60*1000;
+	static constexpr auto LdapLibraryDebugAny = -1;
 
 	bool reconnect();
 	bool connectAndBind( const QUrl& url );

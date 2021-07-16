@@ -1,7 +1,7 @@
 /*
  * Logger.h - a global clas for easily logging messages to log files
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -54,9 +54,10 @@ public:
 
 	static constexpr int DefaultFileSizeLimit = 100;
 	static constexpr int DefaultFileRotationCount = 10;
+	static constexpr int MaximumMessageSize = 1000;
 	static constexpr const char* DefaultLogFileDirectory = "$TEMP";
 
-	Logger( const QString &appName );
+	explicit Logger( const QString &appName );
 	~Logger();
 
 	static const char* logLevelEnvironmentVariable()

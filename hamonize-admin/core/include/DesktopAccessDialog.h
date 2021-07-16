@@ -1,7 +1,7 @@
 /*
  * DesktopAccessDialog.h - declaration of DesktopAccessDialog class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,15 +26,23 @@
 
 #include <QTimer>
 
-#include "SimpleFeatureProvider.h"
+#include "FeatureProviderInterface.h"
 
 class FeatureWorkerManager;
 
-class VEYON_CORE_EXPORT DesktopAccessDialog : public QObject, public SimpleFeatureProvider, public PluginInterface
+class VEYON_CORE_EXPORT DesktopAccessDialog : public QObject, public FeatureProviderInterface, public PluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(FeatureProviderInterface PluginInterface)
 public:
+	enum class Argument
+	{
+		User,
+		Host,
+		Choice
+	};
+	Q_ENUM(Argument)
+
 	enum Choice
 	{
 		ChoiceNone,
@@ -46,8 +54,8 @@ public:
 	} ;
 	Q_ENUM(Choice)
 
-	DesktopAccessDialog( QObject* parent = nullptr );
-	~DesktopAccessDialog() override {}
+	explicit DesktopAccessDialog( QObject* parent = nullptr );
+	~DesktopAccessDialog() override = default;
 
 	bool isBusy( FeatureWorkerManager* featureWorkerManager ) const;
 
@@ -81,7 +89,7 @@ public:
 
 	QString vendor() const override
 	{
-        return QStringLiteral( "Veyon Community" );
+		return QStringLiteral( "Veyon Community" );
 	}
 
 	QString copyright() const override
@@ -92,6 +100,17 @@ public:
 	const FeatureList& featureList() const override
 	{
 		return m_features;
+	}
+
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override
+	{
+		Q_UNUSED(featureUid)
+		Q_UNUSED(operation)
+		Q_UNUSED(arguments)
+		Q_UNUSED(computerControlInterfaces)
+
+		return false;
 	}
 
 	bool handleFeatureMessage( VeyonServerInterface& server,
@@ -115,13 +134,6 @@ private:
 		ReportDesktopAccessChoice
 	};
 
-	enum Arguments
-	{
-		UserArgument,
-		HostArgument,
-		ChoiceArgument
-	};
-
 	const Feature m_desktopAccessDialogFeature;
 	const FeatureList m_features;
 
@@ -129,7 +141,7 @@ private:
 
 	QTimer m_abortTimer;
 
-signals:
+Q_SIGNALS:
 	void finished();
 
 };

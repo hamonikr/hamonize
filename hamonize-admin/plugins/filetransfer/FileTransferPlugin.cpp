@@ -1,7 +1,7 @@
 /*
  * FileTransferPlugin.cpp - implementation of FileTransferPlugin class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -28,11 +28,14 @@
 #include <QMessageBox>
 
 #include "BuiltinFeatures.h"
+#include "Filesystem.h"
+#include "FileTransferConfigurationPage.h"
 #include "FileTransferController.h"
 #include "FileTransferDialog.h"
 #include "FileTransferPlugin.h"
 #include "FileTransferUserConfiguration.h"
 #include "FeatureWorkerManager.h"
+#include "PlatformFilesystemFunctions.h"
 #include "SystemTrayIcon.h"
 #include "VeyonMasterInterface.h"
 #include "VeyonServerInterface.h"
@@ -45,13 +48,11 @@ FileTransferPlugin::FileTransferPlugin( QObject* parent ) :
 						   Feature::Action | Feature::AllComponents,
 						   Feature::Uid( "4a70bd5a-fab2-4a4b-a92a-a1e81d2b75ed" ),
 						   Feature::Uid(),
-						   tr( "File transfer" ), QString(),
+						   tr( "File transfer" ), {},
 						   tr( "Click this button to transfer files from your computer to all computers." ),
 						   QStringLiteral(":/filetransfer/applications-office.png") ),
 	m_features( { m_fileTransferFeature } ),
-	m_fileTransferController( nullptr ),
-	m_currentFile(),
-	m_currentTransferId()
+	m_configuration( &VeyonCore::config() )
 {
 }
 
@@ -64,31 +65,57 @@ FileTransferPlugin::~FileTransferPlugin()
 
 
 
-bool FileTransferPlugin::startFeature( VeyonMasterInterface& master, const Feature& feature,
-									   const ComputerControlInterfaceList& computerControlInterfaces )
+bool FileTransferPlugin::controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+										const ComputerControlInterfaceList& computerControlInterfaces )
 {
-	if( feature == m_fileTransferFeature )
+	if( hasFeature( featureUid ) == false )
 	{
-		FileTransferUserConfiguration config( master.userConfigurationObject() );
+		return false;
+	}
 
-		const auto files = QFileDialog::getOpenFileNames( master.mainWindow(),
-														  tr( "Select one or more files to transfer" ),
-														  config.lastFileTransferSourceDirectory() );
-		if( files.isEmpty() == false )
+	if( operation == Operation::Initialize )
+	{
+		auto files = arguments.value( argToString(Argument::Files) ).toStringList();
+		if( files.isEmpty() )
 		{
-			config.setLastFileTransferSourceDirectory( QFileInfo( files.first() ).absolutePath() );
+			return false;
+		}
 
-			if( m_fileTransferController == nullptr )
+		for( auto& file : files )
+		{
+			QFileInfo fileInfo( file );
+			if( fileInfo.dir() == QDir::current() )
 			{
-				m_fileTransferController = new FileTransferController( this );
+				file = fileInfo.fileName();
 			}
+		}
 
-			m_fileTransferController->setFiles( files );
-			m_fileTransferController->setInterfaces( computerControlInterfaces );
+		if( m_fileTransferController == nullptr )
+		{
+			m_fileTransferController = new FileTransferController( this );
+		}
 
-			auto dialog = new FileTransferDialog( m_fileTransferController, master.mainWindow() );
-			connect( dialog, &QDialog::finished, dialog, &QDialog::deleteLater );
-			dialog->exec();
+		m_fileTransferController->setFiles( files );
+		m_fileTransferController->setInterfaces( computerControlInterfaces );
+
+		return true;
+	}
+
+	if( operation == Operation::Start )
+	{
+		if( m_fileTransferController )
+		{
+			m_fileTransferController->start();
+		}
+
+		return true;
+	}
+
+	if( operation == Operation::Stop )
+	{
+		if( m_fileTransferController )
+		{
+			m_fileTransferController->stop();
 		}
 
 		return true;
@@ -99,24 +126,38 @@ bool FileTransferPlugin::startFeature( VeyonMasterInterface& master, const Featu
 
 
 
-bool FileTransferPlugin::stopFeature( VeyonMasterInterface& master, const Feature& feature,
-									  const ComputerControlInterfaceList& computerControlInterfaces )
+bool FileTransferPlugin::startFeature( VeyonMasterInterface& master, const Feature& feature,
+									   const ComputerControlInterfaceList& computerControlInterfaces )
 {
-	Q_UNUSED(master)
-	Q_UNUSED(feature)
-	Q_UNUSED(computerControlInterfaces)
+	if( feature == m_fileTransferFeature )
+	{
+		FileTransferUserConfiguration config( master.userConfigurationObject() );
 
-	return false;
-}
+		m_lastFileTransferSourceDirectory = config.lastFileTransferSourceDirectory();
+		if( m_configuration.rememberLastFileTransferSourceDirectory() == false ||
+			QDir( m_lastFileTransferSourceDirectory ).exists() == false )
+		{
+			m_lastFileTransferSourceDirectory = VeyonCore::filesystem().expandPath( m_configuration.fileTransferDefaultSourceDirectory() );
+		}
+		const auto files = QFileDialog::getOpenFileNames( master.mainWindow(),
+														  tr( "Select one or more files to transfer" ),
+														  m_lastFileTransferSourceDirectory );
 
+		if( files.isEmpty() == false )
+		{
+			config.setLastFileTransferSourceDirectory( QFileInfo( files.first() ).absolutePath() );
 
+			if( controlFeature( feature.uid(), Operation::Initialize,
+								{ { argToString(Argument::Files), files } }, computerControlInterfaces ) )
+			{
+				auto dialog = new FileTransferDialog( m_fileTransferController, master.mainWindow() );
+				connect( dialog, &QDialog::finished, dialog, &QDialog::deleteLater );
+				dialog->exec();
+			}
+		}
 
-bool FileTransferPlugin::handleFeatureMessage( VeyonMasterInterface& master, const FeatureMessage& message,
-											   ComputerControlInterface::Pointer computerControlInterface )
-{
-	Q_UNUSED(master)
-	Q_UNUSED(message)
-	Q_UNUSED(computerControlInterface)
+		return true;
+	}
 
 	return false;
 }
@@ -131,21 +172,16 @@ bool FileTransferPlugin::handleFeatureMessage( VeyonServerInterface& server,
 
 	if( m_fileTransferFeature.uid() == message.featureUid() )
 	{
-		if( server.featureWorkerManager().isWorkerRunning( m_fileTransferFeature ) == false )
-		{
-			server.featureWorkerManager().startWorker( m_fileTransferFeature, FeatureWorkerManager::UnmanagedSessionProcess );
-		}
-
 		if( message.command() == FileTransferFinishCommand )
 		{
 			VeyonCore::builtinFeatures().systemTrayIcon().showMessage( m_fileTransferFeature.displayName(),
 																   tr( "Received file \"%1\"." ).
-																   arg( message.argument( Filename ).toString() ),
+																	   arg( message.argument( Argument::Filename ).toString() ),
 																   server.featureWorkerManager() );
 		}
 
 		// forward message to worker
-		server.featureWorkerManager().sendMessage( message );
+		server.featureWorkerManager().sendMessageToUnmanagedSessionWorker( message );
 
 		return true;
 	}
@@ -165,9 +201,10 @@ bool FileTransferPlugin::handleFeatureMessage( VeyonWorkerInterface& worker, con
 		{
 		case FileTransferStartCommand:
 			m_currentFile.close();
-			// TODO: make path configurable
-			m_currentFile.setFileName( QDir::homePath() + QDir::separator() + message.argument( Filename ).toString() );
-			if( m_currentFile.exists() && message.argument( OverwriteExistingFile ).toBool() == false )
+
+			m_currentFileName = destinationDirectory() + QDir::separator() + message.argument( Argument::Filename ).toString();
+			m_currentFile.setFileName( m_currentFileName );
+			if( m_currentFile.exists() && message.argument( Argument::OverwriteExistingFile ).toBool() == false )
 			{
 				QMessageBox::critical( nullptr, m_fileTransferFeature.displayName(),
 									   tr( "Could not receive file \"%1\" as it already exists." ).
@@ -175,9 +212,12 @@ bool FileTransferPlugin::handleFeatureMessage( VeyonWorkerInterface& worker, con
 				return true;
 			}
 
-			if( m_currentFile.open( QFile::WriteOnly | QFile::Truncate ) )
+			if( VeyonCore::platform().filesystemFunctions().openFileSafely(
+					&m_currentFile,
+					QFile::WriteOnly | QFile::Truncate,
+					QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther ) )
 			{
-				m_currentTransferId = message.argument( TransferId ).toUuid();
+				m_currentTransferId = message.argument( Argument::TransferId ).toUuid();
 			}
 			else
 			{
@@ -188,9 +228,9 @@ bool FileTransferPlugin::handleFeatureMessage( VeyonWorkerInterface& worker, con
 			return true;
 
 		case FileTransferContinueCommand:
-			if( message.argument( TransferId ).toUuid() == m_currentTransferId )
+			if( message.argument( Argument::TransferId ).toUuid() == m_currentTransferId )
 			{
-				m_currentFile.write( message.argument( DataChunk ).toByteArray() );
+				m_currentFile.write( message.argument( Argument::DataChunk ).toByteArray() );
 			}
 			else
 			{
@@ -199,7 +239,7 @@ bool FileTransferPlugin::handleFeatureMessage( VeyonWorkerInterface& worker, con
 			return true;
 
 		case FileTransferCancelCommand:
-			if( message.argument( TransferId ).toUuid() == m_currentTransferId )
+			if( message.argument( Argument::TransferId ).toUuid() == m_currentTransferId )
 			{
 				m_currentFile.remove();
 			}
@@ -211,15 +251,15 @@ bool FileTransferPlugin::handleFeatureMessage( VeyonWorkerInterface& worker, con
 
 		case FileTransferFinishCommand:
 			m_currentFile.close();
-			if( message.argument( OpenFileInApplication ).toBool() )
+			if( message.argument( Argument::OpenFileInApplication ).toBool() )
 			{
-				QDesktopServices::openUrl( QUrl::fromLocalFile( m_currentFile.fileName() ) );
+				QDesktopServices::openUrl( QUrl::fromLocalFile( m_currentFileName ) );
 			}
-			m_currentFile.setFileName( QString() );
+			m_currentFile.setFileName( {} );
 			return true;
 
 		case OpenTransferFolder:
-			QDesktopServices::openUrl( QUrl::fromLocalFile( QDir::homePath() ) );
+			QDesktopServices::openUrl( QUrl::fromLocalFile( destinationDirectory() ) );
 			return true;
 
 		default:
@@ -236,9 +276,9 @@ void FileTransferPlugin::sendStartMessage( QUuid transferId, const QString& file
 										   bool overwriteExistingFile, const ComputerControlInterfaceList& interfaces )
 {
 	sendFeatureMessage( FeatureMessage( m_fileTransferFeature.uid(), FileTransferStartCommand ).
-						addArgument( TransferId, transferId ).
-						addArgument( Filename, fileName ).
-						addArgument( OverwriteExistingFile, overwriteExistingFile ),
+						addArgument( Argument::TransferId, transferId ).
+						addArgument( Argument::Filename, fileName ).
+						addArgument( Argument::OverwriteExistingFile, overwriteExistingFile ),
 						interfaces );
 }
 
@@ -248,8 +288,8 @@ void FileTransferPlugin::sendDataMessage( QUuid transferId, const QByteArray& da
 										  const ComputerControlInterfaceList& interfaces )
 {
 	sendFeatureMessage( FeatureMessage( m_fileTransferFeature.uid(), FileTransferContinueCommand ).
-						addArgument( TransferId, transferId ).
-						addArgument( DataChunk, data ),
+						addArgument( Argument::TransferId, transferId ).
+						addArgument( Argument::DataChunk, data ),
 						interfaces );
 }
 
@@ -259,7 +299,7 @@ void FileTransferPlugin::sendCancelMessage( QUuid transferId,
 											const ComputerControlInterfaceList& interfaces )
 {
 	sendFeatureMessage( FeatureMessage( m_fileTransferFeature.uid(), FileTransferCancelCommand ).
-						addArgument( TransferId, transferId ), interfaces );
+						addArgument( Argument::TransferId, transferId ), interfaces );
 }
 
 
@@ -268,9 +308,9 @@ void FileTransferPlugin::sendFinishMessage( QUuid transferId, const QString& fil
 											bool openFileInApplication, const ComputerControlInterfaceList& interfaces )
 {
 	sendFeatureMessage( FeatureMessage( m_fileTransferFeature.uid(), FileTransferFinishCommand ).
-						addArgument( TransferId, transferId ).
-						addArgument( Filename, fileName ).
-						addArgument( OpenFileInApplication, openFileInApplication ), interfaces );
+						addArgument( Argument::TransferId, transferId ).
+						addArgument( Argument::Filename, fileName ).
+						addArgument( Argument::OpenFileInApplication, openFileInApplication ), interfaces );
 }
 
 
@@ -279,3 +319,28 @@ void FileTransferPlugin::sendOpenTransferFolderMessage( const ComputerControlInt
 {
 	sendFeatureMessage( FeatureMessage( m_fileTransferFeature.uid(), OpenTransferFolder ), interfaces );
 }
+
+
+
+QString FileTransferPlugin::destinationDirectory() const
+{
+	auto dir = VeyonCore::filesystem().expandPath( m_configuration.fileTransferDestinationDirectory() );
+	if( QDir( dir ).exists() == false &&
+		m_configuration.fileTransferCreateDestinationDirectory() &&
+		VeyonCore::filesystem().ensurePathExists( dir ) == false )
+	{
+		return QDir::homePath();
+	}
+
+	return dir;
+}
+
+
+
+ConfigurationPage* FileTransferPlugin::createConfigurationPage()
+{
+	return new FileTransferConfigurationPage( m_configuration );
+}
+
+
+IMPLEMENT_CONFIG_PROXY(FileTransferConfiguration)

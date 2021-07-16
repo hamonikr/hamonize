@@ -1,7 +1,7 @@
 /*
  * DemoServerConnection.h - header file for DemoServerConnection class
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,30 +33,35 @@ class DemoServer;
 // the demo server creates an instance of this class for each client connection,
 // i.e. each client is connected to a different server thread for best
 // performance
-class DemoServerConnection : public QObject
+class DemoServerConnection : public QThread
 {
 	Q_OBJECT
 public:
+	using Password = CryptoCore::PlaintextPassword;
+
 	enum {
 		ProtocolRetryTime = 250,
 	};
 
-	DemoServerConnection( const QString& demoAccessToken, QTcpSocket* socket, DemoServer* demoServer );
-	~DemoServerConnection() override;
+	DemoServerConnection( DemoServer* demoServer, const Password& demoAccessToken, quintptr socketDescriptor );
+	~DemoServerConnection() = default;
 
-public slots:
+private:
+	void run() override;
+
 	void processClient();
 	void sendFramebufferUpdate();
 
-private:
 	bool receiveClientMessage();
 
+	const Password m_demoAccessToken;
 	DemoServer* m_demoServer;
 
-	QTcpSocket* m_socket;
+	quintptr m_socketDescriptor;
+	QTcpSocket* m_socket{nullptr};
 
 	VncServerClient m_vncServerClient;
-	DemoServerProtocol m_serverProtocol;
+	DemoServerProtocol* m_serverProtocol{nullptr};
 
 	const QMap<int, int> m_rfbClientToServerMessageSizes;
 

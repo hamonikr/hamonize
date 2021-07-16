@@ -1,7 +1,7 @@
 /*
  * VncClientProtocol.cpp - implementation of the VncClientProtocol class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,7 +25,7 @@
 extern "C"
 {
 #include "rfb/rfbproto.h"
-#include "common/d3des.h"
+#include "d3des.h"
 }
 
 #include <QBuffer>
@@ -66,10 +66,10 @@ vncEncryptBytes(unsigned char *bytes, const char *passwd, size_t passwd_length)
 
 
 
-VncClientProtocol::VncClientProtocol( QTcpSocket* socket, const QString& vncPassword ) :
+VncClientProtocol::VncClientProtocol( QTcpSocket* socket, const Password& vncPassword ) :
 	m_socket( socket ),
 	m_state( Disconnected ),
-	m_vncPassword( vncPassword.toUtf8() ),
+	m_vncPassword( vncPassword ),
 	m_serverInitMessage(),
 	m_pixelFormat( { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } ),
 	m_framebufferWidth( 0 ),
@@ -183,6 +183,13 @@ void VncClientProtocol::requestFramebufferUpdate( bool incremental )
 
 bool VncClientProtocol::receiveMessage()
 {
+	if( m_socket->bytesAvailable() > MaximumMessageSize )
+	{
+		vCritical() << "Message too big or invalid";
+		m_socket->close();
+		return false;
+	}
+
 	uint8_t messageType = 0;
 	if( m_socket->peek( reinterpret_cast<char *>( &messageType ), sizeof(messageType) ) != sizeof(messageType) )
 	{
@@ -282,19 +289,26 @@ bool VncClientProtocol::receiveSecurityTypes()
 			return false;
 		}
 
-		const char securityType = rfbSecTypeVncAuth;
+		char securityType = rfbSecTypeInvalid;
 
-		if( securityTypeList.contains( securityType ) == false )
+		if( securityTypeList.contains( rfbSecTypeVncAuth ) )
 		{
-			vCritical() << "no supported security type!";
+			securityType = rfbSecTypeVncAuth;
+			m_state = State::SecurityChallenge;
+		}
+		else if( securityTypeList.contains( rfbSecTypeNone ) )
+		{
+			securityType = rfbSecTypeNone;
+			m_state = State::SecurityResult;
+		}
+		else
+		{
+			vCritical() << "unsupported security types!" << securityTypeList;
 			m_socket->close();
-
 			return false;
 		}
 
 		m_socket->write( &securityType, sizeof(securityType) );
-
-		m_state = SecurityChallenge;
 
 		return true;
 	}
@@ -485,7 +499,7 @@ bool VncClientProtocol::receiveCutTextMessage()
 		return false;
 	}
 
-	return readMessage( sz_rfbServerCutTextMsg + qFromBigEndian( message.length ) );
+	return readMessage( sz_rfbServerCutTextMsg + static_cast<int>( qFromBigEndian( message.length ) ) );
 }
 
 

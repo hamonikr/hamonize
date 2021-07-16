@@ -1,7 +1,7 @@
 /*
  * RemoteAccessFeaturePlugin.cpp - implementation of RemoteAccessFeaturePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,11 +24,11 @@
 
 #include <QApplication>
 #include <QInputDialog>
-#include <QMessageBox>
 
 #include "AuthenticationCredentials.h"
 #include "RemoteAccessFeaturePlugin.h"
 #include "RemoteAccessWidget.h"
+#include "VeyonConfiguration.h"
 #include "VeyonMasterInterface.h"
 
 
@@ -38,31 +38,20 @@ RemoteAccessFeaturePlugin::RemoteAccessFeaturePlugin( QObject* parent ) :
 						 Feature::Session | Feature::Master,
 						 Feature::Uid( "a18e545b-1321-4d4e-ac34-adc421c6e9c8" ),
 						 Feature::Uid(),
-						 tr( "Remote view" ), QString(),
+						 tr( "Remote view" ), {},
 						 tr( "Open a remote view for a computer without interaction." ),
 						 QStringLiteral(":/remoteaccess/kmag.png") ),
 	m_remoteControlFeature( QStringLiteral( "RemoteControl" ),
 							Feature::Session | Feature::Master,
 							Feature::Uid( "ca00ad68-1709-4abe-85e2-48dff6ccf8a2" ),
 							Feature::Uid(),
-							tr( "Remote control" ), QString(),
+							tr( "Remote control" ), {},
 							tr( "Open a remote control window for a computer." ),
 							QStringLiteral(":/remoteaccess/krdc.png") ),
-	/* hihoon BIOSControl start */
-	m_remoteBIOSControlFeature( QStringLiteral( "RemoteBIOSControl" ),
-							Feature::Session | Feature::Master,
-							Feature::Uid( "72b8a722-be77-4a06-81ac-c046da4e2fa5" ),
-							Feature::Uid(),
-							tr( "Remote BIOS control" ), QString(),
-							tr( "Open a remote BIOS control window for a computer BIOS." ),
-							QStringLiteral(":/remoteaccess/krdc.png") ),
-	/* hihoon BIOSControl end */
-	// hihoon m_features( { m_remoteViewFeature, m_remoteControlFeature } ),
-	m_features( { m_remoteViewFeature, m_remoteControlFeature,m_remoteBIOSControlFeature } ),
+	m_features( { m_remoteViewFeature, m_remoteControlFeature } ),
 	m_commands( {
 { QStringLiteral("view"), m_remoteViewFeature.displayName() },
 { QStringLiteral("control"), m_remoteControlFeature.displayName() },
-{ QStringLiteral("bioscontrol"), m_remoteBIOSControlFeature.displayName() },
 { QStringLiteral("help"), tr( "Show help about command" ) },
 				} )
 {
@@ -77,15 +66,57 @@ const FeatureList &RemoteAccessFeaturePlugin::featureList() const
 
 
 
+bool RemoteAccessFeaturePlugin::controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+											   const ComputerControlInterfaceList& computerControlInterfaces )
+{
+	if( hasFeature( featureUid ) == false ||
+		operation != Operation::Start )
+	{
+		return false;
+	}
+
+	auto viewOnly = featureUid == m_remoteViewFeature.uid();
+	if( remoteControlEnabled() == false )
+	{
+		viewOnly = true;
+	}
+
+	Computer computer;
+	computer.setHostAddress( arguments.value( argToString(Argument::HostName) ).toString() );
+	computer.setName( computer.hostAddress() );
+
+	if( computer.hostAddress().isEmpty() )
+	{
+		if( computerControlInterfaces.isEmpty() == false )
+		{
+			computer = computerControlInterfaces.first()->computer();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	new RemoteAccessWidget( ComputerControlInterface::Pointer::create( computer ), viewOnly,
+							remoteViewEnabled() && remoteControlEnabled() );
+
+	return true;
+}
+
+
+
 bool RemoteAccessFeaturePlugin::startFeature( VeyonMasterInterface& master, const Feature& feature,
 											  const ComputerControlInterfaceList& computerControlInterfaces )
 {
+	if( hasFeature( feature.uid() ) == false )
+	{
+		return false;
+	}
+
 	// determine which computer to access and ask if neccessary
 	ComputerControlInterface::Pointer remoteAccessComputer;
 
-	if( ( feature.uid() == m_remoteViewFeature.uid() ||
-		  feature.uid() == m_remoteControlFeature.uid() ) &&
-			computerControlInterfaces.count() != 1 )
+	if( computerControlInterfaces.count() != 1 )
 	{
 		QString hostName = QInputDialog::getText( master.mainWindow(),
 												  tr( "Remote access" ),
@@ -110,105 +141,14 @@ bool RemoteAccessFeaturePlugin::startFeature( VeyonMasterInterface& master, cons
 		return false;
 	}
 
-
-	if( feature.uid() == m_remoteViewFeature.uid() )
+	auto viewOnly = feature.uid() == m_remoteViewFeature.uid();
+	if( remoteControlEnabled() == false )
 	{
-		// 2019.05.10 hihoon RemoteBIOSControl mode 추가 
-		// 2019.05.10 hihoon remark // new RemoteAccessWidget( remoteAccessComputer, true );
-
-		new RemoteAccessWidget( remoteAccessComputer, VncView::ViewOnlyMode );
-
-		return true;
+		viewOnly = true;
 	}
-	else if( feature.uid() == m_remoteControlFeature.uid() )
-	{
-		/* UI가 없어 실행되지 않음
-		QMessageBox messageBox(QMessageBox::Information, tr( "Information" ),
-								tr( "Open a remote control window for a computer. Becouse this computer is not support remote BIOS control." ));
-		messageBox.show();
-		*/
 
-		// 2019.05.10 hihoon RemoteBIOSControl mode 추가 
-		// 2019.05.10 hihoon remark // new RemoteAccessWidget( remoteAccessComputer, false );
-		new RemoteAccessWidget( remoteAccessComputer, VncView::RemoteControlMode );
-
-		return true;
-	}
-	/* 2019.05.08 hihoon start : 이함수의 로그는 VeyonAdmin.log 파일에 남는다. */
-	else if( feature.uid() == m_remoteBIOSControlFeature.uid() )
-	{
-		/* UI가 없어 실행되지 않음
-		QMessageBox messageBox(QMessageBox::Information, tr( "Information" ),
-								tr( "Open a remote control window for a computer. Becouse this computer is not support remote BIOS control." ));
-		messageBox.show();
-		*/
-
-		vDebug() << "###### hihoon 4 ######## " << "feature.uid:" << feature.uid() 
-							<< ", m_remoteBIOSControlFeature.uid:" << m_remoteBIOSControlFeature.uid();
-
-        if (1) {
-
-            // TODO : gtk-vnc 실행
-            // linux : gvncviewer hostAddress
-            // windows : ?
-
-
-            bool _hasExtVNC = false;
-
-            QStringList _argList;
-            QString _extvncPath;
-
-            QString _linux_ext_vncPath = QString::fromLatin1("/usr/bin/gvncviewer");
-            QString _window_ext_vncPath = QString::fromLatin1("c:/Program Files/uvnc bvba/UltraVNC/vncviewer.exe");
-
-            if(QFile::exists (_linux_ext_vncPath)) {
-
-                _extvncPath = _linux_ext_vncPath;
-                _hasExtVNC = true;
-
-            }
-            else if (QFile::exists (_window_ext_vncPath) ) {
-
-                _extvncPath = _window_ext_vncPath;
-                _hasExtVNC = true;
-
-                _argList << QString::fromLatin1(("/nostatus"));
-
-            }
-            else {
-
-                _hasExtVNC = false;
-
-                QMessageBox::information( nullptr,
-                        tr( "Execution impossible" ),
-                        tr(	"No external VNC program were found. "
-                            "Please VNC program install at proper location %1 " ).arg( _window_ext_vncPath ) );
-            }
-
-            if (_hasExtVNC) {
-
-                QString _hostAddress = remoteAccessComputer->computer().hostAddress();
-                _argList.append(_hostAddress );
-
-                Process = new QProcess(this);
-                Process->start(_extvncPath, _argList);
-
-                return true;
-            }
-            else {
-
-                return false;
-            }
-
-        }
-        else {
-
-            new RemoteAccessWidget( remoteAccessComputer, VncView::RemoteBIOSControlMode );
-        }
-
-		return true;
-	}
-	/* hihoon end */
+	new RemoteAccessWidget( remoteAccessComputer, viewOnly,
+							remoteViewEnabled() && remoteControlEnabled() );
 
 	return false;
 }
@@ -236,7 +176,12 @@ CommandLinePluginInterface::RunResult RemoteAccessFeaturePlugin::handle_view( co
 		return NotEnoughArguments;
 	}
 
-	return remoteAccess( arguments.first(), VncView::ViewOnlyMode ) ? Successful : Failed;
+	if( remoteViewEnabled() == false )
+	{
+		return InvalidCommand;
+	}
+
+	return remoteAccess( arguments.first(), true ) ? Successful : Failed;
 }
 
 
@@ -248,36 +193,45 @@ CommandLinePluginInterface::RunResult RemoteAccessFeaturePlugin::handle_control(
 		return NotEnoughArguments;
 	}
 
-	return remoteAccess( arguments.first(), VncView::RemoteControlMode ) ? Successful : Failed;
-}
-
-
-
-CommandLinePluginInterface::RunResult RemoteAccessFeaturePlugin::handle_bioscontrol( const QStringList& arguments )
-{
-	if( arguments.count() < 1 )
+	if( remoteControlEnabled() == false )
 	{
-		return NotEnoughArguments;
+		return InvalidCommand;
 	}
 
-	return remoteAccess( arguments.first(), VncView::RemoteBIOSControlMode ) ? Successful : Failed;
+	return remoteAccess( arguments.first(), false ) ? Successful : Failed;
 }
+
 
 
 CommandLinePluginInterface::RunResult RemoteAccessFeaturePlugin::handle_help( const QStringList& arguments )
 {
-	if( arguments.value( 0 ) == QStringLiteral("view") )
+	if( arguments.value( 0 ) == QLatin1String("view") )
 	{
 		printf( "\nremoteaccess view <host>\n\n" );
 		return NoResult;
 	}
-	else if( arguments.value( 0 ) == QStringLiteral("control") )
+	else if( arguments.value( 0 ) == QLatin1String("control") )
 	{
 		printf( "\nremoteaccess control <host>\n}n" );
 		return NoResult;
 	}
 
 	return InvalidCommand;
+}
+
+
+
+bool RemoteAccessFeaturePlugin::remoteViewEnabled() const
+{
+	return VeyonCore::config().disabledFeatures().contains( m_remoteViewFeature.uid().toString() ) == false;
+
+}
+
+
+
+bool RemoteAccessFeaturePlugin::remoteControlEnabled() const
+{
+	return VeyonCore::config().disabledFeatures().contains( m_remoteControlFeature.uid().toString() ) == false;
 }
 
 
@@ -295,9 +249,7 @@ bool RemoteAccessFeaturePlugin::initAuthentication()
 
 
 
-// 2019.05.10 hihoon RemoteBIOSControl mode 추가 
-// 2019 05.10 hihoon remark // bool RemoteAccessFeaturePlugin::remoteAccess( const QString& hostAddress, bool viewOnly )
-bool RemoteAccessFeaturePlugin::remoteAccess( const QString& hostAddress, VncView::Mode remoteMode )
+bool RemoteAccessFeaturePlugin::remoteAccess( const QString& hostAddress, bool viewOnly )
 {
 	if( initAuthentication() == false )
 	{
@@ -308,11 +260,13 @@ bool RemoteAccessFeaturePlugin::remoteAccess( const QString& hostAddress, VncVie
 	remoteComputer.setName( hostAddress );
 	remoteComputer.setHostAddress( hostAddress );
 
-	// 2019.05.10 hihoon RemoteBIOSControl mode 추가 
-	// 2019 05.10 hihoon remark // new RemoteAccessWidget( ComputerControlInterface::Pointer::create( remoteComputer ), viewOnly );
+	if( remoteControlEnabled() == false )
+	{
+		viewOnly = true;
+	}
 
-    new RemoteAccessWidget( ComputerControlInterface::Pointer::create( remoteComputer ), remoteMode );
-
+	new RemoteAccessWidget( ComputerControlInterface::Pointer::create( remoteComputer ), viewOnly,
+							remoteViewEnabled() && remoteControlEnabled() );
 
 	qApp->exec();
 

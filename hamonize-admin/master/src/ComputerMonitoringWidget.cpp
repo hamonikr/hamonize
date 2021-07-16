@@ -1,7 +1,7 @@
 /*
  * ComputerMonitoringWidget.cpp - provides a view with computer monitor thumbnails
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,91 +22,63 @@
  *
  */
 
+#include <QApplication>
 #include <QMenu>
 #include <QScrollBar>
 #include <QShowEvent>
-#include <QTimer>
 
 #include "ComputerControlListModel.h"
-#include "ComputerManager.h"
 #include "ComputerMonitoringWidget.h"
-#include "ComputerSortFilterProxyModel.h"
+#include "ComputerMonitoringModel.h"
 #include "VeyonMaster.h"
 #include "FeatureManager.h"
 #include "VeyonConfiguration.h"
-#include "UserConfig.h"
 
-#include "ui_ComputerMonitoringWidget.h"
 
 ComputerMonitoringWidget::ComputerMonitoringWidget( QWidget *parent ) :
-	QWidget(parent),
-	ui(new Ui::ComputerMonitoringWidget),
-	m_master( nullptr ),
+	FlexibleListView( parent ),
 	m_featureMenu( new QMenu( this ) )
 {
-	ui->setupUi( this );
+	const auto computerMonitoringThumbnailSpacing = VeyonCore::config().computerMonitoringThumbnailSpacing();
 
-	ui->listView->setUidRole( ComputerControlListModel::UidRole );
+	setContextMenuPolicy( Qt::CustomContextMenu );
+	setAcceptDrops( true );
+	setDragEnabled( true );
+	setDragDropMode( QAbstractItemView::DropOnly );
+	setDefaultDropAction( Qt::MoveAction );
+	setSelectionMode( QAbstractItemView::ExtendedSelection );
+	setFlow( QListView::LeftToRight );
+	setWrapping( true );
+	setResizeMode( QListView::Adjust );
+	setSpacing( computerMonitoringThumbnailSpacing  );
+	setViewMode( QListView::IconMode );
+	setUniformItemSizes( true );
+	setSelectionRectVisible( true );
 
-	connect( ui->listView, &QListView::doubleClicked,
-			 this, &ComputerMonitoringWidget::runDoubleClickFeature );
+	setUidRole( ComputerControlListModel::UidRole );
 
-	connect( ui->listView, &QListView::customContextMenuRequested,
-			 this, &ComputerMonitoringWidget::showContextMenu );
+	connect( this, &QListView::doubleClicked, this, &ComputerMonitoringWidget::runDoubleClickFeature );
+	connect( this, &QListView::customContextMenuRequested,
+			 this, [this]( QPoint pos ) { showContextMenu( mapToGlobal( pos ) ); } );
+
+	initializeView( this );
+
+	setModel( dataModel() );
 }
 
 
 
-ComputerMonitoringWidget::~ComputerMonitoringWidget()
+ComputerControlInterfaceList ComputerMonitoringWidget::selectedComputerControlInterfaces() const
 {
-	if( m_master )
-	{
-		m_master->userConfig().setFilterPoweredOnComputers( listModel().stateFilter() != ComputerControlInterface::State::None );
-		m_master->userConfig().setComputerPositions( ui->listView->savePositions() );
-		m_master->userConfig().setUseCustomComputerPositions( ui->listView->flexible() );
-	}
-
-	delete ui;
-}
-
-
-
-void ComputerMonitoringWidget::setVeyonMaster( VeyonMaster& masterCore )
-{
-	if( m_master )
-	{
-		return;
-	}
-
-	m_master = &masterCore;
-
-	auto palette = ui->listView->palette();
-	palette.setColor( QPalette::Base, VeyonCore::config().computerMonitoringBackgroundColor() );
-	palette.setColor( QPalette::Text, VeyonCore::config().computerMonitoringTextColor() );
-	ui->listView->setPalette( palette );
-
-	// attach proxy model to view
-	ui->listView->setModel( &listModel() );
-
-	// load custom positions
-	ui->listView->loadPositions( m_master->userConfig().computerPositions() );
-	ui->listView->setFlexible( m_master->userConfig().useCustomComputerPositions() );
-}
-
-
-
-ComputerControlInterfaceList ComputerMonitoringWidget::selectedComputerControlInterfaces()
-{
-	const auto& computerControlListModel = m_master->computerControlListModel();
 	ComputerControlInterfaceList computerControlInterfaces;
 
-	const auto selectedIndices = ui->listView->selectionModel()->selectedIndexes();
+	const auto selectedIndices = selectionModel()->selectedIndexes(); // clazy:exclude=inefficient-qlist
 	computerControlInterfaces.reserve( selectedIndices.size() );
 
 	for( const auto& index : selectedIndices )
 	{
-		const auto sourceIndex = listModel().mapToSource( index );
-		computerControlInterfaces.append( computerControlListModel.computerControlInterface( sourceIndex ) );
+		computerControlInterfaces.append( model()->data( index, ComputerControlListModel::ControlInterfaceRole )
+											  .value<ComputerControlInterface::Pointer>() );
 	}
 
 	return computerControlInterfaces;
@@ -114,226 +86,145 @@ ComputerControlInterfaceList ComputerMonitoringWidget::selectedComputerControlIn
 
 
 
-void ComputerMonitoringWidget::setSearchFilter( const QString& searchFilter )
+bool ComputerMonitoringWidget::performIconSizeAutoAdjust()
 {
-	listModel().setFilterRegExp( searchFilter );
-}
-
-
-
-void ComputerMonitoringWidget::setFilterPoweredOnComputers( bool enabled )
-{
-	listModel().setStateFilter( enabled ? ComputerControlInterface::State::Connected : ComputerControlInterface::State::None );
-}
-
-
-
-void ComputerMonitoringWidget::setComputerScreenSize( int size )
-{
-	if( m_master )
+	if( ComputerMonitoringView::performIconSizeAutoAdjust() == false)
 	{
-		m_master->userConfig().setMonitoringScreenSize( size );
-
-		m_master->computerControlListModel().updateComputerScreenSize();
-
-		ui->listView->setIconSize( QSize( size, size * 9 / 16 ) );
-	}
-}
-
-
-
-void ComputerMonitoringWidget::autoAdjustComputerScreenSize()
-{
-	int size = ui->listView->iconSize().width();
-
-	if( ui->listView->verticalScrollBar()->isVisible() ||
-			ui->listView->horizontalScrollBar()->isVisible() )
-	{
-		while( ( ui->listView->verticalScrollBar()->isVisible() ||
-				 ui->listView->horizontalScrollBar()->isVisible() ) &&
-			   size > MinimumComputerScreenSize )
-		{
-			size -= 10;
-			setComputerScreenSize( size );
-			QApplication::processEvents();
-		}
-	}
-	else
-	{
-		while( ui->listView->verticalScrollBar()->isVisible() == false &&
-			   ui->listView->horizontalScrollBar()->isVisible() == false &&
-			   size < MaximumComputerScreenSize )
-		{
-			size += 10;
-			setComputerScreenSize( size );
-			QApplication::processEvents();
-		}
-
-		setComputerScreenSize( size-20 );
+		return false;
 	}
 
-	emit computerScreenSizeAdjusted( m_master->userConfig().monitoringScreenSize() );
+	m_ignoreResizeEvent = true;
+
+	auto size = iconSize().width();
+
+	setComputerScreenSize( size );
+	QApplication::processEvents();
+
+	while( verticalScrollBar()->isVisible() == false &&
+		   horizontalScrollBar()->isVisible() == false &&
+		   size < MaximumComputerScreenSize )
+	{
+		size += IconSizeAdjustStepSize;
+		setComputerScreenSize( size );
+		QApplication::processEvents();
+	}
+
+	while( ( verticalScrollBar()->isVisible() ||
+			 horizontalScrollBar()->isVisible() ) &&
+		   size > MinimumComputerScreenSize )
+	{
+		size -= IconSizeAdjustStepSize;
+		setComputerScreenSize( size );
+		QApplication::processEvents();
+	}
+
+	Q_EMIT computerScreenSizeAdjusted( size );
+
+	m_ignoreResizeEvent = false;
+
+	return true;
 }
+
 
 
 
 void ComputerMonitoringWidget::setUseCustomComputerPositions( bool enabled )
 {
-	ui->listView->setFlexible( enabled );
+	setFlexible( enabled );
 }
 
 
 
 void ComputerMonitoringWidget::alignComputers()
 {
-	ui->listView->alignToGrid();
+	alignToGrid();
 }
 
 
 
-void ComputerMonitoringWidget::showContextMenu( QPoint pos )
+void ComputerMonitoringWidget::showContextMenu( QPoint globalPos )
 {
-	populateFeatureMenu( activeFeatures( selectedComputerControlInterfaces() ) );
+	populateFeatureMenu( selectedComputerControlInterfaces() );
 
-	m_featureMenu->exec( ui->listView->mapToGlobal( pos ) );
+	m_featureMenu->exec( globalPos );
 }
 
 
 
-void ComputerMonitoringWidget::runDoubleClickFeature( const QModelIndex& index )
+void ComputerMonitoringWidget::setIconSize( const QSize& size )
 {
-	const Feature& feature = m_master->featureManager().feature( VeyonCore::config().computerDoubleClickFeature() );
-
-	if( index.isValid() && feature.isValid() )
-	{
-		ui->listView->selectionModel()->select( index, QItemSelectionModel::SelectCurrent );
-		runFeature( feature );
-	}
+	QAbstractItemView::setIconSize( size );
 }
 
 
 
-void ComputerMonitoringWidget::runFeature( const Feature& feature )
+void ComputerMonitoringWidget::setColors( const QColor& backgroundColor, const QColor& textColor )
 {
-	if( m_master == nullptr )
-	{
-		return;
-	}
-
-	ComputerControlInterfaceList computerControlInterfaces = selectedComputerControlInterfaces();
-
-	// mode feature already active?
-	if( feature.testFlag( Feature::Mode ) &&
-			activeFeatures( computerControlInterfaces ).contains( feature.uid().toString() ) )
-	{
-		// then stop it
-		m_master->featureManager().stopFeature( *m_master, feature, computerControlInterfaces );
-	}
-	else
-	{
-		// stop all other active mode feature
-		if( feature.testFlag( Feature::Mode ) )
-		{
-			for( const auto& currentFeature : m_master->features() )
-			{
-				if( currentFeature.testFlag( Feature::Mode ) && currentFeature != feature )
-				{
-					m_master->featureManager().stopFeature( *m_master, currentFeature, computerControlInterfaces );
-				}
-			}
-		}
-
-		m_master->featureManager().startFeature( *m_master, feature, computerControlInterfaces );
-	}
+	auto pal = palette();
+	pal.setColor( QPalette::Base, backgroundColor );
+	pal.setColor( QPalette::Text, textColor );
+	setPalette( pal );
 }
 
 
 
-ComputerSortFilterProxyModel& ComputerMonitoringWidget::listModel()
+QJsonArray ComputerMonitoringWidget::saveComputerPositions()
 {
-	return m_master->computerSortFilterProxyModel();
+	return savePositions();
 }
 
 
 
-void ComputerMonitoringWidget::showEvent( QShowEvent* event )
+bool ComputerMonitoringWidget::useCustomComputerPositions()
 {
-	if( event->spontaneous() == false &&
-			VeyonCore::config().autoAdjustGridSize() )
-	{
-		QTimer::singleShot( 250, this, &ComputerMonitoringWidget::autoAdjustComputerScreenSize );
-	}
-
-	QWidget::showEvent( event );
+	return flexible();
 }
 
 
 
-void ComputerMonitoringWidget::wheelEvent( QWheelEvent* event )
+void ComputerMonitoringWidget::loadComputerPositions( const QJsonArray& positions )
 {
-	if( event->modifiers().testFlag( Qt::ControlModifier ) )
-	{
-		setComputerScreenSize( qBound<int>( MinimumComputerScreenSize,
-											ui->listView->iconSize().width() + event->angleDelta().y() / 8,
-											MaximumComputerScreenSize ) );
-
-		emit computerScreenSizeAdjusted( m_master->userConfig().monitoringScreenSize() );
-
-		event->accept();
-	}
-	else
-	{
-		QWidget::wheelEvent( event );
-	}
+	loadPositions( positions );
 }
 
 
 
-FeatureUidList ComputerMonitoringWidget::activeFeatures( const ComputerControlInterfaceList& computerControlInterfaces )
-{
-	FeatureUidList featureUidList;
-
-	for( const auto& controlInterface : computerControlInterfaces )
-	{
-		featureUidList.append( controlInterface->activeFeatures() );
-	}
-
-	featureUidList.removeDuplicates();
-
-	return featureUidList;
-}
-
-
-
-void ComputerMonitoringWidget::populateFeatureMenu( const FeatureUidList& activeFeatures )
+void ComputerMonitoringWidget::populateFeatureMenu(  const ComputerControlInterfaceList& computerControlInterfaces )
 {
 	Plugin::Uid previousPluginUid;
 
 	m_featureMenu->clear();
 
-	for( const auto& feature : m_master->features() )
+	for( const auto& feature : master()->features() )
 	{
-		Plugin::Uid pluginUid = m_master->featureManager().pluginUid( feature );
+		if( feature.testFlag( Feature::Meta ) )
+		{
+			continue;
+		}
+
+		Plugin::Uid pluginUid = master()->featureManager().pluginUid( feature );
 
 		if( previousPluginUid.isNull() == false &&
-				pluginUid != previousPluginUid &&
-				feature.testFlag( Feature::Mode ) == false )
+			pluginUid != previousPluginUid &&
+			feature.testFlag( Feature::Mode ) == false )
 		{
 			m_featureMenu->addSeparator();
 		}
 
 		previousPluginUid = pluginUid;
 
+		auto active = false;
+
 		auto label = feature.displayName();
-		if( activeFeatures.contains( feature.uid().toString() ) &&
-				feature.displayNameActive().isEmpty() == false )
+		if( feature.displayNameActive().isEmpty() == false &&
+			isFeatureOrSubFeatureActive( computerControlInterfaces, feature.uid() ) )
 		{
 			label = feature.displayNameActive();
+			active = true;
 		}
 
-		const auto subFeatures = m_master->subFeatures( feature.uid() );
-
-		if( subFeatures.isEmpty() )
+		const auto subFeatures = master()->subFeatures( feature.uid() );
+		if( subFeatures.isEmpty() || active )
 		{
 			addFeatureToMenu( feature, label );
 		}
@@ -350,12 +241,12 @@ void ComputerMonitoringWidget::addFeatureToMenu( const Feature& feature, const Q
 {
 #if QT_VERSION < 0x050600
 #warning Building legacy compat code for unsupported version of Qt
-		auto action = m_featureMenu->addAction( QIcon( feature.iconUrl() ), label );
-		connect( action, &QAction::triggered, this, [=] () { runFeature( feature ); } );
+	auto action = m_featureMenu->addAction( QIcon( feature.iconUrl() ), label );
+	connect( action, &QAction::triggered, this, [=] () { runFeature( feature ); } );
 #else
-		m_featureMenu->addAction( QIcon( feature.iconUrl() ),
-								  label,
-								  this, [=] () { runFeature( feature ); } );
+	m_featureMenu->addAction( QIcon( feature.iconUrl() ),
+							  label,
+							  this, [=] () { runFeature( feature ); } );
 #endif
 }
 
@@ -376,5 +267,61 @@ void ComputerMonitoringWidget::addSubFeaturesToMenu( const Feature& parentFeatur
 		menu->addAction( QIcon( subFeature.iconUrl() ), subFeature.displayName(), this,
 						 [=]() { runFeature( subFeature ); }, subFeature.shortcut() );
 #endif
+	}
+}
+
+
+
+void ComputerMonitoringWidget::runDoubleClickFeature( const QModelIndex& index )
+{
+	const Feature& feature = master()->featureManager().feature( VeyonCore::config().computerDoubleClickFeature() );
+
+	if( index.isValid() && feature.isValid() )
+	{
+		selectionModel()->select( index, QItemSelectionModel::SelectCurrent );
+		runFeature( feature );
+	}
+}
+
+
+
+void ComputerMonitoringWidget::resizeEvent( QResizeEvent* event )
+{
+	FlexibleListView::resizeEvent( event );
+
+	if( m_ignoreResizeEvent == false )
+	{
+		initiateIconSizeAutoAdjust();
+	}
+}
+
+
+
+void ComputerMonitoringWidget::showEvent( QShowEvent* event )
+{
+	if( event->spontaneous() == false )
+	{
+		initiateIconSizeAutoAdjust();
+	}
+
+	FlexibleListView::showEvent( event );
+}
+
+
+
+void ComputerMonitoringWidget::wheelEvent( QWheelEvent* event )
+{
+	if( m_ignoreWheelEvent == false &&
+		event->modifiers().testFlag( Qt::ControlModifier ) )
+	{
+		setComputerScreenSize( iconSize().width() + event->angleDelta().y() / 8 );
+
+		Q_EMIT computerScreenSizeAdjusted( computerScreenSize() );
+
+		event->accept();
+	}
+	else
+	{
+		QListView::wheelEvent( event );
 	}
 }

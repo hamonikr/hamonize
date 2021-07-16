@@ -1,7 +1,7 @@
 /*
  * VncEvents.cpp - implementation of VNC event classes
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -60,18 +60,11 @@ void VncPointerEvent::fire(rfbClient *client)
 VncClientCutEvent::VncClientCutEvent( const QString& text ) :
 	m_text( text.toUtf8() )
 {
-//    if(client->serverPort == 5900) {
-//        qDebug() << "vncClientCutEvent::fire(client) ###  hihoon  ### : m_text.data() : " << m_text.data() ;
-//    }
 }
 
 
 
 void VncClientCutEvent::fire( rfbClient* client )
 {
-
-    if(client->serverPort == 5900) {
-        qDebug() << "vncClientCutEvent::fire(client) ###  hihoon  ### : m_text.data() : " << m_text.data() ;
-    }
 	SendClientCutText( client, m_text.data(), m_text.size() ); // clazy:exclude=detaching-member
 }

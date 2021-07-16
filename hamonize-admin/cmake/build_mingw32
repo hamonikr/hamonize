@@ -1,2 +1,0 @@
-cmake `pwd`/../hamonize -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=`pwd`/../hamonize/cmake/modules/Win32Toolchain.cmake -DCMAKE_MODULE_PATH=`pwd`/../hamonize/cmake/modules/
-

@@ -1,7 +1,7 @@
 /*
  * VeyonMaster.h - global instances
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,7 @@ class QModelIndex;
 class BuiltinFeatures;
 class ComputerControlListModel;
 class ComputerManager;
-class ComputerSortFilterProxyModel;
+class ComputerMonitoringModel;
 class FeatureManager;
 class MainWindow;
 class UserConfig;
@@ -45,7 +45,7 @@ class VeyonMaster : public VeyonMasterInterface
 {
 	Q_OBJECT
 public:
-	VeyonMaster( QObject* parent = nullptr );
+	explicit VeyonMaster( QObject* parent = nullptr );
 	~VeyonMaster() override;
 
 	FeatureManager& featureManager()
@@ -68,9 +68,9 @@ public:
 		return *m_computerControlListModel;
 	}
 
-	ComputerSortFilterProxyModel& computerSortFilterProxyModel()
+	ComputerMonitoringModel* computerMonitoringModel() const
 	{
-		return *m_computerSortFilterProxyModel;
+		return m_computerMonitoringModel;
 	}
 
 	const FeatureList& features() const
@@ -79,6 +79,10 @@ public:
 	}
 
 	FeatureList subFeatures( Feature::Uid parentFeatureUid ) const;
+	FeatureUidList subFeaturesUids( Feature::Uid parentFeatureUid ) const;
+	FeatureUidList metaFeaturesUids( const FeatureUidList& featureUids ) const;
+
+	FeatureList modeFeatures() const;
 
 	const Feature::Uid& currentMode() const
 	{
@@ -89,9 +93,16 @@ public:
 	Configuration::Object* userConfigurationObject() override;
 	void reloadSubFeatures() override;
 
+	ComputerControlInterface& localSessionControlInterface() override
+	{
+		return m_localSessionControlInterface;
+	}
+
+	ComputerControlInterfaceList selectedComputerControlInterfaces() const override;
+
 	ComputerControlInterfaceList filteredComputerControlInterfaces();
 
-public slots:
+public Q_SLOTS:
 	void runFeature( const Feature& feature );
 	void enforceDesignatedMode( const QModelIndex& index );
 	void stopAllModeFeatures( const ComputerControlInterfaceList& computerControlInterfaces );
@@ -104,7 +115,9 @@ private:
 	const FeatureList m_features;
 	ComputerManager* m_computerManager;
 	ComputerControlListModel* m_computerControlListModel;
-	ComputerSortFilterProxyModel* m_computerSortFilterProxyModel;
+	ComputerMonitoringModel* m_computerMonitoringModel;
+
+	ComputerControlInterface m_localSessionControlInterface;
 
 	MainWindow* m_mainWindow;
 

@@ -1,7 +1,7 @@
 /*
  * VncConnection.h - declaration of VncConnection class
  *
- * Copyright (c) 2008-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2008-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -39,7 +39,7 @@
 #include "VeyonCore.h"
 #include "SocketDevice.h"
 
-typedef struct _rfbClient rfbClient;
+using rfbClient = struct _rfbClient;
 
 class VncEvent;
 
@@ -47,12 +47,17 @@ class VEYON_CORE_EXPORT VncConnection : public QThread
 {
 	Q_OBJECT
 public:
-
-    enum class RemoteMode
-    {
-        RemoteBIOSControl,
-        RemoteControl
-    } ;
+	// intervals and timeouts
+	static constexpr int DefaultThreadTerminationTimeout = 30000;
+	static constexpr int DefaultConnectTimeout = 10000;
+	static constexpr int DefaultReadTimeout = 30000;
+	static constexpr int DefaultConnectionRetryInterval = 1000;
+	static constexpr int DefaultMessageWaitTimeout = 500;
+	static constexpr int DefaultFastFramebufferUpdateInterval = 100;
+	static constexpr int DefaultFramebufferUpdateWatchdogTimeout = 10000;
+	static constexpr int DefaultSocketKeepaliveIdleTime = 1000;
+	static constexpr int DefaultSocketKeepaliveInterval = 500;
+	static constexpr int DefaultSocketKeepaliveCount = 5;
 
 	enum class Quality
 	{
@@ -75,13 +80,12 @@ public:
 		Disconnected,
 		Connecting,
 		HostOffline,
-		ServiceUnreachable,
+		ServerNotRunning,
 		AuthenticationFailed,
 		ConnectionFailed,
 		Connected
 	} ;
 	Q_ENUM(State)
-
 
 	explicit VncConnection( QObject *parent = nullptr );
 	~VncConnection() override;
@@ -112,11 +116,6 @@ public:
 		return m_host;
 	}
 
-    rfbClient* getClient()
-    {
-        return m_client;
-    }
-
 	void setQuality( Quality quality )
 	{
 		m_quality = quality ;
@@ -128,7 +127,7 @@ public:
 	bool isEventQueueEmpty();
 
 	/** \brief Returns whether framebuffer data is valid, i.e. at least one full FB update received */
-	bool hasValidFrameBuffer() const
+	bool hasValidFramebuffer() const
 	{
 		return m_framebufferState == FramebufferState::Valid;
 	}
@@ -153,7 +152,7 @@ public:
 	void keyEvent( unsigned int key, bool pressed );
 	void clientCut( const QString& text );
 
-signals:
+Q_SIGNALS:
 	void connectionPrepared();
 	void connectionEstablished();
 	void imageUpdated( int x, int y, int w, int h );
@@ -168,20 +167,11 @@ protected:
 	void run() override;
 
 private:
-	// intervals and timeouts
-	static constexpr int ThreadTerminationTimeout = 30000;
-	static constexpr int ConnectionRetryInterval = 1000;
-	static constexpr int MessageWaitTimeout = 500;
-	static constexpr int FastFramebufferUpdateInterval = 100;
-	static constexpr int FramebufferUpdateWatchdogTimeout = 10000;
-	static constexpr int SocketKeepaliveIdleTime = 1000;
-	static constexpr int SocketKeepaliveInterval = 500;
-	static constexpr int SocketKeepaliveCount = 5;
-
 	// RFB parameters
+	using RfbPixel = uint32_t;
 	static constexpr int RfbBitsPerSample = 8;
 	static constexpr int RfbSamplesPerPixel = 3;
-	static constexpr int RfbBytesPerPixel = 4;
+	static constexpr int RfbBytesPerPixel = sizeof(RfbPixel);
 
 	enum class ControlFlag {
 		ScaledScreenNeedsUpdate = 0x01,
@@ -215,6 +205,18 @@ private:
 	static void rfbClientLogNone( const char* format, ... );
 	static void framebufferCleanup( void* framebuffer );
 
+	// intervals and timeouts
+	int m_threadTerminationTimeout{DefaultThreadTerminationTimeout};
+	int m_connectTimeout{DefaultConnectTimeout};
+	int m_readTimeout{DefaultReadTimeout};
+	int m_connectionRetryInterval{DefaultConnectionRetryInterval};
+	int m_messageWaitTimeout{DefaultMessageWaitTimeout};
+	int m_fastFramebufferUpdateInterval{DefaultFastFramebufferUpdateInterval};
+	int m_framebufferUpdateWatchdogTimeout{DefaultFramebufferUpdateWatchdogTimeout};
+	int m_socketKeepaliveIdleTime{DefaultSocketKeepaliveIdleTime};
+	int m_socketKeepaliveInterval{DefaultSocketKeepaliveInterval};
+	int m_socketKeepaliveCount{DefaultSocketKeepaliveCount};
+
 	// states and flags
 	std::atomic<State> m_state;
 	std::atomic<FramebufferState> m_framebufferState;
@@ -225,6 +227,7 @@ private:
 	Quality m_quality;
 	QString m_host;
 	int m_port;
+	int m_defaultPort{-1};
 
 	// thread and timing control
 	QMutex m_globalMutex;

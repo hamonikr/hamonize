@@ -1,7 +1,7 @@
 /*
  * ServiceControl.cpp - class for controlling veyon service
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -81,7 +81,7 @@ void ServiceControl::registerService()
 	serviceControl( tr( "Registering service %1" ).arg( m_name ),
 					QtConcurrent::run( [=]() { VeyonCore::platform().serviceFunctions().install( m_name,
 																								 m_filePath,
-																								 PlatformServiceFunctions::StartModeAuto,
+																								 PlatformServiceFunctions::StartMode::Auto,
 																								 m_displayName ); } ) );
 }
 
@@ -112,7 +112,7 @@ void ServiceControl::serviceControl( const QString& title, const Operation& oper
 
 void ServiceControl::graphicalFeedback( const QString& title, const Operation& operation )
 {
-	QProgressDialog pd( title, QString(), 0, 0, m_parent );
+	QProgressDialog pd( title, {}, 0, 0, m_parent );
 	pd.setWindowTitle( tr( "Service control" ) );
 
 	auto b = new QProgressBar( &pd );

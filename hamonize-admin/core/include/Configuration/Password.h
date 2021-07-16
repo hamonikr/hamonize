@@ -1,7 +1,7 @@
 /*
  * Configuration/Password.h - Configuration::Password class
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "VeyonCore.h"
+#include "CryptoCore.h"
 
 namespace Configuration
 {
@@ -35,14 +35,14 @@ class VEYON_CORE_EXPORT Password
 public:
 	Password() = default;
 
-	QString plainText() const;
+	CryptoCore::PlaintextPassword plainText() const;
 
 	const QString& encrypted() const
 	{
 		return m_encrypted;
 	}
 
-	static Password fromPlainText( const QString& plainText );
+	static Password fromPlainText( const CryptoCore::PlaintextPassword& plainText );
 	static Password fromEncrypted( const QString& encrypted );
 
 private:

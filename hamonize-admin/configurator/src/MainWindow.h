@@ -1,7 +1,7 @@
 /*
  * MainWindow.h - main window of the Veyon Configurator
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,15 +36,16 @@ class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 public:
-	MainWindow( QWidget* parent = nullptr );
+	explicit MainWindow( QWidget* parent = nullptr );
 	~MainWindow() override;
 
 	void reset( bool onlyUI = false );
 	void apply();
 
-	void updateView();
+protected:
+	void resizeEvent( QResizeEvent* event ) override;
 
-private slots:
+private Q_SLOTS:
 	void configurationChanged();
 	void resetOrApply( QAbstractButton *btn );
 	void loadSettingsFromFile();
@@ -52,8 +53,10 @@ private slots:
 	void resetConfiguration();
 	void aboutVeyon();
 
-
 private:
+	void updateSizes();
+	void updateView();
+
 	void switchToStandardView();
 	void switchToAdvancedView();
 

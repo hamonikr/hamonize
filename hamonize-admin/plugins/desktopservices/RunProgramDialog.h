@@ -1,7 +1,7 @@
 /*
  * RunProgramDialog.h - declaration of class RunProgramDialog
  *
- * Copyright (c) 2004-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2004-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -30,7 +30,7 @@ class RunProgramDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	RunProgramDialog( QWidget *parent );
+	explicit RunProgramDialog( QWidget *parent );
 	~RunProgramDialog() override;
 
 	const QString& programs() const

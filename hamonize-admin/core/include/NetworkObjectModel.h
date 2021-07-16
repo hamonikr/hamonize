@@ -1,7 +1,7 @@
 /*
  * NetworkObjectModel.h - base class for data models providing grouped network objects
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,12 +32,12 @@ class VEYON_CORE_EXPORT NetworkObjectModel : public QAbstractItemModel
 {
 	Q_OBJECT
 public:
-	NetworkObjectModel( QObject* parent = nullptr) :
+	explicit NetworkObjectModel( QObject* parent = nullptr) :
 		QAbstractItemModel( parent )
 	{
 	}
 
-	typedef enum Roles
+	enum Role
 	{
 		CheckStateRole = Qt::CheckStateRole,
 		NameRole = Qt::DisplayRole,
@@ -47,6 +47,6 @@ public:
 		MacAddressRole,
 		DirectoryAddressRole,
 		ParentUidRole
-	} Role;
+	} ;
 
 };

@@ -1,7 +1,7 @@
 /*
  * TextMessageFeaturePlugin.h - declaration of TextMessageFeature class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,8 +33,14 @@ class TextMessageFeaturePlugin : public QObject, FeatureProviderInterface, Plugi
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.TextMessage")
 	Q_INTERFACES(PluginInterface FeatureProviderInterface)
 public:
-	TextMessageFeaturePlugin( QObject* parent = nullptr );
-	~TextMessageFeaturePlugin() override {}
+	enum class Argument {
+		Text,
+		Icon
+	};
+	Q_ENUM(Argument)
+
+	explicit TextMessageFeaturePlugin( QObject* parent = nullptr );
+	~TextMessageFeaturePlugin() override = default;
 
 	Plugin::Uid uid() const override
 	{
@@ -68,14 +74,11 @@ public:
 
 	const FeatureList& featureList() const override;
 
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override;
+
 	bool startFeature( VeyonMasterInterface& master, const Feature& feature,
 					   const ComputerControlInterfaceList& computerControlInterfaces ) override;
-
-	bool stopFeature( VeyonMasterInterface& master, const Feature& feature,
-					  const ComputerControlInterfaceList& computerControlInterfaces ) override;
-
-	bool handleFeatureMessage( VeyonMasterInterface& master, const FeatureMessage& message,
-							   ComputerControlInterface::Pointer computerControlInterface ) override;
 
 	bool handleFeatureMessage( VeyonServerInterface& server,
 							   const MessageContext& messageContext,
@@ -86,12 +89,6 @@ public:
 private:
 	enum Commands {
 		ShowTextMessage
-	};
-
-	enum FeatureMessageArguments {
-		MessageTextArgument,
-		MessageIcon,
-		FeatureMessageArgumentCount
 	};
 
 	const Feature m_textMessageFeature;

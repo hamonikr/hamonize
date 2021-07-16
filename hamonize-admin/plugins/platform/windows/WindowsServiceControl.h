@@ -1,7 +1,7 @@
 /*
  * WindowsService.h - class for managing a Windows service
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,7 +33,7 @@ class WindowsServiceControl : public QObject
 	Q_OBJECT
 public:
 	WindowsServiceControl( const QString& name );
-	~WindowsServiceControl();
+	~WindowsServiceControl() override;
 
 	bool isRegistered();
 	bool isRunning();
@@ -45,6 +45,9 @@ public:
 
 private:
 	bool checkService() const;
+
+	static constexpr auto ServiceActionDelay = 10000;
+	static constexpr auto ServiceWaitSleepInterval = 1000;
 
 	const QString m_name;
 	SC_HANDLE m_serviceManager;

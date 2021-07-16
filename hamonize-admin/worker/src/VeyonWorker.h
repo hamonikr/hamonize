@@ -1,7 +1,7 @@
 /*
  * VeyonWorker.h - basic implementation of Veyon Worker
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,14 +33,12 @@ class VeyonWorker : public QObject, VeyonWorkerInterface
 {
 	Q_OBJECT
 public:
-	VeyonWorker( const QString& featureUid, QObject* parent = nullptr );
+	explicit VeyonWorker( const QString& featureUid, QObject* parent = nullptr );
 
 	bool sendFeatureMessageReply( const FeatureMessage& reply ) override;
 
 	VeyonCore& core()
 	{
-        vInfo() << "hihoon : core function Start";
-
 		return m_core;
 	}
 

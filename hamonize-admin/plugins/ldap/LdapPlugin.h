@@ -1,7 +1,7 @@
 /*
  * LdapPlugin.h - declaration of LdapPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -46,7 +46,7 @@ class LdapPlugin : public QObject, PluginInterface,
 				 UserGroupsBackendInterface
 				 ConfigurationPagePluginInterface)
 public:
-	LdapPlugin( QObject* parent = nullptr );
+	explicit LdapPlugin( QObject* parent = nullptr );
 	~LdapPlugin() override;
 
 	Plugin::Uid uid() const override
@@ -114,7 +114,7 @@ public:
 	ConfigurationPage* createConfigurationPage() override;
 
 
-public slots:
+public Q_SLOTS:
 	CommandLinePluginInterface::RunResult handle_autoconfigurebasedn( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_query( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_help( const QStringList& arguments );

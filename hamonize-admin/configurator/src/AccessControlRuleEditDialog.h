@@ -1,7 +1,7 @@
 /*
  * AccessControlRuleEditDialog.h - dialog for editing an AccessControlRule
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,7 @@ class AccessControlRuleEditDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	AccessControlRuleEditDialog(AccessControlRule& rule, QWidget *parent = nullptr);
+	explicit AccessControlRuleEditDialog(AccessControlRule& rule, QWidget *parent = nullptr);
 	~AccessControlRuleEditDialog() override;
 
 	void accept() override;

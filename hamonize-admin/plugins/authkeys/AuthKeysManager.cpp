@@ -1,7 +1,7 @@
 /*
  * AuthKeysManager.cpp - implementation of AuthKeysManager class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -123,7 +123,7 @@ bool AuthKeysManager::deleteKey( const QString& name, const QString& type )
 
 
 
-bool AuthKeysManager::exportKey( const QString& name, const QString& type, const QString& outputFile )
+bool AuthKeysManager::exportKey( const QString& name, const QString& type, const QString& outputFile, bool overwriteExisting )
 {
 	if( checkKey( name, type ) == false )
 	{
@@ -138,7 +138,7 @@ bool AuthKeysManager::exportKey( const QString& name, const QString& type, const
 		return false;
 	}
 
-	if( QFileInfo::exists( outputFile ) )
+	if( overwriteExisting == false && QFileInfo::exists( outputFile ) )
 	{
 		m_resultMessage = tr( "File \"%1\" already exists." ).arg( outputFile );
 		return false;
@@ -366,7 +366,7 @@ QString AuthKeysManager::detectKeyType( const QString& keyFile )
 		return m_keyTypePublic;
 	}
 
-	return QString();
+	return {};
 }
 
 
@@ -413,7 +413,7 @@ QString AuthKeysManager::accessGroup( const QString& key )
 
 	if( checkKey( name, type, false ) == false )
 	{
-		return QString();
+		return {};
 	}
 
 	return VeyonCore::platform().filesystemFunctions().fileOwnerGroup( keyFilePathFromType( name, type ) );
@@ -467,7 +467,7 @@ QString AuthKeysManager::keyNameFromExportedKeyFile( const QString& keyFile )
 		return rx.cap( 1 );
 	}
 
-	return QString();
+	return {};
 }
 
 
@@ -518,7 +518,7 @@ QString AuthKeysManager::keyFilePathFromType( const QString& name, const QString
 		return VeyonCore::filesystem().publicKeyPath( name );
 	}
 
-	return QString();
+	return {};
 }
 
 

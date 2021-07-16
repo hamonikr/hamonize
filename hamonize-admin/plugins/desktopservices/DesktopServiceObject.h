@@ -1,7 +1,7 @@
 /*
  * DesktopServiceObject.h - data class representing a desktop service object
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,8 +33,8 @@ class QJsonObject;
 class DesktopServiceObject
 {
 public:
-	typedef QUuid Uid;
-	typedef QString Name;
+	using Uid = QUuid;
+	using Name = QString;
 
 	enum class Type
 	{
@@ -44,9 +44,9 @@ public:
 	} ;
 
 	DesktopServiceObject( const DesktopServiceObject& other );
-	DesktopServiceObject( Type type = Type::None,
-						  const Name& name = QString(),
-						  const QString& path = QString(),
+	explicit DesktopServiceObject( Type type = Type::None,
+						  const Name& name = {},
+						  const QString& path = {},
 						  Uid uid = Uid() );
 	explicit DesktopServiceObject( const QJsonObject& jsonObject );
 

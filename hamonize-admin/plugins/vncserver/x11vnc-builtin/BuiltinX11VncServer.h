@@ -1,7 +1,7 @@
 /*
  * BuiltinX11VncServer.h - declaration of BuiltinX11VncServer class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,7 +34,7 @@ class BuiltinX11VncServer : public QObject, VncServerPluginInterface, PluginInte
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.BuiltinX11VncServer")
 	Q_INTERFACES(PluginInterface VncServerPluginInterface)
 public:
-	BuiltinX11VncServer( QObject* parent = nullptr );
+	explicit BuiltinX11VncServer( QObject* parent = nullptr );
 
 	Plugin::Uid uid() const override
 	{
@@ -71,20 +71,25 @@ public:
 		return Plugin::ProvidesDefaultImplementation;
 	}
 
+	QStringList supportedSessionTypes() const override
+	{
+		return { QStringLiteral("x11") };
+	}
+
 	QWidget* configurationWidget() override;
 
 	void prepareServer() override;
 
-	void runServer( int serverPort, const QString& password ) override;
+	bool runServer( int serverPort, const Password& password ) override;
 
 	int configuredServerPort() override
 	{
 		return -1;
 	}
 
-	QString configuredPassword() override
+	Password configuredPassword() override
 	{
-		return QString();
+		return {};
 	}
 
 private:

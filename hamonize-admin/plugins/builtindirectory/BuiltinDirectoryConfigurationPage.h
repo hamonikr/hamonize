@@ -1,7 +1,7 @@
 /*
  * BuiltinDirectoryConfigurationPage.h - header for the BuiltinDirectoryConfigurationPage class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -37,14 +37,14 @@ class BuiltinDirectoryConfigurationPage : public ConfigurationPage
 {
 	Q_OBJECT
 public:
-	BuiltinDirectoryConfigurationPage( BuiltinDirectoryConfiguration& configuration, QWidget* parent = nullptr );
-	~BuiltinDirectoryConfigurationPage();
+	explicit BuiltinDirectoryConfigurationPage( BuiltinDirectoryConfiguration& configuration, QWidget* parent = nullptr );
+	~BuiltinDirectoryConfigurationPage() override;
 
 	void resetWidgets() override;
 	void connectWidgetsToProperties() override;
 	void applyConfiguration() override;
 
-private slots:
+private Q_SLOTS:
 	void addLocation();
 	void updateLocation();
 	void removeLocation();

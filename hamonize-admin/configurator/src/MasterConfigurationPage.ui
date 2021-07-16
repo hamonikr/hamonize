@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>MasterConfigurationPage</class>
  <widget class="QWidget" name="MasterConfigurationPage">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>598</width>
-    <height>517</height>
-   </rect>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout_6">
    <property name="topMargin">
     <number>0</number>
@@ -41,9 +33,6 @@
           </property>
           <item row="0" column="2">
            <widget class="QToolButton" name="openUserConfigurationDirectory">
-            <property name="text">
-             <string>...</string>
-            </property>
             <property name="icon">
              <iconset resource="../../core/resources/core.qrc">
               <normaloff>:/core/document-open.png</normaloff>:/core/document-open.png</iconset>
@@ -72,9 +61,6 @@
           </item>
           <item row="1" column="2">
            <widget class="QToolButton" name="openScreenshotDirectory">
-            <property name="text">
-             <string>...</string>
-            </property>
             <property name="icon">
              <iconset resource="../../core/resources/core.qrc">
               <normaloff>:/core/document-open.png</normaloff>:/core/document-open.png</iconset>
@@ -90,14 +76,46 @@
           <string>User interface</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="2" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
              <string>Text color</string>
             </property>
            </widget>
           </item>
+          <item row="4" column="1">
+           <widget class="QPushButton" name="computerMonitoringTextColor"/>
+          </item>
+          <item row="9" column="1">
+           <widget class="QSpinBox" name="computerMonitoringThumbnailSpacing">
+            <property name="suffix">
+             <string> px</string>
+            </property>
+            <property name="prefix">
+             <string/>
+            </property>
+            <property name="minimum">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <number>50</number>
+            </property>
+            <property name="value">
+             <number>16</number>
+            </property>
+           </widget>
+          </item>
           <item row="3" column="1">
+           <widget class="QPushButton" name="computerMonitoringBackgroundColor"/>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>Thumbnail spacing</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
            <widget class="QComboBox" name="computerDisplayRoleContent">
             <item>
              <property name="text">
@@ -116,60 +134,7 @@
             </item>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Computer thumbnail caption</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="computerMonitoringUpdateInterval">
-            <property name="suffix">
-             <string> ms</string>
-            </property>
-            <property name="minimum">
-             <number>250</number>
-            </property>
-            <property name="maximum">
-             <number>60000</number>
-            </property>
-            <property name="singleStep">
-             <number>250</number>
-            </property>
-            <property name="value">
-             <number>1000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="computerMonitoringTextColor"/>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="computerMonitoringBackgroundColor"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Background color</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Thumbnail update interval</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>Sort order</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
+          <item row="7" column="1">
            <widget class="QComboBox" name="computerMonitoringSortOrder">
             <item>
              <property name="text">
@@ -186,6 +151,89 @@
               <string>Only computer name</string>
              </property>
             </item>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Sort order</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QComboBox" name="computerMonitoringAspectRatio">
+            <item>
+             <property name="text">
+              <string>Auto</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">16:9</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">16:10</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">3:2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">4:3</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="computerMonitoringUpdateInterval">
+            <property name="suffix">
+             <string> ms</string>
+            </property>
+            <property name="minimum">
+             <number>250</number>
+            </property>
+            <property name="maximum">
+             <number>10000</number>
+            </property>
+            <property name="singleStep">
+             <number>250</number>
+            </property>
+            <property name="value">
+             <number>1000</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Computer thumbnail caption</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Thumbnail update interval</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Background color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>Thumbnail aspect ratio</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -232,9 +280,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="autoAdjustGridSize">
+           <widget class="QCheckBox" name="autoAdjustMonitoringIconSize">
             <property name="text">
-             <string>Automatically adjust computer thumbnail size</string>
+             <string>Automatically adjust computer icon size</string>
             </property>
            </widget>
           </item>
@@ -272,9 +320,16 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="localComputerHidden">
+           <widget class="QCheckBox" name="hideLocalComputer">
             <property name="text">
              <string>Hide local computer</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="hideOwnSession">
+            <property name="text">
+             <string>Hide local session</string>
             </property>
            </widget>
           </item>
@@ -286,7 +341,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="computerFilterHidden">
+           <widget class="QCheckBox" name="hideComputerFilter">
             <property name="text">
              <string>Hide computer filter field</string>
             </property>
@@ -318,13 +373,20 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="3" column="1">
            <widget class="QComboBox" name="computerDoubleClickFeature"/>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>Feature on computer double click:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="showFeatureWindowsOnSameScreen">
+            <property name="text">
+             <string>Open feature windows on the same screen as the main window</string>
             </property>
            </widget>
           </item>
@@ -387,23 +449,17 @@
            </item>
            <item>
             <widget class="QToolButton" name="disableFeatureButton">
-             <property name="text">
-              <string>...</string>
-             </property>
              <property name="icon">
-              <iconset resource="../resources/configurator.qrc">
-               <normaloff>:/configurator/go-next.png</normaloff>:/configurator/go-next.png</iconset>
+              <iconset resource="../../core/resources/core.qrc">
+               <normaloff>:/core/go-next.png</normaloff>:/core/go-next.png</iconset>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QToolButton" name="enableFeatureButton">
-             <property name="text">
-              <string>...</string>
-             </property>
              <property name="icon">
-              <iconset resource="../resources/configurator.qrc">
-               <normaloff>:/configurator/go-previous.png</normaloff>:/configurator/go-previous.png</iconset>
+              <iconset resource="../../core/resources/core.qrc">
+               <normaloff>:/core/go-previous.png</normaloff>:/core/go-previous.png</iconset>
              </property>
             </widget>
            </item>
@@ -440,20 +496,25 @@
   <tabstop>openUserConfigurationDirectory</tabstop>
   <tabstop>openScreenshotDirectory</tabstop>
   <tabstop>computerMonitoringUpdateInterval</tabstop>
+  <tabstop>computerMonitoringAspectRatio</tabstop>
   <tabstop>computerMonitoringBackgroundColor</tabstop>
   <tabstop>computerMonitoringTextColor</tabstop>
   <tabstop>computerDisplayRoleContent</tabstop>
   <tabstop>computerMonitoringSortOrder</tabstop>
+  <tabstop>computerMonitoringThumbnailSpacing</tabstop>
   <tabstop>accessControlForMasterEnabled</tabstop>
   <tabstop>autoSelectCurrentLocation</tabstop>
-  <tabstop>autoAdjustGridSize</tabstop>
+  <tabstop>autoAdjustMonitoringIconSize</tabstop>
   <tabstop>autoOpenComputerSelectPanel</tabstop>
   <tabstop>showCurrentLocationOnly</tabstop>
   <tabstop>allowAddingHiddenLocations</tabstop>
-  <tabstop>localComputerHidden</tabstop>
+  <tabstop>hideLocalComputer</tabstop>
+  <tabstop>hideOwnSession</tabstop>
   <tabstop>hideEmptyLocations</tabstop>
-  <tabstop>computerFilterHidden</tabstop>
+  <tabstop>hideComputerFilter</tabstop>
   <tabstop>enforceSelectedModeForClients</tabstop>
+  <tabstop>confirmUnsafeActions</tabstop>
+  <tabstop>showFeatureWindowsOnSameScreen</tabstop>
   <tabstop>computerDoubleClickFeature</tabstop>
   <tabstop>allFeaturesListWidget</tabstop>
   <tabstop>disableFeatureButton</tabstop>
@@ -462,7 +523,6 @@
  </tabstops>
  <resources>
   <include location="../../core/resources/core.qrc"/>
-  <include location="../resources/configurator.qrc"/>
  </resources>
  <connections>
   <connection>

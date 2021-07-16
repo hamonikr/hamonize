@@ -1,7 +1,7 @@
 /*
  * main.cpp - main file for Veyon Server
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -23,7 +23,6 @@
  */
 
 #include <QCoreApplication>
-#include <QApplication>
 
 #include "ComputerControlServer.h"
 #include "VeyonConfiguration.h"
@@ -31,10 +30,11 @@
 
 int main( int argc, char **argv )
 {
-//	QCoreApplication app( argc, argv );
-    QApplication app( argc, argv );
+	VeyonCore::setupApplicationParameters();
 
-	VeyonCore core( &app, QStringLiteral("Server") );
+	QCoreApplication app( argc, argv );
+
+	VeyonCore core( &app, VeyonCore::Component::Server, QStringLiteral("Server") );
 
 	ComputerControlServer server( &core );
 	if( server.start() == false )

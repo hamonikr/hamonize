@@ -1,7 +1,7 @@
 /*
  * main.cpp - main file for Veyon CLI
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,6 +34,8 @@
 
 int main( int argc, char **argv )
 {
+	VeyonCore::setupApplicationParameters();
+
 	QCoreApplication* app = nullptr;
 
 #ifdef Q_OS_LINUX
@@ -54,15 +56,15 @@ int main( int argc, char **argv )
 
 	if( arguments.count() == 2 )
 	{
-		if( arguments.last() == QStringLiteral("-v") || arguments.last() == QStringLiteral("--version") )
+		if( arguments.last() == QLatin1String("-v") || arguments.last() == QLatin1String("--version") )
 		{
 			CommandLineIO::print( VeyonCore::version() );
 			delete app;
 			return 0;
 		}
-		else if( arguments.last() == QStringLiteral("about") )
+		else if( arguments.last() == QLatin1String("about") )
 		{
-            CommandLineIO::print( QStringLiteral("Hamonize: %1 (%2)").arg( VeyonCore::version() ).arg( QLatin1String(__DATE__) ) );
+			CommandLineIO::print( QStringLiteral("Veyon: %1 (%2)").arg( VeyonCore::version() ).arg( QLatin1String(__DATE__) ) );
 			CommandLineIO::print( QStringLiteral("Qt: %1 (built against %2/%3)").
 								  arg( QLatin1String(qVersion() ) ).
 								  arg( QLatin1String(QT_VERSION_STR) ).
@@ -79,7 +81,7 @@ int main( int argc, char **argv )
 		qputenv( Logger::logLevelEnvironmentVariable(), QByteArray::number( static_cast<int>(Logger::LogLevel::Nothing) ) );
 	}
 
-	VeyonCore* core = new VeyonCore( app, QStringLiteral("CLI") );
+	auto core = new VeyonCore( app, VeyonCore::Component::CLI, QStringLiteral("CLI") );
 
 	QHash<CommandLinePluginInterface *, QObject *> commandLinePluginInterfaces;
 	const auto pluginObjects = core->pluginManager().pluginObjects();
@@ -111,7 +113,7 @@ int main( int argc, char **argv )
 							Q_RETURN_ARG(CommandLinePluginInterface::RunResult, runResult),
 							Q_ARG( QStringList, arguments.mid( 3 ) ) );
 				}
-				else if( arguments[2] != QStringLiteral("help") )
+				else if( arguments[2] != QLatin1String("help") )
 				{
 					runResult = CommandLinePluginInterface::InvalidCommand;
 				}
@@ -127,8 +129,6 @@ int main( int argc, char **argv )
 			{
 				runResult = CommandLinePluginInterface::NotEnoughArguments;
 			}
-
-			delete core;
 
 			switch( runResult )
 			{
@@ -168,15 +168,16 @@ int main( int argc, char **argv )
 			{
 				CommandLineIO::print( QStringLiteral("    %1 - %2").arg( command, it.key()->commandHelp( command ) ) );
 			}
+
+			delete core;
+			delete app;
 			return -1;
 		}
 	}
 
-	delete core;
-
 	int rc = -1;
 
-	if( module == QStringLiteral("help") )
+	if( module == QLatin1String("help") )
 	{
 		CommandLineIO::print( VeyonCore::tr( "Available modules:" ) );
 		rc = 0;
@@ -197,6 +198,7 @@ int main( int argc, char **argv )
 	std::for_each( modulesHelpStrings.begin(), modulesHelpStrings.end(), [](const QString& s) {
 		CommandLineIO::print( QStringLiteral( "    " ) + s ); } );
 
+	delete core;
 	delete app;
 
 	return rc;

@@ -1,7 +1,7 @@
 /*
  * BuiltinUltraVncServer.cpp - implementation of BuiltinUltraVncServer class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,7 +34,6 @@ extern int WinVNCAppMain();
 
 static BuiltinUltraVncServer* vncServerInstance = nullptr;
 
-extern BOOL multi;
 extern HINSTANCE hAppInstance;
 extern DWORD mainthreadId;
 extern HINSTANCE hInstResDLL;
@@ -42,11 +41,11 @@ extern HINSTANCE hInstResDLL;
 
 void ultravnc_veyon_load_password( char* out, int size )
 {
-	const auto password = vncServerInstance->password().toUtf8();
+	const auto password = vncServerInstance->password().toByteArray();
 
 	if( password.size() == size )
 	{
-		memcpy( out, password.constData(), size ); // Flawfinder: ignore
+		memcpy( out, password.constData(), static_cast<size_t>( size ) ); // Flawfinder: ignore
 	}
 	else
 	{
@@ -91,6 +90,11 @@ BOOL ultravnc_veyon_load_int( LPCSTR valname, LONG *out )
 	if( strcmp( valname, "DeskDupEngine" ) == 0 )
 	{
 		*out = vncServerInstance->configuration().ultraVncDeskDupEngineEnabled() ? 1 : 0;
+		return true;
+	}
+	if( strcmp( valname, "MaxCpu2" ) == 0 )
+	{
+		*out = vncServerInstance->configuration().ultraVncMaxCpu();
 		return true;
 	}
 	if( strcmp( valname, "NewMSLogon" ) == 0 )
@@ -195,33 +199,45 @@ void BuiltinUltraVncServer::prepareServer()
 
 
 
-void BuiltinUltraVncServer::runServer( int serverPort, const QString& password )
+bool BuiltinUltraVncServer::runServer( int serverPort, const Password& password )
 {
 	m_serverPort = serverPort;
 	m_password = password;
 
-	// only allow multiple instances when explicitely working with multiple
-	// service instances
-	if( VeyonCore::hasSessionId() )
-	{
-		multi = true;
-	}
+	// run UltraVNC server
+	auto hUser32 = LoadLibrary( "user32.dll" );
+	auto hSHCore = LoadLibrary( "SHCore.dll" );
 
-	// run winvnc-server
-	HMODULE hUser32 = LoadLibrary( "user32.dll" );
-	using SetProcessDPIAwareFunc = BOOL (*)();
-	SetProcessDPIAwareFunc setDPIAware = nullptr;
-	if( hUser32 )
+	using SetProcessDpiAwarenessFunc = HRESULT (WINAPI *)( DWORD );
+	const auto setProcessDpiAwareness =
+		hSHCore ? SetProcessDpiAwarenessFunc( GetProcAddress( hSHCore, "SetProcessDpiAwareness" ) ) : nullptr;
+
+	if( setProcessDpiAwareness )
 	{
-		setDPIAware = reinterpret_cast<SetProcessDPIAwareFunc>( GetProcAddress( hUser32, "SetProcessDPIAware" ) );
+		static constexpr DWORD PROCESS_PER_MONITOR_DPI_AWARE = 2;
+		setProcessDpiAwareness( PROCESS_PER_MONITOR_DPI_AWARE );
+	}
+	else if( hUser32 )
+	{
+		using SetProcessDPIAwareFunc = BOOL (*)();
+		const auto setDPIAware = SetProcessDPIAwareFunc( GetProcAddress( hUser32, "SetProcessDPIAware" ) );
 		if( setDPIAware )
 		{
 			setDPIAware();
 		}
+	}
+
+	if( hUser32 )
+	{
 		FreeLibrary( hUser32 );
 	}
 
-	WinVNCAppMain();
+	if( hSHCore )
+	{
+		FreeLibrary( hSHCore );
+	}
+
+	return WinVNCAppMain() == 1;
 }
 
 

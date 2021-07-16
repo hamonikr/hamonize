@@ -1,7 +1,7 @@
 /*
  * WindowsCoreFunctions.h - declaration of WindowsCoreFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,8 +25,6 @@
 #pragma once
 
 #include <windows.h>
-//#include <QtDBus/QDBusInterface>
-//#include <QSharedPointer>
 
 #include "PlatformCoreFunctions.h"
 
@@ -37,8 +35,10 @@ class CXEventLog;
 class WindowsCoreFunctions : public PlatformCoreFunctions
 {
 public:
-	WindowsCoreFunctions();
-	~WindowsCoreFunctions();
+	using ProcessId = DWORD;
+
+	WindowsCoreFunctions() = default;
+	~WindowsCoreFunctions() override;
 
 	bool applyConfiguration() override;
 
@@ -48,7 +48,7 @@ public:
 	void reboot() override;
 	void powerDown( bool installUpdates ) override;
 
-	void raiseWindow( QWidget* widget ) override;
+	void raiseWindow( QWidget* widget, bool stayOnTop ) override;
 
 	void disableScreenSaver() override;
 	void restoreScreenSaverSettings() override;
@@ -67,25 +67,45 @@ public:
 
 	QString genericUrlHandler() const override;
 
-//	typedef QSharedPointer<QDBusInterface> DBusInterfacePointer;
-
 	static bool enablePrivilege( LPCWSTR privilegeName, bool enable );
 
-	static wchar_t* toWCharArray( const QString& qstring );
+	static QSharedPointer<wchar_t> toWCharArray( const QString& qstring );
 	static const wchar_t* toConstWCharArray( const QString& qstring );
 
 	static HANDLE runProgramInSession( const QString& program,
 									   const QStringList& parameters,
+									   const QStringList& extraEnvironment,
 									   DWORD baseProcessId,
-									   const QString& desktop = QString() );
+									   const QString& desktop );
 
+	static bool terminateProcess( ProcessId processId, DWORD timeout = DefaultProcessTerminationTimeout );
 
 private:
+	static constexpr int ConsoleOutputBufferSize = 256;
+	static constexpr DWORD DefaultProcessTerminationTimeout = 5000;
+	static constexpr size_t ScreenSaverSettingsCount = 3;
+
+	static constexpr auto ShutdownFlags = SHUTDOWN_FORCE_OTHERS | SHUTDOWN_FORCE_SELF;
+	static constexpr auto ShutdownReason = SHTDN_REASON_MAJOR_OTHER | SHTDN_REASON_FLAG_PLANNED;
+
+	const std::array<UINT, ScreenSaverSettingsCount> ScreenSaverSettingsGetList = {
+		SPI_GETLOWPOWERTIMEOUT,
+		SPI_GETPOWEROFFTIMEOUT,
+		SPI_GETSCREENSAVETIMEOUT
+	};
+
+	const std::array<UINT, ScreenSaverSettingsCount> ScreenSaverSettingsSetList = {
+		SPI_SETLOWPOWERTIMEOUT,
+		SPI_SETPOWEROFFTIMEOUT,
+		SPI_SETSCREENSAVETIMEOUT
+	};
+
+	static wchar_t* appendToEnvironmentBlock( const wchar_t* env, const QStringList& strings );
 	static void setTaskbarState( bool enabled );
 	static void setStartMenuState( bool enabled );
 	static void setDesktopState( bool enabled );
 
-	CXEventLog* m_eventLog;
-
+	CXEventLog* m_eventLog{nullptr};
+	std::array<UINT, ScreenSaverSettingsCount> m_screenSaverSettings{};
 
 };

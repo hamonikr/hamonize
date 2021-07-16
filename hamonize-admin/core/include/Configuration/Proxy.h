@@ -1,7 +1,7 @@
 /*
  * Configuration/Proxy.h - ConfigurationProxy class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,8 +34,8 @@ class VEYON_CORE_EXPORT Proxy : public QObject
 {
 	Q_OBJECT
 public:
-	Proxy( Object* object, QObject* parent = nullptr );
-	~Proxy() = default;
+	explicit Proxy( Object* object );
+	~Proxy() override = default;
 
 	bool hasValue( const QString& key, const QString& parentKey ) const;
 
@@ -47,6 +47,11 @@ public:
 
 	void reloadFromStore();
 	void flushStore();
+
+	QObject* object() const
+	{
+		return m_object;
+	}
 
 	const QString& instanceId() const
 	{
@@ -71,11 +76,11 @@ private:
 #define DECLARE_CONFIG_PROXY(name, ops) \
 	class name : public Configuration::Proxy { \
 	public: \
-		name( Configuration::Object* object, QObject* parent = nullptr ); \
+		explicit name( Configuration::Object* object ); \
 		ops(DECLARE_CONFIG_PROPERTY) \
 	};
 
 #define IMPLEMENT_CONFIG_PROXY(name) \
-	name::name( Configuration::Object* object, QObject* parent ) : Configuration::Proxy( object, parent ) { }
+	name::name( Configuration::Object* object ) : Configuration::Proxy( object ) { }
 
 }

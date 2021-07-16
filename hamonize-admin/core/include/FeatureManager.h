@@ -1,7 +1,7 @@
 /*
  * FeatureManager.h - header for the FeatureManager class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -39,7 +39,7 @@ class VEYON_CORE_EXPORT FeatureManager : public QObject
 {
 	Q_OBJECT
 public:
-	FeatureManager( QObject* parent = nullptr );
+	explicit FeatureManager( QObject* parent = nullptr );
 
 	const FeatureList& features() const
 	{
@@ -50,23 +50,30 @@ public:
 
 	const Feature& feature( Feature::Uid featureUid ) const;
 
+	Feature::Uid metaFeatureUid( Feature::Uid featureUid ) const;
+
 	Plugin::Uid pluginUid( const Feature& feature ) const;
+
+	void controlFeature( Feature::Uid featureUid,
+						FeatureProviderInterface::Operation operation,
+						const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) const;
 
 	void startFeature( VeyonMasterInterface& master,
 					   const Feature& feature,
-					   const ComputerControlInterfaceList& computerControlInterfaces );
+					   const ComputerControlInterfaceList& computerControlInterfaces ) const;
 	void stopFeature( VeyonMasterInterface& master,
 					  const Feature& feature,
-					  const ComputerControlInterfaceList& computerControlInterfaces );
+					  const ComputerControlInterfaceList& computerControlInterfaces ) const;
 
-public slots:
-    bool handleFeatureMessage( VeyonMasterInterface& master,
-                               const FeatureMessage& message,
-							   const ComputerControlInterface::Pointer& computerControlInterface );
+	void updateActiveFeatures( const ComputerControlInterfaceList& computerControlInterfaces ) const;
+
+	bool handleFeatureMessage( ComputerControlInterface::Pointer computerControlInterface,
+							  const FeatureMessage& message ) const;
 	bool handleFeatureMessage( VeyonServerInterface& server,
 							   const MessageContext& messageContext,
-							   const FeatureMessage& message );
-	bool handleFeatureMessage( VeyonWorkerInterface& worker, const FeatureMessage& message );
+							   const FeatureMessage& message ) const;
+	bool handleFeatureMessage( VeyonWorkerInterface& worker, const FeatureMessage& message ) const;
 
 private:
 	FeatureList m_features;

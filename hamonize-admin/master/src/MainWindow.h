@@ -1,7 +1,7 @@
 /*
  * MainWindow.h - main window of Veyon Master Application
  *
- * Copyright (c) 2004-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2004-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,13 +26,11 @@
 
 #include <QMainWindow>
 
-#include "Feature.h"
+#include "ComputerControlInterface.h"
 
 class QButtonGroup;
 class QToolButton;
 
-class ComputerSelectPanel;
-class ScreenshotManagementPanel;
 class VeyonMaster;
 
 namespace Ui {
@@ -44,7 +42,7 @@ class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 public:
-	MainWindow( VeyonMaster& masterCore, QWidget* parent = nullptr );
+	explicit MainWindow( VeyonMaster& masterCore, QWidget* parent = nullptr );
 	~MainWindow() override;
 
 	static bool initAuthentication();
@@ -57,18 +55,26 @@ public:
 
 	void reloadSubFeatures();
 
+	ComputerControlInterfaceList selectedComputerControlInterfaces() const;
+
 protected:
 	void closeEvent( QCloseEvent* event ) override;
+	bool eventFilter( QObject* object, QEvent* event ) override;
 	void keyPressEvent( QKeyEvent *e ) override;
 
 
-private slots:
+private Q_SLOTS:
 	void showAboutDialog();
 
 private:
 	static int buttonId( const Feature& feature )
 	{
 		return static_cast<int>( qHash( feature.uid() ) );
+	}
+
+	static constexpr const char* originalSizePropertyName()
+	{
+		return "originalSize";
 	}
 
 	void addFeaturesToToolBar();
@@ -81,8 +87,5 @@ private:
 	VeyonMaster& m_master;
 
 	QButtonGroup* m_modeGroup;
-
-	ComputerSelectPanel* m_computerSelectPanel;
-	ScreenshotManagementPanel* m_screenshotManagementPanel;
 
 } ;

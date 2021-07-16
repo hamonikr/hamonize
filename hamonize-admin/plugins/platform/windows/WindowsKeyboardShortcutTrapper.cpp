@@ -1,7 +1,7 @@
 /*
  * WindowsKeyboardShortcutTrapper.cpp - class for trapping shortcuts on Windows
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -105,7 +105,6 @@ LRESULT CALLBACK TaskKeyHookLL( int nCode, WPARAM wp, LPARAM lp )
 
 WindowsKeyboardShortcutTrapper::WindowsKeyboardShortcutTrapper( QObject* parent ) :
 	KeyboardShortcutTrapper( parent ),
-	m_enabled( false ),
 	m_pollTimer( this )
 {
 	connect( &m_pollTimer, &QTimer::timeout,
@@ -167,6 +166,6 @@ void WindowsKeyboardShortcutTrapper::forwardTrappedShortcuts()
 
 	while( __trappedShortcuts.isEmpty() == false )
 	{
-		emit shortcutTrapped( __trappedShortcuts.takeFirst() );
+		Q_EMIT shortcutTrapped( __trappedShortcuts.takeFirst() );
 	}
 }

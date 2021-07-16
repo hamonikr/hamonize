@@ -1,7 +1,7 @@
 /*
  * PlatformFilesystemFunctions.h - interface class for platform filesystem
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -41,5 +41,6 @@ public:
 	virtual bool setFileOwnerGroup( const QString& filePath, const QString& ownerGroup ) = 0;
 	virtual bool setFileOwnerGroupPermissions( const QString& filePath, QFile::Permissions permissions ) = 0;
 
+	virtual bool openFileSafely( QFile* file, QFile::OpenMode openMode, QFile::Permissions permissions ) = 0;
 
 };

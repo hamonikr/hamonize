@@ -1,7 +1,7 @@
 /*
  * VeyonCore.h - declaration of VeyonCore class + basic headers
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -40,14 +40,11 @@
 #  define VEYON_CORE_EXPORT Q_DECL_IMPORT
 #endif
 
-#define QSL QStringLiteral
-
 class QCoreApplication;
 class QWidget;
 
 class AuthenticationCredentials;
 class BuiltinFeatures;
-class ComputerControlInterface;
 class CryptoCore;
 class Filesystem;
 class Logger;
@@ -68,10 +65,23 @@ public:
 		Version_4_0,
 		Version_4_1,
 		Version_4_2,
+		Version_4_3,
+		Version_4_4,
+		Version_4_5,
 	};
 	Q_ENUM(ApplicationVersion)
 
-	VeyonCore( QCoreApplication* application, const QString& appComponentName );
+	enum class Component {
+		Service,
+		Server,
+		Worker,
+		Master,
+		CLI,
+		Configurator
+	};
+	Q_ENUM(Component)
+
+	VeyonCore( QCoreApplication* application, Component component, const QString& appComponentName );
 	~VeyonCore() override;
 
 	static VeyonCore* instance();
@@ -84,6 +94,11 @@ public:
 	static QString sharedLibrarySuffix();
 
 	static QString sessionIdEnvironmentVariable();
+
+	static Component component()
+	{
+		return instance()->m_component;
+	}
 
 	static VeyonConfiguration& config()
 	{
@@ -130,16 +145,13 @@ public:
 		return *( instance()->m_filesystem );
 	}
 
-	static ComputerControlInterface& localComputerControlInterface()
-	{
-		return *( instance()->m_localComputerControlInterface );
-	}
-
 	static void setupApplicationParameters();
 	bool initAuthentication();
 
-	static bool hasSessionId();
-	static int sessionId();
+	static int sessionId()
+	{
+		return instance()->m_sessionId;
+	}
 
 	static QString applicationName();
 	static void enforceBranding( QWidget* topLevelWidget );
@@ -151,11 +163,6 @@ public:
 
 	static QString stripDomain( const QString& username );
 	static QString formattedUuid( QUuid uuid );
-
-	const QString& authenticationKeyName() const
-	{
-		return m_authenticationKeyName;
-	}
 
 	static bool isAuthenticationKeyNameValid( const QString& authKeyName );
 
@@ -170,6 +177,7 @@ public:
 
 private:
 	void initPlatformPlugin();
+	void initSession();
 	void initConfiguration();
 	void initLogging( const QString& appComponentName );
 	void initLocaleAndTranslation();
@@ -180,6 +188,7 @@ private:
 	void initLocalComputerControlInterface();
 	bool initLogonAuthentication();
 	bool initKeyFileAuthentication();
+	void initSystemInfo();
 
 	static VeyonCore* s_instance;
 
@@ -195,13 +204,14 @@ private:
 	UserGroupsBackendManager* m_userGroupsBackendManager;
 	NetworkObjectDirectoryManager* m_networkObjectDirectoryManager;
 
-	ComputerControlInterface* m_localComputerControlInterface;
-
+	Component m_component;
 	QString m_applicationName;
-	QString m_authenticationKeyName;
 	bool m_debugging;
 
-signals:
+	int m_sessionId{0};
+
+Q_SIGNALS:
+	void initialized();
 	void applicationLoaded();
 
 };

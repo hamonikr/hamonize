@@ -2,7 +2,7 @@
  * VncServer.h - class VncServer, a VNC server abstraction for
  *                    platform-independent VNC server usage
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,23 +27,28 @@
 
 #include <QThread>
 
+#include "CryptoCore.h"
+
 class VncServerPluginInterface;
 
 class VncServer : public QThread
 {
 	Q_OBJECT
 public:
-	VncServer( QObject* parent = nullptr );
-	virtual ~VncServer();
+	using Password = CryptoCore::SecureArray;
+
+	explicit VncServer( QObject* parent = nullptr );
+	~VncServer() override;
 
 	void prepare();
 
+	int serverBasePort() const;
 	int serverPort() const;
 
-	QString password() const;
+	Password password() const;
 
 private:
-	virtual void run();
+	void run() override;
 
 	VncServerPluginInterface* m_pluginInterface;
 

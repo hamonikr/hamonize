@@ -1,7 +1,7 @@
 /*
  * PluginManager.cpp - implementation of the PluginManager class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -35,9 +35,25 @@ PluginManager::PluginManager( QObject* parent ) :
 	QObject( parent ),
 	m_pluginInterfaces(),
 	m_pluginObjects(),
+	m_pluginLoaders(),
 	m_noDebugMessages( qEnvironmentVariableIsSet( Logger::logLevelEnvironmentVariable() ) )
 {
 	initPluginSearchPath();
+}
+
+
+
+PluginManager::~PluginManager()
+{
+	vDebug();
+
+	for( auto pluginLoader : qAsConst(m_pluginLoaders) )
+	{
+		pluginLoader->unload();
+	}
+
+	m_pluginInterfaces.clear();
+	m_pluginObjects.clear();
 }
 
 
@@ -52,8 +68,6 @@ void PluginManager::loadPlatformPlugins()
 void PluginManager::loadPlugins()
 {
 	loadPlugins( QStringLiteral("*") + VeyonCore::sharedLibrarySuffix() );
-
-	emit pluginsLoaded();
 }
 
 
@@ -142,7 +156,7 @@ QString PluginManager::pluginName( Plugin::Uid pluginUid ) const
 		}
 	}
 
-	return QString();
+	return {};
 }
 
 
@@ -150,9 +164,6 @@ QString PluginManager::pluginName( Plugin::Uid pluginUid ) const
 void PluginManager::initPluginSearchPath()
 {
 	QDir dir( QCoreApplication::applicationDirPath() );
-
-    qWarning() << "### hihoon ### : " << __PRETTY_FUNCTION__ << VeyonCore::pluginDir();
-
 	if( dir.cd( VeyonCore::pluginDir() ) )
 	{
 		const auto pluginSearchPath = dir.absolutePath();
@@ -161,6 +172,7 @@ void PluginManager::initPluginSearchPath()
 			vDebug() << "Adding plugin search path" << pluginSearchPath;
 		}
 		QDir::addSearchPath( QStringLiteral( "plugins" ), pluginSearchPath );
+		QCoreApplication::addLibraryPath( pluginSearchPath );
 	}
 }
 
@@ -171,17 +183,21 @@ void PluginManager::loadPlugins( const QString& nameFilter )
 	const auto plugins = QDir( QStringLiteral( "plugins:" ) ).entryInfoList( { nameFilter } );
 	for( const auto& fileInfo : plugins )
 	{
+		const auto fileName = fileInfo.fileName();
+
 		// skip simple shared libraries
-		if( fileInfo.fileName().startsWith( QStringLiteral("lib") ) )
+		if( fileName.startsWith( QLatin1String("lib") ) &&
+			fileName.startsWith( QLatin1String("libveyon") ) == false )
 		{
 			continue;
 		}
 
-		auto pluginObject = QPluginLoader( fileInfo.filePath() ).instance();
+		auto pluginLoader = new QPluginLoader( fileInfo.filePath(), this );
+		auto pluginObject = pluginLoader->instance();
 		auto pluginInterface = qobject_cast<PluginInterface *>( pluginObject );
 
 		if( pluginObject && pluginInterface &&
-				m_pluginInterfaces.contains( pluginInterface ) == false )
+			m_pluginInterfaces.contains( pluginInterface ) == false )
 		{
 			if( m_noDebugMessages == false )
 			{
@@ -189,6 +205,11 @@ void PluginManager::loadPlugins( const QString& nameFilter )
 			}
 			m_pluginInterfaces += pluginInterface;	// clazy:exclude=reserve-candidates
 			m_pluginObjects += pluginObject;		// clazy:exclude=reserve-candidates
+			m_pluginLoaders += pluginLoader;			// clazy:exclude=reserve-candidates
+		}
+		else
+		{
+			delete pluginLoader;
 		}
 	}
 }

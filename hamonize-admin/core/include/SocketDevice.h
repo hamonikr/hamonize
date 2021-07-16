@@ -1,7 +1,7 @@
 /*
  * SocketDevice.h - SocketDevice abstraction
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,16 +30,15 @@ class SocketDevice : public QIODevice
 {
 	Q_OBJECT
 public:
-	typedef enum SocketOperations
+	enum SocketOperation
 	{
 		SocketOpRead,
 		SocketOpWrite
-	} SocketOperation;
+	} ;
 
-	typedef qint64 (* Dispatcher )( char* buffer, const qint64 bytes,
-									SocketOperation operation, void* user );
+	using Dispatcher = qint64 (*)(char *, const qint64, SocketOperation, void *);
 
-	SocketDevice( Dispatcher dispatcher, void *user = nullptr, QObject* parent = nullptr ) :
+	explicit SocketDevice( Dispatcher dispatcher, void *user = nullptr, QObject* parent = nullptr ) :
 		QIODevice( parent ),
 		m_dispatcher( dispatcher ),
 		m_user( user )
@@ -73,12 +72,12 @@ public:
 	}
 
 protected:
-	qint64 readData( char *buf, qint64 bytes )
+	qint64 readData( char *buf, qint64 bytes ) override
 	{
 		return m_dispatcher( buf, bytes, SocketOpRead, m_user );
 	}
 
-	qint64 writeData( const char *buf, qint64 bytes )
+	qint64 writeData( const char *buf, qint64 bytes ) override
 	{
 		return m_dispatcher( const_cast<char *>( buf ), bytes,
 												SocketOpWrite, m_user );

@@ -1,7 +1,7 @@
 /*
  * VeyonServerProtocol.cpp - implementation of the VeyonServerProtocol class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -58,8 +58,8 @@ void VeyonServerProtocol::performAccessControl()
 	// perform access control via ServerAccessControl manager if either
 	// client just entered access control or is still waiting to be
 	// processed (e.g. desktop access dialog already active for a different connection)
-	if( client()->accessControlState() == VncServerClient::AccessControlInit ||
-			client()->accessControlState() == VncServerClient::AccessControlWaiting )
+	if( client()->accessControlState() == VncServerClient::AccessControlState::Init ||
+			client()->accessControlState() == VncServerClient::AccessControlState::Waiting )
 	{
 		m_serverAccessControlManager.addClient( client() );
 	}

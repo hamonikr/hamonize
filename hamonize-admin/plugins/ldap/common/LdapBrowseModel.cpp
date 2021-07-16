@@ -1,7 +1,7 @@
 /*
  * LdapModel.cpp - item model for browsing LDAP directories
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -120,11 +120,10 @@ LdapBrowseModel::LdapBrowseModel( Mode mode, const LdapConfiguration& configurat
 	QAbstractItemModel( parent ),
 	m_mode( mode ),
 	m_client( new LdapClient( configuration, QUrl(), this ) ),
-	m_root( new Node( Node::Root, QString(), nullptr ) ),
+	m_root( new Node( Node::Root, {}, nullptr ) ),
 	m_objectIcon( QStringLiteral(":/core/document-open.png") ),
 	m_ouIcon( QStringLiteral( ":/ldap/folder-stash.png") ),
-    m_attributeIcon( QStringLiteral(":/ldap/attribute.png") ),
-    m_fullDn ( new QStringList() )
+	m_attributeIcon( QStringLiteral(":/ldap/attribute.png") )
 {
 	populateRoot();
 
@@ -335,10 +334,10 @@ void LdapBrowseModel::populateRoot() const
 		{
 			if( context.isEmpty() == false )
 			{
-				namingContexts.replaceInStrings( QRegExp( QStringLiteral(".*,%1").arg( context ) ), QString() );
+				namingContexts.replaceInStrings( QRegExp( QStringLiteral(".*,%1").arg( context ) ), {} );
 			}
 		}
-		namingContexts.removeAll( QString() );
+		namingContexts.removeAll( {} );
 		namingContexts.sort();
 	}
 	else
@@ -346,32 +345,27 @@ void LdapBrowseModel::populateRoot() const
 		namingContexts.append( baseDn );
 	}
 
-    // hihoon QStringList dns_except_fullDn;
-    //QStringList fullDn;
-
 	for( const auto& namingContext : namingContexts )
 	{
 		auto parent = m_root;
-
+		QStringList fullDn;
 		const auto dns = namingContext.split( QLatin1Char(',') );
 #if QT_VERSION < 0x050600
 #warning Building compat code for unsupported version of Qt
-		typedef std::reverse_iterator<QStringList::const_iterator> QStringListReverseIterator;
+		using QStringListReverseIterator = std::reverse_iterator<QStringList::const_iterator>;
 		for( auto it = QStringListReverseIterator(dns.cend()),
 			 end = QStringListReverseIterator(dns.cbegin()); it != end; ++it )
 #else
 		for( auto it = dns.crbegin(), end = dns.crend(); it != end; ++it )
 #endif
 		{
-            m_fullDn->prepend( *it );
-            auto node = new Node( Node::DN, m_fullDn->join( QLatin1Char(',') ), parent );
+			fullDn.prepend( *it );
+			auto node = new Node( Node::DN, fullDn.join( QLatin1Char(',') ), parent );
 			parent->appendChild( node );
 			parent = node;
 		}
 	}
 
-    // hihoon
-    //m_listbaseDn = fullDn;
 	m_root->setPopulated( true );
 }
 
@@ -381,43 +375,40 @@ void LdapBrowseModel::populateNode( const QModelIndex& parent )
 {
 	auto node = toNode( parent );
 
-    if( node->isPopulated() == false )
-    {
+	if( node->isPopulated() == false )
+	{
+		auto dns = m_client->queryDistinguishedNames( node->name(), {}, LdapClient::Scope::One );
+		dns.sort();
 
-        if( m_client->baseDn().length() <= node->name().length() ) {
+		QStringList attributes;
 
-            auto dns = m_client->queryDistinguishedNames( node->name(), QString(), LdapClient::Scope::One );
-            dns.sort();
+		if( m_mode == BrowseAttributes )
+		{
+			attributes = m_client->queryObjectAttributes( node->name() );
+			attributes.sort();
+		}
 
-            QStringList attributes;
+		const auto itemCount = ( dns + attributes ).size();
 
-            if( m_mode == BrowseAttributes )
-            {
-                attributes = m_client->queryObjectAttributes( node->name() );
-                attributes.sort();
-            }
+		if( itemCount > 0 )
+		{
+			beginInsertRows( parent, 0, itemCount - 1 );
 
-            const auto itemCount = ( dns + attributes ).size();
+			for( const auto& dn : dns )
+			{
+				node->appendChild( new Node( Node::DN, dn, node ) );
+			}
 
-            if( itemCount > 0 )
-            {
-                beginInsertRows( parent, 0, itemCount - 1 );
+			for( const auto& attribute : qAsConst(attributes) )
+			{
+				node->appendChild( new Node( Node::Attribute, attribute, node ) );
+			}
 
-                for( const auto& dn : dns )
-                {
-                    node->appendChild( new Node( Node::DN, dn, node ) );
-                }
+			endInsertRows();
 
-                for( const auto& attribute : qAsConst(attributes) )
-                {
-                    node->appendChild( new Node( Node::Attribute, attribute, node ) );
-                }
+			Q_EMIT layoutChanged();
+		}
 
-                endInsertRows();
-
-                emit layoutChanged();
-            }
-        }
 		node->setPopulated( true );
 	}
 }

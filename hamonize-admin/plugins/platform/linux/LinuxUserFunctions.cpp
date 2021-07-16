@@ -1,7 +1,7 @@
 /*
  * LinuxUserFunctions.cpp - implementation of LinuxUserFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,14 +24,21 @@
 
 #include <QDataStream>
 #include <QDBusReply>
-//#include <QDBusConnection>
 #include <QProcess>
+#include <QRegularExpression>
 
 #include "LinuxCoreFunctions.h"
 #include "LinuxDesktopIntegration.h"
+#include "LinuxKeyboardInput.h"
 #include "LinuxPlatformConfiguration.h"
+#include "LinuxSessionFunctions.h"
 #include "LinuxUserFunctions.h"
 #include "VeyonConfiguration.h"
+
+#define XK_MISCELLANY
+
+#include <X11/keysymdef.h>
+#include <X11/Xlib.h>
 
 #include <pwd.h>
 #include <unistd.h>
@@ -51,7 +58,7 @@ QString LinuxUserFunctions::fullName( const QString& username )
 				shell.endsWith( QStringLiteral( "/null" ) ) ||
 				shell.endsWith( QStringLiteral( "/nologin" ) ) ) )
 		{
-            return QString::fromUtf8( pw_entry->pw_gecos ).split( QLatin1Char(',') ).first();
+			return QString::fromUtf8( pw_entry->pw_gecos ).split( QLatin1Char(',') ).first();
 		}
 	}
 
@@ -59,64 +66,10 @@ QString LinuxUserFunctions::fullName( const QString& username )
 }
 
 
-/* Desker 로그인은 기본 데스크탑 로그인 메니저와 연동하여 로그인/로그아웃시 hamonize-server를 재기동 하는 경우와 달리
- * 해결하기 위해 LinuxUserFunction.cpp 내에서 처리하기로 한다.
- */
-QStringList LinuxUserFunctions::guestUserInfo()
-{
-    QStringList guestUserInfoList = {m_guestId, m_guestName};
-
-    vDebug() << guestUserInfoList;
-
-    return guestUserInfoList;
-
-}
-
-
-// 2019.06.11 hihoon Guest 계정에서 PC방 프로그램 로그인 사용자 ID/NAME 추적 추가
-
-QStringList LinuxUserFunctions::guestUserInfo( const QString& username )
-{
-    QStringList guestUserInfoList = {QString(), QString()};
-
-    if(username.contains(QStringLiteral("guest-"))) {
-
-        QFile userinfofile( QStringLiteral("/tmp/%1/.huserinfo").arg(username) );
-
-        if( userinfofile.exists() && userinfofile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
-
-            QTextStream in(&userinfofile);
-            QString line = in.readLine();
-
-            QStringList resList = line.split( QLatin1Char(':') );
-
-            if( resList.length() >= 2)
-            {
-                return resList;
-            }
-
-        }
-
-    }
-
-    return guestUserInfoList;
-
-}
-
-
-void LinuxUserFunctions::changeDeskerLoginInfo(const QString& guestId, const QString& guestName)
-{
-    vDebug() << __PRETTY_FUNCTION__ << "### hihoon ### m_guestId, guestName" << m_guestId << m_guestName;
-
-    m_guestId = guestId;
-    m_guestName = guestName;
-
-    vDebug() << __PRETTY_FUNCTION__ << "### hihoon ### m_guestId, guestName" << m_guestId << m_guestName;
-}
 
 QStringList LinuxUserFunctions::userGroups( bool queryDomainGroups )
 {
-	Q_UNUSED(queryDomainGroups);
+	Q_UNUSED(queryDomainGroups)
 
 	QStringList groupList;
 
@@ -222,7 +175,7 @@ QStringList LinuxUserFunctions::userGroups( bool queryDomainGroups )
 
 QStringList LinuxUserFunctions::groupsOfUser( const QString& username, bool queryDomainGroups )
 {
-	Q_UNUSED(queryDomainGroups);
+	Q_UNUSED(queryDomainGroups)
 
 	QStringList groupList;
 
@@ -249,80 +202,130 @@ QStringList LinuxUserFunctions::groupsOfUser( const QString& username, bool quer
 }
 
 
-QString LinuxUserFunctions::currentUser()
+
+bool LinuxUserFunctions::isAnyUserLoggedOn()
 {
-    QString username;
-
-    const auto envUser = qgetenv( "USER" );
-
-    struct passwd * pw_entry = nullptr;
-    if( envUser.isEmpty() == false )
-    {
-        pw_entry = getpwnam( envUser.constData() );
-    }
-
-    if( pw_entry == nullptr )
-    {
-        pw_entry = getpwuid( getuid() );
-    }
-
-    if( pw_entry )
-    {
-        const auto shell = QString::fromUtf8( pw_entry->pw_shell );
-
-        // Skip not real users
-        if ( !( shell.endsWith( QStringLiteral( "/false" ) ) ||
-                shell.endsWith( QStringLiteral( "/true" ) ) ||
-                shell.endsWith( QStringLiteral( "/null" ) ) ||
-                shell.endsWith( QStringLiteral( "/nologin" ) ) ) )
-        {
-            username = QString::fromUtf8( pw_entry->pw_name );
-        }
-    }
-
-    if( username.isEmpty() )
-    {
-        return QString::fromUtf8( envUser );
-    }
-
-    return username;
-}
-
-
-QStringList LinuxUserFunctions::loggedOnUsers()
-{
-	QStringList users;
-
-	QProcess whoProcess;
-	whoProcess.start( QStringLiteral("who") );
-	whoProcess.waitForFinished( WhoProcessTimeout );
-
-	if( whoProcess.exitCode() != 0 )
+	const auto sessions = LinuxSessionFunctions::listSessions();
+	for( const auto& session : sessions )
 	{
-		return users;
-	}
-
-	const auto lines = whoProcess.readAll().split( '\n' );
-	for( const auto& line : lines )
-	{
-		const auto user = QString::fromUtf8( line.split( ' ' ).value( 0 ) );
-		if( user.isEmpty() == false && users.contains( user ) == false )
+		if( LinuxSessionFunctions::isOpen( session ) &&
+			LinuxSessionFunctions::isGraphical( session ) &&
+			LinuxSessionFunctions::getSessionClass( session ) == LinuxSessionFunctions::Class::User )
 		{
-			users.append( user ); // clazy:exclude=reserve-candidates
+			return true;
 		}
 	}
 
-	return users;
+	return false;
 }
 
 
 
-void LinuxUserFunctions::logon( const QString& username, const QString& password )
+QString LinuxUserFunctions::currentUser()
 {
-	Q_UNUSED(username);
-	Q_UNUSED(password);
+	QString username;
 
-	// TODO
+	const auto envUser = qgetenv( "USER" );
+
+	struct passwd * pw_entry = nullptr;
+	if( envUser.isEmpty() == false )
+	{
+		pw_entry = getpwnam( envUser.constData() );
+	}
+
+	if( pw_entry == nullptr )
+	{
+		pw_entry = getpwuid( getuid() );
+	}
+
+	if( pw_entry )
+	{
+		const auto shell = QString::fromUtf8( pw_entry->pw_shell );
+
+		// Skip not real users
+		if ( !( shell.endsWith( QStringLiteral( "/false" ) ) ||
+				shell.endsWith( QStringLiteral( "/true" ) ) ||
+				shell.endsWith( QStringLiteral( "/null" ) ) ||
+				shell.endsWith( QStringLiteral( "/nologin" ) ) ) )
+		{
+			username = QString::fromUtf8( pw_entry->pw_name );
+		}
+	}
+
+	if( username.isEmpty() )
+	{
+		return QString::fromUtf8( envUser );
+	}
+
+	return username;
+}
+
+
+
+bool LinuxUserFunctions::prepareLogon( const QString& username, const Password& password )
+{
+	if( m_logonHelper.prepare( username, password ) )
+	{
+		LinuxCoreFunctions::restartDisplayManagers();
+		return true;
+	}
+
+	return false;
+}
+
+
+
+bool LinuxUserFunctions::performLogon( const QString& username, const Password& password )
+{
+	LinuxKeyboardInput input;
+
+	auto sequence = LinuxPlatformConfiguration( &VeyonCore::config() ).userLoginKeySequence();
+
+	if( sequence.isEmpty() == true )
+	{
+		sequence = QStringLiteral("%username%<Tab>%password%<Return>");
+	}
+
+	auto matchIterator = QRegularExpression( QStringLiteral("(<[\\w\\d_]+>|%username%|%password%|[\\w\\d]+)") )
+							 .globalMatch( sequence );
+	if( matchIterator.hasNext() == false )
+	{
+		vCritical() << "invalid user login key sequence";
+		return false;
+	}
+
+	while( matchIterator.hasNext() )
+	{
+		const auto token = matchIterator.next().captured(0);
+		if( token == QStringLiteral("%username%") )
+		{
+			input.sendString( username );
+		}
+		else if( token == QStringLiteral("%password%") )
+		{
+			input.sendString( QString::fromUtf8( password.toByteArray() ) );
+		}
+		else if( token.startsWith( QLatin1Char('<') ) && token.endsWith( QLatin1Char('>') ) )
+		{
+			const auto keysymString = token.mid( 1, token.length() - 2 );
+			const auto keysym = XStringToKeysym( keysymString.toLatin1().constData() );
+			if( keysym != NoSymbol )
+			{
+				input.pressAndReleaseKey( keysym );
+			}
+			else
+			{
+				vCritical() << "unresolved keysym" << keysymString;
+				return false;
+			}
+		}
+		else if( token.isEmpty() == false )
+		{
+			input.sendString( token );
+		}
+	}
+
+	return true;
 }
 
 
@@ -340,15 +343,15 @@ void LinuxUserFunctions::logoff()
 														 static_cast<int>( LinuxDesktopIntegration::Mate::GSM_LOGOUT_MODE_FORCE ) );
 
 	// Xfce logout
-	QProcess::startDetached( QStringLiteral("xfce4-session-logout --logout") );
+	QProcess::startDetached( QStringLiteral("xfce4-session-logout --logout"), {} );
 
 	// LXDE logout
 	QProcess::startDetached( QStringLiteral("kill -TERM %1").
-							 arg( QProcessEnvironment::systemEnvironment().value( QStringLiteral("_LXSESSION_PID") ).toInt() ) );
+							 arg( QProcessEnvironment::systemEnvironment().value( QStringLiteral("_LXSESSION_PID") ).toInt() ), {} );
 
 	// terminate session via systemd
 	LinuxCoreFunctions::systemdLoginManager()->asyncCall( QStringLiteral("TerminateSession"),
-														  QProcessEnvironment::systemEnvironment().value( QStringLiteral("XDG_SESSION_ID") ) );
+														  QProcessEnvironment::systemEnvironment().value( LinuxSessionFunctions::xdgSessionIdEnvVarName() ) );
 
 	// close session via ConsoleKit as a last resort
 	LinuxCoreFunctions::consoleKitManager()->asyncCall( QStringLiteral("CloseSession"),
@@ -357,29 +360,28 @@ void LinuxUserFunctions::logoff()
 
 
 
-bool LinuxUserFunctions::authenticate( const QString& username, const QString& password )
+bool LinuxUserFunctions::authenticate( const QString& username, const Password& password )
 {
 	QProcess p;
-	p.start( QStringLiteral( "hamonize-auth-helper" ) );
+	p.start( QStringLiteral( "hamonize-auth-helper" ), QStringList{}, QProcess::ReadWrite | QProcess::Unbuffered );
 	if( p.waitForStarted() == false )
 	{
-        vCritical() << "failed to start HamonizeAuthHelper";
+		vCritical() << "failed to start VeyonAuthHelper";
 		return false;
 	}
 
 	const auto pamService = LinuxPlatformConfiguration( &VeyonCore::config() ).pamServiceName();
 
 	QDataStream ds( &p );
-	ds << VeyonCore::stripDomain( username );
-	ds << password;
-	ds << pamService;
+	ds << VeyonCore::stripDomain( username ).toUtf8();
+	ds << password.toByteArray();
+	ds << pamService.toUtf8();
 
-	p.closeWriteChannel();
-	p.waitForFinished();
+	p.waitForFinished( AuthHelperTimeout );
 
-	if( p.exitCode() != 0 )
+	if( p.state() != QProcess::NotRunning || p.exitCode() != 0 )
 	{
-        vCritical() << "HamonizeAuthHelper failed:" << p.exitCode()
+		vCritical() << "VeyonAuthHelper failed:" << p.exitCode()
 					<< p.readAllStandardOutput().trimmed() << p.readAllStandardError().trimmed();
 		return false;
 	}

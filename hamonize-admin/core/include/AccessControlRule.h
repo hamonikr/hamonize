@@ -1,7 +1,7 @@
 /*
  * AccessControlRule.h - declaration of class AccessControlRule
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,62 +34,59 @@ class VEYON_CORE_EXPORT AccessControlRule
 {
 	Q_GADGET
 public:
-	typedef enum Actions
+	enum class Action
 	{
-		ActionNone,
-		ActionAllow,
-		ActionDeny,
-		ActionAskForPermission,
-		ActionCount
-	} Action;
+		None,
+		Allow,
+		Deny,
+		AskForPermission,
+	} ;
 
 	Q_ENUM(Action)
 
-	enum Condition
+	enum class Condition
 	{
-		ConditionNone,
-		ConditionMemberOfUserGroup,
-		ConditionGroupsInCommon,
-		ConditionLocatedAt,
-		ConditionSameLocation,
-		ConditionAccessFromLocalHost,
-		ConditionAccessFromLocalUser,
-		ConditionAccessFromAlreadyConnectedUser,
-		ConditionNoUserLoggedOn,
-		ConditionCount
+		None,
+		MemberOfUserGroup,
+		GroupsInCommon,
+		LocatedAt,
+		SameLocation,
+		AccessFromLocalHost,
+		AccessFromLocalUser,
+		AccessFromAlreadyConnectedUser,
+		NoUserLoggedOn,
 	} ;
 
 	Q_ENUM(Condition)
 
-	typedef enum Subjects
+	enum class Subject
 	{
-		SubjectNone,
-		SubjectAccessingUser,
-		SubjectAccessingComputer,
-		SubjectLocalUser,
-		SubjectLocalComputer,
-		SubjectCount
-	} Subject;
+		None,
+		AccessingUser,
+		AccessingComputer,
+		LocalUser,
+		LocalComputer,
+	} ;
 
 	Q_ENUM(Subject)
 
-	typedef QString ConditionArgument;
+	using ConditionArgument = QString;
 
 	struct ConditionParameters
 	{
-		bool enabled;
-		Subject subject;
+		bool enabled{false};
+		Subject subject{Subject::None};
 		ConditionArgument argument;
 	};
 
-	typedef QMap<Condition, ConditionParameters> ConditionParameterMap;
+	using ConditionParameterMap = QMap<Condition, ConditionParameters>;
 
 
 	AccessControlRule();
 	AccessControlRule( const AccessControlRule& other );
-	AccessControlRule( const QJsonValue& jsonValue );
+	explicit AccessControlRule( const QJsonValue& jsonValue );
 
-	~AccessControlRule() {}
+	~AccessControlRule() = default;
 
 	AccessControlRule& operator=( const AccessControlRule& other );
 

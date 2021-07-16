@@ -1,7 +1,7 @@
 /*
  * AboutDialog.cpp - implementation of AboutDialog
  *
- * Copyright (c) 2011-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2011-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -37,7 +37,7 @@ AboutDialog::AboutDialog( QWidget *parent ) :
 {
 	ui->setupUi( this );
 
-	setWindowTitle( tr( "About %1 %2" ).arg( VeyonCore::applicationName(), VeyonCore::version() ) );
+	setWindowTitle( tr( "About Hamonize" ).arg( VeyonCore::applicationName(), VeyonCore::version() ) );
 
 	ui->versionLabel->setText( VeyonCore::version() );
 

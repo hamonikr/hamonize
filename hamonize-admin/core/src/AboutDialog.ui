@@ -12,7 +12,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>About Veyon</string>
+   <string>About Hamonize</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../resources/core.qrc">
@@ -89,7 +89,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="icon">
@@ -139,7 +139,7 @@
        <item row="5" column="1">
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://www.invesume.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://www.invesume.com &lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string notr="true">&lt;a href=&quot;http://www.hamonikr.org&quot;&gt;http://www.hamonikr.org&lt;/a&gt;</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
@@ -149,7 +149,7 @@
        <item row="3" column="0" colspan="2">
         <widget class="QLabel" name="label_8">
          <property name="text">
-          <string notr="true">Copyright © 2004-2019 Invesume Inc.</string>
+          <string notr="true">Copyright © 2004-2021 Tobias Junghans / Veyon Solutions / Invesume Inc</string>
          </property>
         </widget>
        </item>
@@ -176,7 +176,7 @@
        <item row="6" column="0" colspan="2">
         <widget class="QPushButton" name="donateButton">
          <property name="text">
-          <string>Support Veyon project with a donation</string>
+          <string>Support Hamonize project with a donation</string>
          </property>
         </widget>
        </item>
@@ -247,7 +247,7 @@
          <property name="text">
           <string>Current language not translated yet (or native English).
 
-If you're interested in translating Veyon into your local or another language or want to improve an existing translation, please contact a Veyon developer!</string>
+If you're interested in translating Hamonize into your local or another language or want to improve an existing translation, please contact a Hamonize developer!</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

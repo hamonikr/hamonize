@@ -1,7 +1,7 @@
 /*
  * NetworkObjectDirectoryManager.h - header file for NetworkObjectDirectoryManager
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -35,16 +35,16 @@ class VEYON_CORE_EXPORT NetworkObjectDirectoryManager : public QObject
 {
 	Q_OBJECT
 public:
-	NetworkObjectDirectoryManager( QObject* parent = nullptr );
+	explicit NetworkObjectDirectoryManager( QObject* parent = nullptr );
 
 	QMap<Plugin::Uid, QString> availableDirectories();
+
+	NetworkObjectDirectory* createDirectory( Plugin::Uid uid, QObject* parent );
 
 	NetworkObjectDirectory* configuredDirectory();
 
 private:
-	NetworkObjectDirectory* createDirectory();
-
-	QMap<PluginInterface *, NetworkObjectDirectoryPluginInterface *> m_directoryPluginInterfaces;
-	NetworkObjectDirectory* m_configuredDirectory;
+	QMap<PluginInterface *, NetworkObjectDirectoryPluginInterface *> m_directoryPluginInterfaces{};
+	NetworkObjectDirectory* m_configuredDirectory{nullptr};
 
 };

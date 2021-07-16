@@ -1,7 +1,7 @@
 /*
  * LinuxFilesystemFunctions.h - declaration of LinuxFilesystemFunctions class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -38,5 +38,7 @@ public:
 	QString fileOwnerGroup( const QString& filePath ) override;
 	bool setFileOwnerGroup( const QString& filePath, const QString& ownerGroup ) override;
 	bool setFileOwnerGroupPermissions( const QString& filePath, QFile::Permissions permissions ) override;
+
+	bool openFileSafely( QFile* file, QFile::OpenMode openMode, QFile::Permissions permissions ) override;
 
 };

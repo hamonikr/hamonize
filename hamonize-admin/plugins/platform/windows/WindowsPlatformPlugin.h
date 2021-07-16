@@ -1,7 +1,7 @@
 /*
  * WindowsPlatformPlugin.h - declaration of WindowsPlatformPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,6 +32,7 @@
 #include "WindowsInputDeviceFunctions.h"
 #include "WindowsNetworkFunctions.h"
 #include "WindowsServiceFunctions.h"
+#include "WindowsSessionFunctions.h"
 #include "WindowsUserFunctions.h"
 
 class WindowsPlatformPlugin : public QObject, PlatformPluginInterface, PluginInterface, ConfigurationPagePluginInterface
@@ -41,7 +42,7 @@ class WindowsPlatformPlugin : public QObject, PlatformPluginInterface, PluginInt
 	Q_INTERFACES(PluginInterface PlatformPluginInterface ConfigurationPagePluginInterface)
 public:
 	WindowsPlatformPlugin( QObject* parent = nullptr );
-	~WindowsPlatformPlugin() = default;
+	~WindowsPlatformPlugin() override = default;
 
 	Plugin::Uid uid() const override
 	{
@@ -103,6 +104,11 @@ public:
 		return m_windowsServiceFunctions;
 	}
 
+	PlatformSessionFunctions& sessionFunctions() override
+	{
+		return m_windowsSessionFunctions;
+	}
+
 	PlatformUserFunctions& userFunctions() override
 	{
 		return m_windowsUserFunctions;
@@ -111,11 +117,12 @@ public:
 	ConfigurationPage* createConfigurationPage() override;
 
 private:
-	WindowsCoreFunctions m_windowsCoreFunctions;
-	WindowsFilesystemFunctions m_windowsFilesystemFunctions;
-	WindowsInputDeviceFunctions m_windowsInputDeviceFunctions;
-	WindowsNetworkFunctions m_windowsNetworkFunctions;
-	WindowsServiceFunctions m_windowsServiceFunctions;
-	WindowsUserFunctions m_windowsUserFunctions;
+	WindowsCoreFunctions m_windowsCoreFunctions{};
+	WindowsFilesystemFunctions m_windowsFilesystemFunctions{};
+	WindowsInputDeviceFunctions m_windowsInputDeviceFunctions{};
+	WindowsNetworkFunctions m_windowsNetworkFunctions{};
+	WindowsServiceFunctions m_windowsServiceFunctions{};
+	WindowsSessionFunctions m_windowsSessionFunctions{};
+	WindowsUserFunctions m_windowsUserFunctions{};
 
 };

@@ -1,7 +1,7 @@
 /*
  * ServerAccessControlManager.h - header file for ServerAccessControlManager
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -42,13 +42,11 @@ public:
 	void removeClient( VncServerClient* client );
 
 
-signals:
-	void accessControlError( const QString& host, const QString& user );
+Q_SIGNALS:
+	void finished( VncServerClient* client );
 
 private:
-	enum {
-		ClientWaitInterval = 1000
-	};
+	static constexpr int ClientWaitInterval = 1000;
 
 	void performAccessControl( VncServerClient* client );
 	VncServerClient::AccessControlState confirmDesktopAccess( VncServerClient* client );
@@ -61,8 +59,8 @@ private:
 
 	VncServerClientList m_clients;
 
-	typedef QPair<QString, QString> HostUserPair;
-	typedef QMap<HostUserPair, DesktopAccessDialog::Choice> DesktopAccessChoiceMap;
+	using HostUserPair = QPair<QString, QString>;
+	using DesktopAccessChoiceMap = QMap<HostUserPair, DesktopAccessDialog::Choice>;
 
 	DesktopAccessChoiceMap m_desktopAccessChoices;
 

@@ -1,7 +1,7 @@
 /*
  * VeyonServerInterface.h - interface class for VeyonServer
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -29,7 +29,6 @@ class FeatureMessage;
 class FeatureWorkerManager;
 class MessageContext;
 
-
 class VeyonServerInterface
 {
 public:
@@ -37,5 +36,7 @@ public:
 
 	virtual FeatureWorkerManager& featureWorkerManager() = 0;
 	virtual bool sendFeatureMessageReply( const MessageContext& context, const FeatureMessage& reply ) = 0;
+
+	virtual int vncServerBasePort() const = 0;
 
 };

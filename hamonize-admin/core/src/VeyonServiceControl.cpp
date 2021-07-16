@@ -1,7 +1,7 @@
 /*
  * VeyonServiceControl.cpp - class for controlling Veyon service
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -39,8 +39,8 @@ VeyonServiceControl::VeyonServiceControl( QWidget* parent ) :
 bool VeyonServiceControl::setAutostart( bool enabled )
 {
 	return VeyonCore::platform().serviceFunctions().
-			setStartMode( name(), enabled ? PlatformServiceFunctions::StartModeAuto :
-											PlatformServiceFunctions::StartModeManual );
+			setStartMode( name(), enabled ? PlatformServiceFunctions::StartMode::Auto :
+											PlatformServiceFunctions::StartMode::Manual );
 }
 
 
@@ -64,5 +64,5 @@ QString VeyonServiceControl::filePath()
 
 QString VeyonServiceControl::displayName()
 {
-    return tr( "Hamonize Service" );
+	return tr( "Veyon Service" );
 }

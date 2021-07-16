@@ -2,18 +2,10 @@
 <ui version="4.0">
  <class>ServiceConfigurationPage</class>
  <widget class="QWidget" name="ServiceConfigurationPage">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>416</width>
-    <height>603</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string notr="true">Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="topMargin">
     <number>0</number>
    </property>
@@ -26,21 +18,21 @@
       <string>General</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_12">
-      <item row="2" column="0" colspan="5">
+      <item row="1" column="0" colspan="2">
+       <widget class="QCheckBox" name="failedAuthenticationNotificationsEnabled">
+        <property name="text">
+         <string>Show notification when an unauthorized access is blocked</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
        <widget class="QCheckBox" name="remoteConnectionNotificationsEnabled">
         <property name="text">
          <string>Show notification on remote connection</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="5">
-       <widget class="QCheckBox" name="failedAuthenticationNotificationsEnabled">
-        <property name="text">
-         <string>Show notification on failed authentication attempts</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="5">
+      <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="isTrayIconHidden">
         <property name="text">
          <string>Hide tray icon</string>
@@ -48,132 +40,160 @@
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>State:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3">
-       <widget class="QPushButton" name="startService">
-        <property name="text">
-         <string>Start service</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../resources/configurator.qrc">
-          <normaloff>:/configurator/media-playback-start.png</normaloff>:/configurator/media-playback-start.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="5">
        <widget class="QCheckBox" name="autostartService">
         <property name="text">
          <string>Autostart</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="5">
-       <widget class="QCheckBox" name="isMultiSessionServiceEnabled">
-        <property name="toolTip">
-         <string>Enabling this option will make the service launch a server process for every interactive session on a computer.
-Typically this is required to support terminal servers.</string>
-        </property>
-        <property name="text">
-         <string>Multi session support (experimental)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="4">
-       <widget class="QPushButton" name="stopService">
-        <property name="text">
-         <string>Stop service</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../resources/configurator.qrc">
-          <normaloff>:/configurator/media-playback-stop.png</normaloff>:/configurator/media-playback-stop.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <spacer name="horizontalSpacer_9">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLabel" name="serviceState">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Stopped</string>
-        </property>
-       </widget>
+      <item row="6" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_16">
+          <property name="text">
+           <string>State:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="serviceState">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Stopped</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="startService">
+          <property name="text">
+           <string>Start service</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources/configurator.qrc">
+            <normaloff>:/configurator/media-playback-start.png</normaloff>:/configurator/media-playback-start.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="stopService">
+          <property name="text">
+           <string>Stop service</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources/configurator.qrc">
+            <normaloff>:/configurator/media-playback-stop.png</normaloff>:/configurator/media-playback-stop.png</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="networkGroupBox">
+    <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Network</string>
+      <string>Sessions</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="singleSessionModeEnabled">
+        <property name="text">
+         <string>Single session mode (create server instance for local/physical session only)</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">sessionModeButtonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="multiSessionModeEnabled">
+        <property name="toolTip">
+         <string>Enabling this option will make the service launch a server process for every interactive session on a computer.
+Typically this is required to support terminal servers.</string>
+        </property>
+        <property name="text">
+         <string>Multi session mode (create server instance for each local and remote desktop session)</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">sessionModeButtonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Maximum session count</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="maximumSessionCount">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="networkPortNumbersGroupBox">
+     <property name="title">
+      <string>Network port numbers</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_11">
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="featureWorkerManagerPort">
-        <property name="minimum">
-         <number>1024</number>
-        </property>
-        <property name="maximum">
-         <number>65535</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Demo server port</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
-       <widget class="QSpinBox" name="primaryServicePort">
+       <widget class="QSpinBox" name="veyonServerPort">
         <property name="minimum">
          <number>1024</number>
         </property>
         <property name="maximum">
          <number>65535</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>Feature manager port</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Primary service port</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="2">
-       <widget class="QCheckBox" name="isFirewallExceptionEnabled">
-        <property name="text">
-         <string>Enable firewall exception</string>
         </property>
        </widget>
       </item>
@@ -187,17 +207,41 @@ Typically this is required to support terminal servers.</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QCheckBox" name="localConnectOnly">
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="featureWorkerManagerPort">
+        <property name="minimum">
+         <number>1024</number>
+        </property>
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_12">
         <property name="text">
-         <string>Allow connections from localhost only</string>
+         <string>Hamonize server</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_15">
         <property name="text">
-         <string>Internal VNC server port</string>
+         <string>Internal VNC server</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>Feature manager</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>Demo server</string>
         </property>
        </widget>
       </item>
@@ -215,18 +259,22 @@ Typically this is required to support terminal servers.</string>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_HW">
+    <widget class="QGroupBox" name="miscNetworkSettingsGroupBox">
      <property name="title">
-      <string>Hardware change check</string>
+      <string>Miscellaneous network settings</string>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="isHardwareChangeCheck">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QCheckBox" name="isFirewallExceptionEnabled">
         <property name="text">
-         <string>Hardware change check and PC disabled</string>
+         <string>Enable firewall exception</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="localConnectOnly">
+        <property name="text">
+         <string>Allow connections from localhost only</string>
         </property>
        </widget>
       </item>
@@ -282,11 +330,13 @@ Typically this is required to support terminal servers.</string>
   <tabstop>isTrayIconHidden</tabstop>
   <tabstop>failedAuthenticationNotificationsEnabled</tabstop>
   <tabstop>remoteConnectionNotificationsEnabled</tabstop>
-  <tabstop>isMultiSessionServiceEnabled</tabstop>
   <tabstop>autostartService</tabstop>
   <tabstop>startService</tabstop>
   <tabstop>stopService</tabstop>
-  <tabstop>primaryServicePort</tabstop>
+  <tabstop>singleSessionModeEnabled</tabstop>
+  <tabstop>multiSessionModeEnabled</tabstop>
+  <tabstop>maximumSessionCount</tabstop>
+  <tabstop>veyonServerPort</tabstop>
   <tabstop>vncServerPort</tabstop>
   <tabstop>featureWorkerManagerPort</tabstop>
   <tabstop>demoServerPort</tabstop>
@@ -346,10 +396,29 @@ Typically this is required to support terminal servers.</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>multiSessionModeEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>maximumSessionCount</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>371</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>295</x>
+     <y>415</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>updateVncServerPluginConfigurationWidget()</slot>
   <slot>startService()</slot>
   <slot>stopService()</slot>
  </slots>
+ <buttongroups>
+  <buttongroup name="sessionModeButtonGroup"/>
+ </buttongroups>
 </ui>

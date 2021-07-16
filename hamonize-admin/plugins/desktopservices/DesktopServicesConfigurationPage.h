@@ -1,7 +1,7 @@
 /*
  * DesktopServicesConfigurationPage.h - header for the DesktopServicesConfigurationPage class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -38,14 +38,14 @@ class DesktopServicesConfigurationPage : public ConfigurationPage
 {
 	Q_OBJECT
 public:
-	DesktopServicesConfigurationPage( DesktopServicesConfiguration& configuration, QWidget* parent = nullptr );
+	explicit DesktopServicesConfigurationPage( DesktopServicesConfiguration& configuration, QWidget* parent = nullptr );
 	~DesktopServicesConfigurationPage() override;
 
 	void resetWidgets() override;
 	void connectWidgetsToProperties() override;
 	void applyConfiguration() override;
 
-private slots:
+private Q_SLOTS:
 	void addProgram();
 	void updateProgram();
 	void removeProgram();

@@ -1,7 +1,7 @@
 /*
  *  RemoteAccessWidget.h - widget containing a VNC view and controls for it
  *
- *  Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ *  Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  *  This file is part of Veyon - https://veyon.io
  *
@@ -24,13 +24,11 @@
 #pragma once
 
 #include "ComputerControlInterface.h"
-#include "VncView.h"
 
 #include <QTimeLine>
 #include <QWidget>
 
-class VncView;
-class VeyonConnection;
+class VncViewWidget;
 class RemoteAccessWidget;
 class ToolButton;
 
@@ -40,8 +38,8 @@ class RemoteAccessWidgetToolBar : public QWidget
 {
 	Q_OBJECT
 public:
-	RemoteAccessWidgetToolBar( RemoteAccessWidget* parent, bool viewOnly );
-
+	RemoteAccessWidgetToolBar( RemoteAccessWidget* parent,
+							   bool startViewOnly, bool showViewOnlyToggleButton );
 	~RemoteAccessWidgetToolBar() override = default;
 
 	void appear();
@@ -52,6 +50,7 @@ public:
 protected:
 	void leaveEvent( QEvent* event ) override;
 	void paintEvent( QPaintEvent* event ) override;
+
 
 private:
 	void updateConnectionAnimation();
@@ -65,14 +64,14 @@ private:
 
 	bool m_connecting;
 
-    ToolButton* m_viewOnlyButton;
+	ToolButton* m_viewOnlyButton;
 	ToolButton* m_sendShortcutButton;
 	ToolButton* m_screenshotButton;
 	ToolButton* m_fullScreenButton;
 	ToolButton* m_exitButton;
 
-    static constexpr int ShowHideAnimationDuration = 500;
-    static constexpr int DisappearDelay = 800;
+	static constexpr int ShowHideAnimationDuration = 300;
+	static constexpr int DisappearDelay = 500;
 
 } ;
 
@@ -84,13 +83,11 @@ class RemoteAccessWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	// 2019.05.10 hihoon change for RemoteBIOSControl feature //
-	// 2019.05.10 hihoon original 
-	// hihoon RemoteAccessWidget( const ComputerControlInterface::Pointer& computerControlInterface, bool viewOnly = false );
-	RemoteAccessWidget( const ComputerControlInterface::Pointer& computerControlInterface, VncView::Mode remoteMode = VncView::RemoteControlMode );
+	explicit RemoteAccessWidget( const ComputerControlInterface::Pointer& computerControlInterface,
+								 bool startViewOnly, bool showViewOnlyToggleButton );
 	~RemoteAccessWidget() override;
 
-	VncView* vncView() const
+	VncViewWidget* vncView() const
 	{
 		return m_vncView;
 	}
@@ -99,20 +96,18 @@ public:
 	void toggleViewOnly( bool viewOnly );
 	void takeScreenshot();
 
-
 protected:
+	bool eventFilter( QObject* object, QEvent* event ) override;
 	void enterEvent( QEvent* event ) override;
 	void leaveEvent( QEvent* event ) override;
 	void resizeEvent( QResizeEvent* event ) override;
 
-
 private:
-	void checkKeyEvent( unsigned int, bool );
 	void updateSize();
+	void updateRemoteAccessTitle();
 
 	ComputerControlInterface::Pointer m_computerControlInterface;
-	VncView* m_vncView;
-	VeyonConnection* m_connection;
+	VncViewWidget* m_vncView;
 	RemoteAccessWidgetToolBar* m_toolBar;
 
 	static constexpr int AppearDelay = 500;

@@ -1,7 +1,7 @@
 /*
  * LinuxKeyboardShortcutTrapper.h - dummy KeyboardShortcutTrapper implementation 
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,14 +30,12 @@ class LinuxKeyboardShortcutTrapper : public KeyboardShortcutTrapper
 {
 	Q_OBJECT
 public:
-	LinuxKeyboardShortcutTrapper( QObject* parent = nullptr ) :
+	explicit LinuxKeyboardShortcutTrapper( QObject* parent = nullptr ) :
 	    KeyboardShortcutTrapper( parent )
 	{
 	}
 
-	~LinuxKeyboardShortcutTrapper() override
-	{
-	}
+	~LinuxKeyboardShortcutTrapper() override = default;
 
 	void setEnabled( bool on ) override
 	{

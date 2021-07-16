@@ -1,7 +1,7 @@
 /*
  * UserGroupsBackendManager.h - header file for UserGroupsBackendManager
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,17 +30,29 @@ class VEYON_CORE_EXPORT UserGroupsBackendManager : public QObject
 {
 	Q_OBJECT
 public:
-	UserGroupsBackendManager( QObject* parent = nullptr );
+	using Backends = QMap<Plugin::Uid, UserGroupsBackendInterface *>;
+
+	explicit UserGroupsBackendManager( QObject* parent = nullptr );
+
+	const Backends& backends() const
+	{
+		return m_backends;
+	}
 
 	QMap<Plugin::Uid, QString> availableBackends();
+
+	UserGroupsBackendInterface* defaultBackend() const
+	{
+		return m_defaultBackend;
+	}
 
 	UserGroupsBackendInterface* accessControlBackend();
 
 	void reloadConfiguration();
 
 private:
-	QMap<Plugin::Uid, UserGroupsBackendInterface *> m_backends;
-	UserGroupsBackendInterface* m_defaultBackend;
-	UserGroupsBackendInterface* m_accessControlBackend;
+	Backends m_backends{};
+	UserGroupsBackendInterface* m_defaultBackend{nullptr};
+	UserGroupsBackendInterface* m_accessControlBackend{nullptr};
 
 };

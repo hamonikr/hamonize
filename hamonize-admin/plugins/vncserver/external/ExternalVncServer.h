@@ -1,7 +1,7 @@
 /*
  * ExternalVncServer.h - declaration of ExternalVncServer class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,7 +34,7 @@ class ExternalVncServer : public QObject, VncServerPluginInterface, PluginInterf
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.ExternalVncServer")
 	Q_INTERFACES(PluginInterface VncServerPluginInterface)
 public:
-	ExternalVncServer( QObject* parent = nullptr );
+	explicit ExternalVncServer( QObject* parent = nullptr );
 
 	Plugin::Uid uid() const override
 	{
@@ -71,17 +71,22 @@ public:
 		return Plugin::NoFlags;
 	}
 
+	QStringList supportedSessionTypes() const override
+	{
+		return {};
+	}
+
 	void upgrade( const QVersionNumber& oldVersion ) override;
 
 	QWidget* configurationWidget() override;
 
 	void prepareServer() override;
 
-	void runServer( int serverPort, const QString& password ) override;
+	bool runServer( int serverPort, const Password& password ) override;
 
 	int configuredServerPort() override;
 
-	QString configuredPassword() override;
+	Password configuredPassword() override;
 
 private:
 	enum {

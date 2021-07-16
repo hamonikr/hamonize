@@ -1,7 +1,7 @@
 /*
  * ConfigurationObject.cpp - implementation of ConfigurationObject
  *
- * Copyright (c) 2009-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2009-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,6 +32,7 @@ namespace Configuration
 
 Configuration::Property::Property( Object* object, const QString& key, const QString& parentKey,
 								   const QVariant& defaultValue, Flags flags ) :
+	QObject( object ),
 	m_object( object ),
 	m_proxy( nullptr ),
 	m_key( key ),
@@ -45,6 +46,7 @@ Configuration::Property::Property( Object* object, const QString& key, const QSt
 
 Configuration::Property::Property( Proxy* proxy, const QString& key, const QString& parentKey,
 								   const QVariant& defaultValue, Flags flags ) :
+	QObject( proxy->object() ),
 	m_object( nullptr ),
 	m_proxy( proxy ),
 	m_key( key ),
@@ -84,7 +86,7 @@ QVariant Property::variantValue() const
 
 
 
-void Property::setVariantValue( const QVariant& value )
+void Property::setVariantValue( const QVariant& value ) const
 {
 	if( m_object )
 	{
@@ -96,8 +98,24 @@ void Property::setVariantValue( const QVariant& value )
 	}
 	else
 	{
-		qFatal(Q_FUNC_INFO);
+		qFatal("%s", Q_FUNC_INFO);
 	}
+}
+
+
+
+Property* Property::find( QObject* parent, const QString& key, const QString& parentKey )
+{
+	const auto properties = parent->findChildren<Property *>();
+	for( auto property : properties )
+	{
+		if( property->m_key == key && property->m_parentKey == parentKey )
+		{
+			return property;
+		}
+	}
+
+	return nullptr;
 }
 
 
@@ -111,7 +129,7 @@ Password Configuration::TypedProperty<Password>::value() const
 
 
 template<>
-void Configuration::TypedProperty<Password>::setValue( const Password& value )
+void Configuration::TypedProperty<Password>::setValue( const Password& value ) const
 {
 	setVariantValue( value.encrypted() );
 }

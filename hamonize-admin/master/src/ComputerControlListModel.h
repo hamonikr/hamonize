@@ -1,7 +1,7 @@
 /*
  * ComputerControlListModel.h - data model for computer control objects
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,40 +27,27 @@
 #include <QAbstractListModel>
 #include <QImage>
 
+#include "ComputerListModel.h"
 #include "ComputerControlInterface.h"
 
 class VeyonMaster;
 
-class ComputerControlListModel : public QAbstractListModel
+class ComputerControlListModel : public ComputerListModel
 {
 	Q_OBJECT
 public:
-	enum {
-		UidRole = Qt::UserRole,
-		StateRole
-	};
-
-	enum DisplayRoleContent {
-		DisplayUserAndComputerName,
-		DisplayUserName,
-		DisplayComputerName,
-	};
-	Q_ENUM(DisplayRoleContent)
-
-	enum SortOrder {
-		SortByComputerAndUserName,
-		SortByUserName,
-		SortByComputerName,
-	};
-	Q_ENUM(SortOrder)
-
-	ComputerControlListModel( VeyonMaster* masterCore, QObject* parent = nullptr );
+	explicit ComputerControlListModel( VeyonMaster* masterCore, QObject* parent = nullptr );
 
 	int rowCount( const QModelIndex& parent = QModelIndex() ) const override;
 
 	QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const override;
 
 	void updateComputerScreenSize();
+
+	QSize computerScreenSize() const
+	{
+		return m_computerScreenSize;
+	}
 
 	const ComputerControlInterfaceList& computerControlInterfaces() const
 	{
@@ -69,31 +56,28 @@ public:
 
 	ComputerControlInterface::Pointer computerControlInterface( const QModelIndex& index ) const;
 
-	Qt::ItemFlags flags( const QModelIndex& index ) const override;
-
-	Qt::DropActions supportedDragActions() const override;
-	Qt::DropActions supportedDropActions() const override;
-
 	void reload();
 
-signals:
+Q_SIGNALS:
 	void activeFeaturesChanged( QModelIndex );
+	void computerScreenSizeChanged();
 
 private:
 	void update();
+
+	QModelIndex interfaceIndex( ComputerControlInterface* controlInterface ) const;
 
 	void updateState( const QModelIndex& index );
 	void updateScreen( const QModelIndex& index );
 	void updateActiveFeatures( const QModelIndex& index );
 	void updateUser( const QModelIndex& index );
 
-	void startComputerControlInterface( const ComputerControlInterface::Pointer& controlInterface, const QModelIndex& index );
+	void startComputerControlInterface( ComputerControlInterface* controlInterface );
 	void stopComputerControlInterface( const ComputerControlInterface::Pointer& controlInterface );
 
-	QSize computerScreenSize() const;
+	double averageAspectRatio() const;
 
-	void loadIcons();
-	QImage prepareIcon( const QImage& icon );
+	QImage scaleAndAlignIcon( const QImage& icon, QSize size ) const;
 	QImage computerDecorationRole( const ComputerControlInterface::Pointer& controlInterface ) const;
 	QString computerToolTipRole( const ComputerControlInterface::Pointer& controlInterface ) const;
 	QString computerDisplayRole( const ComputerControlInterface::Pointer& controlInterface ) const;
@@ -104,13 +88,12 @@ private:
 
 	VeyonMaster* m_master;
 
-	DisplayRoleContent m_displayRoleContent;
-	SortOrder m_sortOrder;
-
 	QImage m_iconDefault;
 	QImage m_iconConnectionProblem;
-	QImage m_iconDemoMode;
+	QImage m_iconServerNotRunning;
 
-	ComputerControlInterfaceList m_computerControlInterfaces;
+	QSize m_computerScreenSize{};
+
+	ComputerControlInterfaceList m_computerControlInterfaces{};
 
 };

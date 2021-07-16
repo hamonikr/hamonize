@@ -1,7 +1,7 @@
 /*
  * SystemTrayIcon.h - declaration of SystemTrayIcon class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,18 +24,26 @@
 
 #pragma once
 
-#include "SimpleFeatureProvider.h"
+#include "FeatureProviderInterface.h"
 
 class QSystemTrayIcon;
 class FeatureWorkerManager;
 
-class VEYON_CORE_EXPORT SystemTrayIcon : public QObject, public SimpleFeatureProvider, public PluginInterface
+class VEYON_CORE_EXPORT SystemTrayIcon : public QObject, public FeatureProviderInterface, public PluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(FeatureProviderInterface PluginInterface)
 public:
-	SystemTrayIcon( QObject* parent = nullptr );
-	~SystemTrayIcon() override {}
+	enum class Argument
+	{
+		ToolTipText,
+		MessageTitle,
+		MessageText
+	};
+	Q_ENUM(Argument)
+
+	explicit SystemTrayIcon( QObject* parent = nullptr );
+	~SystemTrayIcon() override = default;
 
 	void setToolTip( const QString& toolTipText,
 					 FeatureWorkerManager& featureWorkerManager );
@@ -79,6 +87,17 @@ public:
 		return m_features;
 	}
 
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override
+	{
+		Q_UNUSED(featureUid)
+		Q_UNUSED(operation)
+		Q_UNUSED(arguments)
+		Q_UNUSED(computerControlInterfaces)
+
+		return false;
+	}
+
 	bool handleFeatureMessage( VeyonServerInterface& server,
 							   const MessageContext& messageContext,
 							   const FeatureMessage& message ) override;
@@ -90,13 +109,6 @@ private:
 	{
 		SetToolTipCommand,
 		ShowMessageCommand
-	};
-
-	enum Arguments
-	{
-		ToolTipTextArgument,
-		MessageTitleArgument,
-		MessageTextArgument
 	};
 
 	const Feature m_systemTrayIconFeature;

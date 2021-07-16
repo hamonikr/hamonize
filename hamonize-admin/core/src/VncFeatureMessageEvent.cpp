@@ -1,7 +1,7 @@
 /*
  * FeatureMessageEvent.cpp - implementation of FeatureMessageEvent
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,9 +36,9 @@ VncFeatureMessageEvent::VncFeatureMessageEvent( const FeatureMessage& featureMes
 
 void VncFeatureMessageEvent::fire( rfbClient* client )
 {
-//    vDebug() << "sending message" << m_featureMessage.featureUid()
-//             << "command" << m_featureMessage.command()
-//             << "arguments" << m_featureMessage.arguments();
+	vDebug() << "sending message" << m_featureMessage.featureUid()
+			 << "command" << m_featureMessage.command()
+			 << "arguments" << m_featureMessage.arguments();
 
 	SocketDevice socketDevice( VncConnection::libvncClientDispatcher, client );
 	const char messageType = FeatureMessage::RfbMessageType;

@@ -1,7 +1,7 @@
 /*
  * ScreenLockFeaturePlugin.h - declaration of ScreenLockFeaturePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,7 +34,7 @@ class ScreenLockFeaturePlugin : public QObject, FeatureProviderInterface, Plugin
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.ScreenLock")
 	Q_INTERFACES(PluginInterface FeatureProviderInterface)
 public:
-	ScreenLockFeaturePlugin( QObject* parent = nullptr );
+	explicit ScreenLockFeaturePlugin( QObject* parent = nullptr );
 	~ScreenLockFeaturePlugin() override;
 
 	Plugin::Uid uid() const override
@@ -72,14 +72,8 @@ public:
 		return m_features;
 	}
 
-	bool startFeature( VeyonMasterInterface& master, const Feature& feature,
-					   const ComputerControlInterfaceList& computerControlInterfaces ) override;
-
-	bool stopFeature( VeyonMasterInterface& master, const Feature& feature,
-					  const ComputerControlInterfaceList& computerControlInterfaces ) override;
-
-	bool handleFeatureMessage( VeyonMasterInterface& master, const FeatureMessage& message,
-							   ComputerControlInterface::Pointer computerControlInterface ) override;
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override;
 
 	bool handleFeatureMessage( VeyonServerInterface& server,
 							   const MessageContext& messageContext,
@@ -87,16 +81,16 @@ public:
 
 	bool handleFeatureMessage( VeyonWorkerInterface& worker, const FeatureMessage& message ) override;
 
-    enum Commands
-    {
-        StartLockCommand,
-        StopLockCommand,
-        CommandCount
-    };
 private:
-
+	enum Commands
+	{
+		StartLockCommand,
+		StopLockCommand,
+		CommandCount
+	};
 
 	const Feature m_screenLockFeature;
+	const Feature m_lockInputDevicesFeature;
 	const FeatureList m_features;
 
 	LockWidget* m_lockWidget;

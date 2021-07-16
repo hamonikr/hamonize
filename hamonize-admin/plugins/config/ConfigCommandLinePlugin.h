@@ -1,7 +1,7 @@
 /*
  * ConfigCommandLinePlugin.h - declaration of ConfigCommandLinePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,8 +33,8 @@ class ConfigCommandLinePlugin : public QObject, CommandLinePluginInterface, Plug
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.ConfigCommandLineInterface")
 	Q_INTERFACES(PluginInterface CommandLinePluginInterface)
 public:
-	ConfigCommandLinePlugin( QObject* parent = nullptr );
-	~ConfigCommandLinePlugin() = default;
+	explicit ConfigCommandLinePlugin( QObject* parent = nullptr );
+	~ConfigCommandLinePlugin() override = default;
 
 	Plugin::Uid uid() const override
 	{
@@ -53,12 +53,12 @@ public:
 
 	QString description() const override
 	{
-		return tr( "Configure Veyon at command line" );
+		return tr( "Configure Hamonize at command line" );
 	}
 
 	QString vendor() const override
 	{
-		return QStringLiteral( "Veyon Community" );
+		return QStringLiteral( "Hamonize Community" );
 	}
 
 	QString copyright() const override
@@ -73,13 +73,13 @@ public:
 
 	QString commandLineModuleHelp() const override
 	{
-        return tr( "Commands for managing the configuration of Hamonize" );
+		return tr( "Commands for managing the configuration of Hamonize" );
 	}
 
 	QStringList commands() const override;
 	QString commandHelp( const QString& command ) const override;
 
-public slots:
+public Q_SLOTS:
 	CommandLinePluginInterface::RunResult handle_clear( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_list( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_import( const QStringList& arguments );
@@ -90,8 +90,14 @@ public slots:
 	CommandLinePluginInterface::RunResult handle_upgrade( const QStringList& arguments );
 
 private:
-	void listConfiguration( const VeyonConfiguration::DataMap &map,
-							const QString &parentKey );
+	enum class ListMode {
+		Values,
+		Defaults,
+		Types
+	};
+
+	void listConfiguration( ListMode listMode ) const;
+
 	CommandLinePluginInterface::RunResult applyConfiguration();
 
 	static QString printableConfigurationValue( const QVariant& value );

@@ -1,7 +1,7 @@
 /*
  * LinuxServiceFunctions.cpp - implementation of LinuxServiceFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,13 +22,14 @@
  *
  */
 
+#include "LinuxCoreFunctions.h"
 #include "LinuxServiceCore.h"
 #include "LinuxServiceFunctions.h"
 
 
 QString LinuxServiceFunctions::veyonServiceName() const
 {
-    return QStringLiteral("hamonize");
+	return QStringLiteral("hamonize");
 }
 
 
@@ -46,21 +47,21 @@ bool LinuxServiceFunctions::isRegistered( const QString& name )
 
 bool LinuxServiceFunctions::isRunning( const QString& name )
 {
-	return systemctl( { QStringLiteral("status"), name } ) == 0;
+	return LinuxCoreFunctions::systemctl( { QStringLiteral("status"), name } ) == 0;
 }
 
 
 
 bool LinuxServiceFunctions::start( const QString& name )
 {
-	return systemctl( { QStringLiteral("start"), name } ) == 0;
+	return LinuxCoreFunctions::systemctl( { QStringLiteral("start"), name } ) == 0;
 }
 
 
 
 bool LinuxServiceFunctions::stop( const QString& name )
 {
-	return systemctl( { QStringLiteral("stop"), name } ) == 0;
+	return LinuxCoreFunctions::systemctl( { QStringLiteral("stop"), name } ) == 0;
 }
 
 
@@ -93,21 +94,21 @@ bool LinuxServiceFunctions::uninstall( const QString& name )
 
 bool LinuxServiceFunctions::setStartMode( const QString& name, PlatformServiceFunctions::StartMode startMode )
 {
-	if( startMode == StartModeAuto )
+	if( startMode == StartMode::Auto )
 	{
-		return systemctl( { QStringLiteral("enable"), name } ) == 0;
+		return LinuxCoreFunctions::systemctl( { QStringLiteral("enable"), name } ) == 0;
 	}
 
-	return systemctl( { QStringLiteral("disable"), name } ) == 0;
+	return LinuxCoreFunctions::systemctl( { QStringLiteral("disable"), name } ) == 0;
 }
 
 
 
-bool LinuxServiceFunctions::runAsService( const QString& name, const std::function<void(void)>& serviceMain )
+bool LinuxServiceFunctions::runAsService( const QString& name, const ServiceEntryPoint& serviceEntryPoint )
 {
 	Q_UNUSED(name);
 
-	serviceMain();
+	serviceEntryPoint();
 
 	return true;
 }
@@ -118,12 +119,4 @@ void LinuxServiceFunctions::manageServerInstances()
 {
 	LinuxServiceCore serviceCore;
 	serviceCore.run();
-}
-
-
-
-int LinuxServiceFunctions::systemctl( const QStringList& arguments )
-{
-	return QProcess::execute( QStringLiteral("systemctl"),
-							  QStringList( { QStringLiteral("--no-pager"), QStringLiteral("-q") } ) + arguments );
 }

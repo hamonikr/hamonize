@@ -1,7 +1,7 @@
 /*
  * LinuxPlatformPlugin.cpp - implementation of LinuxPlatformPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,21 +22,20 @@
  *
  */
 
+#include <signal.h>
+
 #include "LinuxPlatformPlugin.h"
 #include "LinuxPlatformConfiguration.h"
 #include "LinuxPlatformConfigurationPage.h"
 
 LinuxPlatformPlugin::LinuxPlatformPlugin( QObject* parent ) :
-	QObject( parent ),
-	m_linuxCoreFunctions(),
-	m_linuxFilesystemFunctions(),
-	m_linuxInputDeviceFunctions(),
-	m_linuxNetworkFunctions(),
-	m_linuxServiceFunctions(),
-	m_linuxUserFunctions()
+	QObject( parent )
 {
 	// make sure to load global config from default config dirs independent of environment variables
 	qunsetenv( "XDG_CONFIG_DIRS" );
+
+	// don't abort with SIGPIPE when writing to closed sockets e.g. while shutting down VncConnection
+	signal( SIGPIPE, SIG_IGN );
 }
 
 

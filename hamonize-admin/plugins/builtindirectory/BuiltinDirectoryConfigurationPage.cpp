@@ -1,7 +1,7 @@
 /*
  * BuiltinDirectoryConfigurationPage.cpp - implementation of BuiltinDirectoryConfigurationPage
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -78,8 +78,8 @@ void BuiltinDirectoryConfigurationPage::applyConfiguration()
 void BuiltinDirectoryConfigurationPage::addLocation()
 {
 	ObjectManager<NetworkObject> objectManager( m_configuration.networkObjects() );
-	objectManager.add( NetworkObject( NetworkObject::Location, tr( "New location" ),
-									  QString(), QString(), QString(), QUuid::createUuid() ) );
+	objectManager.add( NetworkObject( NetworkObject::Type::Location, tr( "New location" ),
+									  {}, {}, {}, QUuid::createUuid() ) );
 	m_configuration.setNetworkObjects( objectManager.objects() );
 
 	populateLocations();
@@ -128,8 +128,8 @@ void BuiltinDirectoryConfigurationPage::addComputer()
 	}
 
 	ObjectManager<NetworkObject> objectManager( m_configuration.networkObjects() );
-	objectManager.add( NetworkObject( NetworkObject::Host, tr( "New computer" ),
-									  QString(), QString(), QString(),
+	objectManager.add( NetworkObject( NetworkObject::Type::Host, tr( "New computer" ),
+									  {}, {}, {},
 									  QUuid::createUuid(),
 									  currentLocationUid ) );
 	m_configuration.setNetworkObjects( objectManager.objects() );
@@ -182,7 +182,7 @@ void BuiltinDirectoryConfigurationPage::populateLocations()
 	for( const auto& networkObjectValue : networkObjects )
 	{
 		const NetworkObject networkObject( networkObjectValue.toObject() );
-		if( networkObject.type() == NetworkObject::Location )
+		if( networkObject.type() == NetworkObject::Type::Location )
 		{
 			auto item = new QTableWidgetItem( networkObject.name() );
 			item->setData( NetworkObjectModel::UidRole, networkObject.uid() );
@@ -210,7 +210,7 @@ void BuiltinDirectoryConfigurationPage::populateComputers()
 	{
 		const NetworkObject networkObject( networkObjectValue.toObject() );
 
-		if( networkObject.type() == NetworkObject::Host &&
+		if( networkObject.type() == NetworkObject::Type::Host &&
 			networkObject.parentUid() == parentUid )
 		{
 			auto nameItem = new QTableWidgetItem( networkObject.name() );
@@ -235,11 +235,11 @@ NetworkObject BuiltinDirectoryConfigurationPage::currentLocationObject() const
 	const auto selectedLocation = ui->locationTableWidget->currentItem();
 	if( selectedLocation )
 	{
-		return NetworkObject( NetworkObject::Location,
+		return NetworkObject( NetworkObject::Type::Location,
 							  selectedLocation->text(),
-							  QString(),
-							  QString(),
-							  QString(),
+							  {},
+							  {},
+							  {},
 							  selectedLocation->data( NetworkObjectModel::UidRole ).toUuid(),
 							  selectedLocation->data( NetworkObjectModel::ParentUidRole ).toUuid() );
 	}
@@ -258,11 +258,11 @@ NetworkObject BuiltinDirectoryConfigurationPage::currentComputerObject() const
 		auto hostAddressItem = ui->computerTableWidget->item( row, 1 );
 		auto macAddressItem = ui->computerTableWidget->item( row, 2 );
 
-		return NetworkObject( NetworkObject::Host,
+		return NetworkObject( NetworkObject::Type::Host,
 							  nameItem->text(),
 							  hostAddressItem->text().trimmed(),
 							  macAddressItem->text().trimmed(),
-							  QString(),
+							  {},
 							  nameItem->data( NetworkObjectModel::UidRole ).toUuid(),
 							  nameItem->data( NetworkObjectModel::ParentUidRole ).toUuid() );
 	}

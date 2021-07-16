@@ -2,7 +2,7 @@
  * RfbVeyonAuth.h - types and names related to veyon-specific RFB
  *                  authentication type
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,7 +33,7 @@ class VEYON_CORE_EXPORT RfbVeyonAuth
 {
 	Q_GADGET
 public:
-	typedef enum Types
+	enum Type
 	{
 		// invalid/null authentication type
 		Invalid,
@@ -41,8 +41,8 @@ public:
 		// no authentication needed
 		None,
 
-		// only hosts from an internal whitelist list are allowed
-		HostWhiteList,
+		// only hosts in an internal whitelist list are allowed
+		HostWhiteListLegacy, // TODO: drop in VEYON5
 
 		// client has to sign some data to verify it's authority
 		KeyFile,
@@ -55,7 +55,7 @@ public:
 
 		AuthTypeCount
 
-	} Type;
+	} ;
 
 	Q_ENUM(Type)
 

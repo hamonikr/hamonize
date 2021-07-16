@@ -1,7 +1,7 @@
 /*
  * FlexibleListView.h - list view with flexible icon positions
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,7 +30,7 @@ class FlexibleListView : public QListView
 {
 	Q_OBJECT
 public:
-	FlexibleListView( QWidget *parent = nullptr );
+	explicit FlexibleListView( QWidget *parent = nullptr );
 	~FlexibleListView() override = default;
 
 	void setUidRole( int role );
@@ -46,11 +46,15 @@ public:
 public:
 	void doItemsLayout() override;
 
+protected:
+	bool viewportEvent( QEvent* event ) override;
+	void dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight,
+					  const QVector<int>& roles ) override;
+
 private:
 	void restorePositions();
 	void updatePositions();
 
-private:
 	QSizeF effectiveGridSize() const;
 	QPointF toGridPoint( QPoint pos ) const;
 	QPoint toItemPosition( QPointF gridPoint ) const;
@@ -58,4 +62,5 @@ private:
 	int m_uidRole;
 	QHash<QUuid, QPointF> m_positions;
 
+	QPoint m_toolTipPos;
 };

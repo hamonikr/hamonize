@@ -1,7 +1,7 @@
 /*
  * FileTransferPlugin.h - declaration of FileTransferPlugin class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,17 +26,32 @@
 
 #include <QFile>
 
+#include "ConfigurationPagePluginInterface.h"
 #include "FeatureProviderInterface.h"
+#include "FileTransferConfiguration.h"
 
 class FileTransferController;
 
-class FileTransferPlugin : public QObject, FeatureProviderInterface, PluginInterface
+class FileTransferPlugin : public QObject, FeatureProviderInterface, PluginInterface, ConfigurationPagePluginInterface
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.FileTransfer")
-	Q_INTERFACES(PluginInterface FeatureProviderInterface)
+	Q_INTERFACES(PluginInterface
+					  FeatureProviderInterface
+						  ConfigurationPagePluginInterface)
 public:
-	FileTransferPlugin( QObject* parent = nullptr );
+	enum class Argument
+	{
+		TransferId,
+		Filename,
+		DataChunk,
+		OpenFileInApplication,
+		OverwriteExistingFile,
+		Files
+	};
+	Q_ENUM(Argument)
+
+	explicit FileTransferPlugin( QObject* parent = nullptr );
 	~FileTransferPlugin() override;
 
 	Plugin::Uid uid() const override
@@ -74,14 +89,11 @@ public:
 		return m_features;
 	}
 
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override;
+
 	bool startFeature( VeyonMasterInterface& master, const Feature& feature,
 					   const ComputerControlInterfaceList& computerControlInterfaces ) override;
-
-	bool stopFeature( VeyonMasterInterface& master, const Feature& feature,
-					  const ComputerControlInterfaceList& computerControlInterfaces ) override;
-
-	bool handleFeatureMessage( VeyonMasterInterface& master, const FeatureMessage& message,
-							   ComputerControlInterface::Pointer computerControlInterface ) override;
 
 	bool handleFeatureMessage( VeyonServerInterface& server,
 							   const MessageContext& messageContext,
@@ -97,7 +109,11 @@ public:
 							bool openFileInApplication, const ComputerControlInterfaceList& interfaces );
 	void sendOpenTransferFolderMessage( const ComputerControlInterfaceList& interfaces );
 
+	ConfigurationPage* createConfigurationPage() override;
+
 private:
+	QString destinationDirectory() const;
+
 	enum Commands
 	{
 		FileTransferStartCommand,
@@ -108,22 +124,17 @@ private:
 		CommandCount
 	};
 
-	enum Arguments
-	{
-		TransferId,
-		Filename,
-		DataChunk,
-		OpenFileInApplication,
-		OverwriteExistingFile,
-		ArgumentsCount
-	};
-
 	const Feature m_fileTransferFeature;
 	const FeatureList m_features;
 
-	FileTransferController* m_fileTransferController;
+	FileTransferConfiguration m_configuration;
 
-	QFile m_currentFile;
-	QUuid m_currentTransferId;
+	QString m_lastFileTransferSourceDirectory;
+
+	FileTransferController* m_fileTransferController{nullptr};
+
+	QFile m_currentFile{};
+	QString m_currentFileName{};
+	QUuid m_currentTransferId{};
 
 };

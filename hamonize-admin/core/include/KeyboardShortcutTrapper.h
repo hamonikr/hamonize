@@ -1,7 +1,7 @@
 /*
  * KeyboardShortcutTrapper.h - class for trapping system-wide keyboard shortcuts
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -43,14 +43,14 @@ public:
 	} ;
 	Q_ENUM(Shortcut)
 
-	KeyboardShortcutTrapper( QObject* parent = nullptr ) :
+	explicit KeyboardShortcutTrapper( QObject* parent = nullptr ) :
 		QObject( parent )
 	{
 	}
 
 	virtual void setEnabled( bool on ) = 0;
 
-signals:
-	void shortcutTrapped( Shortcut );
+Q_SIGNALS:
+	void shortcutTrapped( KeyboardShortcutTrapper::Shortcut );
 
 } ;

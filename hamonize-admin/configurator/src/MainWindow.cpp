@@ -1,7 +1,7 @@
 /*
  * MainWindow.cpp - implementation of MainWindow class
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -28,6 +28,7 @@
 #include <QFileDialog>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QScrollBar>
 
 #include "Configuration/JsonStore.h"
 #include "Configuration/UiMapping.h"
@@ -49,9 +50,7 @@ MainWindow::MainWindow( QWidget* parent ) :
 {
 	ui->setupUi( this );
 
-    QString appName = VeyonCore::applicationName();
-
-	setWindowTitle( tr( "%1 Configurator %2" ).arg( VeyonCore::applicationName(), VeyonCore::version() ) );
+	setWindowTitle( tr( "Hamonize Configurator" ).arg( VeyonCore::applicationName(), VeyonCore::version() ) );
 
 	loadConfigurationPagePlugins();
 
@@ -83,11 +82,17 @@ MainWindow::MainWindow( QWidget* parent ) :
 	ui->viewModeStandard->setChecked( true );
 
 	connect( viewModeGroup, &QActionGroup::triggered, this, &MainWindow::updateView );
-	switchToStandardView();
 
 	connect( ui->actionAboutQt, &QAction::triggered, QApplication::instance(), &QApplication::aboutQt );
 
 	connect( &VeyonCore::config(), &VeyonConfiguration::configurationChanged, this, &MainWindow::configurationChanged );
+
+	connect( ui->configPages, &QStackedWidget::currentChanged, this, &MainWindow::updateSizes );
+
+	resize( ui->pageSelector->width() + ui->generalConfigurationPage->minimumSizeHint().width(),
+			ui->generalConfigurationPage->minimumSizeHint().height() );
+
+	updateView();
 
 	VeyonCore::enforceBranding( this );
 }
@@ -139,16 +144,11 @@ void MainWindow::apply()
 
 
 
-void MainWindow::updateView()
+void MainWindow::resizeEvent( QResizeEvent* event )
 {
-	if( ui->viewModeAdvanced->isChecked() )
-	{
-		switchToAdvancedView();
-	}
-	else
-	{
-		switchToStandardView();
-	}
+	QMainWindow::resizeEvent( event );
+
+	updateSizes();
 }
 
 
@@ -233,6 +233,30 @@ void MainWindow::resetConfiguration()
 void MainWindow::aboutVeyon()
 {
 	AboutDialog( this ).exec();
+}
+
+
+
+void MainWindow::updateSizes()
+{
+	ui->configPages->setMinimumSize( ui->scrollArea->width() - ui->scrollArea->verticalScrollBar()->width(),
+									 ui->configPages->currentWidget()->minimumSizeHint().height() );
+}
+
+
+
+void MainWindow::updateView()
+{
+	if( ui->viewModeAdvanced->isChecked() )
+	{
+		switchToAdvancedView();
+	}
+	else
+	{
+		switchToStandardView();
+	}
+
+	QTimer::singleShot( 0, this, &MainWindow::updateSizes );
 }
 
 

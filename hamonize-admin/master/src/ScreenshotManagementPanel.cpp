@@ -1,7 +1,7 @@
 /*
  * ScreenshotManagementPanel.cpp - implementation of screenshot management view
  *
- * Copyright (c) 2004-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2004-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -23,9 +23,8 @@
  */
 
 #include <QDir>
-#include <QDate>
-#include <QFileSystemModel>
-#include <QScrollArea>
+#include <QFileInfo>
+#include <QMessageBox>
 
 #include "Filesystem.h"
 #include "ScreenshotManagementPanel.h"
@@ -38,25 +37,32 @@
 
 ScreenshotManagementPanel::ScreenshotManagementPanel( QWidget *parent ) :
 	QWidget( parent ),
-	ui( new Ui::ScreenshotManagementPanel ),
-	m_fsModel( this )
+	ui( new Ui::ScreenshotManagementPanel )
 {
 	ui->setupUi( this );
 
 	VeyonCore::filesystem().ensurePathExists( VeyonCore::config().screenshotDirectory() );
 
-	m_fsModel.setNameFilters( { QStringLiteral("*.png") } );
-	m_fsModel.setFilter( QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Files );
-	m_fsModel.setRootPath( VeyonCore::filesystem().expandPath( VeyonCore::config().screenshotDirectory() ) );
+	m_fsWatcher.addPath( VeyonCore::filesystem().screenshotDirectoryPath() );
+	connect( &m_fsWatcher, &QFileSystemWatcher::directoryChanged, this, &ScreenshotManagementPanel::updateModel );
 
-	ui->list->setModel( &m_fsModel );
-	ui->list->setRootIndex( m_fsModel.index( m_fsModel.rootPath() ) );
+	m_reloadTimer.setInterval( FsModelResetDelay );
+	m_reloadTimer.setSingleShot( true );
 
-	connect( ui->list, &QListView::clicked, this, &ScreenshotManagementPanel::updateScreenshot );
-	connect( ui->list, &QListView::doubleClicked, this, &ScreenshotManagementPanel::showScreenshot );
+	connect( &m_reloadTimer, &QTimer::timeout, this, &ScreenshotManagementPanel::updateModel );
+	connect( &VeyonCore::filesystem(), &Filesystem::screenshotDirectoryModified,
+			 &m_reloadTimer, QOverload<>::of(&QTimer::start) );
+
+	ui->list->setModel( &m_model );
+
+	connect( ui->list->selectionModel(), &QItemSelectionModel::currentRowChanged,
+			 this, &ScreenshotManagementPanel::updateScreenshot );
+	connect( ui->list, &QListView::activated, this, &ScreenshotManagementPanel::showScreenshot );
 
 	connect( ui->showBtn, &QPushButton::clicked, this, &ScreenshotManagementPanel::showScreenshot );
 	connect( ui->deleteBtn, &QPushButton::clicked, this, &ScreenshotManagementPanel::deleteScreenshot );
+
+	updateModel();
 }
 
 
@@ -92,29 +98,43 @@ void ScreenshotManagementPanel::resizeEvent( QResizeEvent* event )
 
 
 
-void ScreenshotManagementPanel::updateScreenshot( const QModelIndex &idx )
+void ScreenshotManagementPanel::updateModel()
 {
-	setPreview( Screenshot( m_fsModel.filePath( idx ) ) );
+	const auto currentFile = m_model.data( ui->list->currentIndex(), Qt::DisplayRole ).toString();
+
+	const QDir dir{ VeyonCore::filesystem().screenshotDirectoryPath() };
+	const auto files = dir.entryList( { QStringLiteral("*.png") },
+									  QDir::Filter::Files, QDir::SortFlag::Name );
+
+	m_model.setStringList( files );
+
+	ui->list->setCurrentIndex( m_model.index( files.indexOf( currentFile ) ) );
 }
 
 
 
-void ScreenshotManagementPanel::screenshotDoubleClicked( const QModelIndex &idx )
+QString ScreenshotManagementPanel::filePath( const QModelIndex& index ) const
 {
-	auto imgLabel = new QLabel;
-	imgLabel->setPixmap( m_fsModel.filePath( idx ) );
-	if( imgLabel->pixmap() != nullptr )
-	{
-		imgLabel->setFixedSize( imgLabel->pixmap()->width(),
-								imgLabel->pixmap()->height() );
-	}
+	return VeyonCore::filesystem().screenshotDirectoryPath() + QDir::separator() + m_model.data( index, Qt::DisplayRole ).toString();
+}
 
-	auto sa = new QScrollArea;
-	sa->setAttribute( Qt::WA_DeleteOnClose, true );
-	sa->move( 0, 0 );
-	sa->setWidget( imgLabel );
-	sa->setWindowTitle( m_fsModel.fileName( idx ) );
-	sa->show();
+
+
+void ScreenshotManagementPanel::updateScreenshot( const QModelIndex& index )
+{
+	setPreview( Screenshot( filePath( index ) ) );
+}
+
+
+
+void ScreenshotManagementPanel::screenshotDoubleClicked( const QModelIndex& index )
+{
+	auto screenshotWindow = new QLabel;
+	screenshotWindow->setPixmap( filePath( index ) );
+	screenshotWindow->setScaledContents( true );
+	screenshotWindow->setWindowTitle( QFileInfo( filePath( index ) ).fileName() );
+	screenshotWindow->setAttribute( Qt::WA_DeleteOnClose, true );
+	screenshotWindow->showNormal();
 }
 
 
@@ -131,8 +151,19 @@ void ScreenshotManagementPanel::showScreenshot()
 
 void ScreenshotManagementPanel::deleteScreenshot()
 {
-	if( ui->list->currentIndex().isValid() )
+	const auto selection = ui->list->selectionModel()->selectedIndexes();
+	if( selection.size() > 1 &&
+		QMessageBox::question( this,
+							   tr("Screenshot"),
+							   tr("Do you really want to delete all selected screenshots?") ) != QMessageBox::Yes )
 	{
-		m_fsModel.remove( ui->list->currentIndex() );
+		return;
 	}
+
+	for( const auto& index : selection )
+	{
+		QFile::remove( filePath( index ) );
+	}
+
+	updateModel();
 }

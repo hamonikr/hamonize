@@ -1,7 +1,7 @@
 /*
  * LinuxServiceFunctions.h - declaration of LinuxServiceFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -41,10 +41,7 @@ public:
 				  StartMode startMode, const QString& displayName) override;
 	bool uninstall( const QString& name ) override;
 	bool setStartMode( const QString& name, StartMode startMode ) override;
-	bool runAsService( const QString& name, const std::function<void(void)>& serviceMain ) override;
+	bool runAsService( const QString& name, const ServiceEntryPoint& serviceEntryPoint ) override;
 	void manageServerInstances() override;
-
-private:
-	static int systemctl( const QStringList& arguments );
 
 };

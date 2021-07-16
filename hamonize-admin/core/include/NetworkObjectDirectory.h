@@ -1,7 +1,7 @@
 /*
  * NetworkObjectDirectory.h - base class for network object directory implementations
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -41,7 +41,7 @@ public:
 		MaximumUpdateInterval = 3600
 	};
 
-	NetworkObjectDirectory( QObject* parent );
+	explicit NetworkObjectDirectory( QObject* parent );
 
 	void setUpdateInterval( int interval );
 
@@ -55,17 +55,20 @@ public:
 
 	NetworkObject::ModelId rootId() const;
 
-	virtual NetworkObjectList queryObjects( NetworkObject::Type type, const QString& name = QString() );
+	virtual NetworkObjectList queryObjects( NetworkObject::Type type,
+											NetworkObject::Attribute attribute, const QVariant& value );
 	virtual NetworkObjectList queryParents( const NetworkObject& child );
 
 	virtual void update() = 0;
 	virtual void fetchObjects( const NetworkObject& object );
 
 protected:
-	typedef std::function<bool(const NetworkObject &)> NetworkObjectFilter;
+	using NetworkObjectFilter = std::function<bool (const NetworkObject &)>;
 
+	bool hasObjects() const;
 	void addOrUpdateObject( const NetworkObject& networkObject, const NetworkObject& parent );
 	void removeObjects( const NetworkObject& parent, const NetworkObjectFilter& removeObjectFilter );
+	void replaceObjects( const NetworkObjectList& objects, const NetworkObject& parent );
 	void setObjectPopulated( const NetworkObject& networkObject );
 
 private:
@@ -75,7 +78,7 @@ private:
 	NetworkObject m_rootObject;
 	NetworkObjectList m_defaultObjectList;
 
-signals:
+Q_SIGNALS:
 	void objectsAboutToBeInserted( const NetworkObject& parent, int index, int count );
 	void objectsInserted();
 	void objectsAboutToBeRemoved( const NetworkObject& parent, int index, int count );

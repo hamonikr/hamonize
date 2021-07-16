@@ -1,7 +1,7 @@
 /*
  * SystemTrayIcon.cpp - implementation of SystemTrayIcon class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,10 +36,9 @@ SystemTrayIcon::SystemTrayIcon( QObject* parent ) :
 	QObject( parent ),
 	m_systemTrayIconFeature( Feature( QLatin1String( staticMetaObject.className() ),
 									  Feature::Session | Feature::Service | Feature::Worker | Feature::Builtin,
-									  //hihoon Feature::Uid( "8e997d84-ebb9-430f-8f72-d45d9821963d" 
-									  Feature::Uid( "5ea6b6e7-c3e1-41a3-b3f3-1bb0eadb178a"),
+									  Feature::Uid( "5ea6b6e7-c3e1-41a3-b3f3-1bb0eadb178a" ),
 									  Feature::Uid(),
-									  tr( "System tray icon"), QString(), QString() ) ),
+									  tr( "System tray icon"), {}, {} ) ),
 	m_features( { m_systemTrayIconFeature } ),
 	m_systemTrayIcon( nullptr )
 {
@@ -48,55 +47,39 @@ SystemTrayIcon::SystemTrayIcon( QObject* parent ) :
 
 
 void SystemTrayIcon::setToolTip( const QString& toolTipText,
-								 FeatureWorkerManager& featureWorkerManager )
+								FeatureWorkerManager& featureWorkerManager )
 {
-	if( featureWorkerManager.isWorkerRunning( m_systemTrayIconFeature ) == false )
-	{
-		featureWorkerManager.startWorker( m_systemTrayIconFeature, FeatureWorkerManager::UnmanagedSessionProcess );
-	}
-
 	FeatureMessage featureMessage( m_systemTrayIconFeature.uid(), SetToolTipCommand );
-	featureMessage.addArgument( ToolTipTextArgument, toolTipText );
+	featureMessage.addArgument( Argument::ToolTipText, toolTipText );
 
-	featureWorkerManager.sendMessage( featureMessage );
+	featureWorkerManager.sendMessageToUnmanagedSessionWorker( featureMessage );
 }
 
 
 
 void SystemTrayIcon::showMessage( const QString& messageTitle,
-								  const QString& messageText,
-								  FeatureWorkerManager& featureWorkerManager  )
+								 const QString& messageText,
+								 FeatureWorkerManager& featureWorkerManager  )
 {
-	if( featureWorkerManager.isWorkerRunning( m_systemTrayIconFeature ) == false )
-	{
-		featureWorkerManager.startWorker( m_systemTrayIconFeature, FeatureWorkerManager::UnmanagedSessionProcess );
-	}
-
 	FeatureMessage featureMessage( m_systemTrayIconFeature.uid(), ShowMessageCommand );
-	featureMessage.addArgument( MessageTitleArgument, messageTitle );
-	featureMessage.addArgument( MessageTextArgument, messageText );
+	featureMessage.addArgument( Argument::MessageTitle, messageTitle );
+	featureMessage.addArgument( Argument::MessageText, messageText );
 
-	featureWorkerManager.sendMessage( featureMessage );
+	featureWorkerManager.sendMessageToUnmanagedSessionWorker( featureMessage );
 }
 
 
 
 bool SystemTrayIcon::handleFeatureMessage( VeyonServerInterface& server,
-										   const MessageContext& messageContext,
-										   const FeatureMessage& message )
+										  const MessageContext& messageContext,
+										  const FeatureMessage& message )
 {
 	Q_UNUSED(messageContext)
 
 	if( m_systemTrayIconFeature.uid() == message.featureUid() )
 	{
 		// forward message to worker
-		if( server.featureWorkerManager().isWorkerRunning( m_systemTrayIconFeature ) == false )
-		{
-			server.featureWorkerManager().startWorker( m_systemTrayIconFeature, FeatureWorkerManager::UnmanagedSessionProcess );
-		}
-
-		server.featureWorkerManager().sendMessage( message );
-
+		server.featureWorkerManager().sendMessageToUnmanagedSessionWorker( message );
 		return true;
 	}
 
@@ -132,21 +115,21 @@ bool SystemTrayIcon::handleFeatureMessage( VeyonWorkerInterface& worker, const F
 	case SetToolTipCommand:
 		if( m_systemTrayIcon )
 		{
-			m_systemTrayIcon->setToolTip( message.argument( ToolTipTextArgument ).toString() );
+			m_systemTrayIcon->setToolTip( message.argument( Argument::ToolTipText ).toString() );
 		}
 		return true;
 
 	case ShowMessageCommand:
 		if( m_systemTrayIcon )
 		{
-			m_systemTrayIcon->showMessage( message.argument( MessageTitleArgument ).toString(),
-										   message.argument( MessageTextArgument ).toString() );
+			m_systemTrayIcon->showMessage( message.argument( Argument::MessageTitle ).toString(),
+										   message.argument( Argument::MessageText ).toString() );
 		}
 		else
 		{
 			QMessageBox::information( nullptr,
-									  message.argument( MessageTitleArgument ).toString(),
-									  message.argument( MessageTextArgument ).toString() );
+									  message.argument( Argument::MessageTitle ).toString(),
+									  message.argument( Argument::MessageText ).toString() );
 		}
 		return true;
 

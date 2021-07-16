@@ -1,7 +1,7 @@
 /*
  * ToolButton.h - declaration of class ToolButton
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -38,10 +38,10 @@ class VEYON_CORE_EXPORT ToolButton : public QToolButton
 public:
 	ToolButton( const QIcon& icon,
 				const QString& label,
-				const QString& altLabel = QString(),
-				const QString& description = QString(),
+				const QString& altLabel = {},
+				const QString& description = {},
 				const QKeySequence& shortcut = QKeySequence() );
-	~ToolButton() = default;
+	~ToolButton() override = default;
 
 	static void setIconOnlyMode( QWidget* mainWindow, bool enabled );
 
@@ -70,7 +70,7 @@ protected:
 	void paintEvent( QPaintEvent * _pe ) override;
 
 
-signals:
+Q_SIGNALS:
 	void mouseLeftButton();
 
 

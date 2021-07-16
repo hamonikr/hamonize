@@ -1,7 +1,7 @@
 /*
  * BuiltinFeatures.h - declaration of BuiltinFeatures class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,7 +30,6 @@ class DesktopAccessDialog;
 class FeatureControl;
 class MonitoringMode;
 class SystemTrayIcon;
-class UserSessionControl;
 
 // clazy:excludeall=rule-of-three
 
@@ -60,15 +59,9 @@ public:
 		return *m_desktopAccessDialog;
 	}
 
-	UserSessionControl& userSessionControl()
-	{
-		return *m_userSessionControl;
-	}
-
 private:
 	FeatureControl* m_featureControl;
 	SystemTrayIcon* m_systemTrayIcon;
 	MonitoringMode* m_monitoringMode;
 	DesktopAccessDialog* m_desktopAccessDialog;
-	UserSessionControl* m_userSessionControl;
 };

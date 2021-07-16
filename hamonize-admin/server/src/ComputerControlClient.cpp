@@ -1,7 +1,7 @@
 /*
  * ComputerControlClient.cpp - implementation of the ComputerControlClient class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,7 +32,7 @@
 ComputerControlClient::ComputerControlClient( ComputerControlServer* server,
 											  QTcpSocket* clientSocket,
 											  int vncServerPort,
-											  const QString& vncServerPassword,
+											  const Password& vncServerPassword,
 											  QObject* parent ) :
 	VncProxyConnection( clientSocket, vncServerPort, parent ),
 	m_server( server ),
@@ -43,8 +43,6 @@ ComputerControlClient::ComputerControlClient( ComputerControlServer* server,
 					  server->accessControlManager() ),
 	m_clientProtocol( vncServerSocket(), vncServerPassword )
 {
-	m_serverProtocol.start();
-	m_clientProtocol.start();
 }
 
 
@@ -68,7 +66,7 @@ bool ComputerControlClient::receiveClientMessage()
 
 	if( messageType == FeatureMessage::RfbMessageType )
 	{
-        return m_server->handleFeatureMessage( socket );
+		return m_server->handleFeatureMessage( socket );
 	}
 
 	return VncProxyConnection::receiveClientMessage();

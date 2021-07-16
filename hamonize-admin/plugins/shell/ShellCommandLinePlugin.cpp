@@ -1,7 +1,7 @@
 /*
  * ShellCommandLinePlugin.cpp - implementation of ShellCommandLinePlugin class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -63,7 +63,7 @@ CommandLinePluginInterface::RunResult ShellCommandLinePlugin::handle_main()
 		printf("VEYON> ");
 
 		QString line;
-		if( stream.readLineInto( &line ) && line != QStringLiteral("exit") )
+		if( stream.readLineInto( &line ) && line != QLatin1String("exit") )
 		{
 			runCommand( line );
 		}

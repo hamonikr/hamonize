@@ -1,7 +1,7 @@
 /*
  * AccessControlProvider.cpp - implementation of the AccessControlProvider class
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,11 +22,12 @@
  *
  */
 
+#include <QNetworkInterface>
 #include <QRegularExpression>
-#include <QHostInfo>
 
 #include "UserGroupsBackendManager.h"
 #include "AccessControlProvider.h"
+#include "HostAddress.h"
 #include "NetworkObjectDirectory.h"
 #include "NetworkObjectDirectoryManager.h"
 #include "VeyonConfiguration.h"
@@ -47,7 +48,7 @@ AccessControlProvider::AccessControlProvider() :
 
 	for( const auto& accessControlRule : accessControlRules )
 	{
-		m_accessControlRules.append( accessControlRule );
+		m_accessControlRules.append( AccessControlRule( accessControlRule ) );
 	}
 }
 
@@ -66,7 +67,8 @@ QStringList AccessControlProvider::userGroups() const
 
 QStringList AccessControlProvider::locations() const
 {
-	auto locationList = objectNames( m_networkObjectDirectory->queryObjects( NetworkObject::Location ) );
+	auto locationList = objectNames( m_networkObjectDirectory->queryObjects( NetworkObject::Type::Location,
+																			 NetworkObject::Attribute::None, {} ) );
 
 	std::sort( locationList.begin(), locationList.end() );
 
@@ -77,9 +79,21 @@ QStringList AccessControlProvider::locations() const
 
 QStringList AccessControlProvider::locationsOfComputer( const QString& computer ) const
 {
-	const auto computers = m_networkObjectDirectory->queryObjects( NetworkObject::Host, computer );
+	const auto fqdn = HostAddress( computer ).convert( HostAddress::Type::FullyQualifiedDomainName );
+
+	vDebug() << "Searching for locations of computer" << computer << "via FQDN" << fqdn;
+
+	if( fqdn.isEmpty() )
+	{
+		vWarning() << "Empty FQDN - returning empty location list";
+		return {};
+	}
+
+	const auto computers = m_networkObjectDirectory->queryObjects( NetworkObject::Type::Host,
+																   NetworkObject::Attribute::HostAddress, fqdn );
 	if( computers.isEmpty() )
 	{
+		vWarning() << "Could not query any network objects for host" << fqdn;
 		return {};
 	}
 
@@ -97,20 +111,22 @@ QStringList AccessControlProvider::locationsOfComputer( const QString& computer 
 
 	std::sort( locationList.begin(), locationList.end() );
 
+	vDebug() << "Found locations:" << locationList;
+
 	return locationList;
 }
 
 
 
-AccessControlProvider::AccessResult AccessControlProvider::checkAccess( const QString& accessingUser,
-																		const QString& accessingComputer,
-																		const QStringList& connectedUsers )
+AccessControlProvider::Access AccessControlProvider::checkAccess( const QString& accessingUser,
+																  const QString& accessingComputer,
+																  const QStringList& connectedUsers )
 {
 	if( VeyonCore::config().isAccessRestrictedToUserGroups() )
 	{
 		if( processAuthorizedGroups( accessingUser ) )
 		{
-			return AccessAllow;
+			return Access::Allow;
 		}
 	}
 	else if( VeyonCore::config().isAccessControlRulesProcessingEnabled() )
@@ -118,14 +134,14 @@ AccessControlProvider::AccessResult AccessControlProvider::checkAccess( const QS
 		auto action = processAccessControlRules( accessingUser,
 												 accessingComputer,
 												 VeyonCore::platform().userFunctions().currentUser(),
-												 QHostInfo::localHostName(),
+												 HostAddress::localFQDN(),
 												 connectedUsers );
 		switch( action )
 		{
-		case AccessControlRule::ActionAllow:
-			return AccessAllow;
-		case AccessControlRule::ActionAskForPermission:
-			return AccessToBeConfirmed;
+		case AccessControlRule::Action::Allow:
+			return Access::Allow;
+		case AccessControlRule::Action::AskForPermission:
+			return Access::ToBeConfirmed;
 		default: break;
 		}
 	}
@@ -134,13 +150,13 @@ AccessControlProvider::AccessResult AccessControlProvider::checkAccess( const QS
 		vDebug() << "no access control method configured, allowing access.";
 
 		// no access control method configured, therefore grant access
-		return AccessAllow;
+		return Access::Allow;
 	}
 
 	vDebug() << "configured access control method did not succeed, denying access.";
 
 	// configured access control method did not succeed, therefore deny access
-	return AccessDeny;
+	return Access::Deny;
 }
 
 
@@ -149,8 +165,18 @@ bool AccessControlProvider::processAuthorizedGroups( const QString& accessingUse
 {
 	vDebug() << "processing for user" << accessingUser;
 
-	return intersects( m_userGroupsBackend->groupsOfUser( accessingUser, m_queryDomainGroups ).toSet(),
-					   VeyonCore::config().authorizedUserGroups().toSet() );
+	const auto groupsOfAccessingUser = m_userGroupsBackend->groupsOfUser( accessingUser, m_queryDomainGroups );
+	const auto authorizedUserGroups = VeyonCore::config().authorizedUserGroups();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+	const auto groupsOfAccessingUserSet = QSet<QString>{ groupsOfAccessingUser.begin(), groupsOfAccessingUser.end() };
+	const auto authorizedUserGroupSet = QSet<QString>{ authorizedUserGroups.begin(), authorizedUserGroups.end() };
+#else
+	const auto groupsOfAccessingUserSet = groupsOfAccessingUser.toSet();
+	const auto authorizedUserGroupSet = authorizedUserGroups.toSet();
+#endif
+
+	return intersects( groupsOfAccessingUserSet, authorizedUserGroupSet );
 }
 
 
@@ -166,7 +192,7 @@ AccessControlRule::Action AccessControlProvider::processAccessControlRules( cons
 	for( const auto& rule : qAsConst( m_accessControlRules ) )
 	{
 		// rule disabled?
-		if( rule.action() == AccessControlRule::ActionNone )
+		if( rule.action() == AccessControlRule::Action::None )
 		{
 			// then continue with next rule
 			continue;
@@ -182,7 +208,7 @@ AccessControlRule::Action AccessControlProvider::processAccessControlRules( cons
 
 	vDebug() << "no matching rule, denying access";
 
-	return AccessControlRule::ActionDeny;
+	return AccessControlRule::Action::Deny;
 }
 
 
@@ -198,13 +224,19 @@ bool AccessControlProvider::isAccessToLocalComputerDenied() const
 
 	for( const auto& rule : qAsConst( m_accessControlRules ) )
 	{
-		if( rule.action() == AccessControlRule::ActionDeny &&
-			matchConditions( rule, QString(), QString(),
-							 VeyonCore::platform().userFunctions().currentUser(),
-							 QHostInfo::localHostName(),
-							 QStringList() ) )
+		if( matchConditions( rule, {}, {},
+							 VeyonCore::platform().userFunctions().currentUser(), HostAddress::localFQDN(), {} ) )
 		{
-			return true;
+			switch( rule.action() )
+			{
+			case AccessControlRule::Action::Deny:
+				return true;
+			case AccessControlRule::Action::Allow:
+			case AccessControlRule::Action::AskForPermission:
+				return false;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -240,7 +272,15 @@ bool AccessControlProvider::haveGroupsInCommon( const QString &userOne, const QS
 	const auto userOneGroups = m_userGroupsBackend->groupsOfUser( userOne, m_queryDomainGroups );
 	const auto userTwoGroups = m_userGroupsBackend->groupsOfUser( userTwo, m_queryDomainGroups );
 
-	return intersects( userOneGroups.toSet(), userTwoGroups.toSet() );
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+	const auto userOneGroupSet = QSet<QString>{ userOneGroups.begin(), userOneGroups.end() };
+	const auto userTwoGroupSet = QSet<QString>{ userTwoGroups.begin(), userTwoGroups.end() };
+#else
+	const auto userOneGroupSet = userOneGroups.toSet();
+	const auto userTwoGroupSet = userTwoGroups.toSet();
+#endif
+
+	return intersects( userOneGroupSet, userTwoGroupSet );
 }
 
 
@@ -258,21 +298,22 @@ bool AccessControlProvider::haveSameLocations( const QString &computerOne, const
 
 bool AccessControlProvider::isLocalHost( const QString &accessingComputer ) const
 {
-	return QHostAddress( accessingComputer ).isLoopback();
+	return HostAddress( accessingComputer ).isLocalHost();
 }
 
 
 
 bool AccessControlProvider::isLocalUser( const QString &accessingUser, const QString &localUser ) const
 {
-	return accessingUser == localUser;
+	return accessingUser.isEmpty() == false &&
+			accessingUser == localUser;
 }
 
 
 
 bool AccessControlProvider::isNoUserLoggedOn() const
 {
-	return VeyonCore::platform().userFunctions().loggedOnUsers().isEmpty();
+	return VeyonCore::platform().userFunctions().isAnyUserLoggedOn() == false;
 }
 
 
@@ -283,14 +324,14 @@ QString AccessControlProvider::lookupSubject( AccessControlRule::Subject subject
 {
 	switch( subject )
 	{
-	case AccessControlRule::SubjectAccessingUser: return accessingUser;
-	case AccessControlRule::SubjectAccessingComputer: return accessingComputer;
-	case AccessControlRule::SubjectLocalUser: return localUser;
-	case AccessControlRule::SubjectLocalComputer: return localComputer;
+	case AccessControlRule::Subject::AccessingUser: return accessingUser;
+	case AccessControlRule::Subject::AccessingComputer: return accessingComputer;
+	case AccessControlRule::Subject::LocalUser: return localUser;
+	case AccessControlRule::Subject::LocalComputer: return localComputer;
 	default: break;
 	}
 
-	return QString();
+	return {};
 }
 
 
@@ -309,13 +350,12 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 
 	vDebug() << rule.toJson() << matchResult;
 
-	auto condition = AccessControlRule::ConditionMemberOfUserGroup;
-
-	if( rule.isConditionEnabled( condition ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::MemberOfUserGroup ) )
 	{
 		hasConditions = true;
 
-		const auto user = lookupSubject( rule.subject( condition ), accessingUser, QString(), localUser, QString() );
+		const auto condition = AccessControlRule::Condition::MemberOfUserGroup;
+		const auto user = lookupSubject( rule.subject( condition ), accessingUser, {}, localUser, {} );
 		const auto group = rule.argument( condition );
 
 		if( user.isEmpty() || group.isEmpty() ||
@@ -325,9 +365,7 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 		}
 	}
 
-	condition = AccessControlRule::ConditionGroupsInCommon;
-
-	if( rule.isConditionEnabled( condition ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::GroupsInCommon ) )
 	{
 		hasConditions = true;
 
@@ -338,13 +376,12 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 		}
 	}
 
-	condition = AccessControlRule::ConditionLocatedAt;
-
-	if( rule.isConditionEnabled( condition ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::LocatedAt ) )
 	{
 		hasConditions = true;
 
-		const auto computer = lookupSubject( rule.subject( condition ), QString(), accessingComputer, QString(), localComputer );
+		const auto condition = AccessControlRule::Condition::LocatedAt;
+		const auto computer = lookupSubject( rule.subject( condition ), {}, accessingComputer, {}, localComputer );
 		const auto location = rule.argument( condition );
 
 		if( computer.isEmpty() || location.isEmpty() ||
@@ -354,10 +391,7 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 		}
 	}
 
-
-	condition = AccessControlRule::ConditionSameLocation;
-
-	if( rule.isConditionEnabled( condition ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::SameLocation ) )
 	{
 		hasConditions = true;
 
@@ -368,7 +402,7 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 		}
 	}
 
-	if( rule.isConditionEnabled( AccessControlRule::ConditionAccessFromLocalHost ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::AccessFromLocalHost ) )
 	{
 		hasConditions = true;
 
@@ -378,7 +412,7 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 		}
 	}
 
-	if( rule.isConditionEnabled( AccessControlRule::ConditionAccessFromLocalUser ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::AccessFromLocalUser ) )
 	{
 		hasConditions = true;
 
@@ -388,7 +422,7 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 		}
 	}
 
-	if( rule.isConditionEnabled( AccessControlRule::ConditionAccessFromAlreadyConnectedUser ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::AccessFromAlreadyConnectedUser ) )
 	{
 		hasConditions = true;
 
@@ -398,7 +432,7 @@ bool AccessControlProvider::matchConditions( const AccessControlRule &rule,
 		}
 	}
 
-	if( rule.isConditionEnabled( AccessControlRule::ConditionNoUserLoggedOn ) )
+	if( rule.isConditionEnabled( AccessControlRule::Condition::NoUserLoggedOn ) )
 	{
 		hasConditions = true;
 

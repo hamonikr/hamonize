@@ -1,7 +1,7 @@
 /*
  * CheckableItemProxyModel.h - proxy model for overlaying checked property
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,7 +34,7 @@ class CheckableItemProxyModel : public QIdentityProxyModel
 {
 	Q_OBJECT
 public:
-	CheckableItemProxyModel( int uidRole, QObject *parent = nullptr );
+	explicit CheckableItemProxyModel( int uidRole, QObject *parent = nullptr );
 
 	void setException( int exceptionRole, const QVariant& exceptionFilterData );
 
@@ -45,7 +45,6 @@ public:
 	bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
 	void updateNewRows(const QModelIndex &parent, int first, int last);
-	void removeRowStates(const QModelIndex &parent, int first, int last);
 
 	QJsonArray saveStates();
 	void loadStates( const QJsonArray& data );

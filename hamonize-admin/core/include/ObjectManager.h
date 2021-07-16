@@ -1,7 +1,7 @@
 /*
  * ObjectManager.h - header file for ObjectManager
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,7 +32,7 @@ template<class T>
 class ObjectManager
 {
 public:
-	ObjectManager( const QJsonArray& objects ) :
+	explicit ObjectManager( const QJsonArray& objects ) :
 		m_objects( objects )
 	{
 	}
@@ -49,16 +49,24 @@ public:
 		return m_objects;
 	}
 
-	const QJsonArray& update( const T& object )
+	const QJsonArray& update( const T& object, bool addIfNotFound = false )
 	{
+		bool found = false;
+
 		for( auto it = m_objects.begin(); it != m_objects.end(); ++it )
 		{
 			T currentObject( it->toObject() );
 			if( currentObject.uid() == object.uid() )
 			{
 				*it = object.toJson();
+				found = true;
 				break;
 			}
+		}
+
+		if( !found )
+		{
+			add( object );
 		}
 
 		return m_objects;

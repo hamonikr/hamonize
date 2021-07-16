@@ -1,7 +1,7 @@
 /*
  * Configuration/JsonStore.h - JsonStore class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,7 +34,7 @@ namespace Configuration
 class VEYON_CORE_EXPORT JsonStore : public Store
 {
 public:
-	JsonStore( Scope scope, const QString & file = QString() );
+	explicit JsonStore( Scope scope, const QString & file = {} );
 
 	void load( Object *obj ) override;
 	void flush( const Object *obj ) override;

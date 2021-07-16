@@ -1,7 +1,7 @@
 /*
  * ConfigurationPagePluginInterface.h - interface class for configuration pages
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -37,7 +37,7 @@ public:
 
 };
 
-typedef QList<ConfigurationPagePluginInterface> ConfigurationPagePluginInterfaceList;
+using ConfigurationPagePluginInterfaceList = QList<ConfigurationPagePluginInterface>;
 
 #define ConfigurationPagePluginInterface_iid "io.veyon.Veyon.Plugins.ConfigurationPagePluginInterface"
 

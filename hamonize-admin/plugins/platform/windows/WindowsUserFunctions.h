@@ -1,7 +1,7 @@
 /*
  * WindowsUserFunctions.h - declaration of WindowsUserFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,8 +24,8 @@
 
 #pragma once
 
+#include "LogonHelper.h"
 #include "PlatformUserFunctions.h"
-//#include "WindowsCoreFunctions.h"
 
 // clazy:exclude=copyable-polymorphic
 
@@ -37,18 +37,15 @@ public:
 	QStringList userGroups( bool queryDomainGroups ) override;
 	QStringList groupsOfUser( const QString& username, bool queryDomainGroups ) override;
 
+	bool isAnyUserLoggedOn() override;
 	QString currentUser() override;
-	QStringList loggedOnUsers() override;
 
-    QStringList guestUserInfo() override;
-	QStringList guestUserInfo( const QString& username ) override;
+	bool prepareLogon( const QString& username, const Password& password ) override;
+	bool performLogon( const QString& username, const Password& password ) override;
 
-	void logon( const QString& username, const QString& password ) override;
 	void logoff() override;
 
-	bool authenticate( const QString& username, const QString& password ) override;
-
-	void changeDeskerLoginInfo(const QString& guestId, const QString& guestName) override;
+	bool authenticate( const QString& username, const Password& password ) override;
 
 
 private:
@@ -58,16 +55,7 @@ private:
 
 	static QStringList localUserGroups();
 	static QStringList localGroupsOfUser( const QString& username );
-/*
-    typedef struct {
-        QString guestId;
-        QString guestName;
-        QDBusObjectPath path;
-    } GuestLoginDBusUserInfo;
-*/
-    QString m_guestId;
-    QString m_guestName;
 
-//	WindowsCoreFunctions::DBusInterfacePointer m_guestLoginManager;
+	LogonHelper m_logonHelper{};
 
 };

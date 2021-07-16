@@ -1,7 +1,7 @@
 /*
  * ComputerControlServer.h - header file for ComputerControlServer
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,18 +26,7 @@
 
 #include <QtCore/QMutex>
 #include <QtCore/QStringList>
-#include <QApplication>
 
-#include <QFileSystemWatcher>
-
-//#include <QtDBus/QDBusInterface>
-//#include <QtDBus/QDBusConnection>
-
-//#include <QDBusInterface>
-//#include <QDBusConnection>
-
-#include "VeyonCore.h"
-#include "FeatureProviderInterface.h"
 #include "FeatureManager.h"
 #include "FeatureWorkerManager.h"
 #include "RfbVeyonAuth.h"
@@ -47,22 +36,19 @@
 #include "VncProxyServer.h"
 #include "VncProxyConnectionFactory.h"
 #include "VncServer.h"
-#include "HWInfo.h"
-#include "CenterAPI.h"
-#include "DeskerWidget.h"
 
 class ComputerControlServer : public QObject, VncProxyConnectionFactory, VeyonServerInterface
 {
 	Q_OBJECT
 public:
-	ComputerControlServer( QObject* parent = nullptr );
+	explicit ComputerControlServer( QObject* parent = nullptr );
 	~ComputerControlServer() override;
 
 	bool start();
 
 	VncProxyConnection* createVncProxyConnection( QTcpSocket* clientSocket,
 												  int vncServerPort,
-												  const QString& vncServerPassword,
+												  const Password& vncServerPassword,
 												  QObject* parent ) override;
 
 	ServerAuthenticationManager& authenticationManager()
@@ -79,58 +65,28 @@ public:
 
 	bool sendFeatureMessageReply( const MessageContext& context, const FeatureMessage& reply ) override;
 
-	void setAllowedIPs( const QStringList &allowedIPs );
-
 	FeatureWorkerManager& featureWorkerManager() override
 	{
 		return m_featureWorkerManager;
 	}
 
-//    typedef QSharedPointer<QDBusInterface> DBusInterfacePointer;
-
-//    static DBusInterfacePointer guestLoginManager();
-
-    void localLock();
-
-private slots:
-    void guestLogin( const QString& guestId, const QString& guestName );
-    void guestLogout();
-    void watchingGuestUser();
+	int vncServerBasePort() const override
+	{
+		return m_vncServer.serverBasePort();
+	}
 
 private:
-    enum Arguments
-    {
-        UserLoginName,
-        UserFullName,
-        GuestLoginName, // 2019.06.10 hihoon PC방 Guest 로그인 시 사용자 로그인 App용 사용자 ID/NAME 전달 변수 추가
-        GuestFullName,  // 2019.06.10 hihoon PC방 Guest 로그인 시 사용자 로그인 App용 사용자 ID/NAME 전달 변수 추가
-    };
+	void checkForIncompleteAuthentication( VncServerClient* client );
+	void showAuthenticationMessage( VncServerClient* client );
+	void showAccessControlMessage( VncServerClient* client );
 
-    enum {
-        LoginManagerReconnectInterval = 3000,
-        ServerTerminateTimeout = 3000,
-        ServerStopSleepInterval = 100,
-        ServerKillDelayTime = 1000,
-        SessionEnvironmentProbingInterval = 1000,
-        SessionUptimeSecondsMinimum = 3,
-        SessionUptimeProbingInterval = 1000,
-    };
-
-    enum Commands
-    {
-        StartLockCommand,
-        StopLockCommand,
-        CommandCount
-    };
-
-	void showAuthenticationMessage( ServerAuthenticationManager::AuthResult result, const QString& host, const QString& user );
-
-    void connectToGuestLoginManager();
+	void updateTrayIconToolTip();
 
 	QMutex m_dataMutex;
 	QStringList m_allowedIPs;
 
 	QStringList m_failedAuthHosts;
+	QStringList m_failedAccessControlHosts;
 
 	FeatureManager m_featureManager;
 	FeatureWorkerManager m_featureWorkerManager;
@@ -138,19 +94,7 @@ private:
 	ServerAuthenticationManager m_serverAuthenticationManager;
 	ServerAccessControlManager m_serverAccessControlManager;
 
-//    ComputerControlServer::DBusInterfacePointer m_guestLoginManager;
-
-    HWInfo *m_hwInfo;
-
 	VncServer m_vncServer;
 	VncProxyServer m_vncProxyServer;
 
-
-    const Feature m_screenLockFeature;
-
-    QFileSystemWatcher *m_watcher;
-
-    DeskerWidget *m_deskerCore;
-
-    QApplication *m_app;
 } ;
