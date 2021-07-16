@@ -1,7 +1,7 @@
 /*
  * LinuxServiceFunctions.cpp - implementation of LinuxServiceFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,35 +22,29 @@
  *
  */
 
-#include <QDateTime>
 #include <QDBusReply>
-#include <QElapsedTimer>
 #include <QEventLoop>
+#include <QFileInfo>
 #include <QProcess>
-#include <QThread>
 #include <QTimer>
 
+#include <csignal>
 #include <proc/readproc.h>
+#include <sys/types.h>
 
-#include "BuiltinFeatures.h"
-#include "UserSessionControl.h"
-#include "PluginManager.h"
-#include "PlatformUserFunctions.h"
 #include "Filesystem.h"
 #include "LinuxCoreFunctions.h"
+#include "LinuxPlatformConfiguration.h"
 #include "LinuxServiceCore.h"
+#include "LinuxSessionFunctions.h"
+#include "ProcessHelper.h"
 #include "VeyonConfiguration.h"
 
 
 LinuxServiceCore::LinuxServiceCore( QObject* parent ) :
-	QObject( parent ),
-	m_loginManager( LinuxCoreFunctions::systemdLoginManager() ),
-    m_guestLoginManager( LinuxCoreFunctions::guestLoginManager() ),
-    m_multiSession( VeyonCore::config().isMultiSessionServiceEnabled() )
+	QObject( parent )
 {
-
 	connectToLoginManager();
-//    connectToGuestLoginManager();
 }
 
 
@@ -64,7 +58,7 @@ LinuxServiceCore::~LinuxServiceCore()
 
 void LinuxServiceCore::run()
 {
-	const auto sessions = listSessions();
+	const auto sessions = LinuxSessionFunctions::listSessions();
 
 	for( const auto& s : sessions )
 	{
@@ -79,87 +73,123 @@ void LinuxServiceCore::run()
 
 void LinuxServiceCore::startServer( const QString& login1SessionId, const QDBusObjectPath& sessionObjectPath )
 {
-    const auto sessionPath = sessionObjectPath.path();
+	const auto sessionPath = sessionObjectPath.path();
 
-	const auto sessionType = getSessionType( sessionPath );
+	const auto sessionType = LinuxSessionFunctions::getSessionType( sessionPath );
 
-	if( sessionType == QStringLiteral("wayland") )
+	if( sessionType == LinuxSessionFunctions::Type::Wayland )
 	{
 		vCritical() << "Can't start Veyon Server in Wayland sessions as this is not yet supported. Please switch to X11-based sessions!";
 		return;
 	}
 
 	// do not start server for non-graphical sessions
-	if( sessionType != QStringLiteral("x11") )
+	if( sessionType != LinuxSessionFunctions::Type::X11 )
 	{
 		return;
 	}
 
-	const auto sessionLeader = getSessionLeaderPid( sessionPath );
+	const auto sessionState = LinuxSessionFunctions::getSessionState( sessionPath );
+	if( sessionState == LinuxSessionFunctions::State::Opening )
+	{
+		vDebug() << "Session" << sessionPath << "still opening - retrying in" << SessionStateProbingInterval << "msecs";
+		QTimer::singleShot( SessionStateProbingInterval, this, [=]() { startServer( login1SessionId, sessionObjectPath ); } );
+		return;
+	}
+
+	// only start server for online or active sessions
+	if( sessionState != LinuxSessionFunctions::State::Online &&
+		sessionState != LinuxSessionFunctions::State::Active )
+	{
+		vDebug() << "Not starting server for session" << sessionPath << "in state" << sessionState;
+		return;
+	}
+
+	const auto sessionLeader = LinuxSessionFunctions::getSessionLeaderPid( sessionPath );
 	if( sessionLeader < 0 )
 	{
 		vCritical() << "No leader available for session" << sessionPath;
 		return;
 	}
 
-	auto sessionEnvironment = getSessionEnvironment( sessionLeader );
+	auto sessionEnvironment = LinuxSessionFunctions::getSessionEnvironment( sessionLeader );
 
 	if( sessionEnvironment.isEmpty() )
 	{
-        vWarning() << "Environment for session" << sessionPath << "not yet available - retrying in"
+		vWarning() << "Environment for session" << sessionPath << "not yet available - retrying in"
 				   << SessionEnvironmentProbingInterval << "msecs";
 		QTimer::singleShot( SessionEnvironmentProbingInterval, this,
 							[=]() { startServer( login1SessionId, sessionObjectPath ); } );
 		return;
 	}
 
-	if( m_multiSession == false && m_serverProcesses.isEmpty() == false )
+	if( m_sessionManager.multiSession() == false )
 	{
 		// make sure no other server is still running
 		stopAllServers();
 	}
 
-	const auto sessionUptime = getSessionUptimeSeconds( sessionPath );
+	const auto sessionUptime = LinuxSessionFunctions::getSessionUptimeSeconds( sessionPath );
 
-	if( sessionUptime >= 0 && sessionUptime < SessionUptimeSecondsMinimum )
+	if( sessionUptime >= 0 &&
+		sessionUptime < LinuxPlatformConfiguration(&VeyonCore::config()).minimumUserSessionLifetime() )
 	{
 		vDebug() << "Session" << sessionPath << "too young - retrying in" << SessionUptimeProbingInterval << "msecs";
-        QTimer::singleShot( SessionUptimeProbingInterval, this, [=]() { startServer( login1SessionId, sessionObjectPath ); } );
+		QTimer::singleShot( SessionUptimeProbingInterval, this, [=]() { startServer( login1SessionId, sessionObjectPath ); } );
 		return;
 	}
 
-	const auto seat = getSessionSeat( sessionPath );
-	const auto display = getSessionDisplay( sessionPath );
-
-    vInfo() << "Starting server for new session" << login1SessionId << "(" << sessionPath << ")"
-			<< "with display" << display
-			<< "at seat" << seat.path;
-
-	if( m_multiSession )
+	// if pam-systemd is not in use, we have to set the XDG_SESSION_ID environment variable manually
+	if( sessionEnvironment.contains( LinuxSessionFunctions::xdgSessionIdEnvVarName() ) == false )
 	{
-		const auto sessionId = openSession( QStringList( { sessionPath, display, seat.path } ) );
-		sessionEnvironment.insert( VeyonCore::sessionIdEnvironmentVariable(), QString::number( sessionId ) );
+		sessionEnvironment.insert( LinuxSessionFunctions::xdgSessionIdEnvVarName(),
+								   LinuxSessionFunctions::getSessionId( sessionPath ) );
 	}
 
-    //    vInfo() << "currentUser:" << currentUser;
+	const auto sessionId = m_sessionManager.openSession( sessionPath );
 
-//    auto processDesker = new QProcess( this );
-//    processDesker->setProcessEnvironment( sessionEnvironment );
-//    processDesker->start( VeyonCore::filesystem().deskerFilePath() );
-//    m_deskerProcesses[sessionPath] = processDesker;
+	vInfo() << "Starting server for new session" << sessionPath
+			<< "with ID" << sessionId
+			<< "at seat" << LinuxSessionFunctions::getSessionSeat( sessionPath ).path;
 
-    auto process = new QProcess( this );
+	sessionEnvironment.insert( QLatin1String( ServiceDataManager::serviceDataTokenEnvironmentVariable() ),
+							   QString::fromUtf8( m_dataManager.token().toByteArray() ) );
+
+	auto process = new QProcess( this );
 	process->setProcessEnvironment( sessionEnvironment );
-	process->start( VeyonCore::filesystem().serverFilePath() );
-	m_serverProcesses[sessionPath] = process;
 
+	if( VeyonCore::config().logToSystem() )
+	{
+		process->setProcessChannelMode( QProcess::ForwardedChannels );
+	}
+
+	const auto catchsegv{ QStringLiteral("/usr/bin/catchsegv") };
+	if( qEnvironmentVariableIsSet("VEYON_VALGRIND_SERVERS") )
+	{
+		process->start( QStringLiteral("/usr/bin/valgrind"),
+						{ QStringLiteral("--error-limit=no"),
+						  QStringLiteral("--log-file=valgrind-veyon-server-%1.log").arg(sessionId),
+						  VeyonCore::filesystem().serverFilePath() } );
+	}
+	else if( VeyonCore::isDebugging() && QFileInfo::exists( catchsegv ) )
+	{
+		process->start( catchsegv, { VeyonCore::filesystem().serverFilePath() } );
+	}
+	else
+	{
+		process->start( VeyonCore::filesystem().serverFilePath(), QStringList{} );
+	}
+
+	connect( process, &QProcess::stateChanged, this, [=]() { checkSessionState( sessionPath ); } );
+
+	m_serverProcesses[sessionPath] = process;
 }
 
 
 
 void LinuxServiceCore::stopServer( const QString& login1SessionId, const QDBusObjectPath& sessionObjectPath )
 {
-	Q_UNUSED( login1SessionId );
+	Q_UNUSED(login1SessionId)
 
 	const auto sessionPath = sessionObjectPath.path();
 
@@ -167,12 +197,8 @@ void LinuxServiceCore::stopServer( const QString& login1SessionId, const QDBusOb
 	{
 		stopServer( sessionPath );
 	}
-
-//    if( m_deskerProcesses.contains( sessionPath ) )
-//    {
-//        stopDesker ( sessionPath );
-//    }
 }
+
 
 
 void LinuxServiceCore::connectToLoginManager()
@@ -183,12 +209,11 @@ void LinuxServiceCore::connectToLoginManager()
 	const auto path = m_loginManager->path();
 	const auto interface = m_loginManager->interface();
 
-
-    success &= QDBusConnection::systemBus().connect( service, path, interface, QStringLiteral("SessionNew"),
+	success &= QDBusConnection::systemBus().connect( service, path, interface, QStringLiteral("SessionNew"),
 													 this, SLOT(startServer(QString,QDBusObjectPath)) );
 
 	success &= QDBusConnection::systemBus().connect( service, path, interface, QStringLiteral("SessionRemoved"),
-                                                     this, SLOT(stopServer(QString,QDBusObjectPath)) );
+													 this, SLOT(stopServer(QString,QDBusObjectPath)) );
 
 	if( success == false )
 	{
@@ -199,13 +224,14 @@ void LinuxServiceCore::connectToLoginManager()
 	{
 		vDebug() << "connected to login manager";
 	}
-
 }
 
 
 
 void LinuxServiceCore::stopServer( const QString& sessionPath )
 {
+	m_sessionManager.closeSession( sessionPath );
+
 	if( m_serverProcesses.contains( sessionPath ) == false )
 	{
 		return;
@@ -215,69 +241,42 @@ void LinuxServiceCore::stopServer( const QString& sessionPath )
 
 	auto process = qAsConst(m_serverProcesses)[sessionPath];
 
-	process->terminate();
+	const auto sendSignalRecursively = []( int pid, int sig ) {
+		if( pid > 0 )
+		{
+			LinuxCoreFunctions::forEachChildProcess(
+				[=]( proc_t* procInfo ) {
+					if( procInfo->tid > 0 )
+					{
+						kill( procInfo->tid, sig );
+					}
+					return true;
+				},
+				pid, 0, true );
+		}
+	};
 
-	QElapsedTimer serverStopTimer;
-	serverStopTimer.start();
+	const auto pid = process->processId();
 
-	while( process->state() != QProcess::NotRunning )
+	// tell x11vnc and child processes (in case spawned via catchsegv) to shutdown
+	sendSignalRecursively( pid, SIGINT );
+
+	if( ProcessHelper::waitForProcess( process, ServerShutdownTimeout, ServerWaitSleepInterval ) == false )
 	{
-		if( serverStopTimer.elapsed() >= ServerTerminateTimeout )
+		process->terminate();
+		sendSignalRecursively( pid, SIGTERM );
+
+		if( ProcessHelper::waitForProcess( process, ServerTerminateTimeout, ServerWaitSleepInterval ) == false )
 		{
 			vWarning() << "server for session" << sessionPath << "still running - killing now";
 			process->kill();
-			QThread::msleep( ServerKillDelayTime );
-			break;
+			sendSignalRecursively( pid, SIGKILL );
+			ProcessHelper::waitForProcess( process, ServerKillTimeout, ServerWaitSleepInterval );
 		}
-
-		QThread::msleep( ServerStopSleepInterval );
 	}
 
-	if( m_multiSession )
-	{
-		closeSession( process->processEnvironment().value( VeyonCore::sessionIdEnvironmentVariable() ).toInt() );
-	}
-
-	delete process;
+	process->deleteLater();
 	m_serverProcesses.remove( sessionPath );
-}
-
-void LinuxServiceCore::stopDesker( const QString& sessionPath )
-{
-    if( m_deskerProcesses.contains( sessionPath ) == false )
-    {
-        return;
-    }
-
-    vInfo() << "stopping desker for removed session" << sessionPath;
-
-    auto processDesker = qAsConst(m_deskerProcesses)[sessionPath];
-
-    processDesker->terminate();
-
-    QElapsedTimer deskerStopTimer;
-    deskerStopTimer.start();
-
-    while( processDesker->state() != QProcess::NotRunning )
-    {
-        if( deskerStopTimer.elapsed() >= ServerTerminateTimeout )
-        {
-            vWarning() << "server for session" << sessionPath << "still running - killing now";
-            processDesker->kill();
-            QThread::msleep( ServerKillDelayTime );
-            break;
-        }
-
-        QThread::msleep( ServerStopSleepInterval );
-    }
-
-    if( m_multiSession )
-    {
-        closeSession( processDesker->processEnvironment().value( VeyonCore::sessionIdEnvironmentVariable() ).toInt() );
-    }
-
-    delete processDesker;
-    m_deskerProcesses.remove( sessionPath );
 }
 
 
@@ -288,208 +287,15 @@ void LinuxServiceCore::stopAllServers()
 	{
 		stopServer( m_serverProcesses.firstKey() );
 	}
-
-//    while( m_deskerProcesses.isEmpty() == false )
-//    {
-//        stopDesker( m_deskerProcesses.firstKey() );
-//    }
 }
 
 
 
-QStringList LinuxServiceCore::listSessions()
+void LinuxServiceCore::checkSessionState( const QString& sessionPath )
 {
-	QStringList sessions;
-
-	const QDBusReply<QDBusArgument> reply = m_loginManager->call( QStringLiteral("ListSessions") );
-
-	if( reply.isValid() )
+	if( LinuxSessionFunctions::getSessionState( sessionPath ) == LinuxSessionFunctions::State::Closing )
 	{
-		const auto data = reply.value();
-
-		data.beginArray();
-		while( data.atEnd() == false )
-		{
-			LoginDBusSession session;
-
-			data.beginStructure();
-			data >> session.id >> session.uid >> session.name >> session.seatId >> session.path;
-			data.endStructure();
-
-			sessions.append( session.path.path() );
-		}
-		return sessions;
+		vDebug() << "Stopping server for currently closing session" << sessionPath;
+		stopServer( sessionPath );
 	}
-	else
-	{
-		vCritical() << "Could not query sessions:" << reply.error().message();
-	}
-
-	return sessions;
-}
-
-
-
-void LinuxServiceCore::logonDesker( const QString& guestId, const QString& guestName )
-{
-
-    vDebug() << __PRETTY_FUNCTION__ << "### hihoon ### guestId, guestName" << guestId << guestName;
-
-    VeyonCore::platform().userFunctions().changeDeskerLoginInfo(guestId, guestName);
-
-//    VeyonCore::builtinFeatures().userSessionControl().getUserSessionInfo( { weakPointer() } );
-//    UserSessionControl* userSessionCtl = VeyonCore::builtinFeatures().userSessionControl().getUserSessionInfo( { weakPointer() } );
-    VeyonCore::builtinFeatures().userSessionControl().setGuestUserInfo(guestId, guestName);
-
-}
-
-
-
-void LinuxServiceCore::connectToGuestLoginManager()
-{
-    bool success = true;
-
-    const auto service = m_guestLoginManager->service();
-    const auto path = m_guestLoginManager->path();
-    const auto interface = m_guestLoginManager->interface();
-
-
-    success &= QDBusConnection::sessionBus().connect( service, path, interface, QStringLiteral("GuestSessionNew"),
-                                                     this, SLOT(guestLogin(QString,QDBusObjectPath)) );
-
-    success &= QDBusConnection::sessionBus().connect( service, path, interface, QStringLiteral("GuestSessionRemoved"),
-                                                     this, SLOT(guestLogout(QString,QDBusObjectPath)) );
-
-    if( success == false )
-    {
-        vWarning() << "could not connect to guest login manager! retrying in" << LoginManagerReconnectInterval << "msecs";
-        QTimer::singleShot( LoginManagerReconnectInterval, this, &LinuxServiceCore::connectToGuestLoginManager );
-    }
-    else
-    {
-        vDebug() << "connected to guest login manager";
-    }
-}
-
-
-
-QVariant LinuxServiceCore::getSessionProperty( const QString& session, const QString& property )
-{
-	QDBusInterface loginManager( QStringLiteral("org.freedesktop.login1"),
-								 session,
-								 QStringLiteral("org.freedesktop.DBus.Properties"),
-								 QDBusConnection::systemBus() );
-
-	const QDBusReply<QDBusVariant> reply = loginManager.call( QStringLiteral("Get"),
-															  QStringLiteral("org.freedesktop.login1.Session"),
-															  property );
-
-	if( reply.isValid() == false )
-	{
-		vCritical() << "Could not query session property" << property << reply.error().message();
-		return QVariant();
-	}
-
-	return reply.value().variant();
-}
-
-
-
-int LinuxServiceCore::getSessionLeaderPid( const QString& session )
-{
-	const auto leader = getSessionProperty( session, QStringLiteral("Leader") );
-
-	if( leader.isNull() )
-	{
-		return -1;
-	}
-
-	return leader.toInt();
-}
-
-
-
-qint64 LinuxServiceCore::getSessionUptimeSeconds( const QString& session )
-{
-	const auto timestamp = getSessionProperty( session, QStringLiteral("Timestamp") );
-
-	if( timestamp.isNull() )
-	{
-		return -1;
-	}
-
-	return QDateTime::currentMSecsSinceEpoch() / 1000 - static_cast<qint64>( timestamp.toLongLong() / ( 1000 * 1000 ) );
-}
-
-
-
-QString LinuxServiceCore::getSessionType( const QString& session )
-{
-	return getSessionProperty( session, QStringLiteral("Type") ).toString();
-}
-
-
-
-QString LinuxServiceCore::getSessionDisplay( const QString& session )
-{
-	return getSessionProperty( session, QStringLiteral("Display") ).toString();
-}
-
-
-
-QString LinuxServiceCore::getSessionId( const QString& session )
-{
-	return getSessionProperty( session, QStringLiteral("Id") ).toString();
-}
-
-
-
-LinuxServiceCore::LoginDBusSessionSeat LinuxServiceCore::getSessionSeat( const QString& session )
-{
-	const auto seatArgument = getSessionProperty( session, QStringLiteral("Seat") ).value<QDBusArgument>();
-
-	LoginDBusSessionSeat seat;
-	seatArgument.beginStructure();
-	seatArgument >> seat.id;
-	seatArgument >> seat.path;
-	seatArgument.endStructure();
-
-	return seat;
-}
-
-
-
-QProcessEnvironment LinuxServiceCore::getSessionEnvironment( int sessionLeaderPid )
-{
-	QProcessEnvironment sessionEnv;
-
-	PROCTAB* proc = openproc( PROC_FILLSTATUS | PROC_FILLENV );
-	proc_t* procInfo = nullptr;
-
-	QList<int> ppids;
-
-    int proc_cnt = 0;
-	while( ( procInfo = readproc( proc, nullptr ) ) )
-	{
-		if( ( procInfo->ppid == sessionLeaderPid || ppids.contains( procInfo->ppid ) ) &&
-				procInfo->environ != nullptr )
-		{
-			for( int i = 0; procInfo->environ[i]; ++i )
-			{
-				const auto env = QString::fromUtf8( procInfo->environ[i] ).split( QLatin1Char('=') );
-                const auto first = env.first();
-                const auto mid = env.mid(1);
-                sessionEnv.insert( first, mid.join( QLatin1Char('=') ) );
-                //sessionEnv.insert( env.first(), env.mid( 1 ).join( QLatin1Char('=') ) );
-			}
-
-			ppids.append( procInfo->tid );
-		}
-        proc_cnt++;
-		freeproc( procInfo );
-	}
-
-	closeproc( proc );
-
-	return sessionEnv;
 }

@@ -1,7 +1,7 @@
 /*
  * OpenWebsiteDialog.cpp - implementation of OpenWebsiteDialog
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -43,6 +43,8 @@ OpenWebsiteDialog::OpenWebsiteDialog( QWidget* parent ) :
 	connect( ui->presetNameEdit, &QLineEdit::textChanged, this, &OpenWebsiteDialog::validate );
 
 	validate();
+
+	ui->websiteLineEdit->setFocus();
 }
 
 

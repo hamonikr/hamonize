@@ -1,7 +1,7 @@
 /*
  * WindowsFilesystemFunctions.cpp - implementation of WindowsFilesystemFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,12 +27,13 @@
 #include <shlobj.h>
 #include <accctrl.h>
 #include <aclapi.h>
+#include <wtsapi32.h>
 
 #include "WindowsCoreFunctions.h"
 #include "WindowsFilesystemFunctions.h"
 
 
-static QString windowsConfigPath( REFKNOWNFOLDERID folderId )
+static QString windowsConfigPath( const KNOWNFOLDERID folderId )
 {
 	QString result;
 
@@ -50,14 +51,14 @@ static QString windowsConfigPath( REFKNOWNFOLDERID folderId )
 
 QString WindowsFilesystemFunctions::personalAppDataPath() const
 {
-        return windowsConfigPath( FOLDERID_RoamingAppData ) + QDir::separator() + QStringLiteral("Hamonize");
+	return windowsConfigPath( FOLDERID_RoamingAppData ) + QDir::separator() + QStringLiteral("Veyon");
 }
 
 
 
 QString WindowsFilesystemFunctions::globalAppDataPath() const
 {
-        return windowsConfigPath( FOLDERID_ProgramData ) + QDir::separator() + QStringLiteral("Hamonize");
+	return windowsConfigPath( FOLDERID_ProgramData ) + QDir::separator() + QStringLiteral("Veyon");
 }
 
 
@@ -80,7 +81,7 @@ QString WindowsFilesystemFunctions::fileOwnerGroup( const QString& filePath )
 	if( secInfoResult != ERROR_SUCCESS )
 	{
 		vCritical() << "GetSecurityInfo() failed:" << secInfoResult;
-		return QString();
+		return {};
 	}
 
 	DWORD nameSize = 0;
@@ -92,16 +93,18 @@ QString WindowsFilesystemFunctions::fileOwnerGroup( const QString& filePath )
 	if( nameSize == 0 || domainSize == 0)
 	{
 		vCritical() << "Failed to retrieve buffer sizes:" << GetLastError();
-		return QString();
+		return {};
 	}
 
-	wchar_t* name = new wchar_t[nameSize];
-	wchar_t* domain = new wchar_t[domainSize];
+	auto name = new wchar_t[nameSize];
+	auto domain = new wchar_t[domainSize];
 
 	if( LookupAccountSid( nullptr, ownerSID, name, &nameSize, domain, &domainSize, &sidNameUse ) == false )
 	{
 		vCritical() << "LookupAccountSid() (2) failed:" << GetLastError();
-		return QString();
+		delete[] name;
+		delete[] domain;
+		return {};
 	}
 
 	const auto owner = QStringLiteral("%1\\%2").arg( QString::fromWCharArray( domain ), QString::fromWCharArray( name ) );
@@ -117,15 +120,15 @@ QString WindowsFilesystemFunctions::fileOwnerGroup( const QString& filePath )
 bool WindowsFilesystemFunctions::setFileOwnerGroup( const QString& filePath, const QString& ownerGroup )
 {
 	DWORD sidLen = SECURITY_MAX_SID_SIZE;
-	char ownerGroupSID[SECURITY_MAX_SID_SIZE]; // Flawfinder: ignore
-	wchar_t domain[PATH_MAX]; // Flawfinder: ignore
-	domain[0] = 0;
-	DWORD domainLen = PATH_MAX;
+	std::array<char, SECURITY_MAX_SID_SIZE> ownerGroupSID{};
+	std::array<wchar_t, DOMAIN_LENGTH> domain{};
+
+	DWORD domainLen = domain.size();
 	SID_NAME_USE sidNameUse;
 
 	if( LookupAccountName( nullptr, WindowsCoreFunctions::toConstWCharArray( ownerGroup ),
-						   ownerGroupSID, &sidLen,
-						   domain, &domainLen, &sidNameUse ) == false )
+						   ownerGroupSID.data(), &sidLen,
+						   domain.data(), &domainLen, &sidNameUse ) == false )
 	{
 		vCritical() << "Could not look up SID structure:" << GetLastError();
 		return false;
@@ -134,12 +137,10 @@ bool WindowsFilesystemFunctions::setFileOwnerGroup( const QString& filePath, con
 	WindowsCoreFunctions::enablePrivilege( SE_TAKE_OWNERSHIP_NAME, true );
 	WindowsCoreFunctions::enablePrivilege( SE_RESTORE_NAME, true );
 
-	auto filePathWide = WindowsCoreFunctions::toWCharArray( filePath );
+	const auto filePathWide = WindowsCoreFunctions::toWCharArray( filePath );
 
-	const auto result = SetNamedSecurityInfo( filePathWide, SE_FILE_OBJECT,
-											  OWNER_SECURITY_INFORMATION, ownerGroupSID, nullptr, nullptr, nullptr );
-
-	delete[] filePathWide;
+	const auto result = SetNamedSecurityInfo( filePathWide.data(), SE_FILE_OBJECT,
+											  OWNER_SECURITY_INFORMATION, ownerGroupSID.data(), nullptr, nullptr, nullptr );
 
 	if( result != ERROR_SUCCESS )
 	{
@@ -159,15 +160,14 @@ bool WindowsFilesystemFunctions::setFileOwnerGroupPermissions( const QString& fi
 	PSID ownerSID = nullptr;
 	PSECURITY_DESCRIPTOR securityDescriptor = nullptr;
 
-	auto filePathWide = WindowsCoreFunctions::toWCharArray( filePath );
+	const auto filePathWide = WindowsCoreFunctions::toWCharArray( filePath );
 
-	const auto secInfoResult = GetNamedSecurityInfo( filePathWide, SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION,
+	const auto secInfoResult = GetNamedSecurityInfo( filePathWide.data(), SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION,
 													 &ownerSID, nullptr, nullptr, nullptr, &securityDescriptor );
 
 	if( secInfoResult != ERROR_SUCCESS )
 	{
 		vCritical() << "GetSecurityInfo() failed:" << secInfoResult;
-		delete[] filePathWide;
 		return false;
 	}
 
@@ -176,14 +176,11 @@ bool WindowsFilesystemFunctions::setFileOwnerGroupPermissions( const QString& fi
 	if( AllocateAndInitializeSid( &SIDAuthNT, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS,
 								  0, 0, 0, 0, 0, 0, &adminSID ) == false )
 	{
-		delete[] filePathWide;
 		return false;
 	}
 
-	const int NUM_ACES = 2;
-	EXPLICIT_ACCESS ea[NUM_ACES];
-
-	ZeroMemory( &ea, NUM_ACES * sizeof(EXPLICIT_ACCESS) );
+	static constexpr auto ExplicitAccessCount = 2;
+	std::array<EXPLICIT_ACCESS, ExplicitAccessCount> ea{};
 
 	// set read access for owner
 	ea[0].grfAccessPermissions = 0;
@@ -203,7 +200,7 @@ bool WindowsFilesystemFunctions::setFileOwnerGroupPermissions( const QString& fi
 	ea[0].grfInheritance = NO_INHERITANCE;
 	ea[0].Trustee.TrusteeForm = TRUSTEE_IS_SID;
 	ea[0].Trustee.TrusteeType = TRUSTEE_IS_GROUP;
-	ea[0].Trustee.ptstrName = (LPTSTR) ownerSID;
+	ea[0].Trustee.ptstrName = LPTSTR(ownerSID);
 
 	// set full control for Administrators
 	ea[1].grfAccessPermissions = GENERIC_ALL;
@@ -211,18 +208,17 @@ bool WindowsFilesystemFunctions::setFileOwnerGroupPermissions( const QString& fi
 	ea[1].grfInheritance = NO_INHERITANCE;
 	ea[1].Trustee.TrusteeForm = TRUSTEE_IS_SID;
 	ea[1].Trustee.TrusteeType = TRUSTEE_IS_GROUP;
-	ea[1].Trustee.ptstrName = (LPTSTR) adminSID;
+	ea[1].Trustee.ptstrName = LPTSTR(adminSID);
 
 	PACL acl = nullptr;
-	if( SetEntriesInAcl( NUM_ACES, ea, nullptr, &acl ) != ERROR_SUCCESS )
+	if( SetEntriesInAcl( ExplicitAccessCount, ea.data(), nullptr, &acl ) != ERROR_SUCCESS )
 	{
 		vCritical() << "SetEntriesInAcl() failed";
-		delete[] filePathWide;
 		FreeSid( adminSID );
 		return false;
 	}
 
-	const auto result = SetNamedSecurityInfo( filePathWide, SE_FILE_OBJECT,
+	const auto result = SetNamedSecurityInfo( filePathWide.data(), SE_FILE_OBJECT,
 											  DACL_SECURITY_INFORMATION | PROTECTED_DACL_SECURITY_INFORMATION,
 											  nullptr, nullptr, acl, nullptr );
 
@@ -231,9 +227,29 @@ bool WindowsFilesystemFunctions::setFileOwnerGroupPermissions( const QString& fi
 		vCritical() << "SetNamedSecurityInfo() failed:" << result;
 	}
 
-	delete[] filePathWide;
 	FreeSid( adminSID );
 	LocalFree( acl );
 
 	return result == ERROR_SUCCESS;
+}
+
+
+
+bool WindowsFilesystemFunctions::openFileSafely( QFile* file, QIODevice::OpenMode openMode, QFileDevice::Permissions permissions )
+{
+	if( file == nullptr )
+	{
+		return false;
+	}
+
+	if( file->open( openMode ) &&
+		file->symLinkTarget().isEmpty() &&
+		file->setPermissions( permissions ) )
+	{
+		return true;
+	}
+
+	file->close();
+
+	return false;
 }

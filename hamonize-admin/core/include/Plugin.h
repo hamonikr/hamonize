@@ -1,7 +1,7 @@
 /*
  * Plugin.h - generic abstraction of a plugin
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,12 +32,13 @@ class Plugin
 {
 	Q_GADGET
 public:
-	typedef QUuid Uid;
+	using Uid = QUuid;
 
 	enum PluginFlags
 	{
 		NoFlags,
 		ProvidesDefaultImplementation = 0x0001,
+		RequiresLicensing = 0x002,
 	} ;
 
 	Q_DECLARE_FLAGS(Flags, PluginFlags)
@@ -45,4 +46,4 @@ public:
 
 };
 
-typedef QList<Plugin::Uid> PluginUidList;
+using PluginUidList = QVector<Plugin::Uid>;

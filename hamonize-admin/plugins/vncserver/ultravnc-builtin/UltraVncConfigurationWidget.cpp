@@ -1,7 +1,7 @@
 /*
  * UltraVncConfigurationWidget.h - implementation of the UltraVncConfigurationWidget class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,6 +34,9 @@ UltraVncConfigurationWidget::UltraVncConfigurationWidget( UltraVncConfiguration&
 	m_configuration( configuration )
 {
 	ui->setupUi( this );
+
+	Configuration::UiMapping::setFlags( ui->ultraVncMaxCpu, Configuration::Property::Flag::Advanced );
+	Configuration::UiMapping::setFlags( ui->ultraVncMaxCpuLabel, Configuration::Property::Flag::Advanced );
 
 	FOREACH_ULTRAVNC_CONFIG_PROPERTY(INIT_WIDGET_FROM_PROPERTY);
 	FOREACH_ULTRAVNC_CONFIG_PROPERTY(CONNECT_WIDGET_TO_PROPERTY);

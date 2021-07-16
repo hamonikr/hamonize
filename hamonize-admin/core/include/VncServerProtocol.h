@@ -1,7 +1,7 @@
 /*
  * VncServerProtocol.h - header file for the VncServerProtocol class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,7 @@ class VncServerClient;
 class VEYON_CORE_EXPORT VncServerProtocol
 {
 public:
-	typedef enum States {
+	enum State {
 		Disconnected,
 		Protocol,
 		SecurityInit,
@@ -47,7 +47,7 @@ public:
 		Running,
 		Close,
 		StateCount
-	} State;
+	} ;
 
 	VncServerProtocol( QTcpSocket* socket,
 					   VncServerClient* client );
@@ -68,12 +68,12 @@ protected:
 	virtual void processAuthenticationMessage( VariantArrayMessage& message ) = 0;
 	virtual void performAccessControl() = 0;
 
-    QTcpSocket* socket()
-    {
-        return m_socket;
-    }
+	QTcpSocket* socket()
+	{
+		return m_socket;
+	}
 
-    VncServerClient* client()
+	VncServerClient* client()
 	{
 		return m_client;
 	}

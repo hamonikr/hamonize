@@ -1,7 +1,7 @@
 /*
  * LdapNetworkObjectDirectory.h - provides a NetworkObjectDirectory for LDAP
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,13 +27,14 @@
 #include "LdapDirectory.h"
 #include "NetworkObjectDirectory.h"
 
-class LdapNetworkObjectDirectory : public NetworkObjectDirectory
+class LDAP_COMMON_EXPORT LdapNetworkObjectDirectory : public NetworkObjectDirectory
 {
 	Q_OBJECT
 public:
 	LdapNetworkObjectDirectory( const LdapConfiguration& ldapConfiguration, QObject* parent );
 
-	NetworkObjectList queryObjects( NetworkObject::Type type, const QString& name ) override;
+	NetworkObjectList queryObjects( NetworkObject::Type type,
+									NetworkObject::Attribute attribute, const QVariant& value ) override;
 	NetworkObjectList queryParents( const NetworkObject& childId ) override;
 
 	static NetworkObject computerToObject( LdapDirectory* directory, const QString& computerDn );
@@ -42,8 +43,8 @@ private:
 	void update() override;
 	void updateLocation( const NetworkObject& locationObject );
 
-	NetworkObjectList queryLocations( const QString& name );
-	NetworkObjectList queryHosts( const QString& name );
+	NetworkObjectList queryLocations( NetworkObject::Attribute attribute, const QVariant& value );
+	NetworkObjectList queryHosts( NetworkObject::Attribute attribute, const QVariant& value );
 
 	LdapDirectory m_ldapDirectory;
 };

@@ -1,7 +1,7 @@
 /*
  * WtsSessionManager.cpp - implementation of WtsSessionManager class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -29,6 +29,19 @@
 #include "WtsSessionManager.h"
 
 
+WtsSessionManager::SessionId WtsSessionManager::currentSession()
+{
+	auto sessionId = InvalidSession;
+	if( ProcessIdToSessionId( GetCurrentProcessId(), &sessionId ) == 0 )
+	{
+		vWarning() << GetLastError();
+		return InvalidSession;
+	}
+
+	return sessionId;
+}
+
+
 
 WtsSessionManager::SessionId WtsSessionManager::activeConsoleSession()
 {
@@ -50,7 +63,7 @@ WtsSessionManager::SessionList WtsSessionManager::activeSessions()
 		return sessionList;
 	}
 
-	sessionList.reserve( sessionCount );
+	sessionList.reserve( int(sessionCount) );
 
 	for( DWORD sessionIndex = 0; sessionIndex < sessionCount; ++sessionIndex )
 	{
@@ -61,6 +74,8 @@ WtsSessionManager::SessionList WtsSessionManager::activeSessions()
 		}
 	}
 
+	WTSFreeMemory( sessions );
+
 	return sessionList;
 }
 
@@ -68,16 +83,21 @@ WtsSessionManager::SessionList WtsSessionManager::activeSessions()
 
 QString WtsSessionManager::querySessionInformation( SessionId sessionId, SessionInfo sessionInfo )
 {
+	if( sessionId == InvalidSession )
+	{
+		vCritical() << "called with invalid session ID";
+		return {};
+	}
+
 	WTS_INFO_CLASS infoClass = WTSInitialProgram;
 
 	switch( sessionInfo )
 	{
-	case SessionInfoUserName: infoClass = WTSUserName; break;
-	case SessionInfoWinStationName: infoClass = WTSWinStationName; break;
-	case SessionInfoDomainName: infoClass = WTSDomainName; break;
+	case SessionInfo::UserName: infoClass = WTSUserName; break;
+	case SessionInfo::DomainName: infoClass = WTSDomainName; break;
 	default:
 		vCritical() << "invalid session info" << sessionInfo << "requested";
-		return QString();
+		return {};
 	}
 
 	QString result;
@@ -89,25 +109,38 @@ QString WtsSessionManager::querySessionInformation( SessionId sessionId, Session
 	{
 		result = QString::fromWCharArray( pBuffer );
 	}
+	else
+	{
+		const auto lastError = GetLastError();
+		vCritical() << lastError;
+	}
 
 	WTSFreeMemory( pBuffer );
+
+	vDebug() << sessionId << sessionInfo << result;
 
 	return result;
 }
 
 
 
-DWORD WtsSessionManager::findWinlogonProcessId( SessionId sessionId )
+WtsSessionManager::ProcessId WtsSessionManager::findWinlogonProcessId( SessionId sessionId )
 {
+	if( sessionId == InvalidSession )
+	{
+		vCritical() << "called with invalid session ID";
+		return InvalidProcess;
+	}
+
 	PWTS_PROCESS_INFO processInfo = nullptr;
 	DWORD processCount = 0;
-	auto pid = static_cast<DWORD>( -1 );
 
 	if( WTSEnumerateProcesses( WTS_CURRENT_SERVER_HANDLE, 0, 1, &processInfo, &processCount ) == false )
 	{
-		return pid;
+		return InvalidProcess;
 	}
 
+	auto pid = InvalidProcess;
 	const auto processName = QStringLiteral("winlogon.exe");
 
 	for( DWORD proc = 0; proc < processCount; ++proc )
@@ -118,7 +151,7 @@ DWORD WtsSessionManager::findWinlogonProcessId( SessionId sessionId )
 		}
 
 		if( processName.compare( QString::fromWCharArray( processInfo[proc].pProcessName ), Qt::CaseInsensitive ) == 0 &&
-				sessionId == processInfo[proc].SessionId )
+			sessionId == processInfo[proc].SessionId )
 		{
 			pid = processInfo[proc].ProcessId;
 			break;
@@ -131,25 +164,25 @@ DWORD WtsSessionManager::findWinlogonProcessId( SessionId sessionId )
 }
 
 
-DWORD WtsSessionManager::findProcessId( const QString& userName )
+
+WtsSessionManager::ProcessId WtsSessionManager::findUserProcessId( const QString& userName )
 {
 	DWORD sidLen = SECURITY_MAX_SID_SIZE; // Flawfinder: ignore
-	char userSID[SECURITY_MAX_SID_SIZE]; // Flawfinder: ignore
-	wchar_t domainName[MAX_PATH]; // Flawfinder: ignore
-	domainName[0] = 0;
-	DWORD domainLen = MAX_PATH;
+	std::array<char, SECURITY_MAX_SID_SIZE> userSID{};
+	std::array<wchar_t, DOMAIN_LENGTH> domainName{};
+	DWORD domainLen = domainName.size();
 	SID_NAME_USE sidNameUse;
 
 	if( LookupAccountName( nullptr,		// system name
 						   WindowsCoreFunctions::toConstWCharArray( userName ),
-						   userSID,
+						   userSID.data(),
 						   &sidLen,
-						   domainName,
+						   domainName.data(),
 						   &domainLen,
 						   &sidNameUse ) == false )
 	{
 		vCritical() << "could not look up SID structure";
-		return -1;
+		return InvalidProcess;
 	}
 
 	PWTS_PROCESS_INFO processInfo;
@@ -157,15 +190,17 @@ DWORD WtsSessionManager::findProcessId( const QString& userName )
 
 	if( WTSEnumerateProcesses( WTS_CURRENT_SERVER_HANDLE, 0, 1, &processInfo, &processCount ) == false )
 	{
-		return -1;
+		vWarning() << "WTSEnumerateProcesses() failed:" << GetLastError();
+		return InvalidProcess;
 	}
 
-	DWORD pid = -1;
+	auto pid = InvalidProcess;
 
 	for( DWORD proc = 0; proc < processCount; ++proc )
 	{
 		if( processInfo[proc].ProcessId > 0 &&
-				EqualSid( processInfo[proc].pUserSid, userSID ) )
+			processInfo[proc].pUserSid != nullptr &&
+			EqualSid( processInfo[proc].pUserSid, userSID.data() ) )
 		{
 			pid = processInfo[proc].ProcessId;
 			break;
@@ -179,44 +214,33 @@ DWORD WtsSessionManager::findProcessId( const QString& userName )
 
 
 
-QStringList WtsSessionManager::loggedOnUsers()
+WtsSessionManager::ProcessId WtsSessionManager::findProcessId( const QString& processName )
 {
-	QStringList users;
+	PWTS_PROCESS_INFO processInfo = nullptr;
+	DWORD processCount = 0;
 
-	PWTS_SESSION_INFO sessionInfo = nullptr;
-	DWORD sessionCount = 0;
-
-	if( WTSEnumerateSessions( WTS_CURRENT_SERVER_HANDLE, 0, 1, &sessionInfo, &sessionCount ) == false )
+	if( WTSEnumerateProcesses( WTS_CURRENT_SERVER_HANDLE, 0, 1, &processInfo, &processCount ) == false )
 	{
-		return users;
+		return InvalidProcess;
 	}
 
-	for( DWORD session = 0; session < sessionCount; ++session )
+	auto pid = InvalidProcess;
+
+	for( DWORD proc = 0; proc < processCount; ++proc )
 	{
-		if( sessionInfo[session].State != WTSActive )
+		if( processInfo[proc].ProcessId == 0 )
 		{
 			continue;
 		}
 
-		LPTSTR userBuffer = nullptr;
-		DWORD bytesReturned = 0;
-		if( WTSQuerySessionInformation( WTS_CURRENT_SERVER_HANDLE, sessionInfo[session].SessionId, WTSUserName,
-										&userBuffer, &bytesReturned ) == false ||
-				userBuffer == nullptr )
+		if( processName.compare( QString::fromWCharArray( processInfo[proc].pProcessName ), Qt::CaseInsensitive ) == 0 )
 		{
-			continue;
+			pid = processInfo[proc].ProcessId;
+			break;
 		}
-
-		const auto user = QString::fromWCharArray( userBuffer );
-		if( user.isEmpty() == false && users.contains( user ) == false )
-		{
-			users.append( user );
-		}
-
-		WTSFreeMemory( userBuffer );
 	}
 
-	WTSFreeMemory( sessionInfo );
+	WTSFreeMemory( processInfo );
 
-	return users;
+	return pid;
 }

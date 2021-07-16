@@ -1,7 +1,7 @@
 /*
  * LinuxInputDeviceFunctions.cpp - implementation of LinuxInputDeviceFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,18 +27,6 @@
 #include "LinuxKeyboardShortcutTrapper.h"
 
 #include <X11/XKBlib.h>
-
-
-LinuxInputDeviceFunctions::LinuxInputDeviceFunctions() :
-	m_inputDevicesDisabled( false ),
-	m_origKeyTable( nullptr ),
-	m_keyCodeMin( 0 ),
-	m_keyCodeMax( 0 ),
-	m_keyCodeCount( 0 ),
-	m_keySymsPerKeyCode( 0 )
-{
-}
-
 
 
 void LinuxInputDeviceFunctions::enableInputDevices()

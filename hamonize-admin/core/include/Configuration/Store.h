@@ -1,7 +1,7 @@
 /*
  * Configuration/Store.h - ConfigurationStore class
  *
- * Copyright (c) 2009-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2009-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -46,14 +46,14 @@ public:
 		JsonFile,
 		NoBackend
 	} ;
-	typedef Backends Backend;
+	using Backend = Backends;
 
 	enum Scopes
 	{
 		User,		// for current user
 		System,		// system-wide (service settings etc.)
 	} ;
-	typedef Scopes Scope;
+	using Scope = Scopes;
 
 
 	Store( Backend backend, Scope scope ) :
@@ -62,9 +62,7 @@ public:
 	{
 	}
 
-	virtual ~Store()
-	{
-	}
+	virtual ~Store() = default;
 
 	Backend backend() const
 	{
@@ -84,7 +82,7 @@ public:
 			case System: return QStringLiteral( "SystemConfig" );
 		}
 
-		return QString();
+		return {};
 	}
 
 	void setName( const QString& name )

@@ -1,7 +1,7 @@
 /*
  * WtsSessionManager.h - header file for WtsSessionManager class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,25 +26,27 @@
 
 #include <windows.h>
 
+#include <QObject>
+
 class WtsSessionManager
 {
+	Q_GADGET
 public:
-	typedef DWORD SessionId;
-	typedef QList<DWORD> SessionList;
+	using SessionId = DWORD;
+	using SessionList = QList<DWORD>;
+	using ProcessId = DWORD;
 
-	enum SessionInfo {
-		SessionInfoNone,
-		SessionInfoUserName,
-		SessionInfoWinStationName,
-		SessionInfoDomainName,
-		SessionInfoCount
+	enum class SessionInfo {
+		UserName,
+		DomainName,
 	};
 
-	enum {
-		SessionUpdateInterval = 1000
-	};
+	Q_ENUM(SessionInfo)
 
-	static const SessionId InvalidSession = 0xFFFFFFFF;
+	static constexpr SessionId InvalidSession = static_cast<SessionId>( -1 );
+	static constexpr ProcessId InvalidProcess = static_cast<ProcessId>( -1 );
+
+	static SessionId currentSession();
 
 	static SessionId activeConsoleSession();
 
@@ -52,9 +54,8 @@ public:
 
 	static QString querySessionInformation( SessionId sessionId, SessionInfo sessionInfo );
 
-	static DWORD findWinlogonProcessId( SessionId sessionId );
-	static DWORD findProcessId( const QString& userName );
-
-	static QStringList loggedOnUsers();
+	static ProcessId findWinlogonProcessId( SessionId sessionId );
+	static ProcessId findUserProcessId( const QString& userName );
+	static ProcessId findProcessId( const QString& processName );
 
 } ;

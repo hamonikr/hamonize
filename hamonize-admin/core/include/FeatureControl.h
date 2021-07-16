@@ -1,7 +1,7 @@
 /*
  * FeatureControl.h - declaration of FeatureControl class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,17 +24,23 @@
 
 #pragma once
 
-#include "SimpleFeatureProvider.h"
+#include "FeatureProviderInterface.h"
 
-class VEYON_CORE_EXPORT FeatureControl : public QObject, public SimpleFeatureProvider, public PluginInterface
+class VEYON_CORE_EXPORT FeatureControl : public QObject, public FeatureProviderInterface, public PluginInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(FeatureProviderInterface PluginInterface)
 public:
-	FeatureControl( QObject* parent = nullptr );
+	enum class Argument
+	{
+		ActiveFeaturesList
+	};
+	Q_ENUM(Argument)
+
+	explicit FeatureControl( QObject* parent = nullptr );
 	~FeatureControl() override = default;
 
-	bool queryActiveFeatures( const ComputerControlInterfaceList& computerControlInterfaces );
+	void queryActiveFeatures( const ComputerControlInterfaceList& computerControlInterfaces );
 
 	Plugin::Uid uid() const override
 	{
@@ -71,8 +77,19 @@ public:
 		return m_features;
 	}
 
-	bool handleFeatureMessage( VeyonMasterInterface& master, const FeatureMessage& message,
-							   ComputerControlInterface::Pointer computerControlInterface ) override;
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override
+	{
+		Q_UNUSED(featureUid)
+		Q_UNUSED(operation)
+		Q_UNUSED(arguments)
+		Q_UNUSED(computerControlInterfaces)
+
+		return false;
+	}
+
+	bool handleFeatureMessage( ComputerControlInterface::Pointer computerControlInterface,
+							  const FeatureMessage& message ) override;
 
 	bool handleFeatureMessage( VeyonServerInterface& server,
 							   const MessageContext& messageContext,
@@ -82,11 +99,6 @@ private:
 	enum Commands
 	{
 		QueryActiveFeatures,
-	};
-
-	enum Arguments
-	{
-		ActiveFeatureList,
 	};
 
 	const Feature m_featureControlFeature;

@@ -1,7 +1,7 @@
 /*
  * LinuxCoreFunctions.h - declaration of LinuxCoreFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,16 +25,18 @@
 #pragma once
 
 #include <QDBusInterface>
+#include <QSharedPointer>
 
 #include "PlatformCoreFunctions.h"
 
-// clazy:excludeall=copyable-polymorphic
+struct proc_t;
 
+// clazy:excludeall=copyable-polymorphic
 
 class LinuxCoreFunctions : public PlatformCoreFunctions
 {
 public:
-	LinuxCoreFunctions();
+	LinuxCoreFunctions() = default;
 
 	bool applyConfiguration() override;
 
@@ -44,7 +46,7 @@ public:
 	void reboot() override;
 	void powerDown( bool installUpdates ) override;
 
-	void raiseWindow( QWidget* widget ) override;
+	void raiseWindow( QWidget* widget, bool stayOnTop ) override;
 
 	void disableScreenSaver() override;
 	void restoreScreenSaverSettings() override;
@@ -58,15 +60,11 @@ public:
 
 	bool runProgramAsUser( const QString& program, const QStringList& parameters,
 						   const QString& username,
-						   const QString& desktop = QString() ) override;
+						   const QString& desktop = {} ) override;
 
 	QString genericUrlHandler() const override;
 
-    // SFR-004 39 PC의 H/W에 대한 정보는 부팅시 매번 최초 등록된 정보화 비교하여 변경이 일어난 경우
-    //            해당 PC는 사용불가 상태 처리하고 변경된 정보는 즉시 중앙관리시스템으로 전송되어야 함.
-    bool isHWChanged();
-
-	typedef QSharedPointer<QDBusInterface> DBusInterfacePointer;
+	using DBusInterfacePointer = QSharedPointer<QDBusInterface>;
 
 	static DBusInterfacePointer kdeSessionManager();
 	static DBusInterfacePointer gnomeSessionManager();
@@ -75,15 +73,19 @@ public:
 	static DBusInterfacePointer systemdLoginManager();
 	static DBusInterfacePointer consoleKitManager();
 
-    static DBusInterfacePointer guestLoginManager();
+	static int systemctl( const QStringList& arguments );
 
+	static void restartDisplayManagers();
+
+	static void forEachChildProcess( const std::function<bool(proc_t *)>& visitor,
+							 int parentPid, int flags, bool visitParent );
 
 private:
-	int m_screenSaverTimeout;
-	int m_screenSaverPreferBlanking;
-	bool m_dpmsEnabled;
-	unsigned short m_dpmsStandbyTimeout;
-	unsigned short m_dpmsSuspendTimeout;
-	unsigned short m_dpmsOffTimeout;
+	int m_screenSaverTimeout{0};
+	int m_screenSaverPreferBlanking{0};
+	bool m_dpmsEnabled{false};
+	unsigned short m_dpmsStandbyTimeout{0};
+	unsigned short m_dpmsSuspendTimeout{0};
+	unsigned short m_dpmsOffTimeout{0};
 
 };

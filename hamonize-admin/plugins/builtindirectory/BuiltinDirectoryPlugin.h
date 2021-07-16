@@ -1,7 +1,7 @@
 /*
  * BuiltinDirectoryPlugin.h - declaration of BuiltinDirectoryPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -47,7 +47,7 @@ class BuiltinDirectoryPlugin : public QObject,
 				 ConfigurationPagePluginInterface
 				 CommandLinePluginInterface)
 public:
-	BuiltinDirectoryPlugin( QObject* paren = nullptr );
+	explicit BuiltinDirectoryPlugin( QObject* paren = nullptr );
 	~BuiltinDirectoryPlugin() override = default;
 
 	Plugin::Uid uid() const override
@@ -109,7 +109,7 @@ public:
 	QStringList commands() const override;
 	QString commandHelp( const QString& command ) const override;
 
-public slots:
+public Q_SLOTS:
 	CommandLinePluginInterface::RunResult handle_help( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_add( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_clear( const QStringList& arguments );

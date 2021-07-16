@@ -1,7 +1,7 @@
 /*
  * WindowsPlatformConfigurationPage.cpp - page for configuring service application
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,7 +31,6 @@
 
 
 WindowsPlatformConfigurationPage::WindowsPlatformConfigurationPage() :
-	ConfigurationPage(),
 	ui( new Ui::WindowsPlatformConfigurationPage ),
 	m_configuration( &VeyonCore::config() )
 {
@@ -51,14 +50,14 @@ WindowsPlatformConfigurationPage::~WindowsPlatformConfigurationPage()
 
 void WindowsPlatformConfigurationPage::resetWidgets()
 {
-	FOREACH_WINDOWS_PLATFORM_CONFIG_PROPERTY(INIT_WIDGET_FROM_PROPERTY);
+	FOREACH_WINDOWS_PLATFORM_CONFIG_PROPERTY(INIT_WIDGET_FROM_PROPERTY)
 }
 
 
 
 void WindowsPlatformConfigurationPage::connectWidgetsToProperties()
 {
-	FOREACH_WINDOWS_PLATFORM_CONFIG_PROPERTY(CONNECT_WIDGET_TO_PROPERTY);
+	FOREACH_WINDOWS_PLATFORM_CONFIG_PROPERTY(CONNECT_WIDGET_TO_PROPERTY)
 }
 
 

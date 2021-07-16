@@ -1,7 +1,7 @@
 /*
  * VeyonCore.cpp - implementation of Veyon Core
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,29 +22,31 @@
  *
  */
 
-#include <hamonizeconfig.h>
+#include <veyonconfig.h>
 
-#include <QLocale>
-#include <QTranslator>
 #include <QAbstractButton>
 #include <QAction>
 #include <QApplication>
 #include <QDir>
 #include <QGroupBox>
-#include <QHostAddress>
 #include <QLabel>
+#include <QLibraryInfo>
 #include <QProcessEnvironment>
+#include <QRegularExpression>
+#include <QSysInfo>
 
 #include "BuiltinFeatures.h"
 #include "ComputerControlInterface.h"
 #include "Filesystem.h"
+#include "HostAddress.h"
 #include "Logger.h"
 #include "NetworkObjectDirectoryManager.h"
 #include "PasswordDialog.h"
 #include "PlatformPluginManager.h"
 #include "PlatformCoreFunctions.h"
-#include "PlatformServiceCore.h"
+#include "PlatformSessionFunctions.h"
 #include "PluginManager.h"
+#include "TranslationLoader.h"
 #include "UserGroupsBackendManager.h"
 #include "VeyonConfiguration.h"
 #include "VncConnection.h"
@@ -53,7 +55,7 @@
 VeyonCore* VeyonCore::s_instance = nullptr;
 
 
-VeyonCore::VeyonCore( QCoreApplication* application, const QString& appComponentName ) :
+VeyonCore::VeyonCore( QCoreApplication* application, Component component, const QString& appComponentName ) :
 	QObject( application ),
 	m_filesystem( new Filesystem ),
 	m_config( nullptr ),
@@ -66,20 +68,19 @@ VeyonCore::VeyonCore( QCoreApplication* application, const QString& appComponent
 	m_builtinFeatures( nullptr ),
 	m_userGroupsBackendManager( nullptr ),
 	m_networkObjectDirectoryManager( nullptr ),
-	m_localComputerControlInterface( nullptr ),
-	m_applicationName( QStringLiteral( "Hamonize" ) ), //hihoon
-	m_authenticationKeyName(),
+	m_component( component ),
+	m_applicationName( QStringLiteral( "Veyon" ) ),
 	m_debugging( false )
 {
 	Q_ASSERT( application != nullptr );
 
 	s_instance = this;
 
-	setupApplicationParameters();
-
 	initPlatformPlugin();
 
 	initConfiguration();
+
+	initSession();
 
 	initLogging( appComponentName );
 
@@ -93,7 +94,9 @@ VeyonCore::VeyonCore( QCoreApplication* application, const QString& appComponent
 
 	initManagers();
 
-	initLocalComputerControlInterface();
+	initSystemInfo();
+
+	Q_EMIT initialized();
 }
 
 
@@ -106,14 +109,11 @@ VeyonCore::~VeyonCore()
 	delete m_authenticationCredentials;
 	m_authenticationCredentials = nullptr;
 
-	delete m_cryptoCore;
-	m_cryptoCore = nullptr;
+	delete m_builtinFeatures;
+	m_builtinFeatures = nullptr;
 
 	delete m_logger;
 	m_logger = nullptr;
-
-	delete m_builtinFeatures;
-	m_builtinFeatures = nullptr;
 
 	delete m_platformPluginManager;
 	m_platformPluginManager = nullptr;
@@ -126,6 +126,9 @@ VeyonCore::~VeyonCore()
 
 	delete m_filesystem;
 	m_filesystem = nullptr;
+
+	delete m_cryptoCore;
+	m_cryptoCore = nullptr;
 
 	s_instance = nullptr;
 }
@@ -164,11 +167,13 @@ QString VeyonCore::translationsDirectory()
 
 QString VeyonCore::qtTranslationsDirectory()
 {
-#ifdef QT_TRANSLATIONS_DIR
-	return QStringLiteral( QT_TRANSLATIONS_DIR );
-#else
+	const auto path = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+	if( QDir{path}.exists() )
+	{
+		return path;
+	}
+
 	return translationsDirectory();
-#endif
 }
 
 
@@ -196,9 +201,11 @@ QString VeyonCore::sessionIdEnvironmentVariable()
 
 void VeyonCore::setupApplicationParameters()
 {
-    QCoreApplication::setOrganizationName( QStringLiteral( "Invesume Inc" ) );
-    QCoreApplication::setOrganizationDomain( QStringLiteral( "hamonikr.org" ) );
-    QCoreApplication::setApplicationName( QStringLiteral( "Hamonize" ) );
+	QCoreApplication::setOrganizationName( QStringLiteral( "Veyon Solutions" ) );
+	QCoreApplication::setOrganizationDomain( QStringLiteral( "veyon.io" ) );
+	QCoreApplication::setApplicationName( QStringLiteral( "Veyon" ) );
+
+	QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts );
 
 	QApplication::setAttribute( Qt::AA_UseHighDpiPixmaps );
 }
@@ -218,20 +225,6 @@ bool VeyonCore::initAuthentication()
 
 
 
-bool VeyonCore::hasSessionId()
-{
-	return QProcessEnvironment::systemEnvironment().contains( sessionIdEnvironmentVariable() );
-}
-
-
-
-int VeyonCore::sessionId()
-{
-	return QProcessEnvironment::systemEnvironment().value( sessionIdEnvironmentVariable() ).toInt();
-}
-
-
-
 QString VeyonCore::applicationName()
 {
 	return instance()->m_applicationName;
@@ -241,7 +234,7 @@ QString VeyonCore::applicationName()
 
 void VeyonCore::enforceBranding( QWidget *topLevelWidget )
 {
-    const auto appName = QStringLiteral( "Hamonize" );
+	const auto appName = QStringLiteral( "Veyon" );
 
 	auto labels = topLevelWidget->findChildren<QLabel *>();
 	for( auto label : labels )
@@ -280,7 +273,7 @@ void VeyonCore::enforceBranding( QWidget *topLevelWidget )
 
 bool VeyonCore::isDebugging()
 {
-	return instance()->m_debugging;
+	return s_instance && s_instance->m_debugging;
 }
 
 
@@ -333,7 +326,7 @@ QByteArray VeyonCore::cleanupFuncinfo( QByteArray info )
 	info.replace("operator ", "operator");
 
 	// remove argument list
-	forever {
+	Q_FOREVER {
 		int parencount = 0;
 		pos = info.lastIndexOf(')');
 		if (pos == -1) {
@@ -483,14 +476,14 @@ QString VeyonCore::formattedUuid( QUuid uuid )
 
 bool VeyonCore::isAuthenticationKeyNameValid( const QString& authKeyName )
 {
-	return QRegExp( QStringLiteral("\\w+") ).exactMatch( authKeyName );
+	return QRegularExpression( QStringLiteral("^[\\w-]+$") ).match( authKeyName ).hasMatch();
 }
 
 
 
 int VeyonCore::exec()
 {
-	emit applicationLoaded();
+	Q_EMIT applicationLoaded();
 
 	vDebug() << "Running";
 
@@ -516,6 +509,31 @@ void VeyonCore::initPlatformPlugin()
 
 
 
+void VeyonCore::initSession()
+{
+	if( component() != Component::Service && config().multiSessionModeEnabled() )
+	{
+		const auto systemEnv = QProcessEnvironment::systemEnvironment();
+		if( systemEnv.contains( sessionIdEnvironmentVariable() ) )
+		{
+			m_sessionId = systemEnv.value( sessionIdEnvironmentVariable() ).toInt();
+		}
+		else
+		{
+			const auto sessionId = platform().sessionFunctions().currentSessionId();
+			if( sessionId != PlatformSessionFunctions::InvalidSessionId )
+			{
+				m_sessionId = sessionId;
+			}
+		}
+	}
+	else
+	{
+		m_sessionId = PlatformSessionFunctions::DefaultSessionId;
+	}
+}
+
+
 void VeyonCore::initConfiguration()
 {
 	m_config = new VeyonConfiguration();
@@ -536,9 +554,11 @@ void VeyonCore::initConfiguration()
 
 void VeyonCore::initLogging( const QString& appComponentName )
 {
-	if( hasSessionId() )
+	const auto currentSessionId = sessionId();
+
+	if( currentSessionId != PlatformSessionFunctions::DefaultSessionId )
 	{
-		m_logger = new Logger( QStringLiteral("%1-%2").arg( appComponentName ).arg( sessionId() ) );
+		m_logger = new Logger( QStringLiteral("%1-%2").arg( appComponentName ).arg( currentSessionId ) );
 	}
 	else
 	{
@@ -554,45 +574,17 @@ void VeyonCore::initLogging( const QString& appComponentName )
 
 void VeyonCore::initLocaleAndTranslation()
 {
-	QLocale configuredLocale( QLocale::C );
-
-	QRegExp localeRegEx( QStringLiteral( "[^(]*\\(([^)]*)\\)") );
-	if( localeRegEx.indexIn( config().uiLanguage() ) == 0 )
+	if( TranslationLoader::load( QStringLiteral("qtbase") ) == false )
 	{
-		configuredLocale = QLocale( localeRegEx.cap( 1 ) );
+		TranslationLoader::load( QStringLiteral("qt") );
 	}
 
-	if( configuredLocale.language() != QLocale::English )
+	TranslationLoader::load( QStringLiteral("veyon") );
+
+	const auto app = qobject_cast<QGuiApplication *>( QCoreApplication::instance() );
+	if( app )
 	{
-		auto tr = new QTranslator;
-		if( configuredLocale == QLocale::C ||
-			tr->load( QStringLiteral( "%1.qm" ).arg( configuredLocale.name() ), translationsDirectory() ) == false )
-		{
-			configuredLocale = QLocale::system(); // Flawfinder: ignore
-
-			if( tr->load( QStringLiteral( "%1.qm" ).arg( configuredLocale.name() ), translationsDirectory() ) == false )
-			{
-				tr->load( QStringLiteral( "%1.qm" ).arg( configuredLocale.language() ), translationsDirectory() );
-			}
-		}
-
-		QLocale::setDefault( configuredLocale );
-
-		QCoreApplication::installTranslator( tr );
-
-		auto qtTr = new QTranslator;
-		if( qtTr->load( QStringLiteral( "qt_%1.qm" ).arg( configuredLocale.name() ), qtTranslationsDirectory() ) == false )
-		{
-			qtTr->load( QStringLiteral( "qt_%1.qm" ).arg( configuredLocale.language() ), qtTranslationsDirectory() );
-		}
-
-		QCoreApplication::installTranslator( qtTr );
-	}
-
-	if( configuredLocale.language() == QLocale::Hebrew ||
-		configuredLocale.language() == QLocale::Arabic )
-	{
-		QApplication::setLayoutDirection( Qt::RightToLeft );
+		QGuiApplication::setLayoutDirection( QLocale{}.textDirection() );
 	}
 }
 
@@ -637,17 +629,6 @@ void VeyonCore::initManagers()
 
 
 
-void VeyonCore::initLocalComputerControlInterface()
-{
-	const Computer localComputer( NetworkObject::Uid::createUuid(),
-								  QStringLiteral("localhost"),
-								  QStringLiteral("%1:%2").arg( QHostAddress( QHostAddress::LocalHost ).toString() ).arg( config().primaryServicePort() + sessionId() ) );
-
-	m_localComputerControlInterface = new ComputerControlInterface( localComputer, this );
-}
-
-
-
 bool VeyonCore::initLogonAuthentication()
 {
 	if( qobject_cast<QApplication *>( QCoreApplication::instance() ) )
@@ -677,7 +658,7 @@ bool VeyonCore::initKeyFileAuthentication()
 		if( isAuthenticationKeyNameValid( authKeyName ) &&
 				m_authenticationCredentials->loadPrivateKey( VeyonCore::filesystem().privateKeyPath( authKeyName ) ) )
 		{
-			m_authenticationKeyName = authKeyName;
+			m_authenticationCredentials->setAuthenticationKeyName( authKeyName );
 		}
 	}
 	else
@@ -690,11 +671,20 @@ bool VeyonCore::initKeyFileAuthentication()
 		{
 			if( m_authenticationCredentials->loadPrivateKey( VeyonCore::filesystem().privateKeyPath( privateKeyDir ) ) )
 			{
-				m_authenticationKeyName = privateKeyDir;
+				m_authenticationCredentials->setAuthenticationKeyName( privateKeyDir );
 				return true;
 			}
 		}
 	}
 
 	return false;
+}
+
+
+
+void VeyonCore::initSystemInfo()
+{
+	vDebug() << version() << HostAddress::localFQDN()
+			 << QSysInfo::kernelType() << QSysInfo::kernelVersion()
+			 << QSysInfo::prettyProductName() << QSysInfo::productType() << QSysInfo::productVersion();
 }

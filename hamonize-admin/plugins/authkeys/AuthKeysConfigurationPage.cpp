@@ -1,7 +1,7 @@
 /*
  * AuthKeysConfigurationPage.cpp - implementation of the authentication configuration page
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -159,7 +159,7 @@ void AuthKeysConfigurationPage::importKey()
 {
 	const auto title = ui->importKey->text();
 
-	const auto inputFile = QFileDialog::getOpenFileName( this, title, QString(), m_keyFilesFilter );
+	const auto inputFile = QFileDialog::getOpenFileName( this, title, {}, m_keyFilesFilter );
 	if( inputFile.isEmpty() )
 	{
 		return;
@@ -202,7 +202,7 @@ void AuthKeysConfigurationPage::exportKey()
 		if( outputFile.isEmpty() == false )
 		{
 			AuthKeysManager authKeysManager;
-			const auto success = authKeysManager.exportKey( name, type, outputFile );
+			const auto success = authKeysManager.exportKey( name, type, outputFile, true );
 
 			showResultMessage( success, title, authKeysManager.resultMessage() );
 		}
@@ -265,7 +265,7 @@ QString AuthKeysConfigurationPage::selectedKey() const
 		return m_authKeyTableModel.key( row );
 	}
 
-	return QString();
+	return {};
 }
 
 

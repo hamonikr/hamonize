@@ -1,7 +1,7 @@
 /*
  * ServerAuthenticationManager.h - header file for ServerAuthenticationManager
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,34 +36,26 @@ class ServerAuthenticationManager : public QObject
 {
 	Q_OBJECT
 public:
-	typedef enum AuthResults {
-		AuthResultSuccessful,
-		AuthResultFailed,
-		AuthResultCount
-	} AuthResult;
+	enum class AuthResult {
+		Successful,
+		Failed
+	} ;
+	Q_ENUM(AuthResult)
 
-	ServerAuthenticationManager( QObject* parent );
+	explicit ServerAuthenticationManager( QObject* parent );
 
 	QVector<RfbVeyonAuth::Type> supportedAuthTypes() const;
 
 	void processAuthenticationMessage( VncServerClient* client,
 									   VariantArrayMessage& message );
 
-	void setAllowedIPs( const QStringList &allowedIPs );
 
-
-signals:
-	void authenticationDone( AuthResult result, const QString& host, const QString& user );
+Q_SIGNALS:
+	void finished( VncServerClient* client );
 
 private:
 	VncServerClient::AuthState performKeyAuthentication( VncServerClient* client, VariantArrayMessage& message );
 	VncServerClient::AuthState performLogonAuthentication( VncServerClient* client, VariantArrayMessage& message );
-	VncServerClient::AuthState performHostWhitelistAuth( VncServerClient* client, VariantArrayMessage& message );
 	VncServerClient::AuthState performTokenAuthentication( VncServerClient* client, VariantArrayMessage& message );
-
-	QMutex m_dataMutex;
-	QStringList m_allowedIPs;
-
-	QStringList m_failedAuthHosts;
 
 } ;

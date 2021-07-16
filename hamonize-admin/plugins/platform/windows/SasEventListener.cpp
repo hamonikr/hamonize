@@ -1,7 +1,7 @@
 /*
  * SasEventListener.cpp - implementation of SasEventListener class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -29,22 +29,22 @@
 SasEventListener::SasEventListener()
 {
 	const wchar_t* sasDll = L"\\sas.dll";
-	wchar_t sasPath[MAX_PATH] = { 0 }; // Flawfinder: ignore
-	if( GetSystemDirectory( sasPath, MAX_PATH - wcslen(sasDll) - 1 ) == 0 ) // Flawfinder: ignore
+	std::array<wchar_t, MAX_PATH+1> sasPath{};
+	if( GetSystemDirectory( sasPath.data(), static_cast<UINT>( MAX_PATH - wcslen(sasDll) - 1 ) ) == 0 )
 	{
 		vCritical() << "could not determine system directory";
 	}
-	wcscat( sasPath, sasDll );
+	wcscat( sasPath.data(), sasDll );
 
-	m_sasLibrary = LoadLibrary( sasPath ); // Flawfinder: ignore
-	m_sendSas = (SendSas)GetProcAddress( m_sasLibrary, "SendSAS" );
+	m_sasLibrary = LoadLibrary( sasPath.data() ); // Flawfinder: ignore
+	m_sendSas = reinterpret_cast<SendSas>( GetProcAddress( m_sasLibrary, "SendSAS" ) );
 
 	if( m_sendSas == nullptr )
 	{
 		vWarning() << "SendSAS is not supported by operating system!";
 	}
 
-        m_sasEvent = CreateEvent( nullptr, false, false, L"Global\\HamonizeServiceSasEvent" );
+	m_sasEvent = CreateEvent( nullptr, false, false, L"Global\\VeyonServiceSasEvent" );
 	m_stopEvent = CreateEvent( nullptr, false, false, L"StopEvent" );
 }
 
@@ -69,11 +69,11 @@ void SasEventListener::stop()
 
 void SasEventListener::run()
 {
-	HANDLE eventObjects[2] = { m_sasEvent, m_stopEvent };
+	std::array<HANDLE, 2> eventObjects{ m_sasEvent, m_stopEvent };
 
 	while( isInterruptionRequested() == false )
 	{
-		int event = WaitForMultipleObjects( 2, eventObjects, false, WaitPeriod );
+		const auto event = WaitForMultipleObjects( eventObjects.size(), eventObjects.data(), FALSE, WaitPeriod );
 
 		switch( event )
 		{

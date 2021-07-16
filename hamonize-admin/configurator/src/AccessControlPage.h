@@ -1,7 +1,7 @@
 /*
  * AccessControlPage.h - header for the AccessControlPage class
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -43,7 +43,7 @@ public:
 	void connectWidgetsToProperties() override;
 	void applyConfiguration() override;
 
-private slots:
+private Q_SLOTS:
 	void addAccessGroup();
 	void removeAccessGroup();
 	void updateAccessGroupsLists();

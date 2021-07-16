@@ -1,7 +1,7 @@
 /*
  * WindowsPlatformPlugin.cpp - implementation of WindowsPlatformPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,13 +26,7 @@
 #include "WindowsPlatformConfigurationPage.h"
 
 WindowsPlatformPlugin::WindowsPlatformPlugin( QObject* parent ) :
-	QObject( parent ),
-	m_windowsCoreFunctions(),
-	m_windowsFilesystemFunctions(),
-	m_windowsInputDeviceFunctions(),
-	m_windowsNetworkFunctions(),
-	m_windowsServiceFunctions(),
-	m_windowsUserFunctions()
+	QObject( parent )
 {
 }
 

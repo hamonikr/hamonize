@@ -1,7 +1,7 @@
 /*
  * CryptoCore.h - core functions for crypto features
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,10 +33,11 @@
 class VEYON_CORE_EXPORT CryptoCore
 {
 public:
-	typedef QCA::KeyGenerator KeyGenerator;
-	typedef QCA::PrivateKey PrivateKey;
-	typedef QCA::PublicKey PublicKey;
-	typedef QCA::SecureArray SecureArray;
+	using KeyGenerator = QCA::KeyGenerator;
+	using PrivateKey = QCA::PrivateKey;
+	using PublicKey = QCA::PublicKey;
+	using SecureArray = QCA::SecureArray;
+	using PlaintextPassword = SecureArray;
 
 	enum {
 		RsaKeySize = 4096,
@@ -51,8 +52,8 @@ public:
 
 	static QByteArray generateChallenge();
 
-	QString encryptPassword( const QString& password ) const;
-	QString decryptPassword( const QString& encryptedPassword ) const;
+	QString encryptPassword( const PlaintextPassword& password ) const;
+	PlaintextPassword decryptPassword( const QString& encryptedPassword ) const;
 
 private:
 	QCA::Initializer m_qcaInitializer;

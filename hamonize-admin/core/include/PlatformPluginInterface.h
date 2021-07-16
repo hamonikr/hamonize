@@ -1,7 +1,7 @@
 /*
  * PlatformPluginInterface.h - interface class for platform plugins
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,6 +31,7 @@ class PlatformFilesystemFunctions;
 class PlatformInputDeviceFunctions;
 class PlatformNetworkFunctions;
 class PlatformServiceFunctions;
+class PlatformSessionFunctions;
 class PlatformUserFunctions;
 
 // clazy:excludeall=copyable-polymorphic
@@ -43,11 +44,12 @@ public:
 	virtual PlatformInputDeviceFunctions& inputDeviceFunctions() = 0;
 	virtual PlatformNetworkFunctions& networkFunctions() = 0;
 	virtual PlatformServiceFunctions& serviceFunctions() = 0;
+	virtual PlatformSessionFunctions& sessionFunctions() = 0;
 	virtual PlatformUserFunctions& userFunctions() = 0;
 
 };
 
-typedef QList<PlatformPluginInterface *> PlatformPluginInterfaceList;
+using PlatformPluginInterfaceList = QList<PlatformPluginInterface *>;
 
 #define PlatformPluginInterface_iid "io.veyon.Veyon.Plugins.PlatformPluginInterface"
 

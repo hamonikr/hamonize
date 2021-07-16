@@ -1,7 +1,7 @@
 /*
  * VncClientProtocol.h - header file for the VncClientProtocol class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -28,7 +28,7 @@
 
 #include "rfb/rfbproto.h"
 
-#include "VeyonCore.h"
+#include "CryptoCore.h"
 
 class QBuffer;
 class QTcpSocket;
@@ -36,7 +36,9 @@ class QTcpSocket;
 class VEYON_CORE_EXPORT VncClientProtocol
 {
 public:
-	typedef enum States {
+	using Password = CryptoCore::SecureArray;
+
+	enum State {
 		Disconnected,
 		Protocol,
 		SecurityInit,
@@ -45,9 +47,9 @@ public:
 		FramebufferInit,
 		Running,
 		StateCount
-	} State;
+	} ;
 
-	VncClientProtocol( QTcpSocket* socket, const QString& vncPassword );
+	VncClientProtocol( QTcpSocket* socket, const Password& vncPassword );
 
 	State state() const
 	{
@@ -121,10 +123,12 @@ private:
 
 	static bool isPseudoEncoding( rfbFramebufferUpdateRectHeader header );
 
+	static constexpr auto MaximumMessageSize = 4096*4096*4;
+
 	QTcpSocket* m_socket;
 	State m_state;
 
-	QByteArray m_vncPassword;
+	Password m_vncPassword;
 
 	QByteArray m_serverInitMessage;
 

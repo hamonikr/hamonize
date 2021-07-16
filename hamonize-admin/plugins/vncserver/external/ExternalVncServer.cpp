@@ -1,7 +1,7 @@
 /*
  * ExternalVncServer.cpp - implementation of ExternalVncServer class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -47,7 +47,7 @@ void ExternalVncServer::upgrade( const QVersionNumber& oldVersion )
 		if( rawPassword.size() < MaximumPlaintextPasswordLength )
 		{
 			// setting it again will encrypt it
-			m_configuration.setPassword( Configuration::Password::fromPlainText( rawPassword ) );
+			m_configuration.setPassword( Configuration::Password::fromPlainText( rawPassword.toUtf8() ) );
 		}
 	}
 }
@@ -67,12 +67,14 @@ void ExternalVncServer::prepareServer()
 
 
 
-void ExternalVncServer::runServer( int serverPort, const QString& password )
+bool ExternalVncServer::runServer( int serverPort, const Password& password )
 {
 	Q_UNUSED(serverPort);
 	Q_UNUSED(password);
 
 	QEventLoop().exec();
+
+	return true;
 }
 
 
@@ -84,7 +86,7 @@ int ExternalVncServer::configuredServerPort()
 
 
 
-QString ExternalVncServer::configuredPassword()
+ExternalVncServer::Password ExternalVncServer::configuredPassword()
 {
 	return m_configuration.password().plainText();
 }

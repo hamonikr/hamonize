@@ -1,7 +1,7 @@
 /*
  * NetworkObjectOverlayDataModel.h - overlay model for NetworkObjectModel to provide extra data
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,7 +31,7 @@ class NetworkObjectOverlayDataModel : public KExtraColumnsProxyModel
 {
 	Q_OBJECT
 public:
-	NetworkObjectOverlayDataModel( const QString& overlayDataHeader,
+	explicit NetworkObjectOverlayDataModel( const QString& overlayDataHeader,
 								   QObject *parent = nullptr );
 
 	QVariant extraColumnData( const QModelIndex &parent, int row, int extraColumn, int role ) const override;

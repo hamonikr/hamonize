@@ -8,20 +8,19 @@ endif ()
 
 
 # Basic information
-SET(CPACK_PACKAGE_NAME "hamonize")
+if(NOT CPACK_PACKAGE_NAME)
+	set(CPACK_PACKAGE_NAME "hamonize")
+endif()
 SET(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
 SET(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 SET(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
-SET(CPACK_PACKAGE_VERSION_BUILD "${VERSION_BUILD}")
-set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}.${CPACK_PACKAGE_VERSION_BUILD}")
 
 SET(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_${CPACK_SYSTEM_NAME}")
+SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_BUILD}-${CPACK_SYSTEM_NAME}")
 SET(CPACK_PACKAGE_CONTACT "Tobias Junghans <tobydox@veyon.io>")
 SET(CPACK_PACKAGE_HOMEPAGE "https://veyon.io")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Open source computer monitoring and computer management")
-# SET(CPACK_PACKAGE_DESCRIPTION_FILE  "${CMAKE_SOURCE_DIR}/DESCRIPTION")
-SET(CPACK_PACKAGE_VENDOR "Veyon Solutions and INVESUME Inc")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Open source computer monitoring and classroom management")
+SET(CPACK_PACKAGE_VENDOR "Veyon Solutions")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
 SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY TRUE)
@@ -29,22 +28,24 @@ SET(CPACK_SOURCE_IGNORE_FILES "${CMAKE_SOURCE_DIR}/build/;${CMAKE_SOURCE_DIR}/.g
 SET(CPACK_STRIP_FILES  TRUE)
 
 # DEB package
-SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Hamonize, a computer monitoring and computer management software
-  Hamonize is a computer monitoring and computer management software.
-  It enables administrators to view and control computer labs and interact with users.
-  Hamonize is available in different languages and provides lots of useful features:
+SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Open source computer monitoring and classroom management software
+  Veyon is a free and open source software for computer monitoring and classroom
+  management supporting Windows and Linux. It enables teachers to view and control
+  computer labs and interact with students. Veyon is available in many different
+  languages and provides numerous features supporting teachers and administrators
+  at their daily work:
   .
-  * see what's going on in computer labs in overview mode and take screenshots
-  * remote control computers to support and help users
-  * broadcast administrator's screen to users in realtime by using demo mode (either in fullscreen or in a window)
-  * lock workstations for attracting attention to proper using
-  * send text messages to users
-  * powering on/off and rebooting computers remote
-  * remote logoff and remote execution of arbitrary commands/scripts
-  * remote monitoring - Hamonize's network-technology is not restricted to a subnet and therefore users at room
-  can join networks via VPN connections just by installing the Hamonize service
-")
-SET(CPACK_DEBIAN_PACKAGE_SECTION "Administration")
+  * Overview: monitor all computers in one or multiple locations or classrooms
+  * Remote access: view or control computers to watch and support users
+  * Demo: broadcast the teacher's screen in realtime (fullscreen/window)
+  * Screen lock: draw attention to what matters right now
+  * Communication: send text messages to students
+  * Start and end lessons: log in and log out users all at once
+  * Screenshots: record learning progress and document infringements
+  * Programs & websites: launch programs and open website URLs remotely
+  * Teaching material: distribute and open documents, images and videos easily
+  * Administration: power on/off and reboot computers remotely")
+SET(CPACK_DEBIAN_PACKAGE_SECTION "Education")
 SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libqca-qt5-2-plugins")
 SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 SET(CPACK_DEBIAN_COMPRESSION_TYPE "xz")
@@ -93,14 +94,14 @@ ELSEIF ( ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")   # TODO
      SET(CPACK_GENERATOR "PackageMake")
 ELSE ()
      IF(EXISTS /etc/redhat-release OR EXISTS /etc/fedora-release OR OS_OPENSUSE)
-        SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}.${CPACK_SYSTEM_NAME}")
+        SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_BUILD}.${CPACK_SYSTEM_NAME}")
         SET(CPACK_GENERATOR "RPM")
      ENDIF ()
      IF(EXISTS /etc/debian_version)
         if (CPACK_SYSTEM_NAME STREQUAL "x86_64")
                 set(CPACK_SYSTEM_NAME "amd64")
         endif ()
-        SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_${CPACK_SYSTEM_NAME}")
+        SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${VERSION_BUILD}_${CPACK_SYSTEM_NAME}")
         SET(CPACK_GENERATOR "DEB")
      ENDIF ()
      SET(CPACK_SOURCE_GENERATOR "TGZ")

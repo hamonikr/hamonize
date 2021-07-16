@@ -1,7 +1,7 @@
 /*
  * LinuxPlatformConfigurationPage.cpp - page for configuring service application
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,7 +31,6 @@
 
 
 LinuxPlatformConfigurationPage::LinuxPlatformConfigurationPage() :
-	ConfigurationPage(),
 	ui( new Ui::LinuxPlatformConfigurationPage ),
 	m_configuration( &VeyonCore::config() )
 {

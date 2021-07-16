@@ -1,7 +1,7 @@
 /*
  * Configuration/Property.h - Configuration::Property class
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,25 +36,26 @@ namespace Configuration
 class Object;
 class Proxy;
 
-template<typename T, typename = void> struct CheapestType          { typedef const T & Type; };
-template<typename T> struct CheapestType<T, typename std::enable_if<std::is_enum<T>::value >::type> { typedef T Type; };
-template<>           struct CheapestType<bool>    { typedef bool      Type; };
-template<>           struct CheapestType<quint8>  { typedef quint8    Type; };
-template<>           struct CheapestType<quint16> { typedef quint16   Type; };
-template<>           struct CheapestType<quint32> { typedef quint32   Type; };
-template<>           struct CheapestType<quint64> { typedef quint64   Type; };
-template<>           struct CheapestType<qint8>   { typedef qint8     Type; };
-template<>           struct CheapestType<qint16>  { typedef qint16    Type; };
-template<>           struct CheapestType<qint32>  { typedef qint32    Type; };
-template<>           struct CheapestType<qint64>  { typedef qint64    Type; };
-template<>           struct CheapestType<float>   { typedef float     Type; };
-template<>           struct CheapestType<double>  { typedef double    Type; };
-template<>           struct CheapestType<QUuid>   { typedef QUuid     Type; };
-template<typename T> struct CheapestType<T *>     { typedef T *       Type; };
+template<typename T, typename = void> struct CheapestType          { using Type = const T &; };
+template<typename T> struct CheapestType<T, typename std::enable_if<std::is_enum<T>::value >::type> { using Type = T; };
+template<>           struct CheapestType<bool>    { using Type = bool; };
+template<>           struct CheapestType<quint8>  { using Type = quint8; };
+template<>           struct CheapestType<quint16> { using Type = quint16; };
+template<>           struct CheapestType<quint32> { using Type = quint32; };
+template<>           struct CheapestType<quint64> { using Type = quint64; };
+template<>           struct CheapestType<qint8>   { using Type = qint8; };
+template<>           struct CheapestType<qint16>  { using Type = qint16; };
+template<>           struct CheapestType<qint32>  { using Type = qint32; };
+template<>           struct CheapestType<qint64>  { using Type = qint64; };
+template<>           struct CheapestType<float>   { using Type = float; };
+template<>           struct CheapestType<double>  { using Type = double; };
+template<>           struct CheapestType<QUuid>   { using Type = QUuid; };
+template<typename T> struct CheapestType<T *>     { using Type = T *; };
 
 
 class VEYON_CORE_EXPORT Property : public QObject
 {
+	Q_OBJECT
 public:
 	enum class Flag
 	{
@@ -66,7 +67,7 @@ public:
 	Q_DECLARE_FLAGS(Flags, Flag)
 
 	// work around QTBUG-47652 where Q_FLAG() is broken for enum classes when using Qt < 5.12
-#if QT_VERSION >= 0x051200
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
 	Q_FLAG(Flags)
 #endif
 
@@ -80,7 +81,39 @@ public:
 
 	QVariant variantValue() const;
 
-	void setVariantValue( const QVariant& value );
+	void setVariantValue( const QVariant& value ) const;
+
+	static Property* find( QObject* parent, const QString& key, const QString& parentKey );
+
+	const QString& key() const
+	{
+		return m_key;
+	}
+
+	const QString& parentKey() const
+	{
+		return m_parentKey;
+	}
+
+	QString absoluteKey() const
+	{
+		if( m_parentKey.isEmpty() )
+		{
+			return m_key;
+		}
+
+		return m_parentKey + QLatin1Char('/') + m_key;
+	}
+
+	const QVariant& defaultValue() const
+	{
+		return m_defaultValue;
+	}
+
+	Flags flags() const
+	{
+		return m_flags;
+	}
 
 private:
 	Object* m_object;
@@ -96,7 +129,7 @@ private:
 template<class T>
 class VEYON_CORE_EXPORT TypedProperty : public Property {
 public:
-	typedef typename CheapestType<T>::Type Type;
+	using Type = typename CheapestType<T>::Type;
 
 	TypedProperty( Object* object, const QString& key, const QString& parentKey,
 				   const QVariant& defaultValue, Flags flags ) :
@@ -115,7 +148,7 @@ public:
 		return QVariantHelper<T>::value( variantValue() );
 	}
 
-	void setValue( Type value )
+	void setValue( Type value ) const
 	{
 		setVariantValue( QVariant::fromValue( value ) );
 	}
@@ -125,28 +158,24 @@ template<>
 VEYON_CORE_EXPORT Password TypedProperty<Password>::value() const;
 
 template<>
-VEYON_CORE_EXPORT void TypedProperty<Password>::setValue( const Password& value );
+VEYON_CORE_EXPORT void TypedProperty<Password>::setValue( const Password& value ) const;
 
 
 #define DECLARE_CONFIG_PROPERTY(className,config,type, name, setter, key, parentKey, defaultValue, flags) \
 	private: \
-		Configuration::TypedProperty<type> m_##name{this, QStringLiteral(key), QStringLiteral(parentKey), defaultValue, flags}; \
+		const Configuration::TypedProperty<type>* m_##name{ new Configuration::TypedProperty<type>( this, QStringLiteral(key), QStringLiteral(parentKey), defaultValue, flags ) }; \
 	public: \
 		type name() const \
 		{											\
-			return m_##name.value();			\
+			return m_##name->value();			\
 		} \
 		const Configuration::TypedProperty<type>& name##Property() const \
 		{ \
-			return m_##name; \
+			return *m_##name; \
 		} \
-		Configuration::TypedProperty<type>& name##Property() \
+		void setter( Configuration::TypedProperty<type>::Type value ) const \
 		{ \
-			return m_##name; \
-		} \
-		void setter( Configuration::TypedProperty<type>::Type value )									\
-		{ \
-			m_##name.setValue( value ); \
+			m_##name->setValue( value ); \
 		}
 
 }

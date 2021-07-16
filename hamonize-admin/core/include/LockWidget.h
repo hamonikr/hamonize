@@ -1,7 +1,7 @@
 /*
  *  LockWidget.h - widget for locking a client
  *
- *  Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ *  Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  *  This file is part of Veyon - https://veyon.io
  *
@@ -25,7 +25,6 @@
 
 #include <QWidget>
 #include <QPixmap>
-#include <QLabel>
 
 #include "VeyonCore.h"
 
@@ -34,14 +33,14 @@ class VEYON_CORE_EXPORT LockWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	typedef enum Modes
+	enum Mode
 	{
 		DesktopVisible,
 		BackgroundPixmap,
 		NoBackground
-	} Mode;
+	} ;
 
-    LockWidget( Mode mode, const QPixmap& background = QPixmap(), const QString& message = QString(), QWidget* parent = nullptr );
+	explicit LockWidget( Mode mode, const QPixmap& background = QPixmap(), QWidget* parent = nullptr );
 	~LockWidget() override;
 
 
@@ -49,7 +48,6 @@ private:
 	void paintEvent( QPaintEvent * ) override;
 
 	QPixmap m_background;
-    QLabel m_lblMessage;
-    Mode m_mode;
+	Mode m_mode;
 
 } ;

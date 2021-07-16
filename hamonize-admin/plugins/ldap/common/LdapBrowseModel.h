@@ -1,7 +1,7 @@
 /*
  * LdapModel.h - item model for browsing LDAP directories
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -75,6 +75,5 @@ private:
 	QIcon m_objectIcon;
 	QIcon m_ouIcon;
 	QIcon m_attributeIcon;
-    QStringList* m_fullDn;
 
 };

@@ -1,7 +1,7 @@
 /*
  * VncProxyConnection.h - class representing a connection within VncProxyServer
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -43,17 +43,19 @@ public:
 	VncProxyConnection( QTcpSocket* clientSocket, int vncServerPort, QObject* parent );
 	~VncProxyConnection() override;
 
-	QTcpSocket* proxyClientSocket()
+	void start();
+
+	QTcpSocket* proxyClientSocket() const
 	{
 		return m_proxyClientSocket;
 	}
 
-	QTcpSocket* vncServerSocket()
+	QTcpSocket* vncServerSocket() const
 	{
 		return m_vncServerSocket;
 	}
 
-protected slots:
+protected Q_SLOTS:
 	void readFromClient();
 	void readFromServer();
 
@@ -71,12 +73,14 @@ protected:
 	virtual VncServerProtocol& serverProtocol() = 0;
 
 private:
+	const int m_vncServerPort;
+
 	QTcpSocket* m_proxyClientSocket;
 	QTcpSocket* m_vncServerSocket;
 
 	const QMap<int, int> m_rfbClientToServerMessageSizes;
 
-signals:
+Q_SIGNALS:
 	void clientConnectionClosed();
 	void serverConnectionClosed();
 

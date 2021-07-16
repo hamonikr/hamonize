@@ -1,7 +1,7 @@
 /*
  * VncProxyServer.cpp - a VNC proxy implementation for intercepting VNC connections
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -44,6 +44,7 @@ VncProxyServer::VncProxyServer( const QHostAddress& listenAddress,
 	m_connectionFactory( connectionFactory )
 {
 	connect( m_server, &QTcpServer::newConnection, this, &VncProxyServer::acceptConnection );
+	connect( m_server, &QTcpServer::acceptError, this, &VncProxyServer::handleAcceptError );
 }
 
 
@@ -55,7 +56,7 @@ VncProxyServer::~VncProxyServer()
 
 
 
-bool VncProxyServer::start( int vncServerPort, const QString& vncServerPassword )
+bool VncProxyServer::start( int vncServerPort, const Password& vncServerPassword )
 {
 	m_vncServerPort = vncServerPort;
 	m_vncServerPassword = vncServerPassword;
@@ -72,11 +73,12 @@ bool VncProxyServer::start( int vncServerPort, const QString& vncServerPassword 
 }
 
 
+
 void VncProxyServer::stop()
 {
 	for( auto connection : qAsConst( m_connections ) )
 	{
-        delete connection;
+		delete connection;
 	}
 
 	m_connections.clear();
@@ -89,18 +91,24 @@ void VncProxyServer::stop()
 
 void VncProxyServer::acceptConnection()
 {
-	VncProxyConnection* connection =
-			m_connectionFactory->createVncProxyConnection( m_server->nextPendingConnection(),
-														   m_vncServerPort,
-														   m_vncServerPassword,
-														   this );
+	auto clientSocket = m_server->nextPendingConnection();
+	if( clientSocket == nullptr )
+	{
+		vCritical() << "ignoring invalid client socket";
+		return;
+	}
+
+	auto connection = m_connectionFactory->createVncProxyConnection( clientSocket,
+																	 m_vncServerPort,
+																	 m_vncServerPassword,
+																	 this );
 
 	connect( connection, &VncProxyConnection::clientConnectionClosed, this, [=]() { closeConnection( connection ); } );
 	connect( connection, &VncProxyConnection::serverConnectionClosed, this, [=]() { closeConnection( connection ); } );
 
-	m_connections += connection;
+	connection->start();
 
-//    vDebug() << "m_connections.length() :" << m_connections.length();
+	m_connections += connection;
 }
 
 
@@ -109,7 +117,14 @@ void VncProxyServer::closeConnection( VncProxyConnection* connection )
 {
 	m_connections.removeAll( connection );
 
-    vDebug() << "m_connections.length() :" << m_connections.length();
+	Q_EMIT connectionClosed( connection );
 
 	connection->deleteLater();
+}
+
+
+
+void VncProxyServer::handleAcceptError( QAbstractSocket::SocketError socketError )
+{
+	vCritical() << "error while accepting connection" << socketError;
 }

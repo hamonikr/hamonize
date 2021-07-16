@@ -1,7 +1,7 @@
 /*
  * CommandLinePluginInterface.h - interface class for command line plugins
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,7 +32,7 @@ class VEYON_CORE_EXPORT CommandLinePluginInterface
 {
 	Q_GADGET
 public:
-	typedef enum RunResults
+	enum RunResult
 	{
 		Unknown,
 		Successful,
@@ -43,7 +43,7 @@ public:
 		NotLicensed,
 		NoResult,
 		RunResultCount
-	} RunResult;
+	} ;
 
 	Q_ENUM(RunResult)
 
@@ -54,7 +54,7 @@ public:
 
 };
 
-typedef QList<CommandLinePluginInterface *> CommandLinePluginInterfaceList;
+using CommandLinePluginInterfaceList = QList<CommandLinePluginInterface *>;
 
 #define CommandLinePluginInterface_iid "io.veyon.Veyon.Plugins.CommandLinePluginInterface"
 

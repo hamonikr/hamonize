@@ -1,7 +1,7 @@
 /*
  * DemoServerProtocol.cpp - implementation of DemoServerProtocol class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,7 +27,7 @@
 #include "VncServerClient.h"
 
 
-DemoServerProtocol::DemoServerProtocol( const QString& demoAccessToken, QTcpSocket* socket, VncServerClient* client ) :
+DemoServerProtocol::DemoServerProtocol( const Token& demoAccessToken, QTcpSocket* socket, VncServerClient* client ) :
 	VncServerProtocol( socket, client ),
 	m_demoAccessToken( demoAccessToken )
 {
@@ -50,7 +50,7 @@ void DemoServerProtocol::processAuthenticationMessage( VariantArrayMessage& mess
 	}
 	else
 	{
-		client()->setAuthState( VncServerClient::AuthFinishedFail );
+		client()->setAuthState( VncServerClient::AuthState::Failed );
 	}
 }
 
@@ -58,7 +58,7 @@ void DemoServerProtocol::processAuthenticationMessage( VariantArrayMessage& mess
 
 void DemoServerProtocol::performAccessControl()
 {
-	client()->setAccessControlState( VncServerClient::AccessControlSuccessful );
+	client()->setAccessControlState( VncServerClient::AccessControlState::Successful );
 }
 
 
@@ -67,22 +67,22 @@ VncServerClient::AuthState DemoServerProtocol::performTokenAuthentication( Varia
 {
 	switch( client()->authState() )
 	{
-	case VncServerClient::AuthInit:
-		return VncServerClient::AuthToken;
+	case VncServerClient::AuthState::Init:
+		return VncServerClient::AuthState::Token;
 
-	case VncServerClient::AuthToken:
-		if( message.read().toString() == m_demoAccessToken )
+	case VncServerClient::AuthState::Token:
+		if( Token( message.read().toByteArray() ) == m_demoAccessToken )
 		{
 			vDebug() << "SUCCESS";
-			return VncServerClient::AuthFinishedSuccess;
+			return VncServerClient::AuthState::Successful;
 		}
 
 		vDebug() << "FAIL";
-		return VncServerClient::AuthFinishedFail;
+		return VncServerClient::AuthState::Failed;
 
 	default:
 		break;
 	}
 
-	return VncServerClient::AuthFinishedFail;
+	return VncServerClient::AuthState::Failed;
 }

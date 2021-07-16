@@ -1,7 +1,7 @@
 /*
  * ConfigCommandLinePlugin.cpp - implementation of ConfigCommandLinePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -81,10 +81,18 @@ CommandLinePluginInterface::RunResult ConfigCommandLinePlugin::handle_clear( con
 
 CommandLinePluginInterface::RunResult ConfigCommandLinePlugin::handle_list( const QStringList& arguments )
 {
-	Q_UNUSED(arguments);
+	auto listMode = ListMode::Values;
 
-	// clear global configuration
-	listConfiguration( VeyonCore::config().data(), QString() );
+	if( arguments.value( 0 ) == QLatin1String("defaults") )
+	{
+		listMode = ListMode::Defaults;
+	}
+	else if( arguments.value( 0 ) == QLatin1String("types") )
+	{
+		listMode = ListMode::Types;
+	}
+
+	listConfiguration( listMode );
 
 	return NoResult;
 }
@@ -198,17 +206,30 @@ CommandLinePluginInterface::RunResult ConfigCommandLinePlugin::handle_set( const
 		parentKey = keyParts.mid( 0, keyParts.size()-1).join( QLatin1Char('/') );
 	}
 
+	auto valueType = QMetaType::UnknownType;
+	const auto property = Configuration::Property::find( &VeyonCore::config(), key, parentKey );
+
+	if( property )
+	{
+		valueType = static_cast<QMetaType::Type>( property->variantValue().userType() );
+	}
+
 	QVariant configValue = value;
 
-	if( type == QStringLiteral("json") ||
-			VeyonCore::config().value( key, parentKey, QVariant() ).userType() == QMetaType::type( "QJsonArray" ) )
+	if( type == QLatin1String("json") ||
+		valueType == QMetaType::QJsonArray )
 	{
 		configValue = QJsonDocument::fromJson( value.toUtf8() ).array();
 	}
 	else if( key.contains( QStringLiteral("password"), Qt::CaseInsensitive ) ||
-			 type == QStringLiteral("password") )
+			 type == QLatin1String("password") )
 	{
-		configValue = VeyonCore::cryptoCore().encryptPassword( value );
+		configValue = VeyonCore::cryptoCore().encryptPassword( value.toUtf8() );
+	}
+	else if( type == QLatin1String("list") ||
+			 valueType == QMetaType::QStringList )
+	{
+		configValue = value.split( QLatin1Char( ';' ) );
 	}
 
 	VeyonCore::config().setValue( key, configValue, parentKey );
@@ -253,29 +274,35 @@ CommandLinePluginInterface::RunResult ConfigCommandLinePlugin::handle_upgrade( c
 
 
 
-void ConfigCommandLinePlugin::listConfiguration( const VeyonConfiguration::DataMap &map,
-												 const QString &parentKey )
+void ConfigCommandLinePlugin::listConfiguration( ListMode listMode ) const
 {
-	for( auto it = map.begin(); it != map.end(); ++it )
-	{
-		QString curParentKey = parentKey.isEmpty() ? it.key() : parentKey + QLatin1Char('/') + it.key();
+	QTextStream stdoutStream( stdout );
 
-		if( it.value().type() == QVariant::Map )
+	const auto properties = VeyonCore::config().findChildren<Configuration::Property *>();
+
+	for( auto property : properties )
+	{
+		if( property->flags().testFlag( Configuration::Property::Flag::Legacy ) )
 		{
-			listConfiguration( it.value().toMap(), curParentKey );
+			continue;
 		}
-		else
+
+		stdoutStream << property->absoluteKey() << "=";
+		switch( listMode )
 		{
-			QString value = printableConfigurationValue( it.value() );
-			if( value.isNull() )
-			{
-				qWarning() << "Key" << it.key() << "has unknown value type:" << it.value();
-			}
-			else
-			{
-				QTextStream( stdout ) << curParentKey << "=" << value << endl;
-			}
+		case ListMode::Values:
+			stdoutStream << printableConfigurationValue( property->variantValue() );
+			break;
+		case ListMode::Defaults:
+			stdoutStream << printableConfigurationValue( property->defaultValue() );
+			break;
+		case ListMode::Types:
+			stdoutStream << QStringLiteral("[%1]").arg( QString::fromLatin1(
+															property->defaultValue().typeName() ).
+														replace( QLatin1Char('Q'), QString() ).toLower() );
+			break;
 		}
+		stdoutStream << endl;
 	}
 }
 
@@ -286,7 +313,7 @@ CommandLinePluginInterface::RunResult ConfigCommandLinePlugin::applyConfiguratio
 	ConfigurationManager configurationManager;
 
 	if( configurationManager.saveConfiguration() == false ||
-			configurationManager.applyConfiguration() == false )
+		configurationManager.applyConfiguration() == false )
 	{
 		return operationError( configurationManager.errorString() );
 	}
@@ -299,27 +326,31 @@ CommandLinePluginInterface::RunResult ConfigCommandLinePlugin::applyConfiguratio
 QString ConfigCommandLinePlugin::printableConfigurationValue( const QVariant& value )
 {
 	if( value.type() == QVariant::String ||
-			value.type() == QVariant::Uuid ||
-			value.type() == QVariant::UInt ||
-			value.type() == QVariant::Bool )
+		value.type() == QVariant::Uuid ||
+		value.type() == QVariant::UInt ||
+		value.type() == QVariant::Int ||
+		value.type() == QVariant::Bool )
 	{
 		return value.toString();
 	}
 	else if( value.type() == QVariant::StringList )
 	{
-		QStringList list = value.toStringList();
-		for( auto& str : list )
-		{
-			str = QLatin1Char('"') + str + QLatin1Char('"');
-		}
-		return QLatin1Char('(') + list.join( QLatin1Char(',') ) + QLatin1Char(')');
+		return value.toStringList().join( QLatin1Char(';') );
 	}
-	else if( value.userType() == QMetaType::type( "QJsonArray" ) )
+	else if( value.userType() == QMetaType::QJsonArray )
 	{
 		return QString::fromUtf8( QJsonDocument( value.toJsonArray() ).toJson( QJsonDocument::Compact ) );
 	}
+	else if( value.userType() == QMetaType::QJsonObject )
+	{
+		return QString::fromUtf8( QJsonDocument( value.toJsonObject() ).toJson( QJsonDocument::Compact ) );
+	}
+	else if( QMetaType( value.userType() ).flags().testFlag( QMetaType::IsEnumeration ) )
+	{
+		return QString::number( value.toInt() );
+	}
 
-	return QString();
+	return {};
 }
 
 

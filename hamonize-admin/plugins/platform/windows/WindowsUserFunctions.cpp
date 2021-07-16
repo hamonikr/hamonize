@@ -1,7 +1,7 @@
 /*
  * WindowsUserFunctions.cpp - implementation of WindowsUserFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,40 +22,50 @@
  *
  */
 
-#include <winsock2.h>
-#include <windows.h>
-#include <lm.h>
+#include <QBuffer>
 
+#include "DesktopInputController.h"
+#include "VariantStream.h"
 #include "VeyonConfiguration.h"
+#include "VeyonServerInterface.h"
 #include "WindowsCoreFunctions.h"
+#include "WindowsInputDeviceFunctions.h"
 #include "WindowsPlatformConfiguration.h"
+#include "WindowsServiceControl.h"
+#include "WindowsServiceCore.h"
 #include "WindowsUserFunctions.h"
 #include "WtsSessionManager.h"
 
 #include "authSSP.h"
+
+#define XK_MISCELLANY
+
+#include "keysymdef.h"
 
 
 QString WindowsUserFunctions::fullName( const QString& username )
 {
 	QString fullName;
 
-	QString realUsername = username;
-	PBYTE domainController = nullptr;
+	auto realUsername = username;
+	LPWSTR domainController = nullptr;
 
 	const auto nameParts = username.split( QLatin1Char('\\') );
 	if( nameParts.size() > 1 )
 	{
 		realUsername = nameParts[1];
-		if( NetGetDCName( nullptr, WindowsCoreFunctions::toConstWCharArray( nameParts[0] ), &domainController ) != NERR_Success )
+		if( NetGetDCName( nullptr, WindowsCoreFunctions::toConstWCharArray( nameParts[0] ),
+						  reinterpret_cast<LPBYTE *>( &domainController ) ) != NERR_Success )
 		{
 			domainController = nullptr;
 		}
 	}
 
 	LPUSER_INFO_2 buf = nullptr;
-	NET_API_STATUS nStatus = NetUserGetInfo( reinterpret_cast<LPCWSTR>( domainController ),
-											 WindowsCoreFunctions::toConstWCharArray( realUsername ),
-											 2, reinterpret_cast<LPBYTE *>( &buf ) );
+	const auto nStatus = NetUserGetInfo( domainController,
+										 WindowsCoreFunctions::toConstWCharArray( realUsername ),
+										 2, reinterpret_cast<LPBYTE *>( &buf ) );
+
 	if( nStatus == NERR_Success && buf != nullptr )
 	{
 		fullName = QString::fromWCharArray( buf->usri2_full_name );
@@ -75,70 +85,6 @@ QString WindowsUserFunctions::fullName( const QString& username )
 }
 
 
-/* Desker 로그인은 기본 데스크탑 로그인 메니저와 연동하여 로그인/로그아웃시 hamonize-server를 재기동 하는 경우와 달리
- * 해결하기 위해 LinuxUserFunction.cpp 내에서 처리하기로 한다.
- */
-QStringList WindowsUserFunctions::guestUserInfo()
-{
-    // TODO 윈도우 전용으로 개발 필요
-    QStringList guestUserInfoList = {QString(), QString()};
-
-//    bool success = true;
-/*
-    m_guestLoginManager = WindowsCoreFunctions::guestLoginManager();
-
-    윈도우에서 DeskerLoginManager는 QTcpSock 방식으로 바꾸는게 좋겠다
-    const auto deskerservice = m_guestLoginManager->service();
-    const auto deskerpath = m_guestLoginManager->path();
-    const auto deskerinterface = m_guestLoginManager->interface();
-*/
-
-//    success &= QDBusConnection::systemBus().connect( deskerservice, deskerpath, deskerinterface, QStringLiteral("newLogon"),
-//                                                     this, SLOT(changeDeskerLoginInfo(QString,QString)) );
-
-    return guestUserInfoList;
-
-}
-
-
-QStringList WindowsUserFunctions::guestUserInfo( const QString& username )
-{
-    QStringList guestUserInfoList = {QString(), QString()};
-
-    if(username.contains(QStringLiteral("guest-"))) {
-
-        QFile userinfofile( QStringLiteral("/tmp/%1/.huserinfo").arg(username) );
-
-        if( userinfofile.exists() && userinfofile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
-
-            QTextStream in(&userinfofile);
-            QString line = in.readLine();
-
-            QStringList resList = line.split( QLatin1Char(':') );
-
-            if( resList.length() >= 2)
-            {
-                return resList;
-            }
-
-        }
-
-    }
-
-    return guestUserInfoList;
-
-}
-
-void WindowsUserFunctions::changeDeskerLoginInfo(const QString& guestId, const QString& guestName)
-{
-    vDebug() << __PRETTY_FUNCTION__ << "### hihoon ### m_guestId, guestName" << m_guestId << m_guestName;
-
-    m_guestId = guestId;
-    m_guestName = guestName;
-
-    vDebug() << __PRETTY_FUNCTION__ << "### hihoon ### m_guestId, guestName" << m_guestId << m_guestName;
-}
-
 
 QStringList WindowsUserFunctions::userGroups( bool queryDomainGroups )
 {
@@ -150,7 +96,7 @@ QStringList WindowsUserFunctions::userGroups( bool queryDomainGroups )
 	}
 
 	groupList.removeDuplicates();
-	groupList.removeAll( QString() );
+	groupList.removeAll( {} );
 
 	return groupList;
 }
@@ -167,31 +113,47 @@ QStringList WindowsUserFunctions::groupsOfUser( const QString& username, bool qu
 	}
 
 	groupList.removeDuplicates();
-	groupList.removeAll( QString() );
+	groupList.removeAll( {} );
 
 	return groupList;
 }
 
 
 
+bool WindowsUserFunctions::isAnyUserLoggedOn()
+{
+	const auto sessions = WtsSessionManager::activeSessions();
+	for( const auto session : sessions )
+	{
+		if( WtsSessionManager::querySessionInformation( session, WtsSessionManager::SessionInfo::UserName ).isEmpty() == false )
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+
 QString WindowsUserFunctions::currentUser()
 {
-	auto sessionId = WtsSessionManager::activeConsoleSession();
+	const auto sessionId = WtsSessionManager::currentSession();
 
-	auto username = WtsSessionManager::querySessionInformation( sessionId, WtsSessionManager::SessionInfoUserName );
-	auto domainName = WtsSessionManager::querySessionInformation( sessionId, WtsSessionManager::SessionInfoDomainName );
+	auto username = WtsSessionManager::querySessionInformation( sessionId, WtsSessionManager::SessionInfo::UserName );
+	auto domainName = WtsSessionManager::querySessionInformation( sessionId, WtsSessionManager::SessionInfo::DomainName );
 
 	// check whether we just got the name of the local computer
 	if( !domainName.isEmpty() )
 	{
-		wchar_t computerName[MAX_PATH]; // Flawfinder: ignore
-		DWORD size = MAX_PATH;
-		GetComputerName( computerName, &size );
+		std::array<wchar_t, MAX_COMPUTERNAME_LENGTH+1> computerName{}; // Flawfinder: ignore
+		DWORD size = MAX_COMPUTERNAME_LENGTH;
+		GetComputerName( computerName.data(), &size );
 
-		if( domainName == QString::fromWCharArray( computerName ) )
+		if( domainName == QString::fromWCharArray( computerName.data() ) )
 		{
 			// reset domain name as we do not need to store local computer name
-			domainName = QString();
+			domainName.clear();
 		}
 	}
 
@@ -205,19 +167,61 @@ QString WindowsUserFunctions::currentUser()
 
 
 
-QStringList WindowsUserFunctions::loggedOnUsers()
+bool WindowsUserFunctions::prepareLogon( const QString& username, const Password& password )
 {
-	return WtsSessionManager::loggedOnUsers();
+	if( m_logonHelper.prepare( username, password ) )
+	{
+		logoff();
+		return true;
+	}
+
+	return false;
 }
 
 
 
-void WindowsUserFunctions::logon( const QString& username, const QString& password )
+bool WindowsUserFunctions::performLogon( const QString& username, const Password& password )
 {
-	Q_UNUSED(username);
-	Q_UNUSED(password);
+	WindowsPlatformConfiguration config( &VeyonCore::config() );
 
-	// TODO
+	DesktopInputController input( config.logonKeyPressInterval() );
+
+	const auto ctrlAltDel = []() {
+		auto sasEvent = OpenEvent( EVENT_MODIFY_STATE, false, L"Global\\VeyonServiceSasEvent" );
+		SetEvent( sasEvent );
+		CloseHandle( sasEvent );
+	};
+
+	const auto sendString = [&input]( const QString& string ) {
+		for( const auto& character : string )
+		{
+			input.pressAndReleaseKey( character );
+		}
+	};
+
+	WindowsInputDeviceFunctions::stopOnScreenKeyboard();
+
+	ctrlAltDel();
+
+	QThread::msleep( static_cast<unsigned long>( config.logonInputStartDelay() ) );
+
+	if( config.logonConfirmLegalNotice() )
+	{
+		input.pressAndReleaseKey( XK_Return );
+		QThread::msleep( static_cast<unsigned long>( config.logonInputStartDelay() ) );
+	}
+
+	input.pressAndReleaseKey( XK_Delete );
+
+	sendString( username );
+
+	input.pressAndReleaseKey( XK_Tab );
+
+	sendString( QString::fromUtf8( password.toByteArray() ) );
+
+	input.pressAndReleaseKey( XK_Return );
+
+	return true;
 }
 
 
@@ -229,7 +233,7 @@ void WindowsUserFunctions::logoff()
 
 
 
-bool WindowsUserFunctions::authenticate( const QString& username, const QString& password )
+bool WindowsUserFunctions::authenticate( const QString& username, const Password& password )
 {
 	QString domain;
 	QString user;
@@ -247,16 +251,14 @@ bool WindowsUserFunctions::authenticate( const QString& username, const QString&
 
 	auto domainWide = WindowsCoreFunctions::toWCharArray( domain );
 	auto userWide = WindowsCoreFunctions::toWCharArray( user );
-	auto passwordWide = WindowsCoreFunctions::toWCharArray( password );
+	auto passwordWide = WindowsCoreFunctions::toWCharArray( QString::fromUtf8( password.toByteArray() ) );
 
 	bool result = false;
 
-	WindowsPlatformConfiguration config( &VeyonCore::config() );
-
-	if( config.disableSSPIBasedUserAuthentication() )
+	if( WindowsPlatformConfiguration( &VeyonCore::config() ).disableSSPIBasedUserAuthentication() )
 	{
 		HANDLE token = nullptr;
-		result = LogonUserW( userWide, domainWide, passwordWide,
+		result = LogonUserW( userWide.data(), domainWide.data(), passwordWide.data(),
 							 LOGON32_LOGON_NETWORK, LOGON32_PROVIDER_DEFAULT, &token );
 		vDebug() << "LogonUserW()" << result << GetLastError();
 		if( token )
@@ -266,13 +268,9 @@ bool WindowsUserFunctions::authenticate( const QString& username, const QString&
 	}
 	else
 	{
-		result = SSPLogonUser( domainWide, userWide, passwordWide );
+		result = SSPLogonUser( domainWide.data(), userWide.data(), passwordWide.data() );
 		vDebug() << "SSPLogonUser()" << result << GetLastError();
 	}
-
-	delete[] domainWide;
-	delete[] userWide;
-	delete[] passwordWide;
 
 	return result;
 }
@@ -310,7 +308,8 @@ QStringList WindowsUserFunctions::domainUserGroups()
 	DWORD entriesRead = 0;
 	DWORD totalEntries = 0;
 
-	if( NetGroupEnum( WindowsCoreFunctions::toConstWCharArray( dc ), 0, &outBuffer, MAX_PREFERRED_LENGTH, &entriesRead, &totalEntries, nullptr ) == NERR_Success )
+	if( NetGroupEnum( WindowsCoreFunctions::toConstWCharArray( dc ), 0, &outBuffer, MAX_PREFERRED_LENGTH,
+					  &entriesRead, &totalEntries, nullptr ) == NERR_Success )
 	{
 		const auto* groupInfos = reinterpret_cast<GROUP_INFO_0 *>( outBuffer );
 

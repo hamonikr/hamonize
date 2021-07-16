@@ -1,7 +1,7 @@
 /*
  * VeyonConnection.h - declaration of class VeyonConnection
  *
- * Copyright (c) 2008-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2008-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -29,14 +29,14 @@
 #include "RfbVeyonAuth.h"
 #include "VncConnection.h"
 
-
+class AuthenticationProxy;
 class FeatureMessage;
 
 class VEYON_CORE_EXPORT VeyonConnection : public QObject
 {
 	Q_OBJECT
 public:
-	VeyonConnection( VncConnection* vncConnection );
+	explicit VeyonConnection( VncConnection* vncConnection );
 	~VeyonConnection() override;
 
 	VncConnection* vncConnection()
@@ -74,6 +74,11 @@ public:
 		return m_veyonAuthType;
 	}
 
+	void setAuthenticationProxy( AuthenticationProxy* authenticationProxy )
+	{
+		m_authenticationProxy = authenticationProxy;
+	}
+
 	void sendFeatureMessage( const FeatureMessage& featureMessage, bool wake );
 
 	bool handleServerMessage( rfbClient* client, uint8_t msg );
@@ -81,7 +86,7 @@ public:
 	static constexpr auto VeyonConnectionTag = 0xFE14A11;
 
 
-signals:
+Q_SIGNALS:
 	void featureMessageReceived( const FeatureMessage& );
 
 private:
@@ -92,9 +97,13 @@ private:
 	static int8_t handleSecTypeVeyon( rfbClient* client, uint32_t authScheme );
 	static void hookPrepareAuthentication( rfbClient* client );
 
+	AuthenticationCredentials authenticationCredentials() const;
+
 	QPointer<VncConnection> m_vncConnection;
 
 	RfbVeyonAuth::Type m_veyonAuthType;
+
+	AuthenticationProxy* m_authenticationProxy{nullptr};
 
 	QString m_user;
 	QString m_userHomeDir;

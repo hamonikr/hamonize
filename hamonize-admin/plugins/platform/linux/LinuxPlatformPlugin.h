@@ -1,7 +1,7 @@
 /*
  * LinuxPlatformPlugin.h - declaration of LinuxPlatformPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,6 +32,7 @@
 #include "LinuxInputDeviceFunctions.h"
 #include "LinuxNetworkFunctions.h"
 #include "LinuxServiceFunctions.h"
+#include "LinuxSessionFunctions.h"
 #include "LinuxUserFunctions.h"
 
 class LinuxPlatformPlugin : public QObject, PlatformPluginInterface, PluginInterface, ConfigurationPagePluginInterface
@@ -40,7 +41,7 @@ class LinuxPlatformPlugin : public QObject, PlatformPluginInterface, PluginInter
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.LinuxPlatform")
 	Q_INTERFACES(PluginInterface PlatformPluginInterface ConfigurationPagePluginInterface)
 public:
-	LinuxPlatformPlugin( QObject* parent = nullptr );
+	explicit LinuxPlatformPlugin( QObject* parent = nullptr );
 	~LinuxPlatformPlugin() override;
 
 	Plugin::Uid uid() const override
@@ -103,6 +104,11 @@ public:
 		return m_linuxServiceFunctions;
 	}
 
+	PlatformSessionFunctions& sessionFunctions() override
+	{
+		return m_linuxSessionFunctions;
+	}
+
 	PlatformUserFunctions& userFunctions() override
 	{
 		return m_linuxUserFunctions;
@@ -111,11 +117,12 @@ public:
 	ConfigurationPage* createConfigurationPage() override;
 
 private:
-	LinuxCoreFunctions m_linuxCoreFunctions;
-	LinuxFilesystemFunctions m_linuxFilesystemFunctions;
-	LinuxInputDeviceFunctions m_linuxInputDeviceFunctions;
-	LinuxNetworkFunctions m_linuxNetworkFunctions;
-	LinuxServiceFunctions m_linuxServiceFunctions;
-	LinuxUserFunctions m_linuxUserFunctions;
+	LinuxCoreFunctions m_linuxCoreFunctions{};
+	LinuxFilesystemFunctions m_linuxFilesystemFunctions{};
+	LinuxInputDeviceFunctions m_linuxInputDeviceFunctions{};
+	LinuxNetworkFunctions m_linuxNetworkFunctions{};
+	LinuxServiceFunctions m_linuxServiceFunctions{};
+	LinuxSessionFunctions m_linuxSessionFunctions{};
+	LinuxUserFunctions m_linuxUserFunctions{};
 
 };

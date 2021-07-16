@@ -1,7 +1,7 @@
 /*
  * VncServerClient.h - header file for the VncServerClient class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,30 +33,31 @@ class VEYON_CORE_EXPORT VncServerClient : public QObject
 {
 	Q_OBJECT
 public:
-	typedef enum AuthStates {
-		AuthInit,
-		AuthChallenge,
-		AuthPassword,
-		AuthToken,
-		AuthFinishedSuccess,
-		AuthFinishedFail,
-	} AuthState;
+	enum class AuthState {
+		Init,
+		Challenge,
+		Password,
+		Token,
+		Successful,
+		Failed,
+	} ;
+	Q_ENUM(AuthState)
 
-	typedef enum AccessControlStates {
-		AccessControlInit,
-		AccessControlSuccessful,
-		AccessControlPending,
-		AccessControlWaiting,
-		AccessControlFailed,
-		AccessControlStateCount
-	} AccessControlState;
+	enum class AccessControlState {
+		Init,
+		Successful,
+		Pending,
+		Waiting,
+		Failed
+	} ;
+	Q_ENUM(AccessControlState)
 
-	VncServerClient( QObject* parent = nullptr ) :
+	explicit VncServerClient( QObject* parent = nullptr ) :
 		QObject( parent ),
 		m_protocolState( VncServerProtocol::Disconnected ),
-		m_authState( AuthInit ),
+		m_authState( AuthState::Init ),
 		m_authType( RfbVeyonAuth::Invalid ),
-		m_accessControlState( AccessControlInit ),
+		m_accessControlState( AccessControlState::Init ),
 		m_username(),
 		m_hostAddress(),
 		m_challenge()
@@ -148,13 +149,13 @@ public:
 		m_privateKey = privateKey;
 	}
 
-public slots:
+public Q_SLOTS:
 	void finishAccessControl()
 	{
-		emit accessControlFinished( this );
+		Q_EMIT accessControlFinished( this );
 	}
 
-signals:
+Q_SIGNALS:
 	void accessControlFinished( VncServerClient* );
 
 private:
@@ -170,4 +171,4 @@ private:
 
 } ;
 
-typedef QList<VncServerClient *> VncServerClientList;
+using VncServerClientList = QList<VncServerClient *>;

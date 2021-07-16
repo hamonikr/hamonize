@@ -1,7 +1,7 @@
 /*
  * LdapConfiguration.h - LDAP-specific configuration values
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,6 +27,7 @@
 #include "Configuration/Proxy.h"
 #include "CryptoCore.h"
 #include "LdapClient.h"
+#include "LdapCommon.h"
 
 #define FOREACH_LDAP_CONFIG_PROPERTY(OP) \
 	OP( LdapConfiguration, m_configuration, QString, serverHost, setServerHost, "ServerHost", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
@@ -51,10 +52,11 @@
 	OP( LdapConfiguration, m_configuration, QString, computerHostNameAttribute, setComputerHostNameAttribute, "ComputerHostNameAttribute", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, bool, computerHostNameAsFQDN, setComputerHostNameAsFQDN, "ComputerHostNameAsFQDN", "LDAP", false, Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, QString, computerMacAddressAttribute, setComputerMacAddressAttribute, "ComputerMacAddressAttribute", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
-	OP( LdapConfiguration, m_configuration, QString, locationNameAttribute, setLocationNameAttribute, "LocationNameAttribute", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
+	OP( LdapConfiguration, m_configuration, QString, locationNameAttribute, setLocationNameAttribute, "LocationNameAttribute", "LDAP", QStringLiteral("cn"), Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, QString, usersFilter, setUsersFilter, "UsersFilter", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, QString, userGroupsFilter, setUserGroupsFilter, "UserGroupsFilter", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, QString, computersFilter, setComputersFilter, "ComputersFilter", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
+	OP( LdapConfiguration, m_configuration, bool, queryNestedUserGroups, setQueryNestedUserGroups, "QueryNestedUserGroups", "LDAP", false, Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, bool, identifyGroupMembersByNameAttribute, setIdentifyGroupMembersByNameAttribute, "IdentifyGroupMembersByNameAttribute", "LDAP", false, Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, QString, computerGroupsFilter, setComputerGroupsFilter, "ComputerGroupsFilter", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
 	OP( LdapConfiguration, m_configuration, QString, computerContainersFilter, setComputerContainersFilter, "ComputerContainersFilter", "LDAP", QString(), Configuration::Property::Flag::Standard )	\
@@ -73,4 +75,4 @@
 	FOREACH_LDAP_CONFIG_PROPERTY(OP) \
 	FOREACH_LDAP_LEGACY_CONFIG_PROPERTY(OP)
 
-DECLARE_CONFIG_PROXY(LdapConfiguration, FOREACH_LDAP_PROXIES_CONFIG_PROPERTY)
+DECLARE_CONFIG_PROXY(LDAP_COMMON_EXPORT LdapConfiguration, FOREACH_LDAP_PROXIES_CONFIG_PROPERTY)

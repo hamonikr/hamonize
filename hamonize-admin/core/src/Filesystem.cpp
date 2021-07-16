@@ -1,9 +1,9 @@
 /*
  * Filesystem.cpp - filesystem related query and manipulation functions
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@hamonize.io>
  *
- * This file is part of Veyon - https://veyon.io
+ * This file is part of Veyon - https://hamonize.io
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -148,6 +148,13 @@ QString Filesystem::publicKeyPath( const QString& name ) const
 
 
 
+QString Filesystem::screenshotDirectoryPath() const
+{
+	return expandPath( VeyonCore::config().screenshotDirectory() );
+}
+
+
+
 QString Filesystem::serverFilePath() const
 {
 	return QDir::toNativeSeparators( QCoreApplication::applicationDirPath() + QDir::separator() +
@@ -161,11 +168,3 @@ QString Filesystem::workerFilePath() const
 	return QDir::toNativeSeparators( QCoreApplication::applicationDirPath() + QDir::separator() +
 									 QStringLiteral("hamonize-worker" ) + VeyonCore::executableSuffix() );
 }
-
-
-QString Filesystem::deskerFilePath() const
-{
-    return QDir::toNativeSeparators( QCoreApplication::applicationDirPath() + QDir::separator() +
-                                     QStringLiteral("hamonize-desker" ) + VeyonCore::executableSuffix() );
-}
-

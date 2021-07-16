@@ -1,7 +1,7 @@
 /*
  * LinuxFilesystemFunctions.cpp - implementation of LinuxFilesystemFunctions class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,23 +24,25 @@
 
 #include <QDir>
 
+#include <fcntl.h>
 #include <grp.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "LinuxFilesystemFunctions.h"
 
 
 QString LinuxFilesystemFunctions::personalAppDataPath() const
 {
-    return QDir::homePath() + QDir::separator() + QStringLiteral(".hamonize");
+	return QDir::homePath() + QDir::separator() + QStringLiteral(".hamonize");
 }
 
 
 
 QString LinuxFilesystemFunctions::globalAppDataPath() const
 {
-    return QStringLiteral( "/etc/hamonize" );
+	return QStringLiteral( "/etc/hamonize" );
 }
 
 
@@ -108,4 +110,76 @@ bool LinuxFilesystemFunctions::setFileOwnerGroupPermissions( const QString& file
 	}
 
 	return QFile( filePath ).setPermissions( permissions );
+}
+
+
+
+bool LinuxFilesystemFunctions::openFileSafely( QFile* file, QIODevice::OpenMode openMode, QFile::Permissions permissions )
+{
+	if( file == nullptr )
+	{
+		return false;
+	}
+
+	int flags = O_NOFOLLOW | O_CLOEXEC;
+	if( openMode & QFile::ReadOnly )
+	{
+		flags |= O_RDONLY;
+	}
+
+	if( openMode & QFile::WriteOnly )
+	{
+		flags |= O_WRONLY;
+
+		if( permissions )
+		{
+			flags |= O_CREAT;
+		}
+	}
+
+	if( openMode & QFile::Append )
+	{
+		flags |= O_APPEND;
+	}
+	else if( openMode & QFile::Truncate )
+	{
+		flags |= O_TRUNC;
+	}
+
+	int fileMode =
+		( permissions.testFlag( QFile::ReadOwner ) || permissions.testFlag( QFile::ReadUser ) ? S_IRUSR : 0 ) |
+		( permissions.testFlag( QFile::WriteOwner ) || permissions.testFlag( QFile::WriteUser ) ? S_IWUSR : 0 ) |
+		( permissions.testFlag( QFile::ExeOwner ) || permissions.testFlag( QFile::ExeUser ) ? S_IXUSR : 0 ) |
+		( permissions.testFlag( QFile::ReadGroup ) ? S_IRGRP : 0 ) |
+		( permissions.testFlag( QFile::WriteGroup ) ? S_IWGRP : 0 ) |
+		( permissions.testFlag( QFile::ExeGroup ) ? S_IXGRP : 0 ) |
+		( permissions.testFlag( QFile::ReadOther ) ? S_IROTH : 0 ) |
+		( permissions.testFlag( QFile::WriteOther ) ? S_IWOTH : 0 ) |
+		( permissions.testFlag( QFile::ExeOther ) ? S_IXOTH : 0 );
+
+	int fd = open( file->fileName().toUtf8().constData(), flags, fileMode );
+	if( fd == -1 )
+	{
+		return false;
+	}
+
+	struct stat s;
+	if( fstat(fd, &s) != 0 )
+	{
+		close(fd);
+		return false;
+	}
+
+	if( s.st_uid != getuid() )
+	{
+		close(fd);
+		return false;
+	}
+
+	if( fileMode )
+	{
+		(void) fchmod( fd, fileMode );
+	}
+
+	return file->open( fd, openMode, QFileDevice::AutoCloseHandle );
 }

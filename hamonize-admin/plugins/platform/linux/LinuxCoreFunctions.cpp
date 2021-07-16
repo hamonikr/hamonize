@@ -1,7 +1,7 @@
 /*
  * LinuxCoreFunctions.cpp - implementation of LinuxCoreFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,6 +22,7 @@
  *
  */
 
+#include <QFileInfo>
 #include <QDBusPendingCall>
 #include <QProcess>
 #include <QProcessEnvironment>
@@ -29,6 +30,7 @@
 #include <QWidget>
 
 #include <unistd.h>
+#include <proc/readproc.h>
 
 #include "LinuxCoreFunctions.h"
 #include "LinuxDesktopIntegration.h"
@@ -37,18 +39,6 @@
 
 #include <X11/XKBlib.h>
 #include <X11/extensions/dpms.h>
-
-
-LinuxCoreFunctions::LinuxCoreFunctions() :
-	m_screenSaverTimeout( 0 ),
-	m_screenSaverPreferBlanking( 0 ),
-	m_dpmsEnabled( false ),
-	m_dpmsStandbyTimeout( 0 ),
-	m_dpmsSuspendTimeout( 0 ),
-	m_dpmsOffTimeout( 0 )
-{
-}
-
 
 
 bool LinuxCoreFunctions::applyConfiguration()
@@ -75,9 +65,21 @@ void LinuxCoreFunctions::writeToNativeLoggingSystem( const QString& message, Log
 
 void LinuxCoreFunctions::reboot()
 {
+	systemdLoginManager()->asyncCall( QStringLiteral("Reboot"), false );
+	consoleKitManager()->asyncCall( QStringLiteral("Restart") );
+
 	if( isRunningAsAdmin() )
 	{
-		QProcess::startDetached( QStringLiteral("reboot") );
+		for( const auto& file : { QStringLiteral("/sbin/reboot"), QStringLiteral("/usr/sbin/reboot") } )
+		{
+			if( QFileInfo::exists( file ) )
+			{
+				QProcess::startDetached( file, {} );
+				return;
+			}
+		}
+
+		QProcess::startDetached( QStringLiteral("reboot"), {} );
 	}
 	else
 	{
@@ -88,8 +90,6 @@ void LinuxCoreFunctions::reboot()
 		gnomeSessionManager()->asyncCall( QStringLiteral("RequestReboot") );
 		mateSessionManager()->asyncCall( QStringLiteral("RequestReboot") );
 		xfcePowerManager()->asyncCall( QStringLiteral("Reboot") );
-		systemdLoginManager()->asyncCall( QStringLiteral("Reboot") );
-		consoleKitManager()->asyncCall( QStringLiteral("Restart") );
 	}
 }
 
@@ -99,9 +99,21 @@ void LinuxCoreFunctions::powerDown( bool installUpdates )
 {
 	Q_UNUSED(installUpdates)
 
+	systemdLoginManager()->asyncCall( QStringLiteral("PowerOff"), false );
+	consoleKitManager()->asyncCall( QStringLiteral("Stop") );
+
 	if( isRunningAsAdmin() )
 	{
-		QProcess::startDetached( QStringLiteral("poweroff") );
+		for( const auto& file : { QStringLiteral("/sbin/poweroff"), QStringLiteral("/usr/sbin/poweroff") } )
+		{
+			if( QFileInfo::exists( file ) )
+			{
+				QProcess::startDetached( file, {} );
+				return;
+			}
+		}
+
+		QProcess::startDetached( QStringLiteral("poweroff"), {} );
 	}
 	else
 	{
@@ -112,17 +124,24 @@ void LinuxCoreFunctions::powerDown( bool installUpdates )
 		gnomeSessionManager()->asyncCall( QStringLiteral("RequestShutdown") );
 		mateSessionManager()->asyncCall( QStringLiteral("RequestShutdown") );
 		xfcePowerManager()->asyncCall( QStringLiteral("Shutdown") );
-		systemdLoginManager()->asyncCall( QStringLiteral("PowerOff") );
-		consoleKitManager()->asyncCall( QStringLiteral("Stop") );
 	}
 }
 
 
 
-void LinuxCoreFunctions::raiseWindow( QWidget* widget )
+void LinuxCoreFunctions::raiseWindow( QWidget* widget, bool stayOnTop )
 {
 	widget->activateWindow();
 	widget->raise();
+
+	if( stayOnTop )
+	{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 9, 0))
+		widget->setWindowFlag( Qt::WindowStaysOnTopHint, true );
+#else
+		widget->setWindowFlags( widget->windowFlags() | Qt::WindowStaysOnTopHint );
+#endif
+	}
 }
 
 
@@ -131,7 +150,8 @@ void LinuxCoreFunctions::disableScreenSaver()
 	auto display = XOpenDisplay( nullptr );
 
 	// query and disable screen saver
-	int interval, allowExposures;
+	int interval;
+	int allowExposures;
 	XGetScreenSaver( display, &m_screenSaverTimeout, &interval, &m_screenSaverPreferBlanking, &allowExposures );
 	XSetScreenSaver( display, 0, interval, 0, allowExposures );
 
@@ -154,7 +174,7 @@ void LinuxCoreFunctions::disableScreenSaver()
 		DPMSGetTimeouts( display, &m_dpmsStandbyTimeout, &m_dpmsSuspendTimeout, &m_dpmsOffTimeout );
 		DPMSSetTimeouts( display, 0, 0, 0 );
 	}
-	else
+	else if( qEnvironmentVariableIsSet("XRDP_SESSION") == false )
 	{
 		vWarning() << "DPMS extension not supported!";
 	}
@@ -170,7 +190,10 @@ void LinuxCoreFunctions::restoreScreenSaverSettings()
 	auto display = XOpenDisplay( nullptr );
 
 	// restore screensaver settings
-	int timeout, interval, preferBlanking, allowExposures;
+	int timeout;
+	int interval;
+	int preferBlanking;
+	int allowExposures;
 	XGetScreenSaver( display, &timeout, &interval, &preferBlanking, &allowExposures );
 	XSetScreenSaver( display, m_screenSaverTimeout, interval, m_screenSaverPreferBlanking, allowExposures );
 
@@ -217,18 +240,6 @@ bool LinuxCoreFunctions::runProgramAsAdmin( const QString& program, const QStrin
 {
 	const auto commandLine = QStringList( program ) + parameters;
 
-	const auto desktop = QProcessEnvironment::systemEnvironment().value( QStringLiteral("XDG_CURRENT_DESKTOP") );
-	if( desktop == QStringLiteral("KDE") &&
-			QStandardPaths::findExecutable( QStringLiteral("kdesudo") ).isEmpty() == false )
-	{
-		return QProcess::execute( QStringLiteral("kdesudo"), commandLine ) == 0;
-	}
-
-	if( QStandardPaths::findExecutable( QStringLiteral("gksudo") ).isEmpty() == false )
-	{
-		return QProcess::execute( QStringLiteral("gksudo"), commandLine ) == 0;
-	}
-
 	return QProcess::execute( QStringLiteral("pkexec"), commandLine ) == 0;
 }
 
@@ -267,7 +278,7 @@ bool LinuxCoreFunctions::runProgramAsUser( const QString& program, const QString
 	}
 
 	auto process = new UserProcess( uid );
-	process->connect( process, QOverload<int>::of( &QProcess::finished ), &QProcess::deleteLater );
+	QObject::connect( process, QOverload<int, QProcess::ExitStatus>::of( &QProcess::finished ), &QProcess::deleteLater );
 	process->start( program, parameters );
 
 	return true;
@@ -337,20 +348,6 @@ LinuxCoreFunctions::DBusInterfacePointer LinuxCoreFunctions::systemdLoginManager
 
 
 
-/*! Returns DBus interface for session manager of Guest login manager */
-LinuxCoreFunctions::DBusInterfacePointer LinuxCoreFunctions::guestLoginManager()
-{
-    auto res = DBusInterfacePointer::create( QStringLiteral("org.hamonikr.SDesker"),
-                                         QStringLiteral("/org/hamonikr/ODesker"),
-                                         QStringLiteral("org.hamonikr.IDesker"),
-                                         QDBusConnection::systemBus() );
-    vDebug() << __PRETTY_FUNCTION__ << "### hihoon ### res :" << res;
-    return res;
-
-}
-
-
-
 /*! Returns DBus interface for ConsoleKit manager */
 LinuxCoreFunctions::DBusInterfacePointer LinuxCoreFunctions::consoleKitManager()
 {
@@ -362,5 +359,65 @@ LinuxCoreFunctions::DBusInterfacePointer LinuxCoreFunctions::consoleKitManager()
 
 
 
+int LinuxCoreFunctions::systemctl( const QStringList& arguments )
+{
+	QProcess process;
+	process.start( QStringLiteral("systemctl"),
+							  QStringList( { QStringLiteral("--no-pager"), QStringLiteral("-q") } ) + arguments );
+
+	if( process.waitForFinished() && process.exitStatus() == QProcess::NormalExit )
+	{
+		return process.exitCode();
+	}
+
+	return -1;
+}
 
 
+
+void LinuxCoreFunctions::restartDisplayManagers()
+{
+	for( const auto& displayManager : {
+		 QStringLiteral("gdm"),
+		 QStringLiteral("lightdm"),
+		 QStringLiteral("lxdm"),
+		 QStringLiteral("nodm"),
+		 QStringLiteral("sddm"),
+		 QStringLiteral("wdm"),
+		 QStringLiteral("xdm") } )
+	{
+		systemctl( { QStringLiteral("restart"), displayManager } );
+	}
+}
+
+
+
+void LinuxCoreFunctions::forEachChildProcess( const std::function<bool(proc_t*)>& visitor,
+											 int parentPid, int flags, bool visitParent )
+{
+	QProcessEnvironment sessionEnv;
+
+	const auto proc = openproc( flags | PROC_FILLSTAT /* required for proc_t::ppid */ );
+	proc_t* procInfo = nullptr;
+
+	QList<int> ppids;
+
+	while( ( procInfo = readproc( proc, nullptr ) ) )
+	{
+		if( procInfo->ppid == parentPid )
+		{
+			if( visitParent == false || visitor( procInfo ) )
+			{
+				ppids.append( procInfo->tid );
+			}
+		}
+		else if( ppids.contains( procInfo->ppid ) && visitor( procInfo ) )
+		{
+			ppids.append( procInfo->tid );
+		}
+
+		freeproc( procInfo );
+	}
+
+	closeproc( proc );
+}

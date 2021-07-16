@@ -1,7 +1,7 @@
 /*
  * PluginManager.h - header for the PluginManager class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -29,11 +29,14 @@
 #include "Plugin.h"
 #include "PluginInterface.h"
 
+class QPluginLoader;
+
 class VEYON_CORE_EXPORT PluginManager : public QObject
 {
 	Q_OBJECT
 public:
-	PluginManager( QObject* parent = nullptr );
+	explicit PluginManager( QObject* parent = nullptr );
+	~PluginManager();
 
 	void loadPlatformPlugins();
 	void loadPlugins();
@@ -44,12 +47,7 @@ public:
 		return m_pluginInterfaces;
 	}
 
-	PluginInterfaceList& pluginInterfaces()
-	{
-		return m_pluginInterfaces;
-	}
-
-	QObjectList& pluginObjects()
+	const QObjectList& pluginObjects() const
 	{
 		return m_pluginObjects;
 	}
@@ -68,9 +66,7 @@ private:
 
 	PluginInterfaceList m_pluginInterfaces;
 	QObjectList m_pluginObjects;
+	QList<QPluginLoader *> m_pluginLoaders;
 	bool m_noDebugMessages;
-
-signals:
-	void pluginsLoaded();
 
 };

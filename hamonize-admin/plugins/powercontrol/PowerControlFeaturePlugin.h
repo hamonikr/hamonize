@@ -1,7 +1,7 @@
 /*
  * PowerControlFeaturePlugin.h - declaration of PowerControlFeaturePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,20 +27,26 @@
 #include "CommandLineIO.h"
 #include "CommandLinePluginInterface.h"
 #include "Feature.h"
-#include "SimpleFeatureProvider.h"
+#include "FeatureProviderInterface.h"
 
 class PowerControlFeaturePlugin : public QObject,
 		PluginInterface,
 		CommandLineIO,
 		CommandLinePluginInterface,
-		SimpleFeatureProvider
+		FeatureProviderInterface
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.PowerControl")
 	Q_INTERFACES(PluginInterface CommandLinePluginInterface FeatureProviderInterface)
 public:
-	PowerControlFeaturePlugin( QObject* parent = nullptr );
-	~PowerControlFeaturePlugin() override {}
+	enum class Argument
+	{
+		ShutdownTimeout
+	};
+	Q_ENUM(Argument)
+
+	explicit PowerControlFeaturePlugin( QObject* parent = nullptr );
+	~PowerControlFeaturePlugin() override = default;
 
 	Plugin::Uid uid() const override
 	{
@@ -87,6 +93,9 @@ public:
 
 	const FeatureList& featureList() const override;
 
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override;
+
 	bool startFeature( VeyonMasterInterface& master, const Feature& feature,
 					   const ComputerControlInterfaceList& computerControlInterfaces ) override;
 
@@ -96,16 +105,12 @@ public:
 
 	bool handleFeatureMessage( VeyonWorkerInterface& worker, const FeatureMessage& message ) override;
 
-public slots:
+public Q_SLOTS:
 	CommandLinePluginInterface::RunResult handle_help( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_on( const QStringList& arguments );
 
 private:
-	enum Arguments {
-		ShutdownTimeout
-	};
-
-	bool confirmFeatureExecution( const Feature& feature, QWidget* parent );
+	bool confirmFeatureExecution( const Feature& feature, bool all, QWidget* parent );
 	static bool broadcastWOLPacket( QString macAddress );
 
 	void confirmShutdown();

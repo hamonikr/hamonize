@@ -1,7 +1,7 @@
 /*
  * FeatureWorkerManagerConnection.h - class which handles communication between worker manager and worker
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,6 +25,7 @@
 #pragma once
 
 #include <QTcpSocket>
+#include <QTimer>
 
 #include "Feature.h"
 
@@ -45,6 +46,9 @@ public:
 	bool sendMessage( const FeatureMessage& message );
 
 private:
+	static constexpr auto ConnectTimeout = 3000;
+
+	void tryConnection();
 	void sendInitMessage();
 	void receiveMessage();
 
@@ -52,5 +56,6 @@ private:
 	FeatureManager& m_featureManager;
 	QTcpSocket m_socket;
 	Feature::Uid m_featureUid;
+	QTimer m_connectTimer{this};
 
 } ;

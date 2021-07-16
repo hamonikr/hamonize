@@ -1,7 +1,7 @@
 /*
  * WindowsServiceControl.h - class for managing a Windows service
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -35,11 +35,16 @@ WindowsServiceControl::WindowsServiceControl( const QString& name ) :
 
 	if( m_serviceManager )
 	{
-		m_serviceHandle = OpenService( m_serviceManager, WindowsCoreFunctions::toConstWCharArray( m_name ), SERVICE_ALL_ACCESS );
+		m_serviceHandle = OpenService( m_serviceManager, WindowsCoreFunctions::toConstWCharArray( m_name ),
+									   SERVICE_ALL_ACCESS );
+		if( m_serviceHandle == nullptr )
+		{
+			vCritical() << "could not open service" << m_name;
+		}
 	}
 	else
 	{
-		vCritical() << "the Service Control Manager could not be contacted - service " << m_name << "was not started.";
+		vCritical() << "the Service Control Manager could not be contacted - service " << m_name << "can't be controlled.";
 	}
 }
 
@@ -94,7 +99,7 @@ bool WindowsServiceControl::start()
 		{
 			if( status.dwCurrentState == SERVICE_START_PENDING )
 			{
-				Sleep( 1000 );
+				Sleep( ServiceWaitSleepInterval );
 			}
 			else
 			{
@@ -131,7 +136,7 @@ bool WindowsServiceControl::stop()
 		{
 			if( status.dwCurrentState == SERVICE_STOP_PENDING )
 			{
-				Sleep( 1000 );
+				Sleep( ServiceWaitSleepInterval );
 			}
 			else
 			{
@@ -153,19 +158,21 @@ bool WindowsServiceControl::stop()
 
 bool WindowsServiceControl::install( const QString& filePath, const QString& displayName  )
 {
+	const auto binaryPath = QStringLiteral("\"%1\"").arg( QString( filePath ).replace( QLatin1Char('"'), QString() ) );
+
 	m_serviceHandle = CreateService(
 				m_serviceManager,		// SCManager database
 				WindowsCoreFunctions::toConstWCharArray( m_name ),	// name of service
 				WindowsCoreFunctions::toConstWCharArray( displayName ),// name to display
 				SERVICE_ALL_ACCESS,	// desired access
-				SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS,
+				SERVICE_WIN32_OWN_PROCESS,
 				// service type
 				SERVICE_AUTO_START,	// start type
 				SERVICE_ERROR_NORMAL,	// error control type
-				WindowsCoreFunctions::toConstWCharArray( filePath ),		// service's binary
+				WindowsCoreFunctions::toConstWCharArray( binaryPath ),		// service's binary
 				nullptr,			// no load ordering group
 				nullptr,			// no tag identifier
-				nullptr,			// dependencies
+				L"Tcpip\0RpcSs\0\0",		// dependencies
 				nullptr,			// LocalSystem account
 				nullptr );			// no password
 
@@ -185,13 +192,10 @@ bool WindowsServiceControl::install( const QString& filePath, const QString& dis
 	}
 
 	SC_ACTION serviceActions;
-	serviceActions.Delay = 10000;
+	serviceActions.Delay = ServiceActionDelay;
 	serviceActions.Type = SC_ACTION_RESTART;
 
-	SERVICE_FAILURE_ACTIONS serviceFailureActions;
-	serviceFailureActions.dwResetPeriod = 0;
-	serviceFailureActions.lpRebootMsg = nullptr;
-	serviceFailureActions.lpCommand = nullptr;
+	SERVICE_FAILURE_ACTIONS serviceFailureActions{};
 	serviceFailureActions.lpsaActions = &serviceActions;
 	serviceFailureActions.cActions = 1;
 	ChangeServiceConfig2( m_serviceHandle, SERVICE_CONFIG_FAILURE_ACTIONS, &serviceFailureActions );

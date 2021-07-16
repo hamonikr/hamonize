@@ -1,7 +1,7 @@
 /*
  * Logger.cpp - a global clas for easily logging messages to log files
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,6 +31,7 @@
 #include "Filesystem.h"
 #include "Logger.h"
 #include "PlatformCoreFunctions.h"
+#include "PlatformFilesystemFunctions.h"
 
 QAtomicPointer<Logger> Logger::s_instance = nullptr;
 QMutex Logger::s_instanceMutex;
@@ -43,7 +44,7 @@ Logger::Logger( const QString &appName ) :
 	m_lastMessage(),
 	m_lastMessageCount( 0 ),
 	m_logToSystem( false ),
-    m_appName( QStringLiteral( "Hamonize" ) + appName ),
+	m_appName( QStringLiteral( "Veyon" ) + appName ),
 	m_logFile( nullptr ),
 	m_logFileSizeLimit( -1 ),
 	m_logFileRotationCount( -1 )
@@ -64,7 +65,10 @@ Logger::Logger( const QString &appName ) :
 	m_logLevel = qBound( LogLevel::Min, configuredLogLevel, LogLevel::Max );
 	m_logToSystem = VeyonCore::config().logToSystem();
 
-	initLogFile();
+	if( m_logLevel > LogLevel::Nothing )
+	{
+		initLogFile();
+	}
 
 	qInstallMessageHandler( qtMsgHandler );
 
@@ -138,15 +142,26 @@ void Logger::initLogFile()
 
 void Logger::openLogFile()
 {
-	m_logFile->open( QFile::WriteOnly | QFile::Append | QFile::Unbuffered | QFile::Text );
-	m_logFile->setPermissions( QFile::ReadOwner | QFile::WriteOwner );
+	if( VeyonCore::platform().filesystemFunctions().openFileSafely(
+			m_logFile,
+			QFile::WriteOnly | QFile::Append | QFile::Unbuffered | QFile::Text,
+			QFile::ReadOwner | QFile::WriteOwner ) == false )
+	{
+		vCritical() << m_logFile->fileName() << "is a symlink and will not be written to for security reasons";
+		m_logFile->close();
+		delete m_logFile;
+		m_logFile = nullptr;
+	}
 }
 
 
 
 void Logger::closeLogFile()
 {
-	m_logFile->close();
+	if( m_logFile )
+	{
+		m_logFile->close();
+	}
 }
 
 
@@ -154,7 +169,10 @@ void Logger::closeLogFile()
 void Logger::clearLogFile()
 {
 	closeLogFile();
-	m_logFile->remove();
+	if( m_logFile )
+	{
+		m_logFile->remove();
+	}
 	openLogFile();
 }
 
@@ -162,7 +180,7 @@ void Logger::clearLogFile()
 
 void Logger::rotateLogFile()
 {
-	if( m_logFileRotationCount < 1 )
+	if( m_logFileRotationCount < 1 || m_logFile == nullptr )
 	{
 		return;
 	}
@@ -182,7 +200,7 @@ void Logger::rotateLogFile()
 
 #if QT_VERSION < 0x050600
 #warning Building compat code for unsupported version of Qt
-	typedef std::reverse_iterator<QStringList::const_iterator> QStringListReverseIterator;
+	using QStringListReverseIterator = std::reverse_iterator<QStringList::const_iterator>;
 	for( auto it = QStringListReverseIterator(rotatedLogFiles.cend()),
 		 end = QStringListReverseIterator(rotatedLogFiles.cbegin()); it != end; ++it )
 #else
@@ -239,7 +257,9 @@ void Logger::qtMsgHandler( QtMsgType messageType, const QMessageLogContext& cont
 {
 	QMutexLocker instanceLocker( &s_instanceMutex );
 
-	if( s_instance.load() == nullptr )
+	const auto instance = s_instance.loadAcquire();
+
+	if( instance == nullptr || message.size() > MaximumMessageSize )
 	{
 		return;
 	}
@@ -257,11 +277,11 @@ void Logger::qtMsgHandler( QtMsgType messageType, const QMessageLogContext& cont
 
 	if( context.category && strcmp(context.category, "default") != 0 )
 	{
-		s_instance.load()->log( logLevel, QStringLiteral( "[%1] " ).arg(QLatin1String(context.category)) + message );
+		instance->log( logLevel, QStringLiteral( "[%1] " ).arg(QLatin1String(context.category)) + message );
 	}
 	else
 	{
-		s_instance.load()->log( logLevel, message );
+		instance->log( logLevel, message );
 	}
 }
 

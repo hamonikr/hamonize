@@ -1,7 +1,7 @@
 /*
  * FileSystemBrowser.h - a wrapper class for easily browsing the file system
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -38,9 +38,9 @@ public:
 		SaveFile,
 		NumBrowseModes
 	} ;
-	typedef BrowseModes BrowseMode;
+	using BrowseMode = BrowseModes;
 
-	FileSystemBrowser( BrowseMode m ) :
+	explicit FileSystemBrowser( BrowseMode m ) :
 		m_browseMode( m ),
 		m_expandPath( true ),
 		m_shrinkPath( true )
@@ -57,10 +57,10 @@ public:
 		m_shrinkPath = enabled;
 	}
 
-	QString exec( const QString &path, const QString &title = QString(),
-					const QString &filter = QString() );
-	void exec( QLineEdit *lineEdit, const QString &title = QString(),
-					const QString &filter = QString() );
+	QString exec( const QString &path, const QString &title = {},
+					const QString &filter = {} );
+	void exec( QLineEdit *lineEdit, const QString &title = {},
+					const QString &filter = {} );
 
 
 private:

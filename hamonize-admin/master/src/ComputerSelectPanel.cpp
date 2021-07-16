@@ -1,7 +1,7 @@
 /*
  * ComputerSelectPanel.cpp - provides a view for a network object tree
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -60,7 +60,7 @@ ComputerSelectPanel::ComputerSelectPanel( ComputerManager& computerManager, QWid
 	ui->addLocationButton->setVisible( VeyonCore::config().showCurrentLocationOnly() &&
 									   VeyonCore::config().allowAddingHiddenLocations() );
 
-	ui->filterLineEdit->setHidden( VeyonCore::config().computerFilterHidden() );
+	ui->filterLineEdit->setHidden( VeyonCore::config().hideComputerFilter() );
 
 	connect( ui->filterLineEdit, &QLineEdit::textChanged,
 			 this, &ComputerSelectPanel::updateFilter );
@@ -108,7 +108,7 @@ void ComputerSelectPanel::removeLocation()
 	const auto index = ui->treeView->selectionModel()->currentIndex();
 
 	if( index.isValid() &&
-		QVariantHelper<NetworkObject::Type>::value( model->data( index, NetworkObjectModel::TypeRole ) ) == NetworkObject::Location )
+		QVariantHelper<NetworkObject::Type>::value( model->data( index, NetworkObjectModel::TypeRole ) ) == NetworkObject::Type::Location )
 	{
 		m_computerManager.removeLocation( model->data( index, NetworkObjectModel::NameRole ).toString() );
 	}

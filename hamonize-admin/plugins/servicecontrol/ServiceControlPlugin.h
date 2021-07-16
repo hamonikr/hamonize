@@ -1,7 +1,7 @@
 /*
  * ServiceControlPlugin.h - declaration of ServiceControlPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,7 +32,7 @@ class ServiceControlPlugin : public QObject, CommandLinePluginInterface, PluginI
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.ServiceControl")
 	Q_INTERFACES(PluginInterface CommandLinePluginInterface)
 public:
-	ServiceControlPlugin( QObject* parent = nullptr );
+	explicit ServiceControlPlugin( QObject* parent = nullptr );
 	~ServiceControlPlugin() override = default;
 
 	Plugin::Uid uid() const override
@@ -52,12 +52,12 @@ public:
 
 	QString description() const override
 	{
-        return tr( "Configure and control Hamonize service" );
+		return tr( "Configure and control Hamonize service" );
 	}
 
 	QString vendor() const override
 	{
-		return QStringLiteral( "Veyon Community" );
+		return QStringLiteral( "Hamonize Community" );
 	}
 
 	QString copyright() const override
@@ -72,7 +72,7 @@ public:
 
 	QString commandLineModuleHelp() const override
 	{
-        return tr( "Commands for configuring and controlling Hamonize Service" );
+		return tr( "Commands for configuring and controlling Hamonize Service" );
 	}
 
 	QStringList commands() const override
@@ -85,7 +85,7 @@ public:
 		return m_commands.value( command );
 	}
 
-public slots:
+public Q_SLOTS:
 	CommandLinePluginInterface::RunResult handle_register( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_unregister( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_start( const QStringList& arguments );

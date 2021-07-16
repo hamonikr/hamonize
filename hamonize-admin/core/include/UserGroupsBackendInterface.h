@@ -1,7 +1,7 @@
 /*
  * UserGroupsBackendInterface.h - interface for a UserGroupsBackend
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -40,7 +40,7 @@ public:
 
 };
 
-typedef QList<UserGroupsBackendInterface> UserGroupsBackendInterfaceList;
+using UserGroupsBackendInterfaceList = QList<UserGroupsBackendInterface>;
 
 #define UserGroupsBackendInterface_iid "io.veyon.Veyon.Plugins.UserGroupsBackendInterface"
 

@@ -1,7 +1,7 @@
 /*
  * ServiceControl.h - header for the ServiceControl class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -52,7 +52,7 @@ public:
 
 
 private:
-	typedef QFuture<void> Operation;
+	using Operation = QFuture<void>;
 	void serviceControl( const QString& title, const Operation& operation );
 	void graphicalFeedback( const QString &title, const Operation& operation );
 	void textFeedback( const QString &title, const Operation& operation );

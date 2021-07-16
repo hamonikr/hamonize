@@ -1,7 +1,7 @@
 /*
  * WindowsInputDeviceFunctions.h - declaration of WindowsInputDeviceFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,8 +33,8 @@
 class WindowsInputDeviceFunctions : public PlatformInputDeviceFunctions
 {
 public:
-	WindowsInputDeviceFunctions();
-	~WindowsInputDeviceFunctions();
+	WindowsInputDeviceFunctions() = default;
+	virtual ~WindowsInputDeviceFunctions();
 
 	void enableInputDevices() override;
 	void disableInputDevices() override;
@@ -43,7 +43,11 @@ public:
 
 	static void checkInterceptionInstallation();
 
+	static void stopOnScreenKeyboard();
+
 private:
+	static constexpr auto OnScreenKeyboardTerminateTimeout = 5000;
+
 	void enableInterception();
 	void disableInterception();
 	void initHIDServiceStatus();
@@ -54,10 +58,10 @@ private:
 	static bool uninstallInterception();
 	static int interceptionInstaller( const QString& argument );
 
-	bool m_inputDevicesDisabled;
-	InterceptionContext m_interceptionContext;
-	QString m_hidServiceName;
-	bool m_hidServiceStatusInitialized;
-	bool m_hidServiceActivated;
+	bool m_inputDevicesDisabled{false};
+	InterceptionContext m_interceptionContext{nullptr};
+	QString m_hidServiceName{QStringLiteral("hidserv")};
+	bool m_hidServiceStatusInitialized{false};
+	bool m_hidServiceActivated{false};
 
 };

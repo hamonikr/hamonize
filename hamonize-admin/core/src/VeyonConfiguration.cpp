@@ -2,7 +2,7 @@
  * VeyonConfiguration.cpp - a Configuration object storing system wide
  *                          configuration values
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -58,5 +58,14 @@ void VeyonConfiguration::upgrade()
 		setConfirmUnsafeActions( legacyConfirmDangerousActions() );
 
 		setApplicationVersion( VeyonCore::ApplicationVersion::Version_4_2 );
+	}
+	else if( applicationVersion() < VeyonCore::ApplicationVersion::Version_4_5 )
+	{
+		setVeyonServerPort( legacyPrimaryServicePort() );
+		setHideLocalComputer( legacyLocalComputerHidden() );
+		setHideComputerFilter( legacyComputerFilterHidden() );
+		setAutoAdjustMonitoringIconSize( legacyAutoAdjustGridSize() );
+
+		setApplicationVersion( VeyonCore::ApplicationVersion::Version_4_5 );
 	}
 }

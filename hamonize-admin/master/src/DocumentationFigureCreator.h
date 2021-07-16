@@ -1,7 +1,7 @@
 /*
  * DocumentationFigureCreator.h - helper for creating documentation figures
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -35,7 +35,7 @@ class DocumentationFigureCreator : public QObject
 {
 	Q_OBJECT
 public:
-	DocumentationFigureCreator();
+	DocumentationFigureCreator() = default;
 
 	void run();
 
@@ -47,25 +47,36 @@ private:
 	void createLogonDialogFigure();
 	void createLocationDialogFigure();
 	void createScreenshotManagementPanelFigure();
+	void createDemoMenuFigure();
 	void createPowerDownOptionsFigure();
 	void createPowerDownTimeInputDialogFigure();
+	void createUserLoginDialogFigure();
 	void createTextMessageDialogFigure();
 	void createOpenWebsiteDialogFigure();
+	void createWebsiteMenuFigure();
 	void createRunProgramDialogFigure();
+	void createProgramMenuFigure();
 	void createRemoteAccessHostDialogFigure();
 	void createRemoteAccessWindowFigure();
+	void createFileTransferDialogFigure();
 
 	void hideComputers();
 
-	void scheduleUiOperation( const std::function<void(void)>& operation );
+	void scheduleUiOperation( const std::function<void(void)>& operation )
+	{
+		scheduleUiOperation( operation, this );
+	}
 
+	static void scheduleUiOperation( const std::function<void(void)>& operation, QObject* context );
+
+	static void grabMenu( QWidget* window, const QString& buttonName, const QString& fileName );
 	static void grabWidget( QWidget* widget, const QPoint& pos, const QSize& size, const QString& fileName );
 	static void grabDialog( QDialog* dialog, const QSize& size, const QString& fileName );
 	static void grabWindow( QWidget* widget, const QString& fileName );
 	static void grabWindow( QWidget* widget, const QPoint& pos, const QSize& size, const QString& fileName );
 
-	VeyonMaster* m_master;
-	QEventLoop m_eventLoop;
+	VeyonMaster m_master{VeyonCore::instance()};
+	QEventLoop m_eventLoop{};
 
 } ;
 

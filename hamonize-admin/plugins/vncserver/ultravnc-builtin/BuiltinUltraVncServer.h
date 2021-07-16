@@ -1,7 +1,7 @@
 /*
  * BuiltinUltraVncServer.h - declaration of BuiltinUltraVncServer class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,7 @@ class BuiltinUltraVncServer : public QObject, VncServerPluginInterface, PluginIn
 	Q_INTERFACES(PluginInterface VncServerPluginInterface)
 public:
 	BuiltinUltraVncServer();
-	virtual ~BuiltinUltraVncServer();
+	~BuiltinUltraVncServer() override;
 
 	Plugin::Uid uid() const override
 	{
@@ -73,20 +73,25 @@ public:
 		return Plugin::ProvidesDefaultImplementation;
 	}
 
+	QStringList supportedSessionTypes() const override
+	{
+		return { QStringLiteral("console"), QStringLiteral("rdp") };
+	}
+
 	QWidget* configurationWidget() override;
 
 	void prepareServer() override;
 
-	void runServer( int serverPort, const QString& password ) override;
+	bool runServer( int serverPort, const Password& password ) override;
 
 	int configuredServerPort() override
 	{
 		return -1;
 	}
 
-	QString configuredPassword() override
+	Password configuredPassword() override
 	{
-		return QString();
+		return {};
 	}
 
 	const UltraVncConfiguration& configuration() const
@@ -99,7 +104,7 @@ public:
 		return m_serverPort;
 	}
 
-	const QString& password() const
+	const Password& password() const
 	{
 		return m_password;
 	}
@@ -110,7 +115,7 @@ private:
 	static constexpr auto DefaultServerPort = 5900;
 
 	int m_serverPort;
-	QString m_password;
+	Password m_password;
 
 	LogoffEventFilter* m_logoffEventFilter;
 

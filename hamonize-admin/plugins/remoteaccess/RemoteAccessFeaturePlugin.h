@@ -1,7 +1,7 @@
 /*
  * RemoteAccessFeaturePlugin.h - declaration of RemoteAccessFeaturePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,20 +24,24 @@
 
 #pragma once
 
-#include <QProcess>
-
 #include "Computer.h"
-#include "SimpleFeatureProvider.h"
+#include "FeatureProviderInterface.h"
 #include "CommandLinePluginInterface.h"
-#include "VncView.h"
 
-class RemoteAccessFeaturePlugin : public QObject, CommandLinePluginInterface, SimpleFeatureProvider, PluginInterface
+
+class RemoteAccessFeaturePlugin : public QObject, CommandLinePluginInterface, FeatureProviderInterface, PluginInterface
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "io.veyon.Veyon.Plugins.RemoteAccess")
 	Q_INTERFACES(PluginInterface FeatureProviderInterface CommandLinePluginInterface)
 public:
-	RemoteAccessFeaturePlugin( QObject* parent = nullptr );
+	enum class Argument
+	{
+		HostName
+	};
+	Q_ENUM(Argument)
+
+	explicit RemoteAccessFeaturePlugin( QObject* parent = nullptr );
 	~RemoteAccessFeaturePlugin() override = default;
 
 	Plugin::Uid uid() const override
@@ -72,6 +76,9 @@ public:
 
 	const FeatureList& featureList() const override;
 
+	bool controlFeature( Feature::Uid featureUid, Operation operation, const QVariantMap& arguments,
+						const ComputerControlInterfaceList& computerControlInterfaces ) override;
+
 	bool startFeature( VeyonMasterInterface& master, const Feature& feature,
 					   const ComputerControlInterfaceList& computerControlInterfaces ) override;
 
@@ -89,24 +96,21 @@ public:
 
 	QString commandHelp( const QString& command ) const override;
 
-private slots:
+private Q_SLOTS:
 	CommandLinePluginInterface::RunResult handle_view( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_control( const QStringList& arguments );
-    CommandLinePluginInterface::RunResult handle_bioscontrol( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_help( const QStringList& arguments );
 
 private:
+	bool remoteViewEnabled() const;
+	bool remoteControlEnabled() const;
 	bool initAuthentication();
-	// 2019.05.10 hihoon RemoteBIOSControl mode 추가 
-	// 2019.05.10 hihoon remark // bool remoteAccess( const QString& hostAddress, bool viewOnly );
-	bool remoteAccess( const QString& hostAddress, VncView::Mode remoteMode );
+	bool remoteAccess( const QString& hostAddress, bool viewOnly );
 
 	const Feature m_remoteViewFeature;
 	const Feature m_remoteControlFeature;
-	const Feature m_remoteBIOSControlFeature;
 	const FeatureList m_features;
 
 	QMap<QString, QString> m_commands;
 
-    QProcess *Process;
 };

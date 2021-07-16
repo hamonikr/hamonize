@@ -1,7 +1,7 @@
 /*
  *  Screenshot.cpp - class representing a screenshot
  *
- *  Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ *  Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  *  This file is part of Veyon - https://veyon.io
  *
@@ -21,18 +21,22 @@
  *  USA.
  */
 
+#include <QApplication>
 #include <QDateTime>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
-#include <QApplication>
 #include <QMessageBox>
+#include <QMetaEnum>
 #include <QPainter>
+#include <QRegularExpression>
 
 #include "Screenshot.h"
 #include "VeyonConfiguration.h"
 #include "Computer.h"
 #include "ComputerControlInterface.h"
 #include "Filesystem.h"
+#include "PlatformFilesystemFunctions.h"
 
 Screenshot::Screenshot( const QString &fileName, QObject* parent ) :
 	QObject( parent ),
@@ -55,7 +59,7 @@ void Screenshot::take( const ComputerControlInterface::Pointer& computerControlI
 		userLogin = tr( "unknown" );
 	}
 
-	const auto dir = VeyonCore::filesystem().expandPath( VeyonCore::config().screenshotDirectory() );
+	const auto dir = VeyonCore::filesystem().screenshotDirectoryPath();
 
 	if( VeyonCore::filesystem().ensurePathExists( dir ) == false )
 	{
@@ -72,6 +76,22 @@ void Screenshot::take( const ComputerControlInterface::Pointer& computerControlI
 	// construct filename
 	m_fileName = dir + QDir::separator() + constructFileName( userLogin, computerControlInterface->computer().hostAddress() );
 
+	QFile outputFile( m_fileName );
+	if( VeyonCore::platform().filesystemFunctions().openFileSafely(
+			&outputFile,
+			QFile::WriteOnly | QFile::Truncate,
+			QFile::ReadOwner | QFile::WriteOwner ) == false )
+	{
+		const auto msg = tr( "Could not open screenshot file %1 for writing." ).arg( m_fileName );
+		vCritical() << msg.toUtf8().constData();
+		if( qobject_cast<QApplication *>( QCoreApplication::instance() ) )
+		{
+			QMessageBox::critical( nullptr, tr( "Screenshot" ), msg );
+		}
+
+		return;
+	}
+
 	// construct caption
 	auto user = userLogin;
 	if( computerControlInterface->userFullName().isEmpty() == false )
@@ -79,42 +99,56 @@ void Screenshot::take( const ComputerControlInterface::Pointer& computerControlI
 		user = QStringLiteral( "%1 (%2)" ).arg( userLogin, computerControlInterface->userFullName() );
 	}
 
-	const auto caption = QStringLiteral( "%1@%2 %3 %4" ).arg( user,
-															  computerControlInterface->computer().hostAddress(),
-															  QDate::currentDate().toString( Qt::ISODate ),
-															  QTime::currentTime().toString( Qt::ISODate ) );
+	const auto host = computerControlInterface->computer().hostAddress();
+	const auto date = QDate::currentDate().toString( Qt::ISODate );
+	const auto time = QTime::currentTime().toString( Qt::ISODate );
 
-	const int FONT_SIZE = 14;
-	const int RECT_MARGIN = 10;
-	const int RECT_INNER_MARGIN = 5;
+	const auto caption = QStringLiteral( "%1@%2 %3 %4" ).arg( user, host, date, time );
 
-	m_image = QImage( computerControlInterface->screen() );
+	m_image = computerControlInterface->screen();
 
 	QPixmap icon( QStringLiteral( ":/core/icon16.png" ) );
 
-	QPainter p( &m_image );
-	QFont fnt = p.font();
-	fnt.setPointSize( FONT_SIZE );
-	fnt.setBold( true );
-	p.setFont( fnt );
+	QPainter painter( &m_image );
 
-	QFontMetrics fm( p.font() );
+	auto font = painter.font();
+	font.setPointSize( 14 );
+	font.setBold( true );
+	painter.setFont( font );
 
-	const int rx = RECT_MARGIN;
-	const int ry = m_image.height() - RECT_MARGIN - 2 * RECT_INNER_MARGIN - FONT_SIZE;
-	const int rw = RECT_MARGIN + 4 * RECT_INNER_MARGIN +
-					fm.size( Qt::TextSingleLine, caption ).width() + icon.width();
-	const int rh = 2 * RECT_INNER_MARGIN + FONT_SIZE;
-	const int ix = rx + RECT_INNER_MARGIN + 1;
-	const int iy = ry + RECT_INNER_MARGIN - 2;
-	const int tx = ix + icon.width() + 2 * RECT_INNER_MARGIN;
-	const int ty = ry + RECT_INNER_MARGIN + FONT_SIZE - 2;
+	const QFontMetrics fontMetrics( painter.font() );
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+	const auto captionWidth = fontMetrics.horizontalAdvance( caption );
+	const auto captionHeight = fontMetrics.boundingRect( caption ).height();
+#else
+	const auto boundingRect = fontMetrics.boundingRect( caption );
+	const auto captionWidth = boundingRect.width();
+	const auto captionHeight = boundingRect.height();
+#endif
 
-	p.fillRect( rx, ry, rw, rh, QColor( 255, 255, 255, 160 ) );
-	p.drawPixmap( ix, iy, icon );
-	p.drawText( tx, ty, caption );
+	const auto MARGIN = 14;
+	const auto PADDING = 7;
+	const QRect rect{ MARGIN,
+				m_image.height() - MARGIN - 2 * PADDING - captionHeight,
+				4 * PADDING + captionWidth + icon.width(),
+				2 * PADDING + captionHeight };
+	const auto iconX = rect.x() + PADDING + 1;
+	const auto iconY = rect.y() + ( rect.height() - icon.height() ) / 2;
+	const auto textX = iconX + icon.width() + PADDING;
+	const auto textY = rect.y() + PADDING + fontMetrics.ascent();
 
-	m_image.save( m_fileName, "PNG", 50 );
+	painter.fillRect( rect, QColor( 255, 255, 255, 160 ) );
+	painter.drawPixmap( iconX, iconY, icon );
+	painter.drawText( textX, textY, caption );
+
+	m_image.setText( metaDataKey( MetaData::User ), user );
+	m_image.setText( metaDataKey( MetaData::Host ), host );
+	m_image.setText( metaDataKey( MetaData::Date ), date );
+	m_image.setText( metaDataKey( MetaData::Time ), time );
+
+	m_image.save( &outputFile, "PNG", 50 );
+
+	Q_EMIT VeyonCore::filesystem().screenshotDirectoryModified();
 }
 
 
@@ -122,7 +156,10 @@ void Screenshot::take( const ComputerControlInterface::Pointer& computerControlI
 QString Screenshot::constructFileName( const QString& user, const QString& hostAddress,
 									   const QDate& date, const QTime& time )
 {
-	return QStringLiteral( "%1_%2_%3_%4.png" ).arg( user,
+	const auto userSimplified = VeyonCore::stripDomain( user ).toLower().remove(
+				QRegularExpression( QStringLiteral("[^a-z0-9.]") ) );
+
+	return QStringLiteral( "%1_%2_%3_%4.png" ).arg( userSimplified,
 													hostAddress,
 													date.toString( Qt::ISODate ),
 													time.toString( Qt::ISODate ) ).
@@ -133,21 +170,21 @@ QString Screenshot::constructFileName( const QString& user, const QString& hostA
 
 QString Screenshot::user() const
 {
-	return QFileInfo( fileName() ).fileName().section( QLatin1Char('_'), 0, 0 );
+	return property( metaDataKey( MetaData::User ), 0 );
 }
 
 
 
 QString Screenshot::host() const
 {
-	return fileName().section( QLatin1Char('_'), 1, 1 );
+	return property( metaDataKey( MetaData::Host ), 1 );
 }
 
 
 
 QString Screenshot::date() const
 {
-	return QDate::fromString( fileName().section( QLatin1Char('_'), 2, 2 ),
+	return QDate::fromString( property( metaDataKey( MetaData::Date ), 2 ),
 										Qt::ISODate ).toString( Qt::LocalDate );
 }
 
@@ -155,5 +192,32 @@ QString Screenshot::date() const
 
 QString Screenshot::time() const
 {
-	return fileName().section( QLatin1Char('_'), 3, 3 ).section( QLatin1Char('.'), 0, 0 ).replace( QLatin1Char('-'), QLatin1Char(':') );
+	return property( metaDataKey( MetaData::Time ), 3 ).section( QLatin1Char('.'), 0, 0 ).replace( QLatin1Char('-'), QLatin1Char(':') );
+}
+
+
+
+QString Screenshot::metaDataKey( MetaData key )
+{
+	return QLatin1String( QMetaEnum::fromType<MetaData>().valueToKey( static_cast<int>( key ) ) );
+}
+
+
+
+QString Screenshot::property( const QString& key, int section ) const
+{
+	const auto embeddedProperty = m_image.text( key );
+	if( embeddedProperty.isEmpty() )
+	{
+		return fileNameSection( section );
+	}
+
+	return embeddedProperty;
+}
+
+
+
+QString Screenshot::fileNameSection( int n ) const
+{
+	return QFileInfo( fileName() ).fileName().section( QLatin1Char('_'), n, n );
 }

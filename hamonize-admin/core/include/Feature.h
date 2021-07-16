@@ -1,7 +1,7 @@
 /*
  * Feature.h - declaration of the Feature class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -35,7 +35,7 @@ class VEYON_CORE_EXPORT Feature
 {
 	Q_GADGET
 public:
-	typedef QUuid Uid;
+	using Uid = QUuid;
 
 	enum FeatureFlag
 	{
@@ -43,14 +43,14 @@ public:
 		Mode = 0x0001,
 		Action = 0x0002,
 		Session = 0x0004,
-		Operation = 0x0008,
-		Dialog = 0x0010,
+		Meta = 0x0008,
+		Option = 0x0010,
+		Checked = 0x0020,
 		Master = 0x0100,
 		Service = 0x0200,
 		Worker = 0x0400,
-        Desker = 0x0800,
-        Builtin = 0x1000,
-        AllComponents = Master | Service | Worker | Desker
+		Builtin = 0x1000,
+		AllComponents = Master | Service | Worker
 	} ;
 
 	Q_DECLARE_FLAGS(Flags, FeatureFlag)
@@ -215,5 +215,5 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Feature::Flags)
 
-typedef QList<Feature> FeatureList;
-typedef QStringList FeatureUidList;
+using FeatureList = QList<Feature>;
+using FeatureUidList = QList<Feature::Uid>;

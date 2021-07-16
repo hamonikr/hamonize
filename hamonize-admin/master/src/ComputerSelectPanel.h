@@ -1,7 +1,7 @@
 /*
  * ComputerSelectPanel.h - provides a view for a network object tree
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -38,12 +38,12 @@ class ComputerSelectPanel : public QWidget
 {
 	Q_OBJECT
 public:
-	ComputerSelectPanel( ComputerManager& computerManager, QWidget *parent = nullptr );
+	explicit ComputerSelectPanel( ComputerManager& computerManager, QWidget *parent = nullptr );
 	~ComputerSelectPanel() override;
 
 	bool eventFilter(QObject *watched, QEvent *event) override;
 
-private slots:
+private Q_SLOTS:
 	void addLocation();
 	void removeLocation();
 	void saveList();

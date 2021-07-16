@@ -1,7 +1,7 @@
-    /*
+/*
  * GeneralConfigurationPage.cpp - configuration page with general settings
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -49,18 +49,13 @@ GeneralConfigurationPage::GeneralConfigurationPage() :
 
 	// retrieve list of builtin translations and populate language combobox
 	QStringList languages;
-	const auto qmFiles = QDir( VeyonCore::translationsDirectory() ).entryList( { QStringLiteral("*.qm") } );
+	const auto qmFiles = QDir( VeyonCore::translationsDirectory() ).entryList( { QStringLiteral("veyon*.qm") } );
 
 	languages.reserve( qmFiles.count() );
 
 	for( const auto& qmFile : qmFiles )
 	{
-		// ignore Qt's translation files
-		if( qmFile.startsWith( QStringLiteral("qt") ) )
-		{
-			continue;
-		}
-		QLocale loc( qmFile );
+		QLocale loc( qmFile.split( QLatin1Char('_') ).mid( 1 ).join( QLatin1Char('_') ) );
 		if( loc.language() == QLocale::C )
 		{
 			loc = QLocale( QLocale::English );
@@ -197,14 +192,18 @@ void GeneralConfigurationPage::clearLogFiles()
 	}
 
 	bool success = true;
-    const QStringList logFilesFilter( { QStringLiteral("Hamonize*.log") } );
+	const QStringList logFilesFilter( { QStringLiteral("Veyon*.log") } );
 
 	QDir d( VeyonCore::filesystem().expandPath( VeyonCore::config().logFileDirectory() ) );
 	const auto localLogFiles = d.entryList( logFilesFilter );
 
 	for( const auto& f : localLogFiles )
 	{
-        if( f != QStringLiteral("HamonizeConfigurator.log") )
+		if( f.startsWith( QLatin1String("VeyonConfigurator") ) )
+		{
+			d.remove( f );
+		}
+		else
 		{
 			success &= d.remove( f );
 		}
@@ -214,7 +213,7 @@ void GeneralConfigurationPage::clearLogFiles()
 	const auto globalLogFiles = d.entryList( logFilesFilter );
 	for( const auto& f : globalLogFiles )
 	{
-        if( f != QStringLiteral("HamonizeConfigurator.log") )
+		if( f != QLatin1String("VeyonConfigurator.log") )
 		{
 			success &= d.remove( f );
 		}
@@ -241,7 +240,7 @@ void GeneralConfigurationPage::clearLogFiles()
 
 void GeneralConfigurationPage::populateNetworkObjectDirectories()
 {
-	const auto directories = NetworkObjectDirectoryManager().availableDirectories();
+	const auto directories = VeyonCore::networkObjectDirectoryManager().availableDirectories();
 
 	for( auto it = directories.constBegin(), end = directories.constEnd(); it != end; ++it )
 	{

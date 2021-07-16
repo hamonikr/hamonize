@@ -1,7 +1,7 @@
 /*
  * WindowsServiceCore.h - header file for WindowsServiceCore class
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,13 +24,17 @@
 
 #pragma once
 
-#include "PlatformServiceCore.h"
+#include <windows.h>
 
-class WindowsServiceCore : public PlatformServiceCore
+#include "PlatformServiceFunctions.h"
+#include "PlatformSessionManager.h"
+#include "ServiceDataManager.h"
+
+class WindowsServiceCore
 {
 public:
-	WindowsServiceCore( const QString& name, std::function<void(void)> serviceMainEntry );
-	~WindowsServiceCore();
+	WindowsServiceCore( const QString& name, const PlatformServiceFunctions::ServiceEntryPoint& serviceEntryPoint );
+	~WindowsServiceCore() = default;
 
 	static WindowsServiceCore* instance();
 
@@ -49,14 +53,21 @@ private:
 	DWORD serviceCtrl( DWORD ctrlCode, DWORD eventType, LPVOID eventData, LPVOID context );
 	bool reportStatus( DWORD state, DWORD exitCode, DWORD waitHint );
 
-	wchar_t* m_name;
-	std::function<void(void)> m_serviceMainEntry;
+	QSharedPointer<wchar_t> m_name;
+	const PlatformServiceFunctions::ServiceEntryPoint& m_serviceEntryPoint;
 
 	static WindowsServiceCore* s_instance;
-	SERVICE_STATUS m_status;
-	SERVICE_STATUS_HANDLE m_statusHandle;
-	HANDLE m_stopServiceEvent;
-	HANDLE m_serverShutdownEvent;
-	QAtomicInt m_sessionChangeEvent;
+	SERVICE_STATUS m_status{};
+	SERVICE_STATUS_HANDLE m_statusHandle{nullptr};
+	HANDLE m_stopServiceEvent{nullptr};
+	HANDLE m_serverShutdownEvent{nullptr};
+	QAtomicInt m_sessionChangeEvent{0};
+
+	ServiceDataManager m_dataManager{};
+	PlatformSessionManager m_sessionManager{};
+
+	static constexpr auto SessionPollingInterval = 100;
+	static constexpr auto MinimumServerUptimeTime = 10000;
+	static constexpr auto ServiceStartTimeout = 15000;
 
 } ;

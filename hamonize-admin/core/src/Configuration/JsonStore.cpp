@@ -1,7 +1,7 @@
 /*
  * Configuration/JsonStore.cpp - implementation of JsonStore
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -87,7 +87,7 @@ void JsonStore::load( Object* obj )
 
 	QJsonDocument jsonDoc = QJsonDocument::fromJson( jsonFile.readAll() );
 
-	loadJsonTree( obj, jsonDoc.object(), QString() );
+	loadJsonTree( obj, jsonDoc.object(), {} );
 }
 
 

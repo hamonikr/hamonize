@@ -2,7 +2,7 @@
  * DemoServer.h - multi-threaded slim VNC-server for demo-purposes (optimized
  *                for lot of clients accessing server in read-only-mode)
  *
- * Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,32 +27,35 @@
 
 #include <QElapsedTimer>
 #include <QReadWriteLock>
+#include <QTcpServer>
 #include <QTimer>
 
-#include "VncClientProtocol.h"
+#include "CryptoCore.h"
 
 class DemoConfiguration;
 class QTcpServer;
+class QTcpSocket;
+class VncClientProtocol;
 
-class DemoServer : public QObject
+class DemoServer : public QTcpServer
 {
 	Q_OBJECT
 public:
-	typedef QVector<QByteArray> MessageList;
+	using Password = CryptoCore::SecureArray;
+	using MessageList = QVector<QByteArray>;
 
-	DemoServer( int vncServerPort, const QString& vncServerPassword, const QString& demoAccessToken,
-				const DemoConfiguration& configuration, QObject *parent );
+	DemoServer( int vncServerPort, const Password& vncServerPassword, const Password& demoAccessToken,
+				const DemoConfiguration& configuration, int demoServerPort, QObject *parent );
 	~DemoServer() override;
+
+	void terminate();
 
 	const DemoConfiguration& configuration() const
 	{
 		return m_configuration;
 	}
 
-	const QByteArray& serverInitMessage() const
-	{
-		return m_vncClientProtocol.serverInitMessage();
-	}
+	const QByteArray& serverInitMessage() const;
 
 	void lockDataForRead();
 
@@ -72,6 +75,7 @@ public:
 	}
 
 private:
+	void incomingConnection( qintptr socketDescriptor ) override;
 	void acceptPendingConnections();
 	void reconnectToVncServer();
 	void readFromVncServer();
@@ -86,15 +90,18 @@ private:
 	bool setVncServerPixelFormat();
 	bool setVncServerEncodings();
 
+	static constexpr auto ConnectionThreadWaitTime = 5000;
+	static constexpr auto TerminateRetryInterval = 1000;
+
 	const DemoConfiguration& m_configuration;
 	const qint64 m_memoryLimit;
 	const int m_keyFrameInterval;
 	const int m_vncServerPort;
-	const QString m_demoAccessToken;
+	const Password m_demoAccessToken;
 
-	QTcpServer* m_tcpServer;
+	QList<quintptr> m_pendingConnections;
 	QTcpSocket* m_vncServerSocket;
-	VncClientProtocol m_vncClientProtocol;
+	VncClientProtocol* m_vncClientProtocol;
 
 	QReadWriteLock m_dataLock;
 	QTimer m_framebufferUpdateTimer;

@@ -1,7 +1,7 @@
 /*
  * AccessControlRulesTestDialog.cpp - dialog for testing access control rules
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -22,11 +22,11 @@
  *
  */
 
-#include <QHostInfo>
 #include <QMessageBox>
 
 #include "AccessControlRulesTestDialog.h"
 #include "AccessControlProvider.h"
+#include "HostAddress.h"
 #include "PlatformUserFunctions.h"
 
 #include "ui_AccessControlRulesTestDialog.h"
@@ -39,7 +39,7 @@ AccessControlRulesTestDialog::AccessControlRulesTestDialog(QWidget *parent) :
 	ui->setupUi(this);
 
 	ui->localUserLineEdit->setText( VeyonCore::platform().userFunctions().currentUser() );
-	ui->localComputerLineEdit->setText( QHostInfo::localHostName() );
+	ui->localComputerLineEdit->setText( HostAddress::localFQDN() );
 }
 
 
@@ -72,13 +72,13 @@ void AccessControlRulesTestDialog::accept()
 
 	switch( result )
 	{
-	case AccessControlRule::ActionAllow:
+	case AccessControlRule::Action::Allow:
 		resultText = tr( "The access in the given scenario is allowed." );
 		break;
-	case AccessControlRule::ActionDeny:
+	case AccessControlRule::Action::Deny:
 		resultText = tr( "The access in the given scenario is denied." );
 		break;
-	case AccessControlRule::ActionAskForPermission:
+	case AccessControlRule::Action::AskForPermission:
 		resultText = tr( "The access in the given scenario needs permission of the logged on user." );
 		break;
 	default:

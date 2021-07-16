@@ -1,7 +1,7 @@
 /*
  * ConfigurationManager.cpp - class for managing Veyon's configuration
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -62,7 +62,7 @@ bool ConfigurationManager::applyConfiguration()
 	auto& network = VeyonCore::platform().networkFunctions();
 
 	if( network.configureFirewallException( VeyonCore::filesystem().serverFilePath(),
-                                            QStringLiteral("Hamonize Server"),
+											QStringLiteral("Veyon Server"),
 											m_configuration.isFirewallExceptionEnabled() ) == false )
 	{
 		m_errorString = tr( "Could not configure the firewall configuration for the %1 Server." ).arg( VeyonCore::applicationName() );
@@ -70,7 +70,7 @@ bool ConfigurationManager::applyConfiguration()
 	}
 
 	if( network.configureFirewallException( VeyonCore::filesystem().workerFilePath(),
-                                            QStringLiteral("Hamonize Worker"),
+											QStringLiteral("Veyon Worker"),
 											m_configuration.isFirewallExceptionEnabled() ) == false )
 	{
 		m_errorString = tr( "Could not configure the firewall configuration for the %1 Worker." ).arg( VeyonCore::applicationName() );

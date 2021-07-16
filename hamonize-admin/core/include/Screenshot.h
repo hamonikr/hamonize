@@ -1,7 +1,7 @@
 /*
  *  Screenshot.h - class representing a screenshot
  *
- *  Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ *  Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  *  This file is part of Veyon - https://veyon.io
  *
@@ -35,7 +35,16 @@ class VEYON_CORE_EXPORT Screenshot : public QObject
 {
 	Q_OBJECT
 public:
-	Screenshot( const QString &fileName = QString(), QObject* parent = nullptr );
+	enum class MetaData
+	{
+		User,
+		Host,
+		Date,
+		Time
+	};
+	Q_ENUM(MetaData)
+
+	explicit Screenshot( const QString &fileName = {}, QObject* parent = nullptr );
 
 	void take( const ComputerControlInterface::Pointer& computerControlInterface );
 
@@ -68,8 +77,12 @@ public:
 	QString date() const;
 	QString time() const;
 
+	static QString metaDataKey( MetaData key );
 
 private:
+	QString property( const QString& key, int section ) const;
+	QString fileNameSection( int n ) const;
+
 	QString m_fileName;
 	QImage m_image;
 

@@ -1,7 +1,7 @@
 /*
  * PlatformCoreFunctions.h - interface class for platform plugins
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -44,7 +44,7 @@ public:
 	virtual void reboot() = 0;
 	virtual void powerDown( bool installUpdates ) = 0;
 
-	virtual void raiseWindow( QWidget* widget ) = 0;
+	virtual void raiseWindow( QWidget* widget, bool stayOnTop ) = 0;
 
 	virtual void disableScreenSaver() = 0;
 	virtual void restoreScreenSaverSettings() = 0;

@@ -1,7 +1,7 @@
 /*
  * AccessControlPage.cpp - implementation of the access control page
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -164,7 +164,7 @@ void AccessControlPage::updateAccessGroupsLists()
 void AccessControlPage::addAccessControlRule()
 {
 	AccessControlRule newRule;
-	newRule.setAction( AccessControlRule::ActionAllow );
+	newRule.setAction( AccessControlRule::Action::Allow );
 
 	if( AccessControlRuleEditDialog( newRule, this ).exec() )
 	{

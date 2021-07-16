@@ -1,7 +1,7 @@
 /*
  * LdapClient.cpp - class representing the LDAP directory and providing access to directory entries
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -93,7 +93,7 @@ QString LdapClient::errorDescription() const
 
 
 LdapClient::Objects LdapClient::queryObjects( const QString& dn, const QStringList& attributes,
-													 const QString& filter, LdapClient::Scope scope )
+											  const QString& filter, LdapClient::Scope scope )
 {
 	vDebug() << "called with" << dn << attributes << filter << scope;
 
@@ -190,28 +190,28 @@ LdapClient::Objects LdapClient::queryObjects( const QString& dn, const QStringLi
 QStringList LdapClient::queryAttributeValues( const QString& dn, const QString& attribute,
 											  const QString& filter, Scope scope )
 {
-	QStringList entries;
-
-    vDebug() << "called with" << "dn: " << dn << ",attr: " << attribute << ",filter: " << filter << ",scope: " << scope;
+	vDebug() << "called with" << dn << attribute << filter << scope;
 
 	if( m_state != Bound && reconnect() == false )
 	{
 		vCritical() << "not bound to server!";
-		return entries;
+		return {};
 	}
 
 	if( dn.isEmpty() && attribute != m_namingContextAttribute &&
 		attribute.contains( QLatin1String("namingcontext"), Qt::CaseInsensitive ) == false )
 	{
 		vCritical() << "DN is empty!";
-		return entries;
+		return {};
 	}
 
 	if( attribute.isEmpty() )
 	{
 		vCritical() << "attribute is empty!";
-		return entries;
+		return {};
 	}
+
+	QStringList entries;
 
 	int result = -1;
 	int id = m_operation->search( KLDAP::LdapDN( dn ), kldapUrlScope( scope ), filter, QStringList( attribute ) );
@@ -272,22 +272,21 @@ QStringList LdapClient::queryAttributeValues( const QString& dn, const QString& 
 
 QStringList LdapClient::queryDistinguishedNames( const QString& dn, const QString& filter, Scope scope )
 {
-	QStringList distinguishedNames;
-
-    vDebug() << "DN:" << dn << ", Filter: " << filter << ", Scope:" << scope;
+	vDebug() << dn << filter << scope;
 
 	if( m_state != Bound && reconnect() == false )
 	{
 		vCritical() << "not bound to server!";
-		return distinguishedNames;
+		return {};
 	}
 
 	if( dn.isEmpty() )
 	{
 		vCritical() << "DN is empty!";
-
-		return distinguishedNames;
+		return {};
 	}
+
+	QStringList distinguishedNames;
 
 	int result = -1;
 	int id = m_operation->search( KLDAP::LdapDN( dn ), kldapUrlScope( scope ), filter, QStringList() );
@@ -366,7 +365,28 @@ QStringList LdapClient::queryBaseDn()
 
 QStringList LdapClient::queryNamingContexts( const QString& attribute )
 {
-	return queryAttributeValues( QString(), attribute.isEmpty() ? m_namingContextAttribute : attribute );
+	return queryAttributeValues( {}, attribute.isEmpty() ? m_namingContextAttribute : attribute );
+}
+
+
+
+QString LdapClient::baseDn()
+{
+	if( m_baseDn.isEmpty() )
+	{
+		// query base DN via naming context if configured
+		if( m_configuration.queryNamingContext() )
+		{
+			m_baseDn = queryNamingContexts().value( 0 );
+		}
+		else
+		{
+			// use the configured base DN
+			m_baseDn = m_configuration.baseDn();
+		}
+	}
+
+	return m_baseDn;
 }
 
 
@@ -446,7 +466,7 @@ bool LdapClient::connectAndBind( const QUrl& url )
 		if( m_configuration.useBindCredentials() )
 		{
 			m_server->setBindDn( m_configuration.bindDn() );
-			m_server->setPassword( m_configuration.bindPassword().plainText() );
+			m_server->setPassword( QString::fromUtf8( m_configuration.bindPassword().plainText().toByteArray() ) );
 			m_server->setAuth( KLDAP::LdapServer::Simple );
 		}
 		else
@@ -487,17 +507,6 @@ bool LdapClient::connectAndBind( const QUrl& url )
 		m_namingContextAttribute = QStringLiteral( "defaultNamingContext" );
 	}
 
-	// query base DN via naming context if configured
-	if( m_configuration.queryNamingContext() )
-	{
-		m_baseDn = queryNamingContexts().value( 0 );
-	}
-	else
-	{
-		// use the configured base DN
-		m_baseDn = m_configuration.baseDn();
-	}
-
 	return true;
 }
 
@@ -533,6 +542,13 @@ bool LdapClient::reconnect()
 
 	m_connection->setServer( *m_server );
 
+	if( qEnvironmentVariableIsSet( "VEYON_DEBUG_LDAP_LIBRARY") )
+	{
+		const auto debugLevel = LdapLibraryDebugAny;
+		ldap_set_option( nullptr, LDAP_OPT_DEBUG_LEVEL, &debugLevel );
+		ber_set_option( nullptr, LDAP_OPT_DEBUG_LEVEL, &debugLevel );
+	}
+
 	if( m_connection->connect() != 0 )
 	{
 		vWarning() << "LDAP connect failed:" << errorString();
@@ -557,6 +573,11 @@ bool LdapClient::reconnect()
 
 QString LdapClient::constructSubDn( const QString& subtree, const QString& baseDn )
 {
+	if( baseDn.isEmpty() )
+	{
+		return {};
+	}
+
 	if( subtree.isEmpty() )
 	{
 		return baseDn;
@@ -594,7 +615,7 @@ QString LdapClient::constructQueryFilter( const QString& filterAttribute,
 		}
 		else
 		{
-            queryFilter = QStringLiteral( "(&%1%2)" ).arg( extraFilter, queryFilter );  // hihoon (& (...K1...) (...K2...))
+			queryFilter = QStringLiteral( "(&%1%2)" ).arg( extraFilter, queryFilter );
 		}
 	}
 
@@ -603,7 +624,7 @@ QString LdapClient::constructQueryFilter( const QString& filterAttribute,
 
 
 
-QString LdapClient::escapeFilterValue( const QString&   filterValue )
+QString LdapClient::escapeFilterValue( const QString& filterValue )
 {
 	return QString( filterValue )
 			.replace( QStringLiteral("\\"), QStringLiteral("\\\\") )
@@ -633,5 +654,4 @@ QStringList LdapClient::toRDNs( const QString& dn )
 	strParts.append( dn.mid(strPartStartIndex) );
 
 	return strParts;
-
 }

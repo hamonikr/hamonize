@@ -1,7 +1,7 @@
 /*
  * SasEventListener.h - header file for SasEventListener class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,16 +24,19 @@
 
 #pragma once
 
+#include <windows.h>
+
+#include <QThread>
+
 #include "VeyonCore.h"
 
 class SasEventListener : public QThread
 {
+	Q_OBJECT
 public:
-	typedef void (WINAPI *SendSas)(BOOL asUser);
+	using SendSas = void (WINAPI *)(BOOL asUser);
 
-	enum {
-		WaitPeriod = 1000
-	};
+	static constexpr DWORD WaitPeriod = 1000;
 
 	SasEventListener();
 	~SasEventListener() override;

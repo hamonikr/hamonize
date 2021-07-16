@@ -1,7 +1,7 @@
 /*
  * PlatformUserFunctions.h - interface class for platform plugins
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include "CryptoCore.h"
 #include "PlatformPluginInterface.h"
 
 // clazy:excludeall=copyable-polymorphic
@@ -31,6 +32,8 @@
 class PlatformUserFunctions
 {
 public:
+	using Password = CryptoCore::SecureArray;
+
 	virtual ~PlatformUserFunctions() = default;
 
 	virtual QString fullName( const QString& username ) = 0;
@@ -38,18 +41,13 @@ public:
 	virtual QStringList userGroups( bool queryDomainGroups ) = 0;
 	virtual QStringList groupsOfUser( const QString& username, bool queryDomainGroups ) = 0;
 
+	virtual bool isAnyUserLoggedOn() = 0;
 	virtual QString currentUser() = 0;
-	virtual QStringList loggedOnUsers() = 0;
 
-    virtual QStringList guestUserInfo() = 0;
-    virtual QStringList guestUserInfo( const QString& username ) = 0;
-
-	virtual void logon( const QString& username, const QString& password ) = 0;
+	virtual bool prepareLogon( const QString& username, const Password& password ) = 0;
+	virtual bool performLogon( const QString& username, const Password& password ) = 0;
 	virtual void logoff() = 0;
 
-	virtual bool authenticate( const QString& username, const QString& password ) = 0;
-
-    virtual void changeDeskerLoginInfo( const QString& guestId, const QString& guestName ) = 0;
-
+	virtual bool authenticate( const QString& username, const Password& password ) = 0;
 
 };

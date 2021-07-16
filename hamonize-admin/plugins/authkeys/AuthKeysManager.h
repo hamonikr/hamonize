@@ -1,7 +1,7 @@
 /*
  * AuthKeysManager.h - declaration of AuthKeysManager class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,8 +30,8 @@ class AuthKeysManager : public QObject
 {
 	Q_OBJECT
 public:
-	AuthKeysManager( QObject* parent = nullptr );
-	~AuthKeysManager() = default;
+	explicit AuthKeysManager( QObject* parent = nullptr );
+	~AuthKeysManager() override = default;
 
 	const QString& resultMessage() const
 	{
@@ -40,7 +40,7 @@ public:
 
 	bool createKeyPair( const QString& name );
 	bool deleteKey( const QString& name, const QString& type );
-	bool exportKey( const QString& name, const QString& type, const QString& outputFile );
+	bool exportKey( const QString& name, const QString& type, const QString& outputFile, bool overwriteExisting );
 	bool importKey( const QString& name, const QString& type, const QString& inputFile );
 	QStringList listKeys();
 	bool extractPublicFromPrivateKey( const QString& name );

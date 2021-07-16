@@ -1,7 +1,7 @@
 /*
  * VeyonServiceControl.h - class for controlling the Veyon service
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,7 +32,7 @@ class VEYON_CORE_EXPORT VeyonServiceControl : public ServiceControl
 {
 	Q_OBJECT
 public:
-	VeyonServiceControl( QWidget* parent = nullptr );
+	explicit VeyonServiceControl( QWidget* parent = nullptr );
 
 	bool setAutostart( bool enabled );
 

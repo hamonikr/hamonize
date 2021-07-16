@@ -1,7 +1,7 @@
 /*
  * NetworkObject.cpp - data class representing a network object
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,6 +25,7 @@
 #include <QJsonObject>
 
 #include "NetworkObject.h"
+#include "HostAddress.h"
 
 
 const QUuid NetworkObject::networkObjectNamespace( QStringLiteral( "8a6c479e-243e-4ccb-8e5a-0ddf5cf3c7d0" ) );
@@ -119,7 +120,7 @@ bool NetworkObject::exactMatch( const NetworkObject& other ) const
 
 NetworkObject::ModelId NetworkObject::modelId() const
 {
-	if( type() == Root )
+	if( type() == Type::Root )
 	{
 		return 0;
 	}
@@ -145,7 +146,7 @@ NetworkObject::ModelId NetworkObject::modelId() const
 QJsonObject NetworkObject::toJson() const
 {
 	QJsonObject json;
-	json[QStringLiteral("Type")] = type();
+	json[QStringLiteral("Type")] = static_cast<int>( type() );
 	json[QStringLiteral("Uid")] = uid().toString();
 	json[QStringLiteral("Name")] = name();
 
@@ -174,6 +175,51 @@ QJsonObject NetworkObject::toJson() const
 
 
 
+QVariant NetworkObject::attributeValue( NetworkObject::Attribute attribute ) const
+{
+	switch( attribute )
+	{
+	case Attribute::None: return {};
+	case Attribute::Type: return QVariant::fromValue( type() );
+	case Attribute::Name: return name();
+	case Attribute::HostAddress: return hostAddress();
+	case Attribute::MacAddress: return macAddress();
+	case Attribute::DirectoryAddress: return directoryAddress();
+	case Attribute::Uid: return uid();
+	case Attribute::ParentUid: return parentUid();
+	}
+
+	return {};
+}
+
+
+
+bool NetworkObject::isAttributeValueEqual( NetworkObject::Attribute attribute,
+										   const QVariant& value, Qt::CaseSensitivity cs ) const
+{
+	const auto myValue = attributeValue( attribute );
+	const auto myValueType = myValue.userType();
+
+	if( myValueType == value.userType() &&
+		myValueType == QMetaType::QString )
+	{
+		// make sure to compare host addresses in the same format
+		if( attribute == NetworkObject::Attribute::HostAddress )
+		{
+			const HostAddress myHostAddress( myValue.toString() );
+			const auto otherHost = HostAddress( value.toString() ).convert( myHostAddress.type() );
+
+			return myValue.toString().compare( otherHost, cs ) == 0;
+		}
+
+		return myValue.toString().compare( value.toString(), cs ) == 0;
+	}
+
+	return myValue == value;
+}
+
+
+
 NetworkObject::Uid NetworkObject::calculateUid() const
 {
 	// if a directory address is set (e.g. full DN in LDAP) it should be unique and can be
@@ -182,7 +228,7 @@ NetworkObject::Uid NetworkObject::calculateUid() const
 	{
 		return QUuid::createUuidV5( networkObjectNamespace, directoryAddress() );
 	}
-	else if( type() == Root )
+	else if( type() == Type::Root )
 	{
 		return QUuid::createUuidV5( networkObjectNamespace, QByteArrayLiteral("Root") );
 	}

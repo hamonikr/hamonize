@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>LdapConfigurationPage</class>
  <widget class="QWidget" name="LdapConfigurationPage">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>571</width>
-    <height>660</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string notr="true">LDAP Basic</string>
   </property>
@@ -27,7 +19,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="basicSettings">
       <attribute name="title">
@@ -113,11 +105,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="serverHost">
-            <property name="placeholderText">
-             <string>e.g. IP address</string>
-            </property>
-           </widget>
+           <widget class="QLineEdit" name="serverHost"/>
           </item>
           <item row="4" column="1" colspan="2">
            <widget class="QLineEdit" name="bindPassword">
@@ -383,14 +371,14 @@
           <item row="0" column="1">
            <widget class="QLineEdit" name="userTree">
             <property name="placeholderText">
-             <string>e.g. CN=Users or OU=Users</string>
+             <string>e.g. OU=Users</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
            <widget class="QLineEdit" name="groupTree">
             <property name="placeholderText">
-             <string>e.g. CN=Users or OU=Groups</string>
+             <string>e.g. OU=Groups</string>
             </property>
            </widget>
           </item>
@@ -470,7 +458,7 @@
           <item row="7" column="1">
            <widget class="QLineEdit" name="locationNameAttribute">
             <property name="placeholderText">
-             <string>e.g. OU or name or description</string>
+             <string>e.g. name or description</string>
             </property>
            </widget>
           </item>
@@ -492,7 +480,7 @@
           <item row="6" column="1">
            <widget class="QLineEdit" name="computerLocationAttribute">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="placeholderText">
              <string>e.g. room or computerLab</string>
@@ -546,7 +534,7 @@
           <item row="5" column="1">
            <widget class="QLineEdit" name="computerMacAddressAttribute">
             <property name="placeholderText">
-             <string>e.g. macAddress</string>
+             <string>e.g. hwAddress</string>
             </property>
            </widget>
           </item>
@@ -583,7 +571,7 @@
           <item row="6" column="2">
            <widget class="QPushButton" name="browseComputerLocationAttribute">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="icon">
              <iconset resource="../../../core/resources/core.qrc">
@@ -602,7 +590,7 @@
           <item row="6" column="3">
            <widget class="QPushButton" name="testComputerLocationAttribute">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="icon">
              <iconset resource="../../../core/resources/core.qrc">
@@ -739,14 +727,14 @@
           <item row="1" column="1">
            <widget class="QLineEdit" name="userGroupsFilter">
             <property name="placeholderText">
-             <string>e.g. (objectClass=users) or (objectClass=group)</string>
+             <string>e.g. (objectClass=group)</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="usersFilter">
             <property name="placeholderText">
-             <string>e.g. (objectClass=users) or (objectClass=person)</string>
+             <string>e.g. (objectClass=person)</string>
             </property>
            </widget>
           </item>
@@ -774,7 +762,7 @@
           <item row="3" column="1">
            <widget class="QLineEdit" name="computerGroupsFilter">
             <property name="placeholderText">
-             <string>e.g. (co=room) or (objectClass=room)</string>
+             <string>e.g. (objectClass=room) or (objectClass=computerLab)</string>
             </property>
            </widget>
           </item>
@@ -788,7 +776,7 @@
           <item row="4" column="1">
            <widget class="QLineEdit" name="computerContainersFilter">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="placeholderText">
              <string>e.g. (objectClass=container) or (objectClass=organizationalUnit)</string>
@@ -830,11 +818,27 @@
           <item row="4" column="2">
            <widget class="QPushButton" name="testComputerContainersFilter">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="icon">
              <iconset resource="../../../core/resources/core.qrc">
               <normaloff>:/core/dialog-ok-apply.png</normaloff>:/core/dialog-ok-apply.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Query options</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="queryNestedUserGroups">
+            <property name="text">
+             <string>Query nested user groups (supported by AD only)</string>
             </property>
            </widget>
           </item>
@@ -888,9 +892,6 @@
           </item>
           <item>
            <widget class="QRadioButton" name="computerLocationsByGroups">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
             <property name="text">
              <string>Computer groups</string>
             </property>
@@ -906,9 +907,6 @@
            <widget class="QRadioButton" name="computerLocationsByContainer">
             <property name="text">
              <string>Computer containers or OUs</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">computerGroupingGroup</string>
@@ -1089,6 +1087,7 @@
   <tabstop>testComputersFilter</tabstop>
   <tabstop>testComputerGroupsFilter</tabstop>
   <tabstop>testComputerContainersFilter</tabstop>
+  <tabstop>queryNestedUserGroups</tabstop>
   <tabstop>identifyGroupMembersByDN</tabstop>
   <tabstop>identifyGroupMembersByNameAttribute</tabstop>
   <tabstop>computerLocationsByGroups</tabstop>
@@ -1379,8 +1378,8 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="bindConfigurationGroup"/>
   <buttongroup name="baseDnConfigGroup"/>
+  <buttongroup name="bindConfigurationGroup"/>
   <buttongroup name="groupMemberMatchingGroup"/>
   <buttongroup name="computerGroupingGroup"/>
  </buttongroups>

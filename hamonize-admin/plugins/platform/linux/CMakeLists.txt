@@ -4,12 +4,18 @@ FIND_PACKAGE(X11 REQUIRED)
 FIND_PACKAGE(Qt5DBus REQUIRED)
 FIND_PACKAGE(PkgConfig QUIET)
 pkg_check_modules(procps REQUIRED libprocps)
+pkg_check_modules(fakekey libfakekey)
 
-INCLUDE(BuildPlugin)
+INCLUDE(BuildVeyonPlugin)
 
-INCLUDE_DIRECTORIES(${procps_INCLUDE_DIRS})
+if(NOT fakekey_FOUND)
+	set(libfakekey_SOURCES ${libfakekey_DIR}/src/libfakekey.c)
+	set_source_files_properties(${libfakekey_SOURCES} PROPERTIES
+		COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-pointer-sign"
+		SKIP_PRECOMPILE_HEADERS TRUE)
+endif()
 
-BUILD_PLUGIN(linux-platform
+build_veyon_plugin(linux-platform
 	LinuxPlatformPlugin.cpp
 	LinuxCoreFunctions.cpp
 	LinuxPlatformConfigurationPage.h
@@ -20,6 +26,7 @@ BUILD_PLUGIN(linux-platform
 	LinuxNetworkFunctions.cpp
 	LinuxServiceCore.cpp
 	LinuxServiceFunctions.cpp
+	LinuxSessionFunctions.cpp
 	LinuxUserFunctions.cpp
 	LinuxPlatformPlugin.h
 	LinuxPlatformConfiguration.h
@@ -27,12 +34,32 @@ BUILD_PLUGIN(linux-platform
 	LinuxDesktopIntegration.h
 	LinuxFilesystemFunctions.h
 	LinuxInputDeviceFunctions.h
+	LinuxKeyboardInput.h
+	LinuxKeyboardInput.cpp
 	LinuxKeyboardShortcutTrapper.h
 	LinuxNetworkFunctions.h
 	LinuxServiceCore.h
 	LinuxServiceFunctions.h
+	LinuxSessionFunctions.h
 	LinuxUserFunctions.h
 	linux.qrc
+	../common/LogonHelper.h
+	../common/LogonHelper.cpp
+	../common/PersistentLogonCredentials.h
+	../common/PersistentLogonCredentials.cpp
+	../common/PlatformSessionManager.h
+	../common/PlatformSessionManager.cpp
+	../common/ServiceDataManager.h
+	../common/ServiceDataManager.cpp
+	${libfakekey_SOURCES}
+)
+
+set_source_files_properties(LinuxCoreFunctions.cpp PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE)
+
+TARGET_INCLUDE_DIRECTORIES(linux-platform PRIVATE
+	../common
+	${libfakekey_DIR}
+	${procps_INCLUDE_DIRS}
 )
 
 TARGET_LINK_LIBRARIES(linux-platform
@@ -41,11 +68,10 @@ TARGET_LINK_LIBRARIES(linux-platform
 	${procps_LDFLAGS}
 	)
 
-MESSAGE("\n################\n")
-
-message("X11_LIBRARIES: " ${X11_LIBRARIES} )
-message("BuildPlugin: " ${BuildPlugin} )
-message("procps_INCLUDE_DIRS: " ${procps_INCLUDE_DIRS} )
-message("procps_LDFLAGS: " ${procps_LDFLAGS} )
-
-MESSAGE("\n################\n")
+IF(fakekey_FOUND)
+TARGET_INCLUDE_DIRECTORIES(linux-platform PRIVATE ${fakekey_INCLUDE_DIRS})
+TARGET_LINK_LIBRARIES(linux-platform ${fakekey_LDFLAGS})
+ELSE()
+TARGET_INCLUDE_DIRECTORIES(linux-platform PRIVATE ${libfakekey_DIR})
+TARGET_LINK_LIBRARIES(linux-platform ${X11_XTest_LIB})
+ENDIF()

@@ -1,7 +1,7 @@
 /*
  * Proxy.cpp - implementation of Configuration::Proxy
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -28,8 +28,8 @@
 namespace Configuration
 {
 
-Proxy::Proxy(Object *object, QObject *parent) :
-	QObject( parent ),
+Proxy::Proxy( Object* object ) :
+	QObject(),
 	m_object( object ),
 	m_instanceId()
 {

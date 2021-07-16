@@ -1,7 +1,7 @@
 /*
  * ExternalVncServerConfigurationWidget.h - header for the ExternalVncServerConfigurationWidget class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -37,7 +37,7 @@ class ExternalVncServerConfigurationWidget : public QWidget
 	Q_OBJECT
 
 public:
-	ExternalVncServerConfigurationWidget( ExternalVncServerConfiguration& configuration, QWidget* parent = nullptr );
+	explicit ExternalVncServerConfigurationWidget( ExternalVncServerConfiguration& configuration, QWidget* parent = nullptr );
 	~ExternalVncServerConfigurationWidget() override;
 
 private:

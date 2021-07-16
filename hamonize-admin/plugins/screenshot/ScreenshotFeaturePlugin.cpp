@@ -1,7 +1,7 @@
 /*
  * ScreenshotFeaturePlugin.cpp - implementation of ScreenshotFeaturePlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,7 @@ ScreenshotFeaturePlugin::ScreenshotFeaturePlugin( QObject* parent ) :
 								  Feature::Action | Feature::Master,
 								  Feature::Uid( "d5ee3aac-2a87-4d05-b827-0c20344490bd" ),
 								  Feature::Uid(),
-								  tr( "Screenshot" ), QString(),
+								  tr( "Screenshot" ), {},
 								  tr( "Use this function to take a screenshot of selected computers." ),
 								  QStringLiteral(":/screenshot/camera-photo.png") ) ),
 	m_features( { m_screenshotFeature } )
@@ -52,17 +52,32 @@ const FeatureList &ScreenshotFeaturePlugin::featureList() const
 
 
 
-bool ScreenshotFeaturePlugin::startFeature( VeyonMasterInterface& master, const Feature& feature,
-											const ComputerControlInterfaceList& computerControlInterfaces )
+bool ScreenshotFeaturePlugin::controlFeature( Feature::Uid featureUid,
+											 Operation operation, const QVariantMap& arguments,
+											 const ComputerControlInterfaceList& computerControlInterfaces )
 {
-	if( feature.uid() == m_screenshotFeature.uid() )
+	Q_UNUSED(arguments)
+
+	if( hasFeature( featureUid ) && operation == Operation::Start )
 	{
 		for( const auto& controlInterface : computerControlInterfaces )
 		{
 			Screenshot().take( controlInterface );
-
 		}
 
+		return true;
+	}
+
+	return false;
+}
+
+
+
+bool ScreenshotFeaturePlugin::startFeature( VeyonMasterInterface& master, const Feature& feature,
+											const ComputerControlInterfaceList& computerControlInterfaces )
+{
+	if( controlFeature( feature.uid(), Operation::Start, {}, computerControlInterfaces ) )
+	{
 		QMessageBox::information( master.mainWindow(),
 								  tr( "Screenshots taken" ),
 								  tr( "Screenshot of %1 computer have been taken successfully." ).
@@ -71,5 +86,5 @@ bool ScreenshotFeaturePlugin::startFeature( VeyonMasterInterface& master, const 
 		return true;
 	}
 
-	return true;
+	return false;
 }

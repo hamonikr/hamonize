@@ -1,7 +1,7 @@
 /*
  * ComputerControlInterface.h - interface class for controlling a computer
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -31,27 +31,35 @@
 
 #include "Computer.h"
 #include "Feature.h"
+#include "Lockable.h"
 #include "VeyonCore.h"
 #include "VncConnection.h"
 
 class QImage;
 
+class AuthenticationProxy;
 class FeatureMessage;
 class VncConnection;
 class VeyonConnection;
 
-class VEYON_CORE_EXPORT ComputerControlInterface : public QObject
+class VEYON_CORE_EXPORT ComputerControlInterface : public QObject, public Lockable
 {
 	Q_OBJECT
 public:
-	typedef QSharedPointer<ComputerControlInterface> Pointer;
+	enum class UpdateMode {
+		Disabled,
+		Monitoring,
+		Live
+	};
+
+	using Pointer = QSharedPointer<ComputerControlInterface>;
 
 	using State = VncConnection::State;
 
-	ComputerControlInterface( const Computer& computer, QObject* parent = nullptr );
+	explicit ComputerControlInterface( const Computer& computer, QObject* parent = nullptr );
 	~ComputerControlInterface() override;
 
-	void start( QSize scaledScreenSize );
+	void start( QSize scaledScreenSize = {}, UpdateMode updateMode = UpdateMode::Monitoring, AuthenticationProxy* authenticationProxy = nullptr );
 	void stop();
 
 	const Computer& computer() const
@@ -63,6 +71,10 @@ public:
 	{
 		return m_state;
 	}
+
+	bool hasValidFramebuffer() const;
+
+	QSize screenSize() const;
 
 	const QSize& scaledScreenSize() const
 	{
@@ -80,29 +92,17 @@ public:
 		return m_userLoginName;
 	}
 
-	void setUserLoginName( const QString& userLoginName );
-
 	const QString& userFullName() const
 	{
 		return m_userFullName;
 	}
 
-	void setUserFullName( const QString& userFullName );
+	int userSessionId() const
+	{
+		return m_userSessionId;
+	}
 
-
-    const QString& guestLoginName() const
-    {
-        return m_guestLoginName;
-    }
-
-    void setGuestLoginName( const QString& guestLoginName );
-
-    const QString& guestFullName() const
-    {
-        return m_guestFullName;
-    }
-
-    void setGuestFullName( const QString& guestFullName );
+	void setUserInformation( const QString& userLoginName, const QString& userFullName, int sessionId );
 
 	const FeatureUidList& activeFeatures() const
 	{
@@ -116,37 +116,44 @@ public:
 		return m_designatedModeFeature;
 	}
 
-	void setDesignatedModeFeature( Feature::Uid designatedModeFeature );
+	void setDesignatedModeFeature( Feature::Uid designatedModeFeature )
+	{
+		m_designatedModeFeature = designatedModeFeature;
+	}
+
+	void updateActiveFeatures();
 
 	void sendFeatureMessage( const FeatureMessage& featureMessage, bool wake );
 	bool isMessageQueueEmpty();
 
-	void enableUpdates();
-	void disableUpdates();
+	void setUpdateMode( UpdateMode updateMode );
+	UpdateMode updateMode() const
+	{
+		return m_updateMode;
+	}
 
-
-private:
 	Pointer weakPointer();
 
+private:
 	void resetWatchdog();
 	void restartConnection();
 
 	void updateState();
 	void updateUser();
-	void updateActiveFeatures();
 
 	void handleFeatureMessage( const FeatureMessage& message );
 
 	static constexpr int ConnectionWatchdogTimeout = 10000;
-	static constexpr int UpdateIntervalWhenDisabled = 5000;
+	static constexpr int UpdateIntervalDisabled = 5000;
 
 	Computer m_computer;
+
+	UpdateMode m_updateMode{UpdateMode::Disabled};
 
 	State m_state;
 	QString m_userLoginName;
 	QString m_userFullName;
-    QString m_guestLoginName;
-    QString m_guestFullName;
+	int m_userSessionId{0};
 	FeatureUidList m_activeFeatures;
 	Feature::Uid m_designatedModeFeature;
 
@@ -158,8 +165,9 @@ private:
 	QTimer m_userUpdateTimer;
 	QTimer m_activeFeaturesUpdateTimer;
 
-signals:
+Q_SIGNALS:
 	void featureMessageReceived( const FeatureMessage&, ComputerControlInterface::Pointer );
+	void screenSizeChanged();
 	void screenUpdated();
 	void userChanged();
 	void stateChanged();
@@ -167,4 +175,6 @@ signals:
 
 };
 
-typedef QVector<ComputerControlInterface::Pointer> ComputerControlInterfaceList;
+using ComputerControlInterfaceList = QVector<ComputerControlInterface::Pointer>;
+
+Q_DECLARE_METATYPE(ComputerControlInterface::Pointer)

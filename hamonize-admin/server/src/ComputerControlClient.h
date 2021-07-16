@@ -1,7 +1,7 @@
 /*
  * ComputerControlClient.h - header file for the ComputerControlClient class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -35,14 +35,21 @@ class ComputerControlClient : public VncProxyConnection
 {
 	Q_OBJECT
 public:
+	using Password = CryptoCore::SecureArray;
+
 	ComputerControlClient( ComputerControlServer* server,
 						   QTcpSocket* clientSocket,
 						   int vncServerPort,
-						   const QString& vncServerPassword,
+						   const Password& vncServerPassword,
 						   QObject* parent );
 	~ComputerControlClient() override;
 
 	bool receiveClientMessage() override;
+
+	VncServerClient* serverClient()
+	{
+		return &m_serverClient;
+	}
 
 protected:
 	VncClientProtocol& clientProtocol() override
@@ -62,9 +69,5 @@ private:
 
 	VeyonServerProtocol m_serverProtocol;
 	VncClientProtocol m_clientProtocol;
-
-    typedef QMap<int, QTcpSocket*> clientSocketMap;
-
-//    m_proxyClientSocket;
 
 } ;

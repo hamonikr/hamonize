@@ -1,7 +1,7 @@
 /*
  * ComputerManager.h - maintains and provides a computer object list
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -59,7 +59,7 @@ public:
 
 	void updateUser( const ComputerControlInterface::Pointer& controlInterface );
 
-signals:
+Q_SIGNALS:
 	void computerSelectionReset();
 	void computerSelectionChanged();
 

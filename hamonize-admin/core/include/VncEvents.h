@@ -1,7 +1,7 @@
 /*
  * VncEvent.h - declaration of VncEvent and subclasses
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,7 +26,7 @@
 
 #include <QString>
 
-typedef struct _rfbClient rfbClient;
+using rfbClient = struct _rfbClient;
 
 // clazy:excludeall=copyable-polymorphic
 

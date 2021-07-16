@@ -1,8 +1,9 @@
-FILE(GLOB hamonizecore_INCLUDES
+FILE(GLOB veyoncore_INCLUDES
 						${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
 						${CMAKE_CURRENT_SOURCE_DIR}/include/Configuration/*.h
 )
-FILE(GLOB hamonizecore_SOURCES
+FILE(GLOB veyoncore_SOURCES
+						${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
 						${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 						${CMAKE_CURRENT_SOURCE_DIR}/src/*.ui
 						${CMAKE_CURRENT_SOURCE_DIR}/src/Configuration/*.cpp
@@ -11,55 +12,105 @@ FILE(GLOB hamonizecore_SOURCES
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/builddata.qrc.in ${CMAKE_CURRENT_BINARY_DIR}/builddata.qrc)
 SET(core_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/core.qrc ${CMAKE_CURRENT_BINARY_DIR}/builddata.qrc)
 
+if(NOT LibVNCClient_FOUND)
+	set(libvncclient_SOURCES
+		${libvncserver_DIR}/libvncclient/cursor.c
+		${libvncserver_DIR}/libvncclient/listen.c
+		${libvncserver_DIR}/libvncclient/rfbproto.c
+		${libvncserver_DIR}/libvncclient/sockets.c
+		${libvncserver_DIR}/libvncclient/tls_openssl.c
+		${libvncserver_DIR}/libvncclient/vncviewer.c
+		${libvncserver_DIR}/common/crypto_openssl.c
+		${libvncserver_DIR}/common/turbojpeg.c)
+
+	set_source_files_properties(${libvncclient_SOURCES} PROPERTIES COMPILE_FLAGS "-Wno-unused-function -Wno-unused-variable -fvisibility=default")
+endif()
+
+ADD_LIBRARY(hamonize-core SHARED ${veyoncore_SOURCES} ${veyoncore_INCLUDES} ${core_RESOURCES} ${libvncclient_SOURCES})
+target_compile_definitions(hamonize-core PRIVATE XK_KOREAN BUILD_VEYON_CORE_LIBRARY)
+
 # find Qt's translation directory
-IF(NOT VEYON_BUILD_WIN32)
-	GET_TARGET_PROPERTY(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-	EXECUTE_PROCESS(COMMAND "${QT_QMAKE_EXECUTABLE}" -query QT_INSTALL_TRANSLATIONS
-						OUTPUT_STRIP_TRAILING_WHITESPACE
-						OUTPUT_VARIABLE QT_TRANSLATIONS_DIR)
-	ADD_DEFINITIONS(-D'QT_TRANSLATIONS_DIR="${QT_TRANSLATIONS_DIR}"')
-ENDIF()
+if(NOT VEYON_BUILD_WIN32)
+	include(FindQtTranslations)
+	find_qt_translations()
+	target_compile_definitions(hamonize-core PRIVATE QT_TRANSLATIONS_DIR="${QT_TRANSLATIONS_DIR}")
+endif()
 
+set_default_target_properties(hamonize-core)
+target_compile_options(hamonize-core PRIVATE -Wno-parentheses)
 
-SET(libvncclient_SOURCES
-	${libvncserver_DIR}/libvncclient/cursor.c
-	${libvncserver_DIR}/libvncclient/listen.c
-	${libvncserver_DIR}/libvncclient/rfbproto.c
-	${libvncserver_DIR}/libvncclient/sockets.c
-	${libvncserver_DIR}/libvncclient/tls_none.c
-	${libvncserver_DIR}/libvncclient/vncviewer.c
-	${libvncserver_DIR}/common/d3des.c
-	${libvncserver_DIR}/common/turbojpeg.c)
-
-
-ADD_DEFINITIONS(-DBUILD_VEYON_CORE_LIBRARY)
-
-INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include ${libvncserver_DIR}/common/)
-ADD_LIBRARY(hamonize-core SHARED ${hamonizecore_SOURCES} ${hamonizecore_INCLUDES} ${core_RESOURCES} ${hamonizecore_qt_qm_out} ${libvncclient_SOURCES})
-
-SET_SOURCE_FILES_PROPERTIES(${libvncclient_SOURCES} PROPERTIES COMPILE_FLAGS "-Wno-unused-variable -Wno-unused-label -Wno-maybe-uninitialized -Wno-misleading-indentation -Wno-pointer-sign -Wno-int-in-bool-context")
+target_include_directories(hamonize-core PUBLIC
+	${CMAKE_CURRENT_BINARY_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_BINARY_DIR}/include
+	${QCA_INCLUDE_DIR}
+)
 
 TARGET_LINK_LIBRARIES(hamonize-core
 	Qt5::Concurrent
 	Qt5::Gui
 	Qt5::Network
 	Qt5::Widgets
+	OpenSSL::SSL
 	${VEYON_DEBUG_LIBRARIES}
-	${ZLIB_LIBRARIES}
-	${JPEG_LIBRARIES}
-	${PNG_LIBRARIES}
-	${LZO_LIBRARIES}
 	${QCA_LIBRARY}
-	${OPENSSL_LIBRARIES}
 	)
+
+if(LibVNCClient_FOUND)
+	target_link_libraries(hamonize-core LibVNC::LibVNCClient)
+else()
+	target_include_directories(hamonize-core PRIVATE
+		${ZLIB_INCLUDE_DIR}
+		${JPEG_INCLUDE_DIR}
+		${LZO_INCLUDE_DIR}
+	)
+	target_include_directories(hamonize-core PUBLIC
+		${libvncserver_DIR}/common/
+		${libvncserver_DIR}
+	)
+	target_link_libraries(hamonize-core
+		Threads::Threads
+		PNG::PNG
+		${ZLIB_LIBRARIES}
+		${JPEG_LIBRARIES}
+		${LZO_LIBRARIES}
+	)
+endif()
 
 IF(VEYON_BUILD_WIN32)
 	# add Windows Socket library required by libvncclient
 	TARGET_LINK_LIBRARIES(hamonize-core -lws2_32)
 	SET_TARGET_PROPERTIES(hamonize-core PROPERTIES PREFIX "")
-	INSTALL(TARGETS hamonize-core RUNTIME DESTINATION ${VEYON_LIB_DIR})
+	if(NOT WITH_CORE_ONLY)
+		INSTALL(TARGETS hamonize-core RUNTIME DESTINATION ${VEYON_LIB_DIR})
+	endif()
 ELSE()
-	INSTALL(TARGETS hamonize-core LIBRARY DESTINATION ${VEYON_LIB_DIR})
+	if(NOT WITH_CORE_ONLY)
+		INSTALL(TARGETS hamonize-core LIBRARY DESTINATION ${VEYON_LIB_DIR})
+	endif()
 ENDIF(VEYON_BUILD_WIN32)
 
-COTIRE_VEYON(hamonize-core)
+if(VEYON_BUILD_WIN32)
+	target_compile_definitions(hamonize-core PUBLIC _WIN32_WINNT=0x0602)
+endif()
+
+if(WITH_PCH)
+	target_precompile_headers(hamonize-core PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/PrecompiledHeader.h")
+
+	add_library(veyon-pch STATIC "${CMAKE_CURRENT_SOURCE_DIR}/src/PrecompiledHeader.h")
+
+	if(${CMAKE_VERSION} VERSION_GREATER "3.17.5")
+		file(GENERATE
+			 OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cxx
+			 CONTENT "/*empty file*/")
+		set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cxx PROPERTIES SKIP_UNITY_BUILD_INCLUSION TRUE SKIP_AUTOGEN TRUE)
+		target_sources(veyon-pch PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cxx)
+	endif()
+	target_link_libraries(veyon-pch Qt5::Core Qt5::Concurrent Qt5::Network Qt5::Widgets)
+	target_compile_options(veyon-pch PRIVATE ${VEYON_COMPILE_OPTIONS})
+	set_default_target_properties(veyon-pch)
+	target_precompile_headers(veyon-pch PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/PrecompiledHeader.h")
+	if(VEYON_BUILD_WIN32)
+		target_compile_definitions(veyon-pch PUBLIC _WIN32_WINNT=0x0602)
+	endif()
+endif()

@@ -1,7 +1,7 @@
 /*
  * Configuration/LocalStore.h - LocalStore class
  *
- * Copyright (c) 2009-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2009-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,7 @@ namespace Configuration
 class VEYON_CORE_EXPORT LocalStore : public Store
 {
 public:
-	LocalStore( Scope scope );
+	explicit LocalStore( Scope scope );
 
 	void load( Object *obj ) override;
 	void flush( const Object *obj ) override;

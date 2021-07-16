@@ -1,7 +1,7 @@
 /*
  * ConfigurationPage.h - base class for all configuration pages
  *
- * Copyright (c) 2016-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2016-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,14 +32,14 @@ class VEYON_CORE_EXPORT ConfigurationPage : public QWidget
 {
 	Q_OBJECT
 public:
-	ConfigurationPage( QWidget* parent = nullptr );
-	~ConfigurationPage() = default;
+	explicit ConfigurationPage( QWidget* parent = nullptr );
+	~ConfigurationPage() override = default;
 
 	virtual void resetWidgets() = 0;
 	virtual void connectWidgetsToProperties() = 0;
 	virtual void applyConfiguration() = 0;
 
-signals:
+Q_SIGNALS:
 	void widgetsChanged();
 
 };

@@ -1,7 +1,7 @@
 /*
  * FeatureManager.cpp - implementation of the FeatureManager class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -96,6 +96,24 @@ const Feature& FeatureManager::feature( Feature::Uid featureUid ) const
 
 
 
+Feature::Uid FeatureManager::metaFeatureUid( Feature::Uid featureUid ) const
+{
+	for( const auto& featureInterface : m_featurePluginInterfaces )
+	{
+		for( const auto& feature : featureInterface->featureList() )
+		{
+			if( feature.uid() == featureUid )
+			{
+				return featureInterface->metaFeature( featureUid );
+			}
+		}
+	}
+
+	return {};
+}
+
+
+
 Plugin::Uid FeatureManager::pluginUid( const Feature& feature ) const
 {
 	for( auto pluginObject : m_pluginObjects )
@@ -115,9 +133,24 @@ Plugin::Uid FeatureManager::pluginUid( const Feature& feature ) const
 
 
 
+void FeatureManager::controlFeature( Feature::Uid featureUid,
+									FeatureProviderInterface::Operation operation,
+									const QVariantMap& arguments,
+									const ComputerControlInterfaceList& computerControlInterfaces ) const
+{
+	for( auto featureInterface : qAsConst( m_featurePluginInterfaces ) )
+	{
+		featureInterface->controlFeature( featureUid, operation, arguments, computerControlInterfaces );
+	}
+
+	updateActiveFeatures( computerControlInterfaces );
+}
+
+
+
 void FeatureManager::startFeature( VeyonMasterInterface& master,
 								   const Feature& feature,
-								   const ComputerControlInterfaceList& computerControlInterfaces )
+								   const ComputerControlInterfaceList& computerControlInterfaces ) const
 {
 	vDebug() << "feature" << feature.name() << feature.uid() << computerControlInterfaces;
 
@@ -133,13 +166,15 @@ void FeatureManager::startFeature( VeyonMasterInterface& master,
 			controlInterface->setDesignatedModeFeature( feature.uid() );
 		}
 	}
+
+	updateActiveFeatures( computerControlInterfaces );
 }
 
 
 
 void FeatureManager::stopFeature( VeyonMasterInterface& master,
 								  const Feature& feature,
-								  const ComputerControlInterfaceList& computerControlInterfaces )
+								  const ComputerControlInterfaceList& computerControlInterfaces ) const
 {
 	vDebug() << "feature" << feature.name() << feature.uid() << computerControlInterfaces;
 
@@ -155,22 +190,34 @@ void FeatureManager::stopFeature( VeyonMasterInterface& master,
 			controlInterface->setDesignatedModeFeature( Feature::Uid() );
 		}
 	}
+
+	updateActiveFeatures( computerControlInterfaces );
 }
 
 
 
-bool FeatureManager::handleFeatureMessage( VeyonMasterInterface& master, const FeatureMessage& message,
-										   const ComputerControlInterface::Pointer& computerControlInterface )
+void FeatureManager::updateActiveFeatures( const ComputerControlInterfaceList& computerControlInterfaces ) const
 {
-//	vDebug() << "feature" << message.featureUid()
-//			 << "command" << message.command()
-//			 << "arguments" << message.arguments();
+	for( const auto& controlInterface : computerControlInterfaces )
+	{
+		controlInterface->updateActiveFeatures();
+	}
+}
+
+
+
+bool FeatureManager::handleFeatureMessage( ComputerControlInterface::Pointer computerControlInterface,
+										  const FeatureMessage& message ) const
+{
+	vDebug() << "feature" << feature(message.featureUid()).name()
+			 << "command" << message.command()
+			 << "arguments" << message.arguments();
 
 	bool handled = false;
 
 	for( const auto& featureInterface : qAsConst( m_featurePluginInterfaces ) )
 	{
-		if( featureInterface->handleFeatureMessage( master, message, computerControlInterface ) )
+		if( featureInterface->handleFeatureMessage( computerControlInterface, message ) )
 		{
 			handled = true;
 		}
@@ -183,11 +230,11 @@ bool FeatureManager::handleFeatureMessage( VeyonMasterInterface& master, const F
 
 bool FeatureManager::handleFeatureMessage( VeyonServerInterface& server,
 										   const MessageContext& messageContext,
-										   const FeatureMessage& message )
+										   const FeatureMessage& message ) const
 {
-//	vDebug() << "feature" << message.featureUid()
-//			 << "command" << message.command()
-//			 << "arguments" << message.arguments();
+	vDebug() << "feature" << feature(message.featureUid()).name()
+			 << "command" << message.command()
+			 << "arguments" << message.arguments();
 
 	if( VeyonCore::config().disabledFeatures().contains( message.featureUid().toString() ) )
 	{
@@ -210,11 +257,11 @@ bool FeatureManager::handleFeatureMessage( VeyonServerInterface& server,
 
 
 
-bool FeatureManager::handleFeatureMessage( VeyonWorkerInterface& worker, const FeatureMessage& message )
+bool FeatureManager::handleFeatureMessage( VeyonWorkerInterface& worker, const FeatureMessage& message ) const
 {
-//	vDebug() << "feature" << message.featureUid()
-//			 << "command" << message.command()
-//			 << "arguments" << message.arguments();
+	vDebug() << "feature" << feature(message.featureUid()).name()
+			 << "command" << message.command()
+			 << "arguments" << message.arguments();
 
 	bool handled = false;
 

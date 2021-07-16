@@ -1,7 +1,7 @@
 /*
  * PasswordDialog.h - declaration of password dialog
  *
- * Copyright (c) 2010-2016 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -34,17 +34,17 @@ class VEYON_CORE_EXPORT PasswordDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	PasswordDialog( QWidget *parent );
+	explicit PasswordDialog( QWidget *parent );
 	~PasswordDialog() override;
 
 	QString username() const;
-	QString password() const;
+	CryptoCore::PlaintextPassword password() const;
 
 	AuthenticationCredentials credentials() const;
 
 	void accept() override;
 
-private slots:
+private Q_SLOTS:
 	void updateOkButton();
 
 

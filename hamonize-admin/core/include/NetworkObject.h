@@ -1,7 +1,7 @@
 /*
  * NetworkObject.h - data class representing a network object
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,30 +32,45 @@
 
 class VEYON_CORE_EXPORT NetworkObject
 {
+	Q_GADGET
 public:
-	typedef QUuid Uid;
-	typedef QString Name;
-	typedef quintptr ModelId;
+	using Uid = QUuid;
+	using Name = QString;
+	using ModelId = quintptr;
 
-	typedef enum Types
+	enum class Type
 	{
 		None,
 		Root,
 		Location,
 		Host,
 		Label,
-		TypeCount
-	} Type;
+		DesktopGroup
+	} ;
+	Q_ENUM(Type)
+
+	enum class Attribute
+	{
+		None,
+		Type,
+		Name,
+		HostAddress,
+		MacAddress,
+		DirectoryAddress,
+		Uid,
+		ParentUid
+	};
+	Q_ENUM(Attribute)
 
 	NetworkObject( const NetworkObject& other );
-	NetworkObject( Type type = None,
-				   const Name& name = Name(),
-				   const QString& hostAddress = QString(),
-				   const QString& macAddress = QString(),
-				   const QString& directoryAddress = QString(),
-				   Uid uid = Uid(),
-				   Uid parentUid = Uid() );
-	NetworkObject( const QJsonObject& jsonObject );
+	explicit NetworkObject( Type type = Type::None,
+							const Name& name = {},
+							const QString& hostAddress = {},
+							const QString& macAddress = {},
+							const QString& directoryAddress = {},
+							Uid uid = {},
+							Uid parentUid = {} );
+	explicit NetworkObject( const QJsonObject& jsonObject );
 	~NetworkObject() = default;
 
 	NetworkObject& operator=( const NetworkObject& other );
@@ -65,7 +80,7 @@ public:
 
 	bool isValid() const
 	{
-		return type() != None;
+		return type() != Type::None;
 	}
 
 	bool isPopulated() const
@@ -88,7 +103,7 @@ public:
 		return m_parentUid;
 	}
 
-	void setParentUid( const Uid& parentUid )
+	void setParentUid( Uid parentUid )
 	{
 		m_parentUid = parentUid;
 	}
@@ -122,9 +137,12 @@ public:
 
 	QJsonObject toJson() const;
 
+	QVariant attributeValue( Attribute attribute ) const;
+
+	bool isAttributeValueEqual( Attribute attribute, const QVariant& value, Qt::CaseSensitivity cs ) const;
+
 private:
 	Uid calculateUid() const;
-	static ModelId calculateModelId( Uid uid );
 
 	Type m_type;
 	QString m_name;
@@ -141,5 +159,5 @@ private:
 
 Q_DECLARE_METATYPE(NetworkObject::Type)
 
-typedef QList<NetworkObject> NetworkObjectList;
-typedef HashList<NetworkObject::Uid> NetworkObjectUidList;
+using NetworkObjectList = QVector<NetworkObject>;
+using NetworkObjectUidList = HashList<NetworkObject::Uid>;

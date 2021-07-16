@@ -1,7 +1,7 @@
 /*
  * VeyonMasterInterface.h - interface class for VeyonMaster
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,24 +25,29 @@
 #pragma once
 
 #include "Configuration/Object.h"
-#include "VeyonCore.h"
+#include "ComputerControlInterface.h"
 
 class BuiltinFeatures;
+class ComputerControlInterface;
 class QWidget;
 
 class VEYON_CORE_EXPORT VeyonMasterInterface : public QObject
 {
 	Q_OBJECT
 public:
-	VeyonMasterInterface( QObject* parent ) :
+	explicit VeyonMasterInterface( QObject* parent ) :
 		QObject( parent )
 	{
 	}
 
-	virtual ~VeyonMasterInterface() = default;
+	~VeyonMasterInterface() override = default;
 
 	virtual QWidget* mainWindow() = 0;
 	virtual Configuration::Object* userConfigurationObject() = 0;
 	virtual void reloadSubFeatures() = 0;
+
+	virtual ComputerControlInterface& localSessionControlInterface() = 0;
+
+	virtual ComputerControlInterfaceList selectedComputerControlInterfaces() const = 0;
 
 };

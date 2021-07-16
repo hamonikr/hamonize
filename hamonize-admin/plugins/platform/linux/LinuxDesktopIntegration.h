@@ -1,7 +1,7 @@
 /*
  * LinuxDesktopIntegration.h - declaration of LinuxDesktopIntegration class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -52,11 +52,11 @@ public:
 
 	class Gnome {
 	public:
-		typedef enum {
-				GSM_MANAGER_LOGOUT_MODE_NORMAL = 0,
-				GSM_MANAGER_LOGOUT_MODE_NO_CONFIRMATION,
-				GSM_MANAGER_LOGOUT_MODE_FORCE
-		} GsmManagerLogoutMode;
+		enum GsmManagerLogoutMode {
+			GSM_MANAGER_LOGOUT_MODE_NORMAL = 0,
+			GSM_MANAGER_LOGOUT_MODE_NO_CONFIRMATION,
+			GSM_MANAGER_LOGOUT_MODE_FORCE
+		} ;
 	};
 
 	class Mate {

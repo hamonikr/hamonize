@@ -1,7 +1,7 @@
 /*
  * ConfigurationObject.cpp - implementation of ConfigurationObject
  *
- * Copyright (c) 2009-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2009-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -262,7 +262,7 @@ void Object::setValue( const QString& key, const QVariant& value, const QString&
 	if( data != m_data )
 	{
 		m_data = data;
-		emit configurationChanged();
+		Q_EMIT configurationChanged();
 	}
 }
 
@@ -304,7 +304,7 @@ void Object::removeValue( const QString& key, const QString& parentKey )
 	if( data != m_data )
 	{
 		m_data = data;
-		emit configurationChanged();
+		Q_EMIT configurationChanged();
 	}
 }
 

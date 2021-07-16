@@ -1,7 +1,7 @@
 /*
  * main.cpp - main file for Veyon Configurator
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -25,7 +25,6 @@
 #include <QApplication>
 #include <QMessageBox>
 
-#include "ConfigurationTestController.h"
 #include "VeyonConfiguration.h"
 #include "VeyonCore.h"
 #include "MainWindow.h"
@@ -40,14 +39,15 @@ int main( int argc, char **argv )
 
 	QApplication app( argc, argv );
 
-	VeyonCore core( &app, QStringLiteral("Configurator") );
+	VeyonCore core( &app, VeyonCore::Component::Configurator, QStringLiteral("Configurator") );
 
 	// make sure to run as admin
 	if( qEnvironmentVariableIntValue( "VEYON_CONFIGURATOR_NO_ELEVATION" ) == 0 &&
-			VeyonCore::platform().coreFunctions().isRunningAsAdmin() == false )
+		VeyonCore::platform().coreFunctions().isRunningAsAdmin() == false &&
+		app.arguments().size() <= 1 )
 	{
-		if( VeyonCore::platform().coreFunctions().runProgramAsAdmin( QCoreApplication::applicationFilePath(),
-																	 app.arguments().mid( 1 ) ) )
+		if( VeyonCore::platform().coreFunctions().runProgramAsAdmin( QCoreApplication::applicationFilePath(), {
+																	 QStringLiteral("-elevated") } ) )
 		{
 			return 0;
 		}
@@ -59,8 +59,8 @@ int main( int argc, char **argv )
 											  "be run with normal user privileges.") );
 	}
 
-	if( !VeyonConfiguration().isStoreWritable() &&
-			VeyonCore::config().logLevel() != Logger::LogLevel::Debug )
+	if( VeyonConfiguration().isStoreWritable() == false &&
+		VeyonCore::config().logLevel() != Logger::LogLevel::Debug )
 	{
 		QMessageBox::critical( nullptr,
 							   MainWindow::tr( "Configuration not writable" ),
@@ -68,20 +68,6 @@ int main( int argc, char **argv )
 											   "configuration is not writable! Please run the %1 "
 											   "Configurator with higher privileges." ).arg( VeyonCore::applicationName() ) );
 		return -1;
-	}
-
-	// parse arguments
-	QStringListIterator argIt( app.arguments() );
-	argIt.next();
-
-	while( argc > 1 && argIt.hasNext() )
-	{
-		const QString a = argIt.next().toLower();
-
-		if( a == QStringLiteral("-test") )
-		{
-			return ConfigurationTestController( app.arguments().mid( 2 ) ).run();
-		}
 	}
 
 	// now create the main window

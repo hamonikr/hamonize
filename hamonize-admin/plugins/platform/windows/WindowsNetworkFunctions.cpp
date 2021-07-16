@@ -1,7 +1,7 @@
 /*
  * WindowsNetworkFunctions.cpp - implementation of WindowsNetworkFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -188,7 +188,7 @@ static bool configureFirewallException( INetFwPolicy2* fwPolicy2, const wchar_t*
 		if( hr != S_OK )
 		{
 			// failed because firewall service not running / disabled?
-			if( hr == static_cast<HRESULT>( 0x800706D9 ) )
+			if( hr == WindowsNetworkFunctions::WindowsFirewallServiceError )
 			{
 				// then assume this is intended, log a warning and
 				// pretend everything went well

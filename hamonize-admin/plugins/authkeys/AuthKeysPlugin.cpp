@@ -1,7 +1,7 @@
 /*
  * AuthKeysPlugin.cpp - implementation of AuthKeysPlugin class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -21,6 +21,8 @@
  * Boston, MA 02111-1307, USA.
  *
  */
+
+#include <QFileInfo>
 
 #include "AuthKeysConfigurationPage.h"
 #include "AuthKeysPlugin.h"
@@ -209,7 +211,7 @@ CommandLinePluginInterface::RunResult AuthKeysPlugin::handle_export( const QStri
 	}
 
 	AuthKeysManager manager;
-	if( manager.exportKey( name, type, outputFile ) == false )
+	if( manager.exportKey( name, type, outputFile, arguments.contains( QLatin1String("-f") ) ) == false )
 	{
 		error( manager.resultMessage() );
 
@@ -228,6 +230,12 @@ CommandLinePluginInterface::RunResult AuthKeysPlugin::handle_import( const QStri
 	if( arguments.size() < 1 )
 	{
 		return NotEnoughArguments;
+	}
+
+	if( QFileInfo::exists( arguments[0] ) )
+	{
+		error( tr( "Please specify the key name (e.g. \"teacher/public\") as the first argument." ) );
+		return InvalidArguments;
 	}
 
 	const auto nameAndType = arguments[0].split( QLatin1Char('/') );
@@ -258,7 +266,7 @@ CommandLinePluginInterface::RunResult AuthKeysPlugin::handle_import( const QStri
 
 CommandLinePluginInterface::RunResult AuthKeysPlugin::handle_list( const QStringList& arguments )
 {
-	if( arguments.value( 0 ) == QStringLiteral("details") )
+	if( arguments.value( 0 ) == QLatin1String("details") )
 	{
 		printAuthKeyTable();
 	}

@@ -1,7 +1,7 @@
 /*
  * WindowsNetworkFunctions.h - declaration of WindowsNetworkFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -26,6 +26,8 @@
 
 #include "PlatformNetworkFunctions.h"
 
+#include <winbase.h>
+
 // clazy:exclude=copyable-polymorphic
 
 class WindowsNetworkFunctions : public PlatformNetworkFunctions
@@ -35,5 +37,7 @@ public:
 	bool configureFirewallException( const QString& applicationPath, const QString& description, bool enabled ) override;
 
 	bool configureSocketKeepalive( Socket socket, bool enabled, int idleTime, int interval, int probes ) override;
+
+	static constexpr auto WindowsFirewallServiceError = HRESULT(0x800706D9);
 
 };

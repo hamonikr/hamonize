@@ -1,7 +1,7 @@
 /*
  * NetworkObjectFilterProxyModel.h - header file for NetworkObjectFilterProxyModel
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,7 +30,7 @@ class NetworkObjectFilterProxyModel : public QSortFilterProxyModel
 {
 	Q_OBJECT
 public:
-	NetworkObjectFilterProxyModel( QObject* parent );
+	explicit NetworkObjectFilterProxyModel( QObject* parent );
 
 	void setGroupFilter( const QStringList& groupList );
 	void setComputerExcludeFilter( const QStringList& computerExcludeList );

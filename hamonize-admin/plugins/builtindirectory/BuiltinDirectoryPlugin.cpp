@@ -1,7 +1,7 @@
 /*
  * BuiltinDirectoryPlugin.cpp - implementation of BuiltinDirectoryPlugin class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -30,6 +30,7 @@
 #include "CommandLineIO.h"
 #include "ConfigurationManager.h"
 #include "ObjectManager.h"
+#include "PlatformFilesystemFunctions.h"
 #include "VeyonConfiguration.h"
 
 
@@ -96,7 +97,7 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_help( const
 
 	if( command == importCommand() )
 	{
-		printUsage( commandLineModuleName(), importCommand(), { { tr("FILE"), QString() } }, {
+		printUsage( commandLineModuleName(), importCommand(), { { tr("FILE"), {} } }, {
 						{ tr("LOCATION"), locationArgument() },
 						{ tr("FORMAT-STRING-WITH-PLACEHOLDERS"), formatArgument() },
 						{ tr("REGULAR-EXPRESSION-WITH-PLACEHOLDER"), regexArgument() } } );
@@ -126,7 +127,7 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_help( const
 	}
 	else if( command == exportCommand() )
 	{
-		printUsage( commandLineModuleName(), exportCommand(), { { tr("FILE"), QString() } }, {
+		printUsage( commandLineModuleName(), exportCommand(), { { tr("FILE"), {} } }, {
 						{ tr("LOCATION"), locationArgument() },
 						{ tr("FORMAT-STRING-WITH-PLACEHOLDERS"), formatArgument() } } );
 
@@ -147,10 +148,10 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_help( const
 	}
 	else if( command == addCommand() )
 	{
-		printUsage( commandLineModuleName(), addCommand(), { { tr("TYPE"), QString() }, { tr("NAME"), QString() } }, {
-						{ tr("HOST ADDRESS"), QString() },
-						{ tr("MAC ADDRESS"), QString() },
-						{ tr("PARENT"), QString() } } );
+		printUsage( commandLineModuleName(), addCommand(), { { tr("TYPE"), {} }, { tr("NAME"), {} } }, {
+						{ tr("HOST ADDRESS"), {} },
+						{ tr("MAC ADDRESS"), {} },
+						{ tr("PARENT"), {} } } );
 
 		printDescription( tr("Adds an object where %1 can be one of \"%2\" or \"%3\". %4 can be specified by name or UUID.").
 						  arg( tr("TYPE"), typeLocation(), typeComputer(), tr("PARENT") ) );
@@ -164,7 +165,7 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_help( const
 	}
 	else if( command == removeCommand() )
 	{
-		printUsage( commandLineModuleName(), removeCommand(), { { tr("OBJECT"), QString() } } );
+		printUsage( commandLineModuleName(), removeCommand(), { { tr("OBJECT"), {} } } );
 
 		printDescription( tr("Removes the specified object from the directory. %1 can be specified by name or UUID. "
 							 "Removing a location will also remove all related computers.").arg( tr("OBJECT") ) );
@@ -196,7 +197,7 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_add( const 
 
 	if( type == typeLocation() )
 	{
-		object = NetworkObject( NetworkObject::Location, name );
+		object = NetworkObject( NetworkObject::Type::Location, name );
 	}
 	else if( type == typeComputer() )
 	{
@@ -207,8 +208,8 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_add( const 
 		}
 		const auto macAddress = arguments.value( 3 );
 		const auto parent = findNetworkObject( arguments.value( 4 ) );
-		object = NetworkObject( NetworkObject::Host, name, hostAddress, macAddress,
-								QString(), NetworkObject::Uid(), parent.isValid() ? parent.uid() : NetworkObject::Uid() );
+		object = NetworkObject( NetworkObject::Type::Host, name, hostAddress, macAddress,
+								{}, NetworkObject::Uid(), parent.isValid() ? parent.uid() : NetworkObject::Uid() );
 	}
 	else
 	{
@@ -249,7 +250,7 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_dump( const
 	{
 		for( const auto& networkObjectValue : objects )
 		{
-			tableRows.append( dumpNetworkObject( networkObjectValue.toObject() ) );
+			tableRows.append( dumpNetworkObject( NetworkObject( networkObjectValue.toObject() ) ) );
 		}
 	}
 	else
@@ -268,11 +269,13 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_list( const
 {
 	if( arguments.isEmpty() )
 	{
-		listObjects( m_configuration.networkObjects(), NetworkObject::None );
+		listObjects( m_configuration.networkObjects(), NetworkObject( NetworkObject::Type::None ) );
 	}
 	else
 	{
-		const auto parents = BuiltinDirectory( m_configuration, this ).queryObjects( NetworkObject::Location, arguments.first() );
+		const auto parents = BuiltinDirectory( m_configuration, this ).queryObjects( NetworkObject::Type::Location,
+																					 NetworkObject::Attribute::Name,
+																					 arguments.first() );
 
 		for( const auto& parent : parents )
 		{
@@ -402,7 +405,10 @@ CommandLinePluginInterface::RunResult BuiltinDirectoryPlugin::handle_export( con
 	const auto& outputFileName = arguments.first();
 	QFile outputFile( outputFileName );
 
-	if( outputFile.open( QFile::WriteOnly | QFile::Truncate | QFile::Text ) == false )
+	if( VeyonCore::platform().filesystemFunctions().openFileSafely(
+			&outputFile,
+			QFile::WriteOnly | QFile::Truncate | QFile::Text,
+			QFile::ReadOwner | QFile::WriteOwner ) == false )
 	{
 		error( tr( "Can't open file \"%1\" for writing!" ).arg( outputFileName ) );
 		return Failed;
@@ -458,7 +464,7 @@ void BuiltinDirectoryPlugin::listObjects( const QJsonArray& objects, const Netwo
 	{
 		const NetworkObject networkObject( networkObjectValue.toObject() );
 
-		if( ( parent.type() == NetworkObject::None && networkObject.parentUid().isNull() ) ||
+		if( ( parent.type() == NetworkObject::Type::None && networkObject.parentUid().isNull() ) ||
 			networkObject.parentUid() == parent.uid() )
 		{
 			printf( "%s\n", qUtf8Printable( listNetworkObject( networkObject ) ) );
@@ -485,9 +491,9 @@ QString BuiltinDirectoryPlugin::listNetworkObject( const NetworkObject& object )
 {
 	switch( object.type() )
 	{
-	case NetworkObject::Location:
+	case NetworkObject::Type::Location:
 		return tr( "Location \"%1\"" ).arg( object.name() );
-	case NetworkObject::Host:
+	case NetworkObject::Type::Host:
 		return QLatin1Char('\t') +
 				tr( "Computer \"%1\" (host address: \"%2\" MAC address: \"%3\")" ).
 				arg( object.name(), object.hostAddress(), object.macAddress() );
@@ -504,10 +510,10 @@ QString BuiltinDirectoryPlugin::networkObjectTypeName( const NetworkObject& obje
 {
 	switch( object.type() )
 	{
-	case NetworkObject::None: return tr( "None" );
-	case NetworkObject::Location: return typeNameLocation();
-	case NetworkObject::Host: return typeNameComputer();
-	case NetworkObject::Root: return typeNameRoot();
+	case NetworkObject::Type::None: return tr( "None" );
+	case NetworkObject::Type::Location: return typeNameLocation();
+	case NetworkObject::Type::Host: return typeNameComputer();
+	case NetworkObject::Type::Root: return typeNameRoot();
 	default:
 		break;
 	}
@@ -521,18 +527,18 @@ NetworkObject::Type BuiltinDirectoryPlugin::parseNetworkObjectType( const QStrin
 {
 	if( typeName == typeNameLocation() )
 	{
-		return NetworkObject::Location;
+		return NetworkObject::Type::Location;
 	}
 	else if( typeName == typeNameComputer() )
 	{
-		return NetworkObject::Host;
+		return NetworkObject::Type::Host;
 	}
 	else if( typeName == typeNameRoot() )
 	{
-		return NetworkObject::Root;
+		return NetworkObject::Type::Root;
 	}
 
-	return NetworkObject::None;
+	return NetworkObject::Type::None;
 }
 
 
@@ -589,19 +595,19 @@ bool BuiltinDirectoryPlugin::importFile( QFile& inputFile,
 		}
 		else if( parentLocation.isValid() == false )
 		{
-			parentLocation = NetworkObject( NetworkObject::Location, it.key() );
-			objectManager.add( parentLocation );
+			parentLocation = NetworkObject( NetworkObject::Type::Location, it.key() );
+			objectManager.update( parentLocation, true );
 			parentLocationUid = parentLocation.uid();
 		}
 
 		for( const NetworkObject& networkObject : qAsConst(it.value()) )
 		{
-			objectManager.add( NetworkObject( networkObject.type(),
-											  networkObject.name(),
-											  networkObject.hostAddress(),
-											  networkObject.macAddress(),
-											  QString(), NetworkObject::Uid(),
-											  parentLocationUid ) );
+			objectManager.update( NetworkObject( networkObject.type(),
+												 networkObject.name(),
+												 networkObject.hostAddress(),
+												 networkObject.macAddress(),
+												 {}, NetworkObject::Uid(),
+												 parentLocationUid ), true );
 		}
 	}
 
@@ -651,7 +657,7 @@ bool BuiltinDirectoryPlugin::exportFile( QFile& outputFile, const QString& forma
 	// append empty string to generate final newline at end of file
 	lines += QString();
 
-	outputFile.write( lines.join( QStringLiteral("\r\n") ).toUtf8() );
+	outputFile.write( lines.join( QStringLiteral("\n") ).toUtf8() );
 
 	return true;
 }
@@ -694,7 +700,7 @@ NetworkObject BuiltinDirectoryPlugin::toNetworkObject( const QString& line, cons
 	QRegExp rx( rxString );
 	if( rx.indexIn( line ) != -1 )
 	{
-		auto objectType = NetworkObject::Host;
+		auto objectType = NetworkObject::Type::Host;
 		const auto typeIndex = placeholders.indexOf( QStringLiteral("%type%") );
 		if( typeIndex != -1 )
 		{
@@ -710,9 +716,9 @@ NetworkObject BuiltinDirectoryPlugin::toNetworkObject( const QString& line, cons
 		auto host = ( hostIndex != -1 ) ? rx.cap( 1 + hostIndex ).trimmed() : QString();
 		auto mac = ( macIndex != -1 ) ? rx.cap( 1 + macIndex ).trimmed() : QString();
 
-		if( objectType == NetworkObject::Location )
+		if( objectType == NetworkObject::Type::Location )
 		{
-			return NetworkObject( NetworkObject::Location, name );
+			return NetworkObject( NetworkObject::Type::Location, name );
 		}
 
 		if( location.isEmpty() && locationIndex != -1 )
@@ -728,10 +734,10 @@ NetworkObject BuiltinDirectoryPlugin::toNetworkObject( const QString& line, cons
 		{
 			name = host;
 		}
-		return NetworkObject( NetworkObject::Host, name, host, mac );
+		return NetworkObject( NetworkObject::Type::Host, name, host, mac );
 	}
 
-	return NetworkObject::None;
+	return NetworkObject( NetworkObject::Type::None );
 }
 
 

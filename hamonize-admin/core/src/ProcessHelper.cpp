@@ -1,7 +1,7 @@
 /*
  * ProcessHelper.cpp - implementation of ProcessHelper
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -21,6 +21,9 @@
  * Boston, MA 02111-1307, USA.
  *
  */
+
+#include <QElapsedTimer>
+#include <QThread>
 
 #include "ProcessHelper.h"
 
@@ -55,4 +58,24 @@ QByteArray ProcessHelper::runAndReadAll()
 	}
 
 	return QByteArray();
+}
+
+
+
+bool ProcessHelper::waitForProcess( QProcess* process, int timeout, int sleepInterval )
+{
+	QElapsedTimer timeoutTimer;
+	timeoutTimer.start();
+
+	while( process->state() != QProcess::NotRunning )
+	{
+		if( timeoutTimer.elapsed() >= timeout )
+		{
+			return false;
+		}
+
+		QThread::msleep( static_cast<unsigned long>( sleepInterval ) );
+	}
+
+	return true;
 }

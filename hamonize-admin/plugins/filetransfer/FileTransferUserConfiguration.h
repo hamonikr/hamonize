@@ -1,7 +1,7 @@
 /*
  * FileTransferUserConfiguration.h - user config values for file transfer
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -35,7 +35,7 @@
 class FileTransferUserConfiguration : public Configuration::Proxy
 {
 public:
-	FileTransferUserConfiguration( Configuration::Object* object ) :
+	explicit FileTransferUserConfiguration( Configuration::Object* object ) :
 		Configuration::Proxy( object )
 	{
 	}

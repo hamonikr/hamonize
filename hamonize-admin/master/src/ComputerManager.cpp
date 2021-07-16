@@ -1,7 +1,7 @@
 /*
  * ComputerManager.cpp - maintains and provides a computer object list
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,8 +36,8 @@
 #include "NetworkObjectFilterProxyModel.h"
 #include "NetworkObjectOverlayDataModel.h"
 #include "NetworkObjectTreeModel.h"
+#include "PlatformFilesystemFunctions.h"
 #include "UserConfig.h"
-#include "UserSessionControl.h"
 
 
 ComputerManager::ComputerManager( UserConfig& config, QObject* parent ) :
@@ -126,7 +126,10 @@ bool ComputerManager::saveComputerAndUsersList( const QString& fileName )
 	lines += QString();
 
 	QFile outputFile( fileName );
-	if( outputFile.open( QFile::WriteOnly | QFile::Truncate ) == false )
+	if( VeyonCore::platform().filesystemFunctions().openFileSafely(
+			&outputFile,
+			QFile::WriteOnly | QFile::Truncate,
+			QFile::ReadOwner | QFile::WriteOwner ) == false )
 	{
 		return false;
 	}
@@ -149,18 +152,6 @@ void ComputerManager::updateUser( const ComputerControlInterface::Pointer& contr
 		{
 			user = controlInterface->userLoginName();
 		}
-
-        auto guest = controlInterface->guestFullName();
-        if ( guest.isEmpty() )
-        {
-            guest = controlInterface->guestLoginName();
-        }
-
-        if (!guest.isEmpty())
-        {
-            user = guest;
-        }
-
 		m_networkObjectOverlayDataModel->setData( mapToUserNameModelIndex( networkObjectIndex ),
 												  user,
 												  Qt::DisplayRole );
@@ -176,7 +167,7 @@ void ComputerManager::checkChangedData( const QModelIndex& topLeft, const QModel
 
 	if( roles.contains( Qt::CheckStateRole ) )
 	{
-		emit computerSelectionChanged();
+		Q_EMIT computerSelectionChanged();
 	}
 }
 
@@ -223,10 +214,13 @@ void ComputerManager::initNetworkObjectLayer()
 	m_networkObjectDirectory->setUpdateInterval( VeyonCore::config().networkObjectDirectoryUpdateInterval() );
 	m_networkObjectOverlayDataModel->setSourceModel( m_networkObjectModel );
 	m_networkObjectFilterProxyModel->setSourceModel( m_networkObjectOverlayDataModel );
-	m_computerTreeModel->setException( NetworkObjectModel::TypeRole, NetworkObject::Label );
+	m_computerTreeModel->setException( NetworkObjectModel::TypeRole, QVariant::fromValue( NetworkObject::Type::Label ) );
 	m_computerTreeModel->setSourceModel( m_networkObjectFilterProxyModel );
 
-	if( VeyonCore::config().localComputerHidden() )
+	const auto hideLocalComputer = VeyonCore::config().hideLocalComputer();
+	const auto hideOwnSession = VeyonCore::config().hideOwnSession();
+
+	if( hideLocalComputer || hideOwnSession )
 	{
 		QStringList localHostNames( {
 										QStringLiteral("localhost"),
@@ -241,9 +235,32 @@ void ComputerManager::initNetworkObjectLayer()
 			localHostNames.append( address.toString() ); // clazy:exclude=reserve-candidates
 		}
 
-		vDebug() << "excluding local computer via" << localHostNames;
+		QStringList ownSessionNames;
+		ownSessionNames.reserve( localHostNames.size() );
 
-		m_networkObjectFilterProxyModel->setComputerExcludeFilter( localHostNames );
+		if( hideOwnSession )
+		{
+			const auto sessionServerPort = QString::number( VeyonCore::config().veyonServerPort() +
+															 VeyonCore::sessionId() );
+
+			for( const auto& localHostName : qAsConst(localHostNames) )
+			{
+				ownSessionNames.append( QStringLiteral("%1:%2").arg( localHostName, sessionServerPort ) );
+			}
+
+			vDebug() << "excluding own session via" << ownSessionNames;
+		}
+
+		if( hideLocalComputer )
+		{
+			vDebug() << "excluding local computer via" << localHostNames;
+		}
+		else
+		{
+			localHostNames.clear();
+		}
+
+		m_networkObjectFilterProxyModel->setComputerExcludeFilter( localHostNames + ownSessionNames );
 	}
 
 	m_networkObjectFilterProxyModel->setEmptyGroupsExcluded( VeyonCore::config().hideEmptyLocations() );
@@ -309,7 +326,8 @@ QString ComputerManager::findLocationOfComputer( const QStringList& hostNames, c
 
 		auto objectType = static_cast<NetworkObject::Type>( model->data( entryIndex, NetworkObjectModel::TypeRole ).toInt() );
 
-		if( objectType == NetworkObject::Location )
+		if( objectType == NetworkObject::Type::Location ||
+			objectType == NetworkObject::Type::DesktopGroup )
 		{
 			const auto location = findLocationOfComputer( hostNames, hostAddresses, entryIndex );
 			if( location.isEmpty() == false )
@@ -317,7 +335,7 @@ QString ComputerManager::findLocationOfComputer( const QStringList& hostNames, c
 				return location;
 			}
 		}
-		else if( objectType == NetworkObject::Host )
+		else if( objectType == NetworkObject::Type::Host )
 		{
 			QString currentHost = model->data( entryIndex, NetworkObjectModel::HostAddressRole ).toString().toLower();
 			QHostAddress currentHostAddress;
@@ -330,7 +348,7 @@ QString ComputerManager::findLocationOfComputer( const QStringList& hostNames, c
 		}
 	}
 
-	return QString();
+	return {};
 }
 
 
@@ -351,13 +369,14 @@ ComputerList ComputerManager::getComputersAtLocation( const QString& locationNam
 
 		switch( objectType )
 		{
-		case NetworkObject::Location:
+		case NetworkObject::Type::Location:
+		case NetworkObject::Type::DesktopGroup:
 			if( model->data( entryIndex, NetworkObjectModel::NameRole ).toString() == locationName )
 			{
 				computers += getComputersAtLocation( locationName, entryIndex );
 			}
 			break;
-		case NetworkObject::Host:
+		case NetworkObject::Type::Host:
 			computers += Computer( model->data( entryIndex, NetworkObjectModel::UidRole ).toUuid(),
 								   model->data( entryIndex, NetworkObjectModel::NameRole ).toString(),
 								   model->data( entryIndex, NetworkObjectModel::HostAddressRole ).toString(),
@@ -393,10 +412,11 @@ ComputerList ComputerManager::selectedComputers( const QModelIndex& parent )
 
 		switch( objectType )
 		{
-		case NetworkObject::Location:
+		case NetworkObject::Type::Location:
+		case NetworkObject::Type::DesktopGroup:
 			computers += selectedComputers( entryIndex );
 			break;
-		case NetworkObject::Host:
+		case NetworkObject::Type::Host:
 			computers += Computer( model->data( entryIndex, NetworkObjectModel::UidRole ).toUuid(),
 								   model->data( entryIndex, NetworkObjectModel::NameRole ).toString(),
 								   model->data( entryIndex, NetworkObjectModel::HostAddressRole ).toString(),
@@ -424,7 +444,8 @@ QModelIndex ComputerManager::findNetworkObject( NetworkObject::Uid networkObject
 
 		auto objectType = static_cast<NetworkObject::Type>( model->data( entryIndex, NetworkObjectModel::TypeRole ).toInt() );
 
-		if( objectType == NetworkObject::Location )
+		if( objectType == NetworkObject::Type::Location ||
+			objectType == NetworkObject::Type::DesktopGroup )
 		{
 			QModelIndex index = findNetworkObject( networkObjectUid, entryIndex );
 			if( index.isValid() )
@@ -432,7 +453,7 @@ QModelIndex ComputerManager::findNetworkObject( NetworkObject::Uid networkObject
 				return index;
 			}
 		}
-		else if( objectType == NetworkObject::Host )
+		else if( objectType == NetworkObject::Type::Host )
 		{
 			if( model->data( entryIndex, NetworkObjectModel::UidRole ).toUuid() == networkObjectUid )
 			{

@@ -1,7 +1,7 @@
 /*
  * FeatureWorkerManager.h - class for managing feature worker instances
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -39,21 +39,18 @@ class VEYON_CORE_EXPORT FeatureWorkerManager : public QObject
 {
 	Q_OBJECT
 public:
-	typedef enum WorkerProcessModes {
-		ManagedSystemProcess,
-		UnmanagedSessionProcess,
-		WorkerProcessModeCount
-	} WorkerProcessMode;
-
 	FeatureWorkerManager( VeyonServerInterface& server, FeatureManager& featureManager, QObject* parent = nullptr );
 	~FeatureWorkerManager() override;
 
-	Q_INVOKABLE void startWorker( const Feature& feature, WorkerProcessMode workerProcessMode );
-	Q_INVOKABLE void stopWorker( const Feature& feature );
+	bool startManagedSystemWorker( Feature::Uid featureUid );
+	bool startUnmanagedSessionWorker( Feature::Uid featureUid );
 
-	void sendMessage( const FeatureMessage& message );
+	bool stopWorker( Feature::Uid featureUid );
 
-	bool isWorkerRunning( const Feature& feature );
+	void sendMessageToManagedSystemWorker( const FeatureMessage& message );
+	void sendMessageToUnmanagedSessionWorker( const FeatureMessage& message );
+
+	bool isWorkerRunning( Feature::Uid featureUid );
 	FeatureUidList runningWorkers();
 
 private:
@@ -61,7 +58,11 @@ private:
 	void processConnection( QTcpSocket* socket );
 	void closeConnection( QTcpSocket* socket );
 
+	void sendMessage( const FeatureMessage& message );
+
 	void sendPendingMessages();
+
+	static constexpr auto UnmanagedSessionProcessRetryInterval = 5000;
 
 	VeyonServerInterface& m_server;
 	FeatureManager& m_featureManager;
@@ -72,34 +73,9 @@ private:
 		QPointer<QTcpSocket> socket;
 		QPointer<QProcess> process;
 		QList<FeatureMessage> pendingMessages;
-
-		Worker() :
-			socket( nullptr ),
-			process( nullptr ),
-			pendingMessages()
-		{
-		}
-
-		Worker( const Worker &ref ) :
-			socket( ref.socket ),
-			process( ref.process ),
-			pendingMessages( ref.pendingMessages )
-		{
-		}
-
-		~Worker() {}
-
-		Worker& operator=( const Worker& ref )
-		{
-			socket = ref.socket;
-			process = ref.process;
-			pendingMessages = ref.pendingMessages;
-
-			return *this;
-		}
 	};
 
-	typedef QMap<Feature::Uid, Worker> WorkerMap;
+	using WorkerMap = QMap<Feature::Uid, Worker>;
 	WorkerMap m_workers;
 
 	QMutex m_workersMutex;

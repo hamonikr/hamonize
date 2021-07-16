@@ -1,7 +1,7 @@
 /*
  * VncProxyConnectionFactory.h - abstract factory class for VncProxyConnectionFactory objects
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,7 +24,8 @@
 
 #pragma once
 
-class QObject;
+#include "CryptoCore.h"
+
 class QTcpSocket;
 class VncProxyConnection;
 
@@ -33,9 +34,13 @@ class VncProxyConnection;
 class VncProxyConnectionFactory
 {
 public:
+	using Password = CryptoCore::SecureArray;
+
+	virtual ~VncProxyConnectionFactory() = default;
+
 	virtual VncProxyConnection* createVncProxyConnection( QTcpSocket* clientSocket,
 														  int vncServerPort,
-														  const QString& vncServerPassword,
+														  const Password& vncServerPassword,
 														  QObject* parent ) = 0;
 
 } ;

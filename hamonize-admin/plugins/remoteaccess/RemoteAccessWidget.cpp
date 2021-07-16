@@ -1,7 +1,7 @@
 /*
  *  RemoteAccessWidget.cpp - widget containing a VNC-view and controls for it
  *
- *  Copyright (c) 2006-2019 Tobias Junghans <tobydox@veyon.io>
+ *  Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  *  This file is part of Veyon - https://veyon.io
  *
@@ -30,22 +30,26 @@
 #include "rfb/keysym.h"
 
 #include "RemoteAccessWidget.h"
-#include "VncView.h"
+#include "VncViewWidget.h"
+#include "VeyonConfiguration.h"
 #include "VeyonConnection.h"
+#include "VeyonMasterInterface.h"
 #include "Computer.h"
 #include "ComputerControlInterface.h"
 #include "PlatformCoreFunctions.h"
 #include "ToolButton.h"
 #include "Screenshot.h"
 
+
 // toolbar for remote-control-widget
-RemoteAccessWidgetToolBar::RemoteAccessWidgetToolBar( RemoteAccessWidget* parent, bool viewOnly ) :
+RemoteAccessWidgetToolBar::RemoteAccessWidgetToolBar( RemoteAccessWidget* parent,
+													  bool startViewOnly, bool showViewOnlyToggleButton ) :
 	QWidget( parent ),
 	m_parent( parent ),
 	m_showHideTimeLine( ShowHideAnimationDuration, this ),
 	m_iconStateTimeLine( 0, this ),
 	m_connecting( false ),
-	m_viewOnlyButton( new ToolButton( QPixmap( QStringLiteral(":/remoteaccess/kmag.png") ), tr( "View only" ), tr( "Remote control" ) ) ),
+	m_viewOnlyButton( showViewOnlyToggleButton ? new ToolButton( QPixmap( QStringLiteral(":/remoteaccess/kmag.png") ), tr( "View only" ), tr( "Remote control" ) ) : nullptr ),
 	m_sendShortcutButton( new ToolButton( QPixmap( QStringLiteral(":/remoteaccess/preferences-desktop-keyboard.png") ), tr( "Send shortcut" ) ) ),
 	m_screenshotButton( new ToolButton( QPixmap( QStringLiteral(":/remoteaccess/camera-photo.png") ), tr( "Screenshot" ) ) ),
 	m_fullScreenButton( new ToolButton( QPixmap( QStringLiteral(":/remoteaccess/view-fullscreen.png") ), tr( "Fullscreen" ), tr( "Window" ) ) ),
@@ -55,26 +59,22 @@ RemoteAccessWidgetToolBar::RemoteAccessWidgetToolBar( RemoteAccessWidget* parent
 	pal.setBrush( QPalette::Window, QPixmap( QStringLiteral(":/core/toolbar-background.png") ) );
 	setPalette( pal );
 
-//	setAttribute( Qt::WA_NoSystemBackground, true );
+	setAttribute( Qt::WA_NoSystemBackground, true );
 	move( 0, 0 );
 	show();
 	startConnection();
 
-	m_viewOnlyButton->setCheckable( true );
+	if( m_viewOnlyButton )
+	{
+		m_viewOnlyButton->setCheckable( true );
+		m_viewOnlyButton->setChecked( startViewOnly );
+		connect( m_viewOnlyButton, &ToolButton::toggled, this, &RemoteAccessWidgetToolBar::updateControls );
+		connect( m_viewOnlyButton, &QAbstractButton::toggled, parent, &RemoteAccessWidget::toggleViewOnly );
+	}
+
 	m_fullScreenButton->setCheckable( true );
-	m_viewOnlyButton->setChecked( viewOnly );
-	// hihoon change start for RemoteBIOSControl Mode
-/*
-	if (remoteMode == VncView::ViewOnlyMode)
-		m_viewOnlyButton->setChecked( true );
-	else
-		m_viewOnlyButton->setChecked( false );
-*/
-	// hihoon change end for RemoteBIOSControl Mode
 	m_fullScreenButton->setChecked( false );
 
-	connect( m_viewOnlyButton, &ToolButton::toggled, this, &RemoteAccessWidgetToolBar::updateControls );
-	connect( m_viewOnlyButton, &QAbstractButton::toggled, parent, &RemoteAccessWidget::toggleViewOnly );
 	connect( m_fullScreenButton, &QAbstractButton::toggled, parent, &RemoteAccessWidget::toggleFullScreen );
 	connect( m_screenshotButton, &QAbstractButton::clicked, parent, &RemoteAccessWidget::takeScreenshot );
 	connect( m_exitButton, &QAbstractButton::clicked, parent, &QWidget::close );
@@ -104,16 +104,8 @@ RemoteAccessWidgetToolBar::RemoteAccessWidgetToolBar( RemoteAccessWidget* parent
 	shortcutMenu->addAction( tr( "Ctrl+Alt+Del" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltDel ); }  );
 	shortcutMenu->addAction( tr( "Ctrl+Esc" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlEscape ); }  );
 	shortcutMenu->addAction( tr( "Alt+Tab" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutAltTab ); }  );
-    shortcutMenu->addAction( tr( "Alt+F4" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutAltF4 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F1" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF1 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F2" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF2 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F3" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF3 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F4" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF4 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F5" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF5 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F6" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF6 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F7" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF7 ); }  );
-    shortcutMenu->addAction( tr( "Ctrl+Alt+F8" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutCtrlAltF8 ); }  );
-    shortcutMenu->addAction( tr( "Win+Tab" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutWinTab ); }  );
+	shortcutMenu->addAction( tr( "Alt+F4" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutAltF4 ); }  );
+	shortcutMenu->addAction( tr( "Win+Tab" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutWinTab ); }  );
 	shortcutMenu->addAction( tr( "Win" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutWin ); }  );
 	shortcutMenu->addAction( tr( "Menu" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutMenu ); }  );
 	shortcutMenu->addAction( tr( "Alt+Ctrl+F1" ), vncView, [=]() { vncView->sendShortcut( VncView::ShortcutAltCtrlF1 ); }  );
@@ -124,17 +116,20 @@ RemoteAccessWidgetToolBar::RemoteAccessWidgetToolBar( RemoteAccessWidget* parent
 	m_sendShortcutButton->setObjectName( QStringLiteral("shortcuts") );
 
 	auto layout = new QHBoxLayout( this );
-	layout->setMargin( 1 );
+	layout->setContentsMargins( 1, 1, 1, 1 );
 	layout->setSpacing( 1 );
 	layout->addStretch( 0 );
 	layout->addWidget( m_sendShortcutButton );
-	layout->addWidget( m_viewOnlyButton );
+	if( m_viewOnlyButton )
+	{
+		layout->addWidget( m_viewOnlyButton );
+	}
 	layout->addWidget( m_screenshotButton );
 	layout->addWidget( m_fullScreenButton );
 	layout->addWidget( m_exitButton );
 	layout->addSpacing( 5 );
-	connect( vncView, &VncView::startConnection, this, &RemoteAccessWidgetToolBar::startConnection );
-	connect( vncView, &VncView::connectionEstablished, this, &RemoteAccessWidgetToolBar::connectionEstablished );
+	connect( vncView, &VncViewWidget::startConnection, this, &RemoteAccessWidgetToolBar::startConnection );
+	connect( vncView, &VncViewWidget::connectionEstablished, this, &RemoteAccessWidgetToolBar::connectionEstablished );
 
 	setFixedHeight( m_exitButton->height() );
 
@@ -143,10 +138,11 @@ RemoteAccessWidgetToolBar::RemoteAccessWidgetToolBar( RemoteAccessWidget* parent
 	m_iconStateTimeLine.setFrameRange( 0, 100 );
 	m_iconStateTimeLine.setDuration( 1500 );
 	m_iconStateTimeLine.setUpdateInterval( 60 );
-	m_iconStateTimeLine.setCurveShape( QTimeLine::SineCurve );
+	m_iconStateTimeLine.easingCurve().setType( QEasingCurve::SineCurve );
 	connect( &m_iconStateTimeLine, &QTimeLine::valueChanged, this, &RemoteAccessWidgetToolBar::updateConnectionAnimation );
 	connect( &m_iconStateTimeLine, &QTimeLine::finished, &m_iconStateTimeLine, &QTimeLine::start );
 }
+
 
 
 void RemoteAccessWidgetToolBar::appear()
@@ -157,6 +153,7 @@ void RemoteAccessWidgetToolBar::appear()
 		m_showHideTimeLine.resume();
 	}
 }
+
 
 
 void RemoteAccessWidgetToolBar::disappear()
@@ -229,7 +226,7 @@ void RemoteAccessWidgetToolBar::paintEvent( QPaintEvent *paintEv )
 
 void RemoteAccessWidgetToolBar::updateConnectionAnimation()
 {
-    QWidget::repaint();
+	repaint();
 }
 
 
@@ -251,8 +248,7 @@ void RemoteAccessWidgetToolBar::startConnection()
 	m_connecting = true;
 	m_iconStateTimeLine.start();
 	appear();
-
-    QWidget::update();
+	update();
 }
 
 
@@ -271,53 +267,67 @@ void RemoteAccessWidgetToolBar::connectionEstablished()
 
 
 
-// hihoon RemoteAccessWidget::RemoteAccessWidget( const ComputerControlInterface::Pointer& computerControlInterface, bool viewOnly ) :
-RemoteAccessWidget::RemoteAccessWidget( const ComputerControlInterface::Pointer& computerControlInterface, VncView::Mode remoteMode) :
+RemoteAccessWidget::RemoteAccessWidget( const ComputerControlInterface::Pointer& computerControlInterface,
+										bool startViewOnly, bool showViewOnlyToggleButton ) :
 	QWidget( nullptr ),
 	m_computerControlInterface( computerControlInterface ),
-	// hihoon original m_vncView( new VncView( computerControlInterface->computer().hostAddress(), -1, this, VncView::RemoteControlMode ) ),
-	m_vncView( new VncView( computerControlInterface->computer().hostAddress(), -1, this, remoteMode ) ),
-	// hihoon original m_connection( new VeyonConnection( m_vncView->vncConnection() ) ),
-    m_connection( new VeyonConnection( m_vncView->vncConnection() ) )
-	// hihoon original m_toolBar( new RemoteAccessWidgetToolBar( this, viewOnly ) )
-    // m_toolBar( new RemoteAccessWidgetToolBar( this, false ) )
+	m_vncView( new VncViewWidget( computerControlInterface->computer().hostAddress(), -1, this, VncView::RemoteControlMode ) ),
+	m_toolBar( new RemoteAccessWidgetToolBar( this, startViewOnly, showViewOnlyToggleButton ) )
 {
+	const auto openOnMasterScreen = VeyonCore::config().showFeatureWindowsOnSameScreen();
+	const auto master = VeyonCore::instance()->findChild<VeyonMasterInterface *>();
+	if( master && openOnMasterScreen )
+	{
+		const auto masterWindow = master->mainWindow();
+		move( masterWindow->x(), masterWindow->y() );
+	} else {
+		move( 0, 0 );
+	}
 
-	// hihoon add
-    if (remoteMode == VncView::ViewOnlyMode) {
-        m_toolBar = new RemoteAccessWidgetToolBar( this, true );
-        toggleViewOnly( true );
-    }
-    else
-    {
-        m_toolBar = new RemoteAccessWidgetToolBar( this, false );
-        toggleViewOnly( false );
-    }
-	setWindowTitle( tr( "%1 - %2 Remote Access" ).arg( computerControlInterface->computer().name(),
-													   VeyonCore::applicationName() ) );
+	updateRemoteAccessTitle();
+	connect( m_computerControlInterface.data(), &ComputerControlInterface::userChanged, this, &RemoteAccessWidget::updateRemoteAccessTitle );
+
 	setWindowIcon( QPixmap( QStringLiteral(":/remoteaccess/kmag.png") ) );
 	setAttribute( Qt::WA_DeleteOnClose, true );
 
 	m_vncView->move( 0, 0 );
-	connect( m_vncView, &VncView::mouseAtBorder, m_toolBar, &RemoteAccessWidgetToolBar::appear );
-	connect( m_vncView, &VncView::keyEvent, this, &RemoteAccessWidget::checkKeyEvent );
-	connect( m_vncView, &VncView::sizeHintChanged, this, &RemoteAccessWidget::updateSize );
+	m_vncView->installEventFilter( this );
+	connect( m_vncView, &VncViewWidget::mouseAtBorder, m_toolBar, &RemoteAccessWidgetToolBar::appear );
+	connect( m_vncView, &VncViewWidget::sizeHintChanged, this, &RemoteAccessWidget::updateSize );
 
 	showMaximized();
-	VeyonCore::platform().coreFunctions().raiseWindow( this );
+	VeyonCore::platform().coreFunctions().raiseWindow( this, false );
 
 	showNormal();
 
-	move( 0, 0 );
-
+	toggleViewOnly( startViewOnly );
 }
 
 
 
 RemoteAccessWidget::~RemoteAccessWidget()
 {
-	delete m_connection;
 	delete m_vncView;
+}
+
+
+
+bool RemoteAccessWidget::eventFilter( QObject* object, QEvent* event )
+{
+	if( event->type() == QEvent::KeyRelease &&
+		dynamic_cast<QKeyEvent *>( event )->key() == Qt::Key_Escape &&
+		m_vncView->connection()->isConnected() == false )
+	{
+		close();
+		return true;
+	}
+
+	if( object == m_vncView && event->type() == QEvent::FocusOut )
+	{
+		m_toolBar->disappear();
+	}
+
+	return QWidget::eventFilter( object, event );
 }
 
 
@@ -334,7 +344,7 @@ void RemoteAccessWidget::enterEvent( QEvent* event )
 void RemoteAccessWidget::leaveEvent( QEvent* event )
 {
 	QTimer::singleShot( AppearDelay, this, [this]() {
-        if( QWidget::underMouse() == false )
+		if( underMouse() == false && window()->isActiveWindow() )
 		{
 			m_toolBar->appear();
 		}
@@ -344,35 +354,24 @@ void RemoteAccessWidget::leaveEvent( QEvent* event )
 }
 
 
+
 void RemoteAccessWidget::resizeEvent( QResizeEvent* event )
 {
 	m_vncView->resize( size() );
 	m_toolBar->setFixedSize( width(), m_toolBar->height() );
 
-
 	QWidget::resizeEvent( event );
-}
-
-
-void RemoteAccessWidget::checkKeyEvent( unsigned int key, bool pressed )
-{
-	if( pressed && key == XK_Escape && !m_connection->isConnected() )
-	{
-		close();
-	}
 }
 
 
 
 void RemoteAccessWidget::updateSize()
 {
-    if( !( windowState() & Qt::WindowFullScreen ) &&
-            m_vncView->sizeHint().isEmpty() == false )
-    {
-        const auto sizeHint =  m_vncView->sizeHint();
-
-        resize( sizeHint );
-    }
+	if( !( windowState() & Qt::WindowFullScreen ) &&
+			m_vncView->sizeHint().isEmpty() == false )
+	{
+		resize( m_vncView->sizeHint() );
+	}
 }
 
 
@@ -403,4 +402,20 @@ void RemoteAccessWidget::toggleViewOnly( bool viewOnly )
 void RemoteAccessWidget::takeScreenshot()
 {
 	Screenshot().take( m_computerControlInterface );
+}
+
+
+
+void RemoteAccessWidget::updateRemoteAccessTitle()
+{
+	if ( m_computerControlInterface->userFullName().isEmpty() )
+	{
+		setWindowTitle( tr( "%1 - %2 Remote Access" ).arg( m_computerControlInterface->computer().name(),
+														   VeyonCore::applicationName() ) );
+	} else
+	{
+		setWindowTitle( tr( "%1 - %2 - %3 Remote Access" ).arg( m_computerControlInterface->userFullName(),
+																  m_computerControlInterface->computer().name(),
+																  VeyonCore::applicationName() ) );
+	}
 }

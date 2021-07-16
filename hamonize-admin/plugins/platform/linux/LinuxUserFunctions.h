@@ -1,7 +1,7 @@
 /*
  * LinuxUserFunctions.h - declaration of LinuxUserFunctions class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -24,8 +24,8 @@
 
 #pragma once
 
+#include "LogonHelper.h"
 #include "PlatformUserFunctions.h"
-#include "LinuxCoreFunctions.h"
 
 #include <pwd.h>
 
@@ -39,36 +39,20 @@ public:
 	QStringList userGroups( bool queryDomainGroups ) override;
 	QStringList groupsOfUser( const QString& username, bool queryDomainGroups ) override;
 
+	bool isAnyUserLoggedOn() override;
 	QString currentUser() override;
-	QStringList loggedOnUsers() override;
 
-    QStringList guestUserInfo() override;
-    QStringList guestUserInfo( const QString& username ) override;
-
-	void logon( const QString& username, const QString& password ) override;
+	bool prepareLogon( const QString& username, const Password& password ) override;
+	bool performLogon( const QString& username, const Password& password ) override;
 	void logoff() override;
 
-	bool authenticate( const QString& username, const QString& password ) override;
-
-    void changeDeskerLoginInfo(const QString& guestId, const QString& guestName) override;
+	bool authenticate( const QString& username, const Password& password ) override;
 
 	static uid_t userIdFromName( const QString& username );
 
-
 private:
-	enum {
-		WhoProcessTimeout = 3000
-	};
+	static constexpr auto AuthHelperTimeout = 10000;
 
-    typedef struct {
-        QString guestId;
-        QString guestName;
-        QDBusObjectPath path;
-    } GuestLoginDBusUserInfo;
-
-    QString m_guestId;
-    QString m_guestName;
-
-    LinuxCoreFunctions::DBusInterfacePointer m_guestLoginManager;
+	LogonHelper m_logonHelper{};
 
 };

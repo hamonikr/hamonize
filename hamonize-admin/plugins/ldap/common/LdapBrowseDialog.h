@@ -1,7 +1,7 @@
 /*
  * LdapBrowseDialog.h - dialog for browsing LDAP directories
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -39,8 +39,8 @@ class LdapBrowseDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	LdapBrowseDialog( const LdapConfiguration& configuration, QWidget* parent = nullptr );
-	~LdapBrowseDialog();
+	explicit LdapBrowseDialog( const LdapConfiguration& configuration, QWidget* parent = nullptr );
+	~LdapBrowseDialog() override;
 
 	QString browseBaseDn( const QString& dn );
 	QString browseDn( const QString& dn );

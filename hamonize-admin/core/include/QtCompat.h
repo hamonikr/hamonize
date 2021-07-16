@@ -1,7 +1,7 @@
 /*
  * QtCompat.h - functions and templates for compatibility with older Qt versions
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -27,22 +27,25 @@
 #include <QtGlobal>
 #include <QSet>
 #include <QVariant>
+#include <QVector>
 
 template<class A, class B>
 static inline bool intersects( const QSet<A>& a, const QSet<B>& b )
 {
-#if QT_VERSION < 0x050600
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
 	return QSet<A>( a ).intersect( b ).isEmpty() == false;
 #else
 	return a.intersects( b );
 #endif
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 13, 0)
 #define Q_DISABLE_MOVE(Class) \
 	Class(const Class &&) Q_DECL_EQ_DELETE;\
 	Class &operator=(const Class &&) Q_DECL_EQ_DELETE;
+#endif
 
-#if QT_VERSION >= 0x050600
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
 #include <QVersionNumber>
 #else
 
@@ -297,8 +300,8 @@ Q_REQUIRED_RESULT inline bool operator!=(const QVersionNumber &lhs, const QVersi
 Q_DECLARE_METATYPE(QVersionNumber)
 #endif
 
-#if QT_VERSION < 0x050700
-template <typename T> struct QAddConst { typedef const T Type; };
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
+template <typename T> struct QAddConst { using Type = const T; };
 template <typename T> constexpr typename QAddConst<T>::Type &qAsConst(T &t) { return t; }
 template <typename T> void qAsConst(const T &&) = delete;
 
@@ -344,7 +347,7 @@ struct QOverload : QConstOverload<Args...>, QNonConstOverload<Args...>
 };
 #endif
 
-#if QT_VERSION < 0x051200
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
 #define QDeadlineTimer(x) static_cast<unsigned long int>(x)
 #else
 #include <QDeadlineTimer>
@@ -360,7 +363,7 @@ struct QVariantHelper
 	}
 };
 
-#if QT_VERSION < 0x050600
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
 template<typename T>
 struct QVariantHelper<T, typename std::enable_if<std::is_enum<T>::value >::type>
 {

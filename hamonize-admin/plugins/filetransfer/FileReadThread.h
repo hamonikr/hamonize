@@ -1,7 +1,7 @@
 /*
  * FileReadThread.h - declaration of FileReadThread class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -33,7 +33,7 @@ class FileReadThread : public QObject
 {
 	Q_OBJECT
 public:
-	FileReadThread( const QString& fileName, QObject* parent = nullptr );
+	explicit FileReadThread( const QString& fileName, QObject* parent = nullptr );
 	~FileReadThread() override;
 
 	bool start();

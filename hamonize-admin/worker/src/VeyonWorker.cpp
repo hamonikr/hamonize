@@ -1,7 +1,7 @@
 /*
  * VeyonWorker.cpp - basic implementation of Veyon Worker
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -32,41 +32,32 @@
 VeyonWorker::VeyonWorker( const QString& featureUid, QObject* parent ) :
 	QObject( parent ),
 	m_core( QCoreApplication::instance(),
+			VeyonCore::Component::Worker,
 			QStringLiteral( "FeatureWorker-" ) + VeyonCore::formattedUuid( featureUid ) ),
 	m_featureManager(),
 	m_workerManagerConnection( nullptr )
 {
-    vInfo() << "hihoon : Start";
 	const Feature* workerFeature = nullptr;
 
-    vInfo() << "hihoon : for loop start";
-    for( const auto& feature : m_featureManager.features() )
+	for( const auto& feature : m_featureManager.features() )
 	{
 		if( feature.uid() == featureUid )
 		{
 			workerFeature = &feature;
 		}
 	}
-    vInfo() << "hihoon : for loop fnished";
-
 
 	if( workerFeature == nullptr )
 	{
 		qFatal( "Could not find specified feature" );
 	}
 
-    vInfo() << "hihoon : 010 if finished";
-
 	if( m_core.config().disabledFeatures().contains( featureUid ) )
 	{
 		qFatal( "Specified feature is disabled by configuration!" );
 	}
 
-    vInfo() << "hihoon : 020 if finished";
-
 	m_workerManagerConnection = new FeatureWorkerManagerConnection( *this, m_featureManager, featureUid, this );
-
-    vInfo() << "hihoon : 030 if finished";
 
 	vInfo() << "Running worker for feature" << workerFeature->name();
 }
@@ -75,7 +66,5 @@ VeyonWorker::VeyonWorker( const QString& featureUid, QObject* parent ) :
 
 bool VeyonWorker::sendFeatureMessageReply( const FeatureMessage& reply )
 {
-    vInfo() << "hihoon : Start";
-
-    return m_workerManagerConnection->sendMessage( reply );
+	return m_workerManagerConnection->sendMessage( reply );
 }

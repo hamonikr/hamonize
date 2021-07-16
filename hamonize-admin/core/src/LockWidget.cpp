@@ -1,7 +1,7 @@
 /*
  *  LockWidget.cpp - widget for locking a client
  *
- *  Copyright (c) 2006-2016 Tobias Junghans <tobydox@veyon.io>
+ *  Copyright (c) 2006-2021 Tobias Junghans <tobydox@veyon.io>
  *
  *  This file is part of Veyon - https://veyon.io
  *
@@ -28,27 +28,39 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QPainter>
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QScreen>
+#include <QWindow>
 
-LockWidget::LockWidget( Mode mode, const QPixmap& background, const QString& message, QWidget* parent ) :
+
+LockWidget::LockWidget( Mode mode, const QPixmap& background, QWidget* parent ) :
 	QWidget( parent, Qt::X11BypassWindowManagerHint ),
 	m_background( background ),
-    m_mode( mode )
+	m_mode( mode )
 {
+	if( mode == DesktopVisible )
+	{
+		auto screen = QGuiApplication::primaryScreen();
+		if( windowHandle() )
+		{
+			screen = windowHandle()->screen();
+		}
+
+		if( screen )
+		{
+			m_background = screen->grabWindow( 0 );
+		}
+	}
+
+
 	VeyonCore::platform().coreFunctions().setSystemUiState( false );
 	VeyonCore::platform().inputDeviceFunctions().disableInputDevices();
 
-	if( mode == DesktopVisible )
-	{
-        m_background = QPixmap::grabWindow( qApp->desktop()->winId() );
-	}
-
-	setWindowTitle( QString() );
-	showFullScreen();
+	setWindowTitle( {} );
+	show();
 	move( 0, 0 );
 	setFixedSize( qApp->desktop()->size() );
-	VeyonCore::platform().coreFunctions().raiseWindow( this );
+	VeyonCore::platform().coreFunctions().raiseWindow( this, true );
+	showFullScreen();
 	setFocusPolicy( Qt::StrongFocus );
 	setFocus();
 	grabMouse();
@@ -57,45 +69,6 @@ LockWidget::LockWidget( Mode mode, const QPixmap& background, const QString& mes
 	QGuiApplication::setOverrideCursor( Qt::BlankCursor );
 
 	QCursor::setPos( mapToGlobal( QPoint( 0, 0 ) ) );
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    QFont font = m_lblMessage.font();
-    font.setPointSize(32);
-    font.setBold(true);
-
-    QPalette palette = m_lblMessage.palette();
-//    palette.setColor(m_lblMessage.backgroundRole(), Qt::yellow);
-    palette.setColor(m_lblMessage.foregroundRole(), Qt::red);
-
-    m_lblMessage.setFont(font);
-    m_lblMessage.setPalette(palette);
-    m_lblMessage.setAlignment(Qt::AlignCenter);
-
-    if( !message.isEmpty() )
-    {
-        m_lblMessage.setText(message);
-    }
-    else
-    {
-        m_lblMessage.setText(tr("Computer is not availabled,\nPlease contact your administrator."));
-    }
-
-    QLabel dummy;
-
-    font = dummy.font();
-    font.setPointSize(32);
-    font.setBold(true);
-
-    dummy.setFont(font);
-    dummy.setText(tr("C"));
-
-
-    layout->addWidget(&dummy);
-    layout->addWidget(&m_lblMessage);
-
-    setLayout(layout);
-
 }
 
 
@@ -115,19 +88,18 @@ void LockWidget::paintEvent( QPaintEvent* event )
 	Q_UNUSED(event);
 
 	QPainter p( this );
-    switch( m_mode )
-    {
+	switch( m_mode )
+	{
 	case DesktopVisible:
-        p.drawPixmap( 0, 0, m_background );
+		p.drawPixmap( 0, 0, m_background );
 		break;
 
 	case BackgroundPixmap:
-
-        p.fillRect( rect(), QColor( 64, 64, 64 ) );
-        p.drawPixmap( ( width() - m_background.width() ) / 2,
-                      ( height() - m_background.height() ) / 2,
-                      m_background );
-        break;
+		p.fillRect( rect(), QColor( 64, 64, 64 ) );
+		p.drawPixmap( ( width() - m_background.width() ) / 2,
+					  ( height() - m_background.height() ) / 2,
+					  m_background );
+		break;
 
 	default:
 		break;

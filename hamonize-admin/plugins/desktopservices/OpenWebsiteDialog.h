@@ -1,7 +1,7 @@
 /*
  * OpenWebsiteDialog.h - declaration of class OpenWebsiteDialog
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -30,7 +30,7 @@ class OpenWebsiteDialog : public QDialog
 {
 	Q_OBJECT
 public:
-	OpenWebsiteDialog( QWidget *parent );
+	explicit OpenWebsiteDialog( QWidget *parent );
 	~OpenWebsiteDialog() override;
 
 	const QString& website() const

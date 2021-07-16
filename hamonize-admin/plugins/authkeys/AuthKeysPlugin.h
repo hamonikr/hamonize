@@ -1,7 +1,7 @@
 /*
  * AuthKeysPlugin.h - declaration of AuthKeysPlugin class
  *
- * Copyright (c) 2018-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2018-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -42,7 +42,7 @@ class AuthKeysPlugin : public QObject,
 				 CommandLinePluginInterface
 				 ConfigurationPagePluginInterface)
 public:
-	AuthKeysPlugin( QObject* parent = nullptr );
+	explicit AuthKeysPlugin( QObject* parent = nullptr );
 	~AuthKeysPlugin() override = default;
 
 	Plugin::Uid uid() const override
@@ -67,7 +67,7 @@ public:
 
 	QString vendor() const override
 	{
-		return QStringLiteral( "Veyon Community" );
+		return QStringLiteral( "Hamonize Community" );
 	}
 
 	QString copyright() const override
@@ -90,7 +90,7 @@ public:
 
 	ConfigurationPage* createConfigurationPage() override;
 
-public slots:
+public Q_SLOTS:
 	CommandLinePluginInterface::RunResult handle_help( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_setaccessgroup( const QStringList& arguments );
 	CommandLinePluginInterface::RunResult handle_create( const QStringList& arguments );

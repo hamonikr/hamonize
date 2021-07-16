@@ -1,7 +1,7 @@
 /*
  * ServerAccessControlManager.cpp - implementation of ServerAccessControlManager
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -54,16 +54,17 @@ void ServerAccessControlManager::addClient( VncServerClient* client )
 		break;
 
 	case RfbVeyonAuth::None:
-	case RfbVeyonAuth::HostWhiteList:
 	case RfbVeyonAuth::Token:
-		client->setAccessControlState( VncServerClient::AccessControlSuccessful );
+		client->setAccessControlState( VncServerClient::AccessControlState::Successful );
 		break;
 
 	default:
+		// reject unknown auth type
+		client->setAccessControlState( VncServerClient::AccessControlState::Failed );
 		break;
 	}
 
-	if( client->accessControlState() == VncServerClient::AccessControlSuccessful )
+	if( client->accessControlState() == VncServerClient::AccessControlState::Successful )
 	{
 		m_clients.append( client );
 	}
@@ -76,18 +77,18 @@ void ServerAccessControlManager::removeClient( VncServerClient* client )
 	m_clients.removeAll( client );
 
 	// force all remaining clients to pass access control again as conditions might
-	// have changed (e.g. AccessControlRule::ConditionAccessFromAlreadyConnectedUser)
+	// have changed (e.g. AccessControlRule::Condition::AccessFromAlreadyConnectedUser)
 
 	const VncServerClientList previousClients = m_clients;
 	m_clients.clear();
 
 	for( auto prevClient : qAsConst( previousClients ) )
 	{
-		prevClient->setAccessControlState( VncServerClient::AccessControlInit );
+		prevClient->setAccessControlState( VncServerClient::AccessControlState::Init );
 		addClient( prevClient );
 
-		if( prevClient->accessControlState() != VncServerClient::AccessControlSuccessful &&
-				prevClient->accessControlState() != VncServerClient::AccessControlPending )
+		if( prevClient->accessControlState() != VncServerClient::AccessControlState::Successful &&
+				prevClient->accessControlState() != VncServerClient::AccessControlState::Pending )
 		{
 			vDebug() << "closing connection as client does not pass access control any longer";
 			prevClient->setProtocolState( VncServerProtocol::Close );
@@ -103,10 +104,10 @@ void ServerAccessControlManager::performAccessControl( VncServerClient* client )
 	// access dialog is currently active for
 	switch( client->accessControlState() )
 	{
-	case VncServerClient::AccessControlInit:
+	case VncServerClient::AccessControlState::Init:
 		client->accessControlTimer().restart();
 		break;
-	case VncServerClient::AccessControlWaiting:
+	case VncServerClient::AccessControlState::Waiting:
 		if( client->accessControlTimer().elapsed() < ClientWaitInterval )
 		{
 			return;
@@ -124,19 +125,21 @@ void ServerAccessControlManager::performAccessControl( VncServerClient* client )
 
 	switch( accessResult )
 	{
-	case AccessControlProvider::AccessAllow:
-		client->setAccessControlState( VncServerClient::AccessControlSuccessful );
+	case AccessControlProvider::Access::Allow:
+		client->setAccessControlState( VncServerClient::AccessControlState::Successful );
 		break;
 
-	case AccessControlProvider::AccessToBeConfirmed:
+	case AccessControlProvider::Access::ToBeConfirmed:
 		client->setAccessControlState( confirmDesktopAccess( client ) );
 		break;
 
 	default:
-		client->setAccessControlState( VncServerClient::AccessControlFailed );
+		client->setAccessControlState( VncServerClient::AccessControlState::Failed );
 		client->setProtocolState( VncServerProtocol::Close );
 		break;
 	}
+
+	Q_EMIT finished( client );
 }
 
 
@@ -150,17 +153,17 @@ VncServerClient::AccessControlState ServerAccessControlManager::confirmDesktopAc
 	{
 		if( qAsConst(m_desktopAccessChoices)[hostUserPair] == DesktopAccessDialog::ChoiceAlways )
 		{
-			return VncServerClient::AccessControlSuccessful;
+			return VncServerClient::AccessControlState::Successful;
 		}
 
-		return VncServerClient::AccessControlFailed;
+		return VncServerClient::AccessControlState::Failed;
 	}
 
 	// already an access dialog running?
 	if( m_desktopAccessDialog.isBusy( &m_featureWorkerManager ) )
 	{
 		// then close connection so that client has to try again later
-		return VncServerClient::AccessControlWaiting;
+		return VncServerClient::AccessControlState::Waiting;
 	}
 
 	// get notified whenever the dialog finishes - use signal indirection for
@@ -177,7 +180,7 @@ VncServerClient::AccessControlState ServerAccessControlManager::confirmDesktopAc
 	// start the dialog (non-blocking)
 	m_desktopAccessDialog.exec( &m_featureWorkerManager, client->username(), client->hostAddress() );
 
-	return VncServerClient::AccessControlPending;
+	return VncServerClient::AccessControlState::Pending;
 }
 
 
@@ -202,12 +205,12 @@ void ServerAccessControlManager::finishDesktopAccessConfirmation( VncServerClien
 	// evaluate choice and set according access control state
 	if( choice == DesktopAccessDialog::ChoiceYes || choice == DesktopAccessDialog::ChoiceAlways )
 	{
-		client->setAccessControlState( VncServerClient::AccessControlSuccessful );
+		client->setAccessControlState( VncServerClient::AccessControlState::Successful );
 		m_clients.append( client );
 	}
 	else
 	{
-		client->setAccessControlState( VncServerClient::AccessControlFailed );
+		client->setAccessControlState( VncServerClient::AccessControlState::Failed );
 		client->setProtocolState( VncServerProtocol::Close );
 	}
 }

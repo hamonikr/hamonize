@@ -1,7 +1,7 @@
 /*
  * DemoConfigurationPage.h - header for the DemoConfigurationPage class
  *
- * Copyright (c) 2017-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2017-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,7 @@ class DemoConfigurationPage : public ConfigurationPage
 {
 	Q_OBJECT
 public:
-	DemoConfigurationPage( DemoConfiguration& configuration, QWidget* parent = nullptr );
+	explicit DemoConfigurationPage( DemoConfiguration& configuration, QWidget* parent = nullptr );
 	~DemoConfigurationPage() override;
 
 	void resetWidgets() override;

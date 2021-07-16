@@ -1,7 +1,7 @@
 /*
  * DocumentationFigureCreator.cpp - helper for creating documentation figures
  *
- * Copyright (c) 2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2019-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -23,10 +23,13 @@
  */
 
 #include <QApplication>
+#include <QDialogButtonBox>
+#include <QFileDialog>
 #include <QInputDialog>
 #include <QLineEdit>
 #include <QListView>
 #include <QMenu>
+#include <QPushButton>
 #include <QScreen>
 #include <QSpinBox>
 #include <QStringListModel>
@@ -47,24 +50,14 @@
 #include "ScreenshotManagementPanel.h"
 #include "ToolButton.h"
 #include "VeyonConfiguration.h"
-#include "VncView.h"
+#include "VncViewWidget.h"
 
 
 #ifdef VEYON_DEBUG
 
-DocumentationFigureCreator::DocumentationFigureCreator() :
-	QObject(),
-	m_master( nullptr ),
-	m_eventLoop( this )
-{
-	m_master = new VeyonMaster;
-}
-
-
-
 void DocumentationFigureCreator::run()
 {
-	auto mainWindow = m_master->mainWindow();
+	auto mainWindow = m_master.mainWindow();
 
 	mainWindow->move( 0, 0 );
 	mainWindow->resize( 3000, 1000 );
@@ -74,16 +67,21 @@ void DocumentationFigureCreator::run()
 
 	createFeatureFigures();
 	createContextMenuFigure();
+	createDemoMenuFigure();
 	createLogonDialogFigure();
 	createLocationDialogFigure();
 	createScreenshotManagementPanelFigure();
+	createUserLoginDialogFigure();
 	createTextMessageDialogFigure();
 	createOpenWebsiteDialogFigure();
+	createWebsiteMenuFigure();
 	createRunProgramDialogFigure();
+	createProgramMenuFigure();
 	createRemoteAccessHostDialogFigure();
 	createRemoteAccessWindowFigure();
 	createPowerDownOptionsFigure();
 	createPowerDownTimeInputDialogFigure();
+	createFileTransferDialogFigure();
 }
 
 
@@ -96,18 +94,18 @@ void DocumentationFigureCreator::createFeatureFigures()
 	int x = -1;
 	int w = 0;
 
-	auto toolbar = m_master->mainWindow()->findChild<MainToolBar *>();
+	auto toolbar = m_master.mainWindow()->findChild<MainToolBar *>();
 
 	const QStringList separatedPluginFeatures( { QStringLiteral("a54ee018-42bf-4569-90c7-0d8470125ccf"),
 												 QStringLiteral("80580500-2e59-4297-9e35-e53959b028cd")
 											   } );
 
-	const auto& features = m_master->features();
+	const auto& features = m_master.features();
 
 	for( const auto& feature : features )
 	{
 		auto btn = toolbar->findChild<ToolButton *>( feature.name() );
-		const auto pluginUid = m_master->featureManager().pluginUid( feature );
+		const auto pluginUid = m_master.featureManager().pluginUid( feature );
 
 		if( previousPluginUid.isNull() )
 		{
@@ -121,7 +119,7 @@ void DocumentationFigureCreator::createFeatureFigures()
 		if( pluginUid != previousPluginUid || separatedFeature )
 		{
 			auto fileName = VeyonCore::pluginManager().pluginName( previousPluginUid );
-			if( separatedFeature )
+			if( separatedFeature && previousFeature )
 			{
 				fileName = previousFeature->name();
 			}
@@ -155,7 +153,7 @@ void DocumentationFigureCreator::createFeatureFigures()
 
 void DocumentationFigureCreator::createContextMenuFigure()
 {
-	auto view = m_master->mainWindow()->findChild<ComputerMonitoringWidget *>();
+	auto view = m_master.mainWindow()->findChild<ComputerMonitoringWidget *>();
 	auto menu = view->findChild<QMenu *>();
 
 	connect( menu, &QMenu::aboutToShow, this, [menu]() {
@@ -170,7 +168,7 @@ void DocumentationFigureCreator::createContextMenuFigure()
 
 void DocumentationFigureCreator::createLogonDialogFigure()
 {
-	PasswordDialog dialog( m_master->mainWindow() );
+	PasswordDialog dialog( m_master.mainWindow() );
 	dialog.show();
 	dialog.findChild<QLineEdit *>( QStringLiteral("password") )->setText( QStringLiteral( "TeacherPassword") );
 	dialog.findChild<QLineEdit *>( QStringLiteral("password") )->cursorForward( false );
@@ -194,7 +192,7 @@ void DocumentationFigureCreator::createLocationDialogFigure()
 	}
 
 	QStringListModel locationsModel( locations, this );
-	LocationDialog dialog( &locationsModel, m_master->mainWindow() );
+	LocationDialog dialog( &locationsModel, m_master.mainWindow() );
 
 	grabDialog( &dialog, QSize( 300, 200 ), QStringLiteral("LocationDialog.png") );
 
@@ -205,30 +203,46 @@ void DocumentationFigureCreator::createLocationDialogFigure()
 
 void DocumentationFigureCreator::createScreenshotManagementPanelFigure()
 {
-	auto window = m_master->mainWindow();
+	auto window = m_master.mainWindow();
 	auto panel = window->findChild<ScreenshotManagementPanel *>();
 	auto panelButton = window->findChild<QToolButton *>( QStringLiteral("screenshotManagementPanelButton") );
 	auto list = panel->findChild<QListView *>();
+
+	const QStringList exampleUsers({
+									   QStringLiteral("Albert Einstein"),
+									   QStringLiteral("Blaise Pascal"),
+									   QStringLiteral("Caroline Herschel"),
+									   QStringLiteral("Dorothy Hodgkin")
+								   });
+
+	const QStringList exampleHosts({
+									   QStringLiteral("mars"),
+									   QStringLiteral("venus"),
+									   QStringLiteral("saturn"),
+									   QStringLiteral("pluto")
+								   });
 
 	const QDate date( 2019, 4, 4 );
 	const QTime time( 9, 36, 27 );
 
 	QStringList screenshots({
-								Screenshot::constructFileName( QStringLiteral("Albert Einstein"), QStringLiteral("mars"), date, time ),
-								Screenshot::constructFileName( QStringLiteral("Blaise Pascal"), QStringLiteral("venus"), date, time ),
-								Screenshot::constructFileName( QStringLiteral("Caroline Herschel"), QStringLiteral("saturn"), date, time ),
-								Screenshot::constructFileName( QStringLiteral("Dorothy Hodgkin"), QStringLiteral("pluto"), date, time )
+								Screenshot::constructFileName( exampleUsers[0], exampleHosts[0], date, time ),
+								Screenshot::constructFileName( exampleUsers[1], exampleHosts[1], date, time ),
+								Screenshot::constructFileName( exampleUsers[2], exampleHosts[2], date, time ),
+								Screenshot::constructFileName( exampleUsers[3], exampleHosts[3], date, time )
 						   });
 
+	constexpr int exampleScreenshotIndex = 1;
 
 	QStringListModel screenshotsModel( screenshots, this );
 	list->setModel( &screenshotsModel );
-
-	constexpr int exampleScreenshotIndex = 1;
 	list->selectionModel()->setCurrentIndex( screenshotsModel.index( exampleScreenshotIndex ), QItemSelectionModel::SelectCurrent );
 
-	Screenshot exampleScreenshot( screenshots[exampleScreenshotIndex] );
-	exampleScreenshot.setImage( QImage( QStringLiteral(":/examples/example-screenshot.png" ) ) );
+	QImage exampleScreenshotImage{ QStringLiteral(":/examples/example-screenshot.png" ) };
+	exampleScreenshotImage.setText( Screenshot::metaDataKey( Screenshot::MetaData::User ), exampleUsers[exampleScreenshotIndex] );
+
+	Screenshot exampleScreenshot{ screenshots[exampleScreenshotIndex] };
+	exampleScreenshot.setImage( exampleScreenshotImage );
 	panel->setPreview( exampleScreenshot );
 
 	window->setMaximumHeight( 600 );
@@ -249,29 +263,16 @@ void DocumentationFigureCreator::createScreenshotManagementPanelFigure()
 
 
 
+void DocumentationFigureCreator::createDemoMenuFigure()
+{
+	grabMenu( m_master.mainWindow(), QStringLiteral("Demo"), QStringLiteral("DemoMenu.png") );
+}
+
+
+
 void DocumentationFigureCreator::createPowerDownOptionsFigure()
 {
-	auto toolbar = m_master->mainWindow()->findChild<MainToolBar *>();
-	auto powerDownButton = toolbar->findChild<ToolButton *>( QStringLiteral("PowerDown") );
-
-	scheduleUiOperation( [this, powerDownButton]() {
-		scheduleUiOperation( [this, powerDownButton]() {
-			auto menu = powerDownButton->menu();
-
-			grabWindow( m_master->mainWindow(), powerDownButton->mapTo( m_master->mainWindow(), QPoint( 0, 0 ) ),
-						QSize( qMax( powerDownButton->width(), menu->width() ),
-							   powerDownButton->height() + menu->height() ),
-						QStringLiteral("PowerDownOptions.png") );
-			menu->close();
-		} );
-		auto menu = powerDownButton->menu();
-		menu->close();
-
-		powerDownButton->click();
-
-	} );
-
-	powerDownButton->showMenu();
+	grabMenu( m_master.mainWindow(), QStringLiteral("PowerDown"), QStringLiteral("PowerDownOptions.png") );
 }
 
 
@@ -286,7 +287,24 @@ void DocumentationFigureCreator::createPowerDownTimeInputDialogFigure()
 		grabDialog( dialog, {}, QStringLiteral("PowerDownTimeInputDialog.png") );
 	});
 
-	m_master->runFeature( m_master->featureManager().feature( Feature::Uid( "352de795-7fc4-4850-bc57-525bcb7033f5" ) ) );
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "352de795-7fc4-4850-bc57-525bcb7033f5" ) ) );
+}
+
+
+
+void DocumentationFigureCreator::createUserLoginDialogFigure()
+{
+	scheduleUiOperation( []() {
+		auto dialog = qobject_cast<QDialog *>( QApplication::activeWindow() );
+
+		dialog->findChild<QLineEdit *>( QStringLiteral("password") )->setText( QStringLiteral( "TeacherPassword") );
+		dialog->findChild<QLineEdit *>( QStringLiteral("password") )->cursorForward( false );
+		dialog->findChild<QLineEdit *>( QStringLiteral("username") )->setText( tr( "generic-student-user") );
+
+		grabDialog( dialog, {}, QStringLiteral("UserLoginDialog.png") );
+	});
+
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "7310707d-3918-460d-a949-65bd152cb958" ) ) );
 }
 
 
@@ -301,7 +319,7 @@ void DocumentationFigureCreator::createTextMessageDialogFigure()
 		grabDialog( dialog, {}, QStringLiteral("TextMessageDialog.png") );
 	});
 
-	m_master->runFeature( m_master->featureManager().feature( Feature::Uid( "e75ae9c8-ac17-4d00-8f0d-019348346208" ) ) );
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "e75ae9c8-ac17-4d00-8f0d-019348346208" ) ) );
 }
 
 
@@ -316,7 +334,23 @@ void DocumentationFigureCreator::createOpenWebsiteDialogFigure()
 		grabDialog( dialog, {}, QStringLiteral("OpenWebsiteDialog.png") );
 	});
 
-	m_master->runFeature( m_master->featureManager().feature( Feature::Uid( "8a11a75d-b3db-48b6-b9cb-f8422ddd5b0c" ) ) );
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "8a11a75d-b3db-48b6-b9cb-f8422ddd5b0c" ) ) );
+}
+
+
+
+void DocumentationFigureCreator::createWebsiteMenuFigure()
+{
+	const auto openWebsiteButton = m_master.mainWindow()->findChild<ToolButton *>( QStringLiteral("OpenWebsite") );
+
+	QMenu menu;
+	menu.addAction( QStringLiteral("Intranet") );
+	menu.addAction( QStringLiteral("Wikipedia") );
+	menu.addAction( QIcon( QStringLiteral(":/core/document-edit.png") ), tr("Custom website") );
+
+	openWebsiteButton->setMenu( &menu );
+
+	grabMenu( m_master.mainWindow(), openWebsiteButton->objectName(), QStringLiteral("OpenWebsiteMenu.png") );
 }
 
 
@@ -331,7 +365,24 @@ void DocumentationFigureCreator::createRunProgramDialogFigure()
 		grabDialog( dialog, {}, QStringLiteral("RunProgramDialog.png") );
 	});
 
-	m_master->runFeature( m_master->featureManager().feature( Feature::Uid( "da9ca56a-b2ad-4fff-8f8a-929b2927b442" ) ) );
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "da9ca56a-b2ad-4fff-8f8a-929b2927b442" ) ) );
+}
+
+
+
+void DocumentationFigureCreator::createProgramMenuFigure()
+{
+	const auto runProgramButton = m_master.mainWindow()->findChild<ToolButton *>( QStringLiteral("RunProgram") );
+
+	QMenu menu;
+	menu.addAction( tr("Open file manager") );
+	menu.addAction( tr("Start learning tool") );
+	menu.addAction( tr("Play tutorial video") );
+	menu.addAction( QIcon( QStringLiteral(":/core/document-edit.png") ), tr("Custom program") );
+
+	runProgramButton->setMenu( &menu );
+
+	grabMenu( m_master.mainWindow(), runProgramButton->objectName(), QStringLiteral("RunProgramMenu.png") );
 }
 
 
@@ -345,7 +396,7 @@ void DocumentationFigureCreator::createRemoteAccessHostDialogFigure()
 		grabDialog( dialog, {}, QStringLiteral("RemoteAccessHostDialog.png") );
 	} );
 
-	m_master->runFeature( m_master->featureManager().feature( Feature::Uid( "a18e545b-1321-4d4e-ac34-adc421c6e9c8" ) ) );
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "a18e545b-1321-4d4e-ac34-adc421c6e9c8" ) ) );
 }
 
 
@@ -363,7 +414,7 @@ void DocumentationFigureCreator::createRemoteAccessWindowFigure()
 
 			scheduleUiOperation( [this]() {
 				auto window = QApplication::activeWindow();
-				auto vncView = window->findChild<VncView *>();
+				auto vncView = window->findChild<VncViewWidget *>();
 				Q_ASSERT(vncView != nullptr);
 
 				for( auto timeline : window->findChildren<QTimeLine *>() )
@@ -382,41 +433,93 @@ void DocumentationFigureCreator::createRemoteAccessWindowFigure()
 					auto shortcuts = window->findChild<QToolButton *>( QStringLiteral("shortcuts") );
 					Q_ASSERT(shortcuts != nullptr);
 
-					scheduleUiOperation( [this, window, shortcuts]() {
-						auto menu = shortcuts->menu();
-
-						grabWindow( window, shortcuts->mapTo( window, QPoint( 0, 0 ) ),
-									QSize( qMax( shortcuts->width(), menu->width() ),
-										   shortcuts->height() + menu->height() ),
-									QStringLiteral("RemoteAccessShortcutsMenu.png") );
-						menu->close();
-						window->close();
-						m_eventLoop.quit();
-					} );
-
-					shortcuts->showMenu();
+					grabMenu( window, QStringLiteral("shortcuts"), QStringLiteral("RemoteAccessShortcutsMenu.png") );
+					window->close();
+					m_eventLoop.quit();
 				} );
 			} );
 		} );
 	} );
 
-	m_master->runFeature( m_master->featureManager().feature( Feature::Uid( "ca00ad68-1709-4abe-85e2-48dff6ccf8a2" ) ) );
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "ca00ad68-1709-4abe-85e2-48dff6ccf8a2" ) ) );
 	m_eventLoop.exec();
+}
+
+
+
+void DocumentationFigureCreator::createFileTransferDialogFigure()
+{
+	scheduleUiOperation( [this]() {
+
+		auto dialog = qobject_cast<QFileDialog *>( QApplication::activeWindow() );
+		dialog->setDirectory( QDir::current() );
+		dialog->findChildren<QLineEdit *>().constFirst()->setText( QStringLiteral("\"%1.pdf\" \"%2.pdf\"").arg( tr("Handout"), tr("Texts to read") ) );
+		dialog->setResult( QDialog::Accepted );
+		dialog->setVisible( false );
+
+		scheduleUiOperation( [this]() {
+			auto dialog = qobject_cast<QDialog *>( QApplication::activeWindow() );
+			dialog->show();
+			dialog->setFocus();
+			dialog->move( 0, 0 );
+
+			scheduleUiOperation( [dialog, this]() {
+
+				grabWindow( dialog, QStringLiteral("FileTransferDialogStart.png") );
+
+				dialog->findChild<QDialogButtonBox *>()->button( QDialogButtonBox::Ok )->click();
+
+				scheduleUiOperation( [dialog]() {
+					grabDialog( dialog, {}, QStringLiteral("FileTransferDialogFinished.png") );
+				});
+			} );
+		} );
+	} );
+
+	m_master.runFeature( m_master.featureManager().feature( Feature::Uid( "4a70bd5a-fab2-4a4b-a92a-a1e81d2b75ed" ) ) );
 }
 
 
 
 void DocumentationFigureCreator::hideComputers()
 {
-	auto view = m_master->mainWindow()->findChild<ComputerMonitoringWidget *>();
+	auto view = m_master.mainWindow()->findChild<ComputerMonitoringWidget *>();
 	view->setSearchFilter( QStringLiteral("XXXXXX") );
 }
 
 
 
-void DocumentationFigureCreator::scheduleUiOperation( const std::function<void(void)>& operation )
+void DocumentationFigureCreator::scheduleUiOperation( const std::function<void(void)>& operation,
+													 QObject* context )
 {
-	QTimer::singleShot( DialogDelay, this, operation );
+	QTimer::singleShot( DialogDelay, context, operation );
+}
+
+
+
+void DocumentationFigureCreator::grabMenu( QWidget* window, const QString& buttonName, const QString& fileName )
+{
+	const auto button = window->findChild<ToolButton *>( buttonName );
+
+	scheduleUiOperation( [window, button, &fileName]() {
+		scheduleUiOperation( [window, button, &fileName]() {
+			auto menu = button->menu();
+
+			grabWindow( window, button->mapTo( window, QPoint( 0, 0 ) ),
+						QSize( qMax( button->width(), menu->width() ),
+							   button->height() + menu->height() ),
+						fileName );
+			menu->close();
+		}, window );
+		auto menu = button->menu();
+		menu->close();
+
+		button->setDown(true);
+		button->showMenu();
+	}, window );
+
+	button->setDown(true);
+	button->showMenu();
 }
 
 

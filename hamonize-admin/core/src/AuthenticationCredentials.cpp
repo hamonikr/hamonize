@@ -1,7 +1,7 @@
 /*
  * AuthenticationCredentials.cpp - class holding credentials for authentication
  *
- * Copyright (c) 2010-2019 Tobias Junghans <tobydox@veyon.io>
+ * Copyright (c) 2010-2021 Tobias Junghans <tobydox@veyon.io>
  *
  * This file is part of Veyon - https://veyon.io
  *
@@ -36,7 +36,8 @@ AuthenticationCredentials::AuthenticationCredentials() :
 
 
 AuthenticationCredentials::AuthenticationCredentials( const AuthenticationCredentials &other ) :
-	m_privateKey(),
+	m_privateKey( other.privateKey() ),
+	m_authenticationKeyName( other.authenticationKeyName() ),
 	m_logonUsername( other.logonUsername() ),
 	m_logonPassword( other.logonPassword() ),
 	m_token( other.token() ),
@@ -57,8 +58,7 @@ bool AuthenticationCredentials::hasCredentials( Type type ) const
 		return m_logonUsername.isEmpty() == false && m_logonPassword.isEmpty() == false;
 
 	case Type::Token:
-		return m_token.isEmpty() == false &&
-				QByteArray::fromBase64( m_token.toUtf8() ).size() == CryptoCore::ChallengeSize;
+		return m_token.isEmpty() == false && m_token.size() == CryptoCore::ChallengeSize;
 
 	default:
 		break;
@@ -80,7 +80,19 @@ bool AuthenticationCredentials::loadPrivateKey( const QString& privateKeyFile )
 		return false;
 	}
 
-	m_privateKey = CryptoCore::PrivateKey( privateKeyFile );
+	return setPrivateKey( CryptoCore::PrivateKey( privateKeyFile ) );
+}
 
-	return m_privateKey.isNull() == false && m_privateKey.isPrivate();
+
+
+bool AuthenticationCredentials::setPrivateKey( const CryptoCore::PrivateKey& privateKey )
+{
+	if( privateKey.isNull() == false && privateKey.isPrivate() )
+	{
+		m_privateKey = privateKey;
+
+		return true;
+	}
+
+	return false;
 }
