@@ -53,30 +53,19 @@ public class CurlAgentDeviceController {
 		System.out.println("//===================================");
 
 		
-		
-		// chkProgrmPolicy는 정책에 변화가있는지 여부를 체크 agent가 일을 안했으면 0 변경된 정책에 의해 일을했으면 그 변경한 갯수가 출력 >>즉 0이면 새로운 정책을 내
 		if ( chkProgrmPolicy == 0 ) {
-			// 여기서 디비 데이터가져옴 progrmPolicyData()
 			JSONObject jsonProgrmData = progrmPolicyData(agentFirewallVo);
 			if( jsonProgrmData.size() == 0 ) {
 				output = "nodata";
 			}else {
-				//output = jsonProgrmData.toJSONString();
-				// 길이가 0이 아니지만 nodata 키가 value가 있다면 출력  
 				System.out.println("jsonProgrmData.get(\"NODATA\")======"+ jsonProgrmData.get("nodata")+"\n");
 				if( jsonProgrmData.get("nodata") != null ) {
-					// 길이가 0이 아니지만 nodata 키가 value가 있다면 string 타입으로 바꿔서 output에 담
-					System.out.println("aaaa");
 					output =  jsonProgrmData.get("nodata").toString();	
 				}else {
-					// nodata가 아니라 실제 값이 있고 데이터를 가져오면 스트링으로 변환해서 output에 넣음
-					System.out.println("bbbb");
 					output = jsonProgrmData.toJSONString();
 				}
 			}
 		} else {
-			// 정책에 변화가 없다면 그냥 nodata 를 출력
-			System.out.println("ddd");
 			output = "nodata";
 		}
 		

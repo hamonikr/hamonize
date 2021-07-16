@@ -189,7 +189,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 						gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-						gbInnerHtml += "<td>"+value.deptsido+"</td>";
+						// gbInnerHtml += "<td>"+value.deptsido+"</td>";
 						gbInnerHtml += "<td>"+value.deptname+"</td>";
 						if(value.pc_os == "H"){
 							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
@@ -198,7 +198,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else{
 							gbInnerHtml += "<td></td>"; 
 						}
-						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptsido+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date+"')\">"+value.pc_hostname+"</a></td>";
+						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date+"')\">"+value.pc_hostname+"</a></td>";
 						gbInnerHtml += "<td>"+value.first_date+"</td>";
 						gbInnerHtml += "</tr>";
 						$('#pwd').html("경로: "+value.alldeptname+"");
@@ -251,7 +251,7 @@ function getPcMngrList(){
 						
 			gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-			gbInnerHtml += "<td>"+value.deptsido+"</td>";
+			// gbInnerHtml += "<td>"+value.deptsido+"</td>";
 			gbInnerHtml += "<td>"+value.deptname+"</td>";
 			
 			if(value.pc_os == "H"){
@@ -262,7 +262,7 @@ function getPcMngrList(){
 				gbInnerHtml += "<td></td>"; 
 			}
 			
-			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptsido+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date+"')\">"+value.pc_hostname+"</a></td>";
+			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date+"')\">"+value.pc_hostname+"</a></td>";
 			gbInnerHtml += "<td>"+value.first_date+"</td>";
 			gbInnerHtml += "</tr>";
 		
@@ -369,8 +369,8 @@ function searchView(viewName, page){
 	        <div class="top_search">
 	            <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
 	                <option value="0">전체</option>
-	                <option value="1">지역</option>
-	                <option value="2">사지방번호</option>
+	                <%-- <option value="1">지역</option> --%>
+	                <option value="2">부서번호</option>
 	                <option value="3">IP</option>
 	                <option value="4">Mac Address</option>
 	                <option value="5">PC 호스트 이름</option>
@@ -402,7 +402,7 @@ function searchView(viewName, page){
 	                <thead>
 	                   <tr>
 	                       <th>번호</th>
-	                       <th>지역</th>
+	                       <%-- <th>지역</th> --%>
 	                       <th>부서이름</th>
 	                       <th>OS</th>
 	                       <th>PC 호스트 이름</th>
@@ -437,10 +437,7 @@ function searchView(viewName, page){
 						<th>번호</th>
 						<td colspan="3"><span id="detail_no"></span></td>
 					</tr>
-					<tr>
-						<th>지역</th>
-						<td colspan="3"><span id="detail_sido"></span></td>
-					</tr>
+
 					<tr>
 						<th>부서이름</th>
 						<td colspan="3"><span id="detail_name"></span></td>
@@ -486,7 +483,7 @@ function searchView(viewName, page){
 	
 	<!-- 레이어 팝업용 자바스크립트 -->
 	<script type="text/javascript">
-		function detail_popup(no,sido,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
+		function detail_popup(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
 			if(pc_os == "H"){
 				pc_os = hamonikrIcon; 
 			}else if(pc_os == "W"){
@@ -496,7 +493,6 @@ function searchView(viewName, page){
 			}
 			
 			$("#detail_no").html(no);
-			$("#detail_sido").html(sido);
 			$("#detail_pc_os").html(pc_os);
 			$("#detail_hostname").html(hostname);
 			$("#detail_name").html(name);

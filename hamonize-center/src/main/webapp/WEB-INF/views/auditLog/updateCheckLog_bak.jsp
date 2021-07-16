@@ -223,7 +223,6 @@ function detail(uuid){
 			shtml += "</tbody>";
 			shtml += "</table>";
 			
-		//if(data.device.length > 0){  
 			console.log("data.device.length======"+data.device.length);
 			console.log("data======"+data);
 			shtml += "<table class=\"result_detail\" border=\"1\">";

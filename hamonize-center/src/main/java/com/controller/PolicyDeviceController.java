@@ -88,12 +88,7 @@ public class PolicyDeviceController {
 		int result = 0;
 		dService.deviceDelete(params);
 		result = dService.deviceSave(params);
-		/*
-		 * try { OrgVo orgvo = new OrgVo(); vo = new PolicyProgramVo(); jsonArray =
-		 * oService.orgList(orgvo); pList = pService.programList(vo);
-		 * 
-		 * } catch (Exception e) { e.printStackTrace(); // FAIL_GET_LIST }
-		 */
+	
 		if(result >=1 )
 			return "SUCCESS";
 		else

@@ -27,55 +27,92 @@ public class MonitoringService {
 	@Autowired
 	private InfluxDBTemplate<Point> influxDBTemplate;
 
+
 	public List<Map<String, Object>> pcListInfo(Map<String, Object> params) {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        List<PcDataVo> influxList = influxInfo();
+        try {
+            list = mMpper.pcListInfo(params);
+            for(int i = 0; i< list.size();i++){
+                for(int y = 0; y < influxList.size();y++){
+                    if(list.get(i).get("pc_uuid").toString().trim().equals(influxList.get(y).getHost().trim())){
+                        list.get(i).put("pc_status", "true");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<PcDataVo> influxInfo() {
+        JSONArray jsonArray = new JSONArray();
+        Object jObj = null;
+    
+        Query cpu_query = QueryBuilder.newQuery(
+                "SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() - 20s GROUP BY host")
+                .forDatabase("collectd").create();
+        InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
+        long start = System.currentTimeMillis();
+        System.out.println("startTime===="+start);
+        QueryResult queryResult = influxDBTemplate.query(cpu_query);
+        List<PcDataVo> memoryPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
+        long end = System.currentTimeMillis();
+        System.out.println("spendtime===="+(end-start));
+        return memoryPointList;
+    }
 
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		try {
-			list = mMpper.pcListInfo(params);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		return list;
-	}
 
-	public List<PcDataVo> influxInfo() {
-		JSONArray jsonArray = new JSONArray();
-		Object jObj = null;
+// 	public List<Map<String, Object>> pcListInfo(Map<String, Object> params) {
 
-		Query cpu_query = QueryBuilder.newQuery(
-			"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-			.forDatabase("telegraf").create();
+// 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+// 		try {
+// 			list = mMpper.pcListInfo(params);
+// 		} catch (Exception e) {
+// 			e.printStackTrace();
+// 		}
+
+// 		return list;
+// 	}
+
+// 	public List<PcDataVo> influxInfo() {
+// 		JSONArray jsonArray = new JSONArray();
+// 		Object jObj = null;
+
+// 		Query cpu_query = QueryBuilder.newQuery(
+// 			"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
+// 			.forDatabase("collectd").create();
 			
-		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
-		long start = System.currentTimeMillis();
-		System.out.println("startTime===="+start);
-		QueryResult queryResult = influxDBTemplate.query(cpu_query);
-		//for (QueryResult.Result result : queryResult.getResults()) {
+// 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
+// 		long start = System.currentTimeMillis();
+// 		System.out.println("startTime===="+start);
+// 		QueryResult queryResult = influxDBTemplate.query(cpu_query);
+// 		//for (QueryResult.Result result : queryResult.getResults()) {
 
-			// print details of the entire result
-			//System.out.println(result.toString());
+// 			// print details of the entire result
+// 			//System.out.println(result.toString());
 
-			// iterate the series within the result
-			/*
-			 * for (QueryResult.Series series : result.getSeries()) {
-			 * System.out.println("series.getName() = " + series.getName());
-			 * System.out.println("series.getColumns() = " + series.getColumns());
-			 * System.out.println("series.getValues() = " + series.getValues());
-			 * System.out.println("series.getTags() = " + series.getTags()); }
-			 */
-		//}
+// 			// iterate the series within the result
+// 			/*
+// 			 * for (QueryResult.Series series : result.getSeries()) {
+// 			 * System.out.println("series.getName() = " + series.getName());
+// 			 * System.out.println("series.getColumns() = " + series.getColumns());
+// 			 * System.out.println("series.getValues() = " + series.getValues());
+// 			 * System.out.println("series.getTags() = " + series.getTags()); }
+// 			 */
+// 		//}
 
-//		System.out.println("results=======" + results.getResults());
+// //		System.out.println("results=======" + results.getResults());
 
-		List<PcDataVo> memoryPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
-		long end = System.currentTimeMillis();
-		System.out.println("spendtime===="+(end-start));
-//		System.out.println("11111========" + memoryPointList);
-//		System.out.println("11111========" + memoryPointList.get(0).getHost());
+// 		List<PcDataVo> memoryPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
+// 		long end = System.currentTimeMillis();
+// 		System.out.println("spendtime===="+(end-start));
+// //		System.out.println("11111========" + memoryPointList);
+// //		System.out.println("11111========" + memoryPointList.get(0).getHost());
 
-		return memoryPointList;
-	}
+// 		return memoryPointList;
+// 	}
 
 	/*
 	 * public void insertMemory(){
@@ -83,7 +120,7 @@ public class MonitoringService {
 	 * 
 	 * Query mem_query = QueryBuilder.newQuery(
 	 * "insert memory_value,host='HamoniKR-03000200-0400-0500-0006-0007000080009' type='percent' type_instance='dd' value='32'"
-	 * ) .forDatabase("telegraf").create();
+	 * ) .forDatabase("collectd'").create();
 	 * 
 	 * String[] aa = {"used","buffered","cached","free","slab_recl","slab_unrecl"};
 	 * for(int j = 0; j < 15000000;j++) { for(int i=0;i<aa.length;i++) { Point point
@@ -103,13 +140,13 @@ public class MonitoringService {
 		/*
 		 * Query cpu_query = QueryBuilder .newQuery(
 		 * "SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')"
-		 * ) .forDatabase("telegraf").create();
+		 * ) .forDatabase("collectd'").create();
 		 */
 
 		Query mem_query = QueryBuilder
 				.newQuery("SELECT value, host , type_instance FROM memory_value where type='percent' and time > now() -20s and host='" + host
 						+ "' order by time desc limit 6")
-				.forDatabase("telegraf").create();
+				.forDatabase("collectd").create();
 		QueryResult results = influxDBTemplate.query(mem_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 
@@ -151,13 +188,13 @@ public class MonitoringService {
 		/*
 		 * Query cpu_query = QueryBuilder .newQuery(
 		 * "SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')"
-		 * ) .forDatabase("telegraf").create();
+		 * ) .forDatabase("collectd").create();
 		 */
 
 		Query cpu_query = QueryBuilder
 				.newQuery("SELECT ROUND(mean(value)) as value FROM cpu_value WHERE type_instance = 'user' AND type = 'percent' and time > now() -20s and host='"+host+ "'"
 						+ "order by time desc")
-				.forDatabase("telegraf").create();
+				.forDatabase("collectd").create();
 		QueryResult results = influxDBTemplate.query(cpu_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 

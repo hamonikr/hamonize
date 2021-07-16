@@ -9,6 +9,24 @@
 <script type='text/javascript' src='/js/tui/tui-code-snippet.min.js'></script>
 <script type='text/javascript' src='/js/tui/raphael.js'></script>
 <script type='text/javascript' src='/js/tui/tui-chart.js'></script>
+<!-- <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/core.js'></script>
+<script type='text/javascript' src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
+<script type='text/javascript' src='https://uicdn.toast.com/tui.chart/latest/raphael.js'></script> -->
+<!-- <script type='text/javascript' src='/js/views/pcView.js'></script> -->
+<style>
+.box {
+	border: 1px solid rgb(112, 112, 112);
+  background-color: rgb(255, 255, 255);
+  padding: 40px;
+  margin: 40px;
+  width: 100px;
+  height: 70px;
+  display: inline-block;
+  vertical-align: top;
+}
+.callout{border-radius:.25rem;box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);background-color:#fff;border-left:5px solid #e9ecef;margin-bottom:1rem;padding-left: 10px;}.callout a{color:#495057;text-decoration:underline}.callout a:hover{color:#e9ecef}.callout p:last-child{margin-bottom:0}
+.callout.callout-info{border-left-color:#117a8b}
+</style>
 <script>
 
 $(document).ready(function(){
@@ -19,236 +37,74 @@ $(document).ready(function(){
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
 	<%@ include file="../template/topNav.jsp" %>
-
 	<div class='wrap'>
     <div class='code-html' id='code-html'>
-                    <div class="board_view mT20">
-                    <table>
-                            <tbody>
-                                <tr>
-                                    <td class="subject"><c:out value="${pcvo.pc_hostname}" /></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <ul>
-                                            <li>Cpu정보 : <c:out value="${pcvo.pc_cpu}" /></li>
-                                            <li>Memory정보  : <c:out value="${pcvo.pc_memory}" /></li>
-                                            <li>Disk정보 : <c:out value="${pcvo.pc_disk}" /></li>
-                                            <li>MacAddress : <c:out value="${pcvo.pc_macaddress}" /></li>
-                                            <li>IpAddress : <c:out value="${pcvo.pc_ip}" /></li>
-                                            <li>VpnIpAddress : <c:out value="${pcvo.pc_vpnip}" /></li>
-                                            <li>PC MachineId: <c:out value="${pcvo.pc_uuid}" /></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                </tbody>
-                                </table>
-                    </div>
-    <div>
-        <div id='chart-area'></div>
-        <div id='chart-area2'></div>
-        </div>
-        <div>
-        <div id='chart-area3'></div>
-        <div id='chart-area4'></div>
-        </div>
-    </div>
-    <div class='custom-area'>
-        <div id='error-dim'>
-            <span id='error-text'></span>
-            <div id='error-stack'></div>
-            <span id='go-to-dev-tool'></span>
-        </div>
+		<div class="main_title" style="margin-bottom: 20px;">
+			<c:out value="${pcvo.pc_hostname}" />(<c:out value="${pcvo.pc_uuid}" />)
+		<span></span>
+		</div>
+		<div>
+            <!--- 좌측 -->
+            <div style="display: inline-block;
+			width: 43%;
+			vertical-align: top;
+			margin-right: 6%">
+			<div class="callout callout-info">
+				<h5>Cpu정보</h5>
+				<p><c:out value="${pcvo.pc_cpu}" /></p>
+			  </div>
+			  <div class="callout callout-info">
+				<h5>Memory정보</h5>
+				<p><c:out value="${pcvo.pc_memory}" /></p>
+			  </div>
+			  <div class="callout callout-info">
+				<h5>Disk정보</h5>
+				<p><c:out value="${pcvo.pc_disk}" /></p>
+			  </div> 
+			</div>
+			<div style="    display: inline-block;
+			width: calc(100% - 54%);
+			vertical-align: top;">
+			  <div class="callout callout-info">
+				<h5>IpAddress</h5>
+				<p>사설: <c:out value="${pcvo.pc_ip}" /> / 공인: <c:out value="${pcvo.public_ip}" /></p>
+			  </div>
+			  <div class="callout callout-info">
+				<h5>VpnIpAddress</h5>
+				<p><c:out value="${pcvo.pc_vpnip}" /></p>
+			  </div>
+			  <div class="callout callout-info">
+				<h5>MacAddress</h5>
+				<p><c:out value="${pcvo.pc_macaddress}" /></p>
+			  </div>		
+			</div>			
+		</div>
+					<div>
+						<div style="margin-bottom: 50px;">
+							<div class="main_title" style="margin-bottom: 20px;">
+								실시간 사용 정보
+							<span></span>
+							</div>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=7" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=9" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=11" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=14" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=13" width="19.5%" height="200" frameborder="1"></iframe>
+						</div>
+						<div style="margin:0 auto;">
+							<div class="main_title" style="margin-bottom: 20px;">
+								그래프 정보
+							<span></span>
+							</div>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=2" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=5" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=4" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe src="http://192.168.0.76:3000/d-solo/NXSOV_PGz/dashboard-detail?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=3" width="49.5%" height="300" frameborder="1"></iframe>
+
+						</div>
+					</div>
     </div>
 </div>
 <%@ include file="../template/footer.jsp" %>
-	
-	<script class='code-js'id='code-js' >
-	
-	function getRandom(start, end) {
-	    return start + (Math.floor(Math.random() * (end - start + 1)));
-	}
-
-	function zeroFill(number) {
-	    var filledNumber;
-
-	    if (number < 10) {
-	        filledNumber = '0' + number;
-	    } else {
-	        filledNumber = number;
-	    }
-
-	    return filledNumber;
-	}
-
-	function adjustTime(time, addTime) {
-	    addTime = addTime || 60;
-	    if (time < 0) {
-	        time += addTime;
-	    }
-	    return time;
-	}
-
-	function makeDate(hour, minute, second) {
-	    return zeroFill(adjustTime(hour, 24)) + ':' + zeroFill(adjustTime(minute)) + ':' + zeroFill(adjustTime(second));
-	}
-
-	var legends = ['used메모리','slab_unrecl메모리','slab_recl메모리','free메모리','cached메모리','buffered메모리'];
-	var legends2 = ['usedCPU'];
-	var seriesData = tui.util.map(tui.util.range(6), function (value, index) {
-	    var name = legends[index];
-	    var data = tui.util.map(tui.util.range(40), function () {
-	        return 0;
-	    });
-	    return {
-	        name: name,
-	        data: data
-	    };
-	});
-	var seriesData2 = tui.util.map(tui.util.range(1), function (value, index) {
-	    var name = legends2[index];
-	    var data = tui.util.map(tui.util.range(40), function () {
-	        return 0;
-	    });
-	    return {
-	        name: name,
-	        data: data
-	    };
-	});
-	var baseNow = new Date();
-	var startSecond = baseNow.getSeconds() - seriesData[0].data.length - 1;
-	var categories = tui.util.map(seriesData[0].data, function (value, index) {
-	    var hour = baseNow.getHours();
-	    var minute = baseNow.getMinutes();
-	    var second = startSecond + index;
-
-	    if (second < 0) {
-	        minute -= 1;
-	    }
-
-	    if (minute < 0) {
-	        hour -= 1;
-	    }
-	    return makeDate(hour, minute, (startSecond + index));
-	});
-	var categories2 = tui.util.map(seriesData2[0].data, function (value, index) {
-	    var hour = baseNow.getHours();
-	    var minute = baseNow.getMinutes();
-	    var second = startSecond + index;
-
-	    if (second < 0) {
-	        minute -= 1;
-	    }
-
-	    if (minute < 0) {
-	        hour -= 1;
-	    }
-	    return makeDate(hour, minute, (startSecond + index));
-	});
-	var container = document.getElementById('chart-area');
-	var container2 = document.getElementById('chart-area2');
-	var data = {
-	    categories: categories,
-	    series: seriesData
-	};
-	var data2 = {
-		    categories: categories2,
-		    series: seriesData2
-		};
-	var options = {
-	    chart: {
-	        width: 1900,
-	        height: 410,
-	        title: 'memory 사용량'
-	    },
-	    xAxis: {
-	        title: '시간',
-	        labelInterval: 3,
-	        tickInterval: 'auto'
-	    },
-	    yAxis: {
-	        title: '사용량 ',
-	        suffix: '%',
-	        min: 0,
-	        max: 100
-	    },
-	    series: {
-	        spline: true,
-	        showDot: true,
-	        shifting: true
-	    },
-	    tooltip: {
-	        grouped: true
-	    }
-	};
-	var options2 = {
-		    chart: {
-		        width: 1850,
-		        height: 410,
-		        title: 'cpu 사용량'
-		    },
-		    xAxis: {
-		        title: '시간',
-		        labelInterval: 3,
-		        tickInterval: 'auto'
-		    },
-		    yAxis: {
-		        title: '사용량 ',
-		        suffix: '%',
-		        min: 0,
-		        max: 100
-		    },
-		    series: {
-		        spline: true,
-		        showDot: true,
-		        shifting: true
-		    },
-		    tooltip: {
-		        grouped: true
-		    }
-		};
-	var chart = tui.chart.lineChart(container, data, options);
-	var chart2 = tui.chart.lineChart(container2, data2, options2);
-
-	chart.on('load', function () {
-	    var index = categories.length;
-	    setInterval(function () {
-	    		 $.post("memoryUsage.do",{dataType:'json',uuid:'${uuid}'},
-	    		function(data){
-	    			var values = [];
-	    			var agrs = data;
-	    			for(var i = 0; i < agrs.length;i++){
-	    				values.push(agrs[i].memory);
-	    			}
-	        var now = new Date();
-	        var category = makeDate(now.getHours(), now.getMinutes(), now.getSeconds());
-
-	        chart.addData(category, values);
-	        index += 1;
-	    		 });
-	    }, 5000);
-	});  
-	 chart2.on('load', function () {
-		    var index = categories.length;
-		    setInterval(function () {
-		    		 $.post("cpuUsage.do",{dataType:'json',uuid:'${uuid}'},
-		    		function(data){
-		    			var values = [];
-		    			var agrs = data;
-		    			for(var i = 0; i < agrs.length;i++){
-		    			console.log("agrs"+i+"===="+agrs[i].cpu);
-		    			values.push(agrs[i].cpu);
-		    			}
-		        var now = new Date();
-		        var category = makeDate(now.getHours(), now.getMinutes(), now.getSeconds());
-
-		        chart2.addData(category, values);
-		        index += 1;
-		    		 });
-		    }, 5000);
-		}); 
-	
-
-</script>
 </body>
 </html>

@@ -135,7 +135,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<td>"+value.prcssname+"</td>";
 					gbInnerHtml += "<td>"+value.hostname+"</td>"; 
 					gbInnerHtml += "<td>"+value.ipaddr+"</td>"; 
-					gbInnerHtml += "<td>"+value.user_id+"</td>"; 
 					gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 					gbInnerHtml += "</tr>";
 				
@@ -184,8 +183,7 @@ var iNetLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td>"+value.org_nm+"</td>";
 			gbInnerHtml += "<td>"+value.prcssname+"</td>";
 			gbInnerHtml += "<td>"+value.hostname+"</td>"; 
-			gbInnerHtml += "<td>"+value.ipaddr+"</td>"; 
-			gbInnerHtml += "<td>"+value.user_id+"</td>"; 
+			gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
 			gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 			gbInnerHtml += "</tr>";
 		
@@ -304,7 +302,7 @@ function searchView(viewName, page){
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
                           <option value="0">전체</option>
                           <option value="1">사지방번호</option>
-                          <option value="2">아이디</option>
+                          <%-- <option value="2">아이디</option> --%>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
                       <button type="button" class="btn_type3" onclick="getList();"> 검색</button>
@@ -322,7 +320,7 @@ function searchView(viewName, page){
                             <col style="width:10%;" />
                             <col style="width:23%;" />
                             <col style="width:10%;" />
-                            <col style="width:10%;" />
+                            <%-- <col style="width:10%;" /> --%>
                             <col style="width:15%;" />
                             <col />
                         </colgroup>
@@ -331,9 +329,9 @@ function searchView(viewName, page){
                                 <th>번호</th>
                                 <th>부서번호</th>
                                 <th>프로세스</th>
-                                <th>PC관리번호</th>
+                                <th>PC HOSTNAME</th>
                                 <th>IP</th>
-                                <th>아이디</th>
+                                <%-- <th>아이디</th> --%>
                                 <th>차단시간</th>
                             </tr>
                         </thead>

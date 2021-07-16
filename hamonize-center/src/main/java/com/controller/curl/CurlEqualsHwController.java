@@ -1,8 +1,6 @@
 package com.controller.curl;
 
 import java.io.BufferedReader;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
@@ -10,17 +8,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IEqualsHwMapper;
-import com.mapper.IGetAgentBackupMapper;
 import com.mapper.IGetAgentJobMapper;
-import com.mapper.IInetLogMapper;
 import com.model.EqualsHwVo;
-import com.model.GetAgentBackupVo;
 import com.model.GetAgentJobVo;
-import com.model.InetLogVo;
 
 @RestController
 @RequestMapping("/hmsvc")
@@ -60,7 +53,7 @@ public class CurlEqualsHwController {
         for(int i=0 ; i<inetvalArray.size() ; i++){
             JSONObject tempObj = (JSONObject) inetvalArray.get(i);
     		
-            setEqualsHwVo.setInsert_dt(tempObj.get("datetime").toString());
+          //  setEqualsHwVo.setInsert_dt(tempObj.get("datetime").toString()); //디비에서 나우로
             setEqualsHwVo.setPc_hostname(tempObj.get("hostname").toString());
             setEqualsHwVo.setPc_memory(tempObj.get("memory").toString());
             setEqualsHwVo.setPc_cpu_id(tempObj.get("cpuid").toString());
@@ -74,33 +67,33 @@ public class CurlEqualsHwController {
             
         }
         
-        setEqualsHwVo.setOrg_seq(sgbUUID(setEqualsHwVo.getPc_uuid()));
+        setEqualsHwVo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid()));
         
-        
-		int retVal = equalsHwMapper.sgbPcHWInfoInsert(setEqualsHwVo);
+        // 
+		int retVal = equalsHwMapper.pcHWInfoInsert(setEqualsHwVo);
 		System.out.println("=========retVal is =="+ retVal);
 		
 		if( retVal == 1) {
-			equalsHwMapper.sgbPcMngrModify(setEqualsHwVo);
+
+			// ldap 서버에 vpn ip, 호스트네임 변경하는거만 추가
+			equalsHwMapper.pcMngrModify(setEqualsHwVo);
 			return "Y";
 		}else {
 			return "N";
 		}
 	}
 
-	
-	
 
 
 	/**
 	 * 부서 UUID로 부문 seq 가져오기
 	 * 
-	 * @param sgbUuid
+	 * @param uuid
 	 * @return 부문seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public int pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = agentVo.getSeq();
 		return segSeq;

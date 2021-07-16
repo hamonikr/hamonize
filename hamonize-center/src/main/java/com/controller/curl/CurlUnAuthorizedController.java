@@ -1,6 +1,7 @@
 package com.controller.curl;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,25 +51,31 @@ public class CurlUnAuthorizedController {
 	    
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
+		
 		JSONArray inetvalArray = (JSONArray) jsonObj.get("events");
 		System.out.println("====> "+ jsonObj.get("events"));
 
-		UnauthorizedVo setInetLogVo = new UnauthorizedVo();
-        for(int i=0 ; i<inetvalArray.size() ; i++){
-            JSONObject tempObj = (JSONObject) inetvalArray.get(i);
-    		
-            setInetLogVo.setPc_uuid(tempObj.get("uuid").toString());
-    		setInetLogVo.setVendor(tempObj.get("vendor").toString());
-    		setInetLogVo.setProduct(tempObj.get("product").toString());
-    		setInetLogVo.setInfo(tempObj.get("usbinfo").toString());
-    		setInetLogVo.setPc_user(tempObj.get("user").toString());
-    		setInetLogVo.setInsert_dt(tempObj.get("datetime").toString());
-            
+		List <UnauthorizedVo> list = new ArrayList<UnauthorizedVo>();
+		System.out.println("inetvalArray size : "+ inetvalArray.size());
+
+		for(int i=0 ; i<inetvalArray.size() ; i++){
+		    JSONObject tempObj = (JSONObject) inetvalArray.get(i);
+    		UnauthorizedVo tmpVo = new UnauthorizedVo();
+			System.out.println("tempObj : "+ tempObj);
+        	tmpVo.setPc_uuid(tempObj.get("uuid").toString());
+			tmpVo.setVendor(tempObj.get("vendor").toString());
+			tmpVo.setProduct(tempObj.get("product").toString());
+			tmpVo.setInfo(tempObj.get("usbinfo").toString());
+			tmpVo.setPc_user(tempObj.get("user").toString());
+			tmpVo.setInsert_dt(tempObj.get("datetime").toString());
+
+			list.add(tmpVo);
+			System.out.println("setInetLogVo==="+ list.get(i).toString());
+  
         }
         
-        System.out.println("setInetLogVo==="+ setInetLogVo.toString());
-        
-		int retVal = iUnauthorizedMapper.unAuthorizedInsert(setInetLogVo);
+              
+		int retVal = iUnauthorizedMapper.unAuthorizedInsert(list);
 		System.out.println("=========retVal is =="+ retVal);
 		
 		if( retVal == 1) {
