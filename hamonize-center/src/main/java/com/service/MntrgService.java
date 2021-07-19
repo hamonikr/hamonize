@@ -67,11 +67,11 @@ public class MntrgService {
 		// Query cpu_query = QueryBuilder
 		// 		.newQuery(
 		// 				"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-		// 		.forDatabase("telegraf").create();
+		// 		.forDatabase("collectd").create();
 		Query cpu_query = QueryBuilder
 		.newQuery(
 				"SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-		.forDatabase("telegraf").create();
+		.forDatabase("collectd").create();
 
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 		long start = System.currentTimeMillis();
@@ -92,7 +92,7 @@ public class MntrgService {
 		Object jObj = null;
 		Query mem_query = QueryBuilder.newQuery(
 						"SELECT value, host FROM memory_value where type='percent'and type_instance='used' and host='"+host+"' order by time desc limit 1")
-				.forDatabase("telegraf").create();
+				.forDatabase("collectd").create();
 
 		QueryResult results = influxDBTemplate.query(mem_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
@@ -167,7 +167,7 @@ public class MntrgService {
 		JSONArray jsonArray = new JSONArray();
 		Object jObj = null;
 		Query cpu_query = QueryBuilder.newQuery("SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-		        .forDatabase("telegraf")
+		        .forDatabase("collectd")
 		        .bind("host", hostName)
 		        .create();
 		
@@ -196,7 +196,7 @@ public class MntrgService {
 		JSONArray jsonArray = new JSONArray();
 		Object jObj = null;
 		Query cpu_query = QueryBuilder.newQuery("SELECT time, value FROM cpu_value where host = $host and time >= now() - 10s order by time desc LIMIT 1")
-				.forDatabase("telegraf")
+				.forDatabase("collectd")
 				.bind("host", "localhost")
 //		        .bind("host", "inv.ivs.ad.com")
 				.create();
@@ -220,7 +220,7 @@ public class MntrgService {
 		Object jObj = null;
 
 		Query cpu_query = QueryBuilder.newQuery("SELECT value, host FROM (SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() -1m GROUP BY host) tz('Asia/Seoul')")
-		        .forDatabase("telegraf")
+		        .forDatabase("collectd")
 		        .create();
 		QueryResult results = influxDBTemplate.query(cpu_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper(); // thread-safe - can be reused

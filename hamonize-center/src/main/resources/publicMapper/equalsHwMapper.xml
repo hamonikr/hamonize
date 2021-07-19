@@ -5,7 +5,7 @@
 
 
 
- <insert id="sgbPcHWInfoInsert" parameterType="com.model.EqualsHwVo">   
+ <insert id="pcHWInfoInsert" parameterType="com.model.EqualsHwVo">   
 		INSERT INTO 
 			tbl_pc_change_info (
 			    pc_cpu, 

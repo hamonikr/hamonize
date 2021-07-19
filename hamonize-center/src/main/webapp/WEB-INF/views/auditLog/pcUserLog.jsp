@@ -27,8 +27,6 @@
 #divCalendar .btn_cal_close, #divCalendar .btn_cal_close a {width:17px; height:16px;}
 </style>
 <script type="text/javascript">
-//<![CDATA[
-//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -140,13 +138,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
 					gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 					gbInnerHtml += "<td>"+value.org_nm+"</td>";
-					gbInnerHtml += "<td>"+value.join_org_nm+"</td>";
-					// gbInnerHtml += "<td>"+value.sgb_pc_hostname+"</td>";
-					gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
-					gbInnerHtml += "<td>"+value.user_gunbun+"</td>";
-					gbInnerHtml += "<td>"+value.rank+"</td>";
-					gbInnerHtml += "<td>"+value.user_name+"</td>"; 
-					gbInnerHtml += "<td>"+value.user_id+"</td>"; 
+					gbInnerHtml += "<td>"+value.pc_hostname+"</td>"				 
 					gbInnerHtml += "<td>"+value.login_dt+"</td>"; 
 					gbInnerHtml += "<td>"+value.logout_dt+"</td>"; 
 					gbInnerHtml += "<td>"+value.spent_time+"</td>"; 
@@ -203,12 +195,8 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
 			gbInnerHtml += "<td>"+no+"</td>";
 			gbInnerHtml += "<td>"+value.org_nm+"</td>";
-			gbInnerHtml += "<td>"+value.join_org_nm+"</td>";
-			gbInnerHtml += "<td>"+value.sgb_pc_hostname+"</td>";
-			gbInnerHtml += "<td>"+value.user_gunbun+"</td>";
-			gbInnerHtml += "<td>"+value.rank+"</td>";
-			gbInnerHtml += "<td>"+value.user_name+"</td>"; 
-			gbInnerHtml += "<td>"+value.user_id+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
+	 
 			gbInnerHtml += "<td>"+value.login_dt.substr(0,value.login_dt.length -4)+"</td>"; 
 			gbInnerHtml += "<td>"+value.logout_dt.substr(0,value.logout_dt.length -4)+"</td>"; 
 			gbInnerHtml += "<td>"+value.spent_time.substr(0,value.spent_time.length -4)+"</td>"; 
@@ -316,11 +304,11 @@ function searchView(viewName, page){
             <h3>사용자 접속로그</h3>
               <ul class="search_area">
                 <li>
-                  <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
+                  <%-- <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
                   <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
                    ~
                   <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
-                  <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
+                  <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a> --%>
                       <%-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
                       <div id="count"></div>
                   </li>
@@ -330,10 +318,8 @@ function searchView(viewName, page){
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
                        <option value="0">전체</option>
                           <option value="1">이름</option>
-                          <option value="2">아이디</option>
+                          <%-- <option value="2">아이디</option> --%>
                           <option value="3">접속부서</option>
-                          <option value="4">가입부서</option>
-                          <option value="5">PC관리번호</option>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
                       <button type="button" class="btn_type3" onclick="getList();"> 검색</button>
@@ -352,22 +338,14 @@ function searchView(viewName, page){
                             <col style="width:10%;" />
                             <col style="width:10%;" />
                             <col style="width:10%;" />
-                            <col style="width:10%;" />
-                            <col style="width:10%;" />
-                            <col style="width:13%;" />
-                            <col style="width:13%;" />
+                            
                             <col />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>번호</th>
-                                <th>접속부서</th>
-                                <th>가입부서</th>
-                                <th>PC관리번호</th>
-                                <th>사번</th>
-                                <th>직급</th>
-                                <th>이름</th>
-                                <th>아이디</th>
+                                <th>접속부서</th> 
+								<th>PC HOSTNAME</th> 						
                                 <th>최근접속일시</th>
                                 <th>종료일시</th>
                                 <th>사용시간</th>

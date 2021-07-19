@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IActAgentLogInOutMapper">
+	
+<!-- 로그인 정보 저장 -->
+<insert id="insertLoginLog" parameterType="com.model.LogInOutVo">
+    INSERT
+        INTO tbl_loginout
+            (uuid,login_dt)
+        VALUES
+            (#{uuid},#{login_dt}::timestamp)
+</insert>
+
+<!-- 로그아웃 정보 업데이트 -->
+<update id="updateLoginLog" parameterType="com.model.LogInOutVo">
+    UPDATE
+        tbl_loginout
+    SET 
+        logout_dt = #{logout_dt}::timestamp
+    WHERE
+        seq = #{seq}
+</update>
+	
+<select id="selectLoginLogSeq" parameterType="com.model.LogInOutVo" resultType="Integer">
+    SELECT
+        seq
+    FROM
+        tbl_loginout
+    WHERE
+        uuid = #{uuid} 
+    order by login_dt desc limit 1  
+</select>
+
+</mapper>

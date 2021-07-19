@@ -5,11 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
@@ -113,6 +110,11 @@ public class AuditLogService {
 		try {
 			
 			List<String> list = auditLogMapper.programPackageList();
+
+			for(int i=0;i< list.size() ;i++){
+				System.out.println("list : "+list.get(i).toString());
+		
+			}
 			
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());

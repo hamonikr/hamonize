@@ -17,15 +17,17 @@
 			    org_seq
 			)
 			VALUES
-			(
-			    #{pc_uuid}, 
-			    #{vendor},
-			    #{product}, 
-			    #{info},
-			    #{pc_user}, 
-			    TO_TIMESTAMP(#{insert_dt},'YYYY-MM-DD HH24:MI:SS.MS'),
-			    (select org_seq from public.tbl_pc_mangr where pc_uuid = #{pc_uuid} ) 
+			<foreach collection="list" item="item" separator=" , ">
+				(
+			    #{item.pc_uuid}, 
+			    #{item.vendor},
+			    #{item.product}, 
+			    #{item.info},
+			    #{item.pc_user}, 
+			    TO_TIMESTAMP(#{item.insert_dt},'YYYY-MM-DD HH24:MI:SS.MS'),
+			    (select org_seq from public.tbl_pc_mangr where pc_uuid = #{item.pc_uuid} ) 
 			)
+		</foreach>
 	</insert>
 	
 	

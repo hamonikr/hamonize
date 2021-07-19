@@ -38,12 +38,12 @@
 		,b.seq,b.user_sabun,b.user_id,b.user_name,b.org_seq,
 		(select org_nm from tbl_org where seq=b.org_seq) as join_org_nm,
 		(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm,
-			case when b.rank = '001' then '이병'
-				when b.rank = '002' then '일병'
-				when b.rank = '003' then '상병'
-				when b.rank = '004' then '병장'
+			case 
+				when b.rank = '002' then '사원'
+				when b.rank = '003' then '대리'
+				when b.rank = '004' then '과장'
 				when b.rank = '100' then '관리자'
-				else '훈련병'
+				else '부장'
 			end as rank
 			 FROM (select * from tbl_loginout order by login_dt desc) a 
 			 left outer join tbl_user b
@@ -147,12 +147,12 @@
 		SELECT  
 		(ROW_NUMBER() OVER()) AS rownum,
 		b.user_sabun,
-		case when b.rank = '001' then '이병'
-				when b.rank = '002' then '일병'
-				when b.rank = '003' then '상병'
-				when b.rank = '004' then '병장' 
+		case
+				when b.rank = '002' then '사원'
+				when b.rank = '003' then '대리'
+				when b.rank = '004' then '과장' 
 				when b.rank = '100' then '관리자' 
-				else '훈련병'
+				else '부장'
 			end as rank,
 			b.user_name,
 			b.user_id,
@@ -215,12 +215,12 @@
 		to_char(a.reg_dt,'YYYY-MM-DD HH24:MI:SS.MS') as reg_dt,
 		to_char(a.insert_dt,'YYYY-MM-DD HH24:MI:SS') as insert_dt,
 		b.user_name,b.org_seq,
-			case when b.rank = '001' then '이병'
-				when b.rank = '002' then '일병'
-				when b.rank = '003' then '상병'
-				when b.rank = '004' then '병장' 
+			case 
+				when b.rank = '002' then '사원'
+				when b.rank = '003' then '대리'
+				when b.rank = '004' then '과장' 
 				when b.rank = '100' then '관리자' 
-				else '훈련병'
+				else '부장'
 			end as rank
 			 FROM (select * from tbl_inet_log order by reg_dt desc) a 
 			 join tbl_user b
@@ -375,12 +375,12 @@
 		to_char(a.insert_dt,'YYYY-MM-DD HH24:MI:SS') as insert_dt,
 		b.user_id,
 		b.user_name,
-			case when b.rank = '001' then '이병'
-				when b.rank = '002' then '일병'
-				when b.rank = '003' then '상병'
-				when b.rank = '004' then '병장'
+			case 
+				when b.rank = '002' then '사원'
+				when b.rank = '003' then '대리'
+				when b.rank = '004' then '과장'
 				when b.rank = '100' then '관리자'
-				else '훈련병'
+				else '부장'
 			end as rank,
 			(select org_nm from tbl_org where seq=b.org_seq) as org_nm
 			 FROM tbl_inet_log a 
@@ -465,15 +465,15 @@
 		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 		org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-    from tbl_org a
-    where a.seq = #{auditLogVo.org_seq}
-    union all
-    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-    from tbl_org a, search_org so 
-    where a.p_seq = so.seq and not cycle)
-    select seq
-    from search_org
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{auditLogVo.org_seq}
+				union all
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				from tbl_org a, search_org so 
+				where a.p_seq = so.seq and not cycle)
+				select seq
+				from search_org
 				)
 		</if>
 		</where> 
@@ -591,9 +591,7 @@
 		(select org_nm from tbl_org where seq = org_seq)as ORG_NM,
 		PRCSSNAME,
 		ipaddress,
-		macaddress,
 		INSERT_DT,
-		USER_ID,
 		ORG_SEQ
 		FROM TBL_PRCSS_BLOCK_LOG
 		<where>
@@ -615,12 +613,8 @@
 		<if test="auditLogVo.keyWord == 1">
 		and (select org_nm from tbl_org where seq = org_seq) =  #{auditLogVo.txtSearch}
 		</if>
-		<if test="auditLogVo.keyWord == 2">
-		and user_id like '%' || #{auditLogVo.txtSearch} || '%'
-		</if>
 		<if test="auditLogVo.keyWord == 0">
-		and ((select org_nm from tbl_org where seq = org_seq) like '%' || #{auditLogVo.txtSearch} || '%'
-		or user_id like '%' || #{auditLogVo.txtSearch} || '%')
+		and ((select org_nm from tbl_org where seq = org_seq) like '%' || #{auditLogVo.txtSearch} )
 		</if>
 		</where> 
 		order by insert_dt desc
@@ -638,26 +632,22 @@
 		<if test="org_seq != null and org_seq != ''">
 		and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-    from tbl_org a
-    where a.seq = #{org_seq}
-    union all
-    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-    from tbl_org a, search_org so 
-    where a.p_seq = so.seq and not cycle)
-    select seq
-    from search_org
-				)
+		select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+		from tbl_org a
+		where a.seq = #{org_seq}
+		union all
+		select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+		from tbl_org a, search_org so 
+		where a.p_seq = so.seq and not cycle)
+		select seq
+		from search_org
+		)
 		</if>
 		<if test="keyWord == 1">
 		and (select org_nm from tbl_org where seq = org_seq) = #{txtSearch} 
 		</if>
-		<if test="keyWord == 2">
-		and user_id like '%' || #{txtSearch} || '%'
-		</if>
 		<if test="keyWord == 0">
-		and ((select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
-		or user_id like '%' || #{txtSearch} || '%')
+		and ((select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%')
 		</if>
 		</where> 
 	</select>

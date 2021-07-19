@@ -1,10 +1,13 @@
 package com.controller.curl.agentjob;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,18 +17,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.mapper.IActAgentDeviceMapper;
 import com.mapper.IActAgentFirewallMapper;
-import com.mapper.IActAgentNxssMapper;
+import com.mapper.IActAgentLogInOutMapper;
 import com.mapper.IActAgentProgrmMapper;
+import com.mapper.IEqualsHwMapper;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IGetAgentRecoveryMapper;
+import com.mapper.IPcMangrMapper;
 import com.model.ActAgentBackupRecoveryVo;
 import com.model.ActAgentDeviceVo;
 import com.model.ActAgentFirewallVo;
-import com.model.ActAgentNxssVo;
 import com.model.ActAgentProgrmVo;
 import com.model.GetAgentJobVo;
+import com.model.LogInOutVo;
+import com.model.PcMangrVo;
 
 @RestController
 @RequestMapping("/act")
@@ -42,15 +49,69 @@ public class ActAgentFirewallController {
 
 	@Autowired
 	private IActAgentProgrmMapper actAgentProgrmMapper;
-
-	@Autowired
-	private IActAgentNxssMapper actAgentNxssMapper;
-	
 	
 	@Autowired
 	private IGetAgentRecoveryMapper getAgentRecoveryMapper;
 	
+	@Autowired
+	private IActAgentLogInOutMapper actAgentLogInOutMapper;
 	
+	
+	@RequestMapping("/loginout")
+	public void login(HttpServletRequest request ) throws Exception {
+		System.out.println("loginoutAct===============================[start]");
+	
+		StringBuffer json = new StringBuffer();
+	    String line = null;
+	 
+	    try {
+	        BufferedReader reader = request.getReader();
+	        while((line = reader.readLine()) != null) {
+	            json.append(line);
+	        }
+	 
+	    }catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
+	    
+	    System.out.println("json===> "+ json);
+	    
+	    JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
+        JSONArray logInArray = (JSONArray) jsonObj.get("events");
+      
+        LogInOutVo inputVo = new LogInOutVo();
+        for(int i=0 ; i<logInArray.size() ; i++){
+            JSONObject tempObj = (JSONObject) logInArray.get(i);
+        	
+            inputVo.setDatetime(tempObj.get("datetime").toString());
+            inputVo.setUuid(tempObj.get("uuid").toString());
+            inputVo.setGubun(tempObj.get("gubun").toString());
+            
+        }
+		
+		int retVal = 0;
+
+		if(inputVo.getGubun().equals("LOGIN") ){ // login insert
+			System.out.println("aaaa");
+			inputVo.setLogin_dt(inputVo.getDatetime());
+			retVal = actAgentLogInOutMapper.insertLoginLog(inputVo);
+			System.out.println("uuid" +inputVo.getUuid());
+
+		
+		}else if(inputVo.getGubun().equals("LOGOUT")){ // logout update
+			inputVo.setSeq(actAgentLogInOutMapper.selectLoginLogSeq(inputVo));
+			inputVo.setLogout_dt(inputVo.getDatetime());
+			retVal = actAgentLogInOutMapper.updateLoginLog(inputVo);			
+		}
+	    
+		System.out.println("\n에이전트에서 받은 값 inputVo : "+ inputVo.toString()+"\n");
+		System.out.println("loginoutAct===============================[END]");
+		
+	}
+
+	
+
 	@RequestMapping("/firewallAct")
 	public String firewallAct(HttpServletRequest request ) throws Exception {
 		System.out.println("firewallAct===============================[start]");
@@ -106,7 +167,8 @@ public class ActAgentFirewallController {
 	}
 
 	
-	
+	/// 디바이스 정책 배포 결과
+	// {"events":[{"hostname":"888","uuid":"","procut":"aaaa","vendorCode":"1234","productCode":"qwer","statusyn":"N"}]}
 	@RequestMapping("/deviceAct")
 	public String deviceAct(HttpServletRequest request ) throws Exception {
 		System.out.println("deviceAct===============================[start]");
@@ -132,27 +194,25 @@ public class ActAgentFirewallController {
         JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
         JSONArray hmdArray = (JSONArray) jsonObj.get("events");
 
-        ActAgentDeviceVo inputVo = new ActAgentDeviceVo();
+        List <ActAgentDeviceVo> inputVoList = new ArrayList <ActAgentDeviceVo> ();
         for(int i=0 ; i<hmdArray.size() ; i++){
             JSONObject tempObj = (JSONObject) hmdArray.get(i);
-        	
-            inputVo.setUuid(tempObj.get("uuid").toString().trim());
-            inputVo.setHostname(tempObj.get("hostname").toString());
-            inputVo.setStatus_yn(tempObj.get("statusyn").toString());
-            inputVo.setProduct(tempObj.get("procut").toString());
-            inputVo.setVendorCode(tempObj.get("vendorCode").toString());
-            inputVo.setProductCode(tempObj.get("productCode").toString());
-            
+        	ActAgentDeviceVo tmpVo = new ActAgentDeviceVo();
+		
+			tmpVo.setUuid(tempObj.get("uuidVal").toString().trim());
+			tmpVo.setHostname(tempObj.get("hostname").toString());
+			tmpVo.setStatus_yn(tempObj.get("statusyn").toString());
+			tmpVo.setProduct(tempObj.get("product").toString());
+			tmpVo.setVendorCode(tempObj.get("vendorCode").toString());
+			tmpVo.setProductCode(tempObj.get("productCode").toString());			
+			tmpVo.setOrg_seq(pcUUID(tempObj.get("uuidVal").toString().trim()));
+			inputVoList.add(tmpVo);
         }
         
-        int uuid = pcUUID(inputVo.getUuid());
-        inputVo.setOrgseq(uuid);
-        
-        int retVal = actAgentDeviceMapper.insertActAgentDevice(inputVo);
+        int retVal = actAgentDeviceMapper.insertActAgentDevice(inputVoList);
         System.out.println("retVal ==== "+ retVal);
         
 		System.out.println("//===================================");
-		System.out.println("//result data is : " + inputVo);
 		System.out.println("deviceAct===============================[END]");
 		System.out.println("//===================================");
 		
@@ -172,18 +232,13 @@ public class ActAgentFirewallController {
 	    String line = null;
 	 
 	    try {
-			System.out.println("\naaaaa\n");
 	        BufferedReader reader = request.getReader();
 	        while((line = reader.readLine()) != null) {
 	            json.append(line);
-				System.out.println("\nbbbbb\n");
-
-	        }
+		    }
 	 
 	    }catch(Exception e) {
-			System.out.println("\ncccc\n");
-
-	        System.out.println("Error reading JSON string: " + e.toString());
+			System.out.println("Error reading JSON string: " + e.toString());
 	    }
 	    
 	    
@@ -197,8 +252,7 @@ public class ActAgentFirewallController {
 	    
 	    JSONArray insArray = (JSONArray) jsonObj.get("insresert");
 	    ActAgentProgrmVo[] inputVo = new ActAgentProgrmVo[insArray.size()];
-		System.out.println("\ndddd\n");
-
+		
 		if( insArray.size() != 0 ) {
 		    for (int i = 0; i < insArray.size(); i++) {          
 		    	JSONObject tempObj = (JSONObject) insArray.get(i);
@@ -232,55 +286,55 @@ public class ActAgentFirewallController {
 	
 	
 
-	@RequestMapping("/nxssAct")
-	public String nxssAct(HttpServletRequest request ) throws Exception {
-		System.out.println("nxssAct===============================[start]");
-		// 출력 변수
-		String output = "";
+	// @RequestMapping("/nxssAct")
+	// public String nxssAct(HttpServletRequest request ) throws Exception {
+	// 	System.out.println("nxssAct===============================[start]");
+	// 	// 출력 변수
+	// 	String output = "";
 
-		StringBuffer json = new StringBuffer();
-	    String line = null;
+	// 	StringBuffer json = new StringBuffer();
+	//     String line = null;
 	 
-	    try {
-	        BufferedReader reader = request.getReader();
-	        while((line = reader.readLine()) != null) {
-	            json.append(line);
-	        }
+	//     try {
+	//         BufferedReader reader = request.getReader();
+	//         while((line = reader.readLine()) != null) {
+	//             json.append(line);
+	//         }
 	 
-	    }catch(Exception e) {
-	        System.out.println("Error reading JSON string: " + e.toString());
-	    }
+	//     }catch(Exception e) {
+	//         System.out.println("Error reading JSON string: " + e.toString());
+	//     }
 	    
-	    System.out.println("json===> "+ json);
+	//     System.out.println("json===> "+ json);
 	    
-	    JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
-        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
+	//     JSONParser jsonParser = new JSONParser();
+    //     JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
+    //     JSONArray hmdArray = (JSONArray) jsonObj.get("events");
 
-        ActAgentNxssVo inputVo = new ActAgentNxssVo();
-        for(int i=0 ; i<hmdArray.size() ; i++){
-            JSONObject tempObj = (JSONObject) hmdArray.get(i);
+    //     ActAgentNxssVo inputVo = new ActAgentNxssVo();
+    //     for(int i=0 ; i<hmdArray.size() ; i++){
+    //         JSONObject tempObj = (JSONObject) hmdArray.get(i);
         	
-            inputVo.setUuid(tempObj.get("uuid").toString().trim());
-            inputVo.setHostname(tempObj.get("hostname").toString());
-            inputVo.setFile_gubun(tempObj.get("file_gubun").toString());
-            inputVo.setFileDate(tempObj.get("fileDate").toString());
+    //         inputVo.setUuid(tempObj.get("uuid").toString().trim());
+    //         inputVo.setHostname(tempObj.get("hostname").toString());
+    //         inputVo.setFile_gubun(tempObj.get("file_gubun").toString());
+    //         inputVo.setFileDate(tempObj.get("fileDate").toString());
             
-        }
+    //     }
         
-        int uuid = pcUUID(inputVo.getUuid());
-        inputVo.setOrgseq(uuid);
+    //     int uuid = pcUUID(inputVo.getUuid());
+    //     inputVo.setOrgseq(uuid);
         
-        int retVal = actAgentNxssMapper.insertActAgentNxss(inputVo);
-        System.out.println("retVal ==== "+ retVal);
+    //     int retVal = actAgentNxssMapper.insertActAgentNxss(inputVo);
+    //     System.out.println("retVal ==== "+ retVal);
         
-		System.out.println("//===================================");
-		System.out.println("//result data is : " + inputVo);
-		System.out.println("nxssAct===============================[END]");
-		System.out.println("//===================================");
+	// 	System.out.println("//===================================");
+	// 	System.out.println("//result data is : " + inputVo);
+	// 	System.out.println("nxssAct===============================[END]");
+	// 	System.out.println("//===================================");
 		
-		return output;
-	}
+	// 	return output;
+	// }
 	
 	
 	

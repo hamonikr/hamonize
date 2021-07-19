@@ -39,9 +39,12 @@
 	
 	<update id="updatePcinfo" parameterType="com.model.PcMangrVo" >
 		update tbl_pc_mangr
-		set 	pc_ip = #{pc_ip},
+		set 	
+				pc_ip = #{pc_ip},
 				pc_vpnip = #{pc_vpnip},
-				pc_macaddress = #{pc_macaddress}
+				pc_macaddress = #{pc_macaddress},
+				pc_disk = #{pc_disk},
+				pc_disk_id = #{pc_disk_id}
 		where pc_uuid = #{pc_uuid}
 	</update>
 	

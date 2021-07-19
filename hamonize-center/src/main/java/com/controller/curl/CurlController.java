@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.GlobalPropertySource;
 import com.mapper.IGetAgentJobMapper;
+import com.mapper.IHmprogramMapper;
 import com.mapper.IOrgMapper;
 import com.mapper.IPackageInfoMapper;
 import com.mapper.IPcMangrMapper;
@@ -55,6 +56,11 @@ public class CurlController {
 
 	@Autowired
 	private IPackageInfoMapper packageInfoMapper;	
+
+	@Autowired
+	private IHmprogramMapper hmprogramMapper;
+
+	
 
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
@@ -155,6 +161,53 @@ public class CurlController {
 		return isAddPcInfo;
 	}
 	
+	@RequestMapping("/prcssKill")
+	public void prcssKill(HttpServletRequest request) throws Exception {
+		
+		StringBuffer json = new StringBuffer();
+	    String line = null;
+	 
+	    try {
+	        BufferedReader reader = request.getReader();
+	        while((line = reader.readLine()) != null) {
+	            json.append(line);
+	        }
+	 
+	    }catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
+	    
+	    
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
+		JSONArray inetvalArray = (JSONArray) jsonObj.get("events");
+		System.out.println("====> "+ jsonObj.get("events"));
+
+		Map<String,Object> prcssList = new HashMap<String,Object>();
+		PcMangrVo pcInfo =new PcMangrVo();
+		
+		// INSERT INTO TBL_PRCSS_BLOCK_LOG
+		// (HOSTNAME,PRCSSNAME,IPADDR,UUID,ORG_SEQ,INSERT_DT)
+		// VALUES(#{hostname},#{prcssname},#{vpnipaddr},#{uuid},#{org_seq},#{insert_dt})
+
+
+        for(int i=0 ; i<inetvalArray.size() ; i++){
+            JSONObject tempObj = (JSONObject) inetvalArray.get(i);
+            prcssList.put("insert_dt",tempObj.get("datetime").toString());
+            prcssList.put("prcssname",tempObj.get("name").toString());
+            prcssList.put("uuid",tempObj.get("uuid").toString());
+            prcssList.put("org_seq",pcUUID(tempObj.get("uuid").toString()));
+			pcInfo.setPc_uuid(tempObj.get("uuid").toString());	
+			pcInfo = pcMangrMapper.pcDetailInfo(pcInfo);
+			prcssList.put("hostname", pcInfo.getPc_hostname());
+			prcssList.put("vpnipaddr", pcInfo.getPc_vpnip());
+		}
+        
+        hmprogramMapper.prcssKillLog(prcssList);
+	}
+
+
+
 	@RequestMapping("/pcInfoChkProc")
 	public Boolean pcInfoChkProc(@RequestBody String retData, HttpServletRequest request) {
 		System.out.println("pcInfoChkProc============");

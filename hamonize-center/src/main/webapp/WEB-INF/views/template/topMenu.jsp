@@ -114,7 +114,7 @@
                         <%-- <li><a href="/gplcs/blockingNxssMngr">유해사이트 관리</a></li> --%>
                     </ul>
                 </li>
-                  <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a>
+                  <li><a href="/auditLog/updateCheckLog">로그감사</a>
  	              	<ul class="last">
                         <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li> 
                         <%-- <li><a href="/auditLog/iNetLog">인터넷 사용로그</a></li> --%>

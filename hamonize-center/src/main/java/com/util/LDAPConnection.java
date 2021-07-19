@@ -452,6 +452,43 @@ public class LDAPConnection {
 
 	}
 
+	public void updatePc(PcMangrVo pvo, UserVo uvo){
+		String oldDn="";
+		//String newDn="";
+		
+		String upperDn="";
+
+		
+		ModificationItem[] mods = new ModificationItem[2];
+
+		Attribute mod1 = new BasicAttribute("ipHostNumber", pvo.getPc_vpnip().toString());
+		Attribute mod2 = new BasicAttribute("name", pvo.getPc_hostname());
+		
+		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
+		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
+		
+		String str = pvo.getAlldeptname();
+
+		String[] p_array = str.split("\\|");
+		for(int i= p_array.length-1; i>=0 ;i--){
+			System.out.println(p_array[i]);
+			upperDn += ",ou="+p_array[i];
+		}
+
+		oldDn = "cn="+pvo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";
+
+
+		try {
+			
+			dc.modifyAttributes(oldDn, mods);
+			//dc.rename(oldDn, newDn);
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+
+	}
 
 }
 

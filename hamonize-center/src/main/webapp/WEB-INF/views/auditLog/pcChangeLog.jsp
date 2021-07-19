@@ -300,12 +300,12 @@ function searchView(viewName, page){
                 <h3>하드웨어 변경로그</h3>
                 <ul class="search_area">
                   <li>
-                    <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
+                    <%-- <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
                     <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
                      ~
-                    <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
-                    <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                    <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button>
+                    <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" /> --%>
+                    <%-- <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
+                    <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
                     <div id="count"></div>
                   </li>
                   <li>
@@ -313,7 +313,7 @@ function searchView(viewName, page){
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
                           <option value="0">전체</option>
                           <option value="1">이름</option>
-                          <option value="2">아이디</option>
+                          <%-- <option value="2">아이디</option> --%>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
                       <button type="button" class="btn_type3" onclick="getList();"> 검색</button>
@@ -346,7 +346,7 @@ function searchView(viewName, page){
                                 <th>DISK</th>
                                 <th>MAC ADDRESS</th>
                                 <th>IP</th>
-                                <th>PC관리번호</th>
+                                <th>PC HOSTNAME</th>
                                 <th>DISK_ID</th>
                                 <th>CPU_ID</th>
                                 <th>UUID</th>

@@ -4,8 +4,8 @@ import com.model.EqualsHwVo;
 
 public interface IEqualsHwMapper {
 	
-	public int sgbPcHWInfoInsert(EqualsHwVo vo);
+	public int pcHWInfoInsert(EqualsHwVo vo);
 
-	public int sgbPcMngrModify(EqualsHwVo vo);
+	public int pcMngrModify(EqualsHwVo vo);
 
 }

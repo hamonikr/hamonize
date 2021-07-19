@@ -115,33 +115,6 @@
 		</if>
 		</where>
 	</select>
-<!-- 
-	<select id="userView" resultType="com.model.UserVo"  parameterType="com.model.UserVo">
-		SELECT 
-			a.seq, 
-			a.user_sabun, 
-			a.user_id, 
-			a.pass_wd, 
-			a.user_name, 
-			ins_date,
-			email,
-			tel, 
-			to_char(a.upd_date, 'YYYY-MM-DD') as upd_date, 
-			a.kind,
-			case when a.rank = '002' then '사원'
-			when a.rank = '003' then '대리'
-			when a.rank = '004' then '과장'
-			when a.rank = '005' then '부장' 
-			else ''
-			end as rank , 
-			a.discharge_dt, 
-			a.org_seq,
-			(select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) as org_nm
-		FROM tbl_user a
-		<where>
-				a.seq = #{seq}
-		</where>	 
-	</select> -->
 
 	<select id="userView" resultType="com.model.UserVo"  parameterType="com.model.UserVo">
 		SELECT 
