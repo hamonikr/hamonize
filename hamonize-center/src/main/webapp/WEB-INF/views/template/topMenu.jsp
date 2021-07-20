@@ -1,24 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
  <style>
  #header_layer{
  width: 140px;
  height: 150px;
  background-color: #fff;
  display:none;
- /*float:left;*/
  position: absolute;
  top: 25px;
  left: 1700px;
  z-index: 1;
  }
- /* ul,li{
- list-style:none;
- margin:0;
- padding:0
- }
- .clear{clear:both}
- li.current{color:red} */
+
  </style>
  <script>
  $(document).ready(function(){
@@ -41,7 +33,6 @@
 		 shtml += "<li style='text-align: center;'><a href='/admin/list.do' >관리자관리</a></li>";
 		 shtml += "<li style='text-align: center;'><a href='/admin/managerlist.do' >사지방매니저관리</a></li>";
 		 shtml += "<li style='text-align: center;'><a href='/gplcs/jsonInsertPc.do' >Json파일등록</a></li>";
-		 /* shtml += "<li style='text-align: center;'><a href='/admin/serverlist.do' >사지방서버관리</a></li>"; */
 		 shtml += "</ul>"; 
 		 $("#header_layer").append(shtml);
 		 if($("#header_layer").css("display") == "none")
@@ -114,15 +105,22 @@
                         <%-- <li><a href="/gplcs/blockingNxssMngr">유해사이트 관리</a></li> --%>
                     </ul>
                 </li>
-                  <li><a href="/auditLog/updateCheckLog">로그감사</a>
- 	              	<ul class="last">
-                        <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li> 
-                        <%-- <li><a href="/auditLog/iNetLog">인터넷 사용로그</a></li> --%>
-                        <li><a href="/auditLog/prcssBlockLog">프로세스 차단로그</a></li>
-                        <li><a href="/auditLog/pcChangeLog">하드웨어 변경로그</a></li>
-                        <li><a href="/auditLog/unAuthLog">비인가 디바이스로그</a></li>
-                        <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a></li>
-                   </ul>
+
+                <li><a href="/backupRecovery/backupC">백업관리</a>
+                    <ul class="last">
+                        <li><a href="/backupRecovery/backupC">백업주기 설정</a></li> 
+                        <li><a href="/backupRecovery/backupR">복구관리</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="/auditLog/updateCheckLog">로그감사</a>
+                <ul class="last">
+                    <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li> 
+                    <li><a href="/auditLog/prcssBlockLog">프로세스 차단로그</a></li>
+                    <li><a href="/auditLog/pcChangeLog">하드웨어 변경로그</a></li>
+                    <li><a href="/auditLog/unAuthLog">비인가 디바이스로그</a></li>
+                    <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a></li>
+                </ul>
                 </li>
             </ul>
         </div>

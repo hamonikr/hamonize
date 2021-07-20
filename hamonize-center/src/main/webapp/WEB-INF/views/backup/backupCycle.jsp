@@ -350,7 +350,7 @@ function fnSave(){
             </div>
 			<!-- //List -->
 					<div class="right mT20">
-			             <button type="reset" class="btn_type2" id="btnInit"> 초기화</button>
+			             <!-- <button type="reset" class="btn_type2" id="btnInit"> 초기화</button> -->
 			             <button type="button" class="btn_type2" id="btnSave"> 저장</button>
 			         </div>
 
