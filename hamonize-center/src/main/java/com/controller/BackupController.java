@@ -116,7 +116,6 @@ public class BackupController {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				// FAIL_GET_LIST
 			}
 			model.addAttribute("oList", jsonArray);
 
@@ -129,13 +128,17 @@ public class BackupController {
 		public JSONArray backupRCShow(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
 		  	JSONArray result = new JSONArray();
 		  	List<Map<String, Object>> resultSet;
-		  	params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
+			
+			System.out.println("backupRCShow org_seq > "+params.get("org_seq").toString());
+			params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		  	resultSet = bService.backupRCApplcView(params);
-		  	if(!resultSet.isEmpty()) {
+		  	
+			if(!resultSet.isEmpty()) {
 		  	for(int i = 0; i < resultSet.size();i++) {
 		  		JSONObject jo = new JSONObject();
-		  		jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
-		  		jo.put("org_seq", resultSet.get(i).get("org_seq").toString());
+		  		// jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
+		  		jo.put("seq", resultSet.get(i).get("seq").toString());
+				jo.put("org_seq", resultSet.get(i).get("org_seq").toString());
 		  		jo.put("pc_uuid", resultSet.get(i).get("pc_uuid").toString());
 		  		jo.put("pc_hostname", resultSet.get(i).get("pc_hostname").toString());
 		  		result.add(jo);
@@ -153,12 +156,12 @@ public class BackupController {
 		public JSONArray backupRCList(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
 		  	JSONArray result = new JSONArray();
 		  	List<Map<String, Object>> resultSet;
-		  	params.put("dept_seq", Integer.parseInt(params.get("dept_seq").toString()));
+		  	params.put("seq", Integer.parseInt(params.get("seq").toString()));
 		  	resultSet = bService.backupRecoveryList(params);
 		  	if(!resultSet.isEmpty()) {
 		  	for(int i = 0; i < resultSet.size();i++) {
 		  		JSONObject jo = new JSONObject();
-		  		jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
+		  		jo.put("seq", resultSet.get(i).get("seq").toString());
 		  		jo.put("br_org_seq", resultSet.get(i).get("br_org_seq").toString());
 		  		jo.put("br_backup_iso_dt", resultSet.get(i).get("br_backup_iso_dt").toString());
 		  		jo.put("br_backup_gubun", resultSet.get(i).get("br_backup_gubun").toString());
@@ -170,20 +173,16 @@ public class BackupController {
 		  	}
 		  	System.out.println(result);
 			JSONObject data = new JSONObject();
-			//data.put("dataInfo", result);
 			return result;
 				
 		}
 	  @ResponseBody
 	  @RequestMapping("backupRCSave")
 		public String backupRCSave(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
-		  params.put("dept_seq", Integer.parseInt(params.get("dept_seq").toString()));
+		  params.put("seq", Integer.parseInt(params.get("seq").toString()));
 		  params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		  params.put("br_seq", Integer.parseInt(params.get("br_seq").toString()));
-		/*
-		 * params.put("rl_org_seq", Integer.parseInt(params.get("org_seq").toString()));
-		 * params.put("rl_br_seq", Integer.parseInt(params.get("br_seq").toString()));
-		 */
+
 		  int result=0;
 		  //로그저장
 		  bService.backupRecoveryLogSave(params);

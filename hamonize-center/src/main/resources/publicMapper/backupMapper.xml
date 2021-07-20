@@ -38,7 +38,7 @@
 			 	seq, pc_status, pc_cpu, pc_memory, pc_disk, pc_macaddress, 
  				pc_ip, first_date, last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid 
  			FROM tbl_pc_mangr
- 			WHERE ORG_SEQ = #{org_seq}
+ 			WHERE org_seq = #{org_seq}
 	</select>
 	
 	<select id="backupRecoveryList" resultType="java.util.HashMap" parameterType="java.util.HashMap" >

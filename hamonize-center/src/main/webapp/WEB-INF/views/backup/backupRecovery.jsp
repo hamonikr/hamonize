@@ -325,18 +325,18 @@ function fnSave(){
                     <tbody>
                         <tr>
                             <th rowspan="3">PC 목록<br />(HostName)</th>
-                            <td id="pc_list" class="relist">사지방을 선택해 주세요.</td>
+                            <td id="pc_list" class="relist">부서를 선택해 주세요.</td>
                             
                         </tr>
                         <tr>
-                            <td id="rc_list" class="relist">사지방을 선택해 주세요.</td>
+                            <td id="rc_list" class="relist">부서를 선택해 주세요.</td>
                         </tr>
                     </tbody>
                 </table>
                     </form>
                 </div><!-- //List -->
                 <div class="t_center mT20">
-                    <button type="reset" class="btn_type2" id="btnInit">초기화</button>
+                    <!-- <button type="reset" class="btn_type2" id="btnInit">초기화</button> -->
                     <button type="button" class="btn_type2" id="btnSave">저장</button>
                 </div>
             </div>
