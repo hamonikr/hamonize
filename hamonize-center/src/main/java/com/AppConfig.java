@@ -55,22 +55,7 @@ public class AppConfig {
                 resource.setProperty("password", globalPropertySource.getPassword());
                 resource.setProperty("factory", "org.apache.tomcat.jdbc.pool.DataSourceFactory");
                 context.getNamingResources().addResource(resource);
-            }
-            
-            // 테스트 서버용
-            
-            // @Override                   // create JNDI resource
-            // protected void postProcessContext(Context context) {
-            //     ContextResource resource = new ContextResource();
-            //     resource.setName("jdbc/postgresqldb");
-            //     resource.setType(DataSource.class.getName());
-            //     resource.setProperty("driverClassName", "org.postgresql.Driver");
-            //     resource.setProperty("url", "jdbc:postgresql://10.8.0.5:5432/hamonize_center");
-            //     resource.setProperty("username", "ivs");
-            //     resource.setProperty("password","password");
-            //     resource.setProperty("factory", "org.apache.tomcat.jdbc.pool.DataSourceFactory");
-            //     context.getNamingResources().addResource(resource);
-            // }
+            }            
         };
     }
 	 @Bean(name = "dataSource", destroyMethod = "")

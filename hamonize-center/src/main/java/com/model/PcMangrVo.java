@@ -1,7 +1,5 @@
 package com.model;
 
-import java.util.Arrays;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

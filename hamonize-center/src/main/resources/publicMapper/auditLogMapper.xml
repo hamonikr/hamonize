@@ -776,29 +776,33 @@
 			 </select>
 			 
 			 <!-- 디바이스 허용 정책 배포 -->
-			 <select id="devicePackageList" resultType="String">
-				SELECT sm_name
-					FROM tbl_security_mngr where sm_gubun='D'
+			 <select id="devicePackageList" parameterType="hashmap" resultType="String">
+				SELECT distinct product 
+				FROM tbl_act_device_log
+				WHERE org_seq in (
+					select org_seq 
+					from tbl_pc_mangr tpm 
+					where uuid = #{uuid}
+				)
+
 			 </select>
-			 <select id="deviceList" resultType="map" parameterType="hashmap" >
+
+			 <select id="deviceList" parameterType="hashmap" resultType="map">
 				    <foreach collection="debList" item="item" index="index">
-						(select
-						    *
-						  from
-						    tbl_act_device_log tb1
-						    ,tbl_security_mngr tb2
-						  where
-						    tb1.product = tb2.sm_name
-						    and tb1.uuid = #{uuid}
-						    and tb1.product =  #{item} 
-						  order by
-						    tb1.ins_date desc limit 1)
-						     <if test="debListCnt > index+1">
+						(select t.*
+							from(
+							select row_number () over (order by ins_date desc) as row,*
+							from tbl_act_device_log
+							where uuid =  #{uuid} and product = #{item}
+							) t
+							limit 1
+						) 
+						<if test="debListCnt > index+1">
 				            	UNION ALL
-				            </if>
+				        </if>
 					</foreach>
 			 </select>
-			 
+
 			 <!-- 유해사이트 정책 배포 -->
 			 <select id="nxssList" resultType="map" parameterType="hashmap" >
 				    (select

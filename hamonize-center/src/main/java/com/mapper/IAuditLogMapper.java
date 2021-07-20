@@ -48,7 +48,7 @@ public interface IAuditLogMapper {
 	
 	public List<Map<String, Object>> firewallList(HashMap<String, Object> map);
 	
-	public List<String> devicePackageList();
+	public List<String> devicePackageList(HashMap<String, Object> map);
 	
 	public List<Map<String, Object>> deviceList(HashMap<String, Object> map);
 	
