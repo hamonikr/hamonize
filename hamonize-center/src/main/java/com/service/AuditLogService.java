@@ -167,12 +167,13 @@ public class AuditLogService {
 		List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
 		
 		try {
-			
-			List<String> list = auditLogMapper.devicePackageList();
+
+			jsonObject.put("uuid", params.get("pc_uuid"));
+
+			List<String> list = auditLogMapper.devicePackageList(jsonObject);
 			
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
-			jsonObject.put("uuid", params.get("pc_uuid"));
 
 			result = auditLogMapper.deviceList(jsonObject);
 			

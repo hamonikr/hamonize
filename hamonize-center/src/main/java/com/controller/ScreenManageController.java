@@ -23,12 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.mapper.IPcMangrMapper;
 import com.model.FileVO;
 import com.model.OrgVo;
-import com.model.PcMangrVo;
 import com.service.OrgService;
 import com.service.ScreenManageService;
 import com.util.FileUtil;
