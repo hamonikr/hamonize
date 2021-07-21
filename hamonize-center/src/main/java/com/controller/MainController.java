@@ -8,6 +8,7 @@ import java.util.Map;
 import com.mapper.IMainMapper;
 import com.mapper.ITchnlgyMapper;
 import com.service.MainService;
+import com.service.MonitoringService;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -25,6 +26,9 @@ public class MainController {
 	
 	@Autowired
 	private MainService mService;
+
+	@Autowired
+	private MonitoringService miService;
 	
 	@Autowired
 	private ITchnlgyMapper tchnlgyMapper;
@@ -44,6 +48,35 @@ public class MainController {
 	public String mainMap() throws Exception {
 		return "/main/mainMap";
 
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/pcList")
+	public Map<String, Object> pcList(Model model,@RequestParam Map<String, Object> params) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String,Object> result = new HashMap<String,Object>();
+		params.put("org_seq", 1);
+		int on = 0;
+		int off = 0;
+		try {
+			list =  miService.pcListInfo(params);
+			for(int i = 0; i < list.size();i++) {
+				if(list.get(i).get("pc_status") != null)
+					on++;
+				else
+					off++;	
+			}
+			System.out.println("on===="+on);
+			System.out.println("off===="+off);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		result.put("pcList", list);
+		result.put("on", on);
+		result.put("off", off);
+
+		return result;
 	}
 
 	@ResponseBody
@@ -153,35 +186,6 @@ public class MainController {
 		return ja;
 	}
 	
-	
-	@ResponseBody
-	@RequestMapping(value = "/pcList")
-	public Map<String,Object> pcList(Model model,@RequestParam Map<String, Object> params) {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
-		Map<String, Object> dataParams = new HashMap<String, Object>();
-		
-		int on = 0;
-		int off = 0;
-		try {
-			list =  mService.pcListInfo(params);
-			for(int i = 0; i < list.size();i++) {
-				resultList.add((Map<String, Object>) list.get(i));
-				
-				if(list.get(i).get("pc_status")=="true")
-					on++;
-				else
-					off++;		
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		dataParams.put("sido", resultList);
-		dataParams.put("pcOn", on);
-		dataParams.put("pcOff", off);
-		return dataParams;
-	}
 
 	// @ResponseBody
 	// @RequestMapping(value = "/serverList")

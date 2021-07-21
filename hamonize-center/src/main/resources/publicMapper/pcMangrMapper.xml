@@ -556,7 +556,7 @@
 	</update>
 	
 	<!-- 정책배포결과 업데이트 -->
-	<select id="pcPolicyList" resultType="map" parameterType="map">
+	<select id="pcPolicyUpdtList" resultType="map" parameterType="map">
 	SELECT
     DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver
 		FROM (
@@ -601,6 +601,185 @@
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.insert_dt DESC
+			<if test="type == 'main'">
+			limit 5
+			</if>
+			--TA.debname,  TA.gubun DESC
+		) PA
+	</select>
+
+	<!-- 정책배포결과 프로그램 -->
+	<select id="pcPolicyProgrmList" resultType="map" parameterType="map">
+	SELECT
+    DISTINCT PA.count, PA.progrmname, PA.status , (CASE WHEN PA.status_yn = 'N'  THEN '허용' ELSE '차단' END ) as status_yn , PA.ins_date
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER( PARTITION BY TA.progrmname, TA.status ),
+				COUNT(TA.progrmname) over(partition by TA.progrmname, TA.status),
+				TA.*
+				FROM (
+					SELECT
+						ROW_NUMBER() OVER( PARTITION BY A.progrmname, A.uuid ORDER BY A.ins_date DESC),
+						A.progrmname, A.ins_date, A.status, A.status_yn
+					FROM (
+						SELECT
+							DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(progrmname),',') , ',')) progrmname
+							,orgseq
+							,uuid
+							,datetime
+							,hostname
+							,status_yn
+							,status
+							,ins_date
+						FROM tbl_act_progrm_log
+						WHERE 
+						--org_seq not in  (8307 , 8308 )
+							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
+							--and 
+							uuid in (
+								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
+								(
+									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+										FROM tbl_org a
+										WHERE a.seq = #{org_seq}
+										UNION all
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+										FROM tbl_org a, search_org so
+										WHERE a.p_seq = so.seq and not cycle)
+										SELECT seq
+										FROM search_org
+								)
+							)
+							--and gubun != 'DELETE'
+						GROUP BY seq,orgseq,uuid,datetime,hostname,status_yn,status,progrmname,ins_date
+						order by ins_date desc
+					) A
+					--WHERE A.debname != ''
+					--ORDER BY pc_uuid DESC
+				)  TA
+			WHERE row_number = 1
+			ORDER BY TA.ins_date DESC
+			<if test="type == 'main'">
+			limit 5
+			</if>
+			--TA.debname,  TA.gubun DESC
+		) PA
+	</select>
+
+	<!-- 정책배포결과 방화벽 -->
+	<select id="pcPolicyFirewallList" resultType="map" parameterType="map">
+	SELECT
+    DISTINCT PA.count, PA.retport, (CASE WHEN PA.status = 'allow'  THEN '허용' ELSE '차단' END ) as status , (CASE WHEN PA.status_yn = 'Y'  THEN '완료' ELSE '미완료' END ) as status_yn, PA.ins_date
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER( PARTITION BY TA.retport, TA.status ),
+				COUNT(TA.retport) over(partition by TA.retport, TA.status),
+				TA.*
+				FROM (
+					SELECT
+						ROW_NUMBER() OVER( PARTITION BY A.retport, A.uuid ORDER BY A.ins_date DESC),
+						A.retport, A.ins_date, A.status, A.status_yn
+					FROM (
+						SELECT
+							DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(retport),',') , ',')) retport
+							,orgseq
+							,uuid
+							,datetime
+							,hostname
+							,status_yn
+							,status
+							,ins_date
+						FROM tbl_act_firewall_log
+						WHERE 
+						--org_seq not in  (8307 , 8308 )
+							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
+							--and 
+							uuid in (
+								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
+								(
+									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+										FROM tbl_org a
+										WHERE a.seq = 1
+										UNION all
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+										FROM tbl_org a, search_org so
+										WHERE a.p_seq = so.seq and not cycle)
+										SELECT seq
+										FROM search_org
+								)
+							)
+							--and gubun != 'DELETE'
+						GROUP BY seq,orgseq,uuid,datetime,hostname,status_yn,status,retport,ins_date
+						order by ins_date desc
+					) A
+					--WHERE A.debname != ''
+					--ORDER BY pc_uuid DESC
+				)  TA
+			WHERE row_number = 1
+			ORDER BY TA.ins_date DESC
+			<if test="type == 'main'">
+			limit 5
+			</if>
+			--TA.debname,  TA.gubun DESC
+		) PA
+	</select>
+
+	<!-- 정책배포결과 디바이스 -->
+	<select id="pcPolicyDeviceList" resultType="map" parameterType="map">
+	SELECT
+    DISTINCT PA.count, PA.product||'('||PA.vendorcode||':'||PA.productcode||')' as product, (CASE WHEN PA.status_yn = 'Y'  THEN '차단' ELSE '허용' END ) as status_yn, PA.ins_date
+		FROM (
+			SELECT
+				ROW_NUMBER() OVER( PARTITION BY TA.product, TA.status_yn ),
+				COUNT(TA.product) over(partition by TA.product, TA.status_yn),
+				TA.*
+				FROM (
+					SELECT
+						ROW_NUMBER() OVER( PARTITION BY A.product, A.uuid ORDER BY A.ins_date DESC),
+						A.product, A.ins_date, A.status_yn,A.vendorcode,A.productcode
+					FROM (
+						SELECT
+							DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(product),',') , ',')) product
+							,uuid
+							,hostname
+							,status_yn
+							,ins_date
+							,vendorcode
+							,productcode
+						FROM tbl_act_device_log
+						WHERE 
+						--org_seq not in  (8307 , 8308 )
+							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
+							--and 
+							uuid in (
+								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
+								(
+									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+										FROM tbl_org a
+										WHERE a.seq = 1
+										UNION all
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+										FROM tbl_org a, search_org so
+										WHERE a.p_seq = so.seq and not cycle)
+										SELECT seq
+										FROM search_org
+								)
+							)
+							--and gubun != 'DELETE'
+						GROUP BY seq,uuid,hostname,status_yn,product,ins_date,vendorcode,productcode
+						order by ins_date desc
+					) A
+					--WHERE A.debname != ''
+					--ORDER BY pc_uuid DESC
+				)  TA
+			WHERE row_number = 1
+			ORDER BY TA.ins_date DESC
+			<if test="type == 'main'">
+			limit 5
+			</if>
 			--TA.debname,  TA.gubun DESC
 		) PA
 	</select>

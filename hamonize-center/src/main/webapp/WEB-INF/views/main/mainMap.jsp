@@ -1,327 +1,875 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
 
-<script src="/js/sgb/wow.min.js"></script>
-<script src="/js/adapter.js"></script>
-<!-- OpenLayers 3 & Proj4js -->
-        <link rel="stylesheet" type="text/css" href="javascript/ol.css" />
-        <link rel="stylesheet" type="text/css" href="javascript/ol3-layerswitcher.css" />
-        <script type="text/javascript" src="javascript/ol-debug.js"></script>
-<style>
-.ol-mouse-position {display:none;}
-.ol-zoom  {display:none;}
-.ol-zoom-extent {display:none;}
-.ol-attribution {display:none;}
-.tooltip {position:relative; padding: 3px 7px; background:rgba(0, 0, 0, 0.6); color:#fff; font-size:13px; font-weight: 600; text-align:center; height:25px; border-radius:3px} 
-.tooltip:after {position:absolute; top:21px; left: 15px; content: '▼' ;  color:#000; opacity:0.7; font-size:9px }
-#tooltip2:after {position:absolute; top:-16px; left: 4px; content: '▲' ;  color:#000; opacity:0.7; font-size:9px }
-#tooltip4 {left: 17px;}
-#tooltip4:after {position:absolute; top:21px; left: 70px; content: '▼' ;  color:#000; opacity:0.7; font-size:9px }
-#tooltip8:after {position:absolute; top:-16px; left: 75px; content: '▲' ;  color:#000; opacity:0.7; font-size:9px }
-#tooltip11 {left: 17px;}
-#tooltip11:after {position:absolute; top:-16px; left: 65px; content: '▲' ;  color:#000; opacity:0.7; font-size:9px }
-#tooltip13:after {position:absolute; top:-16px; left: 15px; content: '▲' ;  color:#000; opacity:0.7; font-size:9px }
-#tooltip15:after {position:absolute; top:-16px; left: 25px; content: '▲' ;  color:#000; opacity:0.7; font-size:9px }
-#tooltip17 {left: 28px;}
-#tooltip17:after {position:absolute; top:21px; left: 69px; content: '▼' ;  color:#000; opacity:0.7; font-size:9px }
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+	<link href="css/theme.css" rel="stylesheet" media="all">
+	
+	<style>
+        .col-lg-3 {
+            -ms-flex: 0 0 33%;
+            flex: 0 0 33%;
+            max-width: 33%;
+        }
+        .col-lg-9 {
+            flex: 0 0 75%;
+            max-width: 50%;
+        }
+        .menubar li ul {
+            background: #3e3a39;
+            display: none;
+            height: auto;
+            padding-bottom: 10px;
+            margin: 0px;
+            border-radius: 0 0 7px 7px;
+            position: absolute;
+            width: 160px;
+            z-index: 200;
+        }
+        .hamo_header .logo {
+            width: 210px;
+            height: 50px;
+            position: absolute;
+            left: 40px;
+            top: 60px;
+        }
+	</style>
+<body class="animsition">
+	<%@ include file="../template/topMenu.jsp" %>
+	<div class="page-wrapper">
+    <!-- <div class="hamo_container">
+        <div class="main_box"> -->
+		<!-- PAGE CONTAINER-->
+		<div class="page-container">
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="overview-wrap">
+                                    <!-- <h2 class="title-1">PC사용현황</h2> -->
+                                    <!-- <button class="au-btn au-btn-icon au-btn--blue">
+                                        <i class="zmdi zmdi-plus"></i>add item</button> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-t-25" style="justify-content: space-between;">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="overview-item overview-item--c1">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix">
+                                            <div class="icon">
+												<i class="zmdi zmdi-desktop-windows"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>103</h2>
+                                                <span>Total</span>
+                                            </div>
+                                        </div>
+                                        <div class="overview-chart">
+                                            <!-- <canvas id="widgetChart1"></canvas> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="overview-item overview-item--c2">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix">
+                                            <div class="icon">
+                                                <i class="zmdi zmdi-devices"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>8,688</h2>
+                                                <span>On</span>
+                                            </div>
+                                        </div>
+                                        <div class="overview-chart">
+                                            <!-- <canvas id="widgetChart2"></canvas> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="overview-item overview-item--c3">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix">
+                                            <div class="icon">
+                                                <i class="zmdi zmdi-devices-off"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>1,086</h2>
+                                                <span>Off</span>
+                                            </div>
+                                        </div>
+                                        <div class="overview-chart">
+                                            <!-- <canvas id="widgetChart3"></canvas> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-6 col-lg-3">
+                                <div class="overview-item overview-item--c4">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix">
+                                            <div class="icon">
+                                                <i class="zmdi zmdi-money"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>$8,386</h2>
+                                                <span>total earnings</span>
+                                            </div>
+                                        </div>
+                                        <div class="overview-chart">
+                                            <canvas id="widgetChart4"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <h2 class="title-1 m-b-25">PC사용현황</h2>
+                        <iframe src="http://192.168.0.76:3000/d-solo/0acW0zWnz/new-dashboard-copy?orgId=1&var-host=1f9535d4a69640d5bd6c840537ecba3ddd&refresh=10s&from=1626815553983&to=1626837153983&panelId=4" width="100%" height="350" frameborder="0"></iframe>
+                        <!-- <div class="row">
+                            <div class="col-lg-6">
+                                <div class="au-card recent-report">
+                                    <div class="au-card-inner">
+                                        <h3 class="title-2">월별 설치 현황</h3>
+                                        <div class="chart-info">
+                                            <div class="chart-info__left">
+                                                <div class="chart-note">
+                                                    <span class="dot dot--blue"></span>
+                                                    <span>products</span>
+                                                </div>
+                                                <div class="chart-note mr-0">
+                                                    <span class="dot dot--green"></span>
+                                                    <span>services</span>
+                                                </div>
+                                            </div>
+                                            <div class="chart-info__right">
+                                                <div class="chart-statis">
+                                                    <span class="index incre">
+                                                        <i class="zmdi zmdi-long-arrow-up"></i>25%</span>
+                                                    <span class="label">products</span>
+                                                </div>
+                                                <div class="chart-statis mr-0">
+                                                    <span class="index decre">
+                                                        <i class="zmdi zmdi-long-arrow-down"></i>10%</span>
+                                                    <span class="label">services</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="recent-report__chart">
+                                            <canvas id="recent-rep-chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="au-card chart-percent-card">
+                                    <div class="au-card-inner">
+                                        <h3 class="title-2 tm-b-5">char by %</h3>
+                                        <div class="row no-gutters">
+                                            <div class="col-xl-6">
+                                                <div class="chart-note-wrap">
+                                                    <div class="chart-note mr-0 d-block">
+                                                        <span class="dot dot--blue"></span>
+                                                        <span>products</span>
+                                                    </div>
+                                                    <div class="chart-note mr-0 d-block">
+                                                        <span class="dot dot--red"></span>
+                                                        <span>services</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <div class="percent-chart">
+                                                    <canvas id="percent-chart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="row m-t-25" id="list">
+                            <!-- <div class="col-lg-9"></div> -->
+                            <!-- <div class="col-lg-3">
+                                <h2 class="title-1 m-b-25">Top PC 사용량</h2>
+                                <div class="au-card au-card--bg-blue au-card-top-countries m-b-40">
+                                    <div class="au-card-inner">
+                                        <div class="table-responsive">
+                                            <table class="table table-top-countries">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>United States</td>
+                                                        <td class="text-right">$119,366.96</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Australia</td>
+                                                        <td class="text-right">$70,261.65</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>United Kingdom</td>
+                                                        <td class="text-right">$46,399.22</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Turkey</td>
+                                                        <td class="text-right">$35,364.90</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Germany</td>
+                                                        <td class="text-right">$20,366.96</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>France</td>
+                                                        <td class="text-right">$10,366.96</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Australia</td>
+                                                        <td class="text-right">$5,366.96</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Italy</td>
+                                                        <td class="text-right">$1639.32</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- <div class="row">
+                            <div class="col-lg-6">
+                                <div class="au-card au-card--no-shadow au-card--no-pad m-b-40">
+                                    <div class="au-card-title" style="background-image:url('images/bg-title-01.jpg');">
+                                        <div class="bg-overlay bg-overlay--blue"></div>
+                                        <h3>
+                                            <i class="zmdi zmdi-account-calendar"></i>26 April, 2018</h3>
+                                        <button class="au-btn-plus">
+                                            <i class="zmdi zmdi-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="au-task js-list-load">
+                                        <div class="au-task__title">
+                                            <p>Tasks for John Doe</p>
+                                        </div>
+                                        <div class="au-task-list js-scrollbar3">
+                                            <div class="au-task__item au-task__item--danger">
+                                                <div class="au-task__item-inner">
+                                                    <h5 class="task">
+                                                        <a href="#">Meeting about plan for Admin Template 2018</a>
+                                                    </h5>
+                                                    <span class="time">10:00 AM</span>
+                                                </div>
+                                            </div>
+                                            <div class="au-task__item au-task__item--warning">
+                                                <div class="au-task__item-inner">
+                                                    <h5 class="task">
+                                                        <a href="#">Create new task for Dashboard</a>
+                                                    </h5>
+                                                    <span class="time">11:00 AM</span>
+                                                </div>
+                                            </div>
+                                            <div class="au-task__item au-task__item--primary">
+                                                <div class="au-task__item-inner">
+                                                    <h5 class="task">
+                                                        <a href="#">Meeting about plan for Admin Template 2018</a>
+                                                    </h5>
+                                                    <span class="time">02:00 PM</span>
+                                                </div>
+                                            </div>
+                                            <div class="au-task__item au-task__item--success">
+                                                <div class="au-task__item-inner">
+                                                    <h5 class="task">
+                                                        <a href="#">Create new task for Dashboard</a>
+                                                    </h5>
+                                                    <span class="time">03:30 PM</span>
+                                                </div>
+                                            </div>
+                                            <div class="au-task__item au-task__item--danger js-load-item">
+                                                <div class="au-task__item-inner">
+                                                    <h5 class="task">
+                                                        <a href="#">Meeting about plan for Admin Template 2018</a>
+                                                    </h5>
+                                                    <span class="time">10:00 AM</span>
+                                                </div>
+                                            </div>
+                                            <div class="au-task__item au-task__item--warning js-load-item">
+                                                <div class="au-task__item-inner">
+                                                    <h5 class="task">
+                                                        <a href="#">Create new task for Dashboard</a>
+                                                    </h5>
+                                                    <span class="time">11:00 AM</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="au-task__footer">
+                                            <button class="au-btn au-btn-load js-load-btn">load more</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="au-card au-card--no-shadow au-card--no-pad m-b-40">
+                                    <div class="au-card-title" style="background-image:url('images/bg-title-02.jpg');">
+                                        <div class="bg-overlay bg-overlay--blue"></div>
+                                        <h3>
+                                            <i class="zmdi zmdi-comment-text"></i>New Messages</h3>
+                                        <button class="au-btn-plus">
+                                            <i class="zmdi zmdi-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="au-inbox-wrap js-inbox-wrap">
+                                        <div class="au-message js-list-load">
+                                            <div class="au-message__noti">
+                                                <p>You Have
+                                                    <span>2</span>
+
+                                                    new messages
+                                                </p>
+                                            </div>
+                                            <div class="au-message-list">
+                                                <div class="au-message__item unread">
+                                                    <div class="au-message__item-inner">
+                                                        <div class="au-message__item-text">
+                                                            <div class="avatar-wrap">
+                                                                <div class="avatar">
+                                                                    <img src="images/icon/avatar-02.jpg" alt="John Smith">
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                <h5 class="name">John Smith</h5>
+                                                                <p>Have sent a photo</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="au-message__item-time">
+                                                            <span>12 Min ago</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="au-message__item unread">
+                                                    <div class="au-message__item-inner">
+                                                        <div class="au-message__item-text">
+                                                            <div class="avatar-wrap online">
+                                                                <div class="avatar">
+                                                                    <img src="images/icon/avatar-03.jpg" alt="Nicholas Martinez">
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                <h5 class="name">Nicholas Martinez</h5>
+                                                                <p>You are now connected on message</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="au-message__item-time">
+                                                            <span>11:00 PM</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="au-message__item">
+                                                    <div class="au-message__item-inner">
+                                                        <div class="au-message__item-text">
+                                                            <div class="avatar-wrap online">
+                                                                <div class="avatar">
+                                                                    <img src="images/icon/avatar-04.jpg" alt="Michelle Sims">
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                <h5 class="name">Michelle Sims</h5>
+                                                                <p>Lorem ipsum dolor sit amet</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="au-message__item-time">
+                                                            <span>Yesterday</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="au-message__item">
+                                                    <div class="au-message__item-inner">
+                                                        <div class="au-message__item-text">
+                                                            <div class="avatar-wrap">
+                                                                <div class="avatar">
+                                                                    <img src="images/icon/avatar-05.jpg" alt="Michelle Sims">
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                <h5 class="name">Michelle Sims</h5>
+                                                                <p>Purus feugiat finibus</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="au-message__item-time">
+                                                            <span>Sunday</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="au-message__item js-load-item">
+                                                    <div class="au-message__item-inner">
+                                                        <div class="au-message__item-text">
+                                                            <div class="avatar-wrap online">
+                                                                <div class="avatar">
+                                                                    <img src="images/icon/avatar-04.jpg" alt="Michelle Sims">
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                <h5 class="name">Michelle Sims</h5>
+                                                                <p>Lorem ipsum dolor sit amet</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="au-message__item-time">
+                                                            <span>Yesterday</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="au-message__item js-load-item">
+                                                    <div class="au-message__item-inner">
+                                                        <div class="au-message__item-text">
+                                                            <div class="avatar-wrap">
+                                                                <div class="avatar">
+                                                                    <img src="images/icon/avatar-05.jpg" alt="Michelle Sims">
+                                                                </div>
+                                                            </div>
+                                                            <div class="text">
+                                                                <h5 class="name">Michelle Sims</h5>
+                                                                <p>Purus feugiat finibus</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="au-message__item-time">
+                                                            <span>Sunday</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="au-message__footer">
+                                                <button class="au-btn au-btn-load js-load-btn">load more</button>
+                                            </div>
+                                        </div>
+                                        <div class="au-chat">
+                                            <div class="au-chat__title">
+                                                <div class="au-chat-info">
+                                                    <div class="avatar-wrap online">
+                                                        <div class="avatar avatar--small">
+                                                            <img src="images/icon/avatar-02.jpg" alt="John Smith">
+                                                        </div>
+                                                    </div>
+                                                    <span class="nick">
+                                                        <a href="#">John Smith</a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="au-chat__content">
+                                                <div class="recei-mess-wrap">
+                                                    <span class="mess-time">12 Min ago</span>
+                                                    <div class="recei-mess__inner">
+                                                        <div class="avatar avatar--tiny">
+                                                            <img src="images/icon/avatar-02.jpg" alt="John Smith">
+                                                        </div>
+                                                        <div class="recei-mess-list">
+                                                            <div class="recei-mess">Lorem ipsum dolor sit amet, consectetur adipiscing elit non iaculis</div>
+                                                            <div class="recei-mess">Donec tempor, sapien ac viverra</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="send-mess-wrap">
+                                                    <span class="mess-time">30 Sec ago</span>
+                                                    <div class="send-mess__inner">
+                                                        <div class="send-mess-list">
+                                                            <div class="send-mess">Lorem ipsum dolor sit amet, consectetur adipiscing elit non iaculis</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="au-chat-textfield">
+                                                <form class="au-form-icon">
+                                                    <input class="au-input au-input--full au-input--h65" type="text" placeholder="Type a message">
+                                                    <button class="au-input-icon">
+                                                        <i class="zmdi zmdi-camera"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+			<!-- END MAIN CONTENT-->
+		</div>
+		<!-- END PAGE CONTENT-->
+	</div><!-- //content -->
+    <script type="text/javascript">
+    function addZero(data){
+        return (data<10) ? "0"+data : data;
+    }
+    $(document).ready(function(){
+    $.post("/mntrng/pcPolicyList",{org_seq:1,type:'main'},
+				function(data){
+            var shtml = "";
+            
+			if( data.pcList.length > 0){
+                console.log("data.length======"+data.pcList.length);
+                shtml += "<div class=\"col-lg-9\">";
+                shtml += "<h2 class=\"title-1 m-b-25\">업데이트 배포결과</h2>";
+                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
+                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
+                shtml += "<thead>";
+                shtml += "<tr>";
+                shtml += "<th>패키지</th>";
+                shtml += "<th>버전</th>";
+                shtml += "<th>구분</th>";
+                shtml += "<th>전체</th>";
+                shtml += "<th>완료</th>";
+                shtml += "<th>미완료</th>";
+                shtml += "</tr>";
+                shtml += "</thead>";
+                shtml += "<tbody>";
+                    for(var i = 0;i < data.policyUpdtResult.length;i++){
+					console.log(i);
+					console.log(i+1);
+					console.log(data.policyUpdtResult.length);
+					console.log(data.policyUpdtResult[i].debname);
+					var chk = 1;
+					if((i+1) == data.policyUpdtResult.length){
+						chk=0;
+						}
+					if(data.policyUpdtResult[i].debname != data.policyUpdtResult[i+chk].debname){
+						var inset_dt = data.policyUpdtResult[i].ins_date;
+						var date = new Date(inset_dt);
+						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
+						shtml += "<tr>";
+						shtml += "<td>"+data.policyUpdtResult[i].debname+"</td>";
+						if(typeof data.policyUpdtResult[i].debver === "undefined")
+							shtml += "<td>-</td>";
+							else
+						shtml += "<td>"+data.policyUpdtResult[i].debver+"</td>";
+						shtml += "<td>"+data.policyUpdtResult[i].gubun+"</td>";
+						shtml += "<td>"+data.pcList.length+"</td>";
+						shtml += "<td>"+data.policyUpdtResult[i].count+"</td>";
+						shtml += "<td>"+noinstall+"</td>";
+						shtml += "</tr>";
+						}else if((i+1) == data.policyUpdtResult.length){
+							console.log("last");
+							var inset_dt = data.policyUpdtResult[i].ins_date;
+							var date = new Date(inset_dt);
+							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
+							shtml += "<tr>";
+							shtml += "<td>"+data.policyUpdtResult[i].debname+"</td>";
+							shtml += "<td>"+data.policyUpdtResult[i].debver+"</td>";
+							shtml += "<td>"+data.policyUpdtResult[i].gubun+"</td>";
+							shtml += "<td>"+data.pcList.length+"</td>";
+							shtml += "<td>"+data.policyUpdtResult[i].count+"</td>";
+							shtml += "<td>"+noinstall+"</td>";
+							shtml += "</tr>";
+							}
+					}
+
+                shtml += "</tbody>";
+                shtml += "</table>";
+                shtml += "</div>";
+                shtml += "</div>";
 
 
-</style>
-<script>
+                shtml += "<div class=\"col-lg-9\">";
+                shtml += "<h2 class=\"title-1 m-b-25\">프로그램 차단 배포결과</h2>"
+                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
+                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
+                shtml += "<thead>";
+                shtml += "<tr>";
+                shtml += "<th>패키지</th>";
+                shtml += "<th>구분</th>";
+                shtml += "<th>전체</th>";
+                shtml += "<th>완료</th>";
+                shtml += "<th>미완료</th>";
+                shtml += "</tr>";
+                shtml += "</thead>";
+                shtml += "<tbody>";
 
-$(document).ready(function(){
+                    for(var i = 0;i < data.policyProgrmResult.length;i++){
+					console.log(i);
+					console.log(i+1);
+					//console.log(data.policyProgrmResult.length);
+					//console.log(data.policyProgrmResult[i].progrmname);
+					var chk = 1;
+					if((i+1) == data.policyProgrmResult.length){
+						chk=0;
+						}
+					if(data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i+chk].progrmname){
+						var inset_dt = data.policyProgrmResult[i].ins_date;
+						var date = new Date(inset_dt);
+						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+						shtml += "<tr>";
+						shtml += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
+						shtml += "<td>"+data.policyProgrmResult[i].status_yn+"</td>";
+						shtml += "<td>"+data.pcList.length+"</td>";
+						shtml += "<td>"+data.policyProgrmResult[i].count+"</td>";
+						shtml += "<td>"+noinstall+"</td>";
+						shtml += "</tr>";
+						}else if((i+1) == data.policyProgrmResult.length){
+							console.log("last");
+							var inset_dt = data.policyProgrmResult[i].ins_date;
+							var date = new Date(inset_dt);
+							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+							shtml += "<tr>";
+							shtml += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
+							shtml += "<td>"+data.policyProgrmResult[i].status_yn+"</td>";
+							shtml += "<td>"+data.pcList.length+"</td>";
+							shtml += "<td>"+data.policyProgrmResult[i].count+"</td>";
+							shtml += "<td>"+noinstall+"</td>";
+							shtml += "</tr>";
+							}
+					}
+
+                shtml += "</tbody>";
+                shtml += "</table>";
+                shtml += "</div>";
+                shtml += "</div>";
+
+
+                shtml += "<div class=\"col-lg-9\">";
+                shtml += "<h2 class=\"title-1 m-b-25\">방화벽 정책 배포결과</h2>"
+                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
+                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
+                shtml += "<thead>";
+                shtml += "<tr>";
+                shtml += "<th>포트번호</th>";
+                shtml += "<th>구분</th>";
+                shtml += "<th>전체</th>";
+                shtml += "<th>완료</th>";
+                shtml += "<th>미완료</th>";
+                shtml += "</tr>";
+                shtml += "</thead>";
+                shtml += "<tbody>";
+                    for(var i = 0;i < data.policyFirewallResult.length;i++){
+					console.log(i);
+					console.log(i+1);
+					//console.log(data.policyFirewallResult.length);
+					//console.log(data.policyFirewallResult[i].Firewallname);
+					var chk = 1;
+					if((i+1) == data.policyFirewallResult.length){
+						chk=0;
+						}
+					if(data.policyFirewallResult[i].retport != data.policyFirewallResult[i+chk].retport){
+						var inset_dt = data.policyFirewallResult[i].ins_date;
+						var date = new Date(inset_dt);
+						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
+						shtml += "<tr>";
+						shtml += "<td>"+data.policyFirewallResult[i].retport+"</td>";
+						shtml += "<td>"+data.policyFirewallResult[i].status+"</td>";
+						shtml += "<td>"+data.pcList.length+"</td>";
+						shtml += "<td>"+data.policyFirewallResult[i].count+"</td>";
+						shtml += "<td>"+noinstall+"</td>";
+						shtml += "</tr>";
+						}else if((i+1) == data.policyFirewallResult.length){
+							console.log("last");
+							var inset_dt = data.policyFirewallResult[i].ins_date;
+							var date = new Date(inset_dt);
+							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
+							shtml += "<tr>";
+							shtml += "<td>"+data.policyFirewallResult[i].retport+"</td>";
+							shtml += "<td>"+data.policyFirewallResult[i].status+"</td>";
+							shtml += "<td>"+data.pcList.length+"</td>";
+							shtml += "<td>"+data.policyFirewallResult[i].count+"</td>";
+							shtml += "<td>"+noinstall+"</td>";
+							shtml += "</tr>";
+							}
+					}
+
+                shtml += "</tbody>";
+                shtml += "</table>";
+                shtml += "</div>";
+                shtml += "</div>";         
+                
+                shtml += "<div class=\"col-lg-9\">";
+                shtml += "<h2 class=\"title-1 m-b-25\">디바이스 정책 배포결과</h2>"
+                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
+                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
+                shtml += "<thead>";
+                shtml += "<tr>";
+                shtml += "<th>디바이스</th>";
+                shtml += "<th>구분</th>";
+                shtml += "<th>전체</th>";
+                shtml += "<th>완료</th>";
+                shtml += "<th>미완료</th>";
+                shtml += "</tr>";
+                shtml += "</thead>";
+                shtml += "<tbody>";
+                    for(var i = 0;i < data.policyDeviceResult.length;i++){
+					console.log(i);
+					console.log(i+1);
+					//console.log(data.policyDeviceResult.length);
+					//console.log(data.policyDeviceResult[i].progrmname);
+					var chk = 1;
+					if((i+1) == data.policyDeviceResult.length){
+						chk=0;
+						}
+					if(data.policyDeviceResult[i].product != data.policyDeviceResult[i+chk].product){
+						var inset_dt = data.policyDeviceResult[i].ins_date;
+						var date = new Date(inset_dt);
+						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
+						shtml += "<tr>";
+						shtml += "<td>"+data.policyDeviceResult[i].product+"</td>";
+						shtml += "<td>"+data.policyDeviceResult[i].status_yn+"</td>";
+						shtml += "<td>"+data.pcList.length+"</td>";
+						shtml += "<td>"+data.policyDeviceResult[i].count+"</td>";
+						shtml += "<td>"+noinstall+"</td>";
+						shtml += "</tr>";
+						}else if((i+1) == data.policyDeviceResult.length){
+							console.log("last");
+							var inset_dt = data.policyDeviceResult[i].ins_date;
+							var date = new Date(inset_dt);
+							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
+							shtml += "<tr>";
+							shtml += "<td>"+data.policyDeviceResult[i].product+"</td>";
+							shtml += "<td>"+data.policyDeviceResult[i].status_yn+"</td>";
+							shtml += "<td>"+data.pcList.length+"</td>";
+							shtml += "<td>"+data.policyDeviceResult[i].count+"</td>";
+							shtml += "<td>"+noinstall+"</td>";
+							shtml += "</tr>";
+							}
+					}
+
+                shtml += "</tbody>";
+                shtml += "</table>";
+                shtml += "</div>";
+                shtml += "</div>";
+
+                
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+                // shtml += "";
+
+				//프로그램 차단 배포 결과
+
+				// shtml_r += "<h4>프로그램 차단 배포 결과</h4>";
+				// shtml_r += "<div class=\"board_list_3\">";
+				// shtml_r += "<table>";
+				// shtml_r += "<colgroup>";
+				// shtml_r += "<col style=\"width:30%;\" /><col style=\"width:30%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
+				// shtml_r += "</colgroup>";
+				// shtml_r += "<thead><tr>";
+				// shtml_r += "<th>패키지</th>";
+				// shtml_r += "<th>적용여부</th>";
+				// shtml_r += "<th>전체PC</th>";
+				// shtml_r += "<th>완료</th>";
+				// shtml_r += "<th>미완료</th>";
+				// shtml_r += "</tr></thead>";
+				// shtml_r += "<tbody>";
+				// for(var i = 0;i < data.policyProgrmResult.length;i++){
+				// 	console.log(i);
+				// 	console.log(i+1);
+				// 	//console.log(data.policyProgrmResult.length);
+				// 	//console.log(data.policyProgrmResult[i].progrmname);
+				// 	var chk = 1;
+				// 	if((i+1) == data.policyProgrmResult.length){
+				// 		chk=0;
+				// 		}
+				// 	if(data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i+chk].progrmname){
+				// 		var inset_dt = data.policyProgrmResult[i].ins_date;
+				// 		var date = new Date(inset_dt);
+				// 		date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+				// 		var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+				// 		shtml_r += "<tr>";
+				// 		shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
+				// 		shtml_r += "<td>"+data.policyProgrmResult[i].status_yn+"</td>";
+				// 		shtml_r += "<td>"+data.pcList.length+"</td>";
+				// 		shtml_r += "<td>"+data.policyProgrmResult[i].count+"</td>";
+				// 		shtml_r += "<td>"+noinstall+"</td>";
+				// 		shtml_r += "</tr>";
+				// 		}else if((i+1) == data.policyProgrmResult.length){
+				// 			console.log("last");
+				// 			var inset_dt = data.policyProgrmResult[i].ins_date;
+				// 			var date = new Date(inset_dt);
+				// 			date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+				// 			var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+				// 			shtml_r += "<tr>";
+				// 			shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
+				// 			shtml_r += "<td>"+data.policyProgrmResult[i].status_yn+"</td>";
+				// 			shtml_r += "<td>"+data.pcList.length+"</td>";
+				// 			shtml_r += "<td>"+data.policyProgrmResult[i].count+"</td>";
+				// 			shtml_r += "<td>"+noinstall+"</td>";
+				// 			shtml_r += "</tr>";
+				// 			}
+				// 	}
+				
+				// shtml_r += "</tbody>";
+				// shtml_r += "</table>";
+				// shtml_r += "</div>";
+				// shtml_r += "</div>";
+                //$(".col-lg-9").append(shtml);
+                $("#list").append(shtml);
+				
+			}else{  
+				gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+			}
+
+			// console.log("cnt===="+cnt)
+		});
 
 });
+//pc카운트 비동기
+var xmlhttp;
 
-	new WOW().init();
-</script>
-<body>
-	<%@ include file="../template/topMenu.jsp" %>
+if(window.XMLHttpRequest){
+	xmlhttp = new XMLHttpRequest();
+} else {
+	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+}
 
-    <div class="hamo_container">
-        <div class="main_box">
-            <!--- 좌측 -->
-            <div class="main_left">
-                <div class="graph mT50" style="margin-top: 0px;">                    
-					<div id="map" class="map" style="height:915px; font-size: 12px;"></div>
-                    <div id="tooltip"  class="tooltip"></div>
- 						<div id="tooltip2" class="tooltip"></div>
- 						<div id="tooltip3" class="tooltip"></div>
- 						<div id="tooltip4" class="tooltip"></div>
- 						<div id="tooltip5" class="tooltip"></div>
- 						<div id="tooltip6" class="tooltip"></div>
- 						<div id="tooltip7" class="tooltip"></div>
- 						<div id="tooltip8" class="tooltip"></div>
- 						<div id="tooltip9" class="tooltip"></div>
- 						<div id="tooltip10" class="tooltip"></div>
- 						<div id="tooltip11" class="tooltip"></div>
- 						<div id="tooltip12" class="tooltip"></div>
- 						<div id="tooltip13" class="tooltip"></div>
- 						<div id="tooltip14" class="tooltip"></div>
- 						<div id="tooltip15" class="tooltip"></div>
- 						<div id="tooltip16" class="tooltip"></div>
- 						<div id="tooltip17" class="tooltip"></div>
-                </div>
-            </div>
-            
-            <!--- //좌측 -->
-
-            <!--- 우측 -->
-            <div class="main_right">
-            <div class="main_title">
-                    	PC운영현황
-                    <span></span>
-                </div>
-            <ul class="cyberinfo">
-                    <li><span>구분</span></li>
-                    <li><span>합계</span></li>
-                    <li><span>사용 현황</span></li>
-                    <li><span>미사용 현황</span></li>
-                </ul>
-                <!-- 기술지원 현황 -->
-                <%-- <div class="main_title">장애처리현황</div>
-                <ul style="margin-top: 20px;margin-bottom: 20px;">
-                    <li>
-                        <div class="board_list_1 mT20">
-                            <table id="tchnlgyCount">
-                                <colgroup>
-                                    <col style="width:25%;" />
-                                    <col style="width:25%;" />
-                                    <col style="width:25%;" />
-                                    <col />
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th style='text-align: center'>총등록</th>
-                                        <th style='text-align: center'>진행중</th>
-                                        <th style='text-align: center'>답변완료</th>
-                                    </tr>
-                                </thead>
-                                <tbody id = "tchnlgyCountBody">                                    
-                                </tbody>
-                            </table>
-                        </div>
-				<!-- //List -->
-                    </li>
-                </ul> --%>
-                <!-- 접속현황 -->
-                <div class="main_title">접속현황(전국)</div>
-                <ul class="col2">
-                    <li>
-                        <div class="board_list_1 mT20">
-                            <table id="sido1">
-                                <colgroup>
-                                    <col style="width:50%;" />
-                                    <col />
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>지역</th>
-                                        <th class="t_right">사용현황</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>서울특별시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>부산광역시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>대구광역시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>인천광역시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>광주광역시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>대전광역시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>울산광역시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div><!-- //List -->
-                    </li>
-                    <li id="hamain_right2">
-                        <div class="board_list_2 mT20">
-                            <table id="sido2">
-                                <colgroup>
-                                    <col style="width:50%;" />
-                                    <col />
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>지역</th>
-                                        <th class="t_right">사용현황</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                	<tr>
-                                        <td>경기도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>강원도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>충청북도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>충청남도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>전라북도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>전라남도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>경상북도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>경상남도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>제주특별자치도</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>세종특별자치시</td>
-                                        <td class="t_right">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div><!-- //List -->
-                    </li>
-                </ul>
-                <!-- //접속현황 -->
-                
-                <!-- 주요접속 유해사이트 -->
-                <ul class="col2" style="margin-top: 20px;">
-                    <li id="hamain_left1">
-                        <div class="main_title">주요접속 URL 통계(월간)</div>
-                         <ul class="siteinfo">
-                            <li>
-                                <div class="sname con"><span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present rank1 wow fadeInLeft" data-wow-delay="0.5s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname con"><span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present rank2 wow fadeInLeft" data-wow-delay="1s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname con"><span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present rank3 wow fadeInLeft" data-wow-delay="1.5s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname con"> <span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present wow fadeInLeft" data-wow-delay="1.8s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname con"> <span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present wow fadeInLeft" data-wow-delay="2s" style="width:0%"></div>
-                                </div>
-                            </li>
-                        </ul>  
-                    </li>
-<<<<<<< HEAD
-                    <%-- <li id="hamain_right1">
-=======
-                    <li id="hamain_right1">
->>>>>>> 5248dfb25a384b3cc6f9a5530fe0c467b1499cd7
-                        <div class="main_title">유해사이트 차단현황(월간)</div>
-                         <ul class="siteinfo">
-                            <li>
-                                <div class="sname ill"> <span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present rank1 wow fadeInLeft" data-wow-delay="0.5s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname ill"> <span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present rank2 wow fadeInLeft" data-wow-delay="1s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname ill"> <span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present rank3 wow fadeInLeft" data-wow-delay="1.5s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname ill"><span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present wow fadeInLeft" data-wow-delay="1.8s" style="width:0%"></div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="sname ill"> <span>0%</span></div>
-                                <div class="sbar">
-                                    <div class="present wow fadeInLeft" data-wow-delay="2s" style="width:0%"></div>
-                                </div>
-                            </li>
-                        </ul> 
-<<<<<<< HEAD
-                    </li> --%>
-=======
-                    </li>
->>>>>>> 5248dfb25a384b3cc6f9a5530fe0c467b1499cd7
-                </ul>
-                <input type="button" class="btn_type4" id="btnClose" name="btnClose" value="닫기" style="float: right;" />
-                <input type="button" class="btn_type4" id="btnMore" name="btnMore" value="더보기" style="float: right;" />  
-                <!-- //주요접속 유해사이트 -->
-
-            </div>
-            <!--- //우측 -->
-        </div>
-
-    </div><!-- //content -->
-	<script>
+xmlhttp.onreadystatechange = function(){
+	if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+		 var data = JSON.parse(xmlhttp.responseText);
+		 var text = document.getElementsByClassName("text");
+		 text[0].children[0].innerText=data.pcList.length;
+		 text[1].children[0].innerText=data.on;
+		 text[2].children[0].innerText=data.off;
+	}else{
+		console.log("fail");
+	}
+}
+xmlhttp.open("POST","pcList.do",true);
+xmlhttp.send();
+	</script>
+	<!-- <script>
 			$(document).ready(function(){
 				var offset = 0;
 				$(".tooltip").css("display","none");
@@ -928,12 +1476,31 @@ $(document).ready(function(){
 	return setInterval(callback, seconds * 1000);
 	}
 
-</script>
-
-<script type="text/javascript" src="javascript/ol.js"></script>
-<script type="text/javascript" src="javascript/ol3-layerswitcher.js"></script>
-<script type="text/javascript" src="javascript/proj4.js"></script>
+</script> -->
 
 	
 	<%@ include file="../template/footer.jsp" %>
+	<!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <!-- Vendor JS       -->
+    <script src="vendor/slick/slick.min.js">
+    </script>
+    <script src="vendor/wow/wow.min.js"></script>
+    <script src="vendor/animsition/animsition.min.js"></script>
+    <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+    </script>
+    <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+    <script src="vendor/counter-up/jquery.counterup.min.js">
+    </script>
+    <script src="vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <script src="vendor/select2/select2.min.js">
+    </script>
+
+    <!-- Main JS-->
+    <script src="js/main.js"></script>
 </body>

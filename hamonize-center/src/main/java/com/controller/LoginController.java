@@ -52,40 +52,40 @@ public class LoginController implements Serializable{
 		String clientIp = params.get("user_ip").toString();
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		if(clientIp != null || "".equals(clientIp)){
-			System.out.println("===========================================");
-			System.out.println("들어오는 아이피 ===="+clientIp);
-			System.out.println("===========================================");
+		// if(clientIp != null || "".equals(clientIp)){
+		// 	System.out.println("===========================================");
+		// 	System.out.println("들어오는 아이피 ===="+clientIp);
+		// 	System.out.println("===========================================");
 			
-			String[] dotIPs = clientIp.split("\\.");
-			String[] ips = new String[15];
+		// 	String[] dotIPs = clientIp.split("\\.");
+		// 	String[] ips = new String[15];
 			
-			ips[0] = dotIPs[0] + "." + dotIPs[1] + "."  + dotIPs[2] + "." + dotIPs[3];
-			ips[1] = "*." + dotIPs[1] + "."  + dotIPs[2] + "." + dotIPs[3];
-	    	ips[2] = dotIPs[0] + ".*."  + dotIPs[2] + "." + dotIPs[3];
-	    	ips[3] = dotIPs[0] + "." + dotIPs[1] + ".*." + dotIPs[3];
-	    	ips[4] = dotIPs[0] + "." + dotIPs[1] + "."  + dotIPs[2] + ".*";
-	    	ips[5] = "*.*."  + dotIPs[2] + "." + dotIPs[3];
-	    	ips[6] = "*." + dotIPs[1] + ".*." + dotIPs[3];
-	    	ips[7] = "*." + dotIPs[1] + "."  + dotIPs[2] + ".*";
-	    	ips[8] = dotIPs[0] + ".*.*." + dotIPs[3];
-	    	ips[9] = dotIPs[0] + ".*." + dotIPs[2] + ".*";
-	    	ips[10] = dotIPs[0] +"."+ dotIPs[1]+"." + "*.*";
-	    	ips[11] = "*.*.*." + dotIPs[3];
-	    	ips[12] = "*.*." + dotIPs[2] + ".*";
-	    	ips[13] = "*." + dotIPs[1] + ".*.*";
-	    	ips[14] = dotIPs[0] + ".*.*.*";
-	    	for(int i = 0; i<ips.length;i++){
-	    		param.put("usr_ip"+i,ips[i]);
-	    	}
-		}else{
-    		return "2";
-		}
-		int cnt = iService.ipCheck(param);
+		// 	ips[0] = dotIPs[0] + "." + dotIPs[1] + "."  + dotIPs[2] + "." + dotIPs[3];
+		// 	ips[1] = "*." + dotIPs[1] + "."  + dotIPs[2] + "." + dotIPs[3];
+	    // 	ips[2] = dotIPs[0] + ".*."  + dotIPs[2] + "." + dotIPs[3];
+	    // 	ips[3] = dotIPs[0] + "." + dotIPs[1] + ".*." + dotIPs[3];
+	    // 	ips[4] = dotIPs[0] + "." + dotIPs[1] + "."  + dotIPs[2] + ".*";
+	    // 	ips[5] = "*.*."  + dotIPs[2] + "." + dotIPs[3];
+	    // 	ips[6] = "*." + dotIPs[1] + ".*." + dotIPs[3];
+	    // 	ips[7] = "*." + dotIPs[1] + "."  + dotIPs[2] + ".*";
+	    // 	ips[8] = dotIPs[0] + ".*.*." + dotIPs[3];
+	    // 	ips[9] = dotIPs[0] + ".*." + dotIPs[2] + ".*";
+	    // 	ips[10] = dotIPs[0] +"."+ dotIPs[1]+"." + "*.*";
+	    // 	ips[11] = "*.*.*." + dotIPs[3];
+	    // 	ips[12] = "*.*." + dotIPs[2] + ".*";
+	    // 	ips[13] = "*." + dotIPs[1] + ".*.*";
+	    // 	ips[14] = dotIPs[0] + ".*.*.*";
+	    // 	for(int i = 0; i<ips.length;i++){
+	    // 		param.put("usr_ip"+i,ips[i]);
+	    // 	}
+		// }else{
+    	// 	return "2";
+		// }
+		// int cnt = iService.ipCheck(param);
 		
-		if(cnt <= 0) { 
-			return "2";
-		}
+		// if(cnt <= 0) { 
+		// 	return "2";
+		// }
 		
 		String pass_wd = request.getParameter("pass_wd");
 		params.put("pass_wd", StringUtil.EncodingSHA256(pass_wd));

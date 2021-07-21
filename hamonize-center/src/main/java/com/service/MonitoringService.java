@@ -35,7 +35,9 @@ public class MonitoringService {
             list = mMpper.pcListInfo(params);
             for(int i = 0; i< list.size();i++){
                 for(int y = 0; y < influxList.size();y++){
+					System.out.println(y+"==========="+influxList.get(y).getHost()+i+"========="+list.get(i).get("pc_uuid"));
                     if(list.get(i).get("pc_uuid").toString().trim().equals(influxList.get(y).getHost().trim())){
+						System.out.println("-----------------------맞음--------------------------");
                         list.get(i).put("pc_status", "true");
                     }
                 }
@@ -50,7 +52,7 @@ public class MonitoringService {
         Object jObj = null;
     
         Query cpu_query = QueryBuilder.newQuery(
-                "SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() - 20s GROUP BY host")
+                "SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() - 20s and host != 'localhost' GROUP BY host")
                 .forDatabase("collectd").create();
         InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
         long start = System.currentTimeMillis();

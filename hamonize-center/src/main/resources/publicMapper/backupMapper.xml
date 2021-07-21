@@ -44,16 +44,21 @@
 	<select id="backupRecoveryList" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
  			SELECT br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq 
  				FROM tbl_backup_recovery_mngr
- 			WHERE dept_seq = #{dept_seq}
+ 			WHERE dept_seq = #{seq}
 	</select>
-	
+
 	<insert id="backupRecoverySave" parameterType="java.util.HashMap">
 	INSERT INTO TBL_RECOVERY_APPLC 
-				( SEQ									   
-				, dept_seq
-				, ORG_SEQ
-				, BR_SEQ) VALUES
-            ((SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_RECOVERY_APPLC),#{dept_seq},#{org_seq},#{br_seq})
+				(
+					pc_seq
+					,ORG_SEQ
+					,BR_SEQ
+				) VALUES
+            	(
+					#{pc_seq},
+					#{org_seq},
+					#{br_seq}
+				)
 	</insert>
 	
 	<insert id="backupRecoveryLogSave" parameterType="java.util.HashMap">
