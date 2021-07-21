@@ -146,7 +146,7 @@
                             </div> -->
                         </div>
                         <h2 class="title-1 m-b-25">PC사용현황</h2>
-                        <iframe src="http://192.168.0.76:3000/d-solo/0acW0zWnz/new-dashboard-copy?orgId=1&var-host=1f9535d4a69640d5bd6c840537ecba3ddd&refresh=10s&from=1626815553983&to=1626837153983&panelId=4" width="100%" height="350" frameborder="0"></iframe>
+                        <iframe src="http://192.168.0.76:3000/d-solo/0acW0zWnz/new-dashboard-copy?orgId=1&refresh=10s&panelId=4" width="100%" height="350" frameborder="0"></iframe>
                         <!-- <div class="row">
                             <div class="col-lg-6">
                                 <div class="au-card recent-report">
