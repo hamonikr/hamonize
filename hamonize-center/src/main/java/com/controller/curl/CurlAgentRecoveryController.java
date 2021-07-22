@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IGetAgentRecoveryMapper;
-import com.model.GetAgentFirewallVo;
 import com.model.GetAgentJobVo;
 import com.model.GetAgentRecoveryVo;
 
@@ -25,34 +24,37 @@ public class CurlAgentRecoveryController {
 	private IGetAgentRecoveryMapper getAgentRecoveryMapper;
 
 
-	
-
 	@RequestMapping("/recov")
-	public String getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid,
+	public String getRecovAgentJob(@RequestParam(value = "name", required = false) String uuid,
 			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
+		
+		System.out.println("//============ recov =======================");
 
 		String output = "";
-		sgbUuid = sgbUuid.trim();
+		uuid = uuid.trim();
 
-		int segSeq = sgbUUID(sgbUuid);
+		int segSeq = pcUUID(uuid);
 		if( segSeq == 0 ) {
 			return  "nodata";
 		}
 		
 		GetAgentRecoveryVo agentFirewallVo = new GetAgentRecoveryVo();
 		agentFirewallVo.setOrg_seq(segSeq);
-		agentFirewallVo.setPc_uuid(sgbUuid);
+		agentFirewallVo.setPc_uuid(uuid);
 
 		int chkProgrmPolicy = getAgentRecoveryMapper.getAgentWorkYn(agentFirewallVo);
 		int chkRecoveryLog = getAgentRecoveryMapper.getInitChk(agentFirewallVo);
+		
 		System.out.println("//===================================");
-		System.out.println("//work yn === " + chkProgrmPolicy);
+		System.out.println("//getRecovAgent work yn === chkProgrmPolicy :  " + chkProgrmPolicy);
+		System.out.println("//getRecovAgent work yn === chkRecoveryLog :  " + chkRecoveryLog);
+
 		System.out.println("//===================================");
 		
-		
+
 		if ( chkProgrmPolicy == 0 ) {
-			if( chkRecoveryLog != 0 ) {
-				JSONObject jsonProgrmData = progrmPolicyData(agentFirewallVo);
+			if( chkRecoveryLog == 0 ) {
+				JSONObject jsonProgrmData = recoveryPolicyData(agentFirewallVo);
 				output = jsonProgrmData.toJSONString();	
 			}else {
 				output = "nodata";
@@ -60,6 +62,7 @@ public class CurlAgentRecoveryController {
 		} else {
 			output = "nodata";
 		}
+		
 		
 
 		System.out.println("//===================================");
@@ -71,7 +74,7 @@ public class CurlAgentRecoveryController {
 
 	
 	
-	public JSONObject progrmPolicyData(GetAgentRecoveryVo getProgrmVo) {
+	public JSONObject recoveryPolicyData(GetAgentRecoveryVo getProgrmVo) {
 
 		JSONObject jsonObject = new JSONObject();
 
@@ -84,13 +87,12 @@ public class CurlAgentRecoveryController {
 
 		List<GetAgentRecoveryVo> outputDatga = getAgentRecoveryMapper.getAgentWorkData(getProgrmVo);
 		
-		String arrAgentRecoveryData = "";
 		for (GetAgentRecoveryVo set : outputDatga) {
-//			System.out.println("----> " + set.getSeq());
-//			System.out.println("----> " + set.getBr_backup_gubun());
-//			System.out.println("----> " + set.getBr_backup_path());
-//			System.out.println("----> " + set.getBr_backup_name());
-//			System.out.println("----> " + set.getPc_uuid());
+			System.out.println("----> " + set.getSeq());
+			System.out.println("----> " + set.getBr_backup_gubun());
+			System.out.println("----> " + set.getBr_backup_path());
+			System.out.println("----> " + set.getBr_backup_name());
+			System.out.println("----> " + set.getPc_uuid());
 
 			jsonObject.put("PATH", set.getBr_backup_path());
 			jsonObject.put("NAME", set.getBr_backup_name());
@@ -105,9 +107,9 @@ public class CurlAgentRecoveryController {
 		return jsonObject;
 	}
 
-	public int sgbUUID(String sgbUuid) {
+	public int pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		
 		int segSeq = 0;

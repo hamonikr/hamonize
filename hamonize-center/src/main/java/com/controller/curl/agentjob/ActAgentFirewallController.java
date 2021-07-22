@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,17 +21,14 @@ import com.mapper.IActAgentDeviceMapper;
 import com.mapper.IActAgentFirewallMapper;
 import com.mapper.IActAgentLogInOutMapper;
 import com.mapper.IActAgentProgrmMapper;
-import com.mapper.IEqualsHwMapper;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IGetAgentRecoveryMapper;
-import com.mapper.IPcMangrMapper;
 import com.model.ActAgentBackupRecoveryVo;
 import com.model.ActAgentDeviceVo;
 import com.model.ActAgentFirewallVo;
 import com.model.ActAgentProgrmVo;
 import com.model.GetAgentJobVo;
 import com.model.LogInOutVo;
-import com.model.PcMangrVo;
 
 @RestController
 @RequestMapping("/act")
@@ -93,7 +89,6 @@ public class ActAgentFirewallController {
 		int retVal = 0;
 
 		if(inputVo.getGubun().equals("LOGIN") ){ // login insert
-			System.out.println("aaaa");
 			inputVo.setLogin_dt(inputVo.getDatetime());
 			retVal = actAgentLogInOutMapper.insertLoginLog(inputVo);
 			System.out.println("uuid" +inputVo.getUuid());
@@ -168,7 +163,6 @@ public class ActAgentFirewallController {
 
 	
 	/// 디바이스 정책 배포 결과
-	// {"events":[{"hostname":"888","uuid":"","procut":"aaaa","vendorCode":"1234","productCode":"qwer","statusyn":"N"}]}
 	@RequestMapping("/deviceAct")
 	public String deviceAct(HttpServletRequest request ) throws Exception {
 		System.out.println("deviceAct===============================[start]");
@@ -285,60 +279,8 @@ public class ActAgentFirewallController {
 	}
 	
 	
-
-	// @RequestMapping("/nxssAct")
-	// public String nxssAct(HttpServletRequest request ) throws Exception {
-	// 	System.out.println("nxssAct===============================[start]");
-	// 	// 출력 변수
-	// 	String output = "";
-
-	// 	StringBuffer json = new StringBuffer();
-	//     String line = null;
-	 
-	//     try {
-	//         BufferedReader reader = request.getReader();
-	//         while((line = reader.readLine()) != null) {
-	//             json.append(line);
-	//         }
-	 
-	//     }catch(Exception e) {
-	//         System.out.println("Error reading JSON string: " + e.toString());
-	//     }
-	    
-	//     System.out.println("json===> "+ json);
-	    
-	//     JSONParser jsonParser = new JSONParser();
-    //     JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
-    //     JSONArray hmdArray = (JSONArray) jsonObj.get("events");
-
-    //     ActAgentNxssVo inputVo = new ActAgentNxssVo();
-    //     for(int i=0 ; i<hmdArray.size() ; i++){
-    //         JSONObject tempObj = (JSONObject) hmdArray.get(i);
-        	
-    //         inputVo.setUuid(tempObj.get("uuid").toString().trim());
-    //         inputVo.setHostname(tempObj.get("hostname").toString());
-    //         inputVo.setFile_gubun(tempObj.get("file_gubun").toString());
-    //         inputVo.setFileDate(tempObj.get("fileDate").toString());
-            
-    //     }
-        
-    //     int uuid = pcUUID(inputVo.getUuid());
-    //     inputVo.setOrgseq(uuid);
-        
-    //     int retVal = actAgentNxssMapper.insertActAgentNxss(inputVo);
-    //     System.out.println("retVal ==== "+ retVal);
-        
-	// 	System.out.println("//===================================");
-	// 	System.out.println("//result data is : " + inputVo);
-	// 	System.out.println("nxssAct===============================[END]");
-	// 	System.out.println("//===================================");
-		
-	// 	return output;
-	// }
 	
-	
-	
-	@RequestMapping("/stBackupRecoveryAct")
+	@RequestMapping("/stBackupRecoveryJob")
 	public String stBackupRecoveryAct(HttpServletRequest request ) throws Exception {
 		System.out.println("stBackupRecoveryAct===============================[start]");
 		// 출력 변수
@@ -371,12 +313,12 @@ public class ActAgentFirewallController {
             inputVo.setUuid(tempObj.get("uuid").toString().trim());
             inputVo.setHostname(tempObj.get("hostname").toString());
             inputVo.setAction_status(tempObj.get("action_status").toString());
-            inputVo.setResult(tempObj.get("result").toString());
+            inputVo.setResult(tempObj.get("name").toString());
             
         }
         
         int uuid = pcUUID(inputVo.getUuid());
-        inputVo.setOrgseq(uuid);
+        inputVo.setOrg_seq(uuid);
         
         int retVal = getAgentRecoveryMapper.insertActAgentBackupRecovery(inputVo);
         System.out.println("retVal ==== "+ retVal);
@@ -385,7 +327,32 @@ public class ActAgentFirewallController {
 		System.out.println("//result data is : " + inputVo);
 		System.out.println("stBackupRecoveryAct===============================[END]");
 		System.out.println("//===================================");
-		
+
+		if(retVal >= 1){
+			/**
+			 * 복구 실행 후 기존 작업 내역 삭제 
+			 */
+			ActAgentBackupRecoveryVo retVo = getAgentRecoveryMapper.getDataActAgentBackupRecovery(inputVo);
+			
+			System.out.println("retVo========"+ retVo);
+			System.out.println("retVo==result======"+ retVo.getResult());
+			
+			if( "N".equals(retVo.getResult()) ) {
+				try {
+					int delPolicyVal = getAgentRecoveryMapper.deleteActPolicy(inputVo);
+					System.out.println("delPolicyVal======> "+ delPolicyVal);
+					getAgentRecoveryMapper.updateDataActAgentBackupRecovery(inputVo);
+				} catch (Exception e) {
+					System.out.println("e==============="+e.getMessage());
+					return "error";
+				}
+				
+			}
+
+		}else{
+
+		}
+
 		return output;
 	}
 	
@@ -396,44 +363,39 @@ public class ActAgentFirewallController {
 		
 		String output = "";
 		ActAgentBackupRecoveryVo inputVo = new ActAgentBackupRecoveryVo();
-		int segSeq = pcUUID(uuid.trim());
+		int orgSeq = pcUUID(uuid.trim());
 		
 		inputVo.setUuid(uuid.trim());
-		inputVo.setOrgseq(segSeq);
-		System.out.println("segSeq=========>"+ segSeq);
-		if( segSeq == 0 ) {
+		inputVo.setOrg_seq(orgSeq);
+		System.out.println("segSeq=========>"+ orgSeq);
+	
+		if( orgSeq == 0 ) {
 			return  output;
 		}else {
 			/**
 			 * 복구 실행 후 기존 작업 내역 삭제 
 			 */
 			ActAgentBackupRecoveryVo retVo = getAgentRecoveryMapper.getDataActAgentBackupRecovery(inputVo);
+			
 			System.out.println("retVo========"+ retVo);
 			System.out.println("retVo==result======"+ retVo.getResult());
-//			output = retVo.getResult();
 			
 			if( "N".equals(retVo.getResult()) ) {
 //				1. 업데이트 정책 삭제 tbl_updt_agent_job ::: org_seq, pcm_uuid 
 //				2. 프로그램 정책 삭제 tbl_progrm_agent_job ::: org_seq, pcm_uuid
 //				3. 방화벽 포트 정책 삭제 tbl_frwl_agent_job ::: org_seq, pcm_uuid
 //				4. 디바이시 정책 삭제 tbl_device_agent_job ::: org_seq, pcm_uuid
-//				5. 유해사이트 tbl_site_agent_job ::: pc_uuid
 				try {
-					int delPolicyVal = getAgentRecoveryMapper.deleteSgbPolicy(inputVo);
+					int delPolicyVal = getAgentRecoveryMapper.deleteActPolicy(inputVo);
 					System.out.println("delPolicyVal======> "+ delPolicyVal);
 					getAgentRecoveryMapper.updateDataActAgentBackupRecovery(inputVo);
 				} catch (Exception e) {
-					// TODO: handle exception
 					System.out.println("e==============="+e.getMessage());
 					return "error";
 				}
 				
 			}
-
-			
-			
-			
-			
+		
 		}
 		
 		return "aa";

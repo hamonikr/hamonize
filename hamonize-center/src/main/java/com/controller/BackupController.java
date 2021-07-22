@@ -156,30 +156,38 @@ public class BackupController {
 		public JSONArray backupRCList(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
 		  	JSONArray result = new JSONArray();
 		  	List<Map<String, Object>> resultSet;
-		  	params.put("seq", Integer.parseInt(params.get("seq").toString()));
+		  	
+
+			System.out.println("backupRCList seq : "+params.get("seq").toString());  
+			params.put("seq", Integer.parseInt(params.get("seq").toString()));
+
 		  	resultSet = bService.backupRecoveryList(params);
-		  	if(!resultSet.isEmpty()) {
-		  	for(int i = 0; i < resultSet.size();i++) {
-		  		JSONObject jo = new JSONObject();
-		  		jo.put("seq", resultSet.get(i).get("seq").toString());
-		  		jo.put("br_org_seq", resultSet.get(i).get("br_org_seq").toString());
-		  		jo.put("br_backup_iso_dt", resultSet.get(i).get("br_backup_iso_dt").toString());
-		  		jo.put("br_backup_gubun", resultSet.get(i).get("br_backup_gubun").toString());
-		  		jo.put("br_backup_name", resultSet.get(i).get("br_backup_name").toString());
-		  		jo.put("br_seq", resultSet.get(i).get("br_seq").toString());
-		  		result.add(jo);
-		  		System.out.println(resultSet.get(i));
-		  		}
-		  	}
+		  	
+			  if(!resultSet.isEmpty()) {
+				for(int i = 0; i < resultSet.size();i++) {
+					JSONObject jo = new JSONObject();
+					jo.put("br_seq", resultSet.get(i).get("br_seq").toString());
+					jo.put("br_org_seq", resultSet.get(i).get("br_org_seq").toString());
+					jo.put("br_backup_iso_dt", resultSet.get(i).get("br_backup_iso_dt").toString());
+					jo.put("br_backup_gubun", resultSet.get(i).get("br_backup_gubun").toString());
+					jo.put("br_backup_name", resultSet.get(i).get("br_backup_name").toString());
+					jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
+					result.add(jo);
+					System.out.println("backupRCList :  >>>> "+ resultSet.get(i));
+				}
+		  	}else{
+				  System.out.println("backupRCList is empty..");
+			  }
+
 		  	System.out.println(result);
-			JSONObject data = new JSONObject();
+			
 			return result;
 				
 		}
 	  @ResponseBody
 	  @RequestMapping("backupRCSave")
 		public String backupRCSave(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
-		  params.put("seq", Integer.parseInt(params.get("seq").toString()));
+		  params.put("pc_seq", Integer.parseInt(params.get("dept_seq").toString())); //dept_seq는 pc시퀀스번호
 		  params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		  params.put("br_seq", Integer.parseInt(params.get("br_seq").toString()));
 
@@ -190,6 +198,7 @@ public class BackupController {
 		  bService.backupRecoveryDelete(params);
 		  //복구등록
 		  result = bService.backupRecoverySave(params);
+		  
 		  if(result > 0) {
 			  model.addAttribute("messege","성공하였습니다..");
 			return "SUCCESS";

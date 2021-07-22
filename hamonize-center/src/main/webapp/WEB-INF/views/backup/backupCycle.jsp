@@ -96,7 +96,7 @@
 			$('input:checkbox[name=bac_cycle_option]').prop("checked", false); //매주 체크 해제
 		}
 		else if( $(this).val() == "E" ){
-			$(".ui-datepicker-trigger").prop("disabled",true); //매월 버튼 막기
+			$(".ui-datepicker-trigger").prop("disabled",true); //매월 버튼 막기bac_gubun
 			$('input:checkbox[name=bac_cycle_option]').prop("disabled",true); //매주 체크박스 막기
 			$('input:checkbox[name=bac_cycle_option]').prop("checked", false); //매주 체크 해제
 			$("input[name=bac_cycle_date]").val(""); //매월 날짜 초기화 
@@ -155,10 +155,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			console.log("treeNode.id=="+treeNode.id);
 		$.post("backupShow.do",{org_seq:treeNode.id},
 		function(result){
-			$('input[name=bac_cycle_time]').val()
+			    $('input[name=bac_cycle_time]').val()
 				var agrs = result;
-				console.log(agrs.dataInfo);
-
+				
+				console.log( "backupShow dataInfo: " + agrs.dataInfo);
+				if(agrs.dataInfo != null){
+					
 				$('input:radio[name="bac_gubun"][value='+agrs.dataInfo.bac_gubun+']').prop('checked',true);
 				$('input[name=bac_cycle_time]').val(agrs.dataInfo.bac_cycle_time);
 				if(agrs.dataInfo.bac_gubun == "M")
@@ -175,6 +177,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				    });
 				}
 		
+			}
+
 		});
 		}		
 		}
@@ -350,7 +354,6 @@ function fnSave(){
             </div>
 			<!-- //List -->
 					<div class="right mT20">
-			             <!-- <button type="reset" class="btn_type2" id="btnInit"> 초기화</button> -->
 			             <button type="button" class="btn_type2" id="btnSave"> 저장</button>
 			         </div>
 
