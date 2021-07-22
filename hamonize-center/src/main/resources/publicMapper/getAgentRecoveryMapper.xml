@@ -8,16 +8,16 @@
         INSERT 
         	INTO tbl_act_backup_recovery_log
         	(
-				orgseq, 
+				org_seq, 
 		        uuid,
 				hostname,		        
 				datetime,		        
-		        action_status,
+		        status,
 				result,
 		        ins_date
         	) 
         	VALUES( 
-        		#{orgseq}, 
+        		#{org_seq}, 
 				#{uuid},
 				#{hostname}, 
 				#{datetime}, 
@@ -40,18 +40,18 @@
 	<update id="updateDataActAgentBackupRecovery" parameterType="com.model.ActAgentBackupRecoveryVo">
 		update tbl_act_backup_recovery_log
 		set result = 'Y'
-		where orgseq = #{orgseq}
+		where org_seq = #{org_seq}
 			and uuid = #{uuid}
 	</update>
 	
 
 	<!-- 정책 복구 진행 기존 정책작업 백업 후 삭제 -->
-	<delete id="deleteSgbPolicy" parameterType="com.model.ActAgentBackupRecoveryVo">
+	<delete id="deleteActPolicy" parameterType="com.model.ActAgentBackupRecoveryVo">
 		begin;
-			delete from tbl_updt_agent_job where org_seq = #{orgseq} and pcm_uuid = #{uuid};
-			delete from tbl_progrm_agent_job where org_seq = #{orgseq} and pcm_uuid = #{uuid};
-			delete from tbl_frwl_agent_job where org_seq = #{orgseq} and pcm_uuid = #{uuid};
-			delete from tbl_device_agent_job where org_seq = #{orgseq} and pcm_uuid = #{uuid};
+			delete from tbl_updt_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
+			delete from tbl_progrm_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
+			delete from tbl_frwl_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
+			delete from tbl_device_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
 			delete from tbl_site_agent_job where pc_uuid = #{uuid};
 		commit;
 	</delete>	
@@ -62,8 +62,6 @@
 	<!--  =====================================================  -->
 	
 	<select id="getAgentWorkYn" parameterType="com.model.GetAgentRecoveryVo" resultType="Integer">
-		
-				
 		SELECT count(*) as cnt 
 		FROM  tbl_recovery_agent_job TA
 		JOIN 
@@ -76,8 +74,6 @@
 		    ORDER BY ins_date DESC
 		    LIMIT 1
 		) TB on TA.recv_applc_seq = TB.seq
-				
-
 	</select>
 	
 	
@@ -99,11 +95,11 @@
 		    TA.seq, TA.org_seq, TA.pc_seq , TA.br_seq, TA.status, TA.ins_date,
 		    TB.br_backup_gubun, TB.br_backup_path, TB.br_backup_name, 	#{pc_uuid} as uuid
 		    
-		FROM public.tbl_recovery_log TA LEFT OUTER JOIN tbl_backup_recovery_mngr TB ON TA.rl_br_seq = TB.br_seq
+		FROM public.tbl_recovery_log TA LEFT OUTER JOIN tbl_backup_recovery_mngr TB ON TA.br_seq = TB.br_seq
 		WHERE TA.org_seq = #{org_seq}
 		    AND TA.pc_seq = ( select seq from tbl_pc_mangr where pc_uuid = #{pc_uuid} )
 		ORDER BY TA.ins_date DESC
-		LIMIT 1
+		LIMIT 1	
 		
 	</insert>
 

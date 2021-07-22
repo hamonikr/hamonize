@@ -306,7 +306,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		$("#org_seq").val(treeNode.id);
-		$.post("/mntrng/pcPolicyList",{org_seq:treeNode.id},
+		$.post("/mntrng/pcPolicyList",{org_seq:treeNode.id,type:'view'},
 				function(data){
 			var shtml = "";
 			var shtml_r = "";
@@ -338,43 +338,43 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<th>미완료</th>";
 				shtml_r += "</tr></thead>";
 				shtml_r += "<tbody>";
-				for(var i = 0;i < data.policyResult.length;i++){
+				for(var i = 0;i < data.policyUpdtResult.length;i++){
 					console.log(i);
 					console.log(i+1);
-					console.log(data.policyResult.length);
-					console.log(data.policyResult[i].debname);
+					console.log(data.policyUpdtResult.length);
+					console.log(data.policyUpdtResult[i].debname);
 					var chk = 1;
-					if((i+1) == data.policyResult.length){
+					if((i+1) == data.policyUpdtResult.length){
 						chk=0;
 						}
-					if(data.policyResult[i].debname != data.policyResult[i+chk].debname){
-						var inset_dt = data.policyResult[i].ins_date;
+					if(data.policyUpdtResult[i].debname != data.policyUpdtResult[i+chk].debname){
+						var inset_dt = data.policyUpdtResult[i].ins_date;
 						var date = new Date(inset_dt);
 						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
-						var noinstall = data.pcList.length - data.policyResult[i].count;
+						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 						shtml_r += "<tr>";
-						shtml_r += "<td>"+data.policyResult[i].debname+"</td>";
-						if(typeof data.policyResult[i].debver === "undefined")
+						shtml_r += "<td>"+data.policyUpdtResult[i].debname+"</td>";
+						if(typeof data.policyUpdtResult[i].debver === "undefined")
 							shtml_r += "<td>-</td>";
 							else
-						shtml_r += "<td>"+data.policyResult[i].debver+"</td>";
-						shtml_r += "<td>"+data.policyResult[i].gubun+"</td>";
+						shtml_r += "<td>"+data.policyUpdtResult[i].debver+"</td>";
+						shtml_r += "<td>"+data.policyUpdtResult[i].gubun+"</td>";
 						shtml_r += "<td>"+data.pcList.length+"</td>";
-						shtml_r += "<td>"+data.policyResult[i].count+"</td>";
+						shtml_r += "<td>"+data.policyUpdtResult[i].count+"</td>";
 						shtml_r += "<td>"+noinstall+"</td>";
 						shtml_r += "</tr>";
-						}else if((i+1) == data.policyResult.length){
+						}else if((i+1) == data.policyUpdtResult.length){
 							console.log("last");
-							var inset_dt = data.policyResult[i].ins_date;
+							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
-							var noinstall = data.pcList.length - data.policyResult[i].count;
+							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 							shtml_r += "<tr>";
-							shtml_r += "<td>"+data.policyResult[i].debname+"</td>";
-							shtml_r += "<td>"+data.policyResult[i].debver+"</td>";
-							shtml_r += "<td>"+data.policyResult[i].gubun+"</td>";
+							shtml_r += "<td>"+data.policyUpdtResult[i].debname+"</td>";
+							shtml_r += "<td>"+data.policyUpdtResult[i].debver+"</td>";
+							shtml_r += "<td>"+data.policyUpdtResult[i].gubun+"</td>";
 							shtml_r += "<td>"+data.pcList.length+"</td>";
-							shtml_r += "<td>"+data.policyResult[i].count+"</td>";
+							shtml_r += "<td>"+data.policyUpdtResult[i].count+"</td>";
 							shtml_r += "<td>"+noinstall+"</td>";
 							shtml_r += "</tr>";
 							}
@@ -382,6 +382,178 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				
 				shtml_r += "</tbody>";
 				shtml_r += "</table>";
+				shtml_r += "</div>";
+
+				//프로그램 차단 배포 결과
+
+				shtml_r += "<h4>프로그램 차단 배포 결과</h4>";
+				shtml_r += "<div class=\"board_list_3\">";
+				shtml_r += "<table>";
+				shtml_r += "<colgroup>";
+				shtml_r += "<col style=\"width:30%;\" /><col style=\"width:30%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
+				shtml_r += "</colgroup>";
+				shtml_r += "<thead><tr>";
+				shtml_r += "<th>패키지</th>";
+				shtml_r += "<th>구분</th>";
+				shtml_r += "<th>전체PC</th>";
+				shtml_r += "<th>완료</th>";
+				shtml_r += "<th>미완료</th>";
+				shtml_r += "</tr></thead>";
+				shtml_r += "<tbody>";
+				for(var i = 0;i < data.policyProgrmResult.length;i++){
+					console.log(i);
+					console.log(i+1);
+					//console.log(data.policyProgrmResult.length);
+					//console.log(data.policyProgrmResult[i].progrmname);
+					var chk = 1;
+					if((i+1) == data.policyProgrmResult.length){
+						chk=0;
+						}
+					if(data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i+chk].progrmname){
+						var inset_dt = data.policyProgrmResult[i].ins_date;
+						var date = new Date(inset_dt);
+						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+						shtml_r += "<tr>";
+						shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
+						shtml_r += "<td>"+data.policyProgrmResult[i].status_yn+"</td>";
+						shtml_r += "<td>"+data.pcList.length+"</td>";
+						shtml_r += "<td>"+data.policyProgrmResult[i].count+"</td>";
+						shtml_r += "<td>"+noinstall+"</td>";
+						shtml_r += "</tr>";
+						}else if((i+1) == data.policyProgrmResult.length){
+							console.log("last");
+							var inset_dt = data.policyProgrmResult[i].ins_date;
+							var date = new Date(inset_dt);
+							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+							shtml_r += "<tr>";
+							shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
+							shtml_r += "<td>"+data.policyProgrmResult[i].status_yn+"</td>";
+							shtml_r += "<td>"+data.pcList.length+"</td>";
+							shtml_r += "<td>"+data.policyProgrmResult[i].count+"</td>";
+							shtml_r += "<td>"+noinstall+"</td>";
+							shtml_r += "</tr>";
+							}
+					}
+				
+				shtml_r += "</tbody>";
+				shtml_r += "</table>";
+				shtml_r += "</div>";
+				
+				//방화벽 차단 배포 결과
+
+				shtml_r += "<h4>방화벽 정책 배포 결과</h4>";
+				shtml_r += "<div class=\"board_list_3\">";
+				shtml_r += "<table>";
+				shtml_r += "<colgroup>";
+				shtml_r += "<col style=\"width:30%;\" /><col style=\"width:30%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
+				shtml_r += "</colgroup>";
+				shtml_r += "<thead><tr>";
+				shtml_r += "<th>포트번호</th>";
+				shtml_r += "<th>구분</th>";
+				shtml_r += "<th>전체PC</th>";
+				shtml_r += "<th>완료</th>";
+				shtml_r += "<th>미완료</th>";
+				shtml_r += "</tr></thead>";
+				shtml_r += "<tbody>";
+					for(var i = 0;i < data.policyFirewallResult.length;i++){
+					console.log(i);
+					console.log(i+1);
+					//console.log(data.policyFirewallResult.length);
+					//console.log(data.policyFirewallResult[i].Firewallname);
+					var chk = 1;
+					if((i+1) == data.policyFirewallResult.length){
+						chk=0;
+						}
+					if(data.policyFirewallResult[i].retport != data.policyFirewallResult[i+chk].retport){
+						var inset_dt = data.policyFirewallResult[i].ins_date;
+						var date = new Date(inset_dt);
+						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
+						shtml_r += "<tr>";
+						shtml_r += "<td>"+data.policyFirewallResult[i].retport+"</td>";
+						shtml_r += "<td>"+data.policyFirewallResult[i].status+"</td>";
+						shtml_r += "<td>"+data.pcList.length+"</td>";
+						shtml_r += "<td>"+data.policyFirewallResult[i].count+"</td>";
+						shtml_r += "<td>"+noinstall+"</td>";
+						shtml_r += "</tr>";
+						}else if((i+1) == data.policyFirewallResult.length){
+							console.log("last");
+							var inset_dt = data.policyFirewallResult[i].ins_date;
+							var date = new Date(inset_dt);
+							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
+							shtml_r += "<tr>";
+							shtml_r += "<td>"+data.policyFirewallResult[i].retport+"</td>";
+							shtml_r += "<td>"+data.policyFirewallResult[i].status+"</td>";
+							shtml_r += "<td>"+data.pcList.length+"</td>";
+							shtml_r += "<td>"+data.policyFirewallResult[i].count+"</td>";
+							shtml_r += "<td>"+noinstall+"</td>";
+							shtml_r += "</tr>";
+							}
+					}
+				
+				shtml_r += "</tbody>";
+				shtml_r += "</table>";
+				shtml_r += "</div>";
+
+				//디바이스 차단 배포 결과
+
+				shtml_r += "<h4>디바이스 정책 배포 결과</h4>";
+				shtml_r += "<div class=\"board_list_3\">";
+				shtml_r += "<table>";
+				shtml_r += "<colgroup>";
+				shtml_r += "<col style=\"width:30%;\" /><col style=\"width:30%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
+				shtml_r += "</colgroup>";
+				shtml_r += "<thead><tr>";
+				shtml_r += "<th>포트번호</th>";
+				shtml_r += "<th>구분</th>";
+				shtml_r += "<th>전체PC</th>";
+				shtml_r += "<th>완료</th>";
+				shtml_r += "<th>미완료</th>";
+				shtml_r += "</tr></thead>";
+				shtml_r += "<tbody>";
+					for(var i = 0;i < data.policyDeviceResult.length;i++){
+					console.log(i);
+					console.log(i+1);
+					//console.log(data.policyDeviceResult.length);
+					//console.log(data.policyDeviceResult[i].progrmname);
+					var chk = 1;
+					if((i+1) == data.policyDeviceResult.length){
+						chk=0;
+						}
+					if(data.policyDeviceResult[i].product != data.policyDeviceResult[i+chk].product){
+						var inset_dt = data.policyDeviceResult[i].ins_date;
+						var date = new Date(inset_dt);
+						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
+						shtml_r += "<tr>";
+						shtml_r += "<td>"+data.policyDeviceResult[i].product+"</td>";
+						shtml_r += "<td>"+data.policyDeviceResult[i].status_yn+"</td>";
+						shtml_r += "<td>"+data.pcList.length+"</td>";
+						shtml_r += "<td>"+data.policyDeviceResult[i].count+"</td>";
+						shtml_r += "<td>"+noinstall+"</td>";
+						shtml_r += "</tr>";
+						}else if((i+1) == data.policyDeviceResult.length){
+							console.log("last");
+							var inset_dt = data.policyDeviceResult[i].ins_date;
+							var date = new Date(inset_dt);
+							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
+							shtml_r += "<tr>";
+							shtml_r += "<td>"+data.policyDeviceResult[i].product+"</td>";
+							shtml_r += "<td>"+data.policyDeviceResult[i].status_yn+"</td>";
+							shtml_r += "<td>"+data.pcList.length+"</td>";
+							shtml_r += "<td>"+data.policyDeviceResult[i].count+"</td>";
+							shtml_r += "<td>"+noinstall+"</td>";
+							shtml_r += "</tr>";
+							}
+					}
+				
+				shtml_r += "</tbody>";
+				shtml_r += "</table>";
+				shtml_r += "</div>";
 				shtml_r += "</div>";
 					$(".right_box_l").append(shtml);
 					$(".right_box_r").append(shtml_r);

@@ -59,8 +59,17 @@ public interface IPcMangrMapper {
 	//pcBlockStatus
 	public PcMangrVo getPcBlockStatus(PcMangrVo vo);
 	
-	//정책배포결과 카운트
-	public List<Map<String, Object>> pcPolicyList(Map<String, Object> map);
+	//정책배포결과 업데이트
+	public List<Map<String, Object>> pcPolicyUpdtList(Map<String, Object> map);
+
+	//정책배포결과 프로그램
+	public List<Map<String, Object>> pcPolicyProgrmList(Map<String, Object> map);
+
+	//정책배포결과 방화벽
+	public List<Map<String, Object>> pcPolicyFirewallList(Map<String, Object> map);
+
+	//정책배포결과 디바이스
+	public List<Map<String, Object>> pcPolicyDeviceList(Map<String, Object> map);
 	
 	public int inserPcInfo(PcMangrVo vo);
 

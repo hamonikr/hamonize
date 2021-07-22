@@ -94,6 +94,9 @@ public class MonitoringController {
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
+		params.put("type",params.get("type").toString());
+
+		System.out.println("type========"+params.get("type").toString());
 		
 		int on = 0;
 		int off = 0;
@@ -110,9 +113,13 @@ public class MonitoringController {
 			System.out.println("on===="+on);
 			System.out.println("off===="+off);
 			//influxListData = mntrgService.influxInfo();
-			result = pcmp.pcPolicyList(params);
+			result = pcmp.pcPolicyUpdtList(params);
 			jsonObject.put("pcList", list);
-			jsonObject.put("policyResult", result);
+			jsonObject.put("policyUpdtResult", result);
+			jsonObject.put("policyProgrmResult", pcmp.pcPolicyProgrmList(params));
+			jsonObject.put("policyFirewallResult", pcmp.pcPolicyFirewallList(params));
+			jsonObject.put("policyDeviceResult", pcmp.pcPolicyDeviceList(params));
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
