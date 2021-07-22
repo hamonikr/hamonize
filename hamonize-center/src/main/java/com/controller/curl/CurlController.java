@@ -135,6 +135,13 @@ public class CurlController {
 			hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
+		   	System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
+			if(hdVo.getPc_hostname().toLowerCase().contains("hamonikr")){
+				hdVo.setPc_hostname("H");
+			} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
+				hdVo.setPc_hostname("W");
+			}
+
 			if(DuplserverPc >= 1 ) {
 				retVal = pcMangrMapper.updatePcinfo(hdVo);
 				System.out.println("update retVal=== " + retVal);

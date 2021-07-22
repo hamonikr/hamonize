@@ -24,5 +24,6 @@ public interface IBackupMapper {
 	public int backupRecoveryLogSave(Map<String, Object> params);
 	
 	public int backupRecoveryDelete(Map<String, Object> params);
-
-}
+	
+	public int backupRecoveryResetPolicyAct(Map<String, Object> params);
+}	

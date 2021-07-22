@@ -25,7 +25,7 @@ public interface IGetAgentRecoveryMapper {
 	public int updateDataActAgentBackupRecovery(ActAgentBackupRecoveryVo vo);
 	
 	/** 정책 삭제 */
-	public int deleteSgbPolicy(ActAgentBackupRecoveryVo vo);
+	public int deleteActPolicy(ActAgentBackupRecoveryVo vo);
 	
 	
 	

@@ -53,12 +53,10 @@ public class CurlAgentBackupController {
 		
 		if ( chkProgrmPolicy == 0 ) {
 			JSONObject jsonProgrmData = progrmPolicyData(agentBackupVo);
-			//output = jsonProgrmData.toJSONString();
 			
 			if( jsonProgrmData.size() == 0 ) {
 				output = "nodata";
 			}else {
-//				output = jsonProgrmData.toJSONString();
 				System.out.println("jsonProgrmData.get(\"NODATA\")======"+ jsonProgrmData.get("nodata"));
 				
 				if( jsonProgrmData.get("nodata") != null ) {

@@ -10,55 +10,6 @@
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
 
 <style type="text/css">
-<%--
-.form-style-10{
-	width:100%;
-	padding:20px;
-	margin:40px auto;
-	background: #FFF;
-	border-radius: 10px;
-	-webkit-border-radius:10px;
-	-moz-border-radius: 10px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
-}
-.form-style-10 .inner-wrap{
-	padding: 30px;
-	background: #F8F8F8;
-	border-radius: 6px;
-	margin-bottom: 15px;
-}
-
-.form-style-10 .section{
-	color: #2A88AD;
-	margin-bottom: 5px;
-}
-.form-style-10 .section span {
-	background: #2A88AD;
-	padding: 5px 10px 5px 10px;
-	position: absolute;
-	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border: 4px solid #fff;
-	font-size: 14px;
-	margin-left: -45px;
-	color: #fff;
-	margin-top: -3px;
-}
-
-.lnb {
-	width: 100%;
-	border-right: 0;
-}
-
-#tree { padding-top: 0; }
-
-#tree .tui-checkbox { display: inline-block }
-.lnb .search-container { display: block }
---%>
-
 .some-class {
   float: left;
   clear: none;
@@ -80,9 +31,19 @@ input.radio {
 #pc_list , #rc_list { width: 100% }
 </style>
 
+<style>
+div.radio-holder {
+  padding: 10px;
+}
+input[type="radio"] {
+ &:checked+label {
+  border-bottom: 2px solid #222222;
+  padding-bottom: 0px;
+ }
+}
+</style>
+
 <script type="text/javascript">
-//<![CDATA[
-//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -92,17 +53,7 @@ input.radio {
 					enable: true
 				}
 			},
-			  /* check: {
-				enable: true,
-				chkboxType: { "Y" : "", "N" : "ps" }
-			}, */
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
@@ -142,24 +93,24 @@ input.radio {
 	//등록버튼
 	$("#btnSave").click(fnSave);
 	
+	
+		  
+		
   	 //라디오 이벤트 - PC 목록 클릭시
 	 $("#pc_list").on("click", "label", function(){
-	 
-	 	$(this).children('input').prop('checked', true);
+		 $(this).prev().prop( "checked", true );
 		 $("#rc_list").empty();
 		 
-		 var seq = $("input:radio[name='seq']:checked").val();
-		 console.log("seq111=="+seq);
-		 console.log("seq222=="+seq);
-		 
+		 var seq = $("input:radio[name='dept_seq']:checked").val();
 		 
 		 $.post("backupRCList.do",{seq:seq},
 					function(result){
 							var agrs = result;
-							//console.log(agrs[0]);
 							var strHtml = "";
-							 for(var i = 0; i < agrs.length; i++){
-								console.log(i+"==="+agrs[i]);
+					
+							for(var i = 0; i < agrs.length; i++){
+								console.log(i+"bbb==dept_seq="+agrs[i].dept_seq);
+							
 								strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
 								strHtml += "<label for=\"br_seq"+i+"\" class=\"pR50\">";
 								
@@ -173,8 +124,11 @@ input.radio {
 								
 							} 
 							$("#rc_list").append(strHtml);
-							if(agrs != null)
-							$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
+							
+							if(agrs[0] != undefined || agrs[0] != null){
+								$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
+							}							
+							
 					});
 		}); 
   	
@@ -226,9 +180,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							console.log(agrs[i]);
 							if( i == 0 ){ tmp = "checked"; }
 						
-							strHtml += "<p><label>";
-							strHtml += "<input type=\"radio\" class=\"radio2e\" name=\"seq\" id=\"seq"+i+"\" value='"+agrs[i].seq+"'/ style=\"display:block; padding-bottom:10px;\" >";
-							strHtml += agrs[i].pc_hostname+ "</label></p>";
+							strHtml += "";							
+							strHtml += "<div class=\"radio-holder\">";
+							strHtml += " <input id='dept_seq"+i+"' name='dept_seq' type='radio' value='"+agrs[i].seq+"'>";
+							strHtml += "<label for='dept_seq"+i+"'>" +agrs[i].pc_hostname+ "</label>";
+							strHtml += "</div>";
+						  
 						
 						}
 						strHtml += "</div>";
@@ -252,6 +209,8 @@ function setCheck() {
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
 	
+	//var dept_seq = $('input[name="dept_seq"]:checked').val();
+	
 	var dept_seq = $('input[name="dept_seq"]:checked').val();
 	var br_seq = $('input[name="br_seq"]:checked').val();
 	var org_seq = $("#org_seq").val();
@@ -259,6 +218,7 @@ function fnSave(){
 	console.log("dept_seq===="+$('input[name="dept_seq"]:checked').val());
 	console.log("br_seq===="+$('input[name="br_seq"]:checked').val());
 	console.log("org_seq===="+$("#org_seq").val());
+	
 	if(dept_seq == null){
 		alert("pc를 선택해주세요.");
 		return false;
@@ -267,11 +227,12 @@ function fnSave(){
 		alert("백업본을 선택해주세요.");
 		return false;
 	}
+
 	$('form[name=frm] input[name=dept_seq]').val(dept_seq);
 	$('form[name=frm] input[name=br_seq]').val(br_seq);
 	$('form[name=frm] input[name=org_seq]').val(org_seq);
 
-	  $.post("backupRCSave.do", {dataType:'json',seq:seq,
+	  $.post("backupRCSave.do", {dataType:'json',dept_seq:dept_seq,
 		  br_seq:br_seq,org_seq:org_seq}, 
 			 function(result){
 		if(result=="SUCCESS"){
@@ -317,6 +278,8 @@ function fnSave(){
                 <form name="frm" method="post" action="backupRCSave.do" class="row">
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
 								<input type="hidden" name="br_seq"  id="br_seq" value="" />
+								<input type="hidden" name="dept_seq"  id="dept_seq" value="" />
+
                 <table>
                     <colgroup>
                         <col style="width:15%;" />
@@ -336,13 +299,15 @@ function fnSave(){
                     </form>
                 </div><!-- //List -->
                 <div class="t_center mT20">
-                    <!-- <button type="reset" class="btn_type2" id="btnInit">초기화</button> -->
                     <button type="button" class="btn_type2" id="btnSave">저장</button>
                 </div>
             </div>
         </div>
       </div>
 	
+	<form>
+</form>
+
 	<%@ include file="../template/grid.jsp" %>
 	<%@ include file="../template/footer.jsp" %>
 	

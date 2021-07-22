@@ -36,27 +36,12 @@
 					enable: true
 				}
 			},
-			/* check: {
-				enable: true
-			}, */
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
 			},
 			callback: {
-				//beforeDrag: beforeDrag,
-				//beforeDrop: beforeDrop,
-				//beforeDragOpen: beforeDragOpen,
-				//onDrag: onDrag,
-				//onDrop: onDrop,
-				//onExpand: onExpand,
 				beforeClick: beforeClick,
 				onClick: onClick
 			}
