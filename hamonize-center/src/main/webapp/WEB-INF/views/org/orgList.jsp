@@ -50,7 +50,7 @@
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1'}">
+			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
 			,open:true
 			</c:if>
 			},
@@ -220,9 +220,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					 $("#trGugun").remove();
 					 $("#trOrg_num").remove();
 					 $("#trPseq").remove();
-					var shtml = "<tr id='trSido'><th>광역시/도</th><td><input type='text' name='sido' id='sido' class='input_type1 w100' placeholder='광역시/도를 적으세요'/></td></tr>";
-			        shtml += "<tr id='trGugun'><th>시/군/구</th><td><input type='text' name='gugun' id='gugun' class='input_type1 w100' placeholder='시/군/구를 적으세요'/></td></tr>";
-			        shtml += "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
+					//  var shtml = "<tr id='trSido'><th>광역시/도</th><td><input type='text' name='sido' id='sido' class='input_type1 w100' placeholder='광역시/도를 적으세요'/></td></tr>";
+			        // shtml += "<tr id='trGugun'><th>시/군/구</th><td><input type='text' name='gugun' id='gugun' class='input_type1 w100' placeholder='시/군/구를 적으세요'/></td></tr>";
+			        var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" readonly /></td></tr>";
 					$(".board_view tbody").append(shtml);
 				}else{
 					$("#trOrg_num").remove();
@@ -233,7 +233,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					// var shtml = "<tr id='trOrg_num'><th>부문번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부문번호를 적으세요'/></td></tr>";
 					
 					// shtml += "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
-					var shtml = "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
+					var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
 
 					
 					$(".board_view tbody").append(shtml);
@@ -317,8 +317,10 @@ function setCheck() {
 		 $("#trGugun").remove();
 		 $("#trOrg_num").remove();
 		 $("#trPseq").remove();
-		var shtml = "<tr id='trSido'><th>광역시/도</th><td><input type='text' name='sido' id='sido' class='input_type1 w100' placeholder='광역시/도를 적으세요'/></td></tr>";
-        shtml += "<tr id='trGugun'><th>시/군/구</th><td><input type='text' name='gugun' id='gugun' class='input_type1 w100' placeholder='시/군/구를 적으세요'/></td></tr>";
+		
+		var shtml = "";
+		// var shtml = "<tr id='trSido'><th>광역시/도</th><td><input type='text' name='sido' id='sido' class='input_type1 w100' placeholder='광역시/도를 적으세요'/></td></tr>";
+        // shtml += "<tr id='trGugun'><th>시/군/구</th><td><input type='text' name='gugun' id='gugun' class='input_type1 w100' placeholder='시/군/구를 적으세요'/></td></tr>";
 		$(".board_view tbody").append(shtml);
 		
 		var zTree = $.fn.zTree.getZTreeObj("tree"),

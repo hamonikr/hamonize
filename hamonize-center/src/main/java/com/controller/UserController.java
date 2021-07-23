@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,8 +123,17 @@ public class UserController {
 	@RequestMapping("/modify")
 	@ResponseBody
 	public int modify(Model model, UserVo vo) throws Exception {
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		SimpleDateFormat timefomat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		System.out.println("timefomat : " + timefomat.format(timestamp));
+
 		int result=0;
+		
+		if(vo.getGubun().equals("R")){
+			vo.setDischarge_dt(timefomat.format(timestamp));
+		}
 		System.out.println("vo : " +vo.toString());
+		
 		result = userSerivce.userModify(vo);
 		return result;
 		

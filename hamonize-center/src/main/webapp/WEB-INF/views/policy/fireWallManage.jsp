@@ -7,11 +7,8 @@
 <!-- jquery alert -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-<!-- <link rel="stylesheet" href="/css/materialize.css"> -->
 
 <script type="text/javascript">
-//<![CDATA[
-//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -26,30 +23,17 @@
 				chkboxType: { "Y" : "s", "N" : "ps" }
 			},
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
 			},
 			callback: {
-				/* beforeDrag: beforeDrag,
-				beforeDrop: beforeDrop,
-				beforeDragOpen: beforeDragOpen,
-				onDrag: onDrag,
-				onDrop: onDrop,
-				onExpand: onExpand,*/
 				beforeClick: beforeClick,
 				onCheck: onCheck,
 				onClick: onClick
 			}
 		};
 	var zNodes =[
-		/* { id:0, pId:"", name:"부대관리", open:true}, */
 		<c:forEach items="${oList}" var="data" varStatus="status" >
 		{ id:"${data.seq}", pId:"${data.p_seq}",
 			<c:if test="${data.section ne 'S'}">
@@ -61,7 +45,7 @@
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1'}">
+			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
 			,open:true
 			</c:if>},
 		</c:forEach>				
@@ -128,13 +112,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				    });
 				}
 				
-				
-					
 				$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-				//$('form[name=frm] input[name=orgLink]').val(agrs.dataInfo.orgLink);
 				$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-				//$("#orgLank").val(agrs.dataInfo.orgLank);
-				
 				
 		});
 		}
@@ -160,13 +139,8 @@ function onCheck(event, treeId, treeNode) {
 			    });
 			}
 			
-			
-				
 			$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-			//$('form[name=frm] input[name=orgLink]').val(agrs.dataInfo.orgLink);
 			$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-			//$("#orgLank").val(agrs.dataInfo.orgLank);
-			
 			
 	});
 	}
@@ -185,20 +159,7 @@ function setCheck() {
 
 function fnManage(){
 	$("#popup").show();
-	$("#bg_fix").show();
-	/* var _width = '800';
-    var _height = '950';
- 
-    // 팝업을 가운데 위치시키기 위해 아래와 같이 값 구하기
-    var _left = Math.ceil(( window.screen.width - _width )/2);
-    var _top = Math.ceil(( window.screen.width - _height )/2);
-	var option = "width="+_width+", height="+_height+",left="+_left;
-	option += ",top=0,menubar=no,status=no,toolbar=no,directories=no,fullscreen=yes,resizeable=no";
-	var childWindow = window.open("fManagePop","",option);
-		$('body').click(function() {
- 		 	childWindow.focus();
-		});
-	//window.open("dManagePop","",option); */
+	$("#bg_fix").show();	
 }
 function hide_layer(){
 	$("#popup").hide();
@@ -207,11 +168,6 @@ function hide_layer(){
 
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
-	
-	/* if($("#org_nm").val()==""){
-		alert("부대명을 입력해주세요.");
-		return false;
-	} */
 	if(confirm("하위부문 및 부서가 있다면 하위부문 및 부서에도 전부 적용됩니다 적용하시겠습니까?")){
 		
 	var ppm_seq = "";
@@ -225,8 +181,7 @@ function fnSave(){
 	var nodes = zTree.getCheckedNodes(true);
 	var nodeLength=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var queryArr=[];
-   // alert('선택 노트 갯수 : ' + nodes.length);
-
+ㄴ
     $.each(zTree.transformToArray(zTree.getNodes()) && nodes,function(i,v){
     	if(i>=0){
 			if(v.children!=null)
@@ -234,7 +189,6 @@ function fnSave(){
 			nodeLength[eval(v.level-1)]++;
 			 var data={
 					 "org_seq": v.id
-					//,"name":v.name //확인용도
 			} 
 			queryArr.push(data);
     	}
@@ -253,7 +207,7 @@ function fnSave(){
     return false;
 	}
 }
-//]]>
+
 </script>
 
 <body>
@@ -287,7 +241,7 @@ function fnSave(){
 	     <div class="right_box">
 	
 	         <h3 class="inblock">방화벽 관리 <span>방화벽 허용서비스 선택</span></h3>
-      			<div class="right"> <button type="button" id="btnManage" class="btn_type3"> 방화벽 등록</button></div>
+      			<div class="right"> <button type="button" id="btnManage" class="btn_type3"> 방화벽 규칙 관리</button></div>
       					
 						<form name="frm" method="post" action="orgManage.do" class="row">
 	         			<input type="hidden" name="org_seq" id="org_seq" value="" />
@@ -327,18 +281,9 @@ function fnSave(){
 	
 	<!--  레이어 팝업 -->
             <div id="popup" class="popa" style="display:none;">
-                <h3>방화벽 등록</h3>
+                <h3>방화벽 규칙 관리</h3>
                 <div class="pop_content">
-                    <!-- 검색 -->
-                    <!-- <div class="top_search">
-                        <select id="" name="" title="" class="sel_type1">
-                            <option value="">방화벽 허용 서비스 검색</option>
-                            <option value="">-</option>
-                        </select>
-                        <label for="searchTitle"></label><input type="text" name="searchTitle" id="searchTitle" class="input_type1" />
-                        <button type="button" class="btn_type3"> 검색</button>
-                    </div> --><!-- //검색 -->
-				<div class="board_view2 mT20" id="insert">
+        		<div class="board_view2 mT20" id="insert">
                 	<form id="addForm" class="form-inline col-md-12 row" action="" style="display:none;">
 						<input id="sma_gubun" name="sma_gubun" type="hidden" value="Y">
                     	<table>
@@ -363,14 +308,15 @@ function fnSave(){
 		                                <th>포트</th>
 		                                <td><input id="sm_port" name="sm_port" type="text" class="input_type1" style="width:250px" /></td>
 		                                <td class="t_right">
-		                                    <button type="button" id="saveDevice" class="btn_type3">추가</button>
+		                                    <button type="button" id="saveFirewall" class="btn_type3">저장</button>
 		                                </td>
 		                            </tr>
 		                        </tbody>
 		                    </table>
 		                    </form>
 		                    <input type="hidden" id="MngeListInfoCurrentPage" name="MngeListInfoCurrentPage" value="1" />
-		                </div><!-- //List -->
+		                </div>
+						<!-- //List -->
                     <div class="board_list mT20">
                         <table>
                             <colgroup>
@@ -394,7 +340,7 @@ function fnSave(){
                         </table>
                     </div><!-- //List -->
                     <div class="mT20">
-                        <button type="button" class="btn_type3" id="deleteDevice">삭제</button>
+                        <button type="button" class="btn_type3" id="deleteFirewall">삭제</button>
                     </div>
                     <div class="right mT20">
                     	<button type="button" class="btn_type2 insertBtn">방화벽 추가</button>
@@ -477,46 +423,22 @@ function fnSave(){
 	}
 
 	// 등록 버튼
-	function addDeviceFnt(){
+	function addFirewallFnt(){
 		var name = $('#sm_name').val();
 		var info = $('#sm_dc').val();
 		var port = $('#sm_port').val();
 		// 검증
 		if(name.length  <= 0){
 			alert('방화벽명을 입력해 주세요!');
-			/* 입력alert({
-			    title: 'Alert!',
-			    content:  '방화벽명을 입력해 주세요!',
-			    buttons: {
-			        확인: function(){
-			        }
-			    }
-			}); */
 			return;
 		}
 		
 		if(info.length  <= 0){
 			alert('방화벽설명을 입력해 주세요!');
-			/* $.alert({
-			    title: 'Alert!',
-			    content:  '방화벽설명을 입력해 주세요!',
-			    buttons: {
-			        확인: function(){
-			        }
-			    }
-			}); */
 			return;
 		}
 		if(port.length  <= 0){
 			alert('방화벽설명을 입력해 주세요!');
-			/* $.alert({
-			    title: 'Alert!',
-			    content:  '방화벽설명을 입력해 주세요!',
-			    buttons: {
-			        확인: function(){
-			        }
-			    }
-			}); */
 			return;
 		}
 		
@@ -531,22 +453,10 @@ function fnSave(){
 					alert(res.msg+'!');
 					getListAddDeleteVer();
 		        	fromReset();
-					/* $.alert({
-					    title: 'Alert!',
-					    content:  res.msg + '!',
-					    buttons: {
-					        확인: function(){
-					        	getListAddDeleteVer();
-					        	fromReset();
-					        }
-					    }
-					}); */
+					location.reload();
+
 				}else{
 					alert(res.msg+'!');
-					/* $.alert({
-					    title: 'Alert!',
-					    content:  res.msg + '!',
-					}); */
 				}
 			},
 			error:function(request,status,error){
@@ -557,7 +467,7 @@ function fnSave(){
 	
 	
 	// 삭제 버튼
-	function deleteDeviceFnt(){
+	function deleteFirewallFnt(){
 		var iptArr = $('.form-control:checked');
 		var addressArr = [];
 
@@ -568,14 +478,6 @@ function fnSave(){
 		
 		if(0 >= addressArr.length){
 			alert('삭제할 방화벽을 선택해 주시기 바랍니다!');
-			/* $.alert({
-			    title: 'Alert!',
-			    content:  '삭제할 방화벽을 선택해 주시기 바랍니다!',
-			    buttons: {
-			        확인: function(){
-			        }
-			    }
-			}); */
 			return;
 		}
 		
@@ -585,17 +487,7 @@ function fnSave(){
 			alert('정상적으로 삭제되었습니다!');
 			getListAddDeleteVer();
         	fromReset();
-			/* $.alert({
-			    title: 'Alert!',
-			    content:  '정상적으로 삭제되었습니다!',
-			    buttons: {
-			        확인: function(){
-			        	//deleteDeviceSuccess(data, status, xhr, groupId);
-			        	getListAddDeleteVer();
-			        	fromReset();
-			        }
-			    }
-			}); */
+			location.reload();
 		}
 		
 		// 전송
@@ -621,16 +513,14 @@ function fnSave(){
 	});
 	
 	// 등록 버튼
-	$('#saveDevice').on('click', function(){
-		addDeviceFnt();
+	$('#saveFirewall').on('click', function(){
+		addFirewallFnt();
 	});
 	
 	// 삭제 버튼
-	$('#deleteDevice').on('click', function(){
-		deleteDeviceFnt();
+	$('#deleteFirewall').on('click', function(){
+		deleteFirewallFnt();
 	});
-
-
 
 	getList();
 });
@@ -655,16 +545,11 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 			}else{
 				gbInnerHtml += "<input type='checkbox' id=p"+no+" class='form-control'><label for=p"+no+" class='dook'></label></td>";	
 			}
-				gbInnerHtml += "<td><span>"+no+"</span>";
-				/* if(value.ppm_seq == value.sm_seq){
-					gbInnerHtml += '<input type="checkbox" class="form-control" disabled></td>';
-				}else{
-					gbInnerHtml += '<input type="checkbox" class="form-control"></td>';	
-				} */
+		
+			gbInnerHtml += "<td><span>"+no+"</span>";
 			gbInnerHtml += "<td>"+value.sm_name+"</td>";
 			gbInnerHtml += "<td>"+value.sm_dc+"</td>";
 			gbInnerHtml += "<td>"+value.sm_port+"</td>";
-			/*gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_insert_dt+"</td>";*/
 			gbInnerHtml += "</tr>";
 			
 		});	 

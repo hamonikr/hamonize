@@ -70,7 +70,7 @@ text-decoration: none;
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1'}">
+			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
 			,open:true
 			</c:if>},
 		</c:forEach>				
@@ -200,13 +200,11 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							var no = paging.totalRecordSize -(i ) - ((paging.currentPage-1)*10);
 							
 							strHtml += "<tr>";
-							strHtml += "<td><input type='checkbox' name='chk' id="+agrs[i].seq+" class='form-control' value='"+agrs[i].seq+"'><label for="+no+" class='dook'></label></td>";
-							//gbInnerHtml += "<td><input type='checkbox' name='chk' id="+no+" class='form-control' value='"+value.seq+"'><label for="+no+" class='dook'></label></td>";
-
+							strHtml += "<td><input type='checkbox' name='chk' id="+agrs[i].seq+" class='form-control' value='"+agrs[i].seq+"'><label for="+agrs[i].seq+" class='dook'></label></td>";
 							strHtml += "<td>"+no+"</td>";
 							strHtml += "<td>"+agrs[i].p_org_nm+"</td>";
 							strHtml += "<td>"+agrs[i].org_nm+"</td>";
-							strHtml += "<td>"+agrs[i].user_id+"</td>";
+							strHtml += "<td><a style='text-decoration: underline;' href='/user/view/"+agrs[i].seq+"''>"+agrs[i].user_id+"</a></td>";
 							strHtml += "<td>"+agrs[i].rank+"</td>";
 							strHtml += "<td>"+agrs[i].user_name+"</td>";
 							strHtml += "<td>"+agrs[i].user_sabun+"</td>";
@@ -466,10 +464,7 @@ function goDelete(){
 		alert('삭제할 사용자를 선택해주세요');
 	}else{
 		console.log("chked.length : "+chked.length);
-		for(var j=0;j<chked.length;j++){
-			console.log("retVal : "+ chked[j]);		
-		}
-
+		
 		$.ajax({
 			url: '/user/delete',
 			type: 'post',
@@ -477,9 +472,8 @@ function goDelete(){
 					seqs :chked
 			},
 			success: function(data){
-				alert("retVal.. "+ data);
 				if(data==1){
-					alert("사용자를 삭제하였습니다.. "+ data);
+					alert("사용자를 삭제하였습니다.. ");
 					location.reload();
 				}
 				

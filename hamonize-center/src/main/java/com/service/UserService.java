@@ -45,6 +45,7 @@ public class UserService {
 		String pw= vo.getPass_wd();
 		OrgVo ovo = new OrgVo();
 
+		vo.setGubun("A");
 		vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
 		result = userMapper.userSave(vo);
 		
@@ -61,14 +62,10 @@ public class UserService {
 				dn += ",ou="+p_array[i];
 			}
 
-			try {
-				con.connection(gs.getLdapUrl(), gs.getLdapPassword());		
-				vo.setPass_wd(pw);	
-				con.addUser(vo, dn, host);
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());		
+		vo.setPass_wd(pw);	
+		con.addUser(vo, dn, host);
 	
-			} catch (NamingException e) {
-				System.out.println(e);
-			}
 			
 		}else{
 			System.out.println("db 저장 실패");

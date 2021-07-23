@@ -40,8 +40,6 @@
 	</select>
 	
 	<select id="dManagePopList" resultType="com.model.PolicyDeviceVo" parameterType="java.util.HashMap">
-		
-		
 		select 
     		TA.*,
     		TB.ppm_seq
@@ -83,7 +81,7 @@
 		DELETE 
 			FROM tbl_security_mngr
 		WHERE 
-			seq 
+			sm_seq 
 		IN 
 			<foreach collection="deleteList" item="item" separator="," index="index" open="(" close=")">
 				'${deleteList[index]}'::bigint

@@ -214,8 +214,7 @@ public class LDAPConnection {
 		attributes.put("loginShell", "/bin/bash");	
 		attributes.put("userPassword", vo.getPass_wd());	
 		attributes.put("uidNumber", vo.getUser_sabun().toString());	
-		attributes.put("uid", vo.getUser_name());	
-
+	
 		addUser = "uid="+vo.getUser_name()+",ou=users"+dn+",dc=hamonize,dc=com";
 		
 		try {
@@ -351,7 +350,7 @@ public class LDAPConnection {
 		}
 
 		baseDn = upperDn+baseDn;		
-		String dn = "cn="+uvo.getUser_name()+",ou=users"+baseDn; 
+		String dn = "uid="+uvo.getUser_name()+",ou=users"+baseDn; 
 		System.out.println("dn : " +dn);
 		
 		
@@ -421,7 +420,7 @@ public class LDAPConnection {
 		Attribute mod3 = new BasicAttribute("host", host);
 		Attribute mod4 = new BasicAttribute("userPassword", newVo.getPass_wd());
 		Attribute mod5 = new BasicAttribute("uidNumber", newVo.getUser_sabun());
-		Attribute mod6 = new BasicAttribute("uid", newVo.getUser_name());
+		Attribute mod6 = new BasicAttribute("cn", newVo.getUser_name());
 
 		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
@@ -430,13 +429,12 @@ public class LDAPConnection {
 		mods[4] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod5);
 		mods[5] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod6);
 
-
 		if(oldVo.getOrg_seq() != newVo.getOrg_seq() ){
-			newDn="cn="+newVo.getUser_name()+",ou=users"+nDn+",dc=hamonize,dc=com";
-			oldDn = "cn="+oldVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
+			newDn="uid="+newVo.getUser_name()+",ou=users"+nDn+",dc=hamonize,dc=com";
+			oldDn = "uid="+oldVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
 		}else{
-			newDn="cn="+newVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
-			oldDn = "cn="+oldVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
+			newDn="uid="+newVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
+			oldDn = "uid="+oldVo.getUser_name()+",ou=users"+oDn+",dc=hamonize,dc=com";
 		}
 
 		

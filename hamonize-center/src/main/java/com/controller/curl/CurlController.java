@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,91 +82,106 @@ public class CurlController {
 	}
 	
 	/* pc정보 저장 */
-	@Transactional
+	@Transactional(rollbackOn= {Exception.class})
 	@RequestMapping("/setPcInfo")
-	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request)  throws Exception{
+	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request) throws Exception {
 		System.out.println("=============setpcinfo================");
-		
+		LDAPConnection con = new LDAPConnection();
+			
 		int retVal = 0;
-	    try {
-
-	        JSONParser jsonParser = new JSONParser();
-			
-			System.out.println("bbbb");
-	        JSONObject jsonObj = (JSONObject) jsonParser.parse( retData.toString());
-	        JSONArray hmdArray = (JSONArray) jsonObj.get("events");
-
-	        PcMangrVo hdVo = new PcMangrVo();
-	        System.out.println("hmdArray.size()==="+hmdArray.size());
-	        System.out.println("hmdArray===>> "+hmdArray.get(0).toString());
-	        
-
-	        for(int i=0 ; i<hmdArray.size() ; i++){
-	            JSONObject tempObj = (JSONObject) hmdArray.get(i);
-	        	
-	            hdVo.setPc_os(tempObj.get("pcos").toString().trim());
-	            hdVo.setPc_memory(tempObj.get("memory").toString().trim() +"G");
-	            hdVo.setPc_cpu(tempObj.get("cpuid").toString().trim());
-	            hdVo.setPc_disk(tempObj.get("hddinfo").toString().trim());
-	            hdVo.setPc_disk_id(tempObj.get("hddid").toString().trim());
-	            hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString().trim());
-				hdVo.setPc_uuid(tempObj.get("uuid").toString());
-				hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
-	            hdVo.setDeptname(tempObj.get("deptname").toString());	// 부서이름
-
-				hdVo.setSabun(tempObj.get("sabun").toString());	// 사번
-				hdVo.setPc_hostname(tempObj.get("hostname").toString().replaceAll(System.getProperty("line.separator"),""));
-	            hdVo.setPc_ip(tempObj.get("ipaddr").toString());
-				hdVo.setUsername(tempObj.get("username").toString());	// 사용자 이름	
-            
-	       }
-
-			int DuplserverPc = pcMangrMapper.inserPcInfoChk(hdVo);
-			System.out.println("DuplserverPc===="+DuplserverPc +"===>"+ hdVo.getPc_vpnip() );
-
-			PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
-			System.out.println("orgNumChkVo===="+orgNumChkVo);
-			
-			LDAPConnection con = new LDAPConnection();
-			
-			hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
-			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
-		    String dn ="";
-
-			OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
-			hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
-			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-
-		   	System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
-			if(hdVo.getPc_hostname().toLowerCase().contains("hamonikr")){
-				hdVo.setPc_hostname("H");
-			} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
-				hdVo.setPc_hostname("W");
-			}
-
-			if(DuplserverPc >= 1 ) {
-				retVal = pcMangrMapper.updatePcinfo(hdVo);
-				System.out.println("update retVal=== " + retVal);
-				con.addPC(hdVo, sabunChkVo);
-
-			}else {
-				retVal = pcMangrMapper.inserPcInfo(hdVo);
-				System.out.println("insert retVal=== " + retVal);
-				con.addPC(hdVo, sabunChkVo);
-			}
-	        
-	    }catch(Exception e) {
-	        System.out.println("Error reading JSON string: " + e.toString());
-	    }
+		JSONParser jsonParser = new JSONParser();
 		
-	    Boolean isAddPcInfo = true;
-	    if( retVal == 1 ) {
-	    	isAddPcInfo = true;
-	    }else {
-	    	isAddPcInfo = false;
-	    }
-        
-		System.out.println("isAddPcInfo==="+isAddPcInfo);
+		System.out.println("bbbb");
+		JSONObject jsonObj = (JSONObject) jsonParser.parse( retData.toString());
+		JSONArray hmdArray = (JSONArray) jsonObj.get("events");
+
+		PcMangrVo hdVo = new PcMangrVo();
+		System.out.println("hmdArray.size()==="+hmdArray.size());
+		System.out.println("hmdArray===>> "+hmdArray.get(0).toString());
+		Boolean isAddPcInfo = false;
+
+		for(int i=0 ; i<hmdArray.size() ; i++){
+			JSONObject tempObj = (JSONObject) hmdArray.get(i);
+			
+			hdVo.setPc_os(tempObj.get("pcos").toString().trim());
+			hdVo.setPc_memory(tempObj.get("memory").toString().trim() +"G");
+			hdVo.setPc_cpu(tempObj.get("cpuid").toString().trim());
+			hdVo.setPc_disk(tempObj.get("hddinfo").toString().trim());
+			hdVo.setPc_disk_id(tempObj.get("hddid").toString().trim());
+			hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString().trim());
+			hdVo.setPc_uuid(tempObj.get("uuid").toString());
+			hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
+			hdVo.setDeptname(tempObj.get("deptname").toString());	// 부서이름
+			hdVo.setSabun(tempObj.get("sabun").toString());	// 사번
+			hdVo.setPc_hostname(tempObj.get("hostname").toString().replaceAll(System.getProperty("line.separator"),""));
+			hdVo.setPc_ip(tempObj.get("ipaddr").toString());
+			hdVo.setUsername(tempObj.get("username").toString());	// 사용자 이름	
+		
+		}
+
+		PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
+	
+		if(orgNumChkVo != null){
+			System.out.println("orgNumChkVo===="+orgNumChkVo);
+			hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
+			System.out.println("org_seq : "+  hdVo.getOrg_seq());
+		
+			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
+				
+			if(sabunChkVo != null){
+				int isExistPc = pcMangrMapper.inserPcInfoChk(hdVo);
+				System.out.println("PcDuplicateChk===="+isExistPc );
+				Boolean PcDuplicateChk = false;
+				
+				System.out.println("sabunChkVo user name : "+sabunChkVo.getUser_name());
+				
+				if(hdVo.getUsername().equals(sabunChkVo.getUser_name())){
+					if(isExistPc == 0){
+						PcDuplicateChk = true;
+						OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+
+						hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+						con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+			
+						System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
+						System.out.println("hdVo.getPc_os() toLowerCase : "+hdVo.getPc_os().toLowerCase());
+							
+						if(hdVo.getPc_os().toLowerCase().contains("hamonikr")){
+							hdVo.setPc_os("H");
+						} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
+							hdVo.setPc_os("W");
+						}	
+					
+						if(PcDuplicateChk) {
+							retVal = pcMangrMapper.inserPcInfo(hdVo);
+							if(retVal ==1){
+								con.addPC(hdVo, sabunChkVo);
+							}else{
+								System.out.println("pc 저장 실패");
+							}
+							
+						}else {
+							System.out.println("이미 등록된 PC");
+						}
+
+					}else{
+						PcDuplicateChk = false;
+					}					
+				}else{
+					System.out.println("사용자 이름이 일치하지 않음");
+				}
+
+			}else{
+				System.out.println("존재하지 않는 사번");
+			}
+
+		       
+		}else{
+			System.out.println("존재하지 않는 부서");	
+		}
+		
+		 
+		System.out.println("isAddPcInfo==="+ isAddPcInfo);
 		return isAddPcInfo;
 	}
 	

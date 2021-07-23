@@ -38,7 +38,6 @@
 } 
 
 #addForm { display: none }
-/* .input-field { margin: 0 !important } */
 
 #pageGrideInMngrListTb .mdl-data-table__cell--non-numeric input {
 	display: inline-block;
@@ -369,14 +368,12 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 	
 		<article>
 			<div class="code-html">
-			<!-- <div class=" contents"> -->
 				<p id="contentTitle"></p>
 				
 				<hr/>
 				<div class="row" style="margin-left: 10px;">
 		        	<form class="form-inline col-md-5" action="">
 			  			<div class="input-field s3 mb-4 mr-sm-4">
-						  	<!-- <input type="searchTitle" class="form-control mb-1 mr-sm-1" id="email"> -->
 						  	<input id="searchTitle" name="searchTitle" type="text" data-length="10" style="width:280px;">
 			            	<label for="searchTitle" class="mb-4 mr-sm-4">검색 디바이스 :</label>
 			            	<button type="submit" class="btn btn-info mb-1">검색</button>
@@ -419,9 +416,7 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 	                        <th><input type="text" class="form-control" placeholder="번호" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="디바이스" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="디바이스설명" disabled></th>
-	                       <!--  <th><input type="text" class="form-control" placeholder="" disabled></th> -->
-	                        <!-- <th><input type="text" class="form-control" placeholder="등록일시" disabled></th> -->
-	                    </tr>
+	                     </tr>
 		        		</thead>
 						<tbody id="pageGrideInMngrListTb">
 							<input type="hidden" id="notiListCurrentPage" name="notiListCurrentPage" value="1" class="form-control" >

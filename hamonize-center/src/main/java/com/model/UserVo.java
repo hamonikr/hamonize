@@ -16,7 +16,6 @@ public class UserVo extends PagingVo{
 	private String user_name;
 	private String ins_date;
 	private String upd_date;
-	private String kind;
 	private String rank;
 	private String gubun;
 	private String email;
