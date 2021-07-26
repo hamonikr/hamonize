@@ -294,7 +294,7 @@ function searchView(viewName, page){
 	            <select id="" name="" title="" class="sel_type1">
 	                <option value="0">전체</option>
 	                <option value="1">지역</option>
-	                <option value="2">사지방번호</option>
+																																																																												<%-- <option value="2">사지방번호</option> --%>
 	                <option value="3">IP</option>
 	                <option value="4">Mac Address</option>
 	                <option value="5">PC관리번호</option>
