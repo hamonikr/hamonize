@@ -10,14 +10,14 @@
 			a.user_id, 
 			a.pass_wd, 
 			a.user_name, 
-			ins_date, 
+			a.ins_date, 
 			to_char(a.upd_date, 'YYYY-MM-DD') as upd_date, 
-			a.kind,
+			a.gubun,
 			case when a.rank = '002' then '사원'
-			when a.rank = '003' then '부서장'
-			when a.rank = '004' then '부문장'
-			when a.rank = '005' then '대표' 
-			else ''
+			when a.rank = '003' then '대리'
+			when a.rank = '004' then '과장'
+			when a.rank = '005' then '부장' 
+			else '관리자'
 			end as rank , 
 			a.discharge_dt, 
 			a.org_seq,
@@ -124,10 +124,11 @@
 			a.pass_wd, 
 			a.user_name, 
 			ins_date,
-			email,
-			tel, 
+			a.email,
+			a.gubun,
+			a.tel, 
 			to_char(a.upd_date, 'YYYY-MM-DD') as upd_date, 
-			a.kind,
+			a.gubun,
 			case when a.rank = '002' then '사원'
 			when a.rank = '003' then '대리'
 			when a.rank = '004' then '과장'
@@ -173,7 +174,7 @@
 			user_id,
 			pass_wd,
 			user_name,
-			kind,
+			gubun,
 			rank,
 			email,
 			tel,
@@ -186,7 +187,7 @@
 			#{user_id},
 			#{pass_wd},
 			#{user_name},
-			#{kind},
+			#{gubun},
 			#{rank},
 			#{email},
 			#{tel},
@@ -215,7 +216,7 @@
 			pass_wd = #{pass_wd},
 		</if>
 		user_name = #{user_name},
-		kind = #{kind},
+		gubun = #{gubun},
 		rank = #{rank},
 		email = #{email},
 		tel = #{tel},		
@@ -223,6 +224,9 @@
 		position = #{position},
 		user_sabun = #{user_sabun},
 		upd_date = now()
+		<if test="discharge_dt != null">
+			,discharge_dt = #{discharge_dt}
+		</if>
 		WHERE user_id = #{user_id}
 	</update>
 	

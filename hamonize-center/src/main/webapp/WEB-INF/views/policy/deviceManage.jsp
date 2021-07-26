@@ -55,7 +55,7 @@
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1'}">
+			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
 			,open:true
 			</c:if>},
 		</c:forEach>				
@@ -253,7 +253,7 @@ function fnSave(){
 	     <div class="right_box">
 	
 	         <h3 class="inblock">디바이스 관리 <span>허용 디바이스 선택</span></h3>
-      			<div class="right"> <button type="button" id="btnManage" class="btn_type3"> 디바이스 등록</button></div>
+      			<div class="right"> <button type="button" id="btnManage" class="btn_type3"> 허용 디바이스 관리</button></div>
       					
 						<form name="frm" method="post" action="orgManage.do" class="row">
 	         			<input type="hidden" name="org_seq" id="org_seq" value="" />
@@ -289,7 +289,7 @@ function fnSave(){
 	
 	<!--  레이어 팝업 -->
             <div id="popup" class="popa" style="display:none;">
-                <h3>디바이스 등록</h3>
+                <h3>허용 디바이스 관리</h3>
                 <div class="pop_content">
           		<div class="board_view2 mT20" id="insert">
                 	<form id="addForm" class="form-inline col-md-12 row" action="" style="display:none;">
@@ -325,7 +325,7 @@ function fnSave(){
 		                                	<input id="sm_dc" name="sm_dc" type="text" class="input_type1" style="width:270px;"/>
 		                                </td>
 		                                <td class="t_right">
-		                                    <button type="button" id="saveDevice" class="btn_type3">추가</button>
+		                                    <button type="button" id="saveDevice" class="btn_type3">저장</button>
 		                                </td>
 		                            </tr>
 		                        </tbody>
@@ -465,6 +465,7 @@ function fnSave(){
 					alert("등록되었습니다.");
 					getListAddDeleteVer();
 		        	fromReset();
+					location.reload();
 
 				}else{
 					alert("등록되지 않았습니다.");
@@ -502,6 +503,7 @@ function fnSave(){
 			alert("삭제 되었습니다.");
 			getListAddDeleteVer();
         	fromReset();
+			location.reload();
 			
 		}
 		

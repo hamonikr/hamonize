@@ -148,11 +148,12 @@
 			a.user_name, 
 			to_char(a.insert_dt, 'YYYY-MM-DD') as insert_dt, 
 			to_char(a.update_dt, 'YYYY-MM-DD') as update_dt, 
-			a.kind,
+			a.gubun,
 			case when a.rank = '002' then '사원'
-			when a.rank = '003' then '부서장'
-			when a.rank = '004' then '부문장'
-			when a.rank = '005' then '대표' 
+			when a.rank = '003' then '대리'
+			when a.rank = '004' then '과장'
+			when a.rank = '005' then '부장' 
+			when a.rank = '100' then '관리자' 
 			else ''
 			end as rank , 
 			a.discharge_dt, 
@@ -221,12 +222,12 @@
 			a.user_name, 
 			to_char(a.insert_dt, 'YYYY-MM-DD') as insert_dt, 
 			to_char(a.update_dt, 'YYYY-MM-DD') as update_dt, 
-			a.kind,
+			a.gubun,
 			case when a.rank = '002' then '사원'
-			when a.rank = '003' then '부서장'
-			when a.rank = '004' then '부문장'
-			when a.rank = '005' then '대표' 
-			else ''
+			when a.rank = '003' then '대리'
+			when a.rank = '004' then '과장'
+			when a.rank = '005' then '부장' 
+			else '관리자'
 			end as rank , 
 			a.discharge_dt, 
 			a.org_seq,
@@ -327,12 +328,12 @@
 			a.user_name, 
 			to_char(a.insert_dt, 'YYYY-MM-DD') as insert_dt, 
 			to_char(a.update_dt, 'YYYY-MM-DD') as update_dt, 
-			a.kind,
+			a.gubun,
 			case when a.rank = '002' then '사원'
-			when a.rank = '003' then '부문장'
-			when a.rank = '004' then '부서장'
-			when a.rank = '005' then '대표' 
-			else ''
+			when a.rank = '003' then '대리'
+			when a.rank = '004' then '과장'
+			when a.rank = '005' then '부장' 
+			else '관리자'
 			end as rank , 
 			a.discharge_dt, 
 			a.org_seq,

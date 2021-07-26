@@ -60,7 +60,7 @@
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1'}">
+			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
 			,open:true
 			</c:if>},
 		</c:forEach>				
@@ -317,9 +317,8 @@ function searchView(viewName, page){
                   <div class="top_search">
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
                        <option value="0">전체</option>
-                          <option value="1">이름</option>
-                          <%-- <option value="2">아이디</option> --%>
-                          <option value="3">접속부서</option>
+                          <option value="1">pc 호스트 이름</option>
+                          <option value="2">접속부서</option>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
                       <button type="button" class="btn_type3" onclick="getList();"> 검색</button>
@@ -345,7 +344,7 @@ function searchView(viewName, page){
                             <tr>
                                 <th>번호</th>
                                 <th>접속부서</th> 
-								<th>PC HOSTNAME</th> 						
+								<th>pc 호스트 이름</th> 						
                                 <th>최근접속일시</th>
                                 <th>종료일시</th>
                                 <th>사용시간</th>

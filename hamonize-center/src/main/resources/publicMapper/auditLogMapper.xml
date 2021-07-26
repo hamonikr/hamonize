@@ -28,7 +28,7 @@
 		 
 	</select>
 	
-	
+<!-- 	
 	<select id="userLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT  a.seq, 
 		to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS.MS') as login_dt, 
@@ -89,13 +89,95 @@
 			)
 		</if>
 		</where> 
-		--order by a.login_dt desc
+	// 	order by a.login_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		
 	</select>
-	
-	
+	 -->
+	 <select id="userLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
+		SELECT  
+			a.seq, 
+			to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS.MS') as login_dt, 
+			to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS.MS') as logout_dt, 
+			to_char(age(a.logout_dt,a.login_dt),'YYYY-MM-DD HH24:MI:SS.MS') as spent_time,
+			(select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname,
+			b.seq,
+			b.org_seq,
+			(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm
+		FROM (select * from tbl_loginout order by login_dt desc) a left outer join tbl_pc_mangr b on a.uuid = b.pc_uuid 		
+		<where>
+		1=1		
+		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''" >
+			and b.org_seq in (
+					with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+						select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+						from tbl_org a
+						where a.seq = #{auditLogVo.org_seq}
+						union all
+						select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+						from tbl_org a, search_org so 
+						where a.p_seq = so.seq and not cycle)
+						select seq
+						from search_org
+					)
+		</if>
+		<if test="auditLogVo.keyWord == 1">
+			and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
+		</if>
+		<if test="auditLogVo.keyWord == 2">
+			and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
+		</if>
+		<if test="auditLogVo.keyWord == 0">
+			and (b.pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
+			or (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
+			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
+			)
+		</if>
+		</where> 
+		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
+		
+	</select>
 	<select id="countUserLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
+		SELECT 
+			count(*)  as tbl_cnt
+		FROM tbl_loginout a 
+ 		left outer join tbl_pc_mangr b
+ 		on a.uuid = b.pc_uuid
+		<where>
+		1=1
+		<if test="org_seq != null and org_seq != ''">
+		and b.org_seq in (
+				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+					from tbl_org a
+					where a.seq = #{org_seq}
+					union all
+					select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+					from tbl_org a, search_org so 
+					where a.p_seq = so.seq and not cycle)
+					select seq
+					from search_org
+				)
+		</if>
+		<!-- <if test="keyWord == 3">
+		and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{txtSearch}
+		</if>
+		<if test="keyWord == 4">
+		and (select org_nm from tbl_org where seq=b.org_seq) =  #{txtSearch}
+		</if>
+		<if test="keyWord == 5">
+		and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
+		</if>
+		<if test="keyWord == 0">
+			and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{txtSearch}
+			or (select org_nm from tbl_org where seq=b.org_seq) =  #{txtSearch}
+			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
+			)
+		</if> -->
+		</where> 
+	</select>
+
+	<!-- <select id="countUserLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
 		FROM tbl_loginout a 
@@ -141,7 +223,7 @@
 			)
 		</if>
 		</where> 
-	</select>
+	</select> -->
 	
 	<select id="userLogListExcel" resultType="hashmap" parameterType="com.model.AuditLogVo">
 		SELECT  

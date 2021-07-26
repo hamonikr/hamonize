@@ -53,12 +53,7 @@ a:link {
 			$('#user_sabun').focus();
 			return true;
 		}
-		if($(':radio[name="gubun"]:checked').length < 1)
-		{
-			alert('활성여부는 필수 입력 입니다.');
-			$('#gubun').focus();
-			return true;
-		}
+	
 		
 		if($('#pass_wd').val() == '')
 		{
@@ -146,30 +141,11 @@ a:link {
 	function goModify(){
 		var gubun = $("#gubun option:checked").val();
 		$('#gubun').val(gubun);
-
-		if($('#pass_wd').val() == '')
-		{
-			alert('비밀번호는 필수 입력 입니다. 다시 입력해주시기 바랍니다.');
-			$('#pass_wd').focus();
-			return true;
-		}
-		
-		if($('#pass_wd_cfm').val() == '')
-		{
-			alert('비밀번호 확인은 필수 입력 입니다. 다시 입력해주시기 바랍니다.');
-			$('#pass_wd_cfm').focus();
-			return true;
-		}
 		
 		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
 		{
 			alert('비밀번호와 비밀번호 확인이 다릅니다.');
-			$('#pass_wd_cfm').focus();
-			return true;
-		}
-		console.log("passwd==="+$('#pass_wd').val())
-		if($('#pass_wd').val() != '')
-		{
+			$('#pass_wd_cfm').focus();gubun
 			 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
 			{
 				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
@@ -249,16 +225,19 @@ a:link {
                                 <th>* ID</th>
                                 <td colspan="3">
                                     <label for="user_id" class="none"></label>
-                                    <input type="text" name="user_id" id="user_id" value="${result.user_id}" class="input_type1 w50" <c:if test="${result.user_id ne null}">readonly</c:if>/>
+                                    <input type="text" name="user_id" id="user_id" value="${result.user_id}" class="input_type1 w50" <c:if test="${result.user_id ne null}">readonly</c:if> />
                                     <c:if test="${result.user_id eq null}"><button type="button" class="btn_type1" onclick="goIdCheck()"> 아이디 중복확인 </button></c:if>
                                 </td>
                             </tr>
                             <tr>
-                                <th>* 활성여부</th>
-                                <td colspan="3">
-                                    <input type="radio" name="gubun" id="gubunA" value="A" checked <c:if test="${result.gubun eq 'A' }">checked</c:if> /><label for="gubunA" class="pR20">활성</label>
-                                    <input type="radio" name="gubun" id="gubunD" value="D" <c:if test="${result.gubun eq 'D' }">checked</c:if> /><label for="gubunD">비활성</label>
-                                </td>
+								<c:if test="${result.gubun != null}" >
+								<th>* 활성여부</th>
+								<td colspan="3">
+									<input type="radio" name="gubun" id="gubunA" value="A" <c:if test="${result.gubun eq 'A' }">checked</c:if> /><label for="gubunA" class="pR20">활성</label>
+									<input type="radio" name="gubun" id="gubunD" value="D" <c:if test="${result.gubun eq 'D' }">checked</c:if> /><label for="gubunD" class="pR20">휴직</label>
+									<input type="radio" name="gubun" id="gubunR" value="R" <c:if test="${result.gubun eq 'R' }">checked</c:if> /><label for="gubunR">퇴사</label>
+								</td>
+								</c:if>
                             </tr>
                             <tr>
                                 <th>* 성명</th>
@@ -267,7 +246,7 @@ a:link {
 							<tr>
 								<th>* 부서</th>
 								<td colspan="3">
-									<label for="org_nm" class="none"></label>
+									<label for="org_seq" class="none"></label>
 									<input type="hidden" id="seq" name="seq" value="${result.seq}"/>
 									<select id="org_seq" name="org_seq" class="js-example-placeholder-single js-states form-control" style="width:50%;margin-left:5px">
 										<c:if test="${result.org_nm != null}">
@@ -293,7 +272,41 @@ a:link {
 							</tr>
 							<tr>
 								<th>* 직급</th>
-								<td><label for="rank" class="none"></label><input type="text" name="rank" id="rank" value="${result.rank}" class="input_type1 w100" /></td>
+								<td>
+								<label for="rank" class="none"></label>
+								<select class="form-control" name="rank" id="rank" w100>
+									<c:if test="${result.rank == null}">
+										<option value="" disabled selected hidden>직급을 선택해주세요</option>
+										<option value="002">사원</option>
+										<option value="003">대리</option>
+										<option value="004">과장</option>
+										<option value="005">부장</option>
+										<option value="100">관리자</option>
+									</c:if>	 
+									<c:if test="${result.rank != null}">
+										<c:if test="${result.rank == '사원'}">
+											<option value="002"  selected hidden>${result.rank}</option>
+										</c:if>	
+										<c:if test="${result.rank == '대리'}">
+											<option value="003"  selected hidden>${result.rank}</option>
+										</c:if>
+										<c:if test="${result.rank == '과장'}">
+											<option value="004"  selected hidden>${result.rank}</option>
+										</c:if>
+										<c:if test="${result.rank == '부장'}">
+											<option value="005"  selected hidden>${result.rank}</option>
+										</c:if>
+										<c:if test="${result.rank == '관리자'}">
+											<option value="100"  selected hidden>${result.rank}</option>
+										</c:if>
+										<option value="002">사원</option>
+										<option value="003">대리</option>
+										<option value="004">과장</option>
+										<option value="005">부장</option>
+										<option value="100">관리자</option>
+									</c:if>	
+								</select>
+								</td>
 							</tr>
 							<tr>
 								<th> 이메일 </th>
@@ -320,7 +333,7 @@ a:link {
                                 <th>* 비밀번호</th>
                                 <td >
                                     <label for="pass_wd" class="none"></label>
-									<input type="password" name="pass_wd" id="pass_wd" value="exitem08*" class="input_type1  w100" />
+									<input type="password" name="pass_wd" id="pass_wd" value="" class="input_type1  w100" />
                                     ※ 비밀번호는 영문, 숫자, 특수문자 조합 6자리 이상
                                 </td>
                             </tr>
@@ -328,7 +341,7 @@ a:link {
 								<th>* 비밀번호 확인</th>
 								<td>
                                     <label for="pass_wd_cfm" class="none">
-									</label><input type="password" name="pass_wd_cfm" id="pass_wd_cfm" value="exitem08*"  class="input_type1 w100" />
+									</label><input type="password" name="pass_wd_cfm" id="pass_wd_cfm" value=""  class="input_type1 w100" />
                                 </td>
                             </tr>
                             
@@ -359,6 +372,7 @@ a:link {
 
 
 function goSave(){
+
 	if(vaildCheck()) {		
 	} else{
 		document.frm.action = "/user/userSave";
@@ -368,12 +382,15 @@ function goSave(){
 }
 
 $(function() {		
+
+	var gubun = $('input[name="gubun"]:checked').val();
+
 	$("select").change(function(){
         var org_seq = $(this).children("option:selected").val();
     });
 
 
-	$('select').select2({
+	$('#org_seq').select2({
 		"language":{
 			"noResults": function(){
 				return "검색 결과가 없습니다.";

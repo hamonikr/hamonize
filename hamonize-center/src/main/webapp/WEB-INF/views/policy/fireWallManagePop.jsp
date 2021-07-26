@@ -301,7 +301,6 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sm_name+"</td>";
 			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sm_dc+"</td>";
 			gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sm_port+"</td>";
-			/*gbInnerHtml += "<td class='mdl-data-table__cell--non-numeric'>"+value.sma_insert_dt+"</td>";*/
 			gbInnerHtml += "</tr>";
 			
 		});	 
@@ -321,20 +320,6 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 	}
 	$('#pageGrideInMngrListTb').append(gbInnerHtml);
 }
-//디바이스 삭제
-/* var deleteDeviceSuccess = function(data, status, xhr, groupId){
-	var url ='/gplcs/dManagePopList';
-	
-	var keyWord = $("select[name=keyWord]").val();
-	var vData = 'notiListCurrentPage=' + $("#notiListCurrentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val();
-	
-	function fnt(data, status, xhr, groupId){ 
-		ipMngrGetSuccess(data, status, xhr, groupId); 
-		$('.mdl-data-table__cell--non-numeric .form-control').css('opacity', '1');
-	}
-	
-	callAjax('POST', url, vData, fnt, getError, 'json');
-} */
 
 </script>
 </head>
@@ -343,14 +328,12 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 	
 		<article>
 			<div class="code-html">
-			<!-- <div class=" contents"> -->
 				<p id="contentTitle"></p>
 				
 				<hr/>
 				<div class="row" style="margin-left: 10px;">
 		        	<form class="form-inline col-md-5" action="">
 			  			<div class="input-field s3 mb-4 mr-sm-4">
-						  	<!-- <input type="searchTitle" class="form-control mb-1 mr-sm-1" id="email"> -->
 						  	<input id="searchTitle" name="searchTitle" type="text" data-length="10" style="width:280px;">
 			            	<label for="searchTitle" class="mb-4 mr-sm-4">검색 방화벽 :</label>
 			            	<button type="submit" class="btn btn-info mb-1">검색</button>

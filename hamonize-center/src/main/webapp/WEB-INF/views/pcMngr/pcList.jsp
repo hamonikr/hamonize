@@ -65,8 +65,6 @@ transform: translate(-50%, -50%);
  }
 </style>
 <script type="text/javascript">
-//<![CDATA[
-//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -76,16 +74,7 @@ transform: translate(-50%, -50%);
 					enable: true
 				}
 			},
-			/* check: {
-				enable: true
-			}, */
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
@@ -107,7 +96,7 @@ transform: translate(-50%, -50%);
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1'}">
+			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
 			,open:true
 			</c:if>},
 		</c:forEach>				
@@ -370,7 +359,7 @@ function searchView(viewName, page){
 	            <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
 	                <option value="0">전체</option>
 	                <%-- <option value="1">지역</option> --%>
-	                <option value="2">부서번호</option>
+	                <option value="2">부서이름</option>
 	                <option value="3">IP</option>
 	                <option value="4">Mac Address</option>
 	                <option value="5">PC 호스트 이름</option>
@@ -484,6 +473,7 @@ function searchView(viewName, page){
 	<!-- 레이어 팝업용 자바스크립트 -->
 	<script type="text/javascript">
 		function detail_popup(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
+			console.log("pc_disk : " + pc_disk);
 			if(pc_os == "H"){
 				pc_os = hamonikrIcon; 
 			}else if(pc_os == "W"){

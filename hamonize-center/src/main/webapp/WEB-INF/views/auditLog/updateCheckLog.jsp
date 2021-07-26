@@ -62,7 +62,7 @@ caption {text-indent: 0; height: 30px; font-size: 16px; overflow: inherit;}
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1'}">
+			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
 			,open:true
 			</c:if>},
 		</c:forEach>				
