@@ -66,12 +66,13 @@ public class AuditLogController {
 	@ResponseBody
 	@RequestMapping("userLogList.proc")
 	public Map<String, Object> listProc(AuditLogVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
-
-		System.out.println("===========" + vo.getOrg_seq());
-		System.out.println("txtsearch=="+vo.getTxtSearch());
-		System.out.println("keyword=="+vo.getKeyWord());
 		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
+		
+		if(!"".equals(vo.getDate_fr()))
+			vo.setDate_fr(vo.getDate_fr().replaceAll("/","")+" 00:00:00");
+		if(!"".equals(vo.getDate_to()))
+			vo.setDate_to(vo.getDate_to().replaceAll("/","")+" 23:59:59");
 
 		// 페이징
 		pagingVo.setCurrentPage(vo.getCurrentPage());
@@ -87,10 +88,8 @@ public class AuditLogController {
 			List<PcDataVo> influxList = miService.influxInfo();
 			for (AuditLogVo el : list) {
 				for (PcDataVo pd : influxList) {
-					System.out.println("aaaaaaaaaaaa====="+el.getPc_uuid()+"-----------------"+pd.getHost());
 					if(el.getPc_uuid().equals(pd.getHost())){
 						list.get(index).setState("Y");
-						System.out.println("==============================맞음==============================");
 					}
 				}
 				index++;
@@ -134,10 +133,13 @@ public class AuditLogController {
 	@ResponseBody
 	@RequestMapping("pcChangeLogList.proc")
 	public Map<String, Object> pcChangeLogList(AuditLogVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
-
-		System.out.println("===========" + vo.getOrg_seq());
 		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
+
+		if(!"".equals(vo.getDate_fr()))
+			vo.setDate_fr(vo.getDate_fr().replaceAll("/","")+" 00:00:00");
+		if(!"".equals(vo.getDate_to()))
+			vo.setDate_to(vo.getDate_to().replaceAll("/","")+" 23:59:59");
 
 		// 페이징
 		pagingVo.setCurrentPage(vo.getCurrentPage());
@@ -187,11 +189,13 @@ public class AuditLogController {
 	@RequestMapping("unAuthLogList.proc")
 	public Map<String, Object> unAuthLogListproc(AuditLogVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
 
-		System.out.println("===========" + vo.getOrg_seq());
-		System.out.println("txtsearch=="+vo.getTxtSearch());
-		System.out.println("keyword=="+vo.getKeyWord());
 		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
+
+		if(!"".equals(vo.getDate_fr()))
+			vo.setDate_fr(vo.getDate_fr().replaceAll("/","")+" 00:00:00");
+		if(!"".equals(vo.getDate_to()))
+			vo.setDate_to(vo.getDate_to().replaceAll("/","")+" 23:59:59");
 
 		// 페이징
 		pagingVo.setCurrentPage(vo.getCurrentPage());
@@ -241,12 +245,13 @@ public class AuditLogController {
 	@ResponseBody
 	@RequestMapping("prcssBlockLogList.proc")
 	public Map<String, Object> prcssBlockLogList(AuditLogVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
-
-		System.out.println("===========" + vo.getOrg_seq());
-		System.out.println("txtsearch=="+vo.getTxtSearch());
-		System.out.println("keyword=="+vo.getKeyWord());
 		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
+
+		if(!"".equals(vo.getDate_fr()))
+			vo.setDate_fr(vo.getDate_fr().replaceAll("/","")+" 00:00:00");
+		if(!"".equals(vo.getDate_to()))
+			vo.setDate_to(vo.getDate_to().replaceAll("/","")+" 23:59:59");
 
 		// 페이징
 		pagingVo.setCurrentPage(vo.getCurrentPage());

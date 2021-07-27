@@ -28,73 +28,7 @@
 		 
 	</select>
 	
-<!-- 	
 	<select id="userLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
-		SELECT  a.seq, 
-		to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS.MS') as login_dt, 
-		to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS.MS') as logout_dt, 
-		to_char(age(a.logout_dt,a.login_dt),'YYYY-MM-DD HH24:MI:SS.MS') as spent_time,
-		(select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname
-		,b.seq,b.user_sabun,b.user_id,b.user_name,b.org_seq,
-		(select org_nm from tbl_org where seq=b.org_seq) as join_org_nm,
-		(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm,
-			case 
-				when b.rank = '002' then '사원'
-				when b.rank = '003' then '대리'
-				when b.rank = '004' then '과장'
-				when b.rank = '100' then '관리자'
-				else '부장'
-			end as rank
-			 FROM (select * from tbl_loginout order by login_dt desc) a 
-			 left outer join tbl_user b
-			 on a.seq = b.seq
-		<where>
-		1=1
-		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''" >
-		and b.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-					from tbl_org a
-					where a.seq = #{auditLogVo.org_seq}
-					union all
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-					from tbl_org a, search_org so 
-					where a.p_seq = so.seq and not cycle)
-					select seq
-					from search_org
-				)
-		</if>
-		
-		<if test="auditLogVo.keyWord == 1">
-		and b.user_name like '%' || #{auditLogVo.txtSearch} || '%'
-		</if>
-		<if test="auditLogVo.keyWord == 2">
-		and b.user_id like '%' || #{auditLogVo.txtSearch} || '%'
-		</if>
-		<if test="auditLogVo.keyWord == 3">
-		and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
-		</if>
-		<if test="auditLogVo.keyWord == 4">
-		and (select org_nm from tbl_org where seq=b.org_seq) =  #{auditLogVo.txtSearch}
-		</if>
-		<if test="auditLogVo.keyWord == 5">
-		and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
-		</if>
-		<if test="auditLogVo.keyWord == 0">
-			and (b.user_name like '%' || #{auditLogVo.txtSearch} || '%'
-			or b.user_id like '%' || #{auditLogVo.txtSearch} || '%'
-			or (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
-			or (select org_nm from tbl_org where seq=b.org_seq) =  #{auditLogVo.txtSearch}
-			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
-			)
-		</if>
-		</where> 
-	// 	order by a.login_dt desc
-		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
-	</select>
-	 -->
-	 <select id="userLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT  
 			a.seq, 
 			to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
@@ -102,10 +36,10 @@
 			to_char(age(a.logout_dt,a.login_dt),'HH24:MI:SS') as spent_time,
 			(select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname,
 			a.uuid as pc_uuid,
-			b.seq,
 			b.org_seq,
-			(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm
-		FROM (select * from tbl_loginout order by login_dt desc) a left outer join tbl_pc_mangr b on a.uuid = b.pc_uuid 		
+			(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm,
+			last_value (a.seq) over(partition by a.uuid order by a.seq ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_seq
+		FROM tbl_loginout a left outer join tbl_pc_mangr b on a.uuid = b.pc_uuid 		
 		<where>
 		1=1		
 		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''" >
@@ -122,10 +56,21 @@
 						from search_org
 					)
 		</if>
+		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+				<![CDATA[
+				and a.login_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+				]]>
+				</if>
+				<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+				<![CDATA[
+				and a.login_dt <= #{auditLogVo.date_to}::TIMESTAMP
+				]]>
+			</if>
+		<if test="auditLogVo.txtSearch != ''">
 		<if test="auditLogVo.keyWord == 1">
 			and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
 		</if>
-		<if test="auditLogVo.keyWord == 2">
+		<!-- <if test="auditLogVo.keyWord == 2">
 			and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
 		</if>
 		<if test="auditLogVo.keyWord == 0">
@@ -133,6 +78,7 @@
 			or (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
 			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
 			)
+		</if> -->
 		</if>
 		</where>
 		order by login_dt desc
@@ -161,71 +107,32 @@
 					from search_org
 				)
 		</if>
-		<!-- <if test="keyWord == 3">
-		and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{txtSearch}
+		<if test="date_fr != null and date_fr != ''">
+				<![CDATA[
+				and a.login_dt >= #{date_fr}::TIMESTAMP
+				]]>
+				</if>
+				<if test="date_to != null and date_to != ''">
+				<![CDATA[
+				and a.login_dt <= #{date_to}::TIMESTAMP
+				]]>
 		</if>
-		<if test="keyWord == 4">
-		and (select org_nm from tbl_org where seq=b.org_seq) =  #{txtSearch}
+		<if test="txtSearch != ''">
+		<if test="keyWord == 1">
+			and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
 		</if>
-		<if test="keyWord == 5">
-		and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
+		<!-- <if test="auditLogVo.keyWord == 2">
+			and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
 		</if>
-		<if test="keyWord == 0">
-			and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{txtSearch}
-			or (select org_nm from tbl_org where seq=b.org_seq) =  #{txtSearch}
-			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
+		<if test="auditLogVo.keyWord == 0">
+			and (b.pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
+			or (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
+			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
 			)
 		</if> -->
+		</if>
 		</where> 
 	</select>
-
-	<!-- <select id="countUserLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
-		SELECT 
-			count(*)  as tbl_cnt
-		FROM tbl_loginout a 
- 		left outer join tbl_user b
- 		on a.seq = b.seq
-		<where>
-		1=1
-		<if test="org_seq != null and org_seq != ''">
-		and b.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-					from tbl_org a
-					where a.seq = #{org_seq}
-					union all
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-					from tbl_org a, search_org so 
-					where a.p_seq = so.seq and not cycle)
-					select seq
-					from search_org
-				)
-		</if>
-		<if test="keyWord == 1">
-		and b.user_name like '%' || #{txtSearch} || '%'
-		</if>
-		<if test="keyWord == 2">
-		and b.user_id like '%' || #{txtSearch} || '%'
-		</if>
-		<if test="keyWord == 3">
-		and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{txtSearch}
-		</if>
-		<if test="keyWord == 4">
-		and (select org_nm from tbl_org where seq=b.org_seq) =  #{txtSearch}
-		</if>
-		<if test="keyWord == 5">
-		and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
-		</if>
-		<if test="keyWord == 0">
-			and (b.user_name like '%' || #{txtSearch} || '%'
-			or b.user_id like '%' || #{txtSearch} || '%'
-			or (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{txtSearch}
-			or (select org_nm from tbl_org where seq=b.org_seq) =  #{txtSearch}
-			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
-			)
-		</if>
-		</where> 
-	</select> -->
 	
 	<select id="userLogListExcel" resultType="hashmap" parameterType="com.model.AuditLogVo">
 		SELECT  
@@ -543,7 +450,7 @@
 			pc_disk_id, 
 			pc_cpu_id, 
 			pc_uuid, 
-			insert_dt
+			to_char(insert_dt,'YYYY-MM-DD HH24:MI:SS') as insert_dt
 			from tbl_pc_change_info
 		<where>
 		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
@@ -559,6 +466,21 @@
 				select seq
 				from search_org
 				)
+		</if>
+		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+			<![CDATA[
+			and insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+			]]>
+		</if>
+		<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+			<![CDATA[
+			and insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+			]]>
+		</if>
+		<if test="auditLogVo.txtSearch != ''">
+			<if test="auditLogVo.keyWord == 1">
+			and pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
+			</if>
 		</if>
 		</where> 
 		order by insert_dt desc
@@ -586,21 +508,36 @@
     from search_org
 				)
 		</if>
+		<if test="date_fr != null and date_fr != ''">
+			<![CDATA[
+			and insert_dt >= #{date_fr}::TIMESTAMP
+			]]>
+			</if>
+			<if test="date_to != null and date_to != ''">
+			<![CDATA[
+			and insert_dt <= #{date_to}::TIMESTAMP
+			]]>
+		</if>
+		<if test="txtSearch != ''">
+			<if test="keyWord == 1">
+			and pc_hostname like '%' || #{txtSearch} || '%'
+			</if>
+		</if>
 		</where> 
 	</select>
 	
 	<select id="unAuthLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT
-			pc_uuid, 
-			vendor, 
-			product, 
-			info, 
-			pc_user, 
-			insert_dt
-			from tbl_unauthroized 
+			tu.pc_uuid, 
+			tu.vendor, 
+			tu.product, 
+			tu.info, 
+			tpm.pc_hostname, 
+			tu.insert_dt
+			from tbl_unauthroized tu left join tbl_pc_mangr tpm on tpm.pc_uuid = tu.pc_uuid
 		<where>
 		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
-		org_seq in (
+		tu.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 					from tbl_org a
@@ -613,8 +550,23 @@
 					from search_org
 				)
 		</if>
+		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+			<![CDATA[
+			and tu.insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+			]]>
+		</if>
+		<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+			<![CDATA[
+			and tu.insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+			]]>
+		</if>
+		<if test="auditLogVo.txtSearch != ''">
+			<if test="auditLogVo.keyWord == 1">
+			and tpm.pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
+			</if>
+		</if>
 		</where> 
-		order by insert_dt desc
+		order by tu.insert_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		
 	</select>
@@ -623,10 +575,10 @@
 	<select id="countUnAuthLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		FROM tbl_unauthroized 
+		from tbl_unauthroized tu left join tbl_pc_mangr tpm on tpm.pc_uuid = tu.pc_uuid
 		<where>
 			<if test="org_seq != null and org_seq != ''">
-			org_seq in (
+			tu.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 					from tbl_org a
@@ -638,6 +590,21 @@
 					select seq
 					from search_org
 				)
+		</if>
+		<if test="date_fr != null and date_fr != ''">
+			<![CDATA[
+			and tu.insert_dt >= #{date_fr}::TIMESTAMP
+			]]>
+		</if>
+		<if test="date_to != null and date_to != ''">
+			<![CDATA[
+			and tu.insert_dt <= #{date_to}::TIMESTAMP
+			]]>
+		</if>
+		<if test="txtSearch != ''">
+			<if test="keyWord == 1">
+			and tpm.pc_hostname like '%' || #{txtSearch} || '%'
+			</if>
 		</if>
 		</where> 
 	</select>
@@ -694,11 +661,23 @@
 		from search_org
 				)
 		</if>
-		<if test="auditLogVo.keyWord == 1">
-		and (select org_nm from tbl_org where seq = org_seq) =  #{auditLogVo.txtSearch}
+		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+			<![CDATA[
+			and insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+			]]>
 		</if>
-		<if test="auditLogVo.keyWord == 0">
-		and ((select org_nm from tbl_org where seq = org_seq) like '%' || #{auditLogVo.txtSearch} )
+		<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+			<![CDATA[
+			and insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+			]]>
+		</if>
+		<if test="auditLogVo.txtSearch != ''">
+			<if test="auditLogVo.keyWord == 1">
+			and HOSTNAME like '%' || #{auditLogVo.txtSearch} || '%'
+			</if>
+			<if test="auditLogVo.keyWord == 2">
+			and PRCSSNAME like '%' || #{auditLogVo.txtSearch} || '%'
+			</if>
 		</if>
 		</where> 
 		order by insert_dt desc
@@ -727,11 +706,23 @@
 		from search_org
 		)
 		</if>
-		<if test="keyWord == 1">
-		and (select org_nm from tbl_org where seq = org_seq) = #{txtSearch} 
+		<if test="date_fr != null and date_fr != ''">
+			<![CDATA[
+			and insert_dt >= #{date_fr}::TIMESTAMP
+			]]>
 		</if>
-		<if test="keyWord == 0">
-		and ((select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%')
+		<if test="date_to != null and date_to != ''">
+			<![CDATA[
+			and insert_dt <= #{date_to}::TIMESTAMP
+			]]>
+		</if>
+		<if test="txtSearch != ''">
+			<if test="keyWord == 1">
+			and HOSTNAME like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 2">
+			and PRCSSNAME like '%' || #{txtSearch} || '%'
+			</if>
 		</if>
 		</where> 
 	</select>

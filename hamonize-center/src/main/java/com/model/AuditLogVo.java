@@ -30,6 +30,9 @@ public class AuditLogVo {
 	private String spent_time;
 	private String rank;
 	private String join_org_nm;
+
+	private Integer last_seq;
+	private Integer seq;
 	
 	//인터넷 사용기록
 	private String pc_ip;
@@ -57,6 +60,7 @@ public class AuditLogVo {
 	
 	//비인가 디바이스 접속 기록
 	private String vendorcode;
+	private String vendor;
 	private String productcode;
 
 	private String product;

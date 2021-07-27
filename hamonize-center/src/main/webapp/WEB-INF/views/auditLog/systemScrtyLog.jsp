@@ -20,7 +20,7 @@ var data = <%= request.getAttribute("gList") %>;
 			<div class="code-html contents">
 				<p id="contentTitle">로딩중..</p>
 				<hr/>
-				
+				   
 				<div id="grid"></div>
 		    </div>
 		</article>
