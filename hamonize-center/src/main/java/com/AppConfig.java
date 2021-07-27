@@ -54,6 +54,9 @@ public class AppConfig {
                 resource.setProperty("username", globalPropertySource.getUsername());
                 resource.setProperty("password", globalPropertySource.getPassword());
                 resource.setProperty("factory", "org.apache.tomcat.jdbc.pool.DataSourceFactory");
+                resource.setProperty("validationQuery", "SELECT 1");
+                resource.setProperty("testOnBorrow", "true");
+                resource.setProperty("validationInterval", "5000");
                 context.getNamingResources().addResource(resource);
             }            
         };

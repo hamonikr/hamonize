@@ -155,11 +155,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			var currentPage = data.pagingVo.currentPage;
 			var totalRecordSize = data.pagingVo.totalRecordSize;
 			$('#count').html("검색결과: "+numberWithCommas(totalRecordSize)+"건");
-			console.log(startPage);
-			console.log(endPage);
-			console.log(totalPageSize);
-			console.log(currentPage);
-			console.log(totalRecordSize);
 				
 				var viewName='classMngrList';
 				if(totalRecordSize > 0){
@@ -188,7 +183,8 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 	if( data.list.length > 0 ){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-			if(value.logout_dt == null){
+			console.log("state=================="+value.state);
+			if(value.logout_dt == null && value.state != 'Y'){
 				value.logout_dt = "비정상적인 종료입니다.";
 				value.spent_time = "비정상적인 종료입니다.";
 			}
@@ -197,9 +193,11 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td>"+value.org_nm+"</td>";
 			gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
 	 
-			gbInnerHtml += "<td>"+value.login_dt.substr(0,value.login_dt.length -4)+"</td>"; 
-			gbInnerHtml += "<td>"+value.logout_dt.substr(0,value.logout_dt.length -4)+"</td>"; 
-			gbInnerHtml += "<td>"+value.spent_time.substr(0,value.spent_time.length -4)+"</td>"; 
+			// gbInnerHtml += "<td>"+value.login_dt.substr(0,value.login_dt.length -4)+"</td>"; 
+			// gbInnerHtml += "<td>"+value.logout_dt.substr(0,value.logout_dt.length -4)+"</td>"; 
+			gbInnerHtml += "<td>"+value.login_dt+"</td>"; 
+			gbInnerHtml += "<td>"+value.logout_dt+"</td>"; 
+			gbInnerHtml += "<td>"+value.spent_time+"</td>"; 
 			gbInnerHtml += "</tr>";
 		
 		});	

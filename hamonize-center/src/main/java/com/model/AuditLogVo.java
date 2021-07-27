@@ -29,7 +29,6 @@ public class AuditLogVo {
 	private String logout_dt;
 	private String spent_time;
 	private String rank;
-	private String sgb_pc_hostname;
 	private String join_org_nm;
 	
 	//인터넷 사용기록

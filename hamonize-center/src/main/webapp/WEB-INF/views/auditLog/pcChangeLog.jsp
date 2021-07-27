@@ -119,6 +119,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$(".page_num").empty();
 		$('#pageGrideInListTb').empty();
 		$("#pagginationInList").empty();
+		$("#txtSearch").val("");
+		$("#keyWord").val("0");
+		$("#currentPage").val(1);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		$("#org_seq").val(treeNode.id);
@@ -134,7 +137,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<tr data-code='' data-guidcode=''>";
 					gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 					gbInnerHtml += "<td>"+value.pc_cpu+"</td>";
-					gbInnerHtml += "<td>"+value.pc_memeory+"</td>";
+					gbInnerHtml += "<td>"+value.pc_memory+"</td>";
 					gbInnerHtml += "<td>"+value.pc_disk+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_ip+"</td>"; 

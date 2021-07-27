@@ -116,7 +116,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$("#pagginationInList").empty();
 		$("#txtSearch").val("");
 		$("#keyWord").val("0");
-		
+		$("#currentPage").val(1);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		$("#org_seq").val(treeNode.id);
