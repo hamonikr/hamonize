@@ -35,9 +35,7 @@ public class MonitoringService {
             list = mMpper.pcListInfo(params);
             for(int i = 0; i< list.size();i++){
                 for(int y = 0; y < influxList.size();y++){
-					System.out.println(y+"==========="+influxList.get(y).getHost()+i+"========="+list.get(i).get("pc_uuid"));
                     if(list.get(i).get("pc_uuid").toString().trim().equals(influxList.get(y).getHost().trim())){
-						System.out.println("-----------------------맞음--------------------------");
                         list.get(i).put("pc_status", "true");
                     }
                 }

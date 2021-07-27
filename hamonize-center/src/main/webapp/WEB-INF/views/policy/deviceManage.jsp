@@ -189,6 +189,9 @@ function fnSave(){
     	   ppm_seq += ($(this).val())+",";
     });
     ppm_seq = ppm_seq.substr(0,ppm_seq.length -1);
+	if(ppm_seq == ""){
+		ppm_seq = 0;
+	}
     
     var zTree = $.fn.zTree.getZTreeObj("tree");
 	var nodes = zTree.getCheckedNodes(true);
@@ -564,7 +567,7 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 				gbInnerHtml += "<tr data-code='" + value.sm_seq + "'>";
 				gbInnerHtml += "<td class='t_left'>";
 			if(value.ppm_seq == value.sm_seq){
-				gbInnerHtml += "<input type='checkbox' id=d"+no+" class='form-control' ><label for=d"+no+" class='dook'></label></td>";
+				gbInnerHtml += "<input type='checkbox' id=d"+no+" class='form-control' disabled><label for=d"+no+" class='dook'></label></td>";
 			}else{
 				gbInnerHtml += "<input type='checkbox' id=d"+no+" class='form-control'><label for=d"+no+" class='dook'></label></td>";	
 			}

@@ -97,10 +97,11 @@
 	 <select id="userLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT  
 			a.seq, 
-			to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS.MS') as login_dt, 
-			to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS.MS') as logout_dt, 
-			to_char(age(a.logout_dt,a.login_dt),'YYYY-MM-DD HH24:MI:SS.MS') as spent_time,
+			to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
+			to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS') as logout_dt, 
+			to_char(age(a.logout_dt,a.login_dt),'HH24:MI:SS') as spent_time,
 			(select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname,
+			a.uuid as pc_uuid,
 			b.seq,
 			b.org_seq,
 			(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm
@@ -133,7 +134,8 @@
 			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
 			)
 		</if>
-		</where> 
+		</where>
+		order by login_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		
 	</select>
@@ -238,9 +240,9 @@
 			end as rank,
 			b.user_name,
 			b.user_id,
-		to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS.MS') as login_dt, 
-		to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS.MS') as logout_dt, 
-		to_char(age(a.logout_dt,a.login_dt),'YYYY-MM-DD HH24:MI:SS.MS') as spent_time,
+		to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
+		to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS') as logout_dt, 
+		to_char(age(a.logout_dt,a.login_dt),'HH24:MI:SS') as spent_time,
 		(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm,
 		(select org_nm from tbl_org where seq=b.org_seq) as join_org_nm
 			 FROM tbl_loginout a 

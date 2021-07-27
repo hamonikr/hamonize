@@ -19,10 +19,12 @@ import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
+import com.model.PcDataVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.AuditLogService;
 import com.service.OrgService;
+import com.service.MonitoringService;
 
 @Controller
 @RequestMapping("/auditLog")
@@ -33,6 +35,9 @@ public class AuditLogController {
 	
 	@Autowired
 	private AuditLogService logService;
+
+	@Autowired
+	private MonitoringService miService;
 	
 	@Autowired
 	private IAuditLogMapper logMapper;
@@ -77,9 +82,18 @@ public class AuditLogController {
 		pagingVo = PagingUtil.setPaging(pagingVo);
 		System.out.println("vo getOrg_seq : "+ vo.getOrg_seq());
 		try {
+			int index = 0;
 			List<AuditLogVo> list = logService.userLogList(vo, pagingVo);
+			List<PcDataVo> influxList = miService.influxInfo();
 			for (AuditLogVo el : list) {
-				System.out.println("list : "+ el);
+				for (PcDataVo pd : influxList) {
+					System.out.println("aaaaaaaaaaaa====="+el.getPc_uuid()+"-----------------"+pd.getHost());
+					if(el.getPc_uuid().equals(pd.getHost())){
+						list.get(index).setState("Y");
+						System.out.println("==============================맞음==============================");
+					}
+				}
+				index++;
 			}
 			
 			jsonObject.put("list", list);

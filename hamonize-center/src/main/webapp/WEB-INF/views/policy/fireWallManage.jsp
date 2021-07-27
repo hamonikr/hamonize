@@ -176,12 +176,15 @@ function fnSave(){
     	   ppm_seq += ($(this).val())+",";
     });
     ppm_seq = ppm_seq.substr(0,ppm_seq.length -1);
+	if(ppm_seq == ""){
+		ppm_seq = 0;
+	}
     
     var zTree = $.fn.zTree.getZTreeObj("tree");
 	var nodes = zTree.getCheckedNodes(true);
 	var nodeLength=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var queryArr=[];
-ㄴ
+
     $.each(zTree.transformToArray(zTree.getNodes()) && nodes,function(i,v){
     	if(i>=0){
 			if(v.children!=null)

@@ -156,6 +156,7 @@ public class CurlController {
 							retVal = pcMangrMapper.inserPcInfo(hdVo);
 							if(retVal ==1){
 								con.addPC(hdVo, sabunChkVo);
+								
 							}else{
 								System.out.println("pc 저장 실패");
 							}
