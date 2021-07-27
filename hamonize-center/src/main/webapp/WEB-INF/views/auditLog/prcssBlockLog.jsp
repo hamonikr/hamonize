@@ -117,10 +117,14 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$("#txtSearch").val("");
 		$("#keyWord").val("0");
 		$("#currentPage").val(1);
+		if($("#date_fr").val()==""){
+			$("#date_fr").val(getMonthAgoday());
+			$("#date_to").val(getToday());
+		}
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		$("#org_seq").val(treeNode.id);
-		$.post("prcssBlockLogList.proc",{org_seq:treeNode.id,currentPage:$("#currentPage").val()},
+		$.post("prcssBlockLogList.proc",{org_seq:treeNode.id,currentPage:$("#currentPage").val(),date_fr:$("#date_fr").val(),date_to:$("#date_to").val()},
 				function(data){
 			var gbInnerHtml = "";
 			
@@ -162,18 +166,20 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	}
 function getList(){
 	var url ='/auditLog/prcssBlockLogList.proc';
-	
+	if($("#date_fr").val()==""){
+		$("#date_fr").val(getMonthAgoday());
+		$("#date_to").val(getToday());
+	}
 	var keyWord = $("select[name=keyWord]").val();
-	console.log("keyWord===="+keyWord)
-	var vData = 'currentPage=' + $("#currentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val()+ "&org_seq=" + $("#org_seq").val() ; 
+	var vData = 'currentPage=' + $("#currentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val()+ "&org_seq=" + $("#org_seq").val() +"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val(); 
 	callAjax('POST', url, vData, iNetLogGetSuccess, getError, 'json');
 }
 var iNetLogGetSuccess = function(data, status, xhr, groupId){
-	console.log("ss");
 	var gbInnerHtml = "";
 	$('#pageGrideInListTb').empty();
 	$("#pagginationInList").empty();
-	
+	$(".page_num").empty();
+
 	if( data.list.length > 0 ){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
@@ -198,11 +204,6 @@ var iNetLogGetSuccess = function(data, status, xhr, groupId){
 	var currentPage = data.pagingVo.currentPage;
 	var totalRecordSize = data.pagingVo.totalRecordSize;
 	$('#count').html("검색결과: "+numberWithCommas(totalRecordSize)+"건");
-	console.log(startPage);
-	console.log(endPage);
-	console.log(totalPageSize);
-	console.log(currentPage);
-	console.log(totalRecordSize);
 	
 	var viewName='classMngrList';
 	if(totalRecordSize > 0){
@@ -289,20 +290,19 @@ function searchView(viewName, page){
                 
                 <ul class="search_area">
                   <li>
-                    <%--<label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
+                    <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${auditLogVo.date_fr }"/>
                     <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
                      ~
-                    <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
+                    <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" value="${auditLogVo.date_to }"/>
                     <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                       <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
+                       <!-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> -->
                       <div id="count"></div>
                   </li>
                   <li>
                     <div class="top_search">
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
-                          <option value="0">전체</option>
-                          <option value="1">사지방번호</option>
-                          <%-- <option value="2">아이디</option> --%>
+						  <option value="1">PC호스트이름</option>
+                          <option value="2">프로그램명</option>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
                       <button type="button" class="btn_type3" onclick="getList();"> 검색</button>
@@ -317,20 +317,20 @@ function searchView(viewName, page){
                     <table>
                         <colgroup>
                             <col style="width:7%;" />
-                            <col style="width:10%;" />
-                            <col style="width:23%;" />
-                            <col style="width:10%;" />
-                            <%-- <col style="width:10%;" /> --%>
                             <col style="width:15%;" />
+                            <col style="width:20%;" />
+                            <col style="width:23%;" />
+                            <%-- <col style="width:10%;" /> --%>
+                            <col style="width:10%;" />
                             <col />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>번호</th>
-                                <th>부서번호</th>
-                                <th>프로세스</th>
-                                <th>PC HOSTNAME</th>
-                                <th>IP</th>
+                                <th>부서명</th>
+                                <th>프로그램명</th>
+                                <th>PC호스트이름</th>
+                                <th>VPNIP</th>
                                 <%-- <th>아이디</th> --%>
                                 <th>차단시간</th>
                             </tr>

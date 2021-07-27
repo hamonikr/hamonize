@@ -120,12 +120,16 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$('#pageGrideInListTb').empty();
 		$("#pagginationInList").empty();
 		$("#txtSearch").val("");
-		$("#keyWord").val("0");
+		//$("#keyWord").val("0");
 		$("#currentPage").val(1);
+		if($("#date_fr").val()==""){
+			$("#date_fr").val(getMonthAgoday());
+			$("#date_to").val(getToday());
+		}
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		$("#org_seq").val(treeNode.id);
-		$.post("pcChangeLogList.proc",{org_seq:treeNode.id,currentPage:$("#currentPage").val()},
+		$.post("pcChangeLogList.proc",{org_seq:treeNode.id,currentPage:$("#currentPage").val(),date_fr:$("#date_fr").val(),date_to:$("#date_to").val()},
 				function(data){
 			var gbInnerHtml = "";
 			
@@ -139,12 +143,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<td>"+value.pc_cpu+"</td>";
 					gbInnerHtml += "<td>"+value.pc_memory+"</td>";
 					gbInnerHtml += "<td>"+value.pc_disk+"</td>"; 
-					gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
+					// gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_ip+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_hostname+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_disk_id+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_cpu_id+"</td>"; 
-					gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; 
+					// gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; 
 					gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 					gbInnerHtml += "</tr>";
 				
@@ -172,17 +176,20 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	}
 function getList(){
 	var url ='/auditLog/pcChangeLogList.proc';
-	
+	if($("#date_fr").val()==""){
+		$("#date_fr").val(getMonthAgoday());
+		$("#date_to").val(getToday());
+	}
 	var keyWord = $("select[name=keyWord]").val();
-	var vData = 'currentPage=' + $("#currentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val()+ "&org_seq=" + $("#org_seq").val() ; 
+	var vData = 'currentPage=' + $("#currentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val()+ "&org_seq=" + $("#org_seq").val() +"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val(); 
 	callAjax('POST', url, vData, pcChangeLogGetSuccess, getError, 'json');
 }
 var pcChangeLogGetSuccess = function(data, status, xhr, groupId){
-	console.log("ss");
 	var gbInnerHtml = "";
 	$('#pageGrideInListTb').empty();
 	$("#pagginationInList").empty();
-	
+	$(".page_num").empty();
+
 	if( data.list.length > 0 ){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
@@ -192,12 +199,12 @@ var pcChangeLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td>"+value.pc_cpu+"</td>";
 			gbInnerHtml += "<td>"+value.pc_memory+"</td>";
 			gbInnerHtml += "<td>"+value.pc_disk+"</td>"; 
-			gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
+			// gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
 			gbInnerHtml += "<td>"+value.pc_ip+"</td>"; 
 			gbInnerHtml += "<td>"+value.pc_hostname+"</td>"; 
 			gbInnerHtml += "<td>"+value.pc_disk_id+"</td>"; 
 			gbInnerHtml += "<td>"+value.pc_cpu_id+"</td>"; 
-			gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; 
+			// gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; 
 			gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 			gbInnerHtml += "</tr>";
 		
@@ -212,11 +219,6 @@ var pcChangeLogGetSuccess = function(data, status, xhr, groupId){
 	var currentPage = data.pagingVo.currentPage;
 	var totalRecordSize = data.pagingVo.totalRecordSize;
 	$('#count').html("검색결과: "+numberWithCommas(totalRecordSize)+"건");
-	console.log(startPage);
-	console.log(endPage);
-	console.log(totalPageSize);
-	console.log(currentPage);
-	console.log(totalRecordSize);
 	
 	var viewName='classMngrList';
 	if(totalRecordSize > 0){
@@ -303,19 +305,18 @@ function searchView(viewName, page){
                 <h3>하드웨어 변경로그</h3>
                 <ul class="search_area">
                   <li>
-                    <%-- <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
+                    <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${auditLogVo.date_fr }"/>
                     <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
                      ~
-                    <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" /> --%>
-                    <%-- <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                    <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
+                    <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" value="${auditLogVo.date_to }"/>
+                    <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
+                    <!-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> -->
                     <div id="count"></div>
                   </li>
                   <li>
                     <div class="top_search">
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
-                          <option value="0">전체</option>
-                          <option value="1">이름</option>
+                          <option value="1">PC호스트이름</option>
                           <%-- <option value="2">아이디</option> --%>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
@@ -330,15 +331,15 @@ function searchView(viewName, page){
                     <table>
                         <colgroup>
                             <col style="width:4%;" />
-                            <col style="width:10%;" />
-                            <col style="width:10%;" />
+                            <col style="width:18%;" />
+                            <col style="width:8%;" />
                             <col style="width:15%;" />
-                            <col style="width:15%;" />
+                            <!-- <col style="width:15%;" /> -->
                             <col style="width:10%;" />
-                            <col style="width:7%;" />
-                            <col style="width:7%;" />
-                            <col style="width:7%;" />
-                            <col style="width:7%;" />
+                            <col style="width:10%;" />
+                            <col style="width:10%;" />
+                            <col style="width:14%;" />
+                            <!-- <col style="width:7%;" /> -->
                             <col />
                         </colgroup>
                         <thead>
@@ -347,12 +348,12 @@ function searchView(viewName, page){
                                 <th>CPU</th>
                                 <th>MEMORY</th>
                                 <th>DISK</th>
-                                <th>MAC ADDRESS</th>
+                                <!-- <th>MAC ADDRESS</th> -->
                                 <th>IP</th>
                                 <th>PC HOSTNAME</th>
                                 <th>DISK_ID</th>
                                 <th>CPU_ID</th>
-                                <th>UUID</th>
+                                <!-- <th>UUID</th> -->
                                 <th>변경일</th>
                             </tr>
                         </thead>

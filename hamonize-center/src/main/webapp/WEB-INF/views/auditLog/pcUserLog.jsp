@@ -114,12 +114,16 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$('#pageGrideInListTb').empty();
 		$("#pagginationInList").empty();
 		$("#txtSearch").val("");
-		$("#keyWord").val("0");
-		
+		//$("#keyWord").val("0");
+		$("#currentPage").val(1);
+		if($("#date_fr").val()==""){
+			$("#date_fr").val(getMonthAgoday());
+			$("#date_to").val(getToday());
+		}
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		$("#org_seq").val(treeNode.id);
-		$.post("userLogList.proc",{org_seq:treeNode.id,currentPage:$("#currentPage").val()},
+		$.post("userLogList.proc",{org_seq:treeNode.id,currentPage:$("#currentPage").val(),date_fr:$("#date_fr").val(),date_to:$("#date_to").val()},
 				function(data){
 			var gbInnerHtml = "";
 			
@@ -171,7 +175,11 @@ function onClick(event, treeId, treeNode, clickFlag) {
 function getList(){
 	var url ='/auditLog/userLogList.proc';
 	var keyWord = $("select[name=keyWord]").val();
-	var vData = 'currentPage=' + $("#currentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val()+ "&org_seq=" + $("#org_seq").val() ; 
+	if($("#date_fr").val()==""){
+		$("#date_fr").val(getMonthAgoday());
+		$("#date_to").val(getToday());
+	}
+	var vData = 'currentPage=' + $("#currentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val()+ "&org_seq=" + $("#org_seq").val()+"&date_fr=" + $("#date_fr").val()+ "&date_to=" + $("#date_to").val(); 
 	callAjax('POST', url, vData, userLogGetSuccess, getError, 'json');
 }
 var userLogGetSuccess = function(data, status, xhr, groupId){
@@ -183,8 +191,14 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 	if( data.list.length > 0 ){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-			console.log("state=================="+value.state);
-			if(value.logout_dt == null && value.state != 'Y'){
+			if(value.logout_dt == null && value.last_seq != value.seq){
+				value.logout_dt = "비정상적인 종료입니다.";
+				value.spent_time = "비정상적인 종료입니다.";
+			}else if(value.logout_dt == null && value.last_seq == value.seq){
+				value.logout_dt = "-";
+				value.spent_time = "-";
+			}
+			if(value.logout_dt == '-' && value.state == 'N'){
 				value.logout_dt = "비정상적인 종료입니다.";
 				value.spent_time = "비정상적인 종료입니다.";
 			}
@@ -211,11 +225,6 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 	var currentPage = data.pagingVo.currentPage;
 	var totalRecordSize = data.pagingVo.totalRecordSize;
 	$('#count').html("검색결과: "+numberWithCommas(totalRecordSize)+"건");
-	console.log(startPage);
-	console.log(endPage);
-	console.log(totalPageSize);
-	console.log(currentPage);
-	console.log(totalRecordSize);
 	
 	var viewName='classMngrList';
 	if(totalRecordSize > 0){
@@ -302,21 +311,19 @@ function searchView(viewName, page){
             <h3>사용자 접속로그</h3>
               <ul class="search_area">
                 <li>
-                  <%-- <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
+                 <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${auditLogVo.date_fr }"/>
                   <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
                    ~
-                  <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
-                  <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a> --%>
-                      <%-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
+                  <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" value="${auditLogVo.date_to }"/>
+                  <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
+                    <!-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> -->
                       <div id="count"></div>
                   </li>
                   <li>
                   <!-- 검색 -->
                   <div class="top_search">
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
-                       <option value="0">전체</option>
-                          <option value="1">pc 호스트 이름</option>
-                          <option value="2">접속부서</option>
+                          <option value="1">PC호스트이름</option>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
                       <button type="button" class="btn_type3" onclick="getList();"> 검색</button>
@@ -341,8 +348,8 @@ function searchView(viewName, page){
                         <thead>
                             <tr>
                                 <th>번호</th>
-                                <th>접속부서</th> 
-								<th>pc 호스트 이름</th> 						
+                                <th>부서명</th> 
+								<th>PC호스트이름</th> 						
                                 <th>최근접속일시</th>
                                 <th>종료일시</th>
                                 <th>사용시간</th>

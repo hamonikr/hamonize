@@ -4,5 +4,6 @@
 .factorypath
 .settings
 .classpath
+.history
 .mvn/
 target/
