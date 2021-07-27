@@ -257,7 +257,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				$('form[name=frm] input[name=pSeq]').val(treeNode.id);
 				$('form[name=frm] input[name=orgNm]').focus();
 		} else {
-			alert("부문을 선택해 주세요.");
+			alert("부서를 선택해 주세요.");
 		}
 	};
 

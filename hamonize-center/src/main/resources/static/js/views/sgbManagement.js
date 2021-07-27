@@ -14,7 +14,7 @@ $(document).ready(function(){
 		group_label_fnt(this);
 	});
 	
-	// 하위부문 생성
+	// 하위부서 생성
 	$('#addGroup').on('click', function(){
 		add_group_fnt();
 	});
@@ -32,7 +32,7 @@ $(document).ready(function(){
 
 
 
-// 부문명 확인
+// 부서명 확인
 function ck_orgname_fnt($orgname){
 	var ck = true;
 
@@ -40,7 +40,7 @@ function ck_orgname_fnt($orgname){
 
 	if($orgname == null || 1 > $orgname.length){
 		ck = false;
-		alert('부문명이 입력되지 않았습니다.');
+		alert('부서명이 입력되지 않았습니다.');
 	}
 	return ck;
 }
@@ -101,7 +101,7 @@ function mk_form_text(doc, step, defaultStep){
 		textSplitData = $(doc).text();
 	}
 	
-	formText += '<input type="text" name="orgname" placeholder="부문명" class="form-control" value="' + textSplitData + '">';
+	formText += '<input type="text" name="orgname" placeholder="부서명" class="form-control" value="' + textSplitData + '">';
 	formText += '<input type="button" class="saveGroup btn btn-outline-success waves-effect" value="저장"> ';
 	formText += '<input type="button" class="deleteGroup btn btn-outline-info" value="삭제">';
 	
@@ -111,7 +111,7 @@ function mk_form_text(doc, step, defaultStep){
 }
 
 
-// 하위부문 생성
+// 하위부서 생성
 function add_group_fnt(){
 	var doc = $('#groupForm > .addForm').eq(0);
 	
@@ -129,7 +129,7 @@ function save_group_fnt(saveGroup){
 	var $step;
 	
 	if(null == $code || '' == $code){
-		// 부문 생성
+		// 부서 생성
 		console.log(" :::: " + $('#groupForm > .formBase').length);
 		saveGroup = $('#groupForm > .formBase').eq(0);
 		
@@ -137,9 +137,9 @@ function save_group_fnt(saveGroup){
 		$code = $(saveGroup).attr('data-code');
 		$step = $(saveGroup).data('value');
 		
-		console.log(" - 부문생성 :::: orgname : " + $orgname + "\n - upcode : " + $upcode + "\n - code : " + $code + "\n - step : " + $step);
+		console.log(" - 부서생성 :::: orgname : " + $orgname + "\n - upcode : " + $upcode + "\n - code : " + $code + "\n - step : " + $step);
 	}else{
-		// 부문 수정
+		// 부서 수정
 //		$orgname = $(saveGroup).parent('.addForm').children('input[name=orgname]').val();
 //		$upcode = $(saveGroup).parent('.addForm').data('upcode');
 //		$step = $(saveGroup).parent('.addForm').data('value');

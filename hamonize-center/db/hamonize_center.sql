@@ -668,8 +668,8 @@ CREATE TABLE public.tbl_manager (
 	tel_num varchar(20) NULL, -- 유선 전화번호
 	phone_num varchar(30) NULL, -- 핸드폰번호
 	arr_org_seq varchar(30) NULL, -- 부서방 관리번호
-	manager_yn varchar(3) NULL, -- 상위 부문 관리자 여부
-	general_yn varchar(2) NULL, -- 최상위 부문 관리자 여부
+	manager_yn varchar(3) NULL, -- 상위 부서 관리자 여부
+	general_yn varchar(2) NULL, -- 최상위 부서 관리자 여부
 	CONSTRAINT tbl_manager_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_manager IS '부서 관리자 정보';
@@ -686,8 +686,8 @@ COMMENT ON COLUMN public.tbl_manager."rank" IS '직급';
 COMMENT ON COLUMN public.tbl_manager.tel_num IS '유선 전화번호';
 COMMENT ON COLUMN public.tbl_manager.phone_num IS '핸드폰번호';
 COMMENT ON COLUMN public.tbl_manager.arr_org_seq IS '부서방 관리번호';
-COMMENT ON COLUMN public.tbl_manager.manager_yn IS '상위 부문 관리자 여부';
-COMMENT ON COLUMN public.tbl_manager.general_yn IS '최상위 부문 관리자 여부';
+COMMENT ON COLUMN public.tbl_manager.manager_yn IS '상위 부서 관리자 여부';
+COMMENT ON COLUMN public.tbl_manager.general_yn IS '최상위 부서 관리자 여부';
 
 -- Permissions
 
@@ -787,7 +787,7 @@ GRANT ALL ON TABLE public.tbl_object TO hamonize;
 CREATE TABLE public.tbl_org (
 	seq serial NOT NULL,
 	p_seq int8 NULL, -- 상위부서번호
-	org_nm varchar(100) NULL, -- 부문명/부서명
+	org_nm varchar(100) NULL, -- 부서명/부서명
 	org_ordr int4 NULL, -- 부서순서
 	writer_id varchar(30) NULL,
 	ins_date date NULL,
@@ -796,7 +796,7 @@ CREATE TABLE public.tbl_org (
 	upd_date date NULL,
 	update_writer_ip varchar(30) NULL,
 	"section" varchar(100) NULL, -- 부서여부
-	p_org_nm varchar(100) NULL, -- 상위부문명
+	p_org_nm varchar(100) NULL, -- 상위부서명
 	sido varchar(100) NULL, -- 지역(시/도)
 	gugun varchar(100) NULL, -- 지역(구/군)
 	org_num varchar(100) NULL, -- 부서번호
@@ -810,10 +810,10 @@ COMMENT ON TABLE public.tbl_org IS '조직 정보';
 -- Column comments
 
 COMMENT ON COLUMN public.tbl_org.p_seq IS '상위부서번호';
-COMMENT ON COLUMN public.tbl_org.org_nm IS '부문명/부서명';
+COMMENT ON COLUMN public.tbl_org.org_nm IS '부서명/부서명';
 COMMENT ON COLUMN public.tbl_org.org_ordr IS '부서순서';
 COMMENT ON COLUMN public.tbl_org."section" IS '부서여부';
-COMMENT ON COLUMN public.tbl_org.p_org_nm IS '상위부문명';
+COMMENT ON COLUMN public.tbl_org.p_org_nm IS '상위부서명';
 COMMENT ON COLUMN public.tbl_org.sido IS '지역(시/도)';
 COMMENT ON COLUMN public.tbl_org.gugun IS '지역(구/군)';
 COMMENT ON COLUMN public.tbl_org.org_num IS '부서번호';

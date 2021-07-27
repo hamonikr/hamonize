@@ -450,20 +450,49 @@ public class LDAPConnection {
 
 	}
 
-	public void updatePc(PcMangrVo pvo, UserVo uvo){
-		String oldDn="";
-		//String newDn="";
-		
+	public void updatePc(PcMangrVo oldVo, PcMangrVo newVo){
+		String oldDn="";	
+		String newDn="";	
 		String upperDn="";
 
+		ModificationItem[] mods = new ModificationItem[1];
+		Attribute mod = new BasicAttribute("name", newVo.getPc_hostname());
 		
-		ModificationItem[] mods = new ModificationItem[2];
+		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod);
+		
+		String str = oldVo.getAlldeptname();
 
-		Attribute mod1 = new BasicAttribute("ipHostNumber", pvo.getPc_vpnip().toString());
-		Attribute mod2 = new BasicAttribute("name", pvo.getPc_hostname());
-		
-		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
-		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
+		String[] p_array = str.split("\\|");
+		for(int i= p_array.length-1; i>=0 ;i--){
+			System.out.println(p_array[i]);
+			upperDn += ",ou="+p_array[i];
+		}
+
+		oldDn = "cn="+oldVo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";
+		newDn = "cn="+newVo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";
+
+
+		try {
+			
+			dc.modifyAttributes(oldDn, mods);
+			dc.rename(oldDn, newDn);
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+
+
+	}
+
+	public void updatePcVpn(PcMangrVo pvo){
+		String dn="";
+		String upperDn="";
+
+		System.out.println("updatePcVpn --- ");
+		ModificationItem[] mods = new ModificationItem[1];
+
+		Attribute mod = new BasicAttribute("ipHostNumber", pvo.getPc_vpnip().toString());
+		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod);
 		
 		String str = pvo.getAlldeptname();
 
@@ -473,14 +502,12 @@ public class LDAPConnection {
 			upperDn += ",ou="+p_array[i];
 		}
 
-		oldDn = "cn="+pvo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";
-
+		dn = "cn="+pvo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";
 
 		try {
 			
-			dc.modifyAttributes(oldDn, mods);
-			//dc.rename(oldDn, newDn);
-
+			dc.modifyAttributes(dn, mods);
+	
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

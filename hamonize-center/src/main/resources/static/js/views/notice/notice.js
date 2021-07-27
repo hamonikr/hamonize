@@ -39,9 +39,9 @@ $(document).ready(function(){
 		console.log('특별공지 버튼');
 	});
 	
-	// 부문별 목록 생성
+	// 부서별 목록 생성
 	$('#selectGroup').on('change', function(){
-		console.log('부문별 목록 생성 - 선택옵션 : ' + $(this).val());
+		console.log('부서별 목록 생성 - 선택옵션 : ' + $(this).val());
 	});
 	
 	// 직급별 목록 생성
@@ -50,7 +50,7 @@ $(document).ready(function(){
 	});
 	
 	
-	// 페이지 로딩시 부문별선택 목록 생성
+	// 페이지 로딩시 부서별선택 목록 생성
 	for(i=1; i<21 ;++i){
 		addSelectOption(false, $('#selectGroup'), i+'대대', i+'대대');
 	}
@@ -81,7 +81,7 @@ function group_label_fnt(doc){
 	$('#contentTitle').text(txt + $(doc).text());
 }
 
-/* 부문별/직급별 목록 생성 */
+/* 부서별/직급별 목록 생성 */
 function addSelectOption(empty, selectElem, optinName, optinValue){
 	var val = $(selectElem).val();
 	var createOption = '';
@@ -89,7 +89,7 @@ function addSelectOption(empty, selectElem, optinName, optinValue){
 	if(empty) {
 		$(selectElem).empty();
 		
-		if(val == 'selectGroup') createOption = '<option value="' + val + '">부문별</option>';
+		if(val == 'selectGroup') createOption = '<option value="' + val + '">부서별</option>';
 		if(val == 'SelectRank') createOption = '<option value="' + val + '">직급별</option>';
 		
 		$(selectElem).append($(createOption));

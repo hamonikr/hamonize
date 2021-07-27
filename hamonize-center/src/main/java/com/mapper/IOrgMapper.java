@@ -3,7 +3,6 @@ package com.mapper;
 import java.util.List;
 
 import com.model.OrgVo;
-import com.model.PcMangrVo;
 
 public interface IOrgMapper {
 	
@@ -34,10 +33,10 @@ public interface IOrgMapper {
 	
 	public List<OrgVo> orgChoose();
 
-	// 하위 부문/부서 조회
+	// 하위 부서/팀 조회
 	public List<OrgVo> searchChildDept(OrgVo gvo);
 	
-	// 하위 부문/부서 all_org_nm 업데이트
+	// 하위 부서/팀 all_org_nm 업데이트
 	public int allOrgNmUpdate(OrgVo gvo);
 
 	public OrgVo getAllOrgNm(int seq);

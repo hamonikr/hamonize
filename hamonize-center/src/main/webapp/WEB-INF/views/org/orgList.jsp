@@ -230,7 +230,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					$("#trGugun").remove();
 					$("#trPseq").remove();
 					 
-					// var shtml = "<tr id='trOrg_num'><th>부문번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부문번호를 적으세요'/></td></tr>";
+					// var shtml = "<tr id='trOrg_num'><th>부서번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부서번호를 적으세요'/></td></tr>";
 					
 					// shtml += "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
 					var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
@@ -266,13 +266,13 @@ function setCheck() {
 	showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
 }
 
-//부문 추가
+//부서 추가
  function addOrgcht(e) {
 	$("#trOrg_num").remove();
 	$("#trSido").remove();
 	$("#trGugun").remove();
 	$("#trPseq").remove();
-	//var shtml = "<tr id='trOrg_num'><th>부문번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부문번호를 적으세요'/></td></tr>";
+	//var shtml = "<tr id='trOrg_num'><th>부서번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부서번호를 적으세요'/></td></tr>";
 	var shtml = "";
 	$(".board_view tbody").append(shtml);
 		
@@ -280,7 +280,7 @@ function setCheck() {
 		isParent = e.data.isParent,
 		nodes = zTree.getSelectedNodes(),
 		treeNode = nodes[0];
-		$("#nm").html("부문명");
+		$("#nm").html("부서명");
 		console.log(isParent);
 		console.log(nodes);
 		console.log(treeNode);
@@ -307,7 +307,7 @@ function setCheck() {
 				console.log();
 			
 		} else {
-			alert("부문을 선택해 주세요.");
+			alert("부서를 선택해 주세요.");
 		}
 	};
 	
@@ -327,7 +327,7 @@ function setCheck() {
 			isParent = e.data.isParent,
 			nodes = zTree.getSelectedNodes(),
 			treeNode = nodes[0];
-			$("#nm").html("부서명");
+			$("#nm").html("팀명");
 			console.log(isParent);
 			console.log(nodes);
 			console.log(treeNode);
@@ -351,7 +351,7 @@ function setCheck() {
 					console.log($("#section").val());
 				
 			} else {
-				alert("부문을 선택해 주세요.");
+				alert("상위 부서를 선택해 주세요.");
 			}
 		};
 		
@@ -363,7 +363,7 @@ function setCheck() {
 		treeNode = nodes[0];
 		
 		if (nodes.length == 0) {
-			alert("부문을 선택해 주세요");
+			alert("부서를 선택해 주세요");
 			return;
 		}else{
 			if(confirm("하위부서가 있다면 하위부서도 전부 삭제됩니다 삭제하시겠습니까?")){
@@ -458,8 +458,8 @@ function fnSave(){
                     <ul id="tree" class="ztree"></ul>
                 </div>
                 <div class="tree_btn">
-                    <button type="button" class="btn_type3" id="btnAddOrg" name="btnAddOrg">+ 부문추가</button>
-                    <button type="button" class="btn_type3" id="btnAddOrg_s" name="btnAddOrg_s">+ 부서추가</button>
+                    <button type="button" class="btn_type3" id="btnAddOrg" name="btnAddOrg">+ 부서추가</button>
+                    <button type="button" class="btn_type3" id="btnAddOrg_s" name="btnAddOrg_s">+ 팀추가</button>
                 	<button type="button" class="btn_type3" id="btnDelOrg" name="btnDelOrg">- 삭제</button>
                 </div>
                 
@@ -483,16 +483,16 @@ function fnSave(){
                         </colgroup>
                         <tbody>
                             <tr>
-                                <th>상위부문</th>
+                                <th>상위부서</th>
                                 <td><input type="text" name="p_org_nm" id="p_org_nm" class="input_type1 w100" readonly="readonly"/></td>
                             </tr>
                             <tr>
-                                <th>부문순서</th>
+                                <th>부서순서</th>
                                 <td><input type="text" name="org_ordr" id="org_ordr" class="input_type1 w100" readonly="readonly"/></td>
                             </tr>
                             <tr>
-                                <th id="nm">부서명</th>
-                                <td><input type="text" name="org_nm" id="org_nm" class="input_type1 w100" placeholder="부서명을 적으세요"/></td>
+                                <th id="nm">팀명</th>
+                                <td><input type="text" name="org_nm" id="org_nm" class="input_type1 w100" placeholder="팀명을 적으세요"/></td>
                             </tr>
                         </tbody>
                     </table>
