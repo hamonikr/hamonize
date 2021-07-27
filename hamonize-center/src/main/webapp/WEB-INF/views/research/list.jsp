@@ -433,7 +433,7 @@ function searchView(viewName, page){
               <button type="button" class="btn_type" id="3"> 일간 평균 사용자 수</button>
               <button type="button" class="btn_type" id="4"> 중복제거 사용자 수</button>
               <button type="button" class="btn_type" id="5"> 월별 PC총 사용시간</button>
-              <button type="button" class="btn_type" id="6"> 부문별 PC 대수</button>
+              <button type="button" class="btn_type" id="6"> 부서별 PC 대수</button>
               <button type="button" class="btn_type" id="7"> 일별 총 PC대수</button>
               <button type="button" class="btn_type" id="8"> 일별 총 사용자 수</button>
               <div id="count"></div>
@@ -445,7 +445,7 @@ function searchView(viewName, page){
                   <option value="0">전체</option>
                   <option value="1">성명</option>
                   <option value="2">ID</option>
-                  <option value="3">소속부문</option>
+                  <option value="3">소속부서</option>
                   <option value="4">군번</option>
               </select>
               <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
@@ -471,7 +471,7 @@ function searchView(viewName, page){
                         <thead>
                             <tr>
                                 <th>번호</th>
-                                <th>소속부문</th>
+                                <th>소속부서</th>
                                 <th>부서번호</th>
                                 <th>ID</th>
                                 <th>직급</th>

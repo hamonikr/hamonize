@@ -10,15 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.GlobalPropertySource;
 import com.mapper.IEqualsHwMapper;
 import com.mapper.IGetAgentJobMapper;
+import com.mapper.IOrgMapper;
 import com.model.EqualsHwVo;
 import com.model.GetAgentJobVo;
+import com.model.OrgVo;
+import com.model.PcMangrVo;
+import com.util.LDAPConnection;
 
 @RestController
 @RequestMapping("/hmsvc")
 public class CurlEqualsHwController {
 
+	@Autowired
+	GlobalPropertySource gs;
 
 	@Autowired
 	private IGetAgentJobMapper agentJobMapper;
@@ -26,10 +33,12 @@ public class CurlEqualsHwController {
 	@Autowired
 	IEqualsHwMapper equalsHwMapper;
 	
+	@Autowired
+	IOrgMapper orgMapper;
 
 	@RequestMapping("/eqhw")
 	public String getAgentJob(HttpServletRequest request) throws Exception {
-		
+		System.out.println("--- /hmsvc/eqhw ---> ");
 		StringBuffer json = new StringBuffer();
 	    String line = null;
 	 
@@ -47,13 +56,12 @@ public class CurlEqualsHwController {
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
 		JSONArray inetvalArray = (JSONArray) jsonObj.get("events");
-		System.out.println("====> "+ jsonObj.get("events"));
+		System.out.println(" envents ====> "+ jsonObj.get("events"));
 
 		EqualsHwVo setEqualsHwVo = new EqualsHwVo();
         for(int i=0 ; i<inetvalArray.size() ; i++){
             JSONObject tempObj = (JSONObject) inetvalArray.get(i);
     		
-          //  setEqualsHwVo.setInsert_dt(tempObj.get("datetime").toString()); //디비에서 나우로
             setEqualsHwVo.setPc_hostname(tempObj.get("hostname").toString());
             setEqualsHwVo.setPc_memory(tempObj.get("memory").toString());
             setEqualsHwVo.setPc_cpu_id(tempObj.get("cpuid").toString());
@@ -68,15 +76,26 @@ public class CurlEqualsHwController {
         }
         
         setEqualsHwVo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid()));
-        
-        // 
 		int retVal = equalsHwMapper.pcHWInfoInsert(setEqualsHwVo);
-		System.out.println("=========retVal is =="+ retVal);
+		
+		LDAPConnection con = new LDAPConnection();
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+	 	PcMangrVo newPvo = new PcMangrVo();
+		
+		newPvo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid()));
+		newPvo.setPc_hostname(setEqualsHwVo.getPc_hostname());
+		
+		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(newPvo.getOrg_seq());
+		
+		newPvo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+		PcMangrVo oldPvo = equalsHwMapper.getPCinfo(newPvo);
 		
 		if( retVal == 1) {
-
-			// ldap 서버에 vpn ip, 호스트네임 변경하는거만 추가
+			// pc정보 db 업데이트
 			equalsHwMapper.pcMngrModify(setEqualsHwVo);
+			// pc 정보 ldap 업데이트 hostname
+			con.updatePc(newPvo, oldPvo);
+
 			return "Y";
 		}else {
 			return "N";
@@ -86,10 +105,10 @@ public class CurlEqualsHwController {
 
 
 	/**
-	 * 부서 UUID로 부문 seq 가져오기
+	 * 부서 UUID로 부서 seq 가져오기
 	 * 
 	 * @param uuid
-	 * @return 부문seq
+	 * @return 부서seq
 	 */
 	public int pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();

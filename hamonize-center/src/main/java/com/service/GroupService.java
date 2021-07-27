@@ -127,7 +127,7 @@ public class GroupService {
 		selectOrgcode = groupMapper.groupOrgcodeCheck(reqOrgcode);
 		
 		if(null != selectOrgcode) {
-			// 같은 선상에 등록된 부문이 있는 경우 마지막 부문의 코드를 가져온다
+			// 같은 선상에 등록된 부서이 있는 경우 마지막 부서의 코드를 가져온다
 			codeStrArr = selectOrgcode.split("(?<!^)");
 			
 			for(int i=codeStrArr.length-1;i>=0;--i) {
@@ -165,7 +165,7 @@ public class GroupService {
 				}
 			}
 		}else {
-			// 같은 선상에 등록된 부문이 없을 때
+			// 같은 선상에 등록된 부서이 없을 때
 			codeStrArr = reqOrgcode.split("(?<!^)");
 			
 			for(int i=codeStrArr.length-1;i>=0;--i) {

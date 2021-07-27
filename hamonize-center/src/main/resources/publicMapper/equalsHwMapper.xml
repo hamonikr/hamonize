@@ -39,14 +39,18 @@
 	</insert>
 	
 	
-	<update id="sgbPcMngrModify" parameterType="com.model.EqualsHwVo">
-		
+	<update id="pcMngrModify" parameterType="com.model.EqualsHwVo">
 		update tbl_pc_mangr
 			set pc_status = 'N'
 		where pc_uuid = #{pc_uuid}
 
 	</update>
-	
+
+	<select id="getPCinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo" >
+		select * 
+		from tbl_pc_mangr
+		where pc_uuid = #{pc_uuid} 
+	</select>
 	
 
 </mapper>

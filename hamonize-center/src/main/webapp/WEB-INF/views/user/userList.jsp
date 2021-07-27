@@ -34,9 +34,6 @@ text-decoration: none;
 }
 </style>
 <script type="text/javascript">
-//<![CDATA[
-	
-//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -393,7 +390,7 @@ function searchView(viewName, page){
                   <option value="0">전체</option>
                   <option value="1">이름</option>
                   <option value="2">ID</option>
-                  <option value="3">소속부문</option>
+                  <option value="3">소속부서</option>
                   <option value="4">사번</option>
               </select>
               <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
@@ -421,7 +418,7 @@ function searchView(viewName, page){
                             <tr>
 								<th>선택</th>
                                 <th>번호</th>
-                                <th>소속부문</th>
+                                <th>소속부서</th>
                                 <th>부서</th>
                                 <th>ID</th>
                                 <th>직급</th>

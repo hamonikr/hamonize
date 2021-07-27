@@ -26,23 +26,23 @@ public class CurlAgentUpdtController {
 	
 
 	@RequestMapping("/updt")
-	public String getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid,
+	public String getAgentJob(@RequestParam(value = "name", required = false) String uuid,
 			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
 		System.out.println("\n====getAgent updt controller====");
 		String output = "";
 
-		System.out.println("===" + sgbUuid + "==" + sgbWget);
-		sgbUuid = sgbUuid.trim();
+		System.out.println("===" + uuid + "==" + sgbWget);
+		uuid = uuid.trim();
 
-		// uuid로 부문정보 가져오기
-		int segSeq = sgbUUID(sgbUuid);
+		// uuid로 부서정보 가져오기
+		int segSeq = pcUUID(uuid);
 		if( segSeq == 0 ) {
 			return  "nodata";
 		}
 		
 		GetAgentUpdtVo agentFirewallVo = new GetAgentUpdtVo();
 		agentFirewallVo.setOrg_seq(segSeq);
-		agentFirewallVo.setPcm_uuid(sgbUuid);
+		agentFirewallVo.setPcm_uuid(uuid);
 
 		int chkProgrmPolicy = getAgentUpdtMapper.getAgentWorkYn(agentFirewallVo);
 		System.out.println("//===================================");
@@ -201,14 +201,14 @@ public class CurlAgentUpdtController {
 
 
 	/*
-	 * 부서 UUID로 부문 seq 가져오기
+	 * 부서 UUID로 부서 seq 가져오기
 	 * 
-	 * @param sgbUuid
-	 * @return 부문seq
+	 * @param uuid
+	 * @return 부서seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public int pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 
 		int segSeq = 0;

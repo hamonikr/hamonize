@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.UserVo;
 
@@ -28,6 +29,8 @@ public interface IPcMangrMapper {
 
 	public int updatePcinfo(PcMangrVo vo);
 
+	public int pcInfoChange(PcMangrVo vo);
+	
 	public int pcIpchnLog(PcMangrVo vo);
 	
 	public PcMangrVo maxSgbPcCntByorgSeq(PcMangrVo vo);
@@ -77,7 +80,7 @@ public interface IPcMangrMapper {
 
 	public int updateVpnInfo(PcMangrVo vo);
 
-	public PcMangrVo chkPcOrgNum(PcMangrVo vo);
+	public OrgVo chkPcOrgNum(PcMangrVo vo);
 	
 	
 

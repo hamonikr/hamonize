@@ -36,7 +36,7 @@
 		SELECT COUNT(*) FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid}
 	</select>
 	
-	
+	<!-- updatePcinfo -->
 	<update id="updatePcinfo" parameterType="com.model.PcMangrVo" >
 		update tbl_pc_mangr
 		set 	
@@ -48,6 +48,35 @@
 		where pc_uuid = #{pc_uuid}
 	</update>
 	
+	<!-- vpn-auto-connection act -->
+	<!-- <update id="pcInfoChange" parameterType="com.model.PcMangrVo" >
+		update tbl_pc_mangr
+		set 	
+			<if test="PcMangrVo.pc_ip != null ">
+				pc_ip = #{pc_ip},
+			</if>
+			<if test="PcMangrVo.pc_vpnip != null ">
+				pc_vpnip = #{pc_vpnip},
+			</if>
+			<if test="PcMangrVo.pc_hostname != null ">
+				pc_hostname = #{pc_hostname},
+			</if>
+			<if test="PcMangrVo.pc_macaddress != null ">
+				pc_macaddress = #{pc_macaddress},
+			</if>
+			<if test="PcMangrVo.pc_disk != null ">	
+				pc_disk = #{pc_disk},
+			</if>
+			<if test="PcMangrVo.pc_disk_id != null ">
+				pc_disk_id = #{pc_disk_id},
+			</if>
+			<if test="PcMangrVo.pc_status != null ">
+				pc_status = #{pc_status},
+			</if>
+			last_date = now()
+		where pc_uuid = #{pc_uuid}
+	</update> -->
+	
 	<update id="updateVpnInfo" parameterType="com.model.PcMangrVo" >
 		update tbl_pc_mangr
 		set 	
@@ -56,7 +85,7 @@
 		where pc_uuid = #{pc_uuid}
 	</update>
 
-	<select id="chkPcOrgNum" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
+	<select id="chkPcOrgNum" parameterType="com.model.PcMangrVo" resultType="com.model.OrgVo">
 		select *
 		from tbl_org 
 		where trim(org_nm) = #{deptname}

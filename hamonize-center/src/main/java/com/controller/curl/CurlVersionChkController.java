@@ -100,10 +100,10 @@ public class CurlVersionChkController {
 
 
 	/*
-	 * 부서 UUID로 부문 seq 가져오기
+	 * 부서 UUID로 부서 seq 가져오기
 	 * 
 	 * @param sgbUuid
-	 * @return 부문seq
+	 * @return 부서seq
 	 */
 	public int sgbUUID(String sgbUuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();

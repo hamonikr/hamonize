@@ -241,7 +241,7 @@ function fnSave(){
 	var nodeLength=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var queryArr=[];
 	if(nodes.length == 0){
-		alert("부문을 선택해주세요.");
+		alert("부서를 선택해주세요.");
 		return false;
 	}
     console.log(nodes);

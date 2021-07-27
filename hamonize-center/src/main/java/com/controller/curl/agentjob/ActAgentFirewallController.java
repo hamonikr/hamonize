@@ -357,56 +357,11 @@ public class ActAgentFirewallController {
 	}
 	
 	
-	@RequestMapping("/checkRecovery")
-	public String chkeckRecovery(@RequestParam(value = "name", required = false) String uuid,
-			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
-		
-		String output = "";
-		ActAgentBackupRecoveryVo inputVo = new ActAgentBackupRecoveryVo();
-		int orgSeq = pcUUID(uuid.trim());
-		
-		inputVo.setUuid(uuid.trim());
-		inputVo.setOrg_seq(orgSeq);
-		System.out.println("segSeq=========>"+ orgSeq);
-	
-		if( orgSeq == 0 ) {
-			return  output;
-		}else {
-			/**
-			 * 복구 실행 후 기존 작업 내역 삭제 
-			 */
-			ActAgentBackupRecoveryVo retVo = getAgentRecoveryMapper.getDataActAgentBackupRecovery(inputVo);
-			
-			System.out.println("retVo========"+ retVo);
-			System.out.println("retVo==result======"+ retVo.getResult());
-			
-			if( "N".equals(retVo.getResult()) ) {
-//				1. 업데이트 정책 삭제 tbl_updt_agent_job ::: org_seq, pcm_uuid 
-//				2. 프로그램 정책 삭제 tbl_progrm_agent_job ::: org_seq, pcm_uuid
-//				3. 방화벽 포트 정책 삭제 tbl_frwl_agent_job ::: org_seq, pcm_uuid
-//				4. 디바이시 정책 삭제 tbl_device_agent_job ::: org_seq, pcm_uuid
-				try {
-					int delPolicyVal = getAgentRecoveryMapper.deleteActPolicy(inputVo);
-					System.out.println("delPolicyVal======> "+ delPolicyVal);
-					getAgentRecoveryMapper.updateDataActAgentBackupRecovery(inputVo);
-				} catch (Exception e) {
-					System.out.println("e==============="+e.getMessage());
-					return "error";
-				}
-				
-			}
-		
-		}
-		
-		return "aa";
-	}
-	
-	
 	/*
-	 * 부서 UUID로 부문 seq 가져오기
+	 * 부서 UUID로 부서 seq 가져오기
 	 * 
 	 * @param pcuuid
-	 * @return 부문seq
+	 * @return 부서seq
 	 */
 	public int pcUUID(String pcuuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();

@@ -67,7 +67,7 @@ $(document).ready(function(){
 			vertical-align: top;">
 			  <div class="callout callout-info">
 				<h5>IpAddress</h5>
-				<p>사설: <c:out value="${pcvo.pc_ip}" /> / 공인: <c:out value="${pcvo.public_ip}" /></p>
+				<p><c:out value="${pcvo.pc_ip}" /></p>
 			  </div>
 			  <div class="callout callout-info">
 				<h5>VpnIpAddress</h5>

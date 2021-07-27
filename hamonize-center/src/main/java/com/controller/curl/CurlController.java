@@ -119,7 +119,7 @@ public class CurlController {
 		
 		}
 
-		PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
+		OrgVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
 	
 		if(orgNumChkVo != null){
 			System.out.println("orgNumChkVo===="+orgNumChkVo);
@@ -130,44 +130,52 @@ public class CurlController {
 				
 			if(sabunChkVo != null){
 				int isExistPc = pcMangrMapper.inserPcInfoChk(hdVo);
-				System.out.println("PcDuplicateChk===="+isExistPc );
+				System.out.println("isExistPc ? ===="+isExistPc );
 				Boolean PcDuplicateChk = false;
 				
 				System.out.println("sabunChkVo user name : "+sabunChkVo.getUser_name());
-				
-				if(hdVo.getUsername().equals(sabunChkVo.getUser_name())){
-					if(isExistPc == 0){
-						PcDuplicateChk = true;
-						OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
-
-						hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
-						con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-			
-						System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
-						System.out.println("hdVo.getPc_os() toLowerCase : "+hdVo.getPc_os().toLowerCase());
-							
-						if(hdVo.getPc_os().toLowerCase().contains("hamonikr")){
-							hdVo.setPc_os("H");
-						} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
-							hdVo.setPc_os("W");
-						}	
+				System.out.println("orgNumChkVo.getOrg_seq() : "+orgNumChkVo.getSeq());
+				System.out.println("orgNumChkVo.getOrg_seq() : "+sabunChkVo.getOrg_seq());
 					
-						if(PcDuplicateChk) {
-							retVal = pcMangrMapper.inserPcInfo(hdVo);
-							if(retVal ==1){
-								con.addPC(hdVo, sabunChkVo);
+				if(hdVo.getUsername().equals(sabunChkVo.getUser_name())){
+					if(orgNumChkVo.getSeq() == sabunChkVo.getOrg_seq()){
+						if(isExistPc == 0){
+							PcDuplicateChk = true;
+							OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+	
+							hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+							con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+				
+							System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
+							System.out.println("hdVo.getPc_os() toLowerCase : "+hdVo.getPc_os().toLowerCase());
 								
-							}else{
-								System.out.println("pc 저장 실패");
+							if(hdVo.getPc_os().toLowerCase().contains("hamonikr")){
+								hdVo.setPc_os("H");
+							} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
+								hdVo.setPc_os("W");
+							}	
+							System.out.println("hdvo ==== > "+hdVo.toString());
+							if(PcDuplicateChk) {
+								retVal = pcMangrMapper.inserPcInfo(hdVo);
+								if(retVal ==1){
+									con.addPC(hdVo, sabunChkVo);
+									isAddPcInfo = true;
+								}else{
+									System.out.println("pc 저장 실패");
+								}
+								
+							}else {
+								System.out.println("이미 등록된 PC");
 							}
-							
-						}else {
-							System.out.println("이미 등록된 PC");
-						}
-
+	
+						}else{
+							PcDuplicateChk = false;
+						}	
 					}else{
-						PcDuplicateChk = false;
-					}					
+						System.out.println("소속된 부서와 사번이 일치하지않음");
+					}
+					
+									
 				}else{
 					System.out.println("사용자 이름이 일치하지 않음");
 				}
@@ -209,13 +217,8 @@ public class CurlController {
 		System.out.println("====> "+ jsonObj.get("events"));
 
 		Map<String,Object> prcssList = new HashMap<String,Object>();
-		PcMangrVo pcInfo =new PcMangrVo();
-		
-		// INSERT INTO TBL_PRCSS_BLOCK_LOG
-		// (HOSTNAME,PRCSSNAME,IPADDR,UUID,ORG_SEQ,INSERT_DT)
-		// VALUES(#{hostname},#{prcssname},#{vpnipaddr},#{uuid},#{org_seq},#{insert_dt})
-
-
+		PcMangrVo pcInfo =new PcMangrVo();	
+	
         for(int i=0 ; i<inetvalArray.size() ; i++){
             JSONObject tempObj = (JSONObject) inetvalArray.get(i);
             prcssList.put("insert_dt",tempObj.get("datetime").toString());
@@ -262,8 +265,8 @@ public class CurlController {
 			System.out.println("user 사번 >> "+ hdVo.getSabun());
 			System.out.println("user 이름 >> "+ hdVo.getUsername());
 		        
-			PcMangrVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
-			System.out.println("orgNumChkVo====org seq : "+orgNumChkVo.getOrg_seq());
+			OrgVo orgNumChkVo =  pcMangrMapper.chkPcOrgNum(hdVo);
+			System.out.println("orgNumChkVo====org seq : "+orgNumChkVo.getSeq());
 
 		   UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
 		   
@@ -464,11 +467,13 @@ public class CurlController {
 		return isAddPcInfo;
 	}
 	
-	
+	/*
+	* pcVpnInfoChange
+	* vpn-auto-connection에서 vpn변경시 체크해서 업데이트 
+	*
+	*/	
 	@RequestMapping("/pcInfoChange")
-	public String  pcLoginout(HttpServletRequest request) throws Exception {
-		System.out.println("pcInfoChange=====================");
-		
+	public String  pcVpnInfoChange(HttpServletRequest request) throws Exception {		
 		StringBuffer json = new StringBuffer();
 	    String line = null;
 	 
@@ -487,8 +492,6 @@ public class CurlController {
         JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
         JSONArray hmdArray = (JSONArray) jsonObj.get("events");
 
-        System.out.println("=PcInfoChange====client pc device info =====");
-        
         PcMangrVo hdVo = new PcMangrVo();
         for(int i=0 ; i<hmdArray.size() ; i++){
             JSONObject tempObj = (JSONObject) hmdArray.get(i);
@@ -502,29 +505,35 @@ public class CurlController {
             hdVo.setPc_uuid(tempObj.get("pcuuid").toString());
             hdVo.setStatus(tempObj.get("action").toString());
         }
-
+		hdVo.setOrg_seq(pcUUID(hdVo.getPc_uuid()));
+		
+		LDAPConnection con = new LDAPConnection();
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
         
         PcMangrVo chkPcMangrVo = pcMangrMapper.chkPcinfo(hdVo);
-        //System.out.println("pcInfoChange chkPcMangrVo===="+chkPcMangrVo.toString());
-        
+		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+
         int retVal = 0;
-        // if( !chkPcMangrVo.getPc_vpnip().equals(hdVo.getPc_vpnip())) {
-        	
-        // 	hdVo.setOld_pc_ip(chkPcMangrVo.getPc_ip());
-        // 	hdVo.setOld_pc_vpnip(chkPcMangrVo.getPc_vpnip());
-        // 	hdVo.setOld_pc_macaddr(chkPcMangrVo.getPc_macaddress());
-        
-        	retVal = pcMangrMapper.updatePcinfo(hdVo);
-        	System.out.println("PcInfoChange retVal====="+retVal);
-        	pcMangrMapper.pcIpchnLog(hdVo);
-      	
-        	
-//        	AdLdapUtils aldp = new AdLdapUtils();
-//        	String retOU = aldp.adComputerSearchUseCn(hdVo.getPc_hostname());
-//        	Boolean isBool = aldp.computerModify( retOU, hdVo.getPc_hostname() , hdVo.getPc_macaddress());
-        	
-//        }
-        System.out.println("pcloginout info === "+ hdVo.toString());
+
+		hdVo.setOld_pc_ip(chkPcMangrVo.getPc_ip());
+		hdVo.setOld_pc_vpnip(chkPcMangrVo.getPc_vpnip());
+		hdVo.setOld_pc_macaddr(chkPcMangrVo.getPc_macaddress());
+
+        if( !chkPcMangrVo.getPc_vpnip().equals(hdVo.getPc_vpnip())) {   
+			System.out.println("pcInfoChange chkPcMangrVo===="+chkPcMangrVo.toString());
+ 
+			retVal = pcMangrMapper.updateVpnInfo(hdVo);
+			pcMangrMapper.pcIpchnLog(hdVo);
+
+			if(retVal==1){
+				con.updatePcVpn(hdVo);
+			}
+				
+       }else{
+		System.out.println("vpn ip 변경사항없음...");
+	   }
+
         
         return "retval:"+retVal;
 	}

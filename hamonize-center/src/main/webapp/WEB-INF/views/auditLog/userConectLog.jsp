@@ -205,7 +205,7 @@
 	    pagination: true,
 	    columns: [
 	    	{
-	            title: '소속부문',
+	            title: '소속부서',
 	            name: 'group_orgcode'
 	        },
 	    	{
