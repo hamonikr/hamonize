@@ -88,12 +88,9 @@ public class OrgService {
 					List<OrgVo> list = orgMapper.searchChildDept(orgvo);
 
 					for(int i=0;i<list.size();i++){
-						System.out.println("----list----" + list.get(i).toString());
-						newAllOrgNm = list.get(i).getAll_org_nm().replaceFirst(oldOrgVo.getOrg_nm(), orgvo.getOrg_nm());
+						newAllOrgNm = list.get(i).getAll_org_nm().replace(oldOrgVo.getOrg_nm(), orgvo.getOrg_nm());
 						newAllOrgName.setAll_org_nm(newAllOrgNm);
 						newAllOrgName.setSeq(list.get(i).getSeq());
-					
-						System.out.println("----newAllOrgName----" + newAllOrgName.getAll_org_nm());
 
 						orgMapper.allOrgNmUpdate(newAllOrgName);
 					}

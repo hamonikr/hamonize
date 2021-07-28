@@ -15,6 +15,8 @@ text-decoration: none;
 }
 </style>
 <script type="text/javascript">
+//<![CDATA[
+//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -24,7 +26,16 @@ text-decoration: none;
 					enable: true
 				}
 			},
+			/* check: {
+				enable: true
+			}, */
 			edit: {
+				drag: {
+					/* autoExpandTrigger: true,
+					prev: dropPrev,
+					inner: dropInner,
+					next: dropNext */
+				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
@@ -242,11 +253,11 @@ function fnSave(){
                 <h2 class="tree_head">모니터링</h2>
 
                 <ul class="view_action">
-                    <li id="expandAllBtn">전체열기 </li>
-                    <li id="collapseAllBtn">전체닫기</li>
+                    <li><input type="radio" id="expandAllBtn"><label for="expandAllBtn">전체열기</label> </li>
+                    <li><input type="radio" id="collapseAllBtn"><label for="collapseAllBtn">전체닫기</label> </li>
                 </ul>
-
-                <!-- 트리 리스트 -->               
+                <!-- 트리 리스트 -->
+                
                  <div class="tree_list">
                 <ul id="tree" class="ztree"></ul>
                 </div>
