@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+sudo mv /usr/share/pixmaps/hamonize-remote.desktop /usr/share/applications/
+sudo touch /usr/bin/hamonize-remotecon.sh
+sudo chmod 777 /usr/bin/hamonize-remotecon.sh
+sudo echo -e '#!/bin/bash \nIPADDR=$1' >> /usr/bin/hamonize-remotecon.sh
+sudo echo 'IPADDR_SPLIT=($(echo $IPADDR | tr "//" "\n"))' >> /usr/bin/hamonize-remotecon.sh
+sudo echo 'hamonize-cli remoteaccess control ${IPADDR_SPLIT[1]}' >> /usr/bin/hamonize-remotecon.sh

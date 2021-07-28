@@ -30,6 +30,6 @@ ADD_WINDOWS_RESOURCE(hamonize-master)
 MAKE_GRAPHICAL_APP(hamonize-master)
 
 IF(VEYON_BUILD_LINUX)
-	XDG_INSTALL(${CMAKE_CURRENT_BINARY_DIR}/data/hamonize-master.desktop ${CMAKE_CURRENT_SOURCE_DIR}/data/hamonize-master.xpm ${CMAKE_CURRENT_SOURCE_DIR}/data/hamonize-master.png ${CMAKE_CURRENT_SOURCE_DIR}/data/hamonize-master.svg)
+	XDG_INSTALL(${CMAKE_CURRENT_BINARY_DIR}/data/hamonize-master.desktop ${CMAKE_CURRENT_SOURCE_DIR}/data/hamonize-remote.desktop ${CMAKE_CURRENT_SOURCE_DIR}/data/hamonize-master.xpm ${CMAKE_CURRENT_SOURCE_DIR}/data/hamonize-master.png ${CMAKE_CURRENT_SOURCE_DIR}/data/hamonize-master.svg)
 ENDIF()
 

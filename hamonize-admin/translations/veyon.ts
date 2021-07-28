@@ -1235,7 +1235,7 @@ The public key is used on client computers to authenticate incoming connection r
 <context>
     <name>DemoClient</name>
     <message>
-        <source>%1 Demo</source>
+        <source>Hamonize Demo</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3171,11 +3171,11 @@ Please save your work and close all programs.</source>
 <context>
     <name>RemoteAccessWidget</name>
     <message>
-        <source>%1 - %2 Remote Access</source>
+        <source>%1 - Hamonize Remote Access</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 - %2 - %3 Remote Access</source>
+        <source>%1 - %2 - Hamonize Remote Access</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
