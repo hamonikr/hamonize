@@ -157,7 +157,7 @@
 	</insert>
 	
 	
-	<select id="selectPcHostName" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
+	<select id="pchk" parameterType="com.model.PcMangrVo" resultType="Integer">
 		select count(*)
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid}

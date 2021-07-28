@@ -216,29 +216,25 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				var agrs = result;
 				console.log(agrs);
 				if(agrs.section == "S"){
-					$("#trSido").remove();
-					 $("#trGugun").remove();
-					 $("#trOrg_num").remove();
-					 $("#trPseq").remove();
-					//  var shtml = "<tr id='trSido'><th>광역시/도</th><td><input type='text' name='sido' id='sido' class='input_type1 w100' placeholder='광역시/도를 적으세요'/></td></tr>";
-			        // shtml += "<tr id='trGugun'><th>시/군/구</th><td><input type='text' name='gugun' id='gugun' class='input_type1 w100' placeholder='시/군/구를 적으세요'/></td></tr>";
-			        var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" readonly /></td></tr>";
+					console.log('-------------S');
+					
+					$("#trOrg_num").remove();
+					$("#trPseq").remove();
+					$('#nm').html("팀명");
+				
+					var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" readonly /></td></tr>";
 					$(".board_view tbody").append(shtml);
 				}else{
+					console.log('-------------DD');
+					$('#nm').html("부서명");
 					$("#trOrg_num").remove();
-					$("#trSido").remove();
-					$("#trGugun").remove();
 					$("#trPseq").remove();
 					 
-					// var shtml = "<tr id='trOrg_num'><th>부서번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부서번호를 적으세요'/></td></tr>";
-					
-					// shtml += "<tr id=\"trPseq\"><th>상위부서 고유번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
-					var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" placeholder=\"이동할 상위부서 고유번호를 적으세요\"/></td></tr>";
+					var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" /></td></tr>";
 
 					
 					$(".board_view tbody").append(shtml);
 				}
-				//$('form[name=frm] input[name=p_org_nm]').val(agrs.p_org_nm);
 				$('form[name=frm] input[name=p_org_nm]').val($(pSpan).text());
 				$('form[name=frm] input[name=seq]').val(agrs.seq);
 				$('form[name=frm] input[name=p_seq]').val(agrs.p_seq);
@@ -248,8 +244,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				$('form[name=frm] input[name=gugun]').val(agrs.gugun);
 				$('form[name=frm] input[name=all_org_nm]').val(agrs.all_org_nm);
 				$('form[name=frm] input[name=section]').val(agrs.section);
-				//console.log("section11111===="+agrs.section)
-
+		
 		});
 		console.log("section===="+$("#section").val())
 			
@@ -272,7 +267,6 @@ function setCheck() {
 	$("#trSido").remove();
 	$("#trGugun").remove();
 	$("#trPseq").remove();
-	//var shtml = "<tr id='trOrg_num'><th>부서번호</th><td><input type='text' name='org_num' id='org_num' class='input_type1 w100' placeholder='부서번호를 적으세요'/></td></tr>";
 	var shtml = "";
 	$(".board_view tbody").append(shtml);
 		
@@ -281,9 +275,12 @@ function setCheck() {
 		nodes = zTree.getSelectedNodes(),
 		treeNode = nodes[0];
 		$("#nm").html("부서명");
-		console.log(isParent);
+		$("#org_nm").attr("placeholder","부서명을 입력하세요");
+				
+		console.log("isParent: "+ isParent);
 		console.log(nodes);
-		console.log(treeNode);
+		console.log("treeNode: "+ treeNode);
+		
 		if (treeNode) {
 			$('form[name=frm] input[name=type]').val('save');
 			$('form[name=frm] input[name=p_org_nm]').val('');
@@ -311,7 +308,7 @@ function setCheck() {
 		}
 	};
 	
-	//부서 추가
+	//팀 추가
 	 function addOrgcht_s(e) {
 		 $("#trSido").remove();
 		 $("#trGugun").remove();
@@ -319,8 +316,6 @@ function setCheck() {
 		 $("#trPseq").remove();
 		
 		var shtml = "";
-		// var shtml = "<tr id='trSido'><th>광역시/도</th><td><input type='text' name='sido' id='sido' class='input_type1 w100' placeholder='광역시/도를 적으세요'/></td></tr>";
-        // shtml += "<tr id='trGugun'><th>시/군/구</th><td><input type='text' name='gugun' id='gugun' class='input_type1 w100' placeholder='시/군/구를 적으세요'/></td></tr>";
 		$(".board_view tbody").append(shtml);
 		
 		var zTree = $.fn.zTree.getZTreeObj("tree"),
@@ -487,7 +482,7 @@ function fnSave(){
                                 <td><input type="text" name="p_org_nm" id="p_org_nm" class="input_type1 w100" readonly="readonly"/></td>
                             </tr>
                             <tr>
-                                <th>부서순서</th>
+                                <th>순서</th>
                                 <td><input type="text" name="org_ordr" id="org_ordr" class="input_type1 w100" readonly="readonly"/></td>
                             </tr>
                             <tr>

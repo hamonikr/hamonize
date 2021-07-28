@@ -78,3 +78,81 @@ public class AgentAptListService {
 	}
 
 }
+
+// apt저장소에서 description 까지 가져오는 소스
+// @Service
+// public class AgentAptListService {
+	
+// 	  @Value("${apt.ip}") 
+// 	  private String aptIp;
+	 
+	  
+// 	public List<Map<String,Object>> getApt() {
+// 		System.out.println("----------- getApt() 실행 -----------");
+// 		String apiURL = "http://"+aptIp.trim()+"/dists/hamonize/main/binary-amd64/Packages";
+// 		System.out.println("apiURL --> " +apiURL);
+
+// 		List<String> list = new ArrayList<String>();
+// 		List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
+		
+// 		System.out.println("get apt url : "+apiURL);
+		
+// 		try {
+
+// 			URL url = new URL(apiURL);
+// 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+// 			String inputLine;
+
+// 			while ((inputLine = bufferedReader.readLine()) != null) {
+// 				System.out.println("inputLine >>>> " + inputLine.toString());
+// 				System.out.println("Package >>>> " + inputLine.indexOf("Package"));
+// 				System.out.println("Description >>>> " + inputLine.indexOf("Description"));
+			
+// 				if (inputLine.indexOf("Package") == 0) {
+// 					list.add(inputLine);
+// 				} else if (inputLine.indexOf("Version") == 0) {
+// 					list.add(inputLine);
+// 				} else if (inputLine.indexOf("Description") == 0) {
+// 					list.add(inputLine);
+// 				}
+
+// 			}
+// 			int a =0;
+// 			System.out.println("list.size() :  "+list.size());
+// 			for(int i = 1; i < list.size()+1;i++) {
+// 				a = 3*i-2;
+
+// 				if(a < list.size() ){
+								
+// 					System.out.println("aa==="+ a );
+// 					System.out.println("i==="+ i );
+
+// 					Map<String,Object> map = new HashMap<String,Object>();
+// 					System.out.println("package: "+ list.get(a-1).split(":")[1].trim());
+// 					map.put("package", list.get((a-1)).split(":")[1].trim());
+	
+// 					System.out.println("version: "+ list.get(a).split(":")[1].trim());
+// 					map.put("version", list.get(a).split(":")[1].trim());
+	
+// 					System.out.println("description: "+ list.get(a+1).split(":")[1].trim());
+// 					map.put("description", list.get(a+1).split(":")[1].trim());
+	
+// 					result.add(i-1,map);
+
+// 				}
+// 			}
+
+// 			bufferedReader.close();
+
+// 		} catch (MalformedURLException e) {
+// 			e.printStackTrace();
+// 		} catch (IOException e) {
+// 			e.printStackTrace();
+// 		}
+
+// 		return result;
+
+// 	}
+
+// }
