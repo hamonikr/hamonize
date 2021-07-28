@@ -35,7 +35,7 @@ public interface IPcMangrMapper {
 	
 	public PcMangrVo maxSgbPcCntByorgSeq(PcMangrVo vo);
 
-	public int pchk(PcMangrVo hdVo);
+	public PcMangrVo selectPcHostName(PcMangrVo hdVo);
 	
 	public int changeInsertHistory(PcMangrVo vo);
 	

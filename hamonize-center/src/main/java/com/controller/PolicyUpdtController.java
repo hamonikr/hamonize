@@ -72,7 +72,7 @@ public class PolicyUpdtController {
 			listMap = aService.getApt();
 			
 			for(int j=0;j<listMap.size();j++) {
-				System.out.println("listMap: " + listMap.get(j).toString());
+				System.out.println("listMap" + listMap.get(j).toString());
 			}
 			
 			System.out.println("comparing....\n");
@@ -84,6 +84,7 @@ public class PolicyUpdtController {
 						chk = true;
 						if (!listMap.get(i).get("version").equals(pSearchList.get(j).get("deb_new_version"))) {
 							System.out.println("update");
+							// newUpdate.add(listMap.get(i));
 							int result = uService.updtCompareUpdate(listMap.get(i));
 							break;
 						} else {
@@ -95,24 +96,24 @@ public class PolicyUpdtController {
 					}
 				}
 				if (!chk) {
-					System.out.println(" --- 저장---- "+listMap.get(i));
 					newAdd.add(listMap.get(i));
 				}
 			}
 			//apt 저장소에 새로운 패키지 있을경우 추가  
 			if(!newAdd.isEmpty()) {
-				params = new HashMap<String, Object>();
-				params.put("data", newAdd);
-				
-				// 다시 새로운 패키지 정보 비교해서 디비에 저장
-				int result = uService.updtCompareSave(params);
-				System.out.println("result===="+result);
+			params = new HashMap<String, Object>();
+			params.put("data", newAdd);
+			
+			// 다시 새로운 패키지 정보 비교해서 디비에 저장
+			int result = uService.updtCompareSave(params);
+			System.out.println("result===="+result);
 			}
 			pList = uService.updtList(vo);
 		} catch (Exception e) {
 			System.out.println("===error===");
 
 			e.printStackTrace();
+			// FAIL_GET_LIST
 		}
 		
 		model.addAttribute("oList", jsonArray);
@@ -141,7 +142,12 @@ public class PolicyUpdtController {
 		int result = 0;
 		uService.updtDelete(params);
 		result = uService.updtSave(params);
-
+		/*
+		 * try { OrgVo orgvo = new OrgVo(); vo = new PolicyProgramVo(); jsonArray =
+		 * oService.orgList(orgvo); pList = pService.programList(vo);
+		 * 
+		 * } catch (Exception e) { e.printStackTrace(); // FAIL_GET_LIST }
+		 */
 		if(result >=1 )
 			return "SUCCESS";
 		else
@@ -159,6 +165,13 @@ public class PolicyUpdtController {
 		}catch(Exception e) {
 			
 		}
+		/*
+		 * System.out.println("asd"+vo.getPu_seq()); vo = uService.updtApplcView(vo);
+		 * System.out.println("orgvo===="+vo.getPpm_seq()); JSONObject data = new
+		 * JSONObject(); data.put("dataInfo", vo);
+		 * System.out.println("zzzzz"+data.get("ppm_seq"));
+		 */
+
 		
 		return data;
 			

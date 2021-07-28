@@ -40,22 +40,6 @@
 	           			(#{item.package},'I','N',#{item.package},#{item.version}, 'Y')
 	        		</foreach>	
 	</insert>
-
-	<!-- <insert id="updtCompareSave" parameterType="java.util.HashMap">
-						
-			INSERT INTO TBL_PROGRM_UDPT 
-				( PU_NAME									   
-				, PU_STATUS
-				, STATUS
-				, DEB_APPLY_NAME
-				, PU_DC
-				, DEB_NEW_VERSION
-				, BASE_DEB_YN) VALUES
-					<foreach collection="data" item="item" separator=",">
-	           			(#{item.package},'I','N',#{item.package},#{item.description},#{item.version}, 'Y')
-	        		</foreach>	
-	</insert> -->
-	
 	<update id="updtCompareUpdate" parameterType="java.util.HashMap">
 	UPDATE TBL_PROGRM_UDPT 
 		SET 

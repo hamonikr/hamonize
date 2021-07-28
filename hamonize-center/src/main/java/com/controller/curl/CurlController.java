@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -138,35 +139,38 @@ public class CurlController {
 					
 				if(hdVo.getUsername().equals(sabunChkVo.getUser_name())){
 					if(orgNumChkVo.getSeq() == sabunChkVo.getOrg_seq()){
-						OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+						if(isExistPc == 0){
+							PcDuplicateChk = true;
+							OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
 	
-						hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
-						con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-			
-						System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
-						System.out.println("hdVo.getPc_os() toLowerCase : "+hdVo.getPc_os().toLowerCase());
-							
-						if(hdVo.getPc_os().toLowerCase().contains("hamonikr")){
-							hdVo.setPc_os("H");
-						} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
-							hdVo.setPc_os("W");
+							hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+							con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+				
+							System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
+							System.out.println("hdVo.getPc_os() toLowerCase : "+hdVo.getPc_os().toLowerCase());
+								
+							if(hdVo.getPc_os().toLowerCase().contains("hamonikr")){
+								hdVo.setPc_os("H");
+							} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
+								hdVo.setPc_os("W");
+							}	
+							System.out.println("hdvo ==== > "+hdVo.toString());
+							if(PcDuplicateChk) {
+								retVal = pcMangrMapper.inserPcInfo(hdVo);
+								if(retVal ==1){
+									con.addPC(hdVo, sabunChkVo);
+									isAddPcInfo = true;
+								}else{
+									System.out.println("pc 저장 실패");
+								}
+								
+							}else {
+								System.out.println("이미 등록된 PC");
+							}
+	
+						}else{
+							PcDuplicateChk = false;
 						}	
-						
-						System.out.println("hdvo ==== > "+hdVo.toString());
-						
-						retVal = pcMangrMapper.inserPcInfo(hdVo);
-						int chkPc = pcMangrMapper.pchk(hdVo);
-						isAddPcInfo = true;
-
-						if(retVal == 1){					
-							if(chkPc >=1){
-								con.addPC(hdVo, sabunChkVo);
-							}														
-						}else {
-							System.out.println("pc 저장 실패");
-						}
-
-						
 					}else{
 						System.out.println("소속된 부서와 사번이 일치하지않음");
 					}

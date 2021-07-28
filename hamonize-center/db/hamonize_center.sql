@@ -33,11 +33,12 @@ CREATE TABLE public.tbl_act_device_log (
 	org_seq int8 NULL,
 	uuid varchar(200) NULL,
 	hostname varchar(100) NULL,
-	status_yn varchar(10) NULL,
+	status varchar(10) NULL,
 	product varchar(200) NULL,
 	vendorcode varchar(100) NULL,
 	productcode varchar(100) NULL,
-	ins_date timestamp NULL
+	ins_date timestamp NULL,
+	CONSTRAINT tbl_act_device_log_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_act_device_log IS '디바이스 허용 배포 결과';
 
@@ -55,7 +56,7 @@ GRANT ALL ON TABLE public.tbl_act_device_log TO hamonize;
 
 CREATE TABLE public.tbl_act_firewall_log (
 	seq bigserial NOT NULL,
-	orgseq int8 NULL,
+	org_seq int8 NULL,
 	uuid varchar(200) NULL,
 	hostname varchar(100) NULL,
 	datetime varchar(100) NULL,
@@ -105,7 +106,7 @@ GRANT ALL ON TABLE public.tbl_act_nxss_log TO hamonize;
 
 CREATE TABLE public.tbl_act_progrm_log (
 	seq bigserial NOT NULL,
-	orgseq int8 NULL,
+	org_seq int8 NULL,
 	uuid varchar(200) NULL,
 	datetime varchar(100) NULL,
 	hostname varchar(100) NULL,
@@ -232,9 +233,9 @@ CREATE TABLE public.tbl_backup_agent_job (
 	seq bigserial NOT NULL,
 	bac_seq int8 NULL,
 	org_seq int8 NULL,
-	pcm_uuid varchar(100) NULL,
+	uuid varchar(100) NULL,
 	pcm_name varchar(100) NULL,
-	insert_dt timestamp NULL,
+	ins_date timestamp NULL,
 	status varchar(10) NULL,
 	CONSTRAINT tbl_backup_agent_job_pkey PRIMARY KEY (seq)
 );
@@ -253,12 +254,12 @@ GRANT ALL ON TABLE public.tbl_backup_agent_job TO hamonize;
 -- DROP TABLE public.tbl_backup_applc;
 
 CREATE TABLE public.tbl_backup_applc (
-	bac_seq int8 NOT NULL DEFAULT nextval('tbl_backup_applc_seq_seq'::regclass),
+	seq bigserial NOT NULL,
 	org_seq int8 NULL,
 	bac_cycle_option varchar(50) NULL,
 	bac_cycle_time varchar(50) NULL,
 	bac_gubun varchar(10) NULL,
-	CONSTRAINT tbl_backup_applc_pkey PRIMARY KEY (bac_seq)
+	CONSTRAINT tbl_backup_applc_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_backup_applc IS '백업주기 설정';
 
@@ -281,7 +282,7 @@ CREATE TABLE public.tbl_backup_applc_history (
 	bac_cycle_option varchar(100) NULL,
 	bac_cycle_time varchar(100) NULL,
 	bac_gubun varchar(10) NULL,
-	insert_dt timestamp NULL,
+	ins_date timestamp NULL,
 	CONSTRAINT tbl_backup_applc_history_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_backup_applc_history IS '백업주기 히스토리';
@@ -299,26 +300,16 @@ GRANT ALL ON TABLE public.tbl_backup_applc_history TO hamonize;
 -- DROP TABLE public.tbl_backup_recovery_mngr;
 
 CREATE TABLE public.tbl_backup_recovery_mngr (
-	br_seq int8 NOT NULL DEFAULT nextval('tbl_backup_recovery_mngr_seq_seq'::regclass), -- 시리얼 번호
-	br_org_seq int8 NULL, -- 부서 번호
-	br_backup_path varchar(100) NULL, -- 백업 이미지 경로 및 iso 파일 이름
-	br_backup_iso_dt timestamp NULL DEFAULT now(), -- 백업일시
-	br_backup_gubun varchar(10) NULL, -- 백업구분(A:초기백업본, B: 일반백업본)
-	br_backup_name varchar(100) NULL, -- 백업명
-	dept_seq int8 NULL, -- pc 시퀀스 번호
-	CONSTRAINT tbl_backup_recovery_mngr_pkey PRIMARY KEY (br_seq)
+	seq bigserial NOT NULL,
+	org_seq int8 NULL,
+	br_backup_path varchar(100) NULL,
+	br_backup_iso_dt timestamp NULL DEFAULT now(),
+	br_backup_gubun varchar(10) NULL,
+	br_backup_name varchar(100) NULL,
+	dept_seq int8 NULL,
+	CONSTRAINT tbl_backup_recovery_mngr_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_backup_recovery_mngr IS '백업 이미지 정보 테이블';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_backup_recovery_mngr.br_seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_backup_recovery_mngr.br_org_seq IS '부서 번호';
-COMMENT ON COLUMN public.tbl_backup_recovery_mngr.br_backup_path IS '백업 이미지 경로 및 iso 파일 이름';
-COMMENT ON COLUMN public.tbl_backup_recovery_mngr.br_backup_iso_dt IS '백업일시';
-COMMENT ON COLUMN public.tbl_backup_recovery_mngr.br_backup_gubun IS '백업구분(A:초기백업본, B: 일반백업본)';
-COMMENT ON COLUMN public.tbl_backup_recovery_mngr.br_backup_name IS '백업명';
-COMMENT ON COLUMN public.tbl_backup_recovery_mngr.dept_seq IS 'pc 시퀀스 번호';
 
 -- Permissions
 
@@ -638,6 +629,7 @@ GRANT ALL ON TABLE public.tbl_ip TO hamonize;
 
 CREATE TABLE public.tbl_loginout (
 	seq bigserial NOT NULL, -- 시리얼 번호
+	user_seq int8 NULL, -- 사용자 번호
 	login_dt timestamptz NULL DEFAULT now(), -- 로그인 시간
 	logout_dt timestamptz NULL, -- 로그아웃 시간
 	uuid varchar(100) NULL, -- PC 관리번호
@@ -648,6 +640,7 @@ COMMENT ON TABLE public.tbl_loginout IS '로그인/아웃 로그';
 -- Column comments
 
 COMMENT ON COLUMN public.tbl_loginout.seq IS '시리얼 번호';
+COMMENT ON COLUMN public.tbl_loginout.user_seq IS '사용자 번호';
 COMMENT ON COLUMN public.tbl_loginout.login_dt IS '로그인 시간';
 COMMENT ON COLUMN public.tbl_loginout.logout_dt IS '로그아웃 시간';
 COMMENT ON COLUMN public.tbl_loginout.uuid IS 'PC 관리번호';
@@ -675,8 +668,8 @@ CREATE TABLE public.tbl_manager (
 	tel_num varchar(20) NULL, -- 유선 전화번호
 	phone_num varchar(30) NULL, -- 핸드폰번호
 	arr_org_seq varchar(30) NULL, -- 부서방 관리번호
-	manager_yn varchar(3) NULL, -- 상위 부문 관리자 여부
-	general_yn varchar(2) NULL, -- 최상위 부문 관리자 여부
+	manager_yn varchar(3) NULL, -- 상위 부서 관리자 여부
+	general_yn varchar(2) NULL, -- 최상위 부서 관리자 여부
 	CONSTRAINT tbl_manager_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_manager IS '부서 관리자 정보';
@@ -693,8 +686,8 @@ COMMENT ON COLUMN public.tbl_manager."rank" IS '직급';
 COMMENT ON COLUMN public.tbl_manager.tel_num IS '유선 전화번호';
 COMMENT ON COLUMN public.tbl_manager.phone_num IS '핸드폰번호';
 COMMENT ON COLUMN public.tbl_manager.arr_org_seq IS '부서방 관리번호';
-COMMENT ON COLUMN public.tbl_manager.manager_yn IS '상위 부문 관리자 여부';
-COMMENT ON COLUMN public.tbl_manager.general_yn IS '최상위 부문 관리자 여부';
+COMMENT ON COLUMN public.tbl_manager.manager_yn IS '상위 부서 관리자 여부';
+COMMENT ON COLUMN public.tbl_manager.general_yn IS '최상위 부서 관리자 여부';
 
 -- Permissions
 
@@ -792,9 +785,9 @@ GRANT ALL ON TABLE public.tbl_object TO hamonize;
 -- DROP TABLE public.tbl_org;
 
 CREATE TABLE public.tbl_org (
-	seq serial NOT NULL, -- 부문/부서번호
-	p_seq int8 NULL DEFAULT 0, -- 상위부서번호
-	org_nm varchar(100) NULL, -- 부문명/부서명
+	seq serial NOT NULL,
+	p_seq int8 NULL, -- 상위부서번호
+	org_nm varchar(100) NULL, -- 부서명/부서명
 	org_ordr int4 NULL, -- 부서순서
 	writer_id varchar(30) NULL,
 	ins_date date NULL,
@@ -803,7 +796,7 @@ CREATE TABLE public.tbl_org (
 	upd_date date NULL,
 	update_writer_ip varchar(30) NULL,
 	"section" varchar(100) NULL, -- 부서여부
-	p_org_nm varchar(100) NULL, -- 상위부문명
+	p_org_nm varchar(100) NULL, -- 상위부서명
 	sido varchar(100) NULL, -- 지역(시/도)
 	gugun varchar(100) NULL, -- 지역(구/군)
 	org_num varchar(100) NULL, -- 부서번호
@@ -816,12 +809,11 @@ COMMENT ON TABLE public.tbl_org IS '조직 정보';
 
 -- Column comments
 
-COMMENT ON COLUMN public.tbl_org.seq IS '부문/부서번호';
 COMMENT ON COLUMN public.tbl_org.p_seq IS '상위부서번호';
-COMMENT ON COLUMN public.tbl_org.org_nm IS '부문명/부서명';
+COMMENT ON COLUMN public.tbl_org.org_nm IS '부서명/부서명';
 COMMENT ON COLUMN public.tbl_org.org_ordr IS '부서순서';
 COMMENT ON COLUMN public.tbl_org."section" IS '부서여부';
-COMMENT ON COLUMN public.tbl_org.p_org_nm IS '상위부문명';
+COMMENT ON COLUMN public.tbl_org.p_org_nm IS '상위부서명';
 COMMENT ON COLUMN public.tbl_org.sido IS '지역(시/도)';
 COMMENT ON COLUMN public.tbl_org.gugun IS '지역(구/군)';
 COMMENT ON COLUMN public.tbl_org.org_num IS '부서번호';
@@ -911,7 +903,7 @@ CREATE TABLE public.tbl_pc_change_info (
 	pc_uuid varchar(100) NULL, -- PC 관리번호
 	org_seq int8 NULL, -- 부서 관리번호
 	insert_dt timestamp NULL, -- 변경일
-	pc_user varchar(50) NULL, -- 사용자 os 계정
+	pc_user varchar(50) NULL, -- 사용자 아이디
 	CONSTRAINT tbl_pc_change_info_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_pc_change_info IS '부서 pc hw 상태 변경 기록';
@@ -930,7 +922,7 @@ COMMENT ON COLUMN public.tbl_pc_change_info.pc_cpu_id IS 'cpu_id';
 COMMENT ON COLUMN public.tbl_pc_change_info.pc_uuid IS 'PC 관리번호';
 COMMENT ON COLUMN public.tbl_pc_change_info.org_seq IS '부서 관리번호';
 COMMENT ON COLUMN public.tbl_pc_change_info.insert_dt IS '변경일';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_user IS '사용자 os 계정';
+COMMENT ON COLUMN public.tbl_pc_change_info.pc_user IS '사용자 아이디';
 
 -- Permissions
 
@@ -971,7 +963,7 @@ GRANT ALL ON TABLE public.tbl_pc_influxdata TO hamonize;
 
 CREATE TABLE public.tbl_pc_mangr (
 	seq bigserial NOT NULL, -- 시리얼 번호
-	pc_status varchar(300) NULL, -- 하드웨어 업데이트 여부
+	pc_status varchar(300) NULL,
 	pc_cpu varchar(300) NULL, -- cpu
 	pc_memory varchar(300) NULL, -- memory
 	pc_disk varchar(300) NULL, -- disk
@@ -985,10 +977,10 @@ CREATE TABLE public.tbl_pc_mangr (
 	pc_disk_id varchar(100) NULL, -- disk_id
 	pc_cpu_id varchar(100) NULL, -- cpu_id
 	pc_uuid varchar(100) NULL, -- PC 관리번호
-	pc_change varchar(10) NULL, -- R:신청 P:허가 C:완료
+	pc_change varchar(2) NULL, -- R:신청 P:허가 C:완료
 	pc_vpnip varchar(20) NULL, -- vpn_ip
-	pc_sn varchar(300) NULL, -- PC SN
-	pc_os varchar(50) NULL, -- OS 구분
+	pc_sn varchar(30) NULL, -- PC SN
+	pc_os varchar(10) NULL, -- OS 구분
 	CONSTRAINT tbl_pc_mangr_pkey PRIMARY KEY (seq)
 );
 CREATE INDEX tbl_pc_mangr_idx_uuid ON public.tbl_pc_mangr USING btree (pc_uuid);
@@ -997,7 +989,6 @@ COMMENT ON TABLE public.tbl_pc_mangr IS 'PC H/W 정보 관리';
 -- Column comments
 
 COMMENT ON COLUMN public.tbl_pc_mangr.seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_pc_mangr.pc_status IS '하드웨어 업데이트 여부';
 COMMENT ON COLUMN public.tbl_pc_mangr.pc_cpu IS 'cpu';
 COMMENT ON COLUMN public.tbl_pc_mangr.pc_memory IS 'memory';
 COMMENT ON COLUMN public.tbl_pc_mangr.pc_disk IS 'disk';
@@ -1080,48 +1071,6 @@ ALTER TABLE public.tbl_pc_mangr_history OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_pc_mangr_history TO hamonize;
 
 
--- public.tbl_pc_mangr_ip_chn_log definition
-
--- Drop table
-
--- DROP TABLE public.tbl_pc_mangr_ip_chn_log;
-
-CREATE TABLE public.tbl_pc_mangr_ip_chn_log (
-	seq bigserial NOT NULL, -- 시리얼번호
-	pc_uuid varchar(100) NULL, -- PC 관리번호
-	pc_ip varchar(20) NULL, -- ip
-	pc_vpnip varchar(20) NULL, -- vpnip
-	macaddr varchar(1000) NULL, -- macaddress
-	hostname varchar(100) NULL, -- PC호스트명
-	insert_dt timestamptz NULL, -- 변경일
-	old_pc_ip varchar(20) NULL, -- 이전ip
-	old_pc_vpnip varchar(20) NULL, -- 이전vpnip
-	old_pc_macaddr varchar(50) NULL, -- 이전macaddress
-	status varchar(100) NULL, -- 상태값
-	CONSTRAINT tbl_pc_mangr_ip_chn_log_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_pc_mangr_ip_chn_log IS '사지방 pc ip 변경 로그';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.seq IS '시리얼번호';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.pc_uuid IS 'PC 관리번호';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.pc_ip IS 'ip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.pc_vpnip IS 'vpnip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.macaddr IS 'macaddress';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.hostname IS 'PC호스트명';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.insert_dt IS '변경일';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.old_pc_ip IS '이전ip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.old_pc_vpnip IS '이전vpnip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.old_pc_macaddr IS '이전macaddress';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.status IS '상태값';
-
--- Permissions
-
-ALTER TABLE public.tbl_pc_mangr_ip_chn_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_mangr_ip_chn_log TO hamonize;
-
-
 -- public.tbl_prcss_block_log definition
 
 -- Drop table
@@ -1133,9 +1082,11 @@ CREATE TABLE public.tbl_prcss_block_log (
 	hostname varchar(200) NULL,
 	prcssname varchar(200) NULL,
 	ipaddress varchar(50) NULL,
+	macaddress varchar(100) NULL,
 	uuid varchar(200) NULL,
 	org_seq int8 NULL,
 	insert_dt timestamp NULL,
+	user_id varchar(100) NULL,
 	CONSTRAINT tbl_prcss_block_log_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_prcss_block_log IS '프로그램 차단 로그';
@@ -1164,9 +1115,9 @@ COMMENT ON TABLE public.tbl_program_mngr IS 'pc 프로그램 리스트 관리';
 
 -- Column comments
 
-COMMENT ON COLUMN public.tbl_program_mngr.pcm_seq IS '시리얼번호';
 COMMENT ON COLUMN public.tbl_program_mngr.pcm_name IS '프로그램명';
 COMMENT ON COLUMN public.tbl_program_mngr.pcm_dc IS '프로그램설명';
+COMMENT ON COLUMN public.tbl_program_mngr.pcm_seq IS '시리얼번호';
 COMMENT ON COLUMN public.tbl_program_mngr.insert_dt IS '등록일';
 
 -- Permissions
@@ -1434,7 +1385,7 @@ GRANT ALL ON TABLE public.tbl_security_agentjob TO hamonize;
 -- DROP TABLE public.tbl_security_mngr;
 
 CREATE TABLE public.tbl_security_mngr (
-	sm_seq bigserial NOT NULL, -- 시리얼 번호
+	sm_seq bigserial NOT NULL , -- 시리얼 번호
 	sm_name varchar(50) NULL, -- 시리얼 번호
 	sm_status varchar(10) NULL,
 	sm_dc varchar(100) NULL, -- 시리얼 번호
@@ -1489,7 +1440,7 @@ GRANT ALL ON TABLE public.tbl_site_agent_job TO hamonize;
 -- DROP TABLE public.tbl_site_mngr_applc;
 
 CREATE TABLE public.tbl_site_mngr_applc (
-	sma_seq bigserial NOT NULL, -- 시리얼 번호
+	sma_seq bigserial NOT NULL , -- 시리얼 번호
 	sma_ipaddress varchar(50) NULL, -- 사이트IP관리-IP주소
 	sma_macaddress varchar(100) NULL, -- 사이트IP관리-맥어드레스
 	sma_domain varchar(200) NULL, -- 유해사이트-주소
@@ -1556,11 +1507,11 @@ GRANT ALL ON TABLE public.tbl_site_mngr_applc_history TO hamonize;
 
 CREATE TABLE public.tbl_svrlst (
 	seq serial NOT NULL,
-	svr_nm varchar(100) NULL,
-	svr_domain varchar(100) NULL,
-	svr_ip varchar(100) NULL,
+	"name" varchar(100) NULL,
+	"domain" varchar(100) NULL,
+	ipaddress varchar(100) NULL,
 	svr_dc varchar(300) NULL,
-	insert_dt timestamp NULL,
+	ins_date timestamp NULL,
 	svr_port varchar(10) NULL,
 	CONSTRAINT tbl_svrlst_pkey PRIMARY KEY (seq)
 );
@@ -1621,10 +1572,10 @@ GRANT ALL ON TABLE public.tbl_tchnlgy TO hamonize;
 CREATE TABLE public.tbl_unauthroized (
 	seq serial NOT NULL,
 	org_seq int8 NULL,
-	pc_uuid varchar NULL,
+	uuid varchar NULL,
 	vendor varchar(50) NULL,
 	product varchar(50) NULL,
-	info varchar(200) NULL,
+	info varchar(50) NULL,
 	pc_user varchar(50) NULL,
 	insert_dt timestamp NULL,
 	CONSTRAINT tbl_unauthroized_pkey PRIMARY KEY (seq)
@@ -1762,21 +1713,17 @@ CREATE TABLE public.tbl_user (
 	user_id varchar(50) NOT NULL, -- 사용자 아이디
 	pass_wd varchar(100) NOT NULL, -- 사용자 비밀번호
 	user_name varchar(100) NOT NULL, -- 사용자 이름
-	ins_date varchar NULL DEFAULT now(), -- 가입일
+	ins_date timestamp NULL DEFAULT now(), -- 가입일
 	upd_date timestamp NULL DEFAULT now(), -- 수정일
-	gubun varchar(10) NULL, -- 구분
+	kind varchar(10) NULL, -- 구분
 	"rank" varchar(10) NULL, -- 직급
-	org_seq int8 NOT NULL, -- 부서번호
+	org_seq int8 NULL, -- 부서번호
 	"position" varchar(20) NULL, -- 부서 관리자 여부
 	agree_dt timestamp NULL, -- 정보 동의일
 	user_sabun varchar(30) NOT NULL, -- 사번
 	discharge_dt varchar(20) NULL, -- 퇴사일
-	email varchar(30) NULL, -- 사용자 이메일
-	tel varchar(30) NULL, -- 사용자 전화번호
-	kind varchar(20) NULL,
 	CONSTRAINT tbl_user_pkey PRIMARY KEY (seq),
-	CONSTRAINT tbl_user_user_id_key UNIQUE (user_id),
-	CONSTRAINT tbl_user_user_id_unique UNIQUE (user_id)
+	CONSTRAINT tbl_user_user_id_key UNIQUE (user_id)
 );
 COMMENT ON TABLE public.tbl_user IS '사용자 정보';
 
@@ -1788,17 +1735,17 @@ COMMENT ON COLUMN public.tbl_user.pass_wd IS '사용자 비밀번호';
 COMMENT ON COLUMN public.tbl_user.user_name IS '사용자 이름';
 COMMENT ON COLUMN public.tbl_user.ins_date IS '가입일';
 COMMENT ON COLUMN public.tbl_user.upd_date IS '수정일';
-COMMENT ON COLUMN public.tbl_user.gubun IS '구분';
+COMMENT ON COLUMN public.tbl_user.kind IS '구분';
 COMMENT ON COLUMN public.tbl_user."rank" IS '직급';
 COMMENT ON COLUMN public.tbl_user.org_seq IS '부서번호';
 COMMENT ON COLUMN public.tbl_user."position" IS '부서 관리자 여부';
 COMMENT ON COLUMN public.tbl_user.agree_dt IS '정보 동의일';
 COMMENT ON COLUMN public.tbl_user.user_sabun IS '사번';
 COMMENT ON COLUMN public.tbl_user.discharge_dt IS '퇴사일';
-COMMENT ON COLUMN public.tbl_user.email IS '사용자 이메일';
-COMMENT ON COLUMN public.tbl_user.tel IS '사용자 전화번호';
 
 -- Permissions
 
 ALTER TABLE public.tbl_user OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_user TO hamonize;
+
+

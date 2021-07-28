@@ -89,22 +89,6 @@
     ]]>	
 	</select>
 	
-	<select id="getTeamList" resultType="com.model.OrgVo">
-		with recursive search_org(seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
-			select a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
-			from tbl_org a 
-			where a.p_seq = 0
-			union all
-			select b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
-			from tbl_org b, search_org so 
-		where b.p_seq = so.seq and not cycle)
-		select seq,p_seq,org_nm,org_ordr,section,level,path
-		from search_org 
-		where section = 'S'
-		order by level,org_ordr
-	</select>
-		
-
 	<select id="orgChoose" resultType="com.model.OrgVo">
 	<![CDATA[ 
 		select * from tbl_org order by seq asc
@@ -131,6 +115,24 @@
 	]]>	
 	</select>
 
+	<select id="orgTmpView" parameterType="com.model.OrgVo" resultType="com.model.OrgVo">
+			SELECT A.SEQ
+				, A.P_SEQ
+				, A.ORG_ORDR
+				, A.ORG_NM
+				, A.ORG_ORDR
+				, A.writer_id			
+				, A.SECTION
+				, A.P_ORG_NM
+				, A.ALL_ORG_NM
+				, A.SIDO
+				, A.GUGUN
+				, A.ORG_NUM
+			FROM TBL_ORG A
+			WHERE A.SEQ = 
+	</select>
+	
+	
 	<!-- 조직등록 -->
 	<update id="orgSave" parameterType="com.model.OrgVo">
 		WITH upsert AS (
@@ -148,12 +150,7 @@
 				, SIDO		= #{sido} 
 				, GUGUN		= #{gugun} 
 				, SECTION		= #{section} 
-				, ALL_ORG_NM	= 
-				<if test="p_seq == 0">
-					#{org_nm}
-				</if>
-				<if test="p_seq != 0">
-					( select  
+				, ALL_ORG_NM		= (select  
 					STRING_AGG(TA.org_nm, '|' ORDER BY TA.seq ASC) || '|' || #{org_nm}   AS all_org_nm 
 					from (
 					WITH RECURSIVE T AS
@@ -173,55 +170,50 @@
 					order by T.seq asc
 					
 					) TA )
-					
-				</if>
 				WHERE SEQ = #{seq}	 RETURNING *
 		)
 				
-		INSERT INTO 
-		TBL_ORG (	
-			SEQ						
-			, P_SEQ										   
-			, ORG_ORDR						 
-			, ORG_NM						
-			, P_ORG_NM						  
-			, writer_id						
-			, INS_DATE						
-			, WRITER_IP						
-			, UPDATE_WRITER_ID				
-			, UPD_DATE						
-			, UPDATE_WRITER_IP				
-			, SECTION
-			, ALL_ORG_NM
-		)
-		SELECT (SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_ORG)
-		,#{p_seq},#{org_ordr},#{org_nm},#{p_org_nm},#{writer_id},now()
-		,#{writer_ip},#{writer_id},now(),#{writer_ip},#{section},
-		<if test="p_seq == 0">
-		  #{org_nm}
-		</if>
-		<if test="p_seq != 0">
-		( 	select STRING_AGG(TA.org_nm, '|' ORDER BY TA.seq ASC) || '|' || #{org_nm} AS all_org_nm 
-			from (
-				WITH RECURSIVE T AS (
-					SELECT A.*
-					FROM tbl_org A
-					where A.seq = #{p_seq}
-				
-					UNION ALL
-					
-					SELECT A.*
-					FROM tbl_org A,  T
-					
-					WHERE A.seq = T.p_seq
+			INSERT INTO 
+				TBL_ORG (	
+					SEQ						
+					, P_SEQ										   
+					, ORG_ORDR						 
+					, ORG_NM						
+					, P_ORG_NM						  
+					, writer_id						
+					, INS_DATE						
+					, WRITER_IP						
+					, UPDATE_WRITER_ID				
+					, UPD_DATE						
+					, UPDATE_WRITER_IP				
+					, SIDO						
+					, GUGUN						
+					, SECTION
+					, ALL_ORG_NM
 				)
-				SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
-				order by T.seq asc				
-			) TA )
-		</if>
+			SELECT (SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_ORG)
+			,#{p_seq},#{org_ordr},#{org_nm},#{p_org_nm},#{writer_id},now()
+			,#{writer_ip},#{writer_id},now(),#{writer_ip},#{sido},#{gugun},#{section},
+			(
+				select STRING_AGG(TA.org_nm, '|' ORDER BY TA.seq ASC) || '|' || #{org_nm} AS all_org_nm 
+				from (
+					WITH RECURSIVE T AS (
+						SELECT A.*
+						FROM tbl_org A
+						where A.seq = #{p_seq}
+					
+						UNION ALL
+						
+						SELECT A.*
+						FROM tbl_org A,  T
+						
+						WHERE A.seq = T.p_seq
+					)
+					SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+					order by T.seq asc				
+				) TA )
 		WHERE NOT EXISTS (SELECT * FROM upsert)
 	</update>
-
 	
 	<!-- 하위 부서 찾기 -->
 	<select id="searchChildDept" parameterType="com.model.OrgVo" resultType="com.model.OrgVo">

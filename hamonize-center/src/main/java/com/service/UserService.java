@@ -163,12 +163,9 @@ public class UserService {
 		return userMapper.userIdCheck(vo);
 	}
 
-	// public List<OrgVo> getOrgList(OrgVo vo){
-	// 	return orgMapper.orgList();
-	// };
-
 	public List<OrgVo> getOrgList(OrgVo vo){
-		return orgMapper.getTeamList();
+		return orgMapper.orgList();
 	};
+
 	
 }
