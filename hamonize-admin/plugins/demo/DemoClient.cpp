@@ -47,7 +47,7 @@ DemoClient::DemoClient( const QString& host, int port, bool fullscreen, const QR
 		m_toplevel = new QWidget();
 	}
 
-	m_toplevel->setWindowTitle( tr( "%1 Demo" ).arg( VeyonCore::applicationName() ) );
+	m_toplevel->setWindowTitle( tr( "Hamonize Demo" ).arg( VeyonCore::applicationName() ) );
 	m_toplevel->setWindowIcon( QPixmap( QStringLiteral(":/core/icon64.png") ) );
 	m_toplevel->setAttribute( Qt::WA_DeleteOnClose, false );
 

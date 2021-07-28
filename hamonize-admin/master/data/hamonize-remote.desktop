@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.5
+Type=Application
+Exec=/bin/bash /usr/bin/hamonize-remotecon.sh %U
+Icon=hamonize-master
+Terminal=false
+Name=Hamonize RemoteController
+Comment=Monitor and control remote computers
+NoDisplay=true
+MimeType=x-scheme-handler/hamonizecli;

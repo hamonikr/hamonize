@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+sudo rm /usr/share/applications/hamonize-remote.desktop
+sudo rm /usr/bin/hamonize-remotecon.sh
