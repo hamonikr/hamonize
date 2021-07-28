@@ -6,11 +6,7 @@
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
 
-<!-- <link rel="stylesheet" href="/css/materialize.css"> -->
-
 <script type="text/javascript">
-//<![CDATA[
-//zTree 셋팅
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -25,31 +21,17 @@
 				chkboxType: { "Y" : "s", "N" : "ps" }
 			},
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
 			},
 			callback: {
-				/* beforeDrag: beforeDrag,
-				beforeDrop: beforeDrop,
-				beforeDragOpen: beforeDragOpen,
-				onDrag: onDrag,
-				onDrop: onDrop,
-				onExpand: onExpand,*/
 				beforeClick: beforeClick,
-				//beforeCheck: beforeCheck,
 				onCheck: onCheck,
 				onClick: onClick
 			}
 		};
 	var zNodes =[
-		/* { id:0, pId:"", name:"부대관리", open:true}, */
 		<c:forEach items="${oList}" var="data" varStatus="status" >
 		{ id:"${data.seq}", pId:"${data.p_seq}",
 			<c:if test="${data.section ne 'S'}">
@@ -241,12 +223,13 @@ function fnSave(){
 	        <h2 class="tree_head">업데이트관리</h2>
 	
 	        <ul class="view_action">
-	            <li><input type="radio" name="1" id="expandAllBtn"><label for="expandAllBtn">전체열기</label> </li>
-	            <li><input type="radio" name="1" id="collapseAllBtn"><label for="collapseAllBtn">전체닫기</label> </li>
-	        </ul>
-        		<!-- 트리 리스트 -->
+				<li id="expandAllBtn">전체열기 </li>
+				<li id="collapseAllBtn">전체닫기</li>
+			</ul>
+
+		<!-- 트리 리스트 -->
         <div class="tree_list">
-						<ul id="tree" class="ztree"></ul>
+			<ul id="tree" class="ztree"></ul>
         </div>
 	    </div>
 		</div>

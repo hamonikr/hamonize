@@ -559,7 +559,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					$(".right_box_r").append(shtml_r);
 				
 			}else{  
-				gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+				// gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+				shtml_r += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 			}
 
 			console.log("cnt===="+cnt)
@@ -679,9 +680,9 @@ function searchView(viewName, page){
             <h2 class="tree_head">정책 배포 결과</h2>
 
             <ul class="view_action">
-				<li><input type="radio" name="1" id="expandAllBtn"><label for="expandAllBtn">전체열기</label> </li>
-				<li><input type="radio" name="1" id="collapseAllBtn"><label for="collapseAllBtn">전체닫기</label> </li>
-            </ul>		
+				<li id="expandAllBtn">전체열기 </li>
+				<li id="collapseAllBtn">전체닫기</li>
+			</ul>		
       				    <!-- 트리 리스트 -->
             <div class="tree_list">
                 <ul id="tree" class="ztree"></ul>
@@ -702,11 +703,11 @@ function searchView(viewName, page){
                         <font class="off">○</font>OFF
                     </li>
                 </ul>
-            <div class="info">부대 또는 사지방을 선택해주세요.</div>
+            <div class="info">부서 또는 팀을 선택해주세요.</div>
             </div>
             <div class="right_box_r" style="float: left; width: 60%;">
             <h3>정책 배포 결과</h3>
-               <div class="info"> 부대 또는 사지방을 선택해주세요.</div>
+               <div class="info"> 부서 또는 팀을 선택해주세요.</div>
             </div>
             </div>
 

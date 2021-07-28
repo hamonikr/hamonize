@@ -244,7 +244,7 @@ a:link {
                                 <td><label for="user_name" class="none"></label><input type="text" name="user_name" id="user_name" value="${result.user_name}" class="input_type1 w100" /></td>
                             </tr>
 							<tr>
-								<th>* 부서</th>
+								<th>* 팀</th>
 								<td colspan="3">
 									<label for="org_seq" class="none"></label>
 									<input type="hidden" id="seq" name="seq" value="${result.seq}"/>
@@ -396,7 +396,7 @@ $(function() {
 				return "검색 결과가 없습니다.";
 			}
 		},
-		placeholder: "부서를 선택해주세요.",
+		placeholder: "팀을 선택해주세요.",
 		allowClear: true 		
 	});	
 
