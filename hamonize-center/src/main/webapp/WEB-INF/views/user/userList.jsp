@@ -356,11 +356,11 @@ function searchView(viewName, page){
 		        <h2 class="tree_head">사용자 정보</h2>
 		
 		        <ul class="view_action">
-		            <li><input type="radio" name="1" id="expandAllBtn"><label for="expandAllBtn">전체열기</label> </li>
-		            <li><input type="radio" name="1" id="collapseAllBtn"><label for="collapseAllBtn">전체닫기</label> </li>
-		        </ul>
-		        
-		        		<!-- 트리 리스트 -->
+                    <li id="expandAllBtn">전체열기 </li>
+                    <li id="collapseAllBtn">전체닫기</li>
+                </ul>
+
+				<!-- 트리 리스트 -->
 		        <div class="tree_list">
 		            <ul id="tree" class="ztree"></ul>
 		        </div>
@@ -419,7 +419,7 @@ function searchView(viewName, page){
 								<th>선택</th>
                                 <th>번호</th>
                                 <th>소속부서</th>
-                                <th>부서</th>
+                                <th>소속팀</th>
                                 <th>ID</th>
                                 <th>직급</th>
                                 <th>이름</th>

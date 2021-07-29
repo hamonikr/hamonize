@@ -4,15 +4,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashTest {
-// 	public static void main(String[] args) {
-// 		// TODO Auto-generated method stub
-// 		String str = "http://sex.com:80";
-// //		String str = "http://hotsexytsxx.livesexet.com:80";
-// 		String hashStr = createHash(str);
-// 		System.out.println("str : " + str + ", hashStr : " + hashStr);
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String str = "http://sex.com:80";
+//		String str = "http://hotsexytsxx.livesexet.com:80";
+		String hashStr = createHash(str);
+		System.out.println("str : " + str + ", hashStr : " + hashStr);
 		
 		
-// 	}
+	}
 
 	public static String createHash(String str) {
 		String hashString = "";

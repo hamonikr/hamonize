@@ -41,20 +41,20 @@
 			 $("#header_layer").hide();
 	 });
 			
-	//  $.post("/pcMngr/requestCount",{org_seq:""},
-	// 				function(data){
-	// 	 		console.log(data)
-	// 			var shtml;
-	// 			 shtml += "<p>PC 하드웨어 변경요청이<a href='/pcMngr/pcMngrList?pc_change=R'><em>"+data+"건</em></a>이 있습니다.</p>";
-	// 			 $("#pcChange").append(shtml);
+	 $.post("/pcMngr/requestCount",{org_seq:""},
+					function(data){
+		 		console.log(data)
+				var shtml;
+				 shtml += "<p>PC 하드웨어 변경요청이<a href='/pcMngr/pcMngrList?pc_change=R'><em>"+data+"건</em></a>이 있습니다.</p>";
+				 $("#pcChange").append(shtml);
 
 				
-	// 		});		
+			});		
 
-	//   $("li").click(function(){
-	// 	 $("li").removeClass();
-	// 	 $(this).addClass("current");
-	//  }) 
+	  $("li").click(function(){
+		 $("li").removeClass();
+		 $(this).addClass("current");
+	 }) 
  
  });
  function numberWithCommas(x) {

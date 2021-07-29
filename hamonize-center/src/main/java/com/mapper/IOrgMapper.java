@@ -9,7 +9,7 @@ public interface IOrgMapper {
 
 	public List<OrgVo> orgList(OrgVo orgvo);
 	
-	public List<OrgVo> orgList();
+	// public List<OrgVo> orgList();
 	
 	public OrgVo orgView(OrgVo orgvo);
 	
@@ -42,4 +42,7 @@ public interface IOrgMapper {
 	public OrgVo getAllOrgNm(int seq);
 
     public int deleteChildUser(OrgVo orgVo);
+
+	public List<OrgVo> getTeamList();
+
 }
