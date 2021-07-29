@@ -51,10 +51,10 @@
 				
 			});		
 
-	  $("li").click(function(){
-		 $("li").removeClass();
-		 $(this).addClass("current");
-	 }) 
+	//   $("li").click(function(){
+	// 	 $("li").removeClass();
+	// 	 $(this).addClass("current");
+	//  }) 
  
  });
  function numberWithCommas(x) {
