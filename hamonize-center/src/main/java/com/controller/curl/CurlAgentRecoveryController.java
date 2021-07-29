@@ -55,7 +55,7 @@ public class CurlAgentRecoveryController {
 		if ( chkProgrmPolicy == 0 ) {
 			if( chkRecoveryLog == 0 ) {
 				JSONObject jsonProgrmData = recoveryPolicyData(agentFirewallVo);
-				output = jsonProgrmData.toJSONString();	
+				output = jsonProgrmData.toString();	
 			}else {
 				output = "nodata";
 			}
