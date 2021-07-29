@@ -28,6 +28,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/jullee96"><img src="https://avatars.githubusercontent.com/u/66409676?v=4?s=100" width="100px;" alt=""/><br /><sub><b>julie lee</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=jullee96" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/bdh1993"><img src="https://avatars.githubusercontent.com/u/58254473?v=4?s=100" width="100px;" alt=""/><br /><sub><b>JamesBae</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bdh1993" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/choonsik2"><img src="https://avatars.githubusercontent.com/u/62954933?v=4?s=100" width="100px;" alt=""/><br /><sub><b>choonsik</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=choonsik2" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/gon1942"><img src="https://avatars.githubusercontent.com/u/31919227?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ryan</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=gon1942" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/bigeden"><img src="https://avatars.githubusercontent.com/u/51899018?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eden</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bigeden" title="Code">💻</a></td>
   </tr>
 </table>
 
