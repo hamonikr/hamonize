@@ -11,7 +11,7 @@
 
 <style type="text/css">
 .some-class {
-  float: left;
+  /* float: left; */
   clear: none;
 }
 
@@ -33,7 +33,7 @@ input.radio {
 
 <style>
 div.radio-holder {
-  padding: 10px;
+  /* padding: 10px; */
 }
 input[type="radio"] {
  &:checked+label {
@@ -258,12 +258,13 @@ function fnSave(){
             <ul class="location">
             </ul>
             <h2 class="tree_head">백업관리</h2>
-
-            <ul class="view_action">
-				<li><input type="radio" name="1" id="expandAllBtn"><label for="expandAllBtn">전체열기</label> </li>
-				<li><input type="radio" name="1" id="collapseAllBtn"><label for="collapseAllBtn">전체닫기</label> </li>
-            </ul>		
-      				    <!-- 트리 리스트 -->
+			
+			<ul class="view_action">
+				<li id="expandAllBtn">전체열기 </li>
+				<li id="collapseAllBtn">전체닫기</li>
+			</ul>
+        
+		    <!-- 트리 리스트 -->
             <div class="tree_list">
                 <ul id="tree" class="ztree"></ul>
             </div>
