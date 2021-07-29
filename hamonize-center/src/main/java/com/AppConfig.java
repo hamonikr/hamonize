@@ -1,5 +1,6 @@
 // package com;
 
+
 // import java.io.IOException;
 // import javax.naming.NamingException;
 // import javax.sql.DataSource;
@@ -45,7 +46,6 @@
 //             protected void postProcessContext(Context context) {
 //                 System.out.println("globalPropertySource.getJndiName() >> "+ globalPropertySource.getJndiName());
 //                 System.out.println("globalPropertySource.ldapUrl() >> "+ globalPropertySource.getLdapUrl());
-                
 //                 ContextResource resource = new ContextResource();
 //                 resource.setName(globalPropertySource.getJndiName());
 //                 resource.setType(DataSource.class.getName());

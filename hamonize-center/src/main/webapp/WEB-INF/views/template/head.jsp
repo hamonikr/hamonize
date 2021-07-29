@@ -36,9 +36,9 @@
     <script type="text/javascript" src="/js/sgb/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/sgb/jquery-ui.min.js"></script>
     <!-- <script type="text/javascript" src="/js/sgb/content.js"></script> -->
-    <script type="text/javascript" src="/js/sgb/datepicker-ko.js"></script>
+    <!-- <script type="text/javascript" src="/js/sgb/datepicker-ko.js"></script>
     <script type="text/javascript" src="/js/sgb/calendar.js"></script>
-	<script type="text/javascript" src="/js/timer/timer.js"></script>
+	<script type="text/javascript" src="/js/timer/timer.js"></script> -->
 	<script type="text/javascript" src="/js/common.js"></script>
 	<script type="text/javascript" src="/js/calendar.js"></script>
 </head>
