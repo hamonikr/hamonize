@@ -525,7 +525,7 @@
 				function(data){
             var shtml = "";
             
-			if( data.pcList.length > 0){
+			//if( data.pcList.length > 0){
                 console.log("data.length======"+data.pcList.length);
                 shtml += "<div class=\"col-lg-9\">";
                 shtml += "<h2 class=\"title-1 m-b-25\">업데이트 배포결과</h2>";
@@ -836,12 +836,13 @@
 				// shtml_r += "</div>";
 				// shtml_r += "</div>";
                 //$(".col-lg-9").append(shtml);
-                $("#list").append(shtml);
+                
 				
-			}else{  
-				gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
-			}
-
+			//}
+            // else{  
+			// 	shtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+			// }
+            $("#list").append(shtml);
 			// console.log("cnt===="+cnt)
 		});
 
