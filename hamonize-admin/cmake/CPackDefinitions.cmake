@@ -9,7 +9,7 @@ endif ()
 
 # Basic information
 if(NOT CPACK_PACKAGE_NAME)
-	set(CPACK_PACKAGE_NAME "hamonize")
+	set(CPACK_PACKAGE_NAME "hamonize-admin")
 endif()
 SET(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
 SET(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")

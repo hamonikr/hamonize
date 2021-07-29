@@ -7,3 +7,10 @@ sudo chmod 777 /usr/bin/hamonize-remotecon.sh
 sudo echo -e '#!/bin/bash \nIPADDR=$1' >> /usr/bin/hamonize-remotecon.sh
 sudo echo 'IPADDR_SPLIT=($(echo $IPADDR | tr "//" "\n"))' >> /usr/bin/hamonize-remotecon.sh
 sudo echo 'hamonize-cli remoteaccess control ${IPADDR_SPLIT[1]}' >> /usr/bin/hamonize-remotecon.sh
+
+XDG_DESKTOP_MENU="`which xdg-desktop-menu 2> /dev/null`"
+if [ ! -x "$XDG_DESKTOP_MENU" ]; then
+  echo "WARNING: Could not find xdg-desktop-menu" >&2
+else
+  "$XDG_DESKTOP_MENU" install --mode system /usr/share/applications/hamonize-remote.desktop
+fi
