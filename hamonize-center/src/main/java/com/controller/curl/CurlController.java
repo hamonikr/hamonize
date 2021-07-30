@@ -27,11 +27,13 @@ import com.mapper.IPackageInfoMapper;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
 import com.model.GetAgentJobVo;
+import com.model.GetAgentRecoveryVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PcPackageVo;
 import com.model.SvrlstVo;
 import com.model.UserVo;
+import com.service.UserService;
 import com.util.LDAPConnection;
 
 
@@ -61,7 +63,8 @@ public class CurlController {
 	@Autowired
 	private IHmprogramMapper hmprogramMapper;
 
-	
+	@Autowired
+	private UserService userSerivce;
 
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
@@ -125,19 +128,15 @@ public class CurlController {
 			hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
 			System.out.println("org_seq : "+  hdVo.getOrg_seq());
 		
-			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
-				
-			if(sabunChkVo != null){
+//			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
+//			if(sabunChkVo != null){
 				int isExistPc = pcMangrMapper.inserPcInfoChk(hdVo);
 				System.out.println("isExistPc ? ===="+isExistPc );
 				Boolean PcDuplicateChk = false;
 				
-				System.out.println("sabunChkVo user name : "+sabunChkVo.getUser_name());
-				System.out.println("orgNumChkVo.getOrg_seq() : "+orgNumChkVo.getSeq());
-				System.out.println("orgNumChkVo.getOrg_seq() : "+sabunChkVo.getOrg_seq());
 					
-				if(hdVo.getUsername().equals(sabunChkVo.getUser_name())){
-					if(orgNumChkVo.getSeq() == sabunChkVo.getOrg_seq()){
+//				if(hdVo.getUsername().equals(sabunChkVo.getUser_name())){
+//					if(orgNumChkVo.getSeq() == sabunChkVo.getOrg_seq()){
 						OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
 	
 						hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
@@ -158,27 +157,25 @@ public class CurlController {
 						int chkPc = pcMangrMapper.pchk(hdVo);
 						isAddPcInfo = true;
 
-						if(retVal == 1){					
-							if(chkPc >=1){
-								con.addPC(hdVo, sabunChkVo);
-							}														
-						}else {
-							System.out.println("pc 저장 실패");
-						}
-
 						
-					}else{
-						System.out.println("소속된 부서와 사번이 일치하지않음");
-					}
-					
-									
-				}else{
-					System.out.println("사용자 이름이 일치하지 않음");
-				}
-
-			}else{
-				System.out.println("존재하지 않는 사번");
-			}
+						// 입력받은 사용자 정보를 LDAP 저장
+//						if(retVal == 1){					
+//							if(chkPc >=1){
+//								con.addPC(hdVo, sabunChkVo);
+//							}														
+//						}else {
+//							System.out.println("pc 저장 실패");
+//						}
+						
+//					}else{
+//						System.out.println("소속된 부서와 사번이 일치하지않음");
+//					}
+//				}else{
+//					System.out.println("사용자 이름이 일치하지 않음");
+//				}
+//			}else{
+//				System.out.println("존재하지 않는 사번");
+//			}
 
 		       
 		}else{
@@ -186,7 +183,7 @@ public class CurlController {
 		}
 		
 		 
-		System.out.println("isAddPcInfo==="+ isAddPcInfo);
+		System.out.println("hamonize Connector setPcInfo result :: "+ isAddPcInfo);
 		return isAddPcInfo;
 	}
 	
@@ -534,6 +531,30 @@ public class CurlController {
         return "retval:"+retVal;
 	}
 
+	
+	@RequestMapping("/getOrgData")
+	public String  getOrgData(HttpServletRequest request) throws Exception {
+		
+		System.out.println("baseInfo===="+ request.getParameter("aseInfo"));
+		
+		OrgVo vo = new OrgVo();
+		List<OrgVo> orgList = userSerivce.getOrgList(vo);
+		JSONArray jsonArr = new JSONArray();
+		
+		for (OrgVo set : orgList) {
+			System.out.println("----> " + set.getSeq());
+			System.out.println("----> " + set.getOrg_nm());
+			
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("seq", set.getSeq());
+			jsonObject.put("orgnm", set.getOrg_nm());
+			
+			jsonArr.add(jsonObject);
+		}
+		
+		System.out.println("//==getOrgData jsonObject  data is : " + jsonArr);
+		return jsonArr.toString();
+	}
 	
 	
 	public int pcUUID(String uuid) {
