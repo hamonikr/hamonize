@@ -113,7 +113,7 @@ function getMonthAgoday(){
                 <li><a href="/mntrng/pcControlList">모니터링</a></li>
                 <li><a href="/org/orgManage">조직관리</a></li>
                 <%-- <li><a href="/tchnlgy/tchnlgyList">장애처리</a></li> --%>
-                <li><a href="/user/userList">사용자정보</a></li>
+<!--                 <li><a href="/user/userList">사용자정보</a></li> -->
                 <li><a href="/pcMngr/pcMngrList">PC정보</a>
                 <%-- <ul>
                     <li><a href="/pcMngr/pcMngrList">PC정보</a></li>

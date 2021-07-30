@@ -34,7 +34,8 @@
 		select * 
 		from tbl_act_backup_recovery_log
 		where uuid = #{uuid}
-			
+		order by ins_date desc
+		limit 1	
 	</select>
 
 	<update id="updateDataActAgentBackupRecovery" parameterType="com.model.ActAgentBackupRecoveryVo">
