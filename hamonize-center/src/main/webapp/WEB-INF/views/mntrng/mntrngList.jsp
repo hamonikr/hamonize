@@ -15,6 +15,7 @@ text-decoration: none;
 }
 </style>
 <script type="text/javascript">
+	var textCutLength = 10;
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -67,30 +68,25 @@ text-decoration: none;
 	
 	function getMntrngList(){
 		var url ='/mntrng/pcList';
-		//var keyWord = $("select[name=keyWord]").val();
-		//var vData = 'mntrngListCurrentPage=' + $("#mntrngListCurrentPage").val() +"&keyWord="+ keyWord + "&txtSearch=" + $("#txtSearch").val() + "&org_seq=" + $("#gbcdval").attr("data-orgseq");
 		$.post(url,{org_seq:1},
 				function(result){
 						var agrs = result.pcList;
 						var strHtml ="";
 						for(var i =0; i< agrs.length;i++){
 							var uuid = agrs[i].pc_uuid;
+							var hostnameVal = '';
+							console.log("textCutLength========++"+textCutLength +"====="+ agrs[i].pc_hostname.length);
+							if( agrs[i].pc_hostname.length >= textCutLength ){
+				                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
+				           }else{
+				        	   hostnameVal =agrs[i].pc_hostname; 
+				            }
+							
 							if( agrs[i].pc_status == "true"){
-								strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'">'+agrs[i].pc_hostname+'</a></li>'
+								strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'">'+hostnameVal+'</a></li>'
 							}else{
-								strHtml += '<li>'+agrs[i].pc_hostname+'</li>'	
+								strHtml += '<li>'+hostnameVal+'</li>'	
 							}
-							/* strHtml += "<div class=\"mr-sm-3\">";
-							if(agrs[i].sgb_pc_status == "true"){
-								strHtml += "<div class=\"card text-white bg-success mb-3\" style=\"max-width: 18rem; width:150px;\">";
-								strHtml += '<div class="card-header"><a href="pcView.do?uuid='+uuid+'">'+agrs[i].sgb_pc_hostname+'</a></div>';
-							}else{
-								strHtml += "<div class=\"card text-white bg-dark mb-3\" style=\"max-width: 18rem; width:150px;\">";
-								strHtml += '<div class="card-header">'+agrs[i].sgb_pc_hostname+'</div>';
-							}
-							//strHtml += '<div class="card-header">'+agrs[i].sgb_pc_hostname+'</div>';
-							strHtml += '</div>';
-							strHtml += '</div>'; */
 						}
 						$(".monitor_list").append(strHtml);
 						$("#total").append("<font class=\"total\">●</font>TOTAL - "+(parseInt(result.on)+parseInt(result.off))+"대");
@@ -98,7 +94,6 @@ text-decoration: none;
 						$("#off").append("<font class=\"off\">○</font>OFF - "+result.off+"대");
 				});
 		
-		//callAjax('POST', url, vData, pcMngrGetSuccess, getError, 'json');
 	}
  
  var log, className = "dark", curDragNodes, autoExpandNode;
@@ -122,6 +117,9 @@ function expandNode(e) {
 		zTree.expandAll(false);
 	} 
 }
+
+
+
 //메뉴 Tree onClick
 function onClick(event, treeId, treeNode, clickFlag) {
 		$('.monitor_list').empty();
@@ -134,15 +132,23 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		function(result){
 				var agrs = result.pcList;
 				var strHtml ="";
+				
 				if(agrs.length > 0){
-				for(var i =0; i< agrs.length;i++){
-					var uuid = agrs[i].sgb_pc_uuid;
-					if( agrs[i].pc_status == "true"){
-						strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'">'+agrs[i].pc_hostname+'</a></li>'
-					}else{
-						strHtml += '<li>'+agrs[i].pc_hostname+'</li>'	
+					for(var i =0; i< agrs.length;i++){
+						var uuid = agrs[i].sgb_pc_uuid;
+						var hostnameVal = '';
+						if( agrs[i].pc_hostname.length >= textCutLength ){
+			                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
+			           }else{
+			        	   hostnameVal =agrs[i].pc_hostname; 
+			            }
+					 
+						if( agrs[i].pc_status == "true"){
+							strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'">'+hostnameVal+'</a></li>'
+						}else{
+							strHtml += '<li>'+hostnameVal+'</li>'	
+						}
 					}
-				}
 				}else{
 					strHtml += "<div class=\"mr-sm-3\">등록된 pc가 없습니다</div>";
 				}
@@ -150,15 +156,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				$("#total").append("<font class=\"total\">●</font>TOTAL - "+(parseInt(result.on)+parseInt(result.off))+"대");
 				$("#on").append("<font class=\"on\">●</font>ON - "+result.on+"대");
 				$("#off").append("<font class=\"off\">○</font>OFF - "+result.off+"대");
-
-					
-				/* $('form[name=frm] input[name=pOrgNm]').val('');
-				$('form[name=frm] input[name=seq]').val(agrs.seq);
-				$('form[name=frm] input[name=p_seq]').val(agrs.p_seq);
-				$('form[name=frm] input[name=org_ordr]').val(agrs.org_ordr);
-				$('form[name=frm] input[name=org_nm]').val(treeNode.name);
-
-				$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm); */
 
 		});
 			
@@ -183,44 +180,13 @@ function fnSave(){
 		alert("부대명을 입력해주세요.");
 		return false;
 	}
-	
-	//var value = new MiyaValidator(document.forms["frm"]);
-		
-	//value.add("orgOrdr" , {required: true ,message: "부서순서를 입력하세요"});
-	//value.add("orgNm"    , {required: true ,message: "부대명을 입력하세요"});
-	//value.add("orgLinkYn", {required: true ,message: "부서링크를 선택해주세요"});
-	
-	/*  if($("input[name='orgLinkYn']:checked").val() == 'Y' && $("#orgLink").val() == '') {
-		value.add("orgLink", {required: true ,message: "부서링크를 입력하세요"});	
-	} */ 
-	
-	//value.add("link"     , {required: true, option:"engonly", message: "영문으로만 입력하셔야 합니다"});
-	//var msg = "등록하시겠습니끼?";
-    //if(!confirm(msg)){return;}
-    /* $("input[name='jobSeq']").each(function(v,k){
-    	console.log( v+" : "+k);
-    });*/
     console.log($("#seq").val());
     console.log($("#p_seq").val());
     console.log($("#org_nm").val());
-    /* $("#orgchtSeq").val($("#seq").val());
-    if($("#chrgjobNm").val()!=null){
-    	$("#chrgjob").val("y");
-    } */
+
     $('form[name=frm]').append("<input type='hidden' name='type' value='save' />");        
     $('form[name=frm]').submit();
     alert("정상적으로 저장되었습니다.");
-	/* var result = value.validate();
-    if (!result) {
-        //alert(value.getErrorMessage()); //디폴트 label 메세지
-        //alert(value.getErrorMessage("{message}")); //동적 메세지
-        value.getErrorElement().focus();
-        return false;
-    }else {		 
-    	
-        $('form[name=frm]').append("<input type='hidden' name='type' value='save' />");        
-        $('form[name=frm]').submit(); 
-    } */
     return false;
 }
 //]]>

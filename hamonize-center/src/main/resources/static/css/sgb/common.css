@@ -145,7 +145,7 @@ layout
  @media (max-width: 1680px) {
 .menubar li a   {padding:0px 20px;}
 
-.monitor_list li {width:75px; height:45px; margin:10px;}
+.monitor_list li {width:125px; height:45px; margin:10px;}
 }
 
 

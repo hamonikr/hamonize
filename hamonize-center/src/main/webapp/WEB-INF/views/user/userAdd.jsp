@@ -55,43 +55,43 @@ a:link {
 		}
 	
 		
-		if($('#pass_wd').val() == '')
-		{
-			alert('비밀번호는 필수 입력 입니다.');
-			$('#pass_wd').focus();
-			return true;
-		}
+// 		if($('#pass_wd').val() == '')
+// 		{
+// 			alert('비밀번호는 필수 입력 입니다.');
+// 			$('#pass_wd').focus();
+// 			return true;
+// 		}
 		
-		if($('#pass_wd_cfm').val() == '')
-		{
-			alert('비밀번호 확인은 필수 입력 입니다.');
-			$('#pass_wd_cfm').focus();
-			return true;
-		}
+// 		if($('#pass_wd_cfm').val() == '')
+// 		{
+// 			alert('비밀번호 확인은 필수 입력 입니다.');
+// 			$('#pass_wd_cfm').focus();
+// 			return true;
+// 		}
 		
-		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
-		{
-			alert('비밀번호와 비밀번호 확인이 다릅니다.');
-			$('#pass_wd_cfm').focus();
-			return true;
-		}
-		console.log("chkpasswd==="+$('#pass_wd').val().search(pwdFilter));
-		 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
-		{
-			 console.log("chkpasswd==="+$('#pass_wd').val().search (pwdFilter));
-			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
-			$('#pwd_no').val('');
-			$('#pwd_no').focus();
-			return true;
-		} 
+// 		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
+// 		{
+// 			alert('비밀번호와 비밀번호 확인이 다릅니다.');
+// 			$('#pass_wd_cfm').focus();
+// 			return true;
+// 		}
+// 		console.log("chkpasswd==="+$('#pass_wd').val().search(pwdFilter));
+// 		 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
+// 		{
+// 			 console.log("chkpasswd==="+$('#pass_wd').val().search (pwdFilter));
+// 			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
+// 			$('#pwd_no').val('');
+// 			$('#pwd_no').focus();
+// 			return true;
+// 		} 
 		
-		 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
-		{
-			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
-			$('#pwd_no_cfm').val('');
-			$('#pwd_no_cfm').focus();
-			return true;
-		} 
+// 		 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
+// 		{
+// 			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
+// 			$('#pwd_no_cfm').val('');
+// 			$('#pwd_no_cfm').focus();
+// 			return true;
+// 		} 
 		
 		if($('#user_name').val() == '')
 		{
@@ -142,29 +142,29 @@ a:link {
 		var gubun = $("#gubun option:checked").val();
 		$('#gubun').val(gubun);
 		
-		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
-		{
-			alert('비밀번호와 비밀번호 확인이 다릅니다.');
-			$('#pass_wd_cfm').focus();gubun
-			 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
-			{
-				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
-				$('#pass_wd').val('');
-				$('#pass_wd').focus();
-				return true;
-			} 
-		}
+// 		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
+// 		{
+// 			alert('비밀번호와 비밀번호 확인이 다릅니다.');
+// 			$('#pass_wd_cfm').focus();gubun
+// 			 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
+// 			{
+// 				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
+// 				$('#pass_wd').val('');
+// 				$('#pass_wd').focus();
+// 				return true;
+// 			} 
+// 		}
 		
-		if($('#pass_wd_cfm').val() != '')
-		{
-			 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
-			{
-				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
-				$('#pass_wd_cfm').val('');
-				$('#pass_wd_cfm').focus();
-				return true;
-			} 
-		}
+// 		if($('#pass_wd_cfm').val() != '')
+// 		{
+// 			 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
+// 			{
+// 				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 6자이상으로 입력하세요.');
+// 				$('#pass_wd_cfm').val('');
+// 				$('#pass_wd_cfm').focus();
+// 				return true;
+// 			} 
+// 		}
 		var msg = "${result.user_name}(${result.user_id})님 정보를 수정하시겠습니까?";
 	    if(!confirm(msg)){
 	    	return false;
@@ -329,21 +329,23 @@ a:link {
 
 							</tr>
                             
-							<tr>
-                                <th>* 비밀번호</th>
-                                <td >
-                                    <label for="pass_wd" class="none"></label>
-									<input type="password" name="pass_wd" id="pass_wd" value="" class="input_type1  w100" />
-                                    ※ 비밀번호는 영문, 숫자, 특수문자 조합 6자리 이상
-                                </td>
-                            </tr>
-							<tr>    
-								<th>* 비밀번호 확인</th>
-								<td>
-                                    <label for="pass_wd_cfm" class="none">
-									</label><input type="password" name="pass_wd_cfm" id="pass_wd_cfm" value=""  class="input_type1 w100" />
-                                </td>
-                            </tr>
+							<input type="hidden" name="pass_wd" id="pass_wd" value="hamonize)*" class="input_type1  w100" />
+							<input type="hidden" name="pass_wd_cfm" id="pass_wd_cfm" value="hamonize)*"  class="input_type1 w100" />
+<!-- 							<tr> -->
+<!--                                 <th>* 비밀번호</th> -->
+<!--                                 <td > -->
+<!--                                     <label for="pass_wd" class="none"></label> -->
+<!-- 									<input type="password" name="pass_wd" id="pass_wd" value="" class="input_type1  w100" /> -->
+<!--                                     ※ 비밀번호는 영문, 숫자, 특수문자 조합 6자리 이상 -->
+<!--                                 </td> -->
+<!--                             </tr> -->
+<!-- 							<tr>     -->
+<!-- 								<th>* 비밀번호 확인</th> -->
+<!-- 								<td> -->
+<!--                                     <label for="pass_wd_cfm" class="none"> -->
+<!-- 									</label><input type="password" name="pass_wd_cfm" id="pass_wd_cfm" value=""  class="input_type1 w100" /> -->
+<!--                                 </td> -->
+<!--                             </tr> -->
                             
                         </tbody>
                     </table>

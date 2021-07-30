@@ -31,6 +31,16 @@
 
 $(document).ready(function(){
 	$(".tui-chart-chartExportMenu-area").hide();
+	$( "#deviceInfo" ).slideToggle( "slow" ); 
+
+$( "#sp_on" ).click(function() {  
+	$( "#deviceInfo" ).slideToggle( "slow" ); 
+	if(document.getElementById('sp_on').innerText=="▼펼치기"){
+		document.getElementById('sp_on').innerText="▲닫기";
+	}else{
+		document.getElementById('sp_on').innerText="▼펼치기";
+	}
+});
 });
 </script>
 
@@ -39,16 +49,26 @@ $(document).ready(function(){
 	<%@ include file="../template/topNav.jsp" %>
 	<div class='wrap'>
     <div class='code-html' id='code-html'>
-		<div class="main_title" style="margin-bottom: 20px;">
-			<c:out value="${pcvo.pc_hostname}" />(<c:out value="${pcvo.pc_uuid}" />)
+		<div class="main_title" style="margin-top: 20px; ">
+		<span id="sp_on">▲닫기</span>
+			디바이스 정보
 		<span></span>
 		</div>
-		<div>
+
+		 <div style="display: inline-block; width: 43%; vertical-align: top; margin-right: 6%">
+			<div class="callout callout-info">
+				<h5>Device Hosname <p><c:out value="${pcvo.pc_hostname}" /></p></h5>
+			  </div>
+		</div>
+		<div style="display: inline-block; width: calc(100% - 54%); vertical-align: top;">
+			<div class="callout callout-info">
+				<h5>Device MachineId <p><c:out value="${pcvo.pc_uuid}" /></p></h5>
+			  </div>
+		</div>
+<br>			
+		<div id="deviceInfo">
             <!--- 좌측 -->
-            <div style="display: inline-block;
-			width: 43%;
-			vertical-align: top;
-			margin-right: 6%">
+            <div style="display: inline-block; width: 43%; vertical-align: top; margin-right: 6%">
 			<div class="callout callout-info">
 				<h5>Cpu정보</h5>
 				<p><c:out value="${pcvo.pc_cpu}" /></p>
@@ -62,9 +82,7 @@ $(document).ready(function(){
 				<p><c:out value="${pcvo.pc_disk}" /></p>
 			  </div> 
 			</div>
-			<div style="    display: inline-block;
-			width: calc(100% - 54%);
-			vertical-align: top;">
+			<div style="display: inline-block; width: calc(100% - 54%); vertical-align: top;">
 			  <div class="callout callout-info">
 				<h5>IpAddress</h5>
 				<p><c:out value="${pcvo.pc_ip}" /></p>
