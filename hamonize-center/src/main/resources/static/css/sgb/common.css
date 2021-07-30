@@ -137,7 +137,11 @@ layout
 
 
 
-.monitor_list li {width:80px; height:55px; margin:10px;}
+.monitor_list li {
+/* 	width:80px;  */
+	height:55px; 
+	margin:10px;
+}
 
 /*--------------------
 해상도별

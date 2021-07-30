@@ -241,19 +241,19 @@ public class LDAPConnection {
 			upperDn += ",ou="+p_array[i];
 			cn += "."+p_array[i];
 		}
-		cn = uvo.getUser_name()+cn;
+//		cn = uvo.getUser_name()+cn;
 
 		attribute.add("device");
 		attribute.add("extensibleObject");
 		attributes.put(attribute);
 		
 		attributes.put("cn", pvo.getPc_hostname());
-		attributes.put("cn", cn);
+//		attributes.put("cn", cn);
 
 		attributes.put("ipHostNumber", pvo.getPc_vpnip().toString()); 
 		attributes.put("name", pvo.getPc_hostname()); 
 		
-		attributes.put("member", "uid="+uvo.getUser_name()+",ou=users"+upperDn); 
+//		attributes.put("member", "uid="+uvo.getUser_name()+",ou=users"+upperDn); 
 		
 		
 		dn = "cn="+pvo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";

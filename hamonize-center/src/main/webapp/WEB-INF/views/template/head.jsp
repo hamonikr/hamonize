@@ -12,10 +12,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=1200, user-scalable=1" name="viewport" />
-	<!-- <meta http-equiv="content-type" content="text/html; charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>하모나이즈</title> -->
 	
 	<!-- icon <i> -->
 	<!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->

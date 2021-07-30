@@ -161,7 +161,8 @@ public class CurlController {
 						// 입력받은 사용자 정보를 LDAP 저장
 //						if(retVal == 1){					
 //							if(chkPc >=1){
-//								con.addPC(hdVo, sabunChkVo);
+						UserVo sabunChkVo = new UserVo();
+								con.addPC(hdVo, sabunChkVo);
 //							}														
 //						}else {
 //							System.out.println("pc 저장 실패");

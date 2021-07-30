@@ -9,10 +9,7 @@
 <script type='text/javascript' src='/js/tui/tui-code-snippet.min.js'></script>
 <script type='text/javascript' src='/js/tui/raphael.js'></script>
 <script type='text/javascript' src='/js/tui/tui-chart.js'></script>
-<!-- <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/core.js'></script>
-<script type='text/javascript' src='https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.min.js'></script>
-<script type='text/javascript' src='https://uicdn.toast.com/tui.chart/latest/raphael.js'></script> -->
-<!-- <script type='text/javascript' src='/js/views/pcView.js'></script> -->
+
 <style>
 .box {
 	border: 1px solid rgb(112, 112, 112);
@@ -51,7 +48,10 @@ $( "#sp_on" ).click(function() {
     <div class='code-html' id='code-html'>
 		<div class="main_title" style="margin-top: 20px; ">
 		<span id="sp_on">▲닫기</span>
-			디바이스 정보
+			컴퓨터 정보
+			&nbsp;
+<!-- 			<a href="hamonizecli://192.168.0.148" class="btn btn-link">원격제어하기</a> -->
+			 <button type="button" class="btn btn-link" onClick="location.href='hamonizecli://192.168.0.148'">원격제어하기</button>
 		<span></span>
 		</div>
 
