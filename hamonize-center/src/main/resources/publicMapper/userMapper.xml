@@ -58,7 +58,7 @@
 				and a.user_id like '%' || #{txtSearch} || '%'
 			</if>
 			<if test="keyWord == 3 " >
-				and (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%'
+				and (select org_nm from tbl_org where seq = (select seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%'
 			</if>
 			<if test="keyWord == 4 " >
 				and a.user_sabun like '%' || #{txtSearch} || '%'
@@ -67,7 +67,7 @@
 				and (a.user_name like '%' || #{txtSearch} || '%'
 				or a.user_id like '%' || #{txtSearch} || '%'
 				or a.user_sabun like '%' || #{txtSearch} || '%'
-				or (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%')
+				or (select org_nm from tbl_org where seq = (select seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%')
 			</if>
 		</if>
 		</where>
@@ -101,7 +101,7 @@
 				and user_id like '%' || #{txtSearch} || '%'
 			</if>
 			<if test="keyWord == 3 " >
-				and (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where org_seq = b.seq)) like '%' || #{txtSearch} || '%'
+				and (select org_nm from tbl_org where seq = (select seq from tbl_org b where org_seq = b.seq)) like '%' || #{txtSearch} || '%'
 			</if>
 			<if test="keyWord == 4 " >
 				and user_sabun like '%' || #{txtSearch} || '%'
@@ -110,7 +110,7 @@
 				and (user_name like '%' || #{txtSearch} || '%'
 				or user_id like '%' || #{txtSearch} || '%'
 				or user_sabun like '%' || #{txtSearch} || '%'
-				or (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where org_seq = b.seq)) like '%' || #{txtSearch} || '%')
+				or (select org_nm from tbl_org where seq = (select seq from tbl_org b where org_seq = b.seq)) like '%' || #{txtSearch} || '%')
 			</if>
 		</if>
 		</where>

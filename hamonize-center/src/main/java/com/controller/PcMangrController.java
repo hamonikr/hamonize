@@ -1,12 +1,10 @@
 package com.controller;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
@@ -14,22 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mapper.IPcMangrMapper;
-import com.model.AllowIpInfoVo;
-import com.model.AuditLogVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.PcMangrService;
-import com.util.CmmnExcelService;
 import com.util.Constant;
 
 @Controller
@@ -69,15 +63,18 @@ public class PcMangrController {
 		return "/pcMngr/pcList";
 	}
 
+	/**
+	 * PC 목록 불러오기
+	 * @param vo
+	 * @param pagingVo
+	 * @param session
+	 * @param request
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("pcMngrList.proc")
 	public Map<String, Object> listProc(PcMangrVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
 
-		System.out.println("1===========" + vo.getOrg_seq());
-		System.out.println("2===========" + vo.getPc_change());
-		System.out.println("3===========" + vo.getTxtSearch());
-		System.out.println("4===========" + vo.getKeyWord());
-		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		// 페이징
@@ -106,34 +103,6 @@ public class PcMangrController {
 		return jsonObject;
 	}
 	
-	@RequestMapping("/pcMngrListExcel")
-	public CmmnExcelService pcMngrListExcel(PcMangrVo vo, PagingVo pagingVo,HttpServletRequest request, HttpServletResponse response, ModelMap model,
-    		@RequestParam Map<String, String> params) throws Exception {
-		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
-		// 페이징
-		pagingVo.setCurrentPage(vo.getPcListInfoCurrentPage());
-		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
-
-		int cnt = Integer.parseInt(pcmapper.countPcListInfo(vo) + "");
-		pagingVo.setTotalRecordSize(cnt);
-		pagingVo = PagingUtil.setPaging(pagingVo);
-		
-		vo.setDate_fr(vo.getDate_fr().toString().replaceAll("/", "-"));
-		vo.setDate_to(vo.getDate_to().toString().replaceAll("/", "-"));
-
-		List<Map<String, Object>> list = pcmapper.pcMngrListExcel(vo);
-		
-		String[] head ={"번호","지역","부서이름","OS","CPU","MEMORY","DISK","MACADDRESS","IP","설치날짜","HOSTNAME"};
-		String[] column ={"rownum","sido","deptname","pc_os","pc_cpu","pc_memory","pc_disk","pc_macaddress","pc_ip","first_date","pc_hostname"};
-		jsonObject.put("header", head);		  // Excel 상단
-		jsonObject.put("column", column);		  // Excel 상단
-		jsonObject.put("excelName","PC정보리스트");    // Excel 파일명
-		jsonObject.put("list", list);          // Excel Data
-		
-		model.addAttribute("data", jsonObject);
-		return new CmmnExcelService();
-    }
 	
 	@ResponseBody
 	@RequestMapping("changeStts")
@@ -160,7 +129,6 @@ public class PcMangrController {
 	@RequestMapping("requestCount")
 	public int requestCount() {
 		int result = pcmapper.requestCount();
-		//System.out.println("result1========"+result);
 		return result;
 		
 	}
@@ -206,12 +174,6 @@ public class PcMangrController {
 	@ResponseBody
 	@RequestMapping("pcBlockList.proc")
 	public Map<String, Object> blockListProc(PcMangrVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
-
-		System.out.println("1===========" + vo.getOrg_seq());
-		System.out.println("2===========" + vo.getPc_change());
-		System.out.println("3===========" + vo.getTxtSearch());
-		System.out.println("4===========" + vo.getKeyWord());
-		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		// 페이징
@@ -273,5 +235,36 @@ public class PcMangrController {
 		return jsonObject;
 	}
 	
-	
+
+	// pc excel 다운로드
+
+	// @RequestMapping("/pcMngrListExcel")
+	// public CmmnExcelService pcMngrListExcel(PcMangrVo vo, PagingVo pagingVo,HttpServletRequest request, HttpServletResponse response, ModelMap model,
+    // 		@RequestParam Map<String, String> params) throws Exception {
+	// 	Map<String, Object> jsonObject = new HashMap<String, Object>();
+
+	// 	// 페이징
+	// 	pagingVo.setCurrentPage(vo.getPcListInfoCurrentPage());
+	// 	pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
+
+	// 	int cnt = Integer.parseInt(pcmapper.countPcListInfo(vo) + "");
+	// 	pagingVo.setTotalRecordSize(cnt);
+	// 	pagingVo = PagingUtil.setPaging(pagingVo);
+		
+	// 	vo.setDate_fr(vo.getDate_fr().toString().replaceAll("/", "-"));
+	// 	vo.setDate_to(vo.getDate_to().toString().replaceAll("/", "-"));
+
+	// 	List<Map<String, Object>> list = pcmapper.pcMngrListExcel(vo);
+		
+	// 	String[] head ={"번호","지역","부서이름","OS","CPU","MEMORY","DISK","MACADDRESS","IP","설치날짜","HOSTNAME"};
+	// 	String[] column ={"rownum","sido","deptname","pc_os","pc_cpu","pc_memory","pc_disk","pc_macaddress","pc_ip","first_date","pc_hostname"};
+	// 	jsonObject.put("header", head);		  // Excel 상단
+	// 	jsonObject.put("column", column);		  // Excel 상단
+	// 	jsonObject.put("excelName","PC정보리스트");    // Excel 파일명
+	// 	jsonObject.put("list", list);          // Excel Data
+		
+	// 	model.addAttribute("data", jsonObject);
+	// 	return new CmmnExcelService();
+    // }
+
 }

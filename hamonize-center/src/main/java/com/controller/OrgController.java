@@ -1,8 +1,5 @@
 package com.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -71,10 +68,15 @@ public class OrgController {
 		return "/org/orgList";
 	}
 	
+	/*
+	 * 선택한 조직 정보 출력
+	 * 
+	 * @return data
+	 * @throws Exception
+	 */
 	@ResponseBody
 	@RequestMapping(params="type=show",method=RequestMethod.POST)
 	public JSONObject orgView(HttpSession session, Model model,OrgVo orgvo) {
-		// 선택한 조직 정보 출력
 		orgvo = oService.orgView(orgvo);
 		
 		JSONObject data = new JSONObject();
@@ -93,15 +95,23 @@ public class OrgController {
 			
 	}
 	
+		
+	/*
+	* 조직 추가
+	* 
+	*/
 	@ResponseBody
 	@RequestMapping(params="type=save",method=RequestMethod.POST)
 	public int orgSave(HttpSession session, Model model,OrgVo vo) throws Exception{
-		// 조직 추가
 		int result = oService.orgSave(vo);
 		return result;
 		
 	}
 	
+	/*
+	* 조직 삭제
+	* 
+	*/
 	@ResponseBody
 	@RequestMapping(params="type=delt",method=RequestMethod.POST)
 	public int orgDelete(HttpSession session, Model model,OrgVo vo) throws Exception {

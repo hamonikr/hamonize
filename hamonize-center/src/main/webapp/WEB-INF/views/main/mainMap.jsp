@@ -82,7 +82,6 @@
                                             </div>
                                         </div>
                                         <div class="overview-chart">
-                                            <!-- <canvas id="widgetChart1"></canvas> -->
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +99,6 @@
                                             </div>
                                         </div>
                                         <div class="overview-chart">
-                                            <!-- <canvas id="widgetChart2"></canvas> -->
                                         </div>
                                     </div>
                                 </div>
@@ -118,15 +116,13 @@
                                             </div>
                                         </div>
                                         <div class="overview-chart">
-                                            <!-- <canvas id="widgetChart3"></canvas> -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <h2 class="title-1 m-b-25">PC사용현황 <span id="topInfo"> </span></h2>
-                        <iframe src="http://192.168.0.76:3000/d-solo/0acW0zWnz/new-dashboard-copy?orgId=1&refresh=10s&panelId=4" width="100%" height="350" frameborder="0"></iframe>
-                       
+                            <iframe src="http://10.8.0.2:3000/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0"></iframe>                       
                         <div class="row m-t-25" id="list">
                     </div>
                 </div>

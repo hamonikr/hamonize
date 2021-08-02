@@ -390,7 +390,7 @@ function searchView(viewName, page){
                   <option value="0">전체</option>
                   <option value="1">이름</option>
                   <option value="2">ID</option>
-                  <option value="3">소속부서</option>
+                  <option value="3">소속팀</option>
                   <option value="4">사번</option>
               </select>
               <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />

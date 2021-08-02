@@ -36,6 +36,12 @@ public class CurlEqualsHwController {
 	@Autowired
 	IOrgMapper orgMapper;
 
+	/**
+	 * 하드웨어 변경로그 : 에이전트에서 하드웨어의 변경사항이 있을경우 센터로 보냄
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/eqhw")
 	public String getAgentJob(HttpServletRequest request) throws Exception {
 		System.out.println("--- /hmsvc/eqhw ---> ");

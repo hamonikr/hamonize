@@ -26,62 +26,6 @@ public class AgentAptListController {
 	@Value("${apt.ip}") 
 	private static String aptIp;
 	 
-
-// 	public static void main(String[] args) {
-// //		test1();
-
-// 		String apiURL = "https://"+aptIp+"/dists/sgb/main/binary-amd64/Packages";
-// 		System.out.println("apt url aaa : "+apiURL);
-		
-// 		try {
-// 			System.out.println(9%2);
-
-// 			URL url = new URL(apiURL);
-// 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-
-// 			StringBuilder stringBuilder = new StringBuilder();
-
-// 			String inputLine;
-// 			while ((inputLine = bufferedReader.readLine()) != null) {
-// //				stringBuilder.append(inputLine);
-// //				stringBuilder.append(System.lineSeparator());
-				
-// //				System.out.println(inputLine.indexOf("Package"));
-				
-// 				if( inputLine.indexOf("Package") == 0) {
-// 					System.out.println("Package : "+inputLine);
-// 					stringBuilder.append(inputLine);
-// 					stringBuilder.append(System.lineSeparator());
-// 				}
-// 				if( inputLine.indexOf("Version") == 0) {
-// 					System.out.println("Version : "+inputLine);
-// 					stringBuilder.append(inputLine);
-// 					stringBuilder.append(System.lineSeparator());
-// 				}
-// 				if( inputLine.indexOf("Section") == 0) {
-// 					stringBuilder.append(inputLine);
-// 					stringBuilder.append(System.lineSeparator());
-// 				}
-// 				if( inputLine.indexOf("Filename") == 0) {
-// 					stringBuilder.append(inputLine);
-// 					stringBuilder.append(System.lineSeparator());
-// 				}
-				
-// 			}
-
-// 			bufferedReader.close();
-// 			System.out.println(stringBuilder.toString().trim());
-
-// 		} catch (MalformedURLException e) {
-// 			// TODO Auto-generated catch block
-// 			e.printStackTrace();
-// 		} catch (IOException e) {
-// 			// TODO Auto-generated catch block
-// 			e.printStackTrace();
-// 		}
-
-// 	}
-
 	public List<String> getApt() {
 		
 		String apiURL = "http://"+aptIp+"/dists/sgb/main/binary-amd64/Packages";
@@ -95,11 +39,6 @@ public class AgentAptListController {
 
 			String inputLine;
 			while ((inputLine = bufferedReader.readLine()) != null) {
-//				stringBuilder.append(inputLine);
-//				stringBuilder.append(System.lineSeparator());
-				
-//				System.out.println(inputLine.indexOf("Package"));
-				
 				if( inputLine.indexOf("Package") == 0) {
 					list.add(inputLine);
 				}else if( inputLine.indexOf("Version") == 0) {
@@ -115,10 +54,8 @@ public class AgentAptListController {
 			bufferedReader.close();			
 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -138,10 +75,8 @@ public class AgentAptListController {
 				System.out.println(inputLine);
 			in.close();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

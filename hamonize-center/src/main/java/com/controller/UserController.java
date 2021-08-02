@@ -150,7 +150,7 @@ public class UserController {
 			tmp.setSeq(list.get(i));
 			voList.add(tmp);
 		}
-		System.out.println("user 수정---");
+
 		result = userSerivce.userDelete(voList);
 	
 		return result;

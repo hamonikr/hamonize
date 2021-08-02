@@ -10,7 +10,6 @@
 
 <script src="/js/materialize.js"></script>
 <script type="text/javascript">
-//<![CDATA[
 //zTree 셋팅
 	var setting = {
 			view: {
@@ -26,12 +25,6 @@
 				chkboxType: { "Y" : "s", "N" : "ps" }
 			},
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
@@ -43,7 +36,6 @@
 			}
 		};
 	var zNodes =[
-		/* { id:0, pId:"", name:"부대관리", open:true}, */
 		<c:forEach items="${oList}" var="data" varStatus="status" >
 		{ id:"${data.seq}", pId:"${data.p_seq}",
 			<c:if test="${data.section ne 'S'}">
@@ -119,12 +111,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				    });
 				}
 				
-				
 					
 				$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-				//$('form[name=frm] input[name=orgLink]').val(agrs.dataInfo.orgLink);
 				$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-				//$("#orgLank").val(agrs.dataInfo.orgLank);
 		});
 		}	
 		}
@@ -147,12 +136,9 @@ function onCheck(event, treeId, treeNode) {
 			    });
 			}
 			
-			
 				
 			$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-			//$('form[name=frm] input[name=orgLink]').val(agrs.dataInfo.orgLink);
 			$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-			//$("#orgLank").val(agrs.dataInfo.orgLank);
 			
 			
 	});
@@ -605,14 +591,10 @@ var deviceGetSuccess = function(data, status, xhr, groupId){
 	$('#pageGrideInMngrListTb').append(gbInnerHtml);
 
 
-
-
-
 }
 
 
-
-	</script>
+</script>
 	
 	
 	<%@ include file="../template/grid.jsp" %>

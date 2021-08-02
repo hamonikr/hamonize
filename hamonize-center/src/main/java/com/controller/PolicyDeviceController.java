@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.mapper.IPolicyDeviceMapper;
-import com.model.AllowIpInfoVo;
 import com.model.OrgVo;
 import com.model.PolicyDeviceVo;
 import com.paging.PagingUtil;
@@ -45,6 +44,12 @@ public class PolicyDeviceController {
 	@Autowired
 	private IPolicyDeviceMapper policyDeviceMapper;
 	
+	/**
+	 * deviceList 출력
+	 * @param session
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/dmanage")
 	public String manage(HttpSession session, Model model) {
 		
@@ -59,7 +64,6 @@ public class PolicyDeviceController {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-			// FAIL_GET_LIST
 		}
 		model.addAttribute("oList", jsonArray);
 		model.addAttribute("pList",pList);
@@ -107,13 +111,7 @@ public class PolicyDeviceController {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		/*
-		 * vo = dService.deviceApplcView(vo);
-		 * System.out.println("orgvo===="+vo.getPpm_seq()); JSONObject data = new
-		 * JSONObject(); data.put("dataInfo", vo);
-		 * System.out.println("zzzzz"+data.get("ppm_seq"));
-		 */	
+	
 		return data;
 			
 	}
@@ -130,7 +128,7 @@ public class PolicyDeviceController {
 
 		// 페이징
 		
-		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage()); //<input type="hidden" id="MngeListInfoCurrentPage" name="MngeListInfoCurrentPage" value="1">
+		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage()); 
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.LayerPopupPaging, pagingVo); //recordSize, currentPage, blockSize
 		int cnt = policyDeviceMapper.devicePopCount(vo);
 		pagingVo.setTotalRecordSize(cnt);
@@ -143,7 +141,6 @@ public class PolicyDeviceController {
 			jsonObject.put("list", gbList);
 			jsonObject.put("mngeVo", vo);
 			jsonObject.put("pagingVo", pagingVo);
-			//jsonObject.put("ja", ja);
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
@@ -153,11 +150,10 @@ public class PolicyDeviceController {
 		return jsonObject;
 	}
 	
+
 	@ResponseBody
 	@RequestMapping(value = "/dManagePopSave", method=RequestMethod.POST)
 	public Map<String, Object> dManagePopSave(HttpSession session, PolicyDeviceVo vo) throws Exception {
-		////log.info(" -- ctr:ipManagementProc");
-		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		
 		try {

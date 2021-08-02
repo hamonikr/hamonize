@@ -26,7 +26,13 @@ public class LDAPConnection {
 
 	/* connection */
 
-    public void connection(String url, String password) throws NamingException{
+	/**
+	 * ldap 서버에 connection
+	 * @param url
+	 * @param password
+	 * @throws NamingException
+	 */
+	public void connection(String url, String password) throws NamingException{
         Properties env = new Properties();
 
 		System.out.println("ldap url : " +url.trim());
@@ -51,79 +57,16 @@ public class LDAPConnection {
         }
     }
 
-	/* search */
-
-    public void searchUsers() throws NamingException {
-        String searchFilter = "(&(objectClass=inetOrgPerson))";
-		String[] reqAtt = { "cn", "sn","employeeNumber" };
-		
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningAttributes(reqAtt);
-
-		NamingEnumeration users = dc.search("o=tesCom,dc=hamonize,dc=com", searchFilter, controls);
-
-		SearchResult result = null;
-		while (users.hasMore()) {
-			result = (SearchResult) users.next();
-			Attributes attr = result.getAttributes();
-			String name = attr.get("cn").get(0).toString();
-
-			System.out.println(result.getNameInNamespace());
-			System.out.println(attr.get("cn"));
-			System.out.println(attr.get("sn"));
-			System.out.println(attr.get("employeeNumber"));
-		}
-
-	}
-
-    public void searchGroups() throws NamingException {
-	    String searchFilter = "(&(objectClass=organizationalUnit))";
-		String[] reqAtt = { "ou" };
-	
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningAttributes(reqAtt);
-
-		NamingEnumeration depts = dc.search("dc=hamonize,dc=com", searchFilter, controls);
-		SearchResult result = null;
-		while (depts.hasMore()) {
-			result = (SearchResult) depts.next();
-			Attributes attr = result.getAttributes();
-			String name = attr.get("ou").get(0).toString();
-			System.out.println(result.getNameInNamespace());
-			System.out.println(attr.get("ou"));
-		}
-
-	}
-
-    public void getAllUsers() throws NamingException {
-		String searchFilter = "(objectClass=inetOrgPerson)";
-		String[] reqAtt = { "cn", "sn" };
-		SearchControls controls = new SearchControls();
-		controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		controls.setReturningAttributes(reqAtt);
-
-		NamingEnumeration users = dc.search("o=tesCom,dc=hamonize,dc=com", searchFilter, controls);
-
-		SearchResult result = null;
-		while (users.hasMore()) {
-			result = (SearchResult) users.next();
-			Attributes attr = result.getAttributes();
-			String name = attr.get("cn").get(0).toString();
-			System.out.println(result.getNameInNamespace());
-			System.out.println(attr.get("cn"));
-			System.out.println(attr.get("sn"));
-			System.out.println("----------------------");
-		}
-
-	}
-
 	/* add */
+
+	/**
+	 * ldap 서버에 조직 추가
+	 * @param vo
+	 * @throws NamingException
+	 */
 	public void addOu(OrgVo vo) throws NamingException{
 
 		String ouName = vo.getOrg_nm();
-		System.out.println("ouName======" + ouName);
 		Attributes attributes = new BasicAttributes();
 		Attributes comAttributes = new BasicAttributes();
 
@@ -133,11 +76,7 @@ public class LDAPConnection {
 
 		
 		String str = vo.getAll_org_nm();
-		System.out.println("str : "+ str.trim());
-		
 		String[] p_array = str.split("\\|");
-		System.out.println("array.length > "+p_array.length);
-		System.out.println("str.length() > "+ str.length());
 		
 		if(p_array.length > 1){
 				for(int i=p_array.length-1;i>=0;i--) {
@@ -153,11 +92,9 @@ public class LDAPConnection {
 				// 최상위 부서 바로 다음 부서
 				String subStr [] = vo.getP_org_nm().split("\\ -");
 				upperDn = "ou="+subStr[0]+",";
-				System.out.println("upperDn : "+upperDn);
 				baseDn = ","+upperDn + baseDn;
 
 			} else{
-				System.out.println("aaaa : "+vo.getP_seq());
 				baseDn = ",dc=hamonize,dc=com";
 			}
 			
@@ -190,7 +127,13 @@ public class LDAPConnection {
 
 	}
 
-
+	/**
+	 * ldap 서버에 유저 정보 추가
+	 * @param vo
+	 * @param dn
+	 * @param host
+	 * @throws NamingException
+	 */
 	public void addUser(UserVo vo, String dn, String host) throws NamingException{
 		String addUser = "";
 		Attributes attributes = new BasicAttributes();
@@ -200,12 +143,8 @@ public class LDAPConnection {
 		attribute.add("posixAccount");
 		attribute.add("account");
 		attributes.put(attribute);
-
-		System.out.println("dn : "+ dn);
-
 		host = vo.getUser_name()+host;
-		System.out.println("host : "+host);
-	
+
 		// user details
 		attributes.put("cn", vo.getUser_name());
 		attributes.put("gidNumber", vo.getOrg_seq().toString());
@@ -226,6 +165,12 @@ public class LDAPConnection {
 
 	}
 
+	/**
+	 * ldap 서버에 pc 정보 추가
+	 * @param pvo
+	 * @param uvo
+	 * @throws NamingException
+	 */
 	public void addPC(PcMangrVo pvo, UserVo uvo) throws NamingException{
 		Attributes attributes = new BasicAttributes();
 		Attribute attribute = new BasicAttribute("objectClass","ipHost");
@@ -241,20 +186,14 @@ public class LDAPConnection {
 			upperDn += ",ou="+p_array[i];
 			cn += "."+p_array[i];
 		}
-//		cn = uvo.getUser_name()+cn;
 
 		attribute.add("device");
 		attribute.add("extensibleObject");
 		attributes.put(attribute);
 		
 		attributes.put("cn", pvo.getPc_hostname());
-//		attributes.put("cn", cn);
-
 		attributes.put("ipHostNumber", pvo.getPc_vpnip().toString()); 
-		attributes.put("name", pvo.getPc_hostname()); 
-		
-//		attributes.put("member", "uid="+uvo.getUser_name()+",ou=users"+upperDn); 
-		
+		attributes.put("name", pvo.getPc_hostname());	
 		
 		dn = "cn="+pvo.getPc_hostname()+",ou=computers"+upperDn+",dc=hamonize,dc=com";
 
@@ -268,7 +207,12 @@ public class LDAPConnection {
 	}
 
 	/* delete */
-	
+
+	/**
+	 * ldap 서버에 조직 정보 삭제
+	 * @param vo
+	 * @throws NamingException
+	 */
 	public void deleteOu(OrgVo vo) throws NamingException{
 		System.out.println("delete ou all name : " + vo.getAll_org_nm());
 		String baseDn = "dc=hamonize,dc=com";
@@ -305,8 +249,7 @@ public class LDAPConnection {
 
 		NamingEnumeration depts = dc.search(baseDn, searchFilter, controls);
 		SearchResult result = null;	
-		System.out.println("\n---하위 엔트리 조회---");
-
+		
 		List<String> delDn = new ArrayList<>();
 	
 		while (depts.hasMore()) {
@@ -365,6 +308,12 @@ public class LDAPConnection {
 
 	/* update */
 
+	/**
+	 * ldap 서버에 조직이름 업데이트
+	 * @param oldVo
+	 * @param newVo
+	 * @throws NamingException
+	 */
 	public void updateOu(OrgVo oldVo, OrgVo newVo) throws NamingException{
 		String baseDn = "dc=hamonize,dc=com";
 		String upperDn = "";
@@ -450,6 +399,11 @@ public class LDAPConnection {
 
 	}
 
+	/**
+	 * ldap 서버에 pc hostname 업데이트
+	 * @param oldVo
+	 * @param newVo
+	 */
 	public void updatePc(PcMangrVo oldVo, PcMangrVo newVo){
 		String oldDn="";	
 		String newDn="";	
@@ -484,11 +438,13 @@ public class LDAPConnection {
 
 	}
 
+	/**
+	 * ldap 서버에 pc vpn ip 업데이트
+	 * @param pvo
+	 */
 	public void updatePcVpn(PcMangrVo pvo){
 		String dn="";
 		String upperDn="";
-
-		System.out.println("updatePcVpn --- ");
 		ModificationItem[] mods = new ModificationItem[1];
 
 		Attribute mod = new BasicAttribute("ipHostNumber", pvo.getPc_vpnip().toString());
