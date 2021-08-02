@@ -34,7 +34,7 @@ do
         echo "$DATETIME]::::  program access unpossible--> do program is ===>$DO_FILE_PATH" >>$LOGFILE
 
 
-       	sudo chmod 644 $DO_FILE_PATH
+       	# sudo chmod 644 $DO_FILE_PATH
 
 
         INSRET=$INSRET"{\"progrmname\":\"${I}\",\"status_yn\":\"Y\",\"status\":\"ins\",\"datetime\":\"$DATETIME\",\"hostname\":\"$HOSTNAME\",\"uuid\":\"$UUID\"}"
@@ -74,7 +74,8 @@ do
        	DO_FILE_PATH=`echo $DO_WHEREISPROGRM | awk '{print $2}'`
         echo "$DATETIME]:::: program access possible->do program is ===>$DO_FILE_PATH" >>$LOGFILE
 
-       	sudo chmod 755 $DO_FILE_PATH
+        # hamonize_program_mngr service 에서 프로그램 차단을 실행한다.
+       	# sudo chmod 755 $DO_FILE_PATH
 
 
         INSRET=$INSRET"{\"progrmname\":\"${I}\",\"status_yn\":\"N\",\"status\":\"del\",\"datetime\":\"$DATETIME\",\"hostname\":\"$HOSTNAME\",\"uuid\":\"$UUID\"}"

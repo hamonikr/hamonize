@@ -1,23 +1,33 @@
 #!/bin/bash  
 
+(
+RUID=$(who | awk 'FNR == 1 {print $1}')
+RUSER_UID=$(id -u ${RUID})
+DISPLAY=:0  sudo -u ${RUID} DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${RUSER_UID}/bus" /usr/share/hamonize-agent/shell/hamonize-noti-1.0.0.AppImage --no-sandbox
+
+
+) & {
 
 UUID=`cat /etc/uuid |head -1`
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 HOSTNAME=`hostname`
 BKDIR="/timeshift/snapshots"
 centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
-BK_END_CENTERURL="http://${centerUrl}/backup/setEndBackupRecoveryJob"
-BK_START_CENTERURL="http://${centerUrl}/backup/setStartBackupRecoveryJob"
-LOGFILE="/var/log/hamonize/agentjob/agentjob_backup_recovery.log"
-sudo touch $LOGFILE
 
-DEVICE="/dev/sda4"
+# BK_RECOV_CENTERURL="http://192.168.0.116:8080/act/stBackupRecoveryJob"
+BK_RECOV_CENTERURL="http://${centerUrl}/act/stBackupRecoveryJob"
+
+LOGFILE="/var/log/hamonize/agentjob/agentjob_backup_recovery.log"
+# sudo touch $LOGFILE
+
+DEVICE=`df | grep -w "/" | awk '{print $1}'`
 DIR_NAME="/tmp/backuptest";
 BACKUP_NAME=`cat /etc/hamonize/recovery/recoveryInfo.hm`
+# BACKUP_NAME="2021-07-13_16-01-42"
 
-if [ ! -d $DIR_NAME ]; then 
-	mkdir ${DIR_NAME} 
-	touch ${LOGFILE} 
+
+if [ ! -f "$LOGFILE" ]; then
+	sudo touch $LOGFILE
 fi
 
 
@@ -32,54 +42,78 @@ BK_RECOV_JSON="{\
 
 echo ${BK_RECOV_JSON} >> ${LOGFILE}
 
-RET_RECOV=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$BK_RECOV_JSON" $BK_START_CENTERURL`
+# RET_RECOV=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$BK_RECOV_JSON" $BK_START_CENTERURL`
+# echo "---------------------->$RET_RECOV">>$LOGFILE
 
-echo "---------------------->$RET_RECOV">>$LOGFILE
-
-
+# ./hamonikrvdidemo-1.0.0.AppImage
 echo "$DATETIME] backup recovery start==========================" >> ${LOGFILE}
-(
-	echo \n * | sudo sudo timeshift --restore --snapshot "$BACKUP_NAME" --target "$DEVICE" --skip-grub --yes
-) & {
+BKLOG="$UUID|$DATETIME|$BKNAME|$HOSTNAME|$BKDIR|"
 
-	i="0"
-	while (true)
-	do
-		proc=$(ps aux | grep -e "timeshift*" | head -1 | awk '{print $NF}')
-		if [ "$proc" = "timeshift*" ]; then 
+BK_JSON="{\
+		\"events\" : [ {\
+		\"datetime\":\"$DATETIME\",\
+		\"uuid\":\"$UUID\",\
+		\"hostname\": \"$HOSTNAME\",\
+		\"action_status\": \"Y\",\
+		\"name\": \"$BACKUP_NAME\",\
+		\"result\": \"N\",\
+		\"dir\": \"$BKDIR\"\
+		} ]\
+}"
+
+echo ${BK_JSON} >> ${LOGFILE}
+
+RETBAK=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$BK_JSON" $BK_RECOV_CENTERURL`
+echo $RETBAK >> ${LOGFILE}
+
+
+
+echo "$NOWDATE] backup end==========================" >> ${LOGFILE}
+echo \n * | sudo sudo timeshift --restore --snapshot "$BACKUP_NAME" --target "$DEVICE" --skip-grub --yes >> ${LOGFILE}
+
+
+# (
+# 	echo \n * | sudo sudo timeshift --restore --snapshot "$BACKUP_NAME" --target "$DEVICE" --skip-grub --yes
+# ) & {
+
+# 	i="0"
+# 	while (true)
+# 	do
+# 		proc=$(ps aux | grep -e "timeshift*" | head -1 | awk '{print $NF}')
+# 		if [ "$proc" = "timeshift*" ]; then 
 		    
-			echo "end=====================" >> ${LOGFILE}
-			echo "curl send data ==========+" >> ${LOGFILE}		   
+# 			echo "end=====================" >> ${LOGFILE}
+# 			echo "curl send data ==========+" >> ${LOGFILE}		   
 
-			BKLOG="$UUID|$DATETIME|$BKNAME|$HOSTNAME|$BKDIR|"
+# 			BKLOG="$UUID|$DATETIME|$BKNAME|$HOSTNAME|$BKDIR|"
 
-			BK_JSON="{\
-			       \"events\" : [ {\
-			       \"datetime\":\"$DATETIME\",\
-			       \"uuid\":\"$UUID\",\
-			       \"name\": \"$BKNAME\",\
-			       \"hostname\": \"$HOSTNAME\",\
-			       \"dir\": \"$BKDIR\"\
-			       } ]\
-			}"
+# 			BK_JSON="{\
+# 			       \"events\" : [ {\
+# 			       \"datetime\":\"$DATETIME\",\
+# 			       \"uuid\":\"$UUID\",\
+# 			       \"name\": \"$BKNAME\",\
+# 			       \"hostname\": \"$HOSTNAME\",\
+# 			       \"dir\": \"$BKDIR\"\
+# 			       } ]\
+# 			}"
 
-			echo ${BK_JSON} >> ${LOGFILE}
+# 			echo ${BK_JSON} >> ${LOGFILE}
 
-			RETBAK=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$BK_JSON" $BK_END_CENTERURL`
-			echo $RETBAK >> ${LOGFILE}
+# 			RETBAK=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$BK_JSON" $BK_RECOV_CENTERURL`
+# 			echo $RETBAK >> ${LOGFILE}
 
 
 
-			echo "$NOWDATE] backup end==========================" >> ${LOGFILE}
+# 			echo "$NOWDATE] backup end==========================" >> ${LOGFILE}
 
-			break;
+# 			break;
 	   
-		fi
-                done
-		exit 
-} 
+# 		fi
+#                 done
+# 		exit 
+# } 
 
-
+}
 
 
 

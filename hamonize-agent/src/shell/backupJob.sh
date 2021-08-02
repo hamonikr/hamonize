@@ -9,26 +9,30 @@ centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | 
 BKCENTERURL="http://${centerUrl}/backup/setBackupJob"
 LOGFILE="/var/log/hamonize/agentjob/agentjob_backup.log"
 
-sudo touch $LOGFILE
+# sudo touch $LOGFILE 
 sudo cat /dev/null > $LOGFILE
-DEVICE="/dev/sda3"
+DEVICE=`df | grep -w "/" | awk '{print $1}'`
 DIR_NAME="/tmp/backuptest";
 BKGUBUN="B"
 
  
-if [ ! -d $DIR_NAME ]; then 
-	mkdir ${DIR_NAME} 
-	touch ${LOGFILE} 
+if [ ! -f "$FILE" ]; then
+	sudo touch $LOGFILE
 fi
+
+# if [ ! -d $DIR_NAME ]; then 
+# 	mkdir ${DIR_NAME} 
+# 	touch ${LOGFILE} 
+# fi 
 
 
 
 echo "$DATETIME] backup start==========================" >> ${LOGFILE}
 (
-	sed -i "s/exclude\" \: \[/exclude\" \: \[\n    \"\/rescue\/**\"/g" /etc/timeshift.json
-	sudo timeshift --snapshot-device "$DEVICE" --scripted --create --comments "bak test"  >> ${LOGFILE}
+	# sed -i "s/exclude\" \: \[/exclude\" \: \[\n    \"\/rescue\/**\"/g" /etc/timeshift.json
+	sudo timeshift --snapshot-device "$DEVICE" --scripted --create --comments "backup"  >> ${LOGFILE}
 
-) & {
+) && {
 
 	i="0"
 	while (true)
@@ -55,7 +59,7 @@ echo "$DATETIME] backup start==========================" >> ${LOGFILE}
 			}"
 
 			echo ${BK_JSON} >> ${LOGFILE}
-
+			echo ${BKCENTERURL} >> ${LOGFILE} 
 			RETBAK=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$BK_JSON" $BKCENTERURL`
 			echo $RETBAK >> ${LOGFILE}
 

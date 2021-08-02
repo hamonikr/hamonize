@@ -10,31 +10,39 @@ const Poller = require('./Poller');
 var filePath="/etc/hamonize/agent/";
 var fileName="agentJob.txt";
 var schedule = require('node-schedule'); 
-var uuidVal=getUUID()
+var uuidVal=getUUID();
 FnMkdir();
 
 var centerUrl=getCenterInfo();
 
 
 function myFunc(arg) {
+
+	sysInfo();
+  
+	loginInfoAction();
+	
 	var backupData = backupFileData();
 	log.info("myFuncBackupData---_" + backupData);
 	if( backupData != "" ){
+		// console.log(schedule.scheduledJobs);
+        // var chkCronJob = JSON.stringify(schedule.scheduledJobs);
+		var chkCronJob = schedule.scheduledJobs;
+		// console.log("chkCronJob============================+"+ chkCronJob.cronbackup);
+        // obj = JSON.parse(chkCronJob);
 
-        var chkCronJob = JSON.stringify(schedule.scheduledJobs);
-        obj = JSON.parse(chkCronJob);
-
-        if( typeof obj.cronbackup  == 'undefined' ){
+        // if( typeof chkCronJob.cronbackup  == 'undefined' ){
                 schedule.cancelJob('cobj.cronbackuponbackup');
                 fnBackupJob(backupData);
-                log.info("//==Cron Backup Job status is : "+ JSON.stringify(schedule.scheduledJobs));
-        }else{
-                log.info("//==dont cron backup job");
-        }
+                log.info("//==Cron Backup Job status is : "+ schedule.scheduledJobs);
+        // }else{
+        //         log.info("//==dont cron backup job");
+        // }
 	}
 } 
 
 
+// setTimeout(myFunc, 6000, 'funky');
 function hamonizeVersion() {
 
 	var exec = require('child_process').exec;
@@ -47,8 +55,9 @@ function hamonizeVersion() {
 
 
 // Set 1s timeout between polls
-// note: this is previous request + processing time + timeout
-let poller = new Poller(10000); 
+// note: this is previous request + processing time + timeout	
+// let poller = new Poller(10000); 
+let poller = new Poller(60000); 
 //let poller = new Poller(600000); 
 
 // Wait till the timeout sent our event to the EventEmitter
@@ -56,19 +65,25 @@ poller.onPoll(() => {
     log.info("//====agent polling start====")
 	
 	getProgrmDataCall( uuidVal ); // o
-	getDeviceDataCall( uuidVal ); // o 
-	// getNxssDataCall( uuidVal ); // 0
+	getDeviceDataCall( uuidVal ); //  Call 비인가 디바이스 정책 
 	getUpdtDataCall( uuidVal );	// o
 	getRecoveryDataCall( uuidVal );
 	getFirewallDataCall( uuidVal ); // o
 	ipStatusCheck();
 	hamonizeVersion();
-	
+	getBackupDataCall(uuidVal );
+
+	sendToCenter_unauth();	// 비인가 디바이스 로그 전송 	
+
 	poller.poll(); // Go for the next poll
 });
 
 // Initial start
 poller.poll();
+
+var readline = require('readline');
+
+
 
 //========================================================================
 //== ip status check  Job=============================================================
@@ -155,19 +170,27 @@ function fnFirewallJob(retData){
 function getRecoveryDataCall(uuid){
 
 //	Recovery 정책 정보 조회
+	uuid = '2c6777e5d8a349fb92a14e65ad961447';
 	var setUrl = "http://"+centerUrl+"/getAgent/recov?name="+uuid;
+	log.info("getRecoveryDataCall==="+ setUrl);
 	http.get(setUrl, (res) => {
 		res.on('data', (data) => {
-				log.info("//== Recovery data is : " + data);
-				//fnRecovJob(data);
-				if( data != 'nodata'  ){
+				log.info("//===11111111111111111111111111===getRecoveryDataCall= Recovery data is : " + data);
+				log.info("updtRecovObj===================+++++"+ JSON.stringify(data));
+				// if(  !data  && data != "nodata" ){
 
+					
+				if(  data != "nodata" && data != "{}"){
+					// if( updtRecovObj.NAME != "undefined" ) {
+						
 					var updtRecovObj = JSON.parse(data);
+				
 					log.info("//====================================");
 					log.info("//==RecovObj Data is : "+ JSON.stringify(updtRecovObj));
 					log.info("//==RecovObj.PATH Data is : "+ JSON.stringify(updtRecovObj.PATH));
 					log.info("//==RecovObj.NAME Data is : "+ JSON.stringify(updtRecovObj.NAME));
 					log.info("//====================================");
+						
 
 					var fileDir = "/etc/hamonize/recovery/recoveryInfo.hm";
 					let content = updtRecovObj.NAME;
@@ -175,12 +198,14 @@ function getRecoveryDataCall(uuid){
 						if(err){
 							log.info("//== getRecoveryDataCall() error  "+ err.message)
 						}
-						fnRecovJob(content);
+						// fnRecovJob(content);
 					});
 				} else {
 					log.info("//================getRecoveryDataCall not working ===================")
 					log.info("//===================================================================")	
 				}
+
+				
 		});
 	}).on('error', (e) => {log.info(e);});
 }
@@ -414,19 +439,87 @@ function getDeviceDataCall(uuid){
 	}).on('error', (e) => {log.info(e);});
 }
 
-function sendToCenter_result(product, vendorCode, prodcutCode, statusyn){
+
+
+
+async function fnDeviceJob(retData){
+	log.info("==== backup ====");
+
+	var deviceDataObj = JSON.parse(retData);
+	// var deviceDataObj = JSON.parse('{"INS":"aaaa-1234:qwer"}');
+	// var deviceDataObj = JSON.parse('{"INS":"USB-046d:c534,aaaa-1234:qwer"}');
+	
+	// log.info("//====================================");
+	// log.info("//==deviceDataObj Data is : "+ JSON.stringify(deviceDataObj));
+	// log.info("//==deviceDataObj.INS Data is : "+ JSON.stringify(deviceDataObj.INS));
+	// log.info("//==deviceDataObj.DEL Data is : "+ JSON.stringify(deviceDataObj.DEL));
+	// log.info("//====================================");
+
+	var os = new os_func();
+	os.execCommand("sudo /usr/local/bin/center-lockdown").then(res=> {
+		log.info("====centor-lockdown load --- > success\n");
+		fnDeviceJob_result(deviceDataObj,'Y')
+		
+	}).catch(err=> {
+		log.info("====centor-lockdown load --- > fail\n");
+		fnDeviceJob_result(deviceDataObj,'N')
+	})
+	
+}
+
+
+// 비인가 디바이스 정책 배포 결과 전송
+function fnDeviceJob_result(deviceDataObj, statusyn){
+	// product, vendorCode, prodcutCode, statusyn){
 
 	var os = require("os");
 	var hostname = os.hostname();
-	log.info("hostname : "+hostname);
+	var deviceInsData = "";
+	if( typeof deviceDataObj.INS  != 'undefined'  ){
+		deviceInsData = deviceDataObj.INS;
+	}else if( typeof deviceDataObj.DEL  != 'undefined'  ){
+		deviceInsData = deviceDataObj.DEL;
+	}
 
-	log.info("centerUrl : "+centerUrl);
+	let devicePolicyResult = "";
+	var arrSetData = new Array(); 
 
-	var events = "[{hostname:"+hostname+",uuid:"+uuidVal+", procudt:"+product+", vendorCode:"+vendorCode+", productCode:"+prodcutCode+", statusyn:"+statusyn+"}]";
+	var arrDeviceInsData = deviceInsData.split(","); 
+	for( var a in arrDeviceInsData){
+		var product = arrDeviceInsData[a].split(",")[0].split("-")[0];
+		var vendorCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[0];
+		var prodcutCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[1];
+
+		console.log("arrDeviceInsData=====++"+ arrDeviceInsData);
+		console.log("product=====++"+ product);
+		console.log("vendorCode=====++"+ vendorCode);
+		console.log("prodcutCode=====++"+ prodcutCode);
+		console.log("uuidVal=====++"+ uuidVal);
+		
+
+		var setData = new Object(); 
+		setData.hostname = hostname;
+		setData.uuidVal = uuidVal.trim();
+		setData.product = product;
+		setData.productCode = prodcutCode;
+		setData.vendorCode = vendorCode;
+		setData.statusyn = statusyn;
+		
+		arrSetData.push(setData);
+
+	}
+
+	
+	let eventsData = {
+		events : arrSetData
+	};
+	
+	console.log("arrPointHistory==="+JSON.stringify(eventsData));
+
 	
 	request.post('http://'+centerUrl+'/act/deviceAct', {
 		json: {
-			events: [{hostname:hostname,uuid:uuidVal, procut:product, vendorCode:vendorCode, productCode:prodcutCode, statusyn:statusyn}]	
+			events : arrSetData
 	  	}
 	}, (error, res, body) => {
 		if (error) {
@@ -439,39 +532,92 @@ function sendToCenter_result(product, vendorCode, prodcutCode, statusyn){
 
 }
 
-function os_func() {
-    this.execCommand = function (cmd) {
-        return new Promise((resolve, reject)=> {
-	var exec = require('child_process').exec;
-           exec(cmd, (error, stdout, stderr) => {
-             if (error) {
-                reject(error);
-                return;
-            }
-            resolve(stdout)
-           });
-       })
-   }
-}
 
-async function fnDeviceJob(retData){
-	log.info("==== backup ====");
+function sendToCenter_unauth(){
 
-	var deviceDataObj = JSON.parse(retData);
-	log.info("//====================================");
-	log.info("//==deviceDataObj Data is : "+ JSON.stringify(deviceDataObj));
-	log.info("//==deviceDataObj.INS Data is : "+ JSON.stringify(deviceDataObj.INS));
-	log.info("//==deviceDataObj.DEL Data is : "+ JSON.stringify(deviceDataObj.DEL));
-	log.info("//====================================");
+	log.info("--- sendToCenter_unauth start----");
 
-	var os = new os_func();
-	os.execCommand("sudo /usr/local/bin/center-lockdown").then(res=> {
-				log.info("====centor-lockdown load --- > success\n");
-			}).catch(err=> {
-				log.info("====centor-lockdown load --- > fail\n");
-			})
+	if (fs.existsSync('/etc/hamonize/usblog/usb-unauth.hm')){
+		var events_str = fs.readFileSync('/etc/hamonize/usblog/usb-unauth.hm', 'utf8');
+		
+		events_str = events_str.replace(/'/g,'\"');
+		events_str = events_str.replace(/\n/g,',').slice(0,-1);
+		
+		var data = '{"events": [ '+events_str+' ]}';
+		console.log("data==== : "+ data);
+		var events = JSON.parse(data);
+
+
+		request.post('http://'+centerUrl+'/hmsvc/unauth', {
+			json: events
+		}, (error, res, body) => {
+			if (error) {
+				console.error(error);
+					return
+			}
+		  	console.log(`statusCode: ${res.statusCode}`);
+		  	console.log(body);
+		})
+		fs.unlinkSync('/etc/hamonize/usblog/usb-unauth.hm');
+	}
 	
 }
+
+
+async function usbUnauthProc(filename){	
+	
+	const usbUnauthProcVal = await aWaitGetUsbLogFile(filename);
+	let eventsData = {
+		events : [
+			usbUnauthProcVal
+		]
+	};
+
+	console.log(eventsData);
+	
+	request.post('http://'+centerUrl+'/hmsvc/unauth', {
+		json: {
+			eventsData
+	  	}
+	}, (error, res, body) => {
+
+		console.log("res---"+ JSON.stringify(res));
+		console.log(body)
+		if (error) {
+			console.error(error)
+	    		return
+		}
+	  	console.log(`statusCode: ${res.statusCode}`)
+	  	
+	})
+
+}
+
+function aWaitGetUsbLogFile(filename) {
+	const exec = require('child_process').exec;
+	return new Promise((resolve, reject) => {
+		let usbLogData = "";
+		const lineReader = require('line-reader');
+		lineReader.eachLine(filename, (line, last) => {
+			
+			if( !last){
+				usbLogData += line + ",";
+			}else {
+				usbLogData += line;
+				resolve(usbLogData);
+			}
+
+		});
+	});
+}
+
+
+function sendUsbUnauth(){
+	var filename = '/etc/hamonize/usblog/usb-unauth.hm';
+	usbUnauthProc(filename);
+}
+
+
 //========================================================================
 //== Progrm Job=============================================================
 //========================================================================
@@ -548,13 +694,14 @@ function getBackupDataCall(uuid){
 		});
 	}).on('error', (e) => {log.info(e);});
 }
-
+// fnBackupJob('a');
 function fnBackupJob(retData){
-	log.info("==== backup ===="+ retData);
+	log.info("==== backup ========================= data ::: "+ retData);
 
 //	 데이터 sample
 // 주별	//{"backup":[{"cycle_time":"21:30","cycle_option":"mon,tue","Bac_gubun":"D"}]}
-// 일		//{"backup":[{"cycle_time":"21:30","cycle_option":"","Bac_gubun":"E"}]}
+// 일		
+// retData='{"backup":[{"cycle_time":"01:30","cycle_option":"","Bac_gubun":"E"}]}';
 // 월		//{"backup":[{"cycle_time":"21:30","cycle_option":"2019\/06\/12","Bac_gubun":"M"}]} 
 
 	if( retData == "nodata"){
@@ -580,11 +727,10 @@ function fnBackupJob(retData){
 //[Seconds: 0-59], [Minutes: 0-59], [Hours: 0-23], 
 //[Day of Month: 1-31], [Months: 0-11 (Jan-Dec)], [Day of Week: 0-6 (Sun-Sat)]
 
-//	주별
+// //	주별
 	if( backup_gubun == 'D' ){
 		schedule.cancelJob('cronbackup');
 		const scheduler = schedule.scheduleJob('cronbackup', '01 '+minutes+' '+hours+' * * '+backup_cycle, 
-//		const scheduler = schedule.scheduleJob('cronbackup', '* */'+minutes+' * *  *', 
 		function(){ 
 			log.info('//=====backup cycle all day of week : ' + hours+"/"+ minutes +"=="+ backup_cycle ); 
 			var exec = require('child_process').exec;
@@ -598,24 +744,33 @@ function fnBackupJob(retData){
 			});
 		});
 	}
-//	일별
-	if( backup_gubun == 'E' ){
-		schedule.cancelJob('cronbackup');
-		const scheduler = schedule.scheduleJob('cronbackup', '01 '+minutes+' '+hours+' * * *', function(){ 
-			log.info('//=====backup cycle all day : ' + hours+"/"+ minutes +"=="+ backup_cycle); 
-			var exec = require('child_process').exec;
-			exec(' sudo sh /usr/share/hamonize-agent/shell/backupJob.sh  ', function (err, stdout, stderr) {
-				log.info('//=====backup cycle all daystdout: ' + stdout);
-				log.info('//=====backup cycle all daystderr: ' + stderr);
-
-				if (err !== null) {
-					log.info('//=====backup cycle all dayerror: ' + err);
-				}
-			});
-		});
-	}
+// //	일별
+if( backup_gubun == 'E' ){
+	schedule.cancelJob('cronbackup');
+	log.info("backup_gubun=1111111111111111========+"+backup_gubun);
+	// const scheduler = schedule.scheduleJob('cronbackup', '01 '+minutes+' '+hours+' * * *', function(){ 
+	// 	console.log("일별 백업 스케쥴");
+	// });
+	// const scheduler = schedule.scheduleJob('cronbackup', '01 '+minutes+' '+hours+' * * *', function(){ 
 	
-//	월별
+	const scheduler = schedule.scheduleJob('cronbackup', '01 '+minutes+' * * * *', function(){ 
+		log.info('//=====backup cycle all day : ' + hours+"/"+ minutes +"=="+ backup_cycle); 
+		var exec = require('child_process').exec;
+		
+		exec(' sudo sh /usr/share/hamonize-agent/shell/backupJob.sh  ', function (err, stdout, stderr) {
+			// exec(' sudo sh /home/ryan/works_job/2021/rnd/rnd_gs/agent/src/shell/backupJob.sh  ', function (err, stdout, stderr) {
+
+			log.info('//=====backup cycle all daystdout: ' + stdout);
+			log.info('//=====backup cycle all daystderr: ' + stderr);
+
+			if (err !== null) {
+				log.info('//=====backup cycle all dayerror: ' + err);
+			}
+		});
+	});
+}
+	
+// //	월별
 	if( backup_gubun == 'M' ){
 		var month = backup_cycle.split("/")[1];
 		var day = backup_cycle.split("/")[2];
@@ -681,13 +836,10 @@ function getCenterInfo(){
        	var array = fs.readFileSync('/etc/hamonize/propertiesJob/propertiesInfo.hm').toString().split("\n");
 	for(i in array) {
 		if( array[i].indexOf("CENTERURL") != -1   ){
-			console.log("1---" + array[i]);
 			var centerData = array[i].split("=");
-			console.log("h1===" + centerData[0]);
-			console.log("h2===" + centerData[1]);
 			retval = centerData[1];
-		}else{
-			console.log("2---" + array[i]);
+		// }else{
+			// console.log("2---" + array[i]);
 		}
 	} 
 	return retval;
@@ -700,6 +852,12 @@ function getUUID(){
 	return text;
 }
 
+function getHwpInfo(filename){
+	var text = fs.readFileSync('/etc/hamonize/hwinfo/' + filename, 'utf8');
+	log.info("//== pc hw ifon is : " + text);
+	return text;
+}
+
 
 function FnMkdir(){
 	FnProgrmMkdir();
@@ -709,8 +867,33 @@ function FnMkdir(){
 	FnSecurityMkdir();
 	FnFirewallMkdir();
 	FnRecoveryMkdir();
+	FnHwInfoMkdir();
 }
 
+
+
+function FnHwInfoMkdir(){
+
+	log.info("FnHwInfoMkdir----");
+	try{
+		 fs.lstatSync("/etc/hamonize/hwinfo").isDirectory();
+	}catch(e){
+	   // Handle error
+	   if(e.code == 'ENOENT'){
+		   log.info("//==mkdir directory");
+
+			var exec = require('child_process').exec;
+			exec(" sudo mkdir /etc/hamonize/hwinfo/ && sudo touch /etc/hamonize/hwinfo/hwinfo.hm ", 
+				function (err, stdout, stderr) {
+					log.info('//==stdout: ' + stdout);
+					log.info('//==stderr: ' + stderr);
+					if (err !== null) {
+						log.info('//== mkdir error: ' + err);
+					}
+			});
+	   }
+	}
+}
 
 
 function FnProgrmMkdir(){
@@ -735,6 +918,7 @@ function FnProgrmMkdir(){
 	   }
 	}
 }
+
 
 function FnSiteBlockMkdir(){
 
@@ -869,7 +1053,7 @@ function FnRecoveryMkdir(){
 
 			var exec = require('child_process').exec;
 			exec(" " + 
-					" sudo mkdir /etc/hamonize/recovery/ && sudo  touch /etc/hamonize/recovery/recoveryInfo.hm ", 
+					" sudo mkdir /etc/hamonize/recovery/ && sudo  touch /etc/hamonize/recovery/recoveryInfo.hm  && touch /var/log/hamonize/agentjob/agentjob_backup_recovery.log", 
 				function (err, stdout, stderr) {
 					log.info('//==stdout: ' + stdout);
 					log.info('//==stderr: ' + stderr);
@@ -880,3 +1064,166 @@ function FnRecoveryMkdir(){
 	   }
 	}
 }
+
+
+
+function execShellCommand(cmd) {
+	const exec = require('child_process').exec;
+	return new Promise((resolve, reject) => {
+	 exec(cmd, (error, stdout, stderr) => {
+	  if (error) {
+	   console.warn(error);
+	  }
+	  resolve(stdout? stdout : stderr);
+	 });
+	});
+}
+
+
+
+function os_func() {
+    this.execCommand = function (cmd) {
+        return new Promise((resolve, reject)=> {
+	var exec = require('child_process').exec;
+           exec(cmd, (error, stdout, stderr) => {
+             if (error) {
+                reject(error);
+                return;
+            }
+            resolve(stdout)
+           });
+       })
+   }
+}
+
+
+// HW chk =====================================
+const sysInfo = async() => {
+	let retData = {}
+	log.info("sysInfo.... ");
+
+//		await execSetHostname(pcnum)
+
+const si = require('systeminformation');
+
+	const cpu = await si.cpu(); // CPU Info
+	
+	let cpuinfo = ` ${cpu.manufacturer} ${cpu.brand} ${cpu.speed}GHz`;
+	cpuinfo += ` ${cpu.cores} (${cpu.physicalCores} Physical)`;
+	
+	let cpuinfoMd5 = ` ${cpu.manufacturer} ${cpu.brand}`;
+	cpuinfoMd5 += ` ${cpu.cores} (${cpu.physicalCores} Physical)`;
+
+	const disk = (await si.diskLayout())[0]; // Disk Info
+	const size = Math.round(disk.size / 1024 / 1024 / 1024);
+	let diskInfo = ` ${disk.vendor} ${disk.name} ${size}GB ${disk.type} (${disk.interfaceType})`;
+	let diskSerialNum = disk.serialNum;
+
+	const os = await si.osInfo(); //OS Info
+	let osinfo = ` ${os.distro} ${os.release} ${os.codename} (${os.platform})`;
+
+	let osinfoKernel = ` ${os.kernel} ${os.arch}`;
+
+	const ram = await si.mem(); // RAM Info
+	const totalRam = Math.round(ram.total / 1024 / 1024 / 1024);
+	let raminfo = ` ${totalRam}GB`;
+
+	const ipinfo = require("ip");		//	get os ip address
+	const pcuuid = (await si.uuid()); 	//	 get os mac address 
+
+	const machineIdSync = require('node-machine-id').machineIdSync;
+	let machindid = machineIdSync({original: true});
+
+
+	const pcHostname = await execShellCommand('hostname');
+	const cpuid = await execShellCommand('dmidecode -t 4|grep ID');
+	const usernm = await execShellCommand('users');
+	
+	let md5 = require('md5');
+	// var hwinfoMD5 = cpuinfoMd5.replace(/\s/g, "") + diskInfo.replace(/\s/g, "") + diskSerialNum.replace(/\s/g, "") 
+	// 	+ osinfoKernel.replace(/\s/g, "") + raminfo.replace(/\s/g, "") + machindid.replace(/\s/g, "");
+	
+	let hwinfoMD5 = cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	// console.log("==="+hwinfoMD5+"----")
+
+	
+	let hwData = md5(hwinfoMD5);
+
+	const base_hwinfo = getHwpInfo("hwinfo.hm");
+	
+	let isSendYn = false;
+	if( hwData.trim() == base_hwinfo.trim() ){
+		console.log("eq========" +hwData +"=="+ base_hwinfo);
+		isSendYn = false;
+	}else{
+		isSendYn = true;
+		let fileDir = "/etc/hamonize/hwinfo/hwinfo.hm";
+		fs.writeFile(fileDir, hwData, (err) => {
+			if(err){
+				log.info("//== sysInfo hw check() error  "+ err.message)
+			}
+		});
+		console.log("not eq========"+hwData+"==="+base_hwinfo);
+	}
+
+
+	if(isSendYn){
+
+		var unirest = require('unirest');
+		unirest.post('http://'+centerUrl+'/hmsvc/eqhw')
+		.header('content-type', 'application/json')
+		.send( {
+			events:[{
+				datetime: 'datetime',
+				hostname: pcHostname,
+				memory: raminfo,
+				cpuid: cpuid,
+				hddinfo: diskInfo,
+				hddid: diskSerialNum,
+				ipaddr: ipinfo.address(),
+				uuid: machindid,
+				user: usernm,
+				macaddr: pcuuid.macs,
+				cpuinfo: cpuinfo
+			}]
+		} )
+		.end(function (response) {
+			// console.log("response.body==="+JSON.stringify(response));
+			console.log("\nbbbresponse.body==="+response.body);
+		});
+	}
+
+
+  }
+
+
+  const loginInfoAction = async() => {
+	log.info("=========login=======================");
+	var moment = require('moment'); 
+	require('moment-timezone'); 
+	moment.tz.setDefault("Asia/Seoul"); 
+	var date = moment().format('YYYY-MM-DD HH:mm:ss'); 
+
+	const machineIdSync = require('node-machine-id').machineIdSync;
+	let machindid = machineIdSync({original: true});
+
+	var unirest = require('unirest');
+	unirest.post('http://'+centerUrl+'/act/loginout')
+	.header('content-type', 'application/json')
+	.send( {
+		events:[{
+			datetime: date,
+			uuid: machindid,
+			// user: usernm,
+			gubun: 'LOGIN'
+		}]
+	} )
+	.end(function (response) {
+		// console.log("response.body==="+JSON.stringify(response));
+		console.log("\loginInfoAction      .body==="+response.body);
+	});
+  }
+  
+
+  
+  
