@@ -205,7 +205,6 @@ public class AdminController {
 	public String managerlist(HttpSession session, Model model,AdminVo vo) throws Exception{
 			List<AdminVo> list = new ArrayList<AdminVo>();
 		
-			//AdminVo avo = new AdminVo();
 			// 페이징
 			vo.setCurrentPage(vo.getCurrentPage());
 			vo = (AdminVo) PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, vo);
@@ -228,7 +227,6 @@ public class AdminController {
 		if(vo.getUser_id() != null) {
 			System.out.println("vo==="+vo.toString());
 			AdminVo avo = adminservice.sgbManagerView(vo);
-			//avo.setPass_wd(St);
 			model.addAttribute("result",avo);			
 		}
 		JSONArray orgList = null;

@@ -13,7 +13,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IActAgentDeviceMapper;
@@ -53,8 +52,6 @@ public class ActAgentFirewallController {
 
 	@RequestMapping("/loginout")
 	public void login(HttpServletRequest request) throws Exception {
-		System.out.println("loginoutAct===============================[start]");
-
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
@@ -97,17 +94,11 @@ public class ActAgentFirewallController {
 			retVal = actAgentLogInOutMapper.updateLoginLog(inputVo);
 		}
 
-		System.out.println("\n에이전트에서 받은 값 inputVo : " + inputVo.toString() + "\n");
-		System.out.println("loginoutAct===============================[END]");
-
+	
 	}
 
 	@RequestMapping("/firewallAct")
-	public String firewallAct(HttpServletRequest request) throws Exception {
-		System.out.println("firewallAct===============================[start]");
-		// 출력 변수
-		String output = "";
-
+	public void firewallAct(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
@@ -148,21 +139,17 @@ public class ActAgentFirewallController {
 		int retVal = actAgentFirewallMapper.insertActAgentFirewall(inputVo);
 		System.out.println("retVal ==== " + retVal);
 
-		System.out.println("//===================================");
-		System.out.println("//result data is : " + inputVo);
-		System.out.println("firewallAct===============================[END]");
-		System.out.println("//===================================");
-
-		return output;
 	}
 
-	/// 디바이스 정책 배포 결과
-	@RequestMapping("/deviceAct")
-	public String deviceAct(HttpServletRequest request) throws Exception {
-		System.out.println("deviceAct===============================[start]");
-		// 출력 변수
-		String output = "";
 
+	/**
+	 * 디바이스 정책 배포 결과
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/deviceAct")
+	public void deviceAct(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
@@ -199,21 +186,17 @@ public class ActAgentFirewallController {
 
 		int retVal = actAgentDeviceMapper.insertActAgentDevice(inputVoList);
 		System.out.println("retVal ==== " + retVal);
-
-		System.out.println("//===================================");
-		System.out.println("deviceAct===============================[END]");
-		System.out.println("//===================================");
-
-		return output;
+		
 	}
 
+	/**
+	 * insresert : 프로그램 정책 적용 (ins:적용, del:해제)
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/progrmAct")
-	public String progrmAct(HttpServletRequest request) throws Exception {
-		System.out.println("progrmAct===============================[start]");
-		// 출력 변수
-		String output = "";
-		int uuid = 0;
-
+	public void progrmAct(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
@@ -229,12 +212,7 @@ public class ActAgentFirewallController {
 
 		JSONParser Parser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) Parser.parse(json.toString());
-
-		/**
-		 * ====================================== insresert : 프로그램 정책 적용 (ins:적용,
-		 * del:해제) =======================================
-		 */
-
+	
 		JSONArray insArray = (JSONArray) jsonObj.get("insresert");
 		ActAgentProgrmVo[] inputVo = new ActAgentProgrmVo[insArray.size()];
 
@@ -252,11 +230,6 @@ public class ActAgentFirewallController {
 			}
 		}
 
-		System.out.println("에이전트 프로그램 정책 결과 : inputVo ======================================");
-		for (int i = 0; i < inputVo.length; i++) {
-			System.out.println("updtVo[i]=======" + inputVo[i].toString());
-		}
-
 		Map<String, Object> insertDataMap = new HashMap<String, Object>();
 		insertDataMap.put("list", inputVo);
 
@@ -264,17 +237,16 @@ public class ActAgentFirewallController {
 			actAgentProgrmMapper.insertActAgentProgrm(insertDataMap);
 		}
 
-		System.out.println("progrmAct===============================[END]");
-
-		return output;
 	}
 
+	 /**
+	  * 에이전트에서 복구 실행결과 리턴
+	  * @param request
+	  * @return
+	  * @throws Exception
+	  */
 	@RequestMapping("/stBackupRecoveryJob")
-	public String stBackupRecoveryAct(HttpServletRequest request) throws Exception {
-		System.out.println("stBackupRecoveryAct===============================[start]");
-		// 출력 변수
-		String output = "";
-
+	public void stBackupRecoveryAct(HttpServletRequest request) throws Exception {		
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
@@ -310,29 +282,18 @@ public class ActAgentFirewallController {
 		inputVo.setOrg_seq(uuid);
 
 		int retVal = getAgentRecoveryMapper.insertActAgentBackupRecovery(inputVo);
-		System.out.println("retVal ==== " + retVal);
-		System.out.println("//===================================");
-		System.out.println("//result data is : " + inputVo);
-		System.out.println("stBackupRecoveryAct===============================[END]");
-		System.out.println("//===================================");
-
 		if (retVal >= 1) {
 			/**
 			 * 복구 실행 후 기존 작업 내역 삭제
 			 */
 			ActAgentBackupRecoveryVo retVo = getAgentRecoveryMapper.getDataActAgentBackupRecovery(inputVo);
 
-			System.out.println("retVo========" + retVo);
-			System.out.println("retVo==result======" + retVo.getResult());
-
 			if ("N".equals(retVo.getResult())) {
 				try {
 					int delPolicyVal = getAgentRecoveryMapper.deleteActPolicy(inputVo);
-					System.out.println("delPolicyVal======> " + delPolicyVal);
 					getAgentRecoveryMapper.updateDataActAgentBackupRecovery(inputVo);
 				} catch (Exception e) {
 					System.out.println("e===============" + e.getMessage());
-					return "error";
 				}
 
 			}
@@ -341,7 +302,6 @@ public class ActAgentFirewallController {
 
 		}
 
-		return output;
 	}
 
 	/*

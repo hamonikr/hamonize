@@ -126,7 +126,6 @@ public class BackupRecoveryContoller extends EgovWebUtil{
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		
 		try {
-			//log.info(" ------ vo : " + vo);
 			backupCycleService.backupCycleInsert(vo);
 			
 			jsonObject.put("msg", Constant.Board.SUCCESS_GROUP_BOARD);
@@ -165,7 +164,6 @@ public class BackupRecoveryContoller extends EgovWebUtil{
 		
 		try {
 			GroupVo gvo = new GroupVo();
-//			gvo.setGroup_gubun("group");
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -224,8 +222,6 @@ public class BackupRecoveryContoller extends EgovWebUtil{
 	@RequestMapping("startRecovery.proc")
 	public Map<String, Object> startRecoveryProc(RecoveryVo vo, HttpSession session,
 			HttpServletRequest request) {
-
-		//log.info("---- ctr:startRecovery.proc - vo : " + vo);
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {

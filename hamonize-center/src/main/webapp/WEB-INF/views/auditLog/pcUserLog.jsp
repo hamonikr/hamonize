@@ -37,8 +37,6 @@
 				}
 			},
 			edit: {
-				drag: {
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
@@ -114,7 +112,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$('#pageGrideInListTb').empty();
 		$("#pagginationInList").empty();
 		$("#txtSearch").val("");
-		//$("#keyWord").val("0");
 		$("#currentPage").val(1);
 		if($("#date_fr").val()==""){
 			$("#date_fr").val(getMonthAgoday());
@@ -206,10 +203,7 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td>"+no+"</td>";
 			gbInnerHtml += "<td>"+value.org_nm+"</td>";
 			gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
-	 
-			// gbInnerHtml += "<td>"+value.login_dt.substr(0,value.login_dt.length -4)+"</td>"; 
-			// gbInnerHtml += "<td>"+value.logout_dt.substr(0,value.logout_dt.length -4)+"</td>"; 
-			gbInnerHtml += "<td>"+value.login_dt+"</td>"; 
+	 		gbInnerHtml += "<td>"+value.login_dt+"</td>"; 
 			gbInnerHtml += "<td>"+value.logout_dt+"</td>"; 
 			gbInnerHtml += "<td>"+value.spent_time+"</td>"; 
 			gbInnerHtml += "</tr>";

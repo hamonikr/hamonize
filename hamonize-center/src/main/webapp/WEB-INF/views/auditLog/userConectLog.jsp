@@ -10,7 +10,6 @@
 <script src="/js/views/userLog.js"></script>
 
 <script type="text/javascript">
-//<![CDATA[
 //zTree 셋팅
 	var setting = {
 			view: {
@@ -21,27 +20,12 @@
 					enable: true
 				}
 			},
-			/* check: {
-				enable: true
-			}, */
-			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
+			edit: { 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
 			},
 			callback: {
-				//beforeDrag: beforeDrag,
-				//beforeDrop: beforeDrop,
-				//beforeDragOpen: beforeDragOpen,
-				//onDrag: onDrag,
-				//onDrop: onDrop,
-				//onExpand: onExpand,
 				beforeClick: beforeClick,
 				onClick: onClick
 			}
@@ -167,8 +151,6 @@
 		<article>
 		
 			<div class="code-html contents">
-				<!-- <p id="contentTitle">로딩중..</p>
-				<hr/> -->
 						
 				<div id="grid"></div>
 		    </div>

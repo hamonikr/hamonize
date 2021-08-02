@@ -51,11 +51,6 @@
 				
 			});		
 
-	//   $("li").click(function(){
-	// 	 $("li").removeClass();
-	// 	 $(this).addClass("current");
-	//  }) 
- 
  });
  function numberWithCommas(x) {
 	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -88,19 +83,6 @@ function getMonthAgoday(){
  <div class="hamo_header">
  <div class="admin_info">
             <ul class="admin_sinfo">
-                <%-- <li><div class="dropdown">
-                        <div class="notic">
-                            <img src="/images/icon_setting.png" />
-                            <span></span>
-                        </div>
-                        <div class="dropdown_content" >
-                            <a href="/admin/list.do">관리자 관리</a>
-                            <a href="/admin/managerlist.do">부서 관리</a>
-                            <a href="/gplcs/ipManagement.do">사이트 인프라 관리</a>센터에서 서버인프라 관리하는 페이지
-                            <a href="/research/research.do">통계</a>
-                        </div>
-                    </div>
-                </li> --%>
                 <li><a href="/login/logout.do"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
             </ul>
         </div>
@@ -109,16 +91,10 @@ function getMonthAgoday(){
 
         <div class="menubar">
             <ul>
-                <%-- <li><a href="/notice/notice">공지사항</a></li> --%>
                 <li><a href="/mntrng/pcControlList">모니터링</a></li>
                 <li><a href="/org/orgManage">조직관리</a></li>
-                <%-- <li><a href="/tchnlgy/tchnlgyList">장애처리</a></li> --%>
-<!--                 <li><a href="/user/userList">사용자정보</a></li> -->
+                <%-- <li><a href="/user/userList">사용자정보</a></li>  --%>
                 <li><a href="/pcMngr/pcMngrList">PC정보</a>
-                <%-- <ul>
-                    <li><a href="/pcMngr/pcMngrList">PC정보</a></li>
-                    <li><a href="/pcMngr/pcBlockList">PC접속관리</a></li>
-                </ul> --%>
                 </li>
                 <li><a href="/gplcs/umanage">정책관리</a>
                     <ul>
@@ -126,7 +102,6 @@ function getMonthAgoday(){
                         <li><a href="/gplcs/pmanage">프로그램관리</a></li>
                         <li><a href="/gplcs/fmanage">방화벽관리</a></li>
                         <li><a href="/gplcs/dmanage">디바이스관리</a></li>
-                        <%-- <li><a href="/gplcs/blockingNxssMngr">유해사이트 관리</a></li> --%>
                     </ul>
                 </li>
 

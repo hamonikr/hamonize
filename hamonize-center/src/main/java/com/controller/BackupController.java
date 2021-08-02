@@ -49,7 +49,6 @@ public class BackupController {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			// FAIL_GET_LIST
 		}
 
 		model.addAttribute("oList", jsonArray);

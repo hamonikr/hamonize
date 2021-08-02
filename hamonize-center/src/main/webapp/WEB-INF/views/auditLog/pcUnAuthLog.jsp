@@ -25,7 +25,6 @@
 #divCalendar .btn_cal_close, #divCalendar .btn_cal_close a {width:17px; height:16px;}
 </style>
 <script type="text/javascript">
-//<![CDATA[
 //zTree 셋팅
 	var setting = {
 			view: {
@@ -75,9 +74,7 @@
 	getList();
 	
 	//등록버튼
-	//$("#btnSave").click(fnSave);
 	$("#excelBtn").on("click",function(){
-		//location.href="unAuthLogExcel?org_seq="+$("#org_seq").val();
 		location.href="unAuthLogExcel?org_seq="+$("#org_seq").val()+"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val()+"&txtSearch="+$("#txtSearch").val()+"&keyWord="+$("#keyWord").val();
 	});
 	$("#txtSearch").keydown(function(key) {
@@ -116,7 +113,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$('#pageGrideInListTb').empty();
 		$("#pagginationInList").empty();
 		$("#txtSearch").val("");
-		//$("#keyWord").val("0");
 		$("#currentPage").val(1);
 		if($("#date_fr").val()==""){
 			$("#date_fr").val(getMonthAgoday());
@@ -136,13 +132,11 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 					gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
 					gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-					// gbInnerHtml += "<td>"+value.pc_uuid+"</td>";
 					gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
 					gbInnerHtml += "<td>"+value.vendor+"</td>";
 					gbInnerHtml += "<td>"+value.product+"</td>"; 
 					gbInnerHtml += "<td>"+value.info+"</td>"; 
-					// gbInnerHtml += "<td>"+value.pc_user+"</td>"; 
-					gbInnerHtml += "<td>"+value.insert_dt.substr(0,value.insert_dt.length -4)+"</td>";
+					gbInnerHtml += "<td>"+value.insert_dt.substr(0,value.insert_dt.length - 2)+"</td>";
 					gbInnerHtml += "</tr>";
 				
 				});	
@@ -189,12 +183,10 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 
 			gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
 			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-			// gbInnerHtml += "<td>"+value.pc_uuid+"</td>";
 			gbInnerHtml += "<td>"+value.pc_hostname+"</td>";
 			gbInnerHtml += "<td>"+value.vendor+"</td>";
 			gbInnerHtml += "<td>"+value.product+"</td>"; 
 			gbInnerHtml += "<td>"+value.info+"</td>"; 
-			// gbInnerHtml += "<td>"+value.pc_user+"</td>"; 
 			gbInnerHtml += "<td>"+value.insert_dt.substr(0,value.insert_dt.length -4)+"</td>"; 
 			gbInnerHtml += "</tr>";
 		
@@ -300,7 +292,6 @@ function searchView(viewName, page){
                      ~
                     <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" value="${auditLogVo.date_to }"/> 
                      <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                     <!-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button>  -->
                     <div id="count"></div>
                   </li>
                   <li>
@@ -325,14 +316,12 @@ function searchView(viewName, page){
                             <col style="width:15%;" />
                             <col style="width:15%;" />
                             <col style="width:15%;" />
-                            <!-- <col style="width:15%;" /> -->
                             <col />
                         </colgroup>
                         <thead>
                             <tr>
                                  <th>번호</th>
-                                <!-- <th>UUID</th> -->
-								<th>PC호스트이름</th>
+     							<th>PC호스트이름</th>
                                 <th>제품회사</th>
                                 <th>제품번호</th>
                                 <th>INFO</th> 

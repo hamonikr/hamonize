@@ -46,10 +46,6 @@ public class CurlAgentBackupController {
 		agentBackupVo.setPcm_uuid(sgbUuid);
 
 		int chkProgrmPolicy = getAgentBackupMapper.getAgentWorkYn(agentBackupVo);
-		System.out.println("//===================================");
-		System.out.println("//work yn === " + chkProgrmPolicy);
-		System.out.println("//===================================");
-
 		
 		if ( chkProgrmPolicy == 0 ) {
 			JSONObject jsonProgrmData = progrmPolicyData(agentBackupVo);
@@ -57,8 +53,6 @@ public class CurlAgentBackupController {
 			if( jsonProgrmData.size() == 0 ) {
 				output = "nodata";
 			}else {
-				System.out.println("jsonProgrmData.get(\"NODATA\")======"+ jsonProgrmData.get("nodata"));
-				
 				if( jsonProgrmData.get("nodata") != null ) {
 					output =  jsonProgrmData.get("nodata").toString();	
 				}else {

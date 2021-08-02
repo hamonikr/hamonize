@@ -23,6 +23,13 @@ public class CurlAgentProgramController {
 	@Autowired
 	private IGetAgentProgrmMapper getAgentProgrmMapper;
 
+	/**
+	 * 에이전트에서 
+	 * @param uuid
+	 * @param sgbWget
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/progrm")
 	public String getAgentJob(@RequestParam(value = "name", required = false) String uuid,
 			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
@@ -43,17 +50,12 @@ public class CurlAgentProgramController {
 
 		int chkProgrmPolicy = getAgentProgrmMapper.getAgentWorkYn(getProgrmVo);
 		boolean isAgentProgrmAction = false;
-		System.out.println("//===================================");
-		System.out.println("//work yn === " + chkProgrmPolicy);
-		System.out.println("//===================================");
-
 		if ( chkProgrmPolicy == 0 ) {
 			isAgentProgrmAction = true;
 			JSONObject jsonProgrmData = progrmPolicyData(getProgrmVo);
 			if( jsonProgrmData.size() == 0 ) {
 				output = "nodata";
 			}else {
-				System.out.println("jsonProgrmData.get(\"NODATA\")======"+ jsonProgrmData.get("nodata"));
 				if( jsonProgrmData.get("nodata") != null ) {
 					output =  jsonProgrmData.get("nodata").toString();	
 				}else {
@@ -64,11 +66,6 @@ public class CurlAgentProgramController {
 			output = "nodata";
 		}
 
-
-		System.out.println("//===================================");
-		System.out.println("//CurlAgentProgramController result data is : " + output);
-		System.out.println("//===================================");
-		
 		return output;
 	}
 
@@ -81,7 +78,6 @@ public class CurlAgentProgramController {
 		GetAgentProgrmVo agentoldseqVo = getAgentProgrmMapper.getAgentOldSeq(getProgrmVo);
 		
 		if( agentoldseqVo != null ) {
-			System.out.println("//====getAgentOldSeq is : "+ getProgrmVo.toString());
 			getProgrmVo.setOrg_seq(agentoldseqVo.getOrg_seq());
 			getProgrmVo.setPcm_uuid(agentoldseqVo.getPcm_uuid());
 			getProgrmVo.setPa_seq(agentoldseqVo.getPa_seq());
@@ -149,12 +145,6 @@ public class CurlAgentProgramController {
 			}
 			
 		}
-		
-		System.out.println("//===============================");
-		System.out.println("//==INS output data is : "+ arrAgentProgrmY);
-		System.out.println("//==DEL output data is : "+ arrAgentProgrmN);
-		System.out.println("//==jsonObject  data is : "+ jsonObject);
-		System.out.println("//===============================");
 		
 		return jsonObject;
 	}
