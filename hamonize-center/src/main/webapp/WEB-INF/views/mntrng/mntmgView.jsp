@@ -103,21 +103,21 @@ $( "#sp_on" ).click(function() {
 								실시간 사용 정보
 							<span></span>
 							</div>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=7" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=9" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=11" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=14" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=13" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=7" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=9" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=11" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=14" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=13" width="19.5%" height="200" frameborder="1"></iframe>
 						</div>
 						<div style="margin:0 auto;">
 							<div class="main_title" style="margin-bottom: 20px;">
 								그래프 정보
 							<span></span>
 							</div>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=2" width="49.5%" height="300" frameborder="1"></iframe>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=5" width="49.5%" height="300" frameborder="1"></iframe>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=4" width="49.5%" height="300" frameborder="1"></iframe>
-							<iframe src="http://10.8.0.2:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=3" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=2" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=5" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=4" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=3" width="49.5%" height="300" frameborder="1"></iframe>
 
 						</div>
 					</div>
