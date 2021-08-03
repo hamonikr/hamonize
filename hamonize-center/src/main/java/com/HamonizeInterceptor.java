@@ -17,8 +17,8 @@ import com.service.IpManagementService;
 @Component
 public class HamonizeInterceptor extends HandlerInterceptorAdapter {
 	
-	@Autowired
-	private IpManagementService iService;
+	// @Autowired
+	// private IpManagementService iService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
