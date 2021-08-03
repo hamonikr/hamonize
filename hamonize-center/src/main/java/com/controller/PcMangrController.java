@@ -87,10 +87,7 @@ public class PcMangrController {
 
 		try {
 			List<PcMangrVo> gbList = pcService.pcMangrList(vo, pagingVo);
-			for (int i=0;i<gbList.size();i++){
-				System.out.println("gbList >>> "+ gbList.get(i).toString());
-			}
-
+		
 			jsonObject.put("list", gbList);
 			jsonObject.put("pcVo", vo);
 			jsonObject.put("pagingVo", pagingVo);
@@ -209,7 +206,6 @@ public class PcMangrController {
 	@RequestMapping(value = "/updateBlock.proc", method=RequestMethod.POST)
 	public Map<String, Object> updateBlockproc(HttpSession session, PcMangrVo vo) throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		System.out.println("getUpdateBlockList========"+vo.getUpdateBlockList());
 		
 		try {
 	

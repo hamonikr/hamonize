@@ -2,8 +2,6 @@ package com.mapper;
 
 import java.util.HashMap;
 import java.util.List;
-
-import com.model.HmProgrmUpdtVo;
 import com.model.HmSecurityVo;
 
 public interface IHmSecurityMapper {

@@ -136,7 +136,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<td>"+value.vendor+"</td>";
 					gbInnerHtml += "<td>"+value.product+"</td>"; 
 					gbInnerHtml += "<td>"+value.info+"</td>"; 
-					gbInnerHtml += "<td>"+value.insert_dt.substr(0,value.insert_dt.length - 2)+"</td>";
+					gbInnerHtml += "<td>"+value.insert_dt.substr(0,value.insert_dt.length)+"</td>";
 					gbInnerHtml += "</tr>";
 				
 				});	
@@ -187,7 +187,7 @@ var userLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td>"+value.vendor+"</td>";
 			gbInnerHtml += "<td>"+value.product+"</td>"; 
 			gbInnerHtml += "<td>"+value.info+"</td>"; 
-			gbInnerHtml += "<td>"+value.insert_dt.substr(0,value.insert_dt.length -4)+"</td>"; 
+			gbInnerHtml += "<td>"+value.insert_dt.substr(0,value.insert_dt.length)+"</td>"; 
 			gbInnerHtml += "</tr>";
 		
 		});	

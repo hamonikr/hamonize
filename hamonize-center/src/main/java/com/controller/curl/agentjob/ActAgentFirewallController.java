@@ -28,6 +28,16 @@ import com.model.ActAgentProgrmVo;
 import com.model.GetAgentJobVo;
 import com.model.LogInOutVo;
 
+
+/**
+ * 에이전트에서 정책 수행결과를 리턴하는 컨트롤러
+ * 사용자 로그인/아웃
+ * 방화벽 정책
+ * 디바이스 정책
+ * 프로그램 차단 정책
+ * 복구 결과 
+ * 
+ */
 @RestController
 @RequestMapping("/act")
 public class ActAgentFirewallController {
@@ -130,8 +140,6 @@ public class ActAgentFirewallController {
 			inputVo.setRetport(tempObj.get("retport").toString());
 
 		}
-
-		System.out.println("\n에이전트에서 받은 값 inputVo : " + inputVo.toString());
 
 		int uuid = pcUUID(inputVo.getUuid());
 		inputVo.setOrgseq(uuid);

@@ -23,11 +23,16 @@ public class CurlAgentRecoveryController {
 	@Autowired
 	private IGetAgentRecoveryMapper getAgentRecoveryMapper;
 
-
+	/**
+	 * 에이전트에 복구 정책 보내는 부분 
+	 * @param uuid
+	 * @param wget
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/recov")
 	public String getRecovAgentJob(@RequestParam(value = "name", required = false) String uuid,
-			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
-		
+			@RequestParam(value = "wget", required = false) String wget) throws Exception {
 		System.out.println("//============ recov =======================");
 
 		String output = "";
@@ -48,7 +53,6 @@ public class CurlAgentRecoveryController {
 		System.out.println("//===================================");
 		System.out.println("//getRecovAgent work yn === chkProgrmPolicy :  " + chkProgrmPolicy);
 		System.out.println("//getRecovAgent work yn === chkRecoveryLog :  " + chkRecoveryLog);
-
 		System.out.println("//===================================");
 		
 
@@ -63,8 +67,6 @@ public class CurlAgentRecoveryController {
 			output = "nodata";
 		}
 		
-		
-
 		System.out.println("//===================================");
 		System.out.println("//result data is : " + output);
 		System.out.println("//===================================");
@@ -88,12 +90,6 @@ public class CurlAgentRecoveryController {
 		List<GetAgentRecoveryVo> outputDatga = getAgentRecoveryMapper.getAgentWorkData(getProgrmVo);
 		
 		for (GetAgentRecoveryVo set : outputDatga) {
-			System.out.println("----> " + set.getSeq());
-			System.out.println("----> " + set.getBr_backup_gubun());
-			System.out.println("----> " + set.getBr_backup_path());
-			System.out.println("----> " + set.getBr_backup_name());
-			System.out.println("----> " + set.getPc_uuid());
-
 			jsonObject.put("PATH", set.getBr_backup_path());
 			jsonObject.put("NAME", set.getBr_backup_name());
 		}

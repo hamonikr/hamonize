@@ -10,15 +10,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IGetAgentJobMapper;
-import com.mapper.IGetAgentNxssMapper;
-import com.mapper.IVersionChkMapper;
 import com.model.GetAgentJobVo;
-import com.model.GetAgentNxssVo;
-import com.model.PcMangrVo;
+
 import com.model.VersionChkVo;
 import com.paging.PagingVo;
 import com.service.VersionChkService;
@@ -30,9 +26,6 @@ public class CurlVersionChkController {
 	@Autowired
 	private IGetAgentJobMapper agentJobMapper;
 
-	@Autowired
-	private IVersionChkMapper versionChkMapper ;
-	
 	@Autowired
 	private VersionChkService vcService;
 

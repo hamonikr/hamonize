@@ -42,7 +42,6 @@ public class ScreenManageService {
 					// 1. 게시글 정보 저장
 				}
 				smMapper.saveFile(dataMap);
-				//partcptMapper.rqfrmModifyFile(dataMap);
 				result = 1;
 		return result;
 		

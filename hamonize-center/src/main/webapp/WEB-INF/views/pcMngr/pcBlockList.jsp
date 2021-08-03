@@ -64,12 +64,6 @@ transform: translate(-50%, -50%);
 				}
 			},
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
@@ -379,7 +373,6 @@ function updateBlockList(){
                  ~
                 <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
                 <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                <%-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
                 <div id="count"></div>
             </li>
             <li>

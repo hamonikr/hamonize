@@ -24,7 +24,7 @@ public class CurlAgentProgramController {
 	private IGetAgentProgrmMapper getAgentProgrmMapper;
 
 	/**
-	 * 에이전트에서 
+	 * 에이전트에 프로그램 차단 정책 보내는 부분 
 	 * @param uuid
 	 * @param sgbWget
 	 * @return

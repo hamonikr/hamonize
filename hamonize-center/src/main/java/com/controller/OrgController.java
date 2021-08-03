@@ -47,15 +47,12 @@ public class OrgController {
 			// 저장된 조직 정보 출력 
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
-			for(int i=0;i<jsonArray.size();i++ ){
-				System.out.println("org list --> "+ jsonArray.get(i).toString());
-			}
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		LDAPConnection con = new LDAPConnection();
-		System.out.println("LDAPConnection ----> start....");
 		
 		try {
 			con.connection(gs.getLdapUrl(), gs.getLdapPassword());

@@ -19,15 +19,20 @@ public class CurlHamonizeVersionChkController {
 	@Autowired
 	IHamonizeVersionChkMapper hamonizeVersionChkMapper;
 	
-
+	/**
+	 * 에이전트 버전 체크 매서드
+	 *
+	 * @param valLoad
+	 * @throws Exception
+	 */
 	@RequestMapping("/version")
 	public void version(@RequestBody String valLoad ) throws Exception {
 		System.out.println("---- CurlHamonizeVersionChkController ----");
 	
 		JSONParser jsonParser = new JSONParser();
-       JSONObject jsonObj = (JSONObject) jsonParser.parse(valLoad);
-       JSONArray hmdArray = (JSONArray) jsonObj.get("versionchk");
-       hamonizeVersionChkVo  hamonizeVersionChkVo = new hamonizeVersionChkVo();
+    	JSONObject jsonObj = (JSONObject) jsonParser.parse(valLoad);
+    	JSONArray hmdArray = (JSONArray) jsonObj.get("versionchk");
+    	hamonizeVersionChkVo  hamonizeVersionChkVo = new hamonizeVersionChkVo();
         
         
 		for(int i=0 ; i<hmdArray.size() ; i++){

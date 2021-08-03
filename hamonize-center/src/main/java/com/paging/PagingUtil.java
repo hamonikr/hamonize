@@ -128,7 +128,6 @@ public class PagingUtil {
 	 * @return
 	 */
 	public static PagingVo setPaging(PagingVo paging) {
-		System.out.println("setPaging==========================");
 		int nBlockGrpSize = (int) Math
 				.ceil((float) paging.getTotalRecordSize() / (float) (paging.getRecordSize() * paging.getBlockSize())); //블록 그룹 size
 		int nTotalPageSize = (int) Math.ceil((float) paging.getTotalRecordSize() / (float) paging.getRecordSize()); //전체 페이지수
@@ -138,9 +137,6 @@ public class PagingUtil {
 		int nEndPage = 0; //페이징의 끝 페이지 번호
 		int nLimitStart = paging.getRecordSize() * (paging.getCurrentPage() == 0 ? 1 : paging.getCurrentPage() - 1);
 		
-		System.out.println("paging.getRecordSize()===="+ paging.getRecordSize());
-		System.out.println("paging.getCurrentPage()===="+ paging.getCurrentPage());
-		System.out.println("nLimitStart==============="+ nLimitStart);
 		//페이징의 시작페이지와  끝페이지 정의
 		if (nCurrentBlockGrp == nBlockGrpSize) {
 			//만약 현재 페이지가 속한 그룹이 마지막 그룹이라면 .._10개짜리 페이지블록에서 [11][12][13] 요렇게  3개만 나와야 할경우

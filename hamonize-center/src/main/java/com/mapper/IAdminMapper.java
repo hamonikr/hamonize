@@ -3,7 +3,6 @@ package com.mapper;
 import java.util.List;
 
 import com.model.AdminVo;
-import com.model.UserVo;
 
 public interface IAdminMapper {
 	//센터 관리자

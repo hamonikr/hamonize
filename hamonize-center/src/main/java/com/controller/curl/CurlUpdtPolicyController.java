@@ -24,7 +24,13 @@ public class CurlUpdtPolicyController {
 	@Autowired
 	IUpdtPollicyMapper updtPollicyMapper;
 	
-	// agent에서 수행결과 값을 받아오는 부분
+	/**
+	 * agent에서 프로그램 업데이트한 수행결과 값을 받아오는 부분
+	 *  리턴 구분값 > 프로그램 설치 : insresert, 업데이트 : updtresert, 삭제 : delresert 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/updtpolicy")
 	public String getAgentJob(HttpServletRequest request) throws Exception {
 		
@@ -115,9 +121,9 @@ public class CurlUpdtPolicyController {
 		    	
 		    }
 		 // deb insert & program del
-		    Map<String, Object> mapDelete = new HashMap<String, Object>();
-		    mapDelete.put("list", updtVo3);
-		    updtPollicyMapper.updtDeleteProgrm(mapDelete);
+		Map<String, Object> mapDelete = new HashMap<String, Object>();
+		mapDelete.put("list", updtVo3);
+		updtPollicyMapper.updtDeleteProgrm(mapDelete);
 	}
 	    
 	    

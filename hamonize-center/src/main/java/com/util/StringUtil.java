@@ -9,16 +9,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.HandlerMapping;
 
 
 public class StringUtil {

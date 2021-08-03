@@ -41,10 +41,16 @@ public class PolicyUpdtController {
 	@Autowired
 	private AgentAptListService aService;
 	
-	
+	/**
+	 * 업데이트 관리 페이지 
+	 * apt 에서 패키지 리스트 가져와 db에 저장 후 출력 
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/umanage")
 	public String manage(HttpSession session, Model model) throws Exception{
-		System.out.println("\n /gplcs/umanage 실행===== \n");
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyUpdtVo> pList = null;
 		//APT저장소 목록
@@ -58,22 +64,21 @@ public class PolicyUpdtController {
 		Map<String, Object> params;
 
 		try {
-			System.out.println("===try===");
 			OrgVo orgvo = new OrgVo();
 			PolicyUpdtVo vo = new PolicyUpdtVo();
 			jsonArray = oService.orgList(orgvo);
 			
 			// 디비에 설치된 패키지 정보
 			pSearchList = uMapper.updtComapreList();
-			for(int k=0;k<pSearchList.size();k++) {
-				System.out.println("pSearchList" + pSearchList.get(k).toString());
-			}
+			// for(int k=0;k<pSearchList.size();k++) {
+			// 	System.out.println("pSearchList" + pSearchList.get(k).toString());
+			// }
 			// apt 저장소에 있는 버전 
 			listMap = aService.getApt();
 			
-			for(int j=0;j<listMap.size();j++) {
-				System.out.println("listMap: " + listMap.get(j).toString());
-			}
+			// for(int j=0;j<listMap.size();j++) {
+			// 	System.out.println("listMap: " + listMap.get(j).toString());
+			// }
 			
 			System.out.println("comparing....\n");
 			//APT저장소와 업데이트목록 비교후 등록 및 업데이트
@@ -83,19 +88,16 @@ public class PolicyUpdtController {
 					if (listMap.get(i).get("package").equals(pSearchList.get(j).get("pu_name"))) {
 						chk = true;
 						if (!listMap.get(i).get("version").equals(pSearchList.get(j).get("deb_new_version"))) {
-							System.out.println("update");
 							int result = uService.updtCompareUpdate(listMap.get(i));
 							break;
 						} else {
-							System.out.println("있음");
 							break;
 						}
 					} else {
 						chk = false;
 					}
 				}
-				if (!chk) {
-					System.out.println(" --- 저장---- "+listMap.get(i));
+				if (!chk) {			
 					newAdd.add(listMap.get(i));
 				}
 			}

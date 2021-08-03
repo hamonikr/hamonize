@@ -25,7 +25,6 @@
 #divCalendar .btn_cal_close, #divCalendar .btn_cal_close a {width:17px; height:16px;}
 </style>
 <script type="text/javascript">
-//<![CDATA[
 //zTree 셋팅
 	var setting = {
 			view: {
@@ -253,7 +252,6 @@ function searchView(viewName, page){
 	default :
 	}
 }
-//]]>
 </script>
 
 <body>
@@ -295,7 +293,6 @@ function searchView(viewName, page){
                      ~
                     <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" value="${auditLogVo.date_to }"/>
                     <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                       <!-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> -->
                       <div id="count"></div>
                   </li>
                   <li>
@@ -320,7 +317,6 @@ function searchView(viewName, page){
                             <col style="width:15%;" />
                             <col style="width:20%;" />
                             <col style="width:23%;" />
-                            <%-- <col style="width:10%;" /> --%>
                             <col style="width:10%;" />
                             <col />
                         </colgroup>
@@ -331,7 +327,6 @@ function searchView(viewName, page){
                                 <th>프로그램명</th>
                                 <th>PC호스트이름</th>
                                 <th>VPNIP</th>
-                                <%-- <th>아이디</th> --%>
                                 <th>차단시간</th>
                             </tr>
                         </thead>

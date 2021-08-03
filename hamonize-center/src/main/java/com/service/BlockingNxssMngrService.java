@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mapper.IBlockingNxssMngrMapper;
-import com.mapper.IIpManagementMapper;
-import com.model.AllowIpInfoVo;
 import com.model.BlockingNxssInfoVo;
-import com.model.NotiVo;
 import com.paging.PagingVo;
 
 

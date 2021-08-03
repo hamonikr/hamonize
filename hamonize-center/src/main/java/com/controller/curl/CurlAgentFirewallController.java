@@ -23,6 +23,13 @@ public class CurlAgentFirewallController {
 	@Autowired
 	private IGetAgentFirewallMapper getAgentFirewallMapper;
 
+	/**
+	 * 에이전트에 방화벽정책 보내는 부분
+	 * @param uuid
+	 * @param wget
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/firewall")
 	public String getAgentJob(@RequestParam(value = "name", required = false) String uuid,
 			@RequestParam(value = "wget", required = false) String wget) throws Exception {
