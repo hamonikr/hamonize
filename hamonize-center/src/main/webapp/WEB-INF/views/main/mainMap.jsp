@@ -122,7 +122,7 @@
                             </div>
                         </div>
                         <h2 class="title-1 m-b-25">PC사용현황 <span id="topInfo"> </span></h2>
-                            <iframe src="http://10.8.0.2:3000/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0"></iframe>                       
+                            <iframe src="http://106.254.251.74:13001/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0"></iframe>                       
                         <div class="row m-t-25" id="list">
                     </div>
                 </div>
