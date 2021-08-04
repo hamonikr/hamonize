@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.model.LoginVO;
-import com.service.IpManagementService;
 import com.service.LoginService;
 import com.util.StringUtil;
 
@@ -27,19 +26,12 @@ import com.util.StringUtil;
 @RequestMapping("/login")
 public class LoginController implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2588429989351863115L;
 	@Autowired
 	private LoginService loginService;
 	
-	@Autowired
-	private IpManagementService iService;
-
 	@RequestMapping("/login")
 	public String login(HttpSession session,Model model) {
-
 		return "/login/login";
 	}
 
@@ -49,41 +41,6 @@ public class LoginController implements Serializable{
 			@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 		String clientIp = params.get("user_ip").toString();
 		Map<String, Object> param = new HashMap<String, Object>();
-		
-		// if(clientIp != null || "".equals(clientIp)){
-		// 	System.out.println("===========================================");
-		// 	System.out.println("들어오는 아이피 ===="+clientIp);
-		// 	System.out.println("===========================================");
-			
-		// 	String[] dotIPs = clientIp.split("\\.");
-		// 	String[] ips = new String[15];
-			
-		// 	ips[0] = dotIPs[0] + "." + dotIPs[1] + "."  + dotIPs[2] + "." + dotIPs[3];
-		// 	ips[1] = "*." + dotIPs[1] + "."  + dotIPs[2] + "." + dotIPs[3];
-	    // 	ips[2] = dotIPs[0] + ".*."  + dotIPs[2] + "." + dotIPs[3];
-	    // 	ips[3] = dotIPs[0] + "." + dotIPs[1] + ".*." + dotIPs[3];
-	    // 	ips[4] = dotIPs[0] + "." + dotIPs[1] + "."  + dotIPs[2] + ".*";
-	    // 	ips[5] = "*.*."  + dotIPs[2] + "." + dotIPs[3];
-	    // 	ips[6] = "*." + dotIPs[1] + ".*." + dotIPs[3];
-	    // 	ips[7] = "*." + dotIPs[1] + "."  + dotIPs[2] + ".*";
-	    // 	ips[8] = dotIPs[0] + ".*.*." + dotIPs[3];
-	    // 	ips[9] = dotIPs[0] + ".*." + dotIPs[2] + ".*";
-	    // 	ips[10] = dotIPs[0] +"."+ dotIPs[1]+"." + "*.*";
-	    // 	ips[11] = "*.*.*." + dotIPs[3];
-	    // 	ips[12] = "*.*." + dotIPs[2] + ".*";
-	    // 	ips[13] = "*." + dotIPs[1] + ".*.*";
-	    // 	ips[14] = dotIPs[0] + ".*.*.*";
-	    // 	for(int i = 0; i<ips.length;i++){
-	    // 		param.put("usr_ip"+i,ips[i]);
-	    // 	}
-		// }else{
-    	// 	return "2";
-		// }
-		// int cnt = iService.ipCheck(param);
-		
-		// if(cnt <= 0) { 
-		// 	return "2";
-		// }
 		
 		String pass_wd = request.getParameter("pass_wd");
 		params.put("pass_wd", StringUtil.EncodingSHA256(pass_wd));

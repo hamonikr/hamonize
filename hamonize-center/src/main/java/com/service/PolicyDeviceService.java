@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.mapper.IOrgMapper;
 import com.mapper.IPolicyDeviceMapper;
-import com.model.AllowIpInfoVo;
 import com.model.PolicyDeviceVo;
 import com.paging.PagingVo;
 
@@ -70,16 +69,5 @@ public class PolicyDeviceService {
 	public void devicePopDelete(PolicyDeviceVo vo) throws Exception{
 		iDeviceMapper.devicePopDelete(vo);
 	}
-	/*
-	 * public List<HmprogramVo> soliderList(HmprogramVo vo, PagingVo pagingVo) {
-	 * 
-	 * HashMap<String, Object> paramMap = new HashMap<String, Object>();
-	 * 
-	 * paramMap.put("hmprogramVo", vo); //paramMap.put("pagingVo", pagingVo);
-	 * 
-	 * List<HmprogramVo> listVal = hmprogramMapper.hmPcProgramListInfo(paramMap);
-	 * 
-	 * return listVal; }
-	 */
 
 }

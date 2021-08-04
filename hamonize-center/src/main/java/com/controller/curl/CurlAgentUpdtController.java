@@ -24,14 +24,17 @@ public class CurlAgentUpdtController {
 	private IGetAgentUpdtMapper getAgentUpdtMapper;
 
 	
-
+	/**
+	 * 에이전트에 업데이트 정책 보내는 부분
+	 * @param uuid
+	 * @param wget
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/updt")
 	public String getAgentJob(@RequestParam(value = "name", required = false) String uuid,
-			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
-		System.out.println("\n====getAgent updt controller====");
+			@RequestParam(value = "wget", required = false) String wget) throws Exception {
 		String output = "";
-
-		System.out.println("===" + uuid + "==" + sgbWget);
 		uuid = uuid.trim();
 
 		// uuid로 부서정보 가져오기

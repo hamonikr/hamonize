@@ -25,25 +25,30 @@ public class CurlAgentBackupController {
 	private IGetAgentBackupMapper getAgentBackupMapper;
 
 	
-
+	/**
+	 * 에이전트에 백업 정책 보내는 매서드 
+	 * @param pcUuid
+	 * @param wget
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/backup")
-	public String getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid,
-			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
+	public String getAgentJob(@RequestParam(value = "name", required = false) String pcUuid,
+			@RequestParam(value = "wget", required = false) String wget) throws Exception {
 
 		// 출력 변수
 		String output = "";
-		System.out.println("===" + sgbUuid + "==" + sgbWget);
-		sgbUuid = sgbUuid.trim();
+		pcUuid = pcUuid.trim();
 
 		// uuid로 부서정보 가져오기
-		int segSeq = sgbUUID(sgbUuid);
+		int segSeq = pcUUID(pcUuid);
 		if( segSeq == 0 ) {
 			return  "nodata";
 		}
 
 		GetAgentBackupVo agentBackupVo = new GetAgentBackupVo();
 		agentBackupVo.setOrg_seq(segSeq);
-		agentBackupVo.setPcm_uuid(sgbUuid);
+		agentBackupVo.setPcm_uuid(pcUuid);
 
 		int chkProgrmPolicy = getAgentBackupMapper.getAgentWorkYn(agentBackupVo);
 		
@@ -119,12 +124,12 @@ public class CurlAgentBackupController {
 	/*
 	 * 부서 UUID로 부서 seq 가져오기
 	 * 
-	 * @param sgbUuid
+	 * @param pcUuid
 	 * @return 부서seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public int pcUUID(String pcUUID) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(pcUUID);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = 0;
 		if(agentVo != null ) {

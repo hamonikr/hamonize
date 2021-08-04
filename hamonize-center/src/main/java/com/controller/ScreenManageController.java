@@ -67,7 +67,6 @@ public class ScreenManageController {
 	@ResponseBody
 	@RequestMapping("/sview")
 	public JSONObject screenView(HttpSession session, Model model,OrgVo orgvo) {
-		System.out.println("orgvo===="+orgvo.getSeq());
 		FileVO fvo = new FileVO();
 		fvo = smService.screenView(orgvo);
 		JSONObject data = new JSONObject();

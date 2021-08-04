@@ -9,8 +9,6 @@ public interface IOrgMapper {
 
 	public List<OrgVo> orgList(OrgVo orgvo);
 	
-	// public List<OrgVo> orgList();
-	
 	public OrgVo orgView(OrgVo orgvo);
 	
 	public int orgSave(OrgVo orgvo);
@@ -41,6 +39,7 @@ public interface IOrgMapper {
 
 	public OrgVo getAllOrgNm(int seq);
 
+	// 하위 부서/팀에 소속된 유저 삭제
     public int deleteChildUser(OrgVo orgVo);
 
 	public List<OrgVo> getTeamList();

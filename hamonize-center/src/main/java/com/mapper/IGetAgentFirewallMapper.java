@@ -3,7 +3,6 @@ package com.mapper;
 import java.util.List;
 
 import com.model.GetAgentFirewallVo;
-import com.model.GetAgentProgrmVo;
 
 public interface IGetAgentFirewallMapper {
 

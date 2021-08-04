@@ -9,7 +9,6 @@ public interface IUpdtPollicyMapper {
 	public int updtPolicyActionResultInsert(Map<String, Object> map);
 
 	public int updtInsertProgrm(UpdtPolicyVo vo);
-//	public int updtInsertProgrm(Map<String, Object> map);
 
 	public int updtDeleteProgrm(Map<String, Object> map);
 

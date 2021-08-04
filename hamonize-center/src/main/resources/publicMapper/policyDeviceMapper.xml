@@ -28,7 +28,7 @@
 		DELETE FROM TBL_DEVICE_APPLC WHERE ORG_SEQ IN (
 		<foreach collection="data" item="item" separator=",">
 	            #{item.org_seq}
-	        		</foreach>
+	    </foreach>
 		)
 	</delete>
 	

@@ -54,7 +54,6 @@ public class TestController {
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			// FAIL_GET_LIST
 		}
 		model.addAttribute("gList", groupList);
 		

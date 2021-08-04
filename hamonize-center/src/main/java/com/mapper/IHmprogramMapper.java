@@ -20,8 +20,6 @@ public interface IHmprogramMapper {
 	
 	public HmprogramVo selectHmProgrmAgentJob( HmprogramVo hvo ) ;
 	
-//	public void save(Map<String, Object> mapwq);
-	
 	public int prcssKillLog(Map<String, Object> map);
 	
 

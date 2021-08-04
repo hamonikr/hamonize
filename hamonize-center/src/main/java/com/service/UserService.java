@@ -121,7 +121,6 @@ public class UserService {
 
 		if(result==1){
 			newVo.setPass_wd(tmpPw);
-			System.out.println("---수정 성공---");
 			con.updateUser(oldVo, newVo, oldDn, newDn, host);
 			
 		}else{
@@ -162,10 +161,6 @@ public class UserService {
 	public int userIdCheck(UserVo vo) {
 		return userMapper.userIdCheck(vo);
 	}
-
-	// public List<OrgVo> getOrgList(OrgVo vo){
-	// 	return orgMapper.orgList();
-	// };
 
 	public List<OrgVo> getOrgList(OrgVo vo){
 		return orgMapper.getTeamList();

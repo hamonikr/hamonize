@@ -38,7 +38,6 @@
 			}
 		};
 	var zNodes =[
-		//  { id:0, pId:"", name:"부서관리", open:true}, 
 		<c:forEach items="${oList}" var="data" varStatus="status" >
 		{ id:"${data.seq}", pId:"${data.p_seq}",
 			<c:if test="${data.section ne 'S'}">
@@ -147,7 +146,6 @@
 	var log, className = "dark", curDragNodes, autoExpandNode;
 	function beforeDrag(treeId, treeNodes) {
 		className = (className === "dark" ? "":"dark");
-		//showLog("[ "+getTime()+" beforeDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
 		for (var i=0,l=treeNodes.length; i<l; i++) {
 			if (treeNodes[i].drag === false) {
 				curDragNodes = null;
@@ -166,23 +164,17 @@
 	}
 	function beforeDrop(treeId, treeNodes, targetNode, moveType, isCopy) {
 		className = (className === "dark" ? "":"dark");
-		//showLog("[ "+getTime()+" beforeDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
-		//showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"));
 		return true;
 	}
 	function onDrag(event, treeId, treeNodes) {
 		className = (className === "dark" ? "":"dark");
-		//showLog("[ "+getTime()+" onDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
 	}
 	function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
 		className = (className === "dark" ? "":"dark");
-		//showLog("[ "+getTime()+" onDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
-		//showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"))
 	}
 	function onExpand(event, treeId, treeNode) {
 		if (treeNode === autoExpandNode) {
 			className = (className === "dark" ? "":"dark");
-			//showLog("[ "+getTime()+" onExpand ]&nbsp;&nbsp;&nbsp;&nbsp;" + treeNode.name);
 		}
 	}
 	function setTrigger() {

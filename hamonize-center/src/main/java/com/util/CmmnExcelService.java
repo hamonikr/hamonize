@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 
@@ -28,8 +27,6 @@ public class CmmnExcelService extends AbstractExcelView{
 		Map<String, Object> data =  (Map<String, Object>) model.get("data");
 		
 		String userAgent = request.getHeader("User-Agent");
-		//String fileName = data.getString("excelName")+".xls";
-		//String fileName = new StringBuilder(data.get("excelName")+"_").append(DateUtil.getToday("yyyyMMddHHmmss")).append(".xlsx").toString();
 		String fileName = new StringBuilder(data.get("excelName")+"_").append(DateUtil.getToday("yyyyMMddHHmmss")).append(".xlsx").toString();
 
 		if (userAgent.indexOf("MSIE") > -1 || userAgent.contains("Trident")) {
@@ -73,27 +70,7 @@ public class CmmnExcelService extends AbstractExcelView{
 				}
         	}
         }
-        
-        	//write the excel to a file
-        	/*
-        	ByteArrayOutputStream  fileOut = new ByteArrayOutputStream();
-            wb.write(fileOut);
-            InputStream filein = new ByteArrayInputStream(fileOut.toByteArray());
-            fileOut.close();
-            
-          //Add password protection and encrypt the file
-            
-            POIFSFileSystem fs = new POIFSFileSystem();
-            EncryptionInfo info = new EncryptionInfo(fs, EncryptionMode.agile);
-            Encryptor enc = info.getEncryptor();
-            enc.confirmPassword("qqq");
-            
-            OPCPackage opc = OPCPackage.open(filein);
-    		OutputStream os = enc.getDataStream(fs);
-    		opc.save(os);
-    		opc.close();
-    		System.out.println("File created!!");
-    		*/
+
         
     		OutputStream fileOut2 = response.getOutputStream(); 
     		wb.write(fileOut2);

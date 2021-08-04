@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mapper.IHmprogramMapper;
 import com.model.GroupVo;
 import com.model.HmprogramVo;
-import com.model.NotiVo;
-import com.model.SoliderVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.GroupService;
@@ -55,7 +53,6 @@ public class SecurityControllerTMP_X {
 	 */
 	@RequestMapping(value = "/updateManagement")
 	public String updateManagementPage(Model model) {
-		//log.info(" -- ctr:updateManagementPage");
 		JSONArray groupList = null;
 
 		try {
@@ -77,12 +74,10 @@ public class SecurityControllerTMP_X {
 	 */
 	@RequestMapping(value = "/programManagement")
 	public String programManagementPage(Model model) {
-		//log.info(" -- ctr:programManagementPage");
 		JSONArray groupList = null;
 
 		try {
 			GroupVo gvo = new GroupVo();
-//			gvo.setGroup_gubun("group");
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -168,7 +163,6 @@ public class SecurityControllerTMP_X {
 	 */
 	@RequestMapping(value = "/securityManagement")
 	public String securityManagementPage(Model model) {
-		//log.info(" -- ctr:securityManagementPage");
 		JSONArray groupList = null;
 
 		try {

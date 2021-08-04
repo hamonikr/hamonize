@@ -35,12 +35,6 @@ public class PsqlDatabaseConfig {
             .build();
     }
 
-    // @Bean(name = "db1DataSource")
-	// @ConfigurationProperties(prefix = "spring.db1.datasource")
-	// public DataSource db1DataSource() {
-	// 	return DataSourceBuilder.create().build();
-	// }
-
    @Bean
    public SqlSessionFactory db1SqlSessionFactory(ApplicationContext applicationContext) throws Exception {
        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();

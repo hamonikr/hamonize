@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mapper.ITchnlgyMapper;
-import com.model.AnswerVo;
 import com.model.TchnlgyVo;
 import com.paging.PagingVo;
 

@@ -27,7 +27,6 @@ import com.mapper.IPackageInfoMapper;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
 import com.model.GetAgentJobVo;
-import com.model.GetAgentRecoveryVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PcPackageVo;
@@ -37,7 +36,10 @@ import com.service.UserService;
 import com.util.LDAPConnection;
 
 
-/* connector가 돌때 데이터 가져오는 부분 */
+/**
+ * connector에서 센터로 데이터를 보내는 컨트롤러
+ * 
+ */
 @RestController
 @RequestMapping("/hmsvc")
 public class CurlController {
@@ -83,11 +85,18 @@ public class CurlController {
 		return str;
 	}
 	
-	/* pc정보 저장 */
+
+	/**
+	 * pc정보 저장 
+	 * ldap 서버에도 pc정보 저장
+	 * @param retData
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@Transactional(rollbackOn= {Exception.class})
 	@RequestMapping("/setPcInfo")
 	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request) throws Exception {
-		System.out.println("=============setpcinfo================");
 		LDAPConnection con = new LDAPConnection();
 			
 		int retVal = 0;
@@ -128,62 +137,38 @@ public class CurlController {
 			hdVo.setOrg_seq(orgNumChkVo.getSeq()); 
 			System.out.println("org_seq : "+  hdVo.getOrg_seq());
 		
-//			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
-//			if(sabunChkVo != null){
 				int isExistPc = pcMangrMapper.inserPcInfoChk(hdVo);
 				System.out.println("isExistPc ? ===="+isExistPc );
-				Boolean PcDuplicateChk = false;
 				
-					
-//				if(hdVo.getUsername().equals(sabunChkVo.getUser_name())){
-//					if(orgNumChkVo.getSeq() == sabunChkVo.getOrg_seq()){
-						OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
-	
-						hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
-						con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-			
-						System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
-						System.out.println("hdVo.getPc_os() toLowerCase : "+hdVo.getPc_os().toLowerCase());
-							
-						if(hdVo.getPc_os().toLowerCase().contains("hamonikr")){
-							hdVo.setPc_os("H");
-						} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
-							hdVo.setPc_os("W");
-						}	
-						
-						System.out.println("hdvo ==== > "+hdVo.toString());
-						
-						retVal = pcMangrMapper.inserPcInfo(hdVo);
-						int chkPc = pcMangrMapper.pchk(hdVo);
-						isAddPcInfo = true;
+				OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
 
-						
-						// 입력받은 사용자 정보를 LDAP 저장
-//						if(retVal == 1){					
-//							if(chkPc >=1){
-						UserVo sabunChkVo = new UserVo();
-								con.addPC(hdVo, sabunChkVo);
-//							}														
-//						}else {
-//							System.out.println("pc 저장 실패");
-//						}
-						
-//					}else{
-//						System.out.println("소속된 부서와 사번이 일치하지않음");
-//					}
-//				}else{
-//					System.out.println("사용자 이름이 일치하지 않음");
-//				}
-//			}else{
-//				System.out.println("존재하지 않는 사번");
-//			}
+				hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+				con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+	
+				System.out.println("hdVo.getPc_hostname() : "+hdVo.getPc_hostname());
+				System.out.println("hdVo.getPc_os() toLowerCase : "+hdVo.getPc_os().toLowerCase());
+					
+				if(hdVo.getPc_os().toLowerCase().contains("hamonikr")){
+					hdVo.setPc_os("H");
+				} else if(hdVo.getPc_hostname().toLowerCase().contains("window")){
+					hdVo.setPc_os("W");
+				}	
+				
+				System.out.println("hdvo ==== > "+hdVo.toString());
+				
+				retVal = pcMangrMapper.inserPcInfo(hdVo);
+				int chkPc = pcMangrMapper.pchk(hdVo);
+				isAddPcInfo = true;
+
+				
+				UserVo sabunChkVo = new UserVo();
+				con.addPC(hdVo, sabunChkVo);
 
 		       
 		}else{
 			System.out.println("존재하지 않는 부서");	
 		}
-		
-		 
+				 
 		System.out.println("hamonize Connector setPcInfo result :: "+ isAddPcInfo);
 		return isAddPcInfo;
 	}

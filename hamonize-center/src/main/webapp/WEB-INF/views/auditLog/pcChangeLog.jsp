@@ -25,7 +25,6 @@
 #divCalendar .btn_cal_close, #divCalendar .btn_cal_close a {width:17px; height:16px;}
 </style>
 <script type="text/javascript">
-//<![CDATA[
 //zTree 셋팅
 	var setting = {
 			view: {
@@ -37,12 +36,6 @@
 				}
 			},
 			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
@@ -143,12 +136,10 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<td>"+value.pc_cpu+"</td>";
 					gbInnerHtml += "<td>"+value.pc_memory+"</td>";
 					gbInnerHtml += "<td>"+value.pc_disk+"</td>"; 
-					// gbInnerHtml += "<td>"+value.pc_macaddress+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_ip+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_hostname+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_disk_id+"</td>"; 
 					gbInnerHtml += "<td>"+value.pc_cpu_id+"</td>"; 
-					// gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; 
 					gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 					gbInnerHtml += "</tr>";
 				
@@ -310,14 +301,12 @@ function searchView(viewName, page){
                      ~
                     <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" value="${auditLogVo.date_to }"/>
                     <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                    <!-- <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> -->
                     <div id="count"></div>
                   </li>
                   <li>
                     <div class="top_search">
                       <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
                           <option value="1">PC호스트이름</option>
-                          <%-- <option value="2">아이디</option> --%>
                       </select>
                       <label for="txtSearch"></label><input type="text" name="txtSearch" id="txtSearch" class="input_type1" />
                       <button type="button" class="btn_type3" onclick="getList();"> 검색</button>
@@ -334,12 +323,10 @@ function searchView(viewName, page){
                             <col style="width:18%;" />
                             <col style="width:8%;" />
                             <col style="width:15%;" />
-                            <!-- <col style="width:15%;" /> -->
                             <col style="width:10%;" />
                             <col style="width:10%;" />
                             <col style="width:10%;" />
                             <col style="width:14%;" />
-                            <!-- <col style="width:7%;" /> -->
                             <col />
                         </colgroup>
                         <thead>
@@ -348,12 +335,10 @@ function searchView(viewName, page){
                                 <th>CPU</th>
                                 <th>MEMORY</th>
                                 <th>DISK</th>
-                                <!-- <th>MAC ADDRESS</th> -->
                                 <th>IP</th>
                                 <th>PC HOSTNAME</th>
                                 <th>DISK_ID</th>
                                 <th>CPU_ID</th>
-                                <!-- <th>UUID</th> -->
                                 <th>변경일</th>
                             </tr>
                         </thead>
@@ -371,96 +356,9 @@ function searchView(viewName, page){
 
         </div>
     </div><!-- //content -->
-	
-	
-	<!-- <section class="body haveGroup">
-		<article>
-			<div class="code-html contents row">
-				
-				<div class="col-md-3 row">
-					<div class="form-style-10 col-md-12 boxDiv">
-						<div class="inner-wrap row" style="padding:0; background: rgba(0,0,0,0)">
-							<div class="section"><span class="numTxt">1</span>그룹선택</div>
-								
-								search
-								
-								<div class="tree_area" style="display: inline-block;">
-									<div class="tree_ctrl">
-										<button type="button" class="btn bg-success btn-md" id="expandAllBtn" style="float: left;">
-											<i class="fa fa-check" aria-hidden="true"></i>
-											전체열기
-										</button>
-										&nbsp;
-										<button type="button" class="btn btn-md bg-dark" id="collapseAllBtn">
-											<i class="fa fa-check" aria-hidden="true"></i>
-											전체닫기
-										</button>
-									</div>
-									<div class="scroll_area">
-										<ul id="tree" class="ztree"></ul>
-									</div>
-								</div>
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-9" style="margin-top: 22px;">
-					<div style="float:left;">
-				<select name="keyWord" id="keyWord" style="float:left;">
-				<option value="0">전체</option>
-				<option value="1">이름</option>
-				<option value="2">아이디</option>
-				</select>
-					<input type="text" name="txtSearch" id="txtSearch" value=""/>
-					</div>
-					<button id="searchBtn" onclick="javascript:getList();">검색</button>
-						<input type="hidden" id="currentPage" name="currentPage" value="1" >
-						<input type="hidden" id="org_seq" name="org_seq" value="">
-						
-						<div class="input_area" style="display: inline-block; width: 100%;">
-						<section class="row">
-					<h1 class="col-md-8" id="groupForm" style="width: 50%; margin: 0;"></h1>
-				  	<div class="table-responsive" id="grid">
-					<table data-toggle="table" id="dataTable" width="100%" cellspacing="0" border=0 class="table table-striped table-bordered" >
-						<thead>
-						<tr class="filters">
-							<th><input type="text" class="form-control" placeholder="번호" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="CPU" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="MEMORY" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="DISK" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="MACADDRESS" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="IP" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="HOSTNAME" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="DISK_ID" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="CPU_ID" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="UUDI" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="변경일" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="비고" disabled></th>
-	                    </tr>
-		        		</thead>
-						<tbody id=pageGrideInListTb>
-						</tbody>
-					</table>
-				</div>
-				페이징
-				<ul class="pagination" id="pagginationInList"></ul>
-				</section>
 
-						</div>
-					
-					
-				</div>
-			
-				
-			</div>
-		</article>
-	</section> -->
-	
-
-	
 	<%@ include file="../template/grid.jsp" %>
 	<%@ include file="../template/footer.jsp" %>
-	
 	
 </body>
 </html>

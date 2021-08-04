@@ -51,7 +51,6 @@ public class TchnlgyController {
 	 */
 	@RequestMapping(value="/tchnlgyList")
 	public String tchnlgyListPage(ModelMap model,HttpServletRequest request) {
-		//model.addAttribute("mngeListInfoCurrentPage",Integer.parseInt(request.getParameter("mngeListInfoCurrentPage")));
 		return "/tchnlgy/tchnlgyList";
 	}
 	
@@ -70,8 +69,6 @@ public class TchnlgyController {
 	public Map<String, Object> listProc(ModelMap model,TchnlgyVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		System.out.println("key==="+vo.getKeyWord());
-		System.out.println("txt==="+vo.getTxtSearch());
 		vo.setMngeListInfoCurrentPage(Integer.parseInt(request.getParameter("mngeListInfoCurrentPage")));
 		// 페이징
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
@@ -89,7 +86,6 @@ public class TchnlgyController {
 			jsonObject.put("pagingVo", pagingVo);
 			jsonObject.put("success", true);
 			model.addAttribute("list",gbList);
-			//model.addAttribute("mngeListInfoCurrentPage",pagingVo.getCurrentPage());
 		} catch (Exception e) {
 			jsonObject.put("success", false);
 			e.printStackTrace();

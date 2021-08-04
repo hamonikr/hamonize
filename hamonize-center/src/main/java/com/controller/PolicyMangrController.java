@@ -262,7 +262,6 @@ public class PolicyMangrController {
 	@ResponseBody
 	@RequestMapping(value = "/addBlockingNxss.proc", method=RequestMethod.POST)
 	public Map<String, Object> addBlockingNxssProc(HttpSession session, BlockingNxssInfoVo vo) throws Exception {
-		//log.info(" -- ctr:addBlockingNxssProc");
 		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		
@@ -299,7 +298,6 @@ public class PolicyMangrController {
 	@ResponseBody
 	@RequestMapping(value = "/deleteBlockingNxss.proc", method=RequestMethod.POST)
 	public Map<String, Object> deleteBlockingNxssProc(HttpSession session, BlockingNxssInfoVo vo) throws Exception {
-		//log.info(" -- ctr:deleteBlockingNxssProc - vo : " + vo);
 		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		

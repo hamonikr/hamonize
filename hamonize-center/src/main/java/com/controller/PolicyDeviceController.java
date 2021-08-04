@@ -90,6 +90,7 @@ public class PolicyDeviceController {
 		params.put("data",resultSet);
 		System.out.println("params..."+params);
 		int result = 0;
+		
 		dService.deviceDelete(params);
 		result = dService.deviceSave(params);
 	
@@ -127,7 +128,6 @@ public class PolicyDeviceController {
 		JSONArray ja = new JSONArray();
 
 		// 페이징
-		
 		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage()); 
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.LayerPopupPaging, pagingVo); //recordSize, currentPage, blockSize
 		int cnt = policyDeviceMapper.devicePopCount(vo);
@@ -180,8 +180,6 @@ public class PolicyDeviceController {
 	@ResponseBody
 	@RequestMapping(value = "/dManagePopDelete", method=RequestMethod.POST)
 	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyDeviceVo vo) throws Exception {
-		//log.info(" -- ctr:deleteIpManagementProc - vo : " + vo);
-		
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		
 		try {

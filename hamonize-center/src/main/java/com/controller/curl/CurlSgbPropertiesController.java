@@ -61,8 +61,7 @@ public class CurlSgbPropertiesController {
     	
 		System.out.println("====> "+ object.get("uuid").toString());
 		
-		//int segSeq = sgbUUID(object.get("uuid").toString());
-
+		
 		List<SvrlstVo> svrlstVo = svrlstMapper.getSvrlstDataList();
 		
 

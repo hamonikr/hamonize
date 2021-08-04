@@ -2,9 +2,6 @@ package com.mapper;
 
 import java.util.Map;
 
-import com.model.ActAgentDeviceVo;
-import com.model.ActAgentProgrmVo;
-
 public interface IActAgentProgrmMapper {
 
 

@@ -41,7 +41,6 @@ text-decoration: none;
  height: 700px;
  background-color: #fff;
  display:none;
- /*float:left;*/
  z-index: 1;
  position: fixed;
 left: 50%;
@@ -117,8 +116,6 @@ transform: translate(-50%, -50%);
 	$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		
 	getPcMngrList();
-	//등록버튼
-	//$("#btnSave").click(fnSave);
 	
 	$("#excelBtn").on("click",function(){
 		location.href="pcMngrListExcel?org_seq="+$("#org_seq").val()+"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val()+"&txtSearch="+$("#txtSearch").val()+"&keyWord="+$("#keyWord").val();
@@ -178,7 +175,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 						gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-						// gbInnerHtml += "<td>"+value.deptsido+"</td>";
 						gbInnerHtml += "<td>"+value.deptname+"</td>";
 						if(value.pc_os == "H"){
 							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
@@ -240,7 +236,6 @@ function getPcMngrList(){
 						
 			gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
-			// gbInnerHtml += "<td>"+value.deptsido+"</td>";
 			gbInnerHtml += "<td>"+value.deptname+"</td>";
 			
 			if(value.pc_os == "H"){
@@ -359,7 +354,6 @@ function searchView(viewName, page){
 	        <div class="top_search">
 	            <select id="keyWord" name="keyWord" title="keyWord" class="sel_type1">
 	                <option value="0">전체</option>
-	                <%-- <option value="1">지역</option> --%>
 	                <option value="2">부서이름</option>
 	                <option value="3">IP</option>
 	                <option value="4">Mac Address</option>
