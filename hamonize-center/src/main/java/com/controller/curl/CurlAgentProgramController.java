@@ -36,36 +36,47 @@ public class CurlAgentProgramController {
 
 		// 출력 변수
 		String output = "";
+		String arrAgentProgrmY = "";
 		uuid = uuid.trim();
 
+		
 		// uuid로 부서정보 가져오기
 		int segSeq = pcUUID(uuid);
 		if( segSeq == 0 ) {
 			return  "nodata";
 		}
 		
+		
+		JSONObject jsonObject = new JSONObject();
 		GetAgentProgrmVo getProgrmVo = new GetAgentProgrmVo();
 		getProgrmVo.setOrg_seq(segSeq);
 		getProgrmVo.setPcm_uuid(uuid);
 
-		int chkProgrmPolicy = getAgentProgrmMapper.getAgentWorkYn(getProgrmVo);
-		boolean isAgentProgrmAction = false;
-		if ( chkProgrmPolicy == 0 ) {
-			isAgentProgrmAction = true;
-			JSONObject jsonProgrmData = progrmPolicyData(getProgrmVo);
-			if( jsonProgrmData.size() == 0 ) {
-				output = "nodata";
-			}else {
-				if( jsonProgrmData.get("nodata") != null ) {
-					output =  jsonProgrmData.get("nodata").toString();	
-				}else {
-					output = jsonProgrmData.toJSONString();
-				}
-			}
-		} else {
-			output = "nodata";
-		}
 
+		
+		boolean isAgentProgrmAction = false;
+		int chkProgrmPolicy = getAgentProgrmMapper.getAgentWorkYn(getProgrmVo);
+		List<GetAgentProgrmVo> progrmDataList = getAgentProgrmMapper.getAgentWorkYnList(getProgrmVo);
+		
+		if( progrmDataList.size() == 0 ) {
+			output = "nodata";
+		}else {
+			for( int a = 0; a < progrmDataList.size(); a++ ) {
+				System.out.println(progrmDataList.get(a).getPcm_name() );
+				
+				if ( progrmDataList.size() - 1 ==  a ) {
+					arrAgentProgrmY += progrmDataList.get(a).getPcm_name();
+				}else {
+					arrAgentProgrmY += progrmDataList.get(a).getPcm_name() + ",";
+				}				
+			}
+			
+			jsonObject.put("INS", arrAgentProgrmY);
+			output = jsonObject.toJSONString();
+		}
+		
+		System.out.println("output=======++"+ output);
+		
 		return output;
 	}
 

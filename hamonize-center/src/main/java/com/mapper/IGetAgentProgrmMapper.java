@@ -13,6 +13,8 @@ public interface IGetAgentProgrmMapper {
 	
 	
 	public int getAgentWorkYn (GetAgentProgrmVo vo );
+	
+	public List<GetAgentProgrmVo> getAgentWorkYnList( GetAgentProgrmVo vo);
 
 	public GetAgentProgrmVo getAgentOldSeq (GetAgentProgrmVo vo );
 	

@@ -64,6 +64,13 @@
 	</select>
 	
 
+	<select id="getAgentWorkYnList" parameterType="com.model.GetAgentProgrmVo" resultType="com.model.GetAgentProgrmVo">
+		SELECT 
+		   *
+		FROM tbl_progrm_agent_job TA JOIN tbl_progrm_applc TB ON TA.pa_seq = TB.seq
+		WHERE TA.org_seq = #{org_seq}
+			AND pcm_uuid = #{pcm_uuid} 
+	</select>
 	
 	<select id="getAgentWorkYn" parameterType="com.model.GetAgentProgrmVo" resultType="Integer">
 		SELECT 
