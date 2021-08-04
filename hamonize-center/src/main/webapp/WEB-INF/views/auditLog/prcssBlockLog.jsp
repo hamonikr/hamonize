@@ -137,7 +137,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<td>"+value.org_nm+"</td>";
 					gbInnerHtml += "<td>"+value.prcssname+"</td>";
 					gbInnerHtml += "<td>"+value.hostname+"</td>"; 
-					gbInnerHtml += "<td>"+value.ipaddr+"</td>"; 
+					gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
 					gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 					gbInnerHtml += "</tr>";
 				

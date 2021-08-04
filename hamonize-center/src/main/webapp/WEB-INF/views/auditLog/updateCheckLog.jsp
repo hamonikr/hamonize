@@ -322,7 +322,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					console.log("pc_status--> "+value.pc_status);
 					shtml += "<li class='on'><a href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+value.pc_hostname+"</a></li>";
 						} else
-					shtml += "<li><a href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+value.pc_hostname+"</a></li>";
+					shtml += "<li><a style='color:#555;' href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+value.pc_hostname+"</a></li>";
 					 
 				});	
 				shtml_r += "<div class=\"content_bapo\">";

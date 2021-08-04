@@ -87,7 +87,7 @@ public class PcMangrController {
 
 		try {
 			List<PcMangrVo> gbList = pcService.pcMangrList(vo, pagingVo);
-		
+			
 			jsonObject.put("list", gbList);
 			jsonObject.put("pcVo", vo);
 			jsonObject.put("pagingVo", pagingVo);
