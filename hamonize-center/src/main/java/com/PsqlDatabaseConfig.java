@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,28 +24,28 @@ public class PsqlDatabaseConfig {
     @Autowired
     GlobalPropertySource globalPropertySource;
 
-    @Bean
-    @Primary
-    public DataSource customDataSource() {
-        return DataSourceBuilder
-            .create()
-            .url(globalPropertySource.getUrl())
-            .driverClassName(globalPropertySource.getDriverClassName())
-            .username(globalPropertySource.getUsername())
-            .password(globalPropertySource.getPassword())
-            .build();
-    }
+    // @Bean
+    // @Primary
+    // public DataSource customDataSource() {
+    //     return DataSourceBuilder
+    //         .create()
+    //         .url(globalPropertySource.getUrl())
+    //         .driverClassName(globalPropertySource.getDriverClassName())
+    //         .username(globalPropertySource.getUsername())
+    //         .password(globalPropertySource.getPassword())
+    //         .build();
+    // }
 
-    // @Bean(name = "db1DataSource")
-	// @ConfigurationProperties(prefix = "spring.db1.datasource")
-	// public DataSource db1DataSource() {
-	// 	return DataSourceBuilder.create().build();
-	// }
+    @Bean(name = "db1DataSource")
+	@ConfigurationProperties(prefix = "spring.db1.datasource")
+	public DataSource db1DataSource() {
+		return DataSourceBuilder.create().build();
+	}
 
    @Bean
    public SqlSessionFactory db1SqlSessionFactory(ApplicationContext applicationContext) throws Exception {
        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-       sqlSessionFactoryBean.setDataSource(customDataSource());
+       sqlSessionFactoryBean.setDataSource(db1DataSource());
        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:publicMapper/*.xml"));
        
        return sqlSessionFactoryBean.getObject();
