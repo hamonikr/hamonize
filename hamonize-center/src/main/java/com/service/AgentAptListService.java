@@ -18,17 +18,14 @@ public class AgentAptListService {
 	
 	  @Value("${apt.ip}") 
 	  private String aptIp;
-	 
 	  
 	public List<Map<String,Object>> getApt() {
-		System.out.println("----------- getApt() 실행 -----------");
 		String apiURL = "http://"+aptIp.trim()+"/dists/hamonize/main/binary-amd64/Packages";
-		System.out.println("apiURL --> " +apiURL);
+		System.out.println("apt url : "+apiURL);
 
 		List<String> list = new ArrayList<String>();
 		List<Map<String,Object>> result = new ArrayList<Map<String,Object>>();
 		
-		System.out.println("get apt url : "+apiURL);
 		
 		try {
 
@@ -38,8 +35,8 @@ public class AgentAptListService {
 			String inputLine;
 
 			while ((inputLine = bufferedReader.readLine()) != null) {
-				System.out.println("inputLine : " + inputLine.toString());
-				System.out.println("Package : " + inputLine.indexOf("Package"));
+				// System.out.println("inputLine : " + inputLine.toString());
+				// System.out.println("Package : " + inputLine.indexOf("Package"));
 				if (inputLine.indexOf("Package") == 0) {
 					list.add(inputLine);
 
@@ -52,12 +49,12 @@ public class AgentAptListService {
 			for(int i = 0; i < list.size();i++) {
 				if((i % 2) != 0) {
 					Map<String,Object> map = new HashMap<String,Object>();
-					System.out.println("package: "+ list.get((i-1)).split(":")[1].trim());
+					// System.out.println("package: "+ list.get((i-1)).split(":")[1].trim());
 					map.put("package", list.get((i-1)).split(":")[1].trim());
 					
-					System.out.println("package: "+ list.get(i).split(":")[1].trim());
+					// System.out.println("package: "+ list.get(i).split(":")[1].trim());
 					map.put("version", list.get(i).split(":")[1].trim());
-					System.out.println("list >> "+list.get(i));
+					// System.out.println("list >> "+list.get(i));
 					result.add((i-co),map);
 					co++;
 				}
@@ -66,10 +63,8 @@ public class AgentAptListService {
 			bufferedReader.close();
 
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

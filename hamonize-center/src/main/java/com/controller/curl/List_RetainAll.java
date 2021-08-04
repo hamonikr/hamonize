@@ -7,31 +7,6 @@ import java.util.Map;
 
 public class List_RetainAll {
 
-	// public static void main(String[] args) {
-
-	// 	List<String> list = new ArrayList<>();
-	// 	list.add("3");
-	// 	list.add("4");
-	// 	list.add("5");
-	// 	list.add("6");
-	// 	list.add("3");
-	// 	list.add("4");
-	// 	list.add("5");
-	// 	list.add("1");
-	// 	list.add("2");
-
-	// 	Map<String, Integer> map = new HashMap<>();
-	// 	for (String temp : list) {
-	// 		Integer count = map.get(temp);
-	// 		map.put(temp, (count == null) ? 1 : count + 1);
-	// 	}
-	// 	printMap(map);
-		
-	// 	System.out.println("=============");
-	// 	test1();
-
-	// }
-
 	private static void printMap(Map<String, Integer> map) {
 		List<List<String>> secondStrings = new ArrayList<>();
 

@@ -1,5 +1,12 @@
 package com.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class FileVO {
     private Integer fileno; 
     private String parentPK;
@@ -21,65 +28,5 @@ public class FileVO {
 
         return String.format("(%.0f %s)", filesize / Math.pow(unit, exp), "KMGTPE".charAt(exp - 1));
     }
-    
-    public Integer getFileno() {
-        return fileno;
-    }
-
-    public void setFileno(Integer fileno) {
-        this.fileno = fileno;
-    }
-
-    public String getParentPK() {
-        return parentPK;
-    }
-    
-    public void setParentPK(String parentPK) {
-        this.parentPK = parentPK;
-    } 
-    
-    public String getFilename() {
-        return filename;
-    }
-    
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-    
-    public String getRealname() {
-        return realname;
-    }
-    
-    public void setRealname(String realname) {
-        this.realname = realname;
-    }
-    
-    public long getFilesize() {
-        return filesize;
-    }
-    
-    public void setFilesize(long filesize) {
-        this.filesize = filesize;
-    }
-
-	public String getFilepath() {
-		return filepath;
-	}
-
-	public void setFilepath(String filepath) {
-		this.filepath = filepath;
-	}
-
-	public String getFilerealname() {
-		return filerealname;
-	}
-
-	public void setFilerealname(String filerealname) {
-		this.filerealname = filerealname;
-	}
-	
-	
-    
-    
     
 }

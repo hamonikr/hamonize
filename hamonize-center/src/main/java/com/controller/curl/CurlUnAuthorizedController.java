@@ -11,16 +11,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mapper.IGetAgentBackupMapper;
-import com.mapper.IGetAgentJobMapper;
-import com.mapper.IInetLogMapper;
 import com.mapper.IUnauthorizedMapper;
-import com.model.GetAgentBackupVo;
-import com.model.GetAgentJobVo;
-import com.model.InetLogVo;
 import com.model.UnauthorizedVo;
 
 @RestController
@@ -31,7 +24,13 @@ public class CurlUnAuthorizedController {
 	@Autowired
 	IUnauthorizedMapper iUnauthorizedMapper;
 	
-
+	/**
+	 * 비인가 디바이스의 접속 로그 
+	 * 에이전트에서 비인가디바이스 접속 로그 전송
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/unauth")
 	public String getAgentJob(HttpServletRequest request) throws Exception {
 		

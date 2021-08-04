@@ -150,7 +150,6 @@ public class AdminController {
 		
 		if(vo.getUser_id() != null) {
 			AdminVo avo = adminservice.adminView(vo);
-			//avo.setPass_wd(St);
 			model.addAttribute("result",avo);
 		}
 		

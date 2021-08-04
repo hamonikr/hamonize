@@ -73,28 +73,23 @@ public class OrgService {
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
-		if(result == 1) {
+		if(result == 1) { // 신규저장
 			try {
 				// ldap 저장
-				System.out.println("----신규저장----");
 				con.addOu(orgvo);				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}else if (result == 0){
-			System.out.println("----수정----");			
 			if(oldOrgVo.getOrg_nm()!=null){ // 수정
 					List<OrgVo> list = orgMapper.searchChildDept(orgvo);
 
 					for(int i=0;i<list.size();i++){
-						System.out.println("----list----" + list.get(i).toString());
+						// System.out.println("----list----" + list.get(i).toString());
 						newAllOrgNm = list.get(i).getAll_org_nm().replaceFirst(oldOrgVo.getOrg_nm(), orgvo.getOrg_nm());
 						newAllOrgName.setAll_org_nm(newAllOrgNm);
 						newAllOrgName.setSeq(list.get(i).getSeq());
-					
-						System.out.println("----newAllOrgName----" + newAllOrgName.getAll_org_nm());
-
 						orgMapper.allOrgNmUpdate(newAllOrgName);
 					}
 
@@ -118,7 +113,7 @@ public class OrgService {
 		List <OrgVo> childOrg = orgMapper.searchChildDept(orgvo);
 		
 		for(int i=0;i<childOrg.size();i++){
-			System.out.println("childOrg 삭제할 하위의 seq "+ childOrg.get(i).getSeq());
+			// System.out.println("childOrg 삭제할 하위의 seq "+ childOrg.get(i).getSeq());
 			orgMapper.deleteChildUser(childOrg.get(i));
 		}
 		orgMapper.deleteChildUser(orgvo);

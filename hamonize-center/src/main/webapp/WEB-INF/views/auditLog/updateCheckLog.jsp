@@ -236,9 +236,12 @@ function detail(uuid){
 			shtml += "<th>적용일</th>";
 			shtml += "</tr></thead>";
 			shtml += "<tbody>";
+			
 			$.each(data.device, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
+				console.log('디바이스 허용 여부 value.status_yn >> ' + value.status_yn);
+
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
 				shtml += "<tr>";
 				shtml += "<td>"+value.product+"("+value.vendorcode+":"+value.productcode+")</td>";
@@ -403,8 +406,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				for(var i = 0;i < data.policyProgrmResult.length;i++){
 					console.log(i);
 					console.log(i+1);
-					//console.log(data.policyProgrmResult.length);
-					//console.log(data.policyProgrmResult[i].progrmname);
 					var chk = 1;
 					if((i+1) == data.policyProgrmResult.length){
 						chk=0;
@@ -460,8 +461,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					for(var i = 0;i < data.policyFirewallResult.length;i++){
 					console.log(i);
 					console.log(i+1);
-					//console.log(data.policyFirewallResult.length);
-					//console.log(data.policyFirewallResult[i].Firewallname);
 					var chk = 1;
 					if((i+1) == data.policyFirewallResult.length){
 						chk=0;
@@ -517,8 +516,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					for(var i = 0;i < data.policyDeviceResult.length;i++){
 					console.log(i);
 					console.log(i+1);
-					//console.log(data.policyDeviceResult.length);
-					//console.log(data.policyDeviceResult[i].progrmname);
 					var chk = 1;
 					if((i+1) == data.policyDeviceResult.length){
 						chk=0;
@@ -559,7 +556,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					$(".right_box_r").append(shtml_r);
 				
 			}else{  
-				// gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 				shtml_r += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 			}
 

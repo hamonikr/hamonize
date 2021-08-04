@@ -49,6 +49,12 @@ public class MonitoringController {
 				return "/mntrng/mntrngList";
 	}
 
+	/**
+	 * 모니터링 페이지에서 pc 리스트 출력하는 메서드
+	 * @param model
+	 * @param params
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/pcList")
 	public Map<String, Object> pcList(Model model,@RequestParam Map<String, Object> params) {
@@ -81,7 +87,9 @@ public class MonitoringController {
 	
 	/**
 	 * 로그감사 > 정책배포결과
-	 *
+	 * 조직도 클릭시 해당 부서/팀에 소속된 pc리스트와 적용된 정책리스트 출력 
+	 * 출력 사항 : 업데이트 배포 결과, 프로그램 차단 배포 결과, 방화벽 정책 배포결과, 디바이스 정책배포결과
+	 * 
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/pcPolicyList")
@@ -137,7 +145,7 @@ public class MonitoringController {
 		 uuid = params.get("uuid").toString();
 		 vo.setPc_uuid(uuid);
 		 vo = pcmp.pcDetailInfo(vo);
-		 System.out.println("vo===="+vo.toString());
+		//  System.out.println("vo===="+vo.toString());
 
 		}
 	

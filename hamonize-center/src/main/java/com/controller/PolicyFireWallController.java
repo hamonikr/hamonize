@@ -24,7 +24,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.mapper.IPolicyFireWallMapper;
 import com.model.OrgVo;
-import com.model.PolicyDeviceVo;
 import com.model.PolicyFireWallVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
@@ -92,13 +91,7 @@ public class PolicyFireWallController {
 	
 		fService.fireWallDelete(params);
 		result = fService.fireWallSave(params);
-		
-		/*
-		 * try { OrgVo orgvo = new OrgVo(); vo = new PolicyProgramVo(); jsonArray =
-		 * oService.orgList(orgvo); pList = pService.programList(vo);
-		 * 
-		 * } catch (Exception e) { e.printStackTrace(); // FAIL_GET_LIST }
-		 */
+	
 		if (result >= 1)
 			return "SUCCESS";
 		else
@@ -116,13 +109,7 @@ public class PolicyFireWallController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		/*
-		 * vo = fService.fireWallApplcView(vo);
-		 * System.out.println("orgvo===="+vo.getSm_seq()); JSONObject data = new
-		 * JSONObject(); data.put("dataInfo", vo);
-		 * System.out.println("zzzzz"+data.get("sm_seq"));
-		 */
-
+	
 		return data;
 
 	}
@@ -192,8 +179,6 @@ public class PolicyFireWallController {
 	@ResponseBody
 	@RequestMapping(value = "/fManagePopDelete", method = RequestMethod.POST)
 	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyFireWallVo vo) throws Exception {
-		// log.info(" -- ctr:deleteIpManagementProc - vo : " + vo);
-
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {

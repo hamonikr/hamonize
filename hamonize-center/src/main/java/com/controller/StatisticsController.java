@@ -25,7 +25,6 @@ public class StatisticsController {
 	 */
 	@RequestMapping("/statistics")
 	public String statisticsPage(Model model){
-		//log.info(" -- ctr:statisticsPage");
 		JSONArray groupList = null;
 		
 		try {

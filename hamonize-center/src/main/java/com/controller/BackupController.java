@@ -135,7 +135,6 @@ public class BackupController {
 			if(!resultSet.isEmpty()) {
 		  	for(int i = 0; i < resultSet.size();i++) {
 		  		JSONObject jo = new JSONObject();
-		  		// jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
 		  		jo.put("seq", resultSet.get(i).get("seq").toString());
 				jo.put("org_seq", resultSet.get(i).get("org_seq").toString());
 		  		jo.put("pc_uuid", resultSet.get(i).get("pc_uuid").toString());
@@ -183,8 +182,9 @@ public class BackupController {
 			return result;
 				
 		}
-	  @ResponseBody
-	  @RequestMapping("backupRCSave")
+	  
+		@ResponseBody
+	    @RequestMapping("backupRCSave")
 		public String backupRCSave(HttpSession session, Model model,@RequestParam Map<String, Object> params) {
 		  params.put("pc_seq", Integer.parseInt(params.get("dept_seq").toString())); //dept_seq는 pc시퀀스번호
 		  params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));

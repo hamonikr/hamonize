@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.model.HmprogramVo;
 import com.model.OrgVo;
 import com.model.PolicyProgramVo;
 import com.service.HmprogramService;
@@ -44,7 +43,6 @@ public class PolicyNxssController {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
-			// FAIL_GET_LIST
 		}
 		System.out.println("pList=="+pList);
 		model.addAttribute("oList", jsonArray);

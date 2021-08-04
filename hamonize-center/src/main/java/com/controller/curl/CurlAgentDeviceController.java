@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IGetAgentDeviceMapper;
-import com.mapper.IGetAgentFirewallMapper;
 import com.mapper.IGetAgentJobMapper;
 import com.model.GetAgentDeviceVo;
-import com.model.GetAgentFirewallVo;
 import com.model.GetAgentJobVo;
 import com.util.StringUtil;
 
@@ -27,25 +25,31 @@ public class CurlAgentDeviceController {
 	private IGetAgentDeviceMapper getAgentDeviceMapper;
 
 	
-
+	/**
+	 * 에이전트에 디바이스 정책 보내는 부분
+	 * @param pcUuid
+	 * @param wget
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/device")
-	public String getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid,
-			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
+	public String getAgentJob(@RequestParam(value = "name", required = false) String pcUuid,
+			@RequestParam(value = "wget", required = false) String wget) throws Exception {
 
 		// 출력 변수
 		String output = "";
-		System.out.println("===" + sgbUuid + "==" + sgbWget);
-		sgbUuid = sgbUuid.trim();
+		System.out.println("===" + pcUuid + "==" + wget);
+		pcUuid = pcUuid.trim();
 
 		// uuid로 부서정보 가져오기
-		int segSeq = sgbUUID(sgbUuid);
+		int segSeq = pcUUID(pcUuid);
 		if( segSeq == 0 ) {
 			return  "nodata";
 		}
 		
 		GetAgentDeviceVo agentFirewallVo = new GetAgentDeviceVo();
 		agentFirewallVo.setOrg_seq(segSeq);
-		agentFirewallVo.setPcm_uuid(sgbUuid);
+		agentFirewallVo.setPcm_uuid(pcUuid);
 
 		int chkProgrmPolicy = getAgentDeviceMapper.getAgentWorkYn(agentFirewallVo);
 		System.out.println("//===================================");
@@ -107,8 +111,8 @@ public class CurlAgentDeviceController {
 		List<GetAgentDeviceVo> progrmPolicyData = getAgentDeviceMapper.getListDevicePolicy(getProgrmVo);
 		
 		System.out.println("//+progrmPolicyData.size() ==="+ progrmPolicyData.size() );
-		// 디비에서 가져온 데이터가 없으면 nodata
 		
+		// 디비에서 가져온 데이터가 없으면 nodata		
 		if( progrmPolicyData.size() == 0  ) {
 			jsonObject.put("nodata", "nodata");
 			return jsonObject;
@@ -179,9 +183,9 @@ public class CurlAgentDeviceController {
 	 * @param sgbUuid
 	 * @return 부서seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public int pcUUID(String pcUuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
-		agentVo.setPc_uuid(sgbUuid);
+		agentVo.setPc_uuid(pcUuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = 0;
 		if(agentVo != null ) {

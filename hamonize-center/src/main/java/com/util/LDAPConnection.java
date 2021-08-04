@@ -35,22 +35,15 @@ public class LDAPConnection {
 	public void connection(String url, String password) throws NamingException{
         Properties env = new Properties();
 
-		System.out.println("ldap url : " +url.trim());
-		System.out.println("ldap password : " +password.trim());
-		System.out.println("ldapAdminUser : " +"cn=admin,dc=hamonize,dc=com");
-		
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, url.trim());
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
         env.put(Context.SECURITY_PRINCIPAL, "cn=admin,dc=hamonize,dc=com");
         env.put(Context.SECURITY_CREDENTIALS, password.trim());
-        
-		System.out.println("env---? " + env);    	
-		
+    	
 		try {
 			dc = new InitialDirContext(env);
-			System.out.println("success");
-        } catch (AuthenticationException ex) {
+	    } catch (AuthenticationException ex) {
 			System.out.println(ex.getMessage());
 		} catch (NamingException e) {
             e.printStackTrace();
@@ -80,7 +73,6 @@ public class LDAPConnection {
 		
 		if(p_array.length > 1){
 				for(int i=p_array.length-1;i>=0;i--) {
-					System.out.println(p_array[i]);
 					upperDn += "ou="+p_array[i]+",";
 				}
 		
@@ -223,20 +215,15 @@ public class LDAPConnection {
 		System.out.println("str : "+ str.trim());
 		
 		String[] p_array = str.split("\\|");
-		System.out.println("array.length > "+p_array.length);
-		System.out.println("vo.getOrg_nm() : " +vo.getOrg_nm());
 	
 		if(str.length() > 0){
 			// 최상위 ou가 아닌경우
 			for(int i=p_array.length-1;i>=0;i--) {
-				System.out.println(p_array[i]);
 				upperDn += "ou="+p_array[i]+",";
 			}
 			baseDn = upperDn + baseDn;
 	
 		} else{ // 최상위 ou 
-			System.out.println("최상위인 경우 : " +vo.getOrg_nm());
-
 			baseDn = "ou="+vo.getOrg_nm()+",dc=hamonize,dc=com";
 		}
 		
@@ -299,9 +286,7 @@ public class LDAPConnection {
 		
 		try {
 			dc.destroySubcontext(dn);
-			System.out.println("success---");
 		} catch (NamingException e) {
-			System.out.println("fail---");			
 			e.printStackTrace();
 		}
 	}

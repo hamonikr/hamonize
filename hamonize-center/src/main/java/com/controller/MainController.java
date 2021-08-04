@@ -19,18 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
-	@Autowired
-	private IMainMapper mMapper;
 	
-	@Autowired
-	private MainService mService;
-
 	@Autowired
 	private MonitoringService miService;
 	
-	@Autowired
-	private ITchnlgyMapper tchnlgyMapper;
-
 	@RequestMapping("/")
 	public String mainPage() throws Exception {
 		return "redirect:/login/login";

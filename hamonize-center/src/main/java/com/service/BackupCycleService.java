@@ -28,12 +28,7 @@ public class BackupCycleService {
 
 	
 	public BackupCycleVo backupCycleList(BackupCycleVo vo) {
-		//log.info("====== vo : " + vo.toString());
-		
-		BackupCycleVo backupCycleList = backupCycleMapper.backupCycleList(vo);
-		
-		//log.info("====== backupCycleList.getBac_cycle_option() : " + backupCycleList);
-		
+		BackupCycleVo backupCycleList = backupCycleMapper.backupCycleList(vo);	
 		return backupCycleList;
 	}
 }

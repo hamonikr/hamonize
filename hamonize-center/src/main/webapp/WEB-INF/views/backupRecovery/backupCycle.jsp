@@ -162,10 +162,6 @@ function mk_form_text(doc, step, defaultStep){
 				    	
 				    	<div class="section"><span>2</span>백업주기 선택</div>
 				    	<div class="inner-wrap row">
-				    		
-				    		
-							<!-- <div id="pageGrideInHmprogram" class="row"></div> -->
-							
 							<div class="col-md-4">
 								<div class="card bg-light mb-3" style="width: 100%">
 									<div class="card-header">
@@ -243,8 +239,7 @@ function mk_form_text(doc, step, defaultStep){
 						
 				    	<div class="section"><span>3</span>백업주기 적용</div>
 				    	<div class="inner-wrap">
-				        	<!-- <input type="button" id="signup" name="signup"  value="적용"> -->
-			     			<button type="button" class="btn btn-outline-success" name="signup"  id="signup" ><span class="fa fa-check" ></span> 적용하기</button>  
+				        	<button type="button" class="btn btn-outline-success" name="signup"  id="signup" ><span class="fa fa-check" ></span> 적용하기</button>  
 				     		<span class="privacy-policy">
 				     			<input type="checkbox" name="field7">백업주기를 클라이언트에 적용시 OS 재부팅이 필요합니다.
 				     		</span>

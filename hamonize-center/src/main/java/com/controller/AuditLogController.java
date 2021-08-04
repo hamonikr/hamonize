@@ -81,7 +81,7 @@ public class AuditLogController {
 		int cnt = Integer.parseInt(logMapper.countUserLogListInfo(vo) + "");
 		pagingVo.setTotalRecordSize(cnt);
 		pagingVo = PagingUtil.setPaging(pagingVo);
-		System.out.println("vo getOrg_seq : "+ vo.getOrg_seq());
+		
 		try {
 			int index = 0;
 			List<AuditLogVo> list = logService.userLogList(vo, pagingVo);
@@ -320,10 +320,7 @@ public class AuditLogController {
 
 	@ResponseBody
 	@RequestMapping("pcMngrList.proc")
-	public Map<String, Object> listProc(PcMangrVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
-
-		System.out.println("===========" + vo.getOrg_seq());
-		
+	public Map<String, Object> listProc(PcMangrVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {	
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		// 페이징

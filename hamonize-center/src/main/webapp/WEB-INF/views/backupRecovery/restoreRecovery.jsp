@@ -8,25 +8,16 @@
 
 <link rel="stylesheet" href="/css/materialize.css">
 <script src="/js/materialize.js"></script>
-
-<!-- <script src="/js/views/programManagement.js"></script> -->
-
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 
 <!-- jquery alert -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-
 <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
 
 
 <%@ include file="../template/backupRecoveryHead.jsp" %>
-
-<%--
-<link rel="stylesheet" type="text/css" href="/css/restoreRecovery.css" />
-<script src="/js/views/restoreRecovery.js"></script>
---%>
 
 <style type="text/css">
 .form-style-10{
@@ -154,7 +145,6 @@ function mk_form_text(doc, step, defaultStep){
 						
 				    	<div class="section"><span>3</span>복구 적용</div>
 				    	<div class="inner-wrap">
-				        	<!-- <input type="button" id="signup" name="signup"  value="적용"> -->
 			     			<button type="button" class="btn btn-outline-success" name="signup"  id="signup" ><span class="fa fa-check" ></span> 복원하기</button>  
 				     		<span class="privacy-policy">
 				     			<input type="checkbox" name="field7">클라이언트에 적용시 OS 재부팅이 필요합니다.

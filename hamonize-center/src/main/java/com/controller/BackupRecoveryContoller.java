@@ -159,7 +159,6 @@ public class BackupRecoveryContoller extends EgovWebUtil{
 	 */
 	@RequestMapping(value="/restoreRecovery")
 	public String restoreRecoveryPage(Model model) {
-		//log.info(" -- restoreRecoveryPage");
 		JSONArray groupList = null;
 		
 		try {

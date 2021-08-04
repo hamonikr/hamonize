@@ -37,27 +37,12 @@
 					enable: true
 				}
 			},
-			/* check: {
-				enable: true
-			}, */
-			edit: {
-				drag: {
-					/* autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext */
-				}, 
+			edit: { 
 				enable: true,
 				showRemoveBtn: false,
 				showRenameBtn: false
 			},
 			callback: {
-				//beforeDrag: beforeDrag,
-				//beforeDrop: beforeDrop,
-				//beforeDragOpen: beforeDragOpen,
-				//onDrag: onDrag,
-				//onDrop: onDrop,
-				//onExpand: onExpand,
 				beforeClick: beforeClick,
 				onClick: onClick
 			}
@@ -90,9 +75,7 @@
 		
 	getList();
 	//등록버튼
-	//$("#btnSave").click(fnSave);
 	$("#excelBtn").on("click",function(){
-		//location.href="iNetLogExcel?org_seq="+$("#org_seq").val();
 		location.href="iNetLogExcel?org_seq="+$("#org_seq").val()+"&date_fr="+$("#date_fr").val()+"&date_to="+$("#date_to").val()+"&txtSearch="+$("#txtSearch").val()+"&keyWord="+$("#keyWord").val()+ "&prcssname=" + $("#prcssname").val()+ "&txtSearch0=" + $("#txtSearch0").val() + "&txtSearch1=" + $("#txtSearch1").val()+ "&txtSearch2=" + $("#txtSearch2").val()+ "&txtSearch3=" + $("#txtSearch3").val()+ "&txtSearch4=" + $("#txtSearch4").val()+ "&txtSearch5=" + $("#txtSearch5").val();
 	});
 	$("#txtSearch").keydown(function(key) {
@@ -119,20 +102,6 @@
 		$("#txtSearch5").val("0");
 		$("#prcssname").val("");
 		})
-	/* $(".sel_type1").change(function(){
-		var html = "";
-		html += "<div class=\"top_search mT20_d\">";
-		html += "<select id=\"keyWord\" name=\"keyWord\" title=\"keyWord\" class=\"sel_type1\" onchange=\"searchTxt();\">";
-		html += "<option value=\"0\">전체</option>";
-		html += "<option value=\"1\">이름</option>";
-		html += "<option value=\"2\">아이디</option>";
-		html += "<option value=\"3\">HOSTNAME</option>";
-		html += "<option value=\"4\">인터넷URL</option>";
-		html += "<option value=\"5\">계급</option>";
-		html += "</select>";
-		html += "</div>";
-		$(".top_search").append(html);
-	}); */
 	
 });
  
@@ -163,7 +132,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$('#pageGrideInListTb').empty();
 		$("#pagginationInList").empty();
 		$("#txtSearch").val("");
-		//$("#keyWord").val("0");
 		$("#currentPage").val(1);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
@@ -181,7 +149,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 					gbInnerHtml += "<td>"+value.pc_ip+"</td>";
 					gbInnerHtml += "<td>"+value.cnnc_url+"</td>";
-					/* gbInnerHtml += "<td>"+value.pc_uuid+"</td>";  */
 					gbInnerHtml += "<td>"+value.hostname+"</td>";
 					gbInnerHtml += "<td>"+value.state+"</td>";
 					if(value.insert_dt != "" && value.insert_dt != null)
@@ -238,7 +205,6 @@ var iNetLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 			gbInnerHtml += "<td>"+value.pc_ip+"</td>";
 			gbInnerHtml += "<td>"+value.cnnc_url+"</td>";
-			/* gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; */ 
 			gbInnerHtml += "<td>"+value.hostname+"</td>";
 			gbInnerHtml += "<td>"+value.state+"</td>"; 
 			if(value.insert_dt != "" && value.insert_dt != null)
@@ -407,7 +373,6 @@ function searchView(viewName, page){
                             <col style="width:7%;" />
                             <col style="width:10%;" />
                             <col style="width:23%;" />
-                            <!-- <col style="width:10%;" /> -->
                             <col style="width:10%;" />
                             <col style="width:10%;" />
                             <col style="width:10%;" />
@@ -420,7 +385,6 @@ function searchView(viewName, page){
                                 <th>번호</th>
                                 <th>사용자IP</th>
                                 <th>인터넷URL</th>
-                                <!-- <th>PC UUID</th> -->
                                 <th>PC관리번호</th>
                                 <th>상태</th>
                                 <th>시간</th>
