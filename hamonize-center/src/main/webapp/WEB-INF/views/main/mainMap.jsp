@@ -22,14 +22,7 @@
     <!-- Main CSS-->
 	<link href="css/theme.css" rel="stylesheet" media="all">
 	
-	
-	
-	
-	
-	
-    <link href="https://coderthemes.com/hyper/saas/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
-<!--     <link href="https://coderthemes.com/hyper/saas/assets/css/app-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" /> -->
     
     
 	<style>
@@ -42,24 +35,9 @@
             flex: 0 0 75%;
             max-width: 50%;
         }
-        .menubar li ul {
-            background: #3e3a39;
-            display: none;
-            height: auto;
-            padding-bottom: 10px;
-            margin: 0px;
-            border-radius: 0 0 7px 7px;
-            position: absolute;
-            width: 160px;
-            z-index: 200;
-        }
-        .hamo_header .logo {
-            width: 210px;
-            height: 50px;
-            position: absolute;
-            left: 40px;
-            top: 60px;
-        }
+        ol, ul {
+			    padding-left: 0rem;
+			}
 	</style>
 <body class="animsition">
 	<%@ include file="../template/topMenu.jsp" %>
