@@ -52,30 +52,27 @@ public class CurlAgentProgramController {
 		getProgrmVo.setOrg_seq(segSeq);
 		getProgrmVo.setPcm_uuid(uuid);
 
-
 		
 		boolean isAgentProgrmAction = false;
 		int chkProgrmPolicy = getAgentProgrmMapper.getAgentWorkYn(getProgrmVo);
-		List<GetAgentProgrmVo> progrmDataList = getAgentProgrmMapper.getAgentWorkYnList(getProgrmVo);
 		
-		if( progrmDataList.size() == 0 ) {
-			output = "nodata";
-		}else {
-			for( int a = 0; a < progrmDataList.size(); a++ ) {
-				System.out.println(progrmDataList.get(a).getPcm_name() );
-				
-				if ( progrmDataList.size() - 1 ==  a ) {
-					arrAgentProgrmY += progrmDataList.get(a).getPcm_name();
+		if ( chkProgrmPolicy == 0 ) {
+			isAgentProgrmAction = true;
+			JSONObject jsonProgrmData = progrmPolicyData(getProgrmVo);
+			if( jsonProgrmData.size() == 0 ) {
+				output = "nodata";
+			}else {
+				if( jsonProgrmData.get("nodata") != null ) {
+					output =  jsonProgrmData.get("nodata").toString();
+				}else if( jsonProgrmData.get("DATAINIT") != null ) {
+					output = "DATAINIT";
 				}else {
-					arrAgentProgrmY += progrmDataList.get(a).getPcm_name() + ",";
-				}				
+					output = jsonProgrmData.toJSONString();
+				}
 			}
-			
-			jsonObject.put("INS", arrAgentProgrmY);
-			output = jsonObject.toJSONString();
+		} else {
+			output = "nodata";
 		}
-		
-		System.out.println("output=======++"+ output);
 		
 		return output;
 	}
@@ -106,7 +103,6 @@ public class CurlAgentProgramController {
 
 		// 프로그램 정책 가져오기
 		List<GetAgentProgrmVo> progrmPolicyData = getAgentProgrmMapper.getListProgrmPolicy(getProgrmVo);
-		System.out.println("//+progrmPolicyData.size() ==="+ progrmPolicyData.size() );
 		if( progrmPolicyData.size() == 0  ) {
 			jsonObject.put("nodata", "nodata");
 			return jsonObject;
@@ -126,33 +122,31 @@ public class CurlAgentProgramController {
 		String arrAgentProgrmY = "", arrAgentProgrmN = "";
 		
 		if (outputDatga.size() > 0) {
-			for (int i = 0; i < outputDatga.size(); i++) {
+			
+			List<GetAgentProgrmVo> progrmDataList = getAgentProgrmMapper.getAgentWorkYnList(getProgrmVo);
+			String output = "";
+			if( progrmDataList.size() == 0 ) {
+				output = "nodata";
+			}else {
+				for( int a = 0; a < progrmDataList.size(); a++ ) {
+					System.out.println(progrmDataList.get(a).getPcm_name() );
+					
+					if(progrmDataList.get(a).getPcm_name() != null )  {
+						if ( progrmDataList.size() - 1 ==  a ) {
+							arrAgentProgrmY += progrmDataList.get(a).getPcm_name();
+						}else {
+							arrAgentProgrmY += progrmDataList.get(a).getPcm_name() + ",";
+						}				
+					}
+				}
 				
-				if( "INS".contentEquals(outputDatga.get(i).getGubun()) ) {
-					if ( outputDatga.size() - 1 ==  i ) {
-						arrAgentProgrmY += outputDatga.get(i).getPcm_name();
-					}else {
-						arrAgentProgrmY += outputDatga.get(i).getPcm_name() + ",";
-					}	
+				if(arrAgentProgrmY == "" ) {
+					jsonObject.put("DATAINIT", arrAgentProgrmY);
+					output = jsonObject.toJSONString();
+				}else {
+					jsonObject.put("INS", arrAgentProgrmY);
+					output = jsonObject.toJSONString();
 				}
-
-				if( "DEL".contentEquals(outputDatga.get(i).getGubun()) ) {
-					if ( outputDatga.size() - 1 ==  i ) {
-						arrAgentProgrmN += outputDatga.get(i).getPcm_name();
-					}else {
-						arrAgentProgrmN += outputDatga.get(i).getPcm_name() + ",";
-					}	
-				}
-			}
-			
-
-			
-			
-			if( arrAgentProgrmY != "" ) {
-				jsonObject.put("INS", arrAgentProgrmY);	
-			}
-			if( arrAgentProgrmN != "" ) {
-				jsonObject.put("DEL", arrAgentProgrmN);	
 			}
 			
 		}
