@@ -202,9 +202,10 @@ function fnSave(){
 		if(result=="SUCCESS"){
 			alert("정상적으로  처리되었습니다.");
 			location.reload();
-		}
-		else
+		}else{
 			alert("실패하였습니다.");
+			button.disabled	= false;
+		}
     }); 
 	
     return false;
@@ -303,16 +304,16 @@ function fnSave(){
 		                            <tr>
 		                                <th>방화벽명</th>
 		                                <td>
-										  	<input id="sm_name" name="sm_name" type="text" class="input_type1" style="width:100px;"/>
+										  	<input id="sm_name" name="sm_name" type="text" class="input_type1" style="width:100px;" maxlength="10" />
 		                                </td>
 		                                <th>방화벽정보</th>
 		                                <td>
-		                                	<input id="sm_dc" name="sm_dc" type="text" class="input_type1" style="width:100px;"/>
+		                                	<input id="sm_dc" name="sm_dc" type="text" class="input_type1" style="width:100px;" maxlength="20" />
 		                                </td>
 		                                <th>포트</th>
-		                                <td><input id="sm_port" name="sm_port" type="text" class="input_type1" style="width:250px" /></td>
+		                                <td><input id="sm_port" name="sm_port" type="text" class="input_type1" style="width:250px" maxlength="5"/></td>
 		                                <td class="t_right">
-		                                    <button type="button" id="saveFirewall" class="btn_type3">저장</button>
+		                                    <button type="button" id="saveFirewall" class="btn_type3">추가</button>
 		                                </td>
 		                            </tr>
 		                        </tbody>
@@ -431,6 +432,8 @@ function fnSave(){
 		var name = $('#sm_name').val();
 		var info = $('#sm_dc').val();
 		var port = $('#sm_port').val();
+		var regExp = /^[0-9_]/;
+
 		// 검증
 		if(name.length  <= 0){
 			alert('방화벽명을 입력해 주세요!');
@@ -441,11 +444,16 @@ function fnSave(){
 			alert('방화벽설명을 입력해 주세요!');
 			return;
 		}
+		
 		if(port.length  <= 0){
 			alert('방화벽설명을 입력해 주세요!');
 			return;
 		}
 		
+		if(!regExp.test(port)){
+			alert('방화벽은 숫자만 입력가능합니다!');
+			return flase;
+		}
 		
 		// 전송
 		$.ajax({
