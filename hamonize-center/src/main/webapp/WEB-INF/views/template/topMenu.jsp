@@ -121,7 +121,6 @@ function getMonthAgoday(){
                     <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a></li>
                 </ul>
                 </li>
-                <li><a href="/login/logout.do"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
             </ul>
         </div>
     </div><!-- //header -->

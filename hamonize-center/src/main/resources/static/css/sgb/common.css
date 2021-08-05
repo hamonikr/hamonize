@@ -94,7 +94,7 @@ layout
 
 .menubar        {border:none;border:0px;font-size:14px; clear: both; }
 .menubar ul     {background-image: linear-gradient(to right, rgba(67,189,213,1), rgba(128,87,215,1));height:70px;float:right;  width:100%; height:70px; text-align: right; font-size:0;  padding-right:160px;}
-.menubar li     {display: inline-block;padding:0px;border-left: 1px solid rgba(255, 255, 255, 0.2); position: relative}
+.menubar li     {display: inline-block;padding:0px;position: relative}
 .menubar li a   {display:block;line-height:70px;margin:0px;padding:0px 25px;text-align:center; color:#fff ; font-size:15px;}
 .menubar li a:hover, .menubar ul li:hover a{background: #3e3a39;}
 .menubar li ul     {background: #3e3a39;display:none;height:auto;padding-bottom: 10px; margin:0px;border-radius:0 0 7px 7px;position:absolute;width:160px;z-index:200; }
@@ -103,7 +103,7 @@ layout
 .menubar li:hover li a {background:none;}
 .menubar li ul a       {display:block;font-size:14px;margin:0px;padding:7px 25px;text-align:left;line-height:30px;}
 .menubar li ul a:hover, .menubar li ul li:hover a{border:0px; color:#69cdf4}
-.menubar li:last-child {border-right: 1px solid rgba(255, 255, 255, 0.2);} 
+/* .menubar li:last-child {border-right: 1px solid rgba(255, 255, 255, 0.2);}  */
 .menubar li ul li:last-child {border-right: 0} 
 .menubar li a.current{background: #3e3a39;}
 /* .menubar li ul.last {left:-74px}  */
