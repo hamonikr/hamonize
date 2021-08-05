@@ -171,7 +171,7 @@ public class ActAgentFirewallController {
 			System.out.println("Error reading JSON string: " + e.toString());
 		}
 
-		System.out.println("json===> " + json);
+		System.out.println("json===> " + json.toString());
 
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
