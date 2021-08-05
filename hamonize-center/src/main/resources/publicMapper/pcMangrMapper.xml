@@ -197,11 +197,11 @@
 			pc_change,
 			(select org_nm from tbl_org where seq = org_seq)as deptname,
 			(select all_org_nm from tbl_org where seq = org_seq)as alldeptname,
-			(select sido from tbl_org where seq = org_seq) as deptsido
+			(select org_nm from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_nm,
+			(select seq from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_seq
 		FROM tbl_pc_mangr
-
 		<where>
-			1=1
+			1=1		
 		<if test="pcMangrVo.org_seq != null and pcMangrVo.org_seq != ''">
 		and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
@@ -721,16 +721,13 @@
 							,ins_date
 						FROM tbl_act_firewall_log
 						WHERE 
-						--org_seq not in  (8307 , 8308 )
-							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
-							--and 
 							uuid in (
 								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
 								(
 									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 										FROM tbl_org a
-										WHERE a.seq = 1
+										WHERE a.seq = #{org_seq}
 										UNION all
 										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
 										FROM tbl_org a, search_org so
@@ -739,19 +736,16 @@
 										FROM search_org
 								)
 							)
-							--and gubun != 'DELETE'
 						GROUP BY seq,orgseq,uuid,datetime,hostname,status_yn,status,retport,ins_date
 						order by ins_date desc
 					) A
-					--WHERE A.debname != ''
-					--ORDER BY pc_uuid DESC
+					
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.ins_date DESC
 			<if test="type == 'main'">
 			limit 5
 			</if>
-			--TA.debname,  TA.gubun DESC
 		) PA
 	</select>
 
@@ -779,16 +773,13 @@
 							,productcode
 						FROM tbl_act_device_log
 						WHERE 
-						--org_seq not in  (8307 , 8308 )
-							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
-							--and 
 							uuid in (
 								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
 								(
 									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 										FROM tbl_org a
-										WHERE a.seq = 1
+										WHERE a.seq = #{org_seq}
 										UNION all
 										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
 										FROM tbl_org a, search_org so
@@ -797,19 +788,15 @@
 										FROM search_org
 								)
 							)
-							--and gubun != 'DELETE'
 						GROUP BY seq,uuid,hostname,status_yn,product,ins_date,vendorcode,productcode
 						order by ins_date desc
 					) A
-					--WHERE A.debname != ''
-					--ORDER BY pc_uuid DESC
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.ins_date DESC
 			<if test="type == 'main'">
 			limit 5
 			</if>
-			--TA.debname,  TA.gubun DESC
 		) PA
 	</select>
 	

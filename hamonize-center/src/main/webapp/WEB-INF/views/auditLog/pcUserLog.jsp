@@ -332,10 +332,10 @@ function searchView(viewName, page){
                         <colgroup>
                             <col style="width:5%;" />
                             <col style="width:7%;" />
+                            <col style="width:10%;" />
                             <col style="width:7%;" />
-                            <col style="width:10%;" />
-                            <col style="width:10%;" />
-                            <col style="width:10%;" />
+                            <col style="width:7%;" />
+                            <col style="width:7%;" />
                             
                             <col />
                         </colgroup>

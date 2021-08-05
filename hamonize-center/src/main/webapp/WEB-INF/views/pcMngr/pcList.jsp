@@ -170,8 +170,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				console.log(data.list)
 				
 				if( data.list.length > 0 ){
+					
 					$.each(data.list, function(index, value) {
 						var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
+						
+						console.log("value.deptname :"+value.org_seq);
+						console.log("value.org_nm :"+value.org_nm);
 
 						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 						gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
@@ -183,10 +187,16 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else{
 							gbInnerHtml += "<td></td>"; 
 						}
-						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date+"')\">"+value.pc_hostname+"</a></td>";
-						gbInnerHtml += "<td>"+value.first_date+"</td>";
+						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 						gbInnerHtml += "</tr>";
-						$('#pwd').html("경로: "+value.alldeptname+"");
+
+						if(value.org_seq ==1){
+							$('#pwd').html("경로: "+value.org_nm+"");	
+						} else{
+							$('#pwd').html("경로: "+value.alldeptname+"");
+						}
+
 					});	
 			}else{  
 				gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
@@ -229,11 +239,12 @@ function getPcMngrList(){
 	$('#pageGrideInPcMngrListTb').empty();
 	$('.page_num').empty();
 	
-	
 	if( data.list.length > 0 ){
+
 		$.each(data.list, function(index, value) {
+		
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-						
+			
 			gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 			gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 			gbInnerHtml += "<td>"+value.deptname+"</td>";
@@ -246,8 +257,8 @@ function getPcMngrList(){
 				gbInnerHtml += "<td></td>"; 
 			}
 			
-			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date+"')\">"+value.pc_hostname+"</a></td>";
-			gbInnerHtml += "<td>"+value.first_date+"</td>";
+			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 			gbInnerHtml += "</tr>";
 		
 		});	
@@ -386,7 +397,6 @@ function searchView(viewName, page){
 	                <thead>
 	                   <tr>
 	                       <th>번호</th>
-	                       <%-- <th>지역</th> --%>
 	                       <th>부서이름</th>
 	                       <th>OS</th>
 	                       <th>PC 호스트 이름</th>
