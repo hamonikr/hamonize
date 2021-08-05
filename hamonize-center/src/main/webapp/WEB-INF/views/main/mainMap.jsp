@@ -22,6 +22,16 @@
     <!-- Main CSS-->
 	<link href="css/theme.css" rel="stylesheet" media="all">
 	
+	
+	
+	
+	
+	
+    <link href="https://coderthemes.com/hyper/saas/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
+<!--     <link href="https://coderthemes.com/hyper/saas/assets/css/app-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" /> -->
+    
+    
 	<style>
         .col-lg-3 {
             -ms-flex: 0 0 33%;
@@ -55,84 +65,71 @@
 	<%@ include file="../template/topMenu.jsp" %>
 	
 	
-	<div class="page-wrapper">
-		<!-- PAGE CONTAINER-->
-		<div class="page-container">
-            <!-- MAIN CONTENT-->
-            <div class="main-content">
-                <div class="section__content section__content--p30">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="overview-wrap">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row m-t-25" style="justify-content: space-between;">
-                            <div class="col-sm-6 col-lg-3">
-                                <div class="overview-item overview-item--c1">
-                                    <div class="overview__inner">
-                                        <div class="overview-box clearfix">
-                                            <div class="icon">
-												<i class="zmdi zmdi-desktop-windows"></i>
-                                            </div>
-                                            <div class="text">
-                                                <h2>103</h2>
-                                                <span>Total</span>
-                                            </div>
-                                        </div>
-                                        <div class="overview-chart">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-3">
-                                <div class="overview-item overview-item--c2">
-                                    <div class="overview__inner">
-                                        <div class="overview-box clearfix">
-                                            <div class="icon">
-                                                <i class="zmdi zmdi-devices"></i>
-                                            </div>
-                                            <div class="text">
-                                                <h2>8,688</h2>
-                                                <span>On</span>
-                                            </div>
-                                        </div>
-                                        <div class="overview-chart">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-3">
-                                <div class="overview-item overview-item--c3">
-                                    <div class="overview__inner">
-                                        <div class="overview-box clearfix">
-                                            <div class="icon">
-                                                <i class="zmdi zmdi-devices-off"></i>
-                                            </div>
-                                            <div class="text">
-                                                <h2>1,086</h2>
-                                                <span>Off</span>
-                                            </div>
-                                        </div>
-                                        <div class="overview-chart">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="title-1 m-b-25">PC사용현황 <span id="topInfo"> </span></h2>
-                            <iframe src="http://106.254.251.74:13001/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0"></iframe>                       
-                        <div class="row m-t-25" id="list">
-                    </div>
-                </div>
-            </div>
-			<!-- END MAIN CONTENT-->
-		</div>
-		<!-- END PAGE CONTENT-->
-	</div><!-- //content -->
-	
-	
+                        
+     <div class="row">
+       <div class="col-xl-3 col-lg-4">
+           <div class="card tilebox-one">
+               <div class="card-body">
+                   <i class="zmdi zmdi-desktop-windows float-end"></i>
+                   <h6 class="text-uppercase mt-0">Total Computers</h6>
+                   <h2 class="my-2" id="totalComputers"></h2>
+<!-- <p class="mb-0 text-muted"> -->
+<!-- <span class="text-success me-2"><span class="mdi mdi-arrow-up-bold"></span> 5.27%</span> -->
+<!-- <span class="text-nowrap">Since last month</span>   -->
+<!-- </p> -->
+               </div> <!-- end card-body-->
+           </div>
+           <!--end card-->
+
+           <div class="card tilebox-one">
+               <div class="card-body">
+                   <i class="zmdi zmdi-devices float-end"></i>
+                   <h6 class="text-uppercase mt-0">Active Computers</h6>
+                   <h2 class="my-2" id="onComputers"></h2>
+<!-- <p class="mb-0 text-muted"> -->
+<!-- <span class="text-danger me-2"><span class="mdi mdi-arrow-down-bold"></span> 1.08%</span> -->
+<!-- <span class="text-nowrap">Since previous week</span> -->
+<!-- </p> -->
+               </div> <!-- end card-body-->
+           </div>
+           <!--end card-->
+           
+           <div class="card tilebox-one">
+               <div class="card-body">
+                   <i class="zmdi zmdi-devices-off float-end"></i>
+                   <h6 class="text-uppercase mt-0">Off Computers</h6>
+                   <h2 class="my-2" id="offComputers"></h2>
+<!-- <p class="mb-0 text-muted"> -->
+<!-- <span class="text-danger me-2"><span class="mdi mdi-arrow-down-bold"></span> 1.08%</span> -->
+<!-- <span class="text-nowrap">Since previous week</span> -->
+<!-- </p> -->
+               </div> <!-- end card-body-->
+           </div>
+           <!--end card-->
+
+       </div> <!-- end col -->
+
+       <div class="col-xl-9 col-lg-8">
+           <div class="card card-h-100">
+               <div class="card-body">
+                   <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
+                       	PC 사용현황
+                   </div>
+<!-- <h4 class="header-title mb-3">Sessions Overview</h4> -->
+						<iframe src="http://106.254.251.74:13001/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0"></iframe>
+                       </div> <!-- end card-body-->
+           </div> <!-- end card-->
+       </div>
+       
+		<div class="row" id="list">
+     		
+
+      <!-- end col-->
+
+ 		</div>
+                               
+   </div>
+   
 	
 	
 	
@@ -146,22 +143,29 @@
             var shtml = "";
             
 			if( data.pcList.length > 0){
-                console.log("data.length======"+data.pcList.length);
-                shtml += "<div class=\"col-lg-9\">";
-                shtml += "<h2 class=\"title-1 m-b-25\">업데이트 배포결과</h2>";
-                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
-                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
-                shtml += "<thead>";
-                shtml += "<tr>";
-                shtml += "<th>패키지</th>";
-                shtml += "<th>버전</th>";
-                shtml += "<th>구분</th>";
-                shtml += "<th>전체</th>";
-                shtml += "<th>완료</th>";
-                shtml += "<th>미완료</th>";
-                shtml += "</tr>";
-                shtml += "</thead>";
-                shtml += "<tbody>";
+                
+                
+                	shtml += "<div class='col-xl-6 col-lg-6'>";
+					shtml += "<div class='card' style='height: 300px;'>";
+                	shtml += "<div class='card-body'>";
+                	shtml += "<h4 class='header-title mt-1 mb-3'>업데이트 배포결과</h4>";
+
+                	shtml += "<div class='table-responsive'>";
+                	shtml += "<table class='table table-sm table-centered mb-0 font-14'>";
+                	shtml += "<thead class='table-light'>";
+                	shtml += "<tr>";
+                	shtml += "<th>패키지</th>";
+                	shtml += "<th>버전</th>";
+                	shtml += "<th>구분</th>";
+                	shtml += "<th>전체</th>";
+                	shtml += "<th>완료</th>";
+                	shtml += "<th>미완료</th>";
+                	shtml += "</tr>";
+					shtml += "</thead>";
+                	shtml += "<tbody>";
+					
+            
+            
                     for(var i = 0;i < data.policyUpdtResult.length;i++){
 					console.log(i);
 					console.log(i+1);
@@ -204,26 +208,33 @@
 							}
 					}
 
-                shtml += "</tbody>";
-                shtml += "</table>";
-                shtml += "</div>";
-                shtml += "</div>";
+					shtml += "</tbody>";
+					shtml += "</table>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";
 
+					
+                
+                shtml += "<div class='col-xl-6 col-lg-6'>";
+				shtml += "<div class='card' style='height: 300px;'>";
+            	shtml += "<div class='card-body'>";
+            	shtml += "<h4 class='header-title mt-1 mb-3'>프로그램 차단  배포결과</h4>";
 
-                shtml += "<div class=\"col-lg-9\">";
-                shtml += "<h2 class=\"title-1 m-b-25\">프로그램 차단 배포결과</h2>"
-                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
-                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
-                shtml += "<thead>";
-                shtml += "<tr>";
+            	shtml += "<div class='table-responsive'>";
+            	shtml += "<table class='table table-sm table-centered mb-0 font-14'>";
+            	shtml += "<thead class='table-light'>";
+            	shtml += "<tr>";
                 shtml += "<th>패키지</th>";
                 shtml += "<th>구분</th>";
                 shtml += "<th>전체</th>";
                 shtml += "<th>완료</th>";
                 shtml += "<th>미완료</th>";
-                shtml += "</tr>";
-                shtml += "</thead>";
-                shtml += "<tbody>";
+            	shtml += "</tr>";
+				shtml += "</thead>";
+            	shtml += "<tbody>";
+            	
 
                     for(var i = 0;i < data.policyProgrmResult.length;i++){
 					console.log(i);
@@ -262,31 +273,34 @@
 							}
 					}
 
-                shtml += "</tbody>";
-                shtml += "</table>";
-                shtml += "</div>";
-                shtml += "</div>";
+                    shtml += "</tbody>";
+					shtml += "</table>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";
+                
+                
+                shtml += "<div class='col-xl-6 col-lg-6'>";
+				shtml += "<div class='card'  style='height: 300px;'>";
+            	shtml += "<div class='card-body'>";
+            	shtml += "<h4 class='header-title mt-1 mb-3'>방화벽 정책  배포결과</h4>";
 
-
-                shtml += "<div class=\"col-lg-9\">";
-                shtml += "<h2 class=\"title-1 m-b-25\">방화벽 정책 배포결과</h2>"
-                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
-                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
-                shtml += "<thead>";
-                shtml += "<tr>";
+            	shtml += "<div class='table-responsive'>";
+            	shtml += "<table class='table table-sm table-centered mb-0 font-14'>";
+            	shtml += "<thead class='table-light'>";
+            	shtml += "<tr>";
                 shtml += "<th>포트번호</th>";
                 shtml += "<th>구분</th>";
                 shtml += "<th>전체</th>";
                 shtml += "<th>완료</th>";
                 shtml += "<th>미완료</th>";
-                shtml += "</tr>";
-                shtml += "</thead>";
-                shtml += "<tbody>";
+            	shtml += "</tr>";
+				shtml += "</thead>";
+            	shtml += "<tbody>";
+            	
+            	
                     for(var i = 0;i < data.policyFirewallResult.length;i++){
-					console.log(i);
-					console.log(i+1);
-					//console.log(data.policyFirewallResult.length);
-					//console.log(data.policyFirewallResult[i].Firewallname);
 					var chk = 1;
 					if((i+1) == data.policyFirewallResult.length){
 						chk=0;
@@ -318,31 +332,34 @@
 							shtml += "</tr>";
 							}
 					}
-
-                shtml += "</tbody>";
-                shtml += "</table>";
-                shtml += "</div>";
-                shtml += "</div>";         
+                    shtml += "</tbody>";
+					shtml += "</table>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";   
                 
-                shtml += "<div class=\"col-lg-9\">";
-                shtml += "<h2 class=\"title-1 m-b-25\">디바이스 정책 배포결과</h2>"
-                shtml += "<div class=\"table-responsive table--no-card m-b-40\">";
-                shtml += "<table class=\"table table-borderless table-striped table-earning\">";
-                shtml += "<thead>";
-                shtml += "<tr>";
+
+                shtml += "<div class='col-xl-6 col-lg-6'>";
+				shtml += "<div class='card' style='height: 300px;'>";
+            	shtml += "<div class='card-body'>";
+            	shtml += "<h4 class='header-title mt-1 mb-3'>디바이스 정책  배포결과</h4>";
+
+            	shtml += "<div class='table-responsive'>";
+            	shtml += "<table class='table table-sm table-centered mb-0 font-14'>";
+            	shtml += "<thead class='table-light'>";
+            	shtml += "<tr>";
                 shtml += "<th>디바이스</th>";
                 shtml += "<th>구분</th>";
                 shtml += "<th>전체</th>";
                 shtml += "<th>완료</th>";
                 shtml += "<th>미완료</th>";
-                shtml += "</tr>";
-                shtml += "</thead>";
-                shtml += "<tbody>";
+            	shtml += "</tr>";
+				shtml += "</thead>";
+            	shtml += "<tbody>";
+            	
+            	
                     for(var i = 0;i < data.policyDeviceResult.length;i++){
-					console.log(i);
-					console.log(i+1);
-					//console.log(data.policyDeviceResult.length);
-					//console.log(data.policyDeviceResult[i].progrmname);
 					var chk = 1;
 					if((i+1) == data.policyDeviceResult.length){
 						chk=0;
@@ -374,11 +391,12 @@
 							shtml += "</tr>";
 							}
 					}
-
-                shtml += "</tbody>";
-                shtml += "</table>";
-                shtml += "</div>";
-                shtml += "</div>";
+                    shtml += "</tbody>";
+					shtml += "</table>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";
+					shtml += "</div>";   
                 
                 $("#list").append(shtml);
 				
@@ -401,10 +419,11 @@ if(window.XMLHttpRequest){
 xmlhttp.onreadystatechange = function(){
 	if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
 		 var data = JSON.parse(xmlhttp.responseText);
-		 var text = document.getElementsByClassName("text");
-		 text[0].children[0].innerText=data.pcList.length;
-		 text[1].children[0].innerText=data.on;
-		 text[2].children[0].innerText=data.off;
+		 
+		 $("#totalComputers").text(data.pcList.length); 
+		 $("#onComputers").text(data.on);
+		 $("#offComputers").text(data.off);
+		 
 	}else{
 		console.log("fail");
 	}
