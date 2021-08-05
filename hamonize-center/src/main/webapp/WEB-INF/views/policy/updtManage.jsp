@@ -163,6 +163,7 @@ function setCheck() {
 
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
+	var button = document.getElementById('btnSave');
 
 	if(confirm("하위부서 및 부서가 있다면 하위부서 및 부서에도 전부 적용됩니다 적용하시겠습니까?")){
 	var ppm_seq = "";
@@ -190,15 +191,21 @@ function fnSave(){
 			queryArr.push(data);
     	}
 	})
+	
+	button.disabled	= true;
 
-	 $.post("usave.do", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
+	$.post("usave.do", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
 			 function(result){
 		if(result=="SUCCESS"){
 			alert("정상적으로  처리되었습니다.");
+			button.disabled	= false;
 			location.reload();
 		}
-		else
+		else{
 			alert("실패하였습니다.");
+			button.disabled	= false;
+		}
+			
     }); 
 
     return false;

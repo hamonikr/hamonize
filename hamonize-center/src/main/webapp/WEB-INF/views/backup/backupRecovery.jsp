@@ -209,8 +209,8 @@ function setCheck() {
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
 	
-	//var dept_seq = $('input[name="dept_seq"]:checked').val();
-	
+	var button = document.getElementById('btnSave');
+
 	var dept_seq = $('input[name="dept_seq"]:checked').val();
 	var br_seq = $('input[name="br_seq"]:checked').val();
 	var org_seq = $("#org_seq").val();
@@ -232,15 +232,20 @@ function fnSave(){
 	$('form[name=frm] input[name=br_seq]').val(br_seq);
 	$('form[name=frm] input[name=org_seq]').val(org_seq);
 
-	  $.post("backupRCSave.do", {dataType:'json',dept_seq:dept_seq,
-		  br_seq:br_seq,org_seq:org_seq}, 
-			 function(result){
-		if(result=="SUCCESS"){
-			alert("정상적으로  처리되었습니다.");
-			location.reload();
-		}
-		else
-			alert("실패하였습니다.");
+	button.disabled	= true;
+
+	$.post("backupRCSave.do", {dataType:'json',dept_seq:dept_seq,
+		br_seq:br_seq,org_seq:org_seq}, 
+			function(result){
+				if(result=="SUCCESS"){
+
+					alert("정상적으로 처리되었습니다.");
+					button.disabled	= false;
+
+					location.reload();
+				} else{
+					alert("실패하였습니다.");
+				}
     });   
     return false;
 }

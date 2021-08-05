@@ -168,6 +168,8 @@ function hide_layer(){
 
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
+	var button = document.getElementById('btnSave');
+	
 	if(confirm("하위부문 및 부서가 있다면 하위부문 및 부서에도 전부 적용됩니다 적용하시겠습니까?")){
 	var ppm_seq = "";
     $('input:checkbox[name=sm_seq]').each(function(i) {
@@ -197,14 +199,19 @@ function fnSave(){
     	}
 	})
 
-	 $.post("dsave.do", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
-			 function(result){
+	button.disabled	= true;
+	
+	$.post("dsave.do", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
+		function(result){	
 		if(result=="SUCCESS"){
 			alert("정상적으로  처리되었습니다.");
+			button.disabled	= false;
+	
 			location.reload();
-		}
-		else
+		}else{
 			alert("실패하였습니다.");
+			button.disabled	= false;
+		}
     }); 
 	
     return false;
@@ -270,7 +277,7 @@ function fnSave(){
 			         <!-- //update list -->
 			         <div class="right mT20">
 			             <button type="reset" class="btn_type2" id="btnInit"> 초기화</button>
-			             <button type="button" class="btn_type2" id="btnSave"> 저장</button>
+			             <button type="button" class="btn_type2" id="btnSave" > 저장</button>
 			         </div>
 						</form>
 	    	</div>
@@ -300,22 +307,22 @@ function fnSave(){
 		                            <tr>
 		                                <th>디바이스</th>
 		                                <td>
-										  	<input id="sm_name" name="sm_name" type="text" class="input_type1" style="width:100px;"/>
+										  	<input id="sm_name" name="sm_name" type="text" class="input_type1" style="width:100px;"  maxlength="20"/>
 		                                </td>
 		                                <th>VendorId</th>
 		                                <td>
-										  	<input id="vendor_id" name="vendor_id" type="text" class="input_type1" style="width:70px;"/>
+										  	<input id="vendor_id" name="vendor_id" type="text" class="input_type1" style="width:70px;" maxlength="4" />
 		                                </td>
 		                                <th>ProductId</th>
 		                                <td>
-										  	<input id="product_id" name="product_id" type="text" class="input_type1" style="width:70px;"/>
+										  	<input id="product_id" name="product_id" type="text" class="input_type1" style="width:70px;" maxlength="4" />
 		                                </td>
 		                                <th>설명</th>
 		                                <td>
-		                                	<input id="sm_dc" name="sm_dc" type="text" class="input_type1" style="width:270px;"/>
+		                                	<input id="sm_dc" name="sm_dc" type="text" class="input_type1" style="width:270px;"  maxlength="30" />
 		                                </td>
 		                                <td class="t_right">
-		                                    <button type="button" id="saveDevice" class="btn_type3">저장</button>
+		                                    <button type="button" id="saveDevice" class="btn_type3">추가</button>
 		                                </td>
 		                            </tr>
 		                        </tbody>
@@ -365,6 +372,7 @@ function fnSave(){
 
 	
 	<script type="text/javascript">
+
 	function searchView(viewName, page){
 			switch(viewName){
 				case 'classMngrList' : $("#MngeListInfoCurrentPage").val(page); getList(); break;	//	공지사항
@@ -433,7 +441,12 @@ function fnSave(){
 	function addDeviceFnt(){
 		var name = $('#sm_name').val();
 		var info = $('#sm_dc').val();
+		var vendor = $('#vendor_id').val();
+		var product = $('#product_id').val();
+		var regExp = /^[a-z0-9_]{4}$/;
+
 		$('#sm_device_code').val($('#vendor_id').val()+":"+$('#product_id').val());
+		
 		// 검증
 		if(name.length  <= 0){
 			alert('디바이스명을 입력해 주세요!');
@@ -445,6 +458,17 @@ function fnSave(){
 			return;
 		}
 		
+
+		if(!regExp.test(vendor)){
+			alert('vendorId는 4자리로된 영문,숫자로 이루어진 코드입니다. 다시 확인해주세요!');
+			return false;
+		}
+
+		if(!regExp.test(product)){
+			alert('productId는 4자리로된 영문,숫자로 이루어진 코드입니다. 다시 확인해주세요!');
+			return false;
+		}
+
 		// 전송
 		$.ajax({
 			url : '/gplcs/dManagePopSave',

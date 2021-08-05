@@ -381,6 +381,8 @@ function setCheck() {
 //등록 처리결과(공통명 : 프로그램명Json )
 function fnSave(){
 	
+	var button = document.getElementById('btnSave');
+
 	if($("#org_nm").val()==""){
 		alert("부서명을 입력해주세요.");
 		return false;
@@ -404,14 +406,17 @@ function fnSave(){
 	var org_nm = all_org_nm.split("|");
 
     $('form[name=frm]').append("<input type='hidden' name='type' value='save' />");        
-    
+
+	button.disabled	= true;
+
     $.ajax({
 		url: 'orgManage.do',							// Any URL
 		type: 'post',
 		data: $('#frm').serialize(),                 // Serialize the form data
 		success: function (data) { 					// If 200 OK
 			alert("등록되었습니다.");
-				location.reload();
+			button.disabled	= true;
+			location.reload();
 		},
 		error: function (xhr, text, error) {              // If 40x or 50x; errors
 			alert("등록되지 않았습니다.");
