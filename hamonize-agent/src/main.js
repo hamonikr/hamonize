@@ -490,11 +490,11 @@ async function fnDeviceJob(retData) {
 	var os = new os_func();
 	os.execCommand("sudo /usr/local/bin/center-lockdown").then(res => {
 		log.info("//== device 정책 :: centor-lockdown load --- > success\n");
-		console.log("res=="+ res);
+		console.log("res==" + res);
 		fnDeviceJob_result(deviceDataObj, 'Y');
 	}).catch(err => {
 		log.info("//==device 정책 :: centor-lockdown load --- > fail\n");
-		console.log("err==="+ err);
+		console.log("err===" + err);
 		// fnDeviceJob_result(deviceDataObj, 'N')
 	})
 
@@ -520,23 +520,23 @@ function fnDeviceJob_result(deviceDataObj, statusyn) {
 	}
 
 
-	if( returnDataIns.length == 0 && returnDataDel.length != 0 ){
+	if (returnDataIns.length == 0 && returnDataDel.length != 0) {
 		setDeviceJsonReturnData = returnDataDel;
-	}else if( returnDataIns.length != 0 && returnDataDel.length == 0 ){
+	} else if (returnDataIns.length != 0 && returnDataDel.length == 0) {
 		setDeviceJsonReturnData = returnDataIns;
-	}else if( returnDataIns.length != 0 && returnDataDel.length != 0 ){
+	} else if (returnDataIns.length != 0 && returnDataDel.length != 0) {
 		setDeviceJsonReturnData = returnDataIns.concat(returnDataDel);
 	}
 
-	
+
 
 	request.post('http://' + centerUrl + '/act/deviceAct', {
 		json: {
-			events: setDeviceJsonReturnData 
+			events: setDeviceJsonReturnData
 		}
 	}, (error, res, body) => {
 		if (error) {
-			console.error("error==="+error);
+			console.error("error===" + error);
 			return
 		}
 		console.log("//==device 정책 배포 결과 전송 :: " + res.statusCode);
@@ -668,12 +668,21 @@ function getProgrmDataCall(uuid) {
 			log.info("//== progrm 정책 data is :: " + data);
 			if (data != 'nodata') {
 				var fileDir = "/etc/hamonize/progrm/progrm.hm";
-				let content = data;
+				let content = '';
+
+				if (data == 'DATAINIT') {
+					content = '';
+				} else {
+					content = data;
+				}
+
 				fs.writeFile(fileDir, content, (err) => {
 					if (err) {
 						log.info("//==progrm 정책 error  " + err.message)
 					}
-					fnProgrmJob(content);
+					if (data != 'DATAINIT') {
+						fnProgrmJob(content);
+					}
 				});
 			} else {
 				log.info("//== progrm 정책 didn't working");
