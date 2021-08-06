@@ -134,7 +134,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				
 				if(agrs.length > 0){
 					for(var i =0; i< agrs.length;i++){
-						var uuid = agrs[i].sgb_pc_uuid;
+						var uuid = agrs[i].pc_uuid;
 						var hostnameVal = '';
 						if( agrs[i].pc_hostname.length >= textCutLength ){
 			                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
