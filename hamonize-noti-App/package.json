@@ -1,0 +1,68 @@
+{
+  "name": "hamonize-noti",
+  "version": "1.0.0",
+  "description": "hamonize-noti application ",
+  "author": "HamoniKR Team <hamonikr-packages@googlegroups.com>",
+  "main": "main.js",
+  "scripts": {
+    "start": "npm run noti",
+    "noti": "electron main.js",
+    "build:linux64": "electron-builder --linux --x64",
+    "clean": "rm -fr node_modules/ ./dist"
+  },
+  "keywords": [
+    "electron",
+    "notification",
+    "notification center",
+    "notify"
+  ],
+  "repository": "https://github.com/hamonikr/hamonize",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "4.0.0",
+    "electron-builder": "^22.11.7",
+    "pkg": "^4.4.0",
+    "standard": "^8.0.0"
+  },
+  "dependencies": {
+    "electron-args": "^0.1.0",
+    "electron-is": "^2.3.0",
+    "electron-localshortcut": "^3.2.1",
+    "electron-packager": "^15.3.0",
+    "jquery": "^3.6.0"
+  },
+  "build": {
+    "productName": "hamonize-noti",
+    "appId": "com.hamonize-noti",
+    "asar": true,
+    "protocols": {
+      "name": "hamonize-noti",
+      "schemes": [
+        "hamonize-noti"
+      ]
+    },
+    "win": {
+      "target": [
+        "zip",
+        "nsis"
+      ],
+      "icon": "./resources/installer/Icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "./resources/linuxicon"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "buildResources": "resources/installer/",
+      "output": "dist/",
+      "app": "."
+    }
+  }
+}
