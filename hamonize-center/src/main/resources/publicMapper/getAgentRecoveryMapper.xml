@@ -53,7 +53,6 @@
 			delete from tbl_progrm_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
 			delete from tbl_frwl_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
 			delete from tbl_device_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
-			delete from tbl_site_agent_job where pc_uuid = #{uuid};
 		commit;
 	</delete>	
 
