@@ -107,7 +107,9 @@ h2.tree_head {border-radius:10px 10px 0 0; display: block; line-height: 40px; he
 .con_right h3 {display: block; font-size:17px}
 .con_right h3 span {padding-left:20px; font-size:17px; font-size:15px}
 .con_right h3 span:before {content: "|"; padding-right: 20px; color:#ccc; font-weight: 400}
-.tree_list {height:400px;  overflow:scroll; padding:20px 20px 30px 20px; width: 300px}
+/* .tree_list {height:400px;  overflow:scroll; padding:20px 20px 30px 20px; width: 300px} */
+.tree_list {height:400px;  overflow:scroll; padding:30px 20px 30px 40px;}
+
 .tree_btn {position: absolute; bottom:10px; left:30px}
 .tree_btn button {font-size:12px}
 

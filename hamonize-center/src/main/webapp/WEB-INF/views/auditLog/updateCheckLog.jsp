@@ -58,7 +58,7 @@ caption {text-indent: 0; height: 30px; font-size: 16px; overflow: inherit;}
 			icon:"/images/icon_tree1.png"
 			</c:if>
 			<c:if test="${data.section eq 'S'}">
-			name:"[B]"+"${data.org_nm}",
+			name:"${data.org_nm}",
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
@@ -124,7 +124,7 @@ function detail(uuid){
 			shtml += "<div class=\"board_list_3\">";
 			shtml += "<table>";
 			shtml += "<colgroup>";
-			shtml += "<col style=\"width:30%;\" /><col style=\"width:30%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
+			shtml += "<col style=\"width:30%;\" /><col style=\"width:28%;\" /><col style=\"width:12%;\" /><col style=\"width:10%;\" /><col />";
 			shtml += "</colgroup>";
 			shtml += "<thead><tr>";
 			shtml += "<th>패키지</th>";
@@ -139,7 +139,7 @@ function detail(uuid){
 				var date = new Date(inset_dt);
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
 				shtml += "<tr>";
-				shtml += "<td class=\"t_left\">"+value.debname+"</td>";
+				shtml += "<td>"+value.debname+"</td>";
 				shtml += "<td>"+value.debver+"</td>";
 				shtml += "<td>"+value.gubun+"</td>";
 				if(value.state == "1")
@@ -296,7 +296,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<div class=\"board_list_3\">";
 				shtml_r += "<table>";
 				shtml_r += "<colgroup>";
-				shtml_r += "<col style=\"width:30%;\" /><col style=\"width:30%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
+				shtml_r += "<col style=\"width:30%;\" /><col style=\"width:28%;\" /><col style=\"width:12%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
 				shtml_r += "</colgroup>";
 				shtml_r += "<thead><tr>";
 				shtml_r += "<th>패키지</th>";
@@ -461,7 +461,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<col style=\"width:30%;\" /><col style=\"width:30%;\" /><col style=\"width:10%;\" /><col style=\"width:10%;\" /><col />";
 				shtml_r += "</colgroup>";
 				shtml_r += "<thead><tr>";
-				shtml_r += "<th>포트번호</th>";
+				shtml_r += "<th>디바이스</th>";
 				shtml_r += "<th>구분</th>";
 				shtml_r += "<th>전체</th>";
 				shtml_r += "<th>완료</th>";

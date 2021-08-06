@@ -4,12 +4,18 @@
 <link rel="stylesheet" type="text/css" href="/css/ztree/zTreeStyle.css" />
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
-
+<link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
 <script type="text/javascript" src="/js/ztree/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
 
 <style type="text/css">
+.board_view tbody td li:after {
+    content: "";
+    color: #ccc;
+    padding-left: 40px;
+    font-size: 13px;
+}
 .some-class {
   /* float: left; */
   clear: none;
@@ -71,7 +77,7 @@ input[type="radio"] {
 			icon:"/images/icon_tree1.png"
 			</c:if>
 			<c:if test="${data.section eq 'S'}">
-			name:"[B]"+"${data.org_nm}",
+			name:"${data.org_nm}",
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
@@ -109,25 +115,38 @@ input[type="radio"] {
 							var strHtml = "";
 					
 							for(var i = 0; i < agrs.length; i++){
-								console.log(i+"bbb==dept_seq="+agrs[i].dept_seq);
 							
-								strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
-								strHtml += "<label for=\"br_seq"+i+"\" class=\"pR50\">";
+// 								strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
+// 								strHtml += "<label for=\"br_seq"+i+"\" class=\"pR50\">";
+// 								if(agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
+// 								else if(agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
+// 								strHtml += "" + agrs[i].br_backup_name + "";
+// 								strHtml += "</label>";
 								
-								if(agrs[i].br_backup_gubun == 'A')
-								strHtml += "초기백업본 ";
-								else if(agrs[i].br_backup_gubun == 'B')
-								strHtml += "일반백업본 ";
-								
-								strHtml += "" + agrs[i].br_backup_name + "";
-								strHtml += "</label>"
+								strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
+					           strHtml += "<span>";
+					           strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
+					           strHtml += "<label style='float: unset;' for=\"br_seq"+i+"\" class=\"\">";
+
+		 						if(agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
+		 						else if(agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
+		 						strHtml += "</label>";
+					           strHtml += "</span>";
+					           strHtml += "<div style='padding: 10px 10px 10px 22px; font-size: 18px;'> 백업일자 : " + agrs[i].br_backup_name + "</div>";
+								strHtml += "</li>";
 								
 							} 
-							$("#rc_list").append(strHtml);
 							
+							$("#rc_list").append(strHtml);
+							$("#selectPcOne").text('');
 							if(agrs[0] != undefined || agrs[0] != null){
 								$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
 							}							
+							
+							if(agrs.length == 0 ){
+								$("#selectPcOne").text('등록된 정보가 없습니다.');
+								
+							}
 							
 					});
 		}); 
@@ -176,17 +195,25 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						var strHtml = "";
 						var tmp = "";
 						strHtml = " <div class=\"some-class\">";
-						for(var i = 0; i < agrs.length; i++){
-							console.log(agrs[i]);
-							if( i == 0 ){ tmp = "checked"; }
 						
-							strHtml += "";							
-							strHtml += "<div class=\"radio-holder\">";
-							strHtml += " <input id='dept_seq"+i+"' name='dept_seq' type='radio' value='"+agrs[i].seq+"'>";
-							strHtml += "<label for='dept_seq"+i+"'>" +agrs[i].pc_hostname+ "</label>";
-							strHtml += "</div>";
-						  
-						
+						if(agrs.length ==0 ){
+							strHtml +="등록된 정보가 없습니다.";
+							$("#selectPcOne").text('');
+						}else{
+							
+							for(var i = 0; i < agrs.length; i++){
+								console.log(agrs[i]);
+								if( i == 0 ){ tmp = "checked"; }
+							
+								strHtml += "";							
+								strHtml += "<div class=\"radio-holder\">";
+								strHtml += " <input id='dept_seq"+i+"' name='dept_seq' type='radio' value='"+agrs[i].seq+"'>";
+								strHtml += "<label for='dept_seq"+i+"'>" +agrs[i].pc_hostname+ "</label>";
+								strHtml += "</div>";
+							  
+							}
+							
+							$("#selectPcOne").text("복구할 PC를 선택해주세요.");
 						}
 						strHtml += "</div>";
 						$("#pc_list").append(strHtml);
@@ -293,12 +320,14 @@ function fnSave(){
                     </colgroup>
                     <tbody>
                         <tr>
-                            <th rowspan="3">PC 목록<br />(HostName)</th>
+                            <th >PC 목록<br />(HostName)</th>
                             <td id="pc_list" class="relist">부서를 선택해 주세요.</td>
-                            
                         </tr>
                         <tr>
-                            <td id="rc_list" class="relist">부서를 선택해 주세요.</td>
+                        	<td colspan='2'>
+                        		<span id='selectPcOne'></span>
+                           <ul class='promlist' id="rc_list"></ul>
+                         </td>
                         </tr>
                     </tbody>
                 </table>

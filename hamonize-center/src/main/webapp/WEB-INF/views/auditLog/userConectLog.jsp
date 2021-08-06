@@ -37,7 +37,7 @@
 			name:"${data.org_nm}"
 				</c:if>
 			<c:if test="${data.section eq 'S'}">
-			name:"[B]"+"${data.org_nm}"
+			name:"${data.org_nm}"
 				</c:if>
 			,od:"${data.org_ordr}"
 			,open:true},

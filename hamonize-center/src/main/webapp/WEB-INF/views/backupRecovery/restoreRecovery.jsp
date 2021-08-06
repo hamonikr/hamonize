@@ -169,7 +169,6 @@ function mk_form_text(doc, step, defaultStep){
 
 
 <script type="text/javascript">
-//부대 팝업
 ;(function($) {
     $(function() {
         $('#orgname').bind('click', function(e) {
@@ -217,11 +216,10 @@ $(document).ready(function() {
 		}
 		
 		
-		// 부대선택
 		if( allOrgNmCheckedList.length <= 0){
 			$.alert({
 			    title: 'Alert!',
-			    content:  '부대을 선택해주세요!',
+			    content:  '부서을 선택해주세요!',
 			    buttons: {
 			        확인: function(){
 			         //   location.href = '/notice/notice';

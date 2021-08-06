@@ -32,10 +32,10 @@ $(document).ready(function(){
 
 $( "#sp_on" ).click(function() {  
 	$( "#deviceInfo" ).slideToggle( "slow" ); 
-	if(document.getElementById('sp_on').innerText=="▼펼치기"){
-		document.getElementById('sp_on').innerText="▲닫기";
-	}else{
+	if(document.getElementById('sp_on').innerText=="▲닫기"){
 		document.getElementById('sp_on').innerText="▼펼치기";
+	}else{
+		document.getElementById('sp_on').innerText="▲닫기";
 	}
 });
 });
@@ -47,7 +47,7 @@ $( "#sp_on" ).click(function() {
 	<div class='wrap'>
     <div class='code-html' id='code-html'>
 		<div class="main_title" style="margin-top: 20px; ">
-		<span id="sp_on">▲닫기</span>
+		<span id="sp_on">▼펼치기</span>
 			컴퓨터 정보
 			&nbsp;
 			 <button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
@@ -56,7 +56,7 @@ $( "#sp_on" ).click(function() {
 
 		 <div style="display: inline-block; width: 43%; vertical-align: top; margin-right: 6%">
 			<div class="callout callout-info">
-				<h5>Device Hosname <p><c:out value="${pcvo.pc_hostname}" /></p></h5>
+				<h5>Device Hostname <p><c:out value="${pcvo.pc_hostname}" /></p></h5>
 			  </div>
 		</div>
 		<div style="display: inline-block; width: calc(100% - 54%); vertical-align: top;">

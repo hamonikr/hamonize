@@ -41,12 +41,12 @@
 		<c:forEach items="${oList}" var="data" varStatus="status" >
 		{ id:"${data.seq}", pId:"${data.p_seq}",
 			<c:if test="${data.section ne 'S'}">
-			name:"${data.org_nm} - ${data.seq}",
-			icon:"/images/icon_tree1.png"
+			name:"${data.org_nm} "
+// 			icon:"/images/icon_tree1.png"
 			</c:if>
 			<c:if test="${data.section eq 'S'}">
-			name:"[B]"+"${data.org_nm}",
-			icon:"/images/icon_tree2.png"
+			name:"${data.org_nm}"
+// 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
 			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
@@ -208,7 +208,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				var agrs = result;
 				console.log(agrs);
 				if(agrs.section == "S"){
-					console.log('-------------S');
 					
 					$("#trOrg_num").remove();
 					$("#trPseq").remove();
@@ -217,7 +216,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					var shtml = "<tr id=\"trPseq\"><th>상위 부서번호</th> <td><input type=\"text\" name=\"p_seq\" id=\"p_seq\" class=\"input_type1 w100\" readonly /></td></tr>";
 					$(".board_view tbody").append(shtml);
 				}else{
-					console.log('-------------DD');
 					$('#nm').html("부서명");
 					$("#trOrg_num").remove();
 					$("#trPseq").remove();

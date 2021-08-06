@@ -91,7 +91,7 @@ transform: translate(-50%, -50%);
 			icon:"/images/icon_tree1.png"
 				</c:if>
 			<c:if test="${data.section eq 'S'}">
-			name:"[B]"+"${data.org_nm}",
+			name:"${data.org_nm}",
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
@@ -162,20 +162,18 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		
+		
 		$("#org_seq").val(treeNode.id);
 		$.post("pcMngrList.proc",{org_seq:treeNode.id,pcMngrListCurrentPage:$("#pcMngrListCurrentPage").val()},
 			function(data){
 				var gbInnerHtml = "";
 				var classGroupList = data.list;
-				console.log(data.list)
 				
 				if( data.list.length > 0 ){
 					
 					$.each(data.list, function(index, value) {
 						var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
 						
-						console.log("value.deptname :"+value.org_seq);
-						console.log("value.org_nm :"+value.org_nm);
 
 						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 						gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
@@ -191,14 +189,18 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 						gbInnerHtml += "</tr>";
 
-						if(value.org_seq ==1){
-							$('#pwd').html("경로: "+value.org_nm+"");	
-						} else{
-							$('#pwd').html("경로: "+value.alldeptname+"");
-						}
+// 						if(value.org_seq ==1){
+// 							$('#pwd').html("경로: "+value.org_nm+"");	
+// 						} else{
+// 							$('#pwd').html("경로: "+value.alldeptname+"");
+// 						}
 
 					});	
 			}else{  
+// 				var parentName = $("#"+treeNode.parentTId+"_span").html();
+// 				$('#pwd').html("경로: "+parentName +"|" + treeNode.name);
+
+		
 				gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 			}
 			
@@ -208,11 +210,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			currentPage = data.pagingVo.currentPage;
 			totalRecordSize = data.pagingVo.totalRecordSize;
 			$('#count').html("검색결과: "+numberWithCommas(totalRecordSize)+"대");
-			console.log(startPage);
-			console.log(endPage);
-			console.log(totalPageSize);
-			console.log(currentPage);
-			console.log(totalRecordSize);
 			
 			var viewName='classMngrList';
 			if(totalRecordSize > 0){
@@ -256,7 +253,6 @@ function getPcMngrList(){
 			}else{
 				gbInnerHtml += "<td></td>"; 
 			}
-			console.log("value==="+JSON.stringify());
 			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
 			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 			gbInnerHtml += "</tr>";
@@ -272,11 +268,6 @@ function getPcMngrList(){
 	currentPage = data.pagingVo.currentPage;
 	totalRecordSize = data.pagingVo.totalRecordSize;
 	$('#count').html("검색결과: "+numberWithCommas(totalRecordSize)+"대");
-	console.log(startPage);
-	console.log(endPage);
-	console.log(totalPageSize);
-	console.log(currentPage);
-	console.log(totalRecordSize);
 	
 	var viewName='classMngrList';
 	if(totalRecordSize > 0){
@@ -482,7 +473,6 @@ function searchView(viewName, page){
 	<!-- 레이어 팝업용 자바스크립트 -->
 	<script type="text/javascript">
 		function detail_popup(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date, vpnip) {
-			console.log("pc_disk : " + pc_disk);
 			if(pc_os == "H"){
 				pc_os = hamonikrIcon; 
 			}else if(pc_os == "W"){

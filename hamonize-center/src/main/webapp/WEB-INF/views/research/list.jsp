@@ -61,7 +61,7 @@ text-decoration: none;
 			icon:"/images/icon_tree1.png"
 			</c:if>
 			<c:if test="${data.section eq 'S'}">
-			name:"[B]"+"${data.org_nm}",
+			name:"${data.org_nm}",
 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
