@@ -1,0 +1,9 @@
+[Unit]
+Description=Run hamonize at Startup
+After=systemd-user-sessions.service
+
+[Service]
+ExecStart=sudo /etc/hamonize/run-script-on-boot.sh login
+
+[Install]
+WantedBy=default.target

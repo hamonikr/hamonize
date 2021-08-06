@@ -1,0 +1,21 @@
+client
+# slpit vpn tunnel
+#pull-filter ignore redirect-gateway def1 bypass-dhcp
+#route-nopull <-- openvpn client 2.3 에서는 pull-filter 대신에 이 명령을 사용
+#pull-filter ignore dhcp-option DNS 8.8.8.8
+#route 192.168.0.0 255.255.255.0
+dev tun
+proto udp
+sndbuf 0
+rcvbuf 0
+remote 106.254.251.74 31194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+remote-cert-tls server
+auth SHA512
+cipher AES-256-CBC
+#setenv opt block-outside-dns
+key-direction 1
+verb 3

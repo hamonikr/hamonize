@@ -1,0 +1,92 @@
+# 장치를 사용할 수 없도록 하기 위해서는 /sys$devpath/authorized 값을 0으로 변경
+# $devpath : 현재 검색된 장치의 경로
+# 
+# 차단 메시지를 보이고 싶은 경우에는 아래 내용을 뒤에 추가
+# ENV{DISPLAY}=":0.0"
+# ex) ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="08", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+# 
+# 디버깅 : tail -f /tmp/usb-lockdown.log
+
+# https://usb.org/defined-class-codes
+# https://www.beyondlogic.org/usbnutshell/usb5.shtml
+# 
+# Authorizing (or not) your USB devices to connect to the system
+# https://www.kernel.org/doc/Documentation/usb/authorization.txt
+# 
+# USB 장치의 유형으로 제어를 하는 경우
+# Ref : https://usb.org/defined-class-codes
+# Ref : https://www.beyondlogic.org/usbnutshell/usb5.shtml
+
+# 장치의 유형 (클래스가 Device인지 Interface인지 사용에 주의)
+# 00h : Use class information in the Interface Descriptors      Device
+# 02h : Communications and CDC Control                          Both
+# 09h : Hub                                                     Device          (USB 멀티 허브)
+# 11h : Billboard Device Class                                  Device
+# DCh : Diagnostic Device                                       Both
+# FEh : Application Specific                                    Interface
+
+
+
+# 장치별로 전체 차단 (bInterfaceClass 기준으로 차단)
+# 해당 클래스는 USB가 꽂혔을 때 생긴다.
+
+
+
+######### USB default lockdown
+
+# 08h : Mass Storage Interface       (USB 저장장치)
+ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="08", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+
+######### USB ALLOW 
+
+# 05h : Physical Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="05", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+
+# 01h : Audio Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="01", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 03h : HID (Human Interface Device) Interface       (키보드, 마우스)
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="03", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 06h : Image Interface       (핸드폰 사진 전송 PTP)
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="06", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 07h : Printer Interface       (프린터)
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="07", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 0Ah : CDC-Data Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="0a", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 0Bh : Smart Card Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="0b", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 0Dh : Content Security Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="0d", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 0Eh : Video Interface  (웹캠, 디지털 캠코더, 비디오 스트리밍 장치)
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="0e", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 0Fh : Personal Healthcare Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="0f", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 10h : Audio/Video Devices Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="10", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# 12h : USB Type-C Bridge Class Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="12", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# E0h : Wireless Controller Interface
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="e0", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# EFh : Miscellaneous Both
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="ef", RUN="/usr/local/bin/usb-lockdown-work lockdown" ENV{DISPLAY}=":0.0"
+
+# FFh : Vendor Specific Interface       (USB 무선 랜카드, USB 유선 랜카드)
+# ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{bInterfaceClass}=="ff", RUN="/usr/local/bin/usb-lockdown-work allow" ENV{DISPLAY}=":0.0"
+
+
+### Center Add Vendor_ID PRODUCT_ID ###
+# ex) ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{idVendor}=="${VENDORCODE}", ATTRS{idProduct}=="${PRODUCTCODE}", RUN="/usr/local/bin/usb-lockdown-work allow"
+

@@ -1,0 +1,14 @@
+[Unit]
+Description=VPN Connect Service
+After=network-online.target
+Wants=network-online.target
+Requires=systemd-logind.service
+
+[Service]
+ExecStart=vpn-client-key
+Type=simple
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

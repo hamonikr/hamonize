@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=Hamonize Connector
+Name[ko]=하모나이즈 커넥터 
+GenericName=Hamonize Connector
+GenericName[ko]=하모나이즈 연결도구
+Comment=Connect to the Hamonize Center
+Comment[ko]=하모나이즈 센터에 연결합니다
+Path=/usr/local/hamonize-connect
+Exec=pkexec hamonize-connect
+Terminal=false
+Type=Application
+Icon=hamonize-connect
+Categories=Utility;Network;

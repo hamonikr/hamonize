@@ -1,0 +1,49 @@
+#!/bin/bash
+
+LOGFILE="/tmp/usb-lockdown.log"
+RUID=$(who | awk 'FNR == 1 {print $1}')
+RUSER_UID=$(id -u ${RUID})
+UUID=`cat /etc/hamonize/uuid |head -1`
+USER=`users`
+UNAUTHLOGFILE="/etc/hamonize/usblog/usb-unauth.hm"
+DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
+
+if [ ! -d /etc/hamonize/usblog ]; then
+        mkdir -p /etc/hamonize/usblog > /dev/null 2>&1
+        touch  $UNAUTHLOGFILE >/dev/null 2>&1
+fi
+
+
+# 장치 차단 및 차단 해제
+case $1 in
+    lockdown)
+        # 장치의 유형별로 전체 차단
+        if [ -f "/sys${DEVPATH%/*}/authorized" ]; then
+
+            # 벤더 프로덕트 ID 확인
+            if [ -f "/sys${DEVPATH%/*}/idVendor" ]; then
+                VENDOR=$(cat /sys${DEVPATH%/*}/idVendor)
+            fi
+            if [ -f "/sys${DEVPATH%/*}/idProduct" ]; then
+                PRODUCT=$(cat /sys${DEVPATH%/*}/idProduct)
+            
+            fi
+
+            sudo -u ${RUID} DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${RUSER_UID}/bus" zenity --error --width=300 --height=100 --text "허용된 USB 만 사용 가능합니다.\n\n관리자에 의해서 이 USB 장치 사용이 금지되었습니다.\n\n관리자에게 >문의하세요.\n\nVendor:Product = $VENDOR:$PRODUCT"
+
+            echo 0 | tee /sys${DEVPATH%/*}/authorized | tee -a $LOGFILE
+            
+
+            USBNMTMP=`lsusb | grep $VENDOR | grep $PRODUCT`
+           
+            echo "{ \"datetime\":\"$DATETIME\", \"uuid\":\"$UUID\", \"vendor\": \"$VENDOR\", \"product\": \"$PRODUCT\", \"usbinfo\": \"$USBNMTMP\", \"user\": \"$USER\" }" >> $UNAUTHLOGFILE
+        fi
+    ;;
+
+    allow)
+        # 특정 장치의 USB 허용
+        if [ -f "/sys${DEVPATH%/*}/authorized" ]; then
+            echo 1 | tee /sys${DEVPATH%/*}/authorized | tee -a $LOGFILE
+        fi
+    ;;
+esac

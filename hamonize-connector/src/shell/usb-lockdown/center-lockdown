@@ -1,0 +1,70 @@
+#!/bin/bash
+
+LOGFILE="/tmp/usb-lockdown.log"
+DEVICEFILE="/etc/hamonize/security/device.hm"
+RULESFILE="/etc/udev/rules.d/30-usb-lockdown.rules"
+
+
+
+if [ -f "${DEVICEFILE}" ]; then 
+
+    echo "--- Center Lockdown Start ---" | tee -a ${LOGFILE}
+
+    VAL=$(cat ${DEVICEFILE})
+    REGEXP="(-[0-9A-Za-z]{4}+):([0-9A-Za-z]{4}+)"
+    INS=($(echo ${VAL} | grep -Po '(?<="INS":")[^"]*' | grep -Eo "${REGEXP}" | cut -d"-" -f2 ))
+    DEL=($(echo ${VAL} | grep -Po '(?<="DEL":")[^"]*' | grep -Eo "${REGEXP}" | cut -d"-" -f2 ))
+    
+
+    # 장치 추가
+    if [ ! -z "$INS" ]; then
+
+        echo "--- INSERT Start ---" | tee -a ${LOGFILE}
+
+        for i in "${INS[@]}"
+        do
+        
+            VENDORCODE=`echo $i | cut -d":" -f1`
+            PRODUCTCODE=`echo $i | cut -d":" -f2`
+                
+            #중복체크 (CHECK 가 없을 경우 추가)
+            CHECK=`cat ${RULESFILE} | grep ${VENDORCODE} | grep ${PRODUCTCODE}`
+            if [ -z "${CHECK}" ]; then
+cat << EOF | tee -a $RULESFILE
+ACTION=="add", SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{idVendor}=="${VENDORCODE}", ATTRS{idProduct}=="${PRODUCTCODE}", RUN="/usr/local/bin/usb-lockdown-work allow"
+EOF
+            fi
+
+        done
+
+        echo "--- INSERT End ---" | tee -a ${LOGFILE}
+
+    fi
+
+    # 장치 삭제
+    if [ ! -z "$DEL" ]; then
+
+        echo "--- DELETE Start ---" | tee -a ${LOGFILE}
+
+        for i in "${DEL[@]}"
+        do
+
+            VENDORCODE=`echo $i | cut -d":" -f1`
+            PRODUCTCODE=`echo $i | cut -d":" -f2`
+
+            CHECK=`cat ${RULESFILE} | grep ${VENDORCODE} | grep ${PRODUCTCODE}`
+
+            if [ ! -z "$CHECK" ]; then
+                sed -i "/ATTRS{idVendor}==\"${VENDORCODE}\", ATTRS{idProduct}==\"${PRODUCTCODE}\"/d" ${RULESFILE}
+            fi
+
+        done
+
+        echo "--- DELETE End ---" | tee -a ${LOGFILE}
+    fi
+
+    echo "--- Center Lockdown Start ---" | tee -a $LOGFILE
+
+    udevadm control --reload-rules
+    
+fi

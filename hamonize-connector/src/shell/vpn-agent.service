@@ -1,0 +1,14 @@
+[Unit]
+Description=VPN Agent Connect Service
+After=network-online.target
+Wants=network-online.target
+Requires=systemd-logind.service
+
+[Service]
+ExecStart=/etc/hamonize/vpn-auto-agent.sh
+Type=simple
+Restart=always
+RestartSec=60min
+
+[Install]
+WantedBy=multi-user.target

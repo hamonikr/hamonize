@@ -1,0 +1,10 @@
+[Unit]
+Description=Run hamonize at shutdown
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStop=sudo /etc/hamonize/run-script-on-boot.sh logout
+
+[Install]
+WantedBy=multi-user.target
