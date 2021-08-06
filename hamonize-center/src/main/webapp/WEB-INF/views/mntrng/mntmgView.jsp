@@ -50,8 +50,7 @@ $( "#sp_on" ).click(function() {
 		<span id="sp_on">▲닫기</span>
 			컴퓨터 정보
 			&nbsp;
-<!-- 			<a href="hamonizecli://192.168.0.148" class="btn btn-link">원격제어하기</a> -->
-			 <button type="button" class="btn btn-link" onClick="location.href='hamonizecli://192.168.0.148'">원격제어하기</button>
+			 <button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
 		<span></span>
 		</div>
 

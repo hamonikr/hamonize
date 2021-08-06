@@ -195,6 +195,7 @@
 			pc_hostname,
 			pc_os,
 			pc_change,
+			pc_vpnip,
 			(select org_nm from tbl_org where seq = org_seq)as deptname,
 			(select all_org_nm from tbl_org where seq = org_seq)as alldeptname,
 			(select org_nm from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_nm,

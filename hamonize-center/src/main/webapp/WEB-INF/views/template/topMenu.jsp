@@ -81,7 +81,7 @@ function getMonthAgoday(){
     
  </script>
  <div class="hamo_header">
- <div class="admin_info">
+ 		 <div class="admin_info">
             <ul class="admin_sinfo">
                 <li><a href="/login/logout.do"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
             </ul>

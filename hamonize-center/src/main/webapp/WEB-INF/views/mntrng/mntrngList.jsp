@@ -75,7 +75,6 @@ text-decoration: none;
 						for(var i =0; i< agrs.length;i++){
 							var uuid = agrs[i].pc_uuid;
 							var hostnameVal = '';
-							console.log("textCutLength========++"+textCutLength +"====="+ agrs[i].pc_hostname.length);
 							if( agrs[i].pc_hostname.length >= textCutLength ){
 				                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
 				           }else{

@@ -13,19 +13,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=1200, user-scalable=1" name="viewport" />
 	
-	<!-- icon <i> -->
-	<!-- <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
-	<!-- <script type='text/javascript'  src="/js/jquery-3.2.1.slim.min.js"></script> -->
-	<!-- <link rel="stylesheet" type="text/css" href="/css/toastui.css" />
-	<link rel="stylesheet" type="text/css" href="/css/index.css" />
-	<link rel="stylesheet" type="text/css" href="/css/template/bootstrap4.css" />
-	<link rel="stylesheet" type="text/css" href="/css/ztree/zTreeStyle.css" /> -->
-	<!-- <script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script> -->
-	<!-- <script type="text/javascript" src="/js/index.js"></script>
-	<script type="text/javascript" src="/js/timer/timer.js"></script> -->
-	
-	
-	
 	<!-- 20190730 퍼블적용 -->
 	<link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
 	<link rel="stylesheet" type="text/css" href="/css/select2.css" />

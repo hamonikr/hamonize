@@ -97,7 +97,7 @@ layout
 .menubar li     {display: inline-block;padding:0px;position: relative}
 .menubar li a   {display:block;line-height:70px;margin:0px;padding:0px 25px;text-align:center; color:#fff ; font-size:15px;}
 .menubar li a:hover, .menubar ul li:hover a{background: #3e3a39;}
-.menubar li ul     {background: #3e3a39;display:none;height:auto;padding-bottom: 10px; margin:0px;border-radius:0 0 7px 7px;position:absolute;width:160px;z-index:200; }
+.menubar li ul     {background: #3e3a39;display:none;height:auto;padding-bottom: 10px; margin:0px;border-radius:0 0 7px 7px;position:absolute;width:0px;z-index:200; }
 .menubar li:hover ul{display:block;}
 .menubar li li         {display:block;float:none;margin:0px;padding:0px;width:170px;}
 .menubar li:hover li a {background:none;}
@@ -149,7 +149,7 @@ layout
  @media (max-width: 1680px) {
 .menubar li a   {padding:0px 20px;}
 
-.monitor_list li {width:125px; height:45px; margin:10px;}
+.monitor_list li {width:150px; height:45px; margin:10px;}
 }
 
 

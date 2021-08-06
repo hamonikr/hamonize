@@ -118,9 +118,7 @@ function detail(uuid){
 	$(".content_bapo").remove();
 	 $.post("detailPolicy.proc",{pc_uuid:uuid},
 			function(data){
-		 console.log("data.program.length11======"+data.program.length);
 			var shtml = "";
-			console.log("data.udpt.length======"+data.udpt.length);
 			shtml += "<div class=\"content_bapo\">";
 			shtml += "<h4>업데이트 배포결과</h4>";
 			shtml += "<div class=\"board_list_3\">";
@@ -155,9 +153,6 @@ function detail(uuid){
 			shtml += "</table>";
 			shtml += "</div>";
 
-			
-			console.log("data.program.length======"+data.program.length);
-			console.log("data======"+data);
 			shtml += "<h4>프로그램 차단 배포 결과</h4>";
 			shtml += "<div class=\"board_list_3\">";
 			shtml += "<table>";
@@ -188,9 +183,6 @@ function detail(uuid){
 			shtml += "</div>";
 			
 				
-			
-			console.log("data.firewall.length======"+data.firewall.length);
-			console.log("data======"+data);
 			shtml += "<h4>방화벽 정책 배포 결과</h4>";
 			shtml += "<div class=\"board_list_3\">";
 			shtml += "<table>";
@@ -222,8 +214,6 @@ function detail(uuid){
 			shtml += "</table>";
 			shtml += "</div>";
 	
-			console.log("data.device.length======"+data.device.length);
-			console.log("data======"+data);
 			shtml += "<h4>디바이스 허용 배포 결과</h4>";
 			shtml += "<div class=\"board_list_3\">";
 			shtml += "<table>";
@@ -240,7 +230,6 @@ function detail(uuid){
 			$.each(data.device, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-				console.log('디바이스 허용 여부 value.status_yn >> ' + value.status_yn);
 
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
 				shtml += "<tr>";
@@ -255,35 +244,6 @@ function detail(uuid){
 			shtml += "</tbody>";
 			shtml += "</table>";
 			shtml += "</div>";
-
-			console.log("data======"+data);
-			// shtml += "<h4>유해사이트 차단 배포 결과</h4>";
-			// shtml += "<div class=\"board_list_3\">";
-			// shtml += "<table>";
-			// shtml += "<colgroup>";
-			// shtml += "<col style=\"width:50%;\" /><col style=\"width:30%;\" /><col />";
-			// shtml += "</colgroup>";
-			// shtml += "<thead><tr>";
-			// shtml += "<th>구분</th>";
-			// shtml += "<th>적용여부</th>";
-			// shtml += "<th>적용일</th>";
-			// shtml += "</tr></thead>";
-			// shtml += "<tbody>";
-			// $.each(data.nxss, function(index, value) {
-			// 	var inset_dt = value.ins_date;
-			// 	var date = new Date(inset_dt);
-			// 	date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
-			// 	shtml += "<tr>";
-	
-			// 	if(value.file_gubun == "fording")
-			// 		shtml += "<td>이동사이트 및 알람 메세지</td>";
-			// 	else if(value.file_gubun == "filelist")
-			// 		shtml += "<td>유해사이트 목록</td>";
-					
-			// 		shtml += "<td>적용</td>";
-			// 		shtml += "<td>"+date+"</td>";
-			// 		shtml += "</tr>";
-			// });	
 			shtml += "</tbody>";
 			shtml += "</table>";
 			shtml += "</div>";
@@ -313,18 +273,24 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				function(data){
 			var shtml = "";
 			var shtml_r = "";
+			
+			var textCutLength = 10;		
+			
 			if( data.pcList.length > 0){
-				console.log("data.length======"+data.pcList.length);
 				shtml += "<ul class='monitor_list'>";
 				$.each(data.pcList, function(index, value) {
+						var hostnameVal = '';
+						if( value.pc_hostname.length >= textCutLength ){
+			                hostnameVal = value.pc_hostname.substr(0,textCutLength)+'...'; 
+			           }else{
+			        	   hostnameVal = value.pc_hostname;
+			            }
 					 if(value.pc_status == "true"){
 						cnt++;
-					console.log("pc_status--> "+value.pc_status);
-					shtml += "<li class='on'><a href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+value.pc_hostname+"</a></li>";
-						} else
-					shtml += "<li><a style='color:#555;' href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+value.pc_hostname+"</a></li>";
-					 
-				});	
+						shtml += "<li class='on'><a href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+hostnameVal+"</a></li>";
+					} else
+						shtml += "<li><a style='color:#555;' href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+hostnameVal+"</a></li>";
+					});	
 				shtml_r += "<div class=\"content_bapo\">";
 				shtml_r += "<h4>업데이트 배포결과</h4>";
 				shtml_r += "<div class=\"board_list_3\">";
@@ -336,16 +302,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<th>패키지</th>";
 				shtml_r += "<th>버전</th>";
 				shtml_r += "<th>구분</th>";
-				shtml_r += "<th>전체PC</th>";
+				shtml_r += "<th>전체</th>";
 				shtml_r += "<th>완료</th>";
 				shtml_r += "<th>미완료</th>";
 				shtml_r += "</tr></thead>";
 				shtml_r += "<tbody>";
 				for(var i = 0;i < data.policyUpdtResult.length;i++){
-					console.log(i);
-					console.log(i+1);
-					console.log(data.policyUpdtResult.length);
-					console.log(data.policyUpdtResult[i].debname);
 					var chk = 1;
 					if((i+1) == data.policyUpdtResult.length){
 						chk=0;
@@ -367,7 +329,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						shtml_r += "<td>"+noinstall+"</td>";
 						shtml_r += "</tr>";
 						}else if((i+1) == data.policyUpdtResult.length){
-							console.log("last");
 							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -398,14 +359,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<thead><tr>";
 				shtml_r += "<th>패키지</th>";
 				shtml_r += "<th>구분</th>";
-				shtml_r += "<th>전체PC</th>";
+				shtml_r += "<th>전체</th>";
 				shtml_r += "<th>완료</th>";
 				shtml_r += "<th>미완료</th>";
 				shtml_r += "</tr></thead>";
 				shtml_r += "<tbody>";
 				for(var i = 0;i < data.policyProgrmResult.length;i++){
-					console.log(i);
-					console.log(i+1);
 					var chk = 1;
 					if((i+1) == data.policyProgrmResult.length){
 						chk=0;
@@ -423,7 +382,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						shtml_r += "<td>"+noinstall+"</td>";
 						shtml_r += "</tr>";
 						}else if((i+1) == data.policyProgrmResult.length){
-							console.log("last");
 							var inset_dt = data.policyProgrmResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -453,14 +411,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<thead><tr>";
 				shtml_r += "<th>포트번호</th>";
 				shtml_r += "<th>구분</th>";
-				shtml_r += "<th>전체PC</th>";
+				shtml_r += "<th>전체</th>";
 				shtml_r += "<th>완료</th>";
 				shtml_r += "<th>미완료</th>";
 				shtml_r += "</tr></thead>";
 				shtml_r += "<tbody>";
 					for(var i = 0;i < data.policyFirewallResult.length;i++){
-					console.log(i);
-					console.log(i+1);
 					var chk = 1;
 					if((i+1) == data.policyFirewallResult.length){
 						chk=0;
@@ -478,7 +434,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						shtml_r += "<td>"+noinstall+"</td>";
 						shtml_r += "</tr>";
 						}else if((i+1) == data.policyFirewallResult.length){
-							console.log("last");
 							var inset_dt = data.policyFirewallResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -508,14 +463,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<thead><tr>";
 				shtml_r += "<th>포트번호</th>";
 				shtml_r += "<th>구분</th>";
-				shtml_r += "<th>전체PC</th>";
+				shtml_r += "<th>전체</th>";
 				shtml_r += "<th>완료</th>";
 				shtml_r += "<th>미완료</th>";
 				shtml_r += "</tr></thead>";
 				shtml_r += "<tbody>";
 					for(var i = 0;i < data.policyDeviceResult.length;i++){
-					console.log(i);
-					console.log(i+1);
 					var chk = 1;
 					if((i+1) == data.policyDeviceResult.length){
 						chk=0;
@@ -533,7 +486,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						shtml_r += "<td>"+noinstall+"</td>";
 						shtml_r += "</tr>";
 						}else if((i+1) == data.policyDeviceResult.length){
-							console.log("last");
 							var inset_dt = data.policyDeviceResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -559,7 +511,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				shtml_r += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 			}
 
-			console.log("cnt===="+cnt)
 		});
 		
 			
@@ -569,26 +520,20 @@ function getList(){
 	var url ='/mntrng/pcList.do';
 	
 	var keyWord = $("select[name=keyWord]").val();
-	console.log("keyWord===="+keyWord)
 
 	var vData = "org_seq=2"; 
 	callAjax('POST', url, vData, iNetLogGetSuccess, getError, 'json');
 }
 
 var iNetLogGetSuccess = function(data, status, xhr, groupId){
-	console.log("ss");
 	var cnt = 0;
 	var gbInnerHtml = "";
 	$('#pageGrideInListTb').empty();
 	$("#pagginationInList").empty();
-	console.log(data);
-	console.log('${on}');
-	console.log('${off}');
 	if( data.length > 0 ){
 		$.each(data, function(index, value) {
 			if(value.pc_status == "true"){
 				cnt++;
-			console.log(value.pc_status)
 				}
 
 			$(".cyberinfo li").each(function (i,v){
@@ -608,7 +553,6 @@ var iNetLogGetSuccess = function(data, status, xhr, groupId){
             
 		
 		});	
-		console.log("cnt===="+cnt)
 	}else{  
 		gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 	}
