@@ -64,10 +64,6 @@
                    <i class="zmdi zmdi-devices float-end"></i>
                    <h6 class="text-uppercase mt-0">Active Computers</h6>
                    <h2 class="my-2" id="onComputers"></h2>
-<!-- <p class="mb-0 text-muted"> -->
-<!-- <span class="text-danger me-2"><span class="mdi mdi-arrow-down-bold"></span> 1.08%</span> -->
-<!-- <span class="text-nowrap">Since previous week</span> -->
-<!-- </p> -->
                </div> <!-- end card-body-->
            </div>
            <!--end card-->
@@ -77,10 +73,6 @@
                    <i class="zmdi zmdi-devices-off float-end"></i>
                    <h6 class="text-uppercase mt-0">Off Computers</h6>
                    <h2 class="my-2" id="offComputers"></h2>
-<!-- <p class="mb-0 text-muted"> -->
-<!-- <span class="text-danger me-2"><span class="mdi mdi-arrow-down-bold"></span> 1.08%</span> -->
-<!-- <span class="text-nowrap">Since previous week</span> -->
-<!-- </p> -->
                </div> <!-- end card-body-->
            </div>
            <!--end card-->
@@ -93,7 +85,6 @@
                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
                        	PC 사용현황
                    </div>
-<!-- <h4 class="header-title mb-3">Sessions Overview</h4> -->
 						<iframe src="http://106.254.251.74:13001/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0"></iframe>
                        </div> <!-- end card-body-->
            </div> <!-- end card-->

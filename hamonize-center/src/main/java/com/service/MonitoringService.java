@@ -34,6 +34,7 @@ public class MonitoringService {
         try {
             list = mMpper.pcListInfo(params);
             for(int i = 0; i< list.size();i++){
+            	
                 for(int y = 0; y < influxList.size();y++){
                     if(list.get(i).get("pc_uuid").toString().trim().equals(influxList.get(y).getHost().trim())){
                         list.get(i).put("pc_status", "true");
@@ -55,11 +56,9 @@ public class MonitoringService {
                 .forDatabase("collectd").create();
         InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
         long start = System.currentTimeMillis();
-        System.out.println("startTime===="+start);
         QueryResult queryResult = influxDBTemplate.query(cpu_query);
         List<PcDataVo> memoryPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
         long end = System.currentTimeMillis();
-        System.out.println("spendtime===="+(end-start));
         return memoryPointList;
     }
 
