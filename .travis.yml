@@ -39,4 +39,6 @@ deploy:
     file: ../*.deb
     skip_cleanup: true
     draft: true
+    on:
+        branch: release
 
