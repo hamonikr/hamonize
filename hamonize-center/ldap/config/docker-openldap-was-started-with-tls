@@ -1,0 +1,4 @@
+export PREVIOUS_TLS_CA_CRT_PATH=/certs/ldap-selfsigned-ca//ldap-selfsigned-ca.crt
+export PREVIOUS_TLS_CRT_PATH=/certs//cert.pem
+export PREVIOUS_TLS_KEY_PATH=/certs//key.pem
+export PREVIOUS_TLS_DH_PARAM_PATH=/certs//dhparam.pem

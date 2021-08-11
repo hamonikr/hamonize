@@ -1,0 +1,55 @@
+version : '3'
+services : 
+    db:
+        image: postgres:10.16
+        environment:
+            POSTGRES_USER : hamonize
+            POSTGRES_PASSWORD : {your own db pw}
+            POSTGRES_DB : hamonize_center
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./sql:/docker-entrypoint-initdb.d
+            - psql-data:/var/lib/postgresql/data
+
+    web:
+        build: .
+        volumes:
+            - ./logs:/usr/local/tomcat/logs
+        ports:
+            - "8080:8080"
+    
+    ldap:
+        image: osixia/openldap:latest
+        hostname: ldap.hamonize.com        
+        ports:            
+            - "389:389"
+            - "636:636"
+        environment:
+            HOSTNAME: ldap.hamonize.com
+            LOG_LEVEL: 256
+            LDAP_DOMAIN: hamonize.com
+            LDAP_BASE_DN: dc=hamonize,dc=com
+            LDAP_ADMIN_PASSWORD: admin
+            LDAP_ORGANISATION: invesume 
+        volumes:
+            - ./ldap/data:/var/lib/openldap
+            - ./ldap/config:/etc/openldap/slapd.d              
+        domainname: "ldap.hamonize.com"
+        restart: always
+
+    phpldapadmin:
+        image: osixia/phpldapadmin:latest
+        ports:
+            - "80:80"
+        environment:
+            - PHPLDAPADMIN_LDAP_HOSTS=ldap
+            - PHPLDAPADMIN_HTTPS="false"
+        links:
+            - ldap
+        depends_on:
+            - ldap
+            
+volumes:
+    hamonize_center.sql:
+    psql-data:

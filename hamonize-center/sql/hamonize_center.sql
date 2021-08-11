@@ -253,7 +253,7 @@ GRANT ALL ON TABLE public.tbl_backup_agent_job TO hamonize;
 -- DROP TABLE public.tbl_backup_applc;
 
 CREATE TABLE public.tbl_backup_applc (
-	bac_seq int8 NOT NULL DEFAULT nextval('tbl_backup_applc_seq_seq'::regclass),
+	bac_seq bigserial NOT NULL,
 	org_seq int8 NULL,
 	bac_cycle_option varchar(50) NULL,
 	bac_cycle_time varchar(50) NULL,
@@ -299,7 +299,7 @@ GRANT ALL ON TABLE public.tbl_backup_applc_history TO hamonize;
 -- DROP TABLE public.tbl_backup_recovery_mngr;
 
 CREATE TABLE public.tbl_backup_recovery_mngr (
-	br_seq int8 NOT NULL DEFAULT nextval('tbl_backup_recovery_mngr_seq_seq'::regclass), -- 시리얼 번호
+	br_seq bigserial NOT NULL, -- 시리얼 번호
 	br_org_seq int8 NULL, -- 부서 번호
 	br_backup_path varchar(100) NULL, -- 백업 이미지 경로 및 iso 파일 이름
 	br_backup_iso_dt timestamp NULL DEFAULT now(), -- 백업일시
@@ -1100,7 +1100,7 @@ CREATE TABLE public.tbl_pc_mangr_ip_chn_log (
 	status varchar(100) NULL, -- 상태값
 	CONSTRAINT tbl_pc_mangr_ip_chn_log_pkey PRIMARY KEY (seq)
 );
-COMMENT ON TABLE public.tbl_pc_mangr_ip_chn_log IS '사지방 pc ip 변경 로그';
+COMMENT ON TABLE public.tbl_pc_mangr_ip_chn_log IS 'pc ip 변경 로그';
 
 -- Column comments
 
@@ -1802,3 +1802,20 @@ COMMENT ON COLUMN public.tbl_user.tel IS '사용자 전화번호';
 
 ALTER TABLE public.tbl_user OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_user TO hamonize;
+
+
+
+--- insert default data ---
+
+-- server list --
+INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_port) VALUES
+	('CLOUDURL','','',NULL,NULL,''),
+    ('APPURL','','',NULL,NULL,''),
+	('APTURL','','',NULL,NULL,''),
+	('COLLECTDIP','','10.8.0.2',NULL,NULL,''),
+	('CENTERURL','','ts.hamonikr.org',NULL,NULL,'');
+
+
+-- admin user --
+INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,upd_date,gubun) VALUES
+	 ('admin','admin','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',NULL,'2021-08-10 11:33:17.030959',NULL,'A');
