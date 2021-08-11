@@ -4,22 +4,39 @@
 ### [하모나이즈 센터](http://ts.hamonikr.org/)
 
 <br><br>
-## <b>Hamonize-center 설치</b>
+# <b>Hamonize-center 설치</b>
 
-1 단계 : 코드 받기<br>
-2 단계 : 개발 환경 구성하기<br>
-3 단계 : 실행하기  <br>
+## 1 단계 : 소스 빌드하기<br>
+## 2 단계 : 개발 환경 구성하기<br>
+## 3 단계 : 실행하기  <br>
 
-<br>
-
-
-# **1 단계 : 코드 받기**<br>
-현재/최신 릴리스는 항상 [깃헙 소스저장소](https://github.com/hamonikr/hamonize)에서 페이지 에서 찾을 수 있습니다. 
-
-<b>git clone https://github.com/hamonikr/hamonize.git </b><br><br><br>
+<br><br>
 
 
-# **2 단계 : 필요서버 구성하기**<br>
+## **1 단계 : 소스 빌드하기**<br>
+ ---
+1. 소스받기 <br>
+ 현재/최신 릴리스는 항상 [깃헙 소스저장소](https://github.com/hamonikr/hamonize)에서 페이지 에서 찾을 수 있습니다. 
+```
+ git clone https://github.com/hamonikr/hamonize.git 
+```
+
+<br><br>
+
+2. 소스 빌드하기 <br>
+- Apache Maven 3.6.3  <br>
+  
+  hamonize-center/ 위치에서 maven build 실행
+
+  ```
+   mvn clean && mvn install
+  ``` 
+
+
+<br><br>
+
+## **2 단계 : 필요서버 구성하기**<br>
+---
 <br>
 
 ### 1. DB 서버 구성하기
@@ -47,8 +64,8 @@ services :
         ...
 
 ```
+<br>
 
-<br><br>
 2) env > config.propertis 설정
 <br>
 
@@ -108,7 +125,7 @@ spring.db1.datasource.password={your own db pw}
 ...
 
 ## ldap 
-ldap.urls=ldap://{your own ldap ip}
+ldap.urls=ldap://localhost:389
 ldap.password={your own ldap pw}
 ...
 
@@ -125,24 +142,41 @@ ldap.password={your own ldap pw}
 
 <br><br>
 
-# **3 단계 : 실행하기**<br>
+## **3 단계 : 실행하기**<br>
+---
 <br>
 
 - Docker version 20.10.7
+- docker-compose version 1.29.2
+
+<br>
 
 1) 모든 서버 올리기
 ```
 docker-compose up
 ```
+&nbsp;&nbsp;&nbsp;&nbsp; ** 로그파일 위치 : **/logs/catalina.{실행날짜}.log **
+
 <br>
 
 2) 모든 서버 내리기
+
 ```
 docker-compose down
 ```
-** 서버를 재시작할땐 logs/ 하위의 로그파일들을 삭제해줘야합니다
+<br>
+
+3) 실행화면 <br>
+- 하모나이즈 센터 : http://localhost:8080 <br> * **default id/pw : admin / admin** <br><br> ![architecture](../img/center_login.png)
 
 <br>
-3) 로그파일 위치 : **/logs/catalina.{실행날짜}.log **
+
+- phpLdap admin : http://localhost:80  <br> * **default Dn/pw : cn=admin,dc=hamonize,dc=com / admin** <br><br> ![architecture](../img/phpLDAPadmin.png) <br><br> 센터의 자세한 매뉴얼은 [여기](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339504)에서 확인하실 수 있습니다
+
+  
+<br>
+
+
+
 
 

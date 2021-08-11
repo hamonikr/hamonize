@@ -30,8 +30,8 @@ services :
             LOG_LEVEL: 256
             LDAP_DOMAIN: hamonize.com
             LDAP_BASE_DN: dc=hamonize,dc=com
-            LDAP_ADMIN_PASSWORD: admin
-            LDAP_ORGANISATION: invesume 
+            LDAP_ADMIN_PASSWORD: {your own ldap pw}
+            LDAP_ORGANISATION: {your own ldap company} 
         volumes:
             - ./ldap/data:/var/lib/openldap
             - ./ldap/config:/etc/openldap/slapd.d              
