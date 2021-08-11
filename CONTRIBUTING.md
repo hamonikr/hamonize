@@ -62,6 +62,25 @@ Hamonize 프로젝트에 제안하려는 경우 최대한 상세하게 이슈에
    * README,CONTRIBUTING 등 문서 작업
    * 기타
 
+* Code Style
+   * Hamonize-Agent는 NodeJS + Shell Script 사용
+    - Linux Coding Style은 해당 링크를 참조하시기 바랍니다.  [ https://www.kernel.org/doc/html/latest/process/coding-style.html]
+    - Node.Js 는 Prettier Module를 사용
+    - 사용밥업 :  
+      1. npm i -D prettier or npm i --save-dev Prettier
+      2. prettier --write "**/*.js"
+      3. Package.json 추가 
+      ```
+      {
+          ...
+          "scripts": {
+              "prettier": "prettier --write '**/*.{ts,js,css,html}'"
+          }
+          ...
+      }
+      ```
+      4. npm run prettier
+
 ***참여부분을 저희에게 알려주세요. 더욱 자세하게 설명드립니다.**
 
 [이슈](https://github.com/hamonikr/hamonize/issues) 또는 [Slack채널](hamonikr.slack.com)을 이용해 주세요.

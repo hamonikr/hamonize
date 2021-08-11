@@ -33,12 +33,10 @@ before_deploy:
     - git tag ${TRAVIS_TAG}
 deploy:
     provider: releases
-    api_key: 
-        secure: "eqgvh+Dez4pF3akrzlKg4HX/JLumG2tGYm7KSGvz2oH6+vw3RjZG9GpSjplCk8PwvR3D8Zn9zND7+zbeINVWPkPozPiTDfH84L04Gb4tr72GJ5PqEt8B0oK7zg//t37MqnFEKzvvr/J6jM1jLNJ7SiooDjSy0c2a/bxxGA88BLxUffzcDC3/c5Eie99kbpLYoNhoflnYl5P3yBzW4nCBT2AsIGkq4ErJOkG/uJxdluHgS/qCaZSTGTRV69jnBj2/547B4/g3qNpj955VgIA9ei+XkLQk1shlc0h9t8NU4kmea9cIqFRBEKky2oq7MkulZQKWGQME0FTUfT/6OPYW9kvP/rQmuZc/4y+1flb2BE1IUDQBZUxLdktCuA9RO3ZkXxNObWXhtKiH0Zv66p/Xsa8BD2w5T2fYoId4LqtmyUDLsGAruHDlnxtcrnCiaoqhblt83vXiCY/yxFj8Ti7XXUKOW6/sBzTOz6QYIJTGKClF9YePu7BM5gei/A+rQaGvoA1kTUEqsijpA9YE6rIaYFeBULfHAk+kHyMmEmc882/+p4K4d3tLHxOelTE1gJ78id3jQHIwVc9SlXqQFNWXDheWH+7grBoJU0nd8uT5uBDhcTcpNGME7Igi0GyBZNHwqnHvONJLf+NSN9wX1msvgQKuSW3v4MWnJRclLpxoF5k="
     file_glob: true
     file: ../*.deb
     skip_cleanup: true
     draft: true
     on:
         branch: release
-
+    token: $GITHUB_TOKEN
