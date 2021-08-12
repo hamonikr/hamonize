@@ -8,16 +8,25 @@
 
 하모나이즈 어드민은 원격지 PC들을 관리하기 위한 원격 지원 및 모니터링을 할 수 있는 솔루션입니다.
 
+<br>
+
 ## License
 
 Copyright (c) 2004-2021 Invesume Inc / Tobias Junghans / Veyon Solutions
 
 See the file COPYING for the GNU GENERAL PUBLIC LICENSE.
 
+<br>
+
 ## Usage
 
+<img width="500" src="../img/admin_main.png">
+<br>
+
+ 자세한 내용은 [사용자 매뉴얼](hhttp://pms.invesume.com:8090/pages/viewpage.action?pageId=73339498) 을 참고하세요
 
 
+<br>
 
 ## BUILD
 
@@ -109,6 +118,26 @@ make install
 ```
 cmake -DCMAKE_BUILD_TYPE=Debug <path and other arguments>
 ```
+
+<br>
+
+### 참여하기
+* #### :sparkles: [issues](https://github.com/hamonikr/hamonize/issues?q=+is%3Aissue+milestone%3A%22%EC%9B%90%EA%B2%A9%EA%B4%80%EB%A6%AC+%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8+%EA%B0%9C%EB%B0%9C%22+)
+
+*  Code Style
+    <br>hamonize-admin 프로젝트는 [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) 를 준수하고 있습니다.<br>
+개발환경에 맞게 코드 스타일을 적용해주세요.<br> 아래는 예시입니다.
+    - vscode : setting.json 파일에 아래의 내용을 추가해주세요 
+      ```
+        "C_Cpp.clang_format_fallbackStyle": "Google"
+        "editor.formatOnSave": true  // 소스 저장시 바로 코드스타일 적용되는 옵션 
+        ...
+      ```
+    - visual studio code : Tools > Options > Text Editor > C/C++ > "Google" 선택
+  
+
+
+<br>
 
 ## More information
 

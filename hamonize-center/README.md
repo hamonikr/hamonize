@@ -1,5 +1,7 @@
 # Hamonize-center
-하모나이즈 센터는 원격지의 PC들을 통합적으로 관리 할 수있는 중앙관제 웹서비스입니다.
+![license](https://img.shields.io/badge/Apache-License2.0-green.svg)
+### Hamonize-center?
+하모나이즈 센터는 원격지의 PC들을 통합적으로 관리 할 수있는 중앙관제 웹서비스입니다
 <br>
 
 <b> [Hamonize-center](http://ts.hamonikr.org/) 데모 </b>
@@ -8,7 +10,7 @@
 
 # <b>Hamonize-center 기능</b>
 - 모니터링 서비스 <br>하모나이즈 센터의 모니터링 페이지는 다음과 같은 기능을 제공합니다.
-<br> 조직 내 PC의 하드웨어 정보, IP주소 등 세부 정보와 실시간 사용 정보를 확인하는 모니터링 서비스<br> 조직 내 PC에 접속해 원격으로 제어, 관리하는 원격제어 서비스 <br><br> <img width="250" src="../img/center_monitoring.png"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="250" src="../img/center_monitoring2.png"> 
+<br> * 조직 내 PC의 하드웨어 정보, IP주소 등 세부 정보와 실시간 사용 정보를 확인하는 모니터링 서비스<br> * 조직 내 PC에 접속해 원격으로 제어, 관리하는 원격제어 서비스 <br><br> <img width="250" src="../img/center_monitoring.png"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="250" src="../img/center_monitoring2.png"> 
 <br><br>
 
 - 조직관리 <br>하모나이즈 센터의 모든 중앙 관리 서비스는 조직의 구조를 기반으로 이뤄지고, 관리자는 조직관리 페이지를 통해 직접 조직의 구조를 구성할 수 있습니다. <br> <br>
@@ -82,8 +84,14 @@
 
 3) 실행화면 <br>
 - 하모나이즈 센터 : http://localhost:8080 <br> * **default id/pw : admin / admin** <br><br> <img width="500" src="../img/center_main.png">
+<br>
+<br>
+ 자세한 내용은 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339504) 을 참고하세요
 
-<br><br>
+
+
+<br>
+<br>
 
 
 
@@ -97,7 +105,7 @@
 
 
 ## **code-style** 
-<br>hamonize-center 프로젝트는 google-java-format 을 준수하고 있습니다.<br>
+<br>hamonize-center 프로젝트는 [Google Java Style](https://google.github.io/styleguide/javaguide.html) 을 준수하고 있습니다.<br>
 개발환경에 맞게 코드 스타일을 적용해주세요.<br> 아래는 예시입니다.
   - vscode : setting.json 파일에 아래의 내용을 추가해주세요 
   <br>
@@ -115,3 +123,4 @@
   <br>2) Import > eclipse-java-google-style.xml 선택 후 적용
 
 
+  
