@@ -92,7 +92,7 @@
 		</if>
 		DEPT_NAME = #{dept_name},
 		GUBUN = #{gubun},
-		UPDT_DT = now()
+		UPD_DATE = now()
 		WHERE USER_ID = #{user_id}
 
 	</update>
