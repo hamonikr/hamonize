@@ -83,9 +83,6 @@ public class LoginController implements Serializable {
 
 		if (lvo != null) {
 			loginService.updateLoginInfo(lvo);
-
-
-
 		}
 
 

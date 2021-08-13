@@ -49,24 +49,28 @@
 	
 	
 	<insert id="svrlstInsert" parameterType="com.model.SvrlstVo">
-        INSERT 
-        	INTO tbl_svrlst
-        	(
-				svr_nm, 
-				svr_domain, 
-				svr_ip, 
-				svr_port, 
-				svr_dc, 
-				insert_dt 
-        	) 
-        	VALUES(
-		        #{svr_nm},
-				#{svr_domain}, 
-				#{svr_ip}, 
-				#{svr_port}, 
-				#{svr_dc}, 
-				now() 
-	        )
+		with upsert as 
+		(
+			update tbl_svrlst set 
+				svr_nm = #{svr_nm}
+				,svr_ip = #{svr_ip}
+				,svr_port = #{svr_port}
+			where
+				seq = #{seq}
+			returning *
+		)
+		insert into tbl_svrlst
+		(
+			svr_nm,
+			svr_ip,
+			svr_port
+		)
+		select 
+			#{svr_nm},
+			#{svr_ip},
+			#{svr_port}
+		where not exists(select * from upsert);
+
 	</insert>
 	
 

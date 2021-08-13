@@ -29,13 +29,13 @@ public class SvrlstService {
 
 		return retData;
 	}
-	
-	
+
+
 
 	@Transactional
 	public void svrlstInsert(SvrlstVo nVo) throws Exception {
 		svrlstMapper.svrlstInsert(nVo);
 	}
-	
+
 
 }

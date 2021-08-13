@@ -42,12 +42,13 @@
                 </div><!-- //검색 -->
                 <div class="board_view2 mT20">
                 <form method="post" id="addForm" class="form-inline col-md-12 row" style="display:none;">
+					<input type="hidden" name="seq" id="seq" value=0> 
                     <table>
                         <colgroup>
                             <col style="width:7%;" />
                             <col style="width:10%;" />
-                            <col style="width:7%;" />
-                            <col style="width:13%;" />
+                            <!-- <col style="width:7%;" />
+                            <col style="width:13%;" /> -->
                             <col style="width:7%;" />
                             <col style="width:13%;" />
                             <col style="width:7%;" />
@@ -58,8 +59,8 @@
                             <tr>
                                 <th>서버명</th>
                                 <td><input type="text" name="svr_nm" id="svr_nm" class="input_type1"></td>
-                                <th>도메인</th>
-                                <td><input type="text" name="svr_domain" id="svr_domain" class="input_type1"></td>
+                                <!-- <th>도메인</th>
+                                <td><input type="text" name="svr_domain" id="svr_domain" class="input_type1"></td> -->
                                 <th>IP</th>
                                 <td><input type="text" name="svr_ip" id="svr_ip" class="input_type1"></td>
                                 <th>Port</th>
@@ -81,7 +82,6 @@
                             <col style="width:10%;" />
                             <col style="width:15%;" />
                             <col style="width:10%;" />
-                            <col style="width:20%;" />
                             <col />
                         </colgroup>
                         <thead>
@@ -89,10 +89,8 @@
                             	<th></th>
                                 <th>번호</th>
                                 <th>서버명</th>
-                                <th>도메인</th>
                                 <th>IP</th>
                                 <th>Port</th>
-                                <th>등록일</th>
                             </tr>
                         </thead>
                         <tbody id="pageGrideInSvrlstListTb">
@@ -270,6 +268,26 @@ $(document).ready (function () {
 	
 });
 
+function edit(seq,servernm,ip,port){
+	var form = $('#addForm');
+	console.log($("#seq").val());
+	console.log(seq);
+	if($("#seq").val()==seq){
+		form.css('display','none');
+		$("#seq").val("");
+		$("#svr_nm").val("");
+		$("#svr_ip").val("");
+		$("#svr_port").val("");
+		console.log($("#seq").val())
+	}else{
+		form.css('display','block');
+		$("#seq").val(seq);
+		$("#svr_nm").val(servernm);
+		$("#svr_ip").val(ip);
+		$("#svr_port").val(port);
+	}
+}
+
 //입력폼 초기화
 function fromReset(){
 	$('#svr_nm').val('');
@@ -324,15 +342,14 @@ var svrlstGetSuccess = function(data, status, xhr, groupId){
 	if( data.list.length > 0 ){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-			
+			if(value.svr_port == null)
+			value.svr_port = "-";
 			gbInnerHtml += "<tr data-code='" + value.seq + "'>";
 			gbInnerHtml += "<td><input type='checkbox' name='RowCheck' value='" + value.seq + "' style=\"display: -webkit-inline-box;\"></td>";
 			gbInnerHtml += "<td><span>"+no+"</span></td>";
-			gbInnerHtml += "<td>"+value.svr_nm+"</td>";
-			gbInnerHtml += "<td>"+value.svr_domain+"</td>";
+			gbInnerHtml += "<td><a href='#' onclick=\"edit("+value.seq+",'"+value.svr_nm+"','"+value.svr_ip+"','"+value.svr_port+"'); return false;\" >"+value.svr_nm+"</a></td>";
 			gbInnerHtml += "<td>"+value.svr_ip+"</td>";
 			gbInnerHtml += "<td>"+value.svr_port+"</td>";
-			gbInnerHtml += "<td>"+value.insert_dt+"</td>";
 			gbInnerHtml += "</tr>";
 		});	 
 	}else{ 
