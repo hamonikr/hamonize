@@ -1,16 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
  <style>
  #header_layer{
- width: 140px;
- height: 150px;
- background-color: #fff;
- display:none;
- position: absolute;
- top: 25px;
- left: 1700px;
- z-index: 1;
+	width: 140px;
+	height: 150px;
+	background-color: #fff;
+	display:none;
+	position: absolute;
+	top: 25px;
+	left: 1700px;
+	z-index: 1;
  }
-
+ .admin{
+	 cursor:pointer;  
+ }
  </style>
  <script>
  $(document).ready(function(){
@@ -83,6 +85,16 @@ function getMonthAgoday(){
  <div class="hamo_header">
  		 <div class="admin_info">
             <ul class="admin_sinfo">
+				<li><div class="dropdown">
+					<div class="admin">
+						<img src="/images/icon_setting.png" />
+						<span></span>
+					</div>
+					<div class="dropdown_content" >
+						<a href="/admin/list.do">관리자 관리</a>
+						<a href="/admin/serverlist.do">서버관리</a>
+					</div>
+				</div></li>
                 <li><a href="/login/logout.do"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
             </ul>
         </div>

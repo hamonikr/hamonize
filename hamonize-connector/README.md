@@ -1,12 +1,15 @@
 # Hamonize-Connector
 
-Hamonize-Connector는 원격지에서 다수의 PC를 관리하는데 필요한 기능들을 설치해주는 프로그램입니다. 
+### Hamonize-Connector?
+
+하모나이즈 커넥터는 원격지에서 다수의 PC를 관리하는데 필요한 기능들을 설치해주는 프로그램입니다
 
 
-<br></br>
+<br>
+
 ###  Usage
 
-##### 1. Hamonize-Center API Url 정보 수정.
+#### 1. Hamonize-Center API Url 정보 수정.
 
 Hamonize-Connector는 
 Hamonize-Center에서 등록된 원격지 컴퓨터들의 정보를 받아오기위해 Hamonize-Center 서버 API통신을 하고있습니다. 
@@ -22,8 +25,8 @@ CENTERURL="http://<Hamonize Center Url>/hmsvc/commInfoData"
 ```
 <br>
 
-##### 2. Vpn Client 
-Hamonize는 원격지의 컴퓨터 접근을위해 Vpn Ip를 이욯하고 있습니다. 
+#### 2. Vpn Client 
+Hamonize는 원격지의 컴퓨터 접근을위해 Vpn Ip를 이용하고 있습니다. 
 
 ```
 cd Hamonize-connector/shell
@@ -34,7 +37,7 @@ vi ./vpnInstall.sh 파일 수정
     
 ```
 
-##### 3. Hamonize-Connetor는 원격지의 컴퓨터를 관리하는데 필요한 실행 프로그램들을 일괄적으로 프로그램을 설치합니다. 
+#### 3. Hamonize-Connetor는 원격지의 컴퓨터를 관리하는데 필요한 실행 프로그램들을 일괄적으로 프로그램을 설치합니다. 
 
 ```
 
@@ -51,19 +54,46 @@ vi ./vpnInstall.sh 파일 수정
 <br>
 
 ### Install 
+
+src/ 위치에서 
 ```
 git clone 
 cd ./hamonize-connector
+
+npm install
 npm start 
 ```
 
 
 ### Build
+hamonize-connector/ 위치에서
 ```
 dpkg-buildpackage -T clean
 
 dpkg-buildpackage -b -us -uc -ui
 
 ```
+
+
+### 참여하기
+* #### :sparkles: [issues](https://github.com/hamonikr/hamonize/issues)
+
+*  Code Style
+   * Hamonize-Connector는 Electron + Shell Script 사용
+    - Linux Coding Style은 해당 [여기](https://www.kernel.org/doc/html/latest/process/coding-style.html) 를 참조하시기 바랍니다.
+    - electronjs는 Prettier Module를 사용
+    - 사용방법 :  
+      1. npm i -D prettier 
+      2. Package.json에 추가 아래의 내용추가 <br><br>
+      ```
+      {
+          ...
+          "scripts": {
+              "prettier": "prettier --write '**/*.{ts,js,css,html}'"
+          }
+          ...
+      }
+      ```
+      3. npm run prettier
 
     

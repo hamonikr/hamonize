@@ -25,7 +25,7 @@
     <div class="hamo_container">
         <div class="content_con">
 
-            <h2>사지방 서버관리</h2>
+            <h2>서버관리</h2>
             <ul class="location">
             </ul>
 
@@ -63,7 +63,7 @@
                                 <th>IP</th>
                                 <td><input type="text" name="svr_ip" id="svr_ip" class="input_type1"></td>
                                 <th>Port</th>
-                                <td><input type="text" name="svr_port" id="svr_port" class="input_type1" style="width:100px" /></td>
+                                <td><input type="text" name="svr_port" id="svr_port" class="input_type1" style="width:150px" /></td>
                                 <td class="t_right">
                                     <button type="button" class="btn_type3 btnAdd" >등록</button>
                                 </td>
@@ -213,7 +213,7 @@ $(document).ready (function () {
 		var ipt = $('#insert');
 		var form = $('#addForm');
 		if(form.css('display') == 'none') {
-			form.css('display', 'flex');
+			form.css('display', 'block');
 			ipt.css('opacity', '1');
 		}else{
 			form.css('display', 'none');

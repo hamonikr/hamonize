@@ -34,28 +34,29 @@ import com.util.StringUtil;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-	
+
 	@Autowired
 	private AdminService adminservice;
-	
+
 	@Autowired
 	private OrgService oService;
 
 	@Autowired
 	private SvrlstService svrlstService;
-	
+
 	@Autowired
 	private ISvrlstMapper svrlstMapper;
-	
-	//서버 관리자
+
+	// 서버 관리자
 	@RequestMapping("/serverlist")
-	public String serverlist(HttpSession session, Model model,AdminVo vo) throws Exception{
+	public String serverlist(HttpSession session, Model model, AdminVo vo) throws Exception {
 		return "/svrlst/list";
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("serverlist.proc")
-	public Map<String, Object> serverlistProc(SvrlstVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
+	public Map<String, Object> serverlistProc(SvrlstVo vo, PagingVo pagingVo, HttpSession session,
+			HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		// 페이징
@@ -63,8 +64,8 @@ public class AdminController {
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.CustomerPaging, pagingVo);
 
 		int cnt = Integer.parseInt(svrlstMapper.countSvrlstListInfo(vo) + "");
-		
-		
+
+
 		pagingVo.setTotalRecordSize(cnt);
 		pagingVo = PagingUtil.setPaging(pagingVo);
 
@@ -81,36 +82,38 @@ public class AdminController {
 
 		return jsonObject;
 	}
-	
-	
+
+
 	@RequestMapping("serverlistDelete.proc")
-	public String serverlistDelete(SvrlstVo vo, PagingVo pagingVo, HttpSession session, HttpServletRequest request) {
+	public String serverlistDelete(SvrlstVo vo, PagingVo pagingVo, HttpSession session,
+			HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		
+
 		svrlstMapper.svrlstDelete(vo);
-		
+
 		return "/svrlst/list";
 	}
-	
-	
-	
+
+
+
 	@ResponseBody
-	@RequestMapping(value="serverlistInsert.proc")
-	public Map<String, Object> serverlistInsert(HttpSession session, SvrlstVo nVo) throws Exception {
-		
+	@RequestMapping(value = "serverlistInsert.proc")
+	public Map<String, Object> serverlistInsert(HttpSession session, SvrlstVo nVo)
+			throws Exception {
+
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		
+
 		try {
 			svrlstService.svrlstInsert(nVo);
-			
+
 			jsonObject.put("msg", Constant.Board.SUCCESS_GROUP_BOARD);
 			jsonObject.put("success", true);
-			
+
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
-		} catch (DataIntegrityViolationException dive ){
+		} catch (DataIntegrityViolationException dive) {
 			dive.printStackTrace();
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
@@ -119,166 +122,168 @@ public class AdminController {
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		}
-		
-		
+
+
 		return jsonObject;
 	}
-	
-	
-	//센터 관리자
+
+
+	// 센터 관리자
 	@RequestMapping("/list")
-	public String list(HttpSession session, Model model,AdminVo vo) throws Exception{
+	public String list(HttpSession session, Model model, AdminVo vo) throws Exception {
 		List<AdminVo> list = new ArrayList<AdminVo>();
 
-			// 페이징
-			vo.setCurrentPage(vo.getAdminListInfoCurrentPage());
-			vo = (AdminVo) PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, vo);
-			int cnt = Integer.parseInt(adminservice.countListInfo(vo) + "");
-			vo.setTotalRecordSize(cnt);
-			vo = (AdminVo) PagingUtil.setPaging(vo);
-			list = adminservice.adminList(vo);
-			
-		model.addAttribute("keyWord",vo.getKeyWord());
-		model.addAttribute("txtSearch",vo.getTxtSearch());
+		// 페이징
+		vo.setCurrentPage(vo.getAdminListInfoCurrentPage());
+		vo = (AdminVo) PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, vo);
+		int cnt = Integer.parseInt(adminservice.countListInfo(vo) + "");
+		vo.setTotalRecordSize(cnt);
+		vo = (AdminVo) PagingUtil.setPaging(vo);
+		list = adminservice.adminList(vo);
+
+		model.addAttribute("keyWord", vo.getKeyWord());
+		model.addAttribute("txtSearch", vo.getTxtSearch());
 		model.addAttribute("aList", list);
 		model.addAttribute("paging", vo);
-		
+
 		return "/admin/list";
 	}
+
 	@RequestMapping("/view")
-	public String view(Model model,AdminVo vo) throws Exception{
-		
-		if(vo.getUser_id() != null) {
+	public String view(Model model, AdminVo vo) throws Exception {
+
+		if (vo.getUser_id() != null) {
 			AdminVo avo = adminservice.adminView(vo);
-			model.addAttribute("result",avo);
+			model.addAttribute("result", avo);
 		}
-		
+
 		return "/admin/view";
-		
+
 	}
-	
+
 	@RequestMapping("/save")
 	@ResponseBody
-	public int save(Model model,AdminVo vo) throws NoSuchAlgorithmException {
-		int result=0;
+	public int save(Model model, AdminVo vo) throws NoSuchAlgorithmException {
+		int result = 0;
 		vo.setPass_wd(StringUtil.EncodingSHA256(vo.getPass_wd()));
 		result = adminservice.adminSave(vo);
 		return result;
-		
+
 	}
-	
+
 	@RequestMapping("/modify")
 	@ResponseBody
-	public int modify(Model model,AdminVo vo) throws Exception {
-		int result=0;
-		if(vo.getPass_wd() != null || vo.getPass_wd() != "") {
-		vo.setPass_wd(StringUtil.EncodingSHA256(vo.getPass_wd()));
+	public int modify(Model model, AdminVo vo) throws Exception {
+		int result = 0;
+		if (vo.getPass_wd() != null || vo.getPass_wd() != "") {
+			vo.setPass_wd(StringUtil.EncodingSHA256(vo.getPass_wd()));
 		}
-		
+
 		result = adminservice.adminModify(vo);
 		return result;
-		
+
 	}
-	
+
 	@RequestMapping("/delete")
 	@ResponseBody
-	public int delete(Model model,AdminVo vo) throws Exception{
-		int result=0;
+	public int delete(Model model, AdminVo vo) throws Exception {
+		int result = 0;
 		result = adminservice.adminDelete(vo);
 		return result;
-		
+
 	}
-	
+
 	@RequestMapping("/idDuplCheck")
 	@ResponseBody
-	public int idDuplCheck(Model model,AdminVo vo) throws Exception{
+	public int idDuplCheck(Model model, AdminVo vo) throws Exception {
 		int result = 0;
 		result = adminservice.adminIdCheck(vo);
 		return result;
-		
+
 	}
-	
-	
-	//부서 관리자
+
+
+	// 부서 관리자
 	@RequestMapping("/managerlist")
-	public String managerlist(HttpSession session, Model model,AdminVo vo) throws Exception{
-			List<AdminVo> list = new ArrayList<AdminVo>();
-		
-			// 페이징
-			vo.setCurrentPage(vo.getCurrentPage());
-			vo = (AdminVo) PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, vo);
-			int cnt = Integer.parseInt(adminservice.sgbManagercountListInfo(vo) + "");
-			vo.setTotalRecordSize(cnt);
-			vo = (AdminVo) PagingUtil.setPaging(vo);
-			list = adminservice.sgbManagerList(vo);
-			
-			model.addAttribute("keyWord",vo.getKeyWord());
-			model.addAttribute("txtSearch",vo.getTxtSearch());
-			model.addAttribute("aList", list);
-			model.addAttribute("paging", vo);
-		
+	public String managerlist(HttpSession session, Model model, AdminVo vo) throws Exception {
+		List<AdminVo> list = new ArrayList<AdminVo>();
+
+		// 페이징
+		vo.setCurrentPage(vo.getCurrentPage());
+		vo = (AdminVo) PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, vo);
+		int cnt = Integer.parseInt(adminservice.sgbManagercountListInfo(vo) + "");
+		vo.setTotalRecordSize(cnt);
+		vo = (AdminVo) PagingUtil.setPaging(vo);
+		list = adminservice.sgbManagerList(vo);
+
+		model.addAttribute("keyWord", vo.getKeyWord());
+		model.addAttribute("txtSearch", vo.getTxtSearch());
+		model.addAttribute("aList", list);
+		model.addAttribute("paging", vo);
+
 		return "/sgbManager/list";
 	}
+
 	@RequestMapping("/managerview")
-	public String managerview(Model model,AdminVo vo) throws Exception{
-		
-		
-		if(vo.getUser_id() != null) {
-			System.out.println("vo==="+vo.toString());
+	public String managerview(Model model, AdminVo vo) throws Exception {
+
+
+		if (vo.getUser_id() != null) {
+			System.out.println("vo===" + vo.toString());
 			AdminVo avo = adminservice.sgbManagerView(vo);
-			model.addAttribute("result",avo);			
+			model.addAttribute("result", avo);
 		}
 		JSONArray orgList = null;
 		OrgVo orgvo = new OrgVo();
 		orgList = oService.orgList(orgvo);
 		model.addAttribute("oList", orgList);
 		return "/sgbManager/view";
-		
+
 	}
-	
+
 	@RequestMapping("/managersave")
 	@ResponseBody
-	public int managersave(Model model,AdminVo vo) throws NoSuchAlgorithmException {
-		int result=0;
+	public int managersave(Model model, AdminVo vo) throws NoSuchAlgorithmException {
+		int result = 0;
 		result = adminservice.sgbManagerIdCheck(vo);
-		if(result == 0) {
+		if (result == 0) {
 			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
 			result = adminservice.sgbManagerSave(vo);
-		}else{
+		} else {
 			result += 10;
 		}
 		return result;
-		
+
 	}
-	
+
 	@RequestMapping("/managermodify")
 	@ResponseBody
-	public int managermodify(Model model,AdminVo vo) throws Exception {
-		int result=0;
-		if(vo.getPass_wd() != null || vo.getPass_wd() != "") {
-		vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
+	public int managermodify(Model model, AdminVo vo) throws Exception {
+		int result = 0;
+		if (vo.getPass_wd() != null || vo.getPass_wd() != "") {
+			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
 		}
 		result = adminservice.sgbManagerModify(vo);
 		return result;
-		
+
 	}
-	
+
 	@RequestMapping("/managerdelete")
 	@ResponseBody
-	public int managerdelete(Model model,AdminVo vo) throws Exception{
-		int result=0;
+	public int managerdelete(Model model, AdminVo vo) throws Exception {
+		int result = 0;
 		result = adminservice.sgbManagerDelete(vo);
 		return result;
-		
+
 	}
-	
+
 	@RequestMapping("/manageridDuplCheck")
 	@ResponseBody
-	public int manageridDuplCheck(Model model,AdminVo vo) throws Exception{
+	public int manageridDuplCheck(Model model, AdminVo vo) throws Exception {
 		int result = 0;
 		result = adminservice.sgbManagerIdCheck(vo);
 		return result;
-		
+
 	}
 
 }
