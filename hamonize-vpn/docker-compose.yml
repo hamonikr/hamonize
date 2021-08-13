@@ -1,0 +1,26 @@
+version: '3'
+
+volumes:
+  hmon_vpn_vpn:
+
+networks:
+  hmon_vpnnet_vpn:
+
+services:
+  hmon_vpn_vpn:
+    image: hamonikr/hamonize-vpn:0.1
+    container_name: hmon_vpn_vpn
+    cap_add:
+     - NET_ADMIN
+    ports:
+     - 1194:1194/udp 
+     - 5555:5555 
+     - 3000:3000 
+    networks: 
+       hmon_vpnnet_vpn: 
+    volumes: 
+      - ./openvpn/pki:/etc/openvpn/pki 
+      - ./openvpn/clients:/etc/openvpn/clients 
+      - ./openvpn/config:/etc/openvpn/config 
+    restart: unless-stopped
+    privileged: true
