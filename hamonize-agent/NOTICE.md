@@ -1,126 +1,56 @@
 # OSS Notice | hamonize #
 
-This application is Copyright © HamoniKR. All rights reserved.
+This application is Copyright © (owner name). All rights reserved.
 
 The following sets forth attribution notices for third party software that may be contained in this application.
 
- **@andycasen/withtimeout**
-
-MIT License
-
- **async-polling**
-
-https://github.com/cGuille/async-polling
-
-Copyright @cGuille
-
-MIT License
-
- **create-file**
-
-https://github.com/joakimbeng/create-file
-
-Copyright Joakim Carlstein
-
-MIT License
-
- **date-utils**
+ **Date-Utils**
 
 https://github.com/JerrySievert/date-utils
 
-Copyright Jerry Sievert
+Copyright 2011 by Jerry Sievert
 
 MIT License
 
- **delay**
+ **file-system**
 
-https://github.com/sindresorhus/delay
-
-Copyright Sindre Sorhus
-
-MIT License
-
- **dialog0.3.1**
-
-[https://github.com/tomas/dialog\#readme][https_github.com_tomas_dialog_readme]
-
-Copyright 2012 Fork Ltd. MIT license.
-
-MIT License
-
- **electron-installer-squirrel-windows**
-
-https://github.com/mongodb-js/electron-installer-squirrel-windows
-
-Copyright Lucas Hrabovsky
-
-Apache License 2.0
-
- **electron-ipc-promise**
-
-https://github.com/kdepp/electron-ipc-promise
-
-Copyright kdepp
-
-ISC License
-
- **electron-log**
-
-https://github.com/megahertz/electron-log
-
-Copyright 2016 Alexey Prokhorov
-
-MIT License
-
- **electron-widevinecdm**
-
-https://github.com/webcatalog/electron-widevinecdm
-
-Copyright Quang Lam
-
-MIT License
-
- **electron-window-state**
-
-https://github.com/mawie81/electron-window-state
-
-Copyright 2015 Jakub Szwacz
-
-Copyright Marcel Wiehle  (http://marcel.wiehle.me)
-
-MIT License
-
- **fetch**
-
-https://github.com/andris9/fetch
-
-Copyright Andris Reinman
-
-MIT License
-
- **fs0.0.1-security**
-
-[https://github.com/npm/security-holder\#readme][https_github.com_npm_security-holder_readme]
+https://github.com/douzi8/file-system
 
 Copyright property of respective owners
 
 ISC License
 
- **json-parser**
+ **jsdiff**
 
-https://github.com/kaelzhang/node-json-parser
+https://github.com/kpdecker/jsdiff
 
-Copyright kaelzhang
+Copyright 2009-2015, Kevin Decker
+
+BSD 3-Clause "New" or "Revised" License
+
+ **line-reader**
+
+https://nickewing@github.com/nickewing/line-reader
+
+Copyright Nick Ewing
 
 MIT License
 
- **Node Cron**
+ **moment**
 
-https://github.com/merencia/node-cron
+https://github.com/moment/moment
 
-Copyright 2016, Lucas Merencia
+Copyright JS Foundation and other contributors
 
-ISC License
+MIT License
+
+ **Moment Timezone**
+
+https://github.com/moment/moment-timezone
+
+Copyright JS Foundation and other contributors
+
+MIT License
 
  **Node Fetch**
 
@@ -138,6 +68,14 @@ Copyright 2015 Matt Patenaude
 
 MIT License
 
+ **node-datetime**
+
+https://github.com/voltrue2/node-datetime
+
+Copyright Nobuyori Takahashi
+
+MIT License
+
  **node-ip**
 
 https://github.com/indutny/node-ip
@@ -146,65 +84,37 @@ Copyright Fedor Indutny, 2012.
 
 MIT License
 
- **node-pre-gyp**
+ **node-machine-id**
 
-https://github.com/mapbox/node-pre-gyp
+https://github.com/automation-stack/node-machine-id
 
-Copyright Mapbox
+Copyright 2016 Aleksandr Komlev
+
+MIT License
+
+ **node-md5**
+
+https://github.com/pvorb/node-md5
+
+Copyright 2011-2012, Paul Vorbach.
+
+Copyright 2009, Jeff Mott
 
 BSD 3-Clause "New" or "Revised" License
 
- **node-xml2js**
-
-https://github.com/Leonidas-from-XIV/node-xml2js
-
-Copyright 2010, 2011, 2012, 2013.
-
-MIT License
-
- **ora**
-
-https://github.com/sindresorhus/ora
-
-Copyright Sindre Sorhus  (https://sindresorhus.com)
-
-MIT License
-
- **ping**
+ **NODE-PING**
 
 https://github.com/danielzzz/node-ping
 
-Copyright danielzzz
+Copyright 2016 Daniel Zelisko
 
 MIT License
 
- **pkg**
+ **Pkg**
 
-https://github.com/zeit/pkg
+https://github.com/vercel/pkg
 
-MIT License
-
- **poller**
-
-https://github.com/anephenix/poller
-
-Copyright Paul Jensen
-
-MIT License
-
- **precise**
-
-https://github.com/avoidwork/precise
-
-Copyright Jason Mulligan
-
-BSD 3-Clause "New" or "Revised" License
-
- **redux-electron-ipc**
-
-https://github.com/mariotacke/redux-electron-ipc
-
-Copyright Mario Tacke
+Copyright 2021 Vercel, Inc.
 
 MIT License
 
@@ -216,27 +126,27 @@ Copyright Mikeal Rogers
 
 Apache License 2.0
 
- **tenacious-fetch**
+ **save**
 
-https://github.com/tiaanduplessis/tenacious-fetch
+https://github.com/serby/save
 
-Copyright Tiaan du Plessis
+Copyright 2015, Paul Serby
+
+ISC License
+
+ **systeminformation**
+
+https://github.com/sebhildebrandt/systeminformation
+
+Copyright Sebastian Hildebrandt
 
 MIT License
 
- **time-counter**
+ **Unirest for Node.js**
 
-https://www.npmjs.com/package/time-counter
+https://github.com/Mashape/unirest-nodejs
 
-Copyright property of respective owners
-
-MIT License
-
- **timer-stopwatch**
-
-https://www.npmjs.com/package/timer-stopwatch
-
-Copyright property of respective owners
+Copyright 2013-2015 Mashape (https://www.mashape.com)
 
 MIT License
 
@@ -253,22 +163,6 @@ MIT License
 https://github.com/winstonjs/winston-daily-rotate-file
 
 Copyright 2015 winstonjs
-
-MIT License
-
- **write**
-
-https://github.com/jonschlinkert/write
-
-Copyright Jon Schlinkert
-
-MIT License
-
- **xml-js**
-
-https://github.com/nashwaan/xml-js
-
-Copyright 2016-2017 Yousuf Almarzooqi
 
 MIT License
 
@@ -393,7 +287,3 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ``````````
-
-
-[https_github.com_tomas_dialog_readme]: https://github.com/tomas/dialog#readme
-[https_github.com_npm_security-holder_readme]: https://github.com/npm/security-holder#readme

@@ -1,50 +1,120 @@
 # OSS Notice | hamonize #
 
-This application is Copyright © HamoniKR. All rights reserved.
+This application is Copyright © (owner name). All rights reserved.
 
 The following sets forth attribution notices for third party software that may be contained in this application.
 
- **@andycasen/withtimeout**
+ **@koa/router**
+
+https://github.com/koajs/router
+
+Copyright 2015 Alexander C. Mingoia
+
+Copyright 2019-present Nick Baugh and Koajs contributors
 
 MIT License
 
- **async-polling**
+ **acron**
 
-https://github.com/cGuille/async-polling
+https://github.com/mwcz/acron
 
-Copyright @cGuille
-
-MIT License
-
- **create-file**
-
-https://github.com/joakimbeng/create-file
-
-Copyright Joakim Carlstein
+Copyright mwcz
 
 MIT License
 
- **date-utils**
+ **app-root-path**
+
+https://github.com/inxilpro/node-app-root-path
+
+Copyright Chris Morrell
+
+MIT License
+
+ **axios**
+
+https://github.com/axios/axios
+
+Copyright 2014-present Matt Zabriskie
+
+MIT License
+
+ **Bootbox**
+
+https://github.com/makeusabrew/bootbox
+
+Copyright 2011-2020 by Nick Payne
+
+MIT License
+
+ **Chokidar**
+
+https://github.com/paulmillr/chokidar
+
+Copyright 2012-2019 Paul Miller (https://paulmillr.com), Elan Shanker
+
+MIT License
+
+ **compass**
+
+https://github.com/ngryman/compass
+
+Copyright Nicolas Gryman
+
+MIT License
+
+ **Date-Utils**
 
 https://github.com/JerrySievert/date-utils
 
-Copyright Jerry Sievert
+Copyright 2011 by Jerry Sievert
 
 MIT License
 
- **delay**
+ **dialogs**
 
-https://github.com/sindresorhus/delay
+https://github.com/jameskyburz/dialogs
 
-Copyright Sindre Sorhus
+Copyright James Kyburz
 
 MIT License
 
- **dialog0.3.1**
+ **easytimer.js**
 
-[https://github.com/tomas/dialog\#readme][https_github.com_tomas_dialog_readme]
+https://github.com/albert-gonzalez/easytimer.js
 
-Copyright 2012 Fork Ltd. MIT license.
+Copyright Albert Gonzalez
+
+MIT License
+
+ **ELECTRON**
+
+https://github.com/electron/electron
+
+Copyright 2013-2020 GitHub Inc.
+
+MIT License
+
+ **Electron IPC promise**
+
+https://github.com/kdepp/electron-ipc-promise
+
+Copyright kdepp
+
+ISC License
+
+ **electron-alert**
+
+https://github.com/rocketlaunchr/electron-alert
+
+Copyright rocketlaunchr.cloud
+
+MIT License
+
+ **electron-builder**
+
+https://github.com/electron-userland/electron-builder
+
+Copyright 2015 Loopline Systems
 
 MIT License
 
@@ -52,17 +122,17 @@ MIT License
 
 https://github.com/mongodb-js/electron-installer-squirrel-windows
 
-Copyright Lucas Hrabovsky
+Copyright 2015 MongoDB Inc.
 
 Apache License 2.0
 
- **electron-ipc-promise**
+ **electron-localshortcut**
 
-https://github.com/kdepp/electron-ipc-promise
+https://github.com/parro-it/electron-localshortcut
 
-Copyright kdepp
+Copyright andrea@parro.it
 
-ISC License
+MIT License
 
  **electron-log**
 
@@ -72,11 +142,35 @@ Copyright 2016 Alexey Prokhorov
 
 MIT License
 
- **electron-widevinecdm**
+ **electron-modal**
 
-https://github.com/webcatalog/electron-widevinecdm
+https://github.com/resin-io-modules/electron-modal
 
-Copyright Quang Lam
+Copyright Juan Cruz Viotti
+
+Apache License 2.0
+
+ **electron-packager**
+
+https://github.com/electron/electron-packager
+
+Copyright Mark Lee
+
+BSD 2-Clause "Simplified" License
+
+ **electron-sudo**
+
+https://github.com/automation-stack/electron-sudo
+
+Copyright Aleksandr Komlev
+
+MIT License
+
+ **electron-window-manager**
+
+https://github.com/TamkeenLMS/electron-window-manager
+
+Copyright Ahmed Zain
 
 MIT License
 
@@ -90,51 +184,135 @@ Copyright Marcel Wiehle  (http://marcel.wiehle.me)
 
 MIT License
 
- **fetch**
+ **ES6-Promise**
 
-https://github.com/andris9/fetch
+https://github.com/stefanpenner/es6-promise
 
-Copyright Andris Reinman
+Copyright 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors
 
 MIT License
 
- **fs0.0.1-security**
+ **es6-promise-polyfill**
 
-[https://github.com/npm/security-holder\#readme][https_github.com_npm_security-holder_readme]
+https://github.com/lahmatiy/es6-promise-polyfill
+
+Copyright Roman Dvornov
+
+MIT License
+
+ **es6-promise-pool**
+
+https://github.com/timdp/es6-promise-pool
+
+Copyright Tim De Pauw
+
+MIT License
+
+ **express**
+
+https://github.com/expressjs/express
+
+Copyright 2009-2014 TJ Holowaychuk
+
+Copyright 2013-2014 Roman Shtylman
+
+Copyright 2014-2015 Douglas Christopher Wilson
+
+MIT License
+
+ **express-ws**
+
+https://github.com/HenningM/express-ws
+
+Copyright Henning Morud
+
+BSD 2-Clause "Simplified" License
+
+ **file-system**
+
+https://github.com/douzi8/file-system
 
 Copyright property of respective owners
 
 ISC License
 
- **json-parser**
+ **findit**
 
-https://github.com/kaelzhang/node-json-parser
+http://github.com/substack/node-findit
 
-Copyright kaelzhang
-
-MIT License
-
- **Node Cron**
-
-https://github.com/merencia/node-cron
-
-Copyright 2016, Lucas Merencia
-
-ISC License
-
- **Node Fetch**
-
-https://github.com/bitinn/node-fetch
-
-Copyright 2016 - 2020 Node Fetch Team
+Copyright James Halliday
 
 MIT License
 
- **Node Schedule**
+ **is-root**
 
-https://github.com/node-schedule/node-schedule
+https://github.com/sindresorhus/is-root
 
-Copyright 2015 Matt Patenaude
+Copyright Sindre Sorhus  (sindresorhus.com)
+
+MIT License
+
+ **jQuery**
+
+https://github.com/jquery/jquery/
+
+Copyright jQuery Foundation and other contributors, https://jquery.org/
+
+MIT License
+
+ **koa**
+
+https://github.com/koajs/koa
+
+Copyright 2019 Koa contributors
+
+MIT License
+
+ **koa-handlebars**
+
+https://github.com/dominicbarnes/koa-handlebars
+
+Copyright Dominic Barnes
+
+MIT License
+
+ **line-reader**
+
+https://nickewing@github.com/nickewing/line-reader
+
+Copyright Nick Ewing
+
+MIT License
+
+ **minimist**
+
+https://github.com/substack/minimist
+
+Copyright James Halliday
+
+MIT License
+
+ **mkdirp**
+
+https://github.com/isaacs/node-mkdirp
+
+Copyright James Halliday (mail@substack.net) and Isaac Z. Schlueter (i@izs.me)
+
+MIT License
+
+ **moment**
+
+https://github.com/moment/moment
+
+Copyright JS Foundation and other contributors
+
+MIT License
+
+ **mysql node.js**
+
+https://github.com/mysqljs/mysql
+
+Copyright 2012 Felix Geisendörfer (felix@debuggable.com) and contributors
 
 MIT License
 
@@ -146,97 +324,149 @@ Copyright Fedor Indutny, 2012.
 
 MIT License
 
- **node-pre-gyp**
+ **node-machine-id**
 
-https://github.com/mapbox/node-pre-gyp
+https://github.com/automation-stack/node-machine-id
 
-Copyright Mapbox
-
-BSD 3-Clause "New" or "Revised" License
-
- **node-xml2js**
-
-https://github.com/Leonidas-from-XIV/node-xml2js
-
-Copyright 2010, 2011, 2012, 2013.
+Copyright 2016 Aleksandr Komlev
 
 MIT License
 
- **ora**
+ **node-md5**
 
-https://github.com/sindresorhus/ora
+https://github.com/pvorb/node-md5
+
+Copyright 2011-2012, Paul Vorbach.
+
+Copyright 2009, Jeff Mott
+
+BSD 3-Clause "New" or "Revised" License
+
+ **node-notifier**
+
+https://github.com/mikaelbr/node-notifier
+
+Copyright Mikael Brevik
+
+MIT License
+
+ **NODE-PING**
+
+https://github.com/danielzzz/node-ping
+
+Copyright 2016 Daniel Zelisko
+
+MIT License
+
+ **node-url**
+
+https://github.com/defunctzombie/node-url
+
+Copyright Joyent, Inc
+
+MIT License
+
+ **node-watch**
+
+https://github.com/yuanchuan/node-watch
+
+Copyright 2012-2018 Yuan Chuan
+
+MIT License
+
+ **open**
+
+https://github.com/sindresorhus/open
 
 Copyright Sindre Sorhus  (https://sindresorhus.com)
 
 MIT License
 
- **ping**
+ **os**
 
-https://github.com/danielzzz/node-ping
+https://github.com/DiegoRBaquero/node-os
 
-Copyright danielzzz
-
-MIT License
-
- **pkg**
-
-https://github.com/zeit/pkg
+Copyright Diego Rodríguez Baquero
 
 MIT License
 
- **poller**
+ **Pkg**
 
-https://github.com/anephenix/poller
+https://github.com/vercel/pkg
 
-Copyright Paul Jensen
-
-MIT License
-
- **precise**
-
-https://github.com/avoidwork/precise
-
-Copyright Jason Mulligan
-
-BSD 3-Clause "New" or "Revised" License
-
- **redux-electron-ipc**
-
-https://github.com/mariotacke/redux-electron-ipc
-
-Copyright Mario Tacke
+Copyright 2021 Vercel, Inc.
 
 MIT License
 
- **request**
+ **react-countdown-circle-timer**
 
-https://github.com/request/request
+https://github.com/vydimitrov/react-countdown-circle-timer
 
-Copyright Mikeal Rogers
+Copyright Vasil Dimitrov
 
-Apache License 2.0
+MIT License
 
- **tenacious-fetch**
+ **read-last-lines**
 
-https://github.com/tiaanduplessis/tenacious-fetch
+https://github.com/alexbbt/read-last-lines
 
-Copyright Tiaan du Plessis
+Copyright Alexander Bell-Towne
+
+MIT License
+
+ **sudo-block**
+
+https://github.com/sindresorhus/sudo-block
+
+Copyright Sindre Sorhus
+
+MIT License
+
+ **sudo-prompt**
+
+https://github.com/jorangreef/sudo-prompt
+
+Copyright Joran Dirk Greef
+
+MIT License
+
+ **systeminformation**
+
+https://github.com/sebhildebrandt/systeminformation
+
+Copyright Sebastian Hildebrandt
 
 MIT License
 
  **time-counter**
 
-https://www.npmjs.com/package/time-counter
+https://github.com/henrikjoreteg/time-counter
 
-Copyright property of respective owners
+Copyright Henrik Joreteg
 
 MIT License
 
- **timer-stopwatch**
+ **time-stamp**
 
-https://www.npmjs.com/package/timer-stopwatch
+https://github.com/jonschlinkert/time-stamp
 
-Copyright property of respective owners
+Copyright Jon Schlinkert
+
+MIT License
+
+ **tiny-timer**
+
+https://github.com/mathiasvr/tiny-timer
+
+Copyright Mathias Rasmussen
+
+MIT License
+
+ **Unirest for Node.js**
+
+https://github.com/Mashape/unirest-nodejs
+
+Copyright 2013-2015 Mashape (https://www.mashape.com)
 
 MIT License
 
@@ -256,21 +486,19 @@ Copyright 2015 winstonjs
 
 MIT License
 
- **write**
+# BSD 2-Clause "Simplified" License #
 
-https://github.com/jonschlinkert/write
+``````````
+Copyright (c)   . All rights reserved.
 
-Copyright Jon Schlinkert
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-MIT License
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 
- **xml-js**
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-https://github.com/nashwaan/xml-js
-
-Copyright 2016-2017 Yousuf Almarzooqi
-
-MIT License
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+``````````
 
 # ISC License #
 
@@ -393,7 +621,3 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ``````````
-
-
-[https_github.com_tomas_dialog_readme]: https://github.com/tomas/dialog#readme
-[https_github.com_npm_security-holder_readme]: https://github.com/npm/security-holder#readme
