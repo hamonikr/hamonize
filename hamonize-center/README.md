@@ -2,41 +2,20 @@
 
 ![license](https://img.shields.io/badge/Apache-License2.0-green.svg)
 
+
 ### Hamonize-center?
 
-하모나이즈 센터는 원격지의 PC들을 통합적으로 관리 할 수있는 중앙관제 웹서비스입니다
-<br>
-
-<b> [Hamonize-center](http://ts.hamonikr.org/) 데모 </b>
-
-# <b>Hamonize-center 기능</b>
-
-- 모니터링 서비스 <br>하모나이즈 센터에서는 조직 내 PC의 실시간 사용 정보와 조직 내 PC를 원격제어할 수 있는  서비스를 제공하고 있습니다 <br><br> <img width="250" src="../img/center_monitoring.png"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="250" src="../img/center_monitoring2.png">
-  <br><br>
-
-- 조직관리 <br>하모나이즈 센터의 모든 중앙 관리 서비스는 조직의 구조를 기반으로 이뤄지고, 관리자는 조직관리 페이지를 통해 직접 조직의 구조를 구성할 수 있습니다. <br> <br>
-  <img width="250" src="../img/center_org.png">
-  <br><br>
-
-- PC 정보 <br>모든 하모나이즈 사용자 PC는 조직 구조를 기반으로 관리되고, 관리자는 PC정보 페이지를 통해 조직 내 PC 정보를 확인할 수 있습니다. <br><br> <img width="250" src="../img/center_pcmngr1.png"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="250" src="../img/center_pcmngr2.png">
-
-<br><br>
-
-- 정책관리 <br> 하모나이즈 센터의 정책관리 서비스를 통해 관리자는 조직 내 PC들을 대상으로 프로그램을 업데이트, 특정 프로그램 차단, 방화벽 관리, 그리고 디바이스 관리를 할 수 있습니다.
-
-  <br><img width="250" src="../img/center_updt.png">
+하모나이즈 센터는 원격지의 PC들을 통합적으로 관리 할 수있는 중앙관제 웹서비스입니다.
+<br><br>조직과 소속된 자원을 효율적으로 관리해주는 ldap 디렉토리 서버, pc의 자원과 실시간 모니터링을 위한 influx+grafana 서버, 프로그램 관리를 위한 apt서버, 데이터 저장을 위한 db 서버들과 연동된 유기적인 서비스입니다. 또한 각각의 서버들은 vpn망을 통해 통신하여 높은 보안성을 유지하고 있습니다.<br><br>따라서 하모나이즈 센터를 사용하기 위해서는 각각의 서버들을 구축해야합니다. <br> 센터에서는 위의 서버들을 손쉽게 구성할 수 있도록 도커라이징 기능도 같이 제공하고있습니다
 
 <br>
-
-- 백업관리 <br>하모나이즈 센터의 백업관리 서비스를 통해 관리자는 조직 내 PC들의 백업 스케줄을 관리하고, 생성된 백업을 통한 복구를 수행할 수 있습니다. <br><br> <img width="250" src="../img/center_backup.png"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="250" src="../img/center_recov.png">
-
+-  하모나이즈 서버 구성도 <br><br> <img width="450" src="../img/hamonize_center_server.png">
 <br><br>
 
-- 로그감사 <br> 하모나이즈는 조직 내 PC의 사용자 접속로그, 프로세스 차단로그, 하드웨어 변경로그, 그리고 비인가 디바이스 로그 감사 기능을 제공합니다.
- <br><br> <img width="250" src="../img/center_policy_result.png">
+-<b> [Hamonize-center](http://ts.hamonikr.org/) 데모 </b>
 
-더 자세한 내용은 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339504) 을 참고하세요
-
+센터 기능이 궁금하시면 [여기](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339504#id-%ED%95%98%EB%AA%A8%EB%82%98%EC%9D%B4%EC%A6%88(Hamonize)%EC%82%AC%EC%9A%A9%EC%9E%90%EB%A7%A4%EB%89%B4%EC%96%BC-%ED%95%98%EB%AA%A8%EB%82%98%EC%9D%B4%EC%A6%88%EC%84%BC%ED%84%B0%EC%A0%91%EC%86%8D%ED%95%98%EA%B8%B0)를 참고하세요
+   
 <br><br>
 
 # <b>Hamonize-center 설치</b>
@@ -66,127 +45,137 @@
     ```
 <br><br>
 
-## 2 단계 : 서버 구성하기<br>
--  하모나이즈 센터 서버 구성도 <br><br> <img width="500" src="../img/center_servers.png">
-<br><br>하모나이즈 센터는 조직과 소속된 자원을 효율적으로 관리해주는 디렉토리 서버, pc의 자원과 실시간 모니터링을 위한 influx+grafana 서버, 프로그램 관리를 위한 apt서버, 데이터 저장을 위한 db 서버들과 연동된 웹서비스입니다. 또한 각각의 서버들은 vpn망을 통해 통신하여 높은 보안성을 유지하고 있습니다.<br><br>따라서 하모나이즈 센터를 사용하기 위해서는 각각의 서버들을 구축해야합니다. <br> 센터에서는 위의 서버들을 손쉽게 구성할 수 있도록 도커라이징 기능도 같이 제공하고있습니다
+## **2 단계 : 서버 구성하기**<br>
 
-- vpn server 구축하기
-  vpn 서버 구축 하기는 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-server/vpn) 를 참고하세요  
+docker-compose.yml 파일은 docker로 was, db, ldap, influxdb 서버등을 도커로 쉽게 구성하기 위해 만들어진 파일입니다. 아래의 설정을 완료해야 도커로 각 서버를 사용할 수 있습니다.  <br><br>
 
-- 센터 서버들 구축하기
-  - **DB 서버 구성하기** <br>1) docker-compose.yml 파일 설정<br>
-먼저, /hamonize-center/Dockerfile 에서 database의 password를 
-원하는 패스워드로 설정해주세요
+- docker-compose.yml 설정 <br>
+  ① **db** 에서 {your own db pw}를 원하는 패스워드로 설정해주세요 <br>
+  ② **ldap** 에서  {your own ldap pw} 를 원하는 패스워드로 설정해주세요 <br>
+  ③ **ldap** 에서 {your own ldap company} 를 자신이 소속된 조직으로 설정해주세요 <br>
+
+      ```
+        version : '3'
+        services : 
+            db:
+                image: postgres:10.16
+                environment:
+                    POSTGRES_USER : hamonize
+                    POSTGRES_PASSWORD : {your own db pw} --- ①
+                    POSTGRES_DB : hamonize_center
+                ports:
+                    - "5432:5432"
+                volumes:
+                    - ./sql:/docker-entrypoint-initdb.d
+                    - psql-data:/var/lib/postgresql/data
+
+            ...
+
+            ldap:
+                image: osixia/openldap:latest
+                hostname: ldap.hamonize.com        
+                ports:            
+                    - "389:389"
+                    - "636:636"
+                environment:
+                    HOSTNAME: ldap.hamonize.com
+                    LOG_LEVEL: 256
+                    LDAP_DOMAIN: hamonize.com
+                    LDAP_BASE_DN: dc=hamonize,dc=com
+                    LDAP_ADMIN_PASSWORD: {your own ldap pw} --- ②
+                    LDAP_ORGANISATION: {your own ldap company}  --- ③
+                volumes:
+                    - ldap-data:/var/lib/openldap
+                    - ./ldap/config:/etc/openldap/slapd.d              
+                domainname: "ldap.hamonize.com"
+                restart: always
+
+            ...
+
+      ```
+
+
+    <br>
+      
+    config.propertis 파일은 센터에서 각서버의 연결정보를 가져오는 설정파일입니다. 기본적으로 home/{user}/ 디렉토리에 위치하고있습니다. <br> <br>
+
+- env/config.propertis 설정 <br>
+  ① **docker-compose** 에서 설정한 **db password**를 입력해주세요 <br>
+  ② **docker-compose** 에서 설정한 **ldap password**를 입력해주세요 <br>     
+
+    ```
+      ## PostgreSQL
+      spring.db1.datasource.primary.jndi-name=jdbc/postgresqldb
+      spring.db1.datasource.driverClassName=org.postgresql.Driver
+      # 10.8.0.5 is example vpn ip
+      spring.db1.datasource.url=jdbc:postgresql://db:5432/hamonize_center
+      # default db admin user
+      spring.db1.datasource.username=hamonize
+      spring.db1.datasource.password={your own db password} --- ①
+
+      ## ldap 
+      ldap.urls=ldap://ldap:389
+      ldap.password={your own ldap password} --- ②
+
+      ...
 
     ```
 
-      version : '3'
-      services : 
-          db:
-              image: postgres:10.16
-              environment:
-                  POSTGRES_USER : hamonize
-                  POSTGRES_PASSWORD : {your own db pw}     
-              ...
-
-      ```
-      <br>
-      2) env > config.propertis 설정
-      <br>
-      /hamonize-center/env/config.propertis 에 1) 에서 설정한 database password를 입력해주세요
-
-      ```
-      ...
-
-      # default db admin user
-      spring.db1.datasource.username=hamonize
-      spring.db1.datasource.password={your own db pw}
-      ```
-      <br><br>
-   -  **LDAP 서버 구성하기**
-      1) docker-compose.yml 파일 설정<br>
-          첫번째로, /hamonize-center/Dockerfile 에서 ldap admin user의 password를 원하는 패스워드로 설정해주세요<br>그리고 LDAP_ORGANISATION 에 본인의 소속된 조직의 명칭을 입력해주세요
-
-          ```
-
-             ...
-              LDAP_DOMAIN: hamonize.com
-              LDAP_BASE_DN: dc=hamonize,dc=com
-              LDAP_ADMIN_PASSWORD: {your own ldap pw}
-              LDAP_ORGANISATION: {your own ldap company} 
-          
-              ...
-
-          ```
-
-          <br>
-      2) env > config.propertis 설정
-         <br>
-
-         /hamonize-center/env/config.propertis 에 1. 에서 설정한 ldap password를 입력해주세요
-
-         ```
-         ...
-
-         ## ldap 
-         ldap.urls=ldap://ldap:389
-         ldap.password={your own ldap pw}
-         ...
-
-         ```
-
-         <br><br>
-     -  **influxdb 서버 구성하기** <br>
-       grafana/ 권한 변경
-          ```
-            sudo chown -R grafana/
-          ```
-   
-
     <br><br>
+
+-  **influxdb 설정하기** <br>
+   grafana/ 권한 변경
+    ```
+      sudo chown -R grafana/
+    ```
+  
+  <br><br>
     
-    - **docker-compose 실행** <br><br> ![version](https://img.shields.io/badge/Docker-v20.10.7-blue.svg) &nbsp;&nbsp; ![version](https://img.shields.io/badge/Docker_Compose-v1.29.2-blue.svg) <br>
-      
-      - 실행
+ - **docker-compose 실행** <br><br> ![version](https://img.shields.io/badge/Docker-v20.10.7-blue.svg) &nbsp;&nbsp; ![version](https://img.shields.io/badge/Docker_Compose-v1.29.2-blue.svg) <br>
+   
+   - 실행
       ```
-       # hamonize-cener/ 위치에서
-       docker-compose up
+        # hamonize-cener/ 위치에서
+        docker-compose up
 
         # 실행중인 컨테이너 확인
-       docker-compose ps
+        docker-compose ps
+
+        # 서버 전체 다운
+        docker-compose down  
+
+        # 볼륨까지 지울때 
+        docker-compose down -v 
 
       ```
-      <br><br>
 
-      - 종료
-      ```
-       docker-compose down  
+   - volume 위치 : /var/lib/docker/volumes/
+     * tomcat log : hamonize-center_was-logs/_data/
+     * postsql data : hamonize-center_psql-data/
+     * ldap data : hamonize-center_ldap-data/
+     * influxdb data : hamonize-center_influxdb/
+     * grafana data : hamonize-center_grafana/
+   
+   <br>
 
-       # 볼륨까지 지울때 
-       docker-compose down -v 
+   - 로그 확인하기
+       ```
+       docker-compose logs -f {container-id} 
+       ```
 
-      ```
-      <br>
+   <br>
 
-      - volume 위치 : /var/lib/docker/volumes/
-        * tomcat log : hamonize-center_was-logs/_data/
-        * postsql data : hamonize-center_psql-data/
-        * ldap data : hamonize-center_ldap-data/
-        * influxdb data : hamonize-center_influxdb/
-        * grafana data : hamonize-center_grafana/
-      
-      <br>
+   - vpn server 구축하기
+vpn 서버 구축 하기는 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-server/vpn) 를 참고하세요  
 
-      - 로그 확인하기
-          ```
-          docker-compose logs -f
-          ```
 <br><br>
 
 ## **3 단계 : 실행하기**<br>
 - grafana : http://localhost:3000 <br> * default id/pw : admin / admin
-  <br> grafana dashboard 설정파일을 제공하고있습니다. import 해주세요 - hamonize-main.json, hamonize-monitoring.json 
+  <br> grafana dashboard 설정파일을 제공하고있습니다. 각 파일들을 import 해주세요 - hamonize-main.json, hamonize-monitoring.json <br> <br>
+     <img width="250" src="../img/Grafana1.png"> &nbsp;&nbsp;&nbsp;  <img width="250" src="../img/Grafana2.png"> &nbsp;&nbsp;&nbsp;  <img width="250" src="../img/Grafana3.png">
 
+<br>
 
 - 하모나이즈 센터 : http://localhost:8080 <br> \* **default id/pw : admin / admin** <br><br> <img width="300" src="../img/center_main.png">
   <br>

@@ -1,14 +1,8 @@
 # OSS Notice | hamonize #
 
-This application is Copyright © HamoniKR. All rights reserved.
+This application is Copyright © (owner name). All rights reserved.
 
 The following sets forth attribution notices for third party software that may be contained in this application.
-
- **@types/jquery**
-
-https://github.com/DefinitelyTyped/DefinitelyTyped
-
-MIT License
 
  **ansi.js**
 
@@ -50,11 +44,21 @@ Copyright 2003-2017 The Apache Software Foundation
 
 Apache License 2.0
 
- **argparse**
+ **Apache Tomcat**
 
-https://github.com/nodeca/argparse
+https://github.com/apache/tomcat
 
-MIT License
+Copyright 1999-2021, The Apache Software Foundation
+
+Apache License 2.0
+
+ **Apache XMLBeans**
+
+https://github.com/apache/xmlbeans
+
+Copyright 2004 The Apache Software Foundation
+
+Apache License 2.0
 
  **AssertJ**
 
@@ -160,19 +164,19 @@ Copyright 2017 Kent C. Dodds
 
 MIT License
 
- **DraftJS TO Markdown**
+ **DefinitelyTyped**
 
-https://github.com/jpuri/draftjs-to-markdown
+https://github.com/DefinitelyTyped/DefinitelyTyped
 
-Copyright 2016 Jyoti Puri
+Copyright property of respective owners
 
 MIT License
 
- **egovframework.rte.psl.dataaccess**
+ **eGovFrame**
 
-https://www.egovframe.go.kr/home/sub.do?menuNo=4
+https://www.egovframe.go.kr/home/sub.do?menuNo=32
 
-Copyright property of respective owners
+Copyright 2016 MINISTRY OF THE INTERIOR AND SAFETY.
 
 Apache License 2.0
 
@@ -220,19 +224,19 @@ Copyright 2014-2015 Douglas Christopher Wilson
 
 MIT License
 
+ **Google Cloud Translation Client for Java**
+
+https://github.com/googleapis/java-translate
+
+Copyright Google LLC
+
+Apache License 2.0
+
  **Google Gson**
 
 https://github.com/google/gson
 
 Copyright 2008 Google Inc.
-
-Apache License 2.0
-
- **google-cloud-translate**
-
-https://mvnrepository.com/artifact/com.google.cloud/google-cloud-translate
-
-Copyright property of respective owners
 
 Apache License 2.0
 
@@ -454,25 +458,17 @@ BSD 3-Clause "New" or "Revised" License
 
  **influxdb-java**
 
-https://mvnrepository.com/artifact/org.influxdb/influxdb-java/2.14
-
-Copyright property of respective owners
-
-MIT License
-
- **influxdb-java**
-
-https://github.com/influxdata/influxdb-java.git
+https://github.com/influxdata/influxdb-java
 
 Copyright 2014-2017 Stefan Majer
 
 MIT License
 
- **istanbul**
+ **Istanbul** 
 
 https://github.com/gotwarlost/istanbul
 
-Copyright Krishnan Anantheswaran
+Copyright 2012 Yahoo! Inc.
 
 BSD 3-Clause "New" or "Revised" License
 
@@ -484,11 +480,17 @@ Copyright Kir Belevich
 
 MIT License
 
- **jackson-mapper-asl**
+ **Jackson**
 
-https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl
+https://github.com/codehaus/jackson
 
-Copyright property of respective owners
+Copyright Tatu Saloranta, tatu.saloranta@iki.fi
+
+Copyright Ryan Heaton, ryan@webcohesion.com
+
+Copyright Peter Harris, Peter.Harris@betfair.com
+
+Copyright Sunny Gleason, sunny@ning.com
 
 Apache License 2.0
 
@@ -500,13 +502,21 @@ Copyright 2008-2018 Pivotal Labs
 
 MIT License
 
- **jasypt-spring3**
+ **JASYPT**
 
-https://mvnrepository.com/artifact/org.jasypt/jasypt-spring3/1.9.2
+https://github.com/jasypt/jasypt
 
-Copyright property of respective owners
+Copyright 2007-2010, The JASYPT team (http://www.jasypt.org)
 
 Apache License 2.0
+
+ **Java Architecture for XML Binding**
+
+https://github.com/javaee/jaxb-spec
+
+Copyright Oracle and/or its affiliates.
+
+Common Development and Distribution License 1.1
 
  **JavaMail**
 
@@ -523,14 +533,6 @@ https://github.com/standard/standard
 Copyright Feross Aboukhadijeh
 
 MIT License
-
- **jaxb-api**
-
-https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
-
-Copyright property of respective owners
-
-Common Development and Distribution License 1.1
 
  **jQuery**
 
@@ -596,7 +598,7 @@ MIT License
 
 https://github.com/karma-runner/karma-cli
 
-Copyright Vojta Jína
+Copyright 2011-2013 Google, Inc.
 
 MIT License
 
@@ -610,7 +612,7 @@ MIT License
 
  **karma-edge-launcher**
 
-https://github.com/karma-runner/karma-edge-launcher
+https://github.com/nickmccurdy/karma-edge-launcher
 
 Copyright Nick McCurdy
 
@@ -618,7 +620,7 @@ MIT License
 
  **karma-edge-launcher**
 
-https://github.com/nickmccurdy/karma-edge-launcher
+https://github.com/karma-runner/karma-edge-launcher
 
 Copyright Nick McCurdy
 
@@ -652,6 +654,8 @@ MIT License
 
 https://github.com/IDCubed/karma-jasmine-ajax
 
+Copyright 2014 IDCubed
+
 MIT License
 
  **karma-junit-reporter**
@@ -682,7 +686,7 @@ MIT License
 
 https://github.com/karma-runner/karma-safari-launcher
 
-Copyright Vojta Jina
+Copyright 2011-2013 Google, Inc.
 
 MIT License
 
@@ -698,15 +702,15 @@ MIT License
 
 https://github.com/demerzel3/karma-sourcemap-loader
 
-Copyright Gabriele Genta
+Copyright 2013 Sergey Todyshev
 
 MIT License
 
  **karma-webdriver-launcher**
 
-[https://github.com/karma-runner/karma-webdriver-launcher\#readme][https_github.com_karma-runner_karma-webdriver-launcher_readme]
+https://github.com/karma-runner/karma-webdriver-launcher
 
-Copyright property of respective owners
+Copyright 2013 Hindsight Software Ltd and contributors.
 
 MIT License
 
@@ -715,12 +719,6 @@ MIT License
 https://github.com/webpack-contrib/karma-webpack
 
 Copyright JS Foundation and other contributors
-
-MIT License
-
- **linkify-it**
-
-https://github.com/markdown-it/linkify-it
 
 MIT License
 
@@ -744,11 +742,15 @@ MIT License
 
 https://github.com/markdown-it/markdown-it-abbr
 
+Copyright property of respective owners
+
 MIT License
 
  **markdown-it-container**
 
 https://github.com/markdown-it/markdown-it-container
+
+Copyright property of respective owners
 
 MIT License
 
@@ -756,23 +758,15 @@ MIT License
 
 https://github.com/markdown-it/markdown-it-deflist
 
+Copyright property of respective owners
+
 MIT License
 
  **markdown-it-emoji**
 
 https://github.com/markdown-it/markdown-it-emoji
 
-MIT License
-
- **markdown-it-footnote**
-
-https://github.com/markdown-it/markdown-it-footnote
-
-MIT License
-
- **markdown-it-for-inline**
-
-https://github.com/markdown-it/markdown-it-for-inline
+Copyright Vitaly Puzrin
 
 MIT License
 
@@ -780,11 +774,7 @@ MIT License
 
 https://github.com/markdown-it/markdown-it-ins
 
-MIT License
-
- **markdown-it-mark**
-
-https://github.com/markdown-it/markdown-it-mark
+Copyright property of respective owners
 
 MIT License
 
@@ -792,23 +782,17 @@ MIT License
 
 https://github.com/markdown-it/markdown-it-sub
 
-MIT License
-
- **markdown-it-sup**
-
-https://github.com/markdown-it/markdown-it-sup
-
-MIT License
-
- **markdown-it-testgen**
-
-https://github.com/markdown-it/markdown-it-testgen
+Copyright property of respective owners
 
 MIT License
 
  **mdurl**
 
 https://github.com/markdown-it/mdurl
+
+Copyright Vitaly Puzrin
+
+Copyright Alex Kocharin
 
 MIT License
 
@@ -828,9 +812,11 @@ Copyright the original author or authors
 
 Apache License 2.0
 
- **ndoc**
+ **Ndoc**
 
 https://github.com/nodeca/ndoc
+
+Copyright 2011 by Vitaly Puzrin
 
 MIT License
 
@@ -846,6 +832,8 @@ BSD 2-Clause "Simplified" License
 
 https://github.com/nodeca/pako
 
+Copyright 2014-2017 by Vitaly Puzrin and Andrei Tuputcyn
+
 MIT License
 
  **plantuml-encoder**
@@ -855,14 +843,6 @@ https://github.com/markushedvall/plantuml-encoder
 Copyright Markus Hedvall
 
 MIT License
-
- **poi-ooxml-schemas**
-
-https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas
-
-Copyright property of respective owners
-
-Apache License 2.0
 
  **PostgreSQL JDBC Driver**
 
@@ -898,11 +878,11 @@ MIT License
 
  **simple-jndi**
 
-https://github.com/hen/osjava
+https://github.com/hen/osjava/tree/master/simple-jndi
 
-Copyright property of respective owners
+Copyright 2003-2013, Henri Yandell + Robert Zigweid
 
-BSD 2-Clause "Simplified" License
+BSD 3-Clause "New" or "Revised" License
 
  **Spring Boot**
 
@@ -916,6 +896,16 @@ Apache License 2.0
 
 https://github.com/miwurster/spring-data-influxdb
 
+Copyright 2016 the original author or authors.
+
+Apache License 2.0
+
+ **Spring LDAP**
+
+https://github.com/spring-projects/spring-ldap
+
+Copyright 2005-2013 the original authors
+
 Apache License 2.0
 
  **squire-rte**
@@ -926,11 +916,11 @@ Copyright Neil Jenkins
 
 MIT License
 
- **stylus**
+ **Stylus**
 
 https://github.com/stylus/stylus
 
-Copyright TJ Holowaychuk
+Copyright Automattic
 
 MIT License
 
@@ -958,13 +948,21 @@ Copyright Developer Express Inc.
 
 MIT License
 
- **tomcat-embed-jasper**
+ **to-mark**
 
-https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
+https://github.com/nhn/to-mark
 
-Copyright property of respective owners
+Copyright NHN Ent. FE Development Lab  (https://nhnent.github.io/to-mark/
 
-Apache License 2.0
+MIT License
+
+ **TOAST UI Tools: Release Notes**
+
+https://github.com/nhn/toast-ui.release-notes
+
+Copyright 2019 NHN Corp
+
+MIT License
 
  **TSLint**
 
@@ -1000,13 +998,7 @@ MIT License
 
  **tui-jsdoc-template**
 
-https://github.com/nhnent/tui.jsdoc-template
-
-MIT License
-
- **tui-release-notes**
-
-https://github.com/nhn/toast-ui.release-notes
+https://github.com/nhn/tui.jsdoc-template
 
 Copyright property of respective owners
 
@@ -1019,12 +1011,6 @@ https://github.com/Microsoft/TypeScript
 Copyright 2012-2020 Microsoft
 
 Apache License 2.0
-
- **uc.micro**
-
-https://github.com/markdown-it/uc.micro
-
-MIT License
 
  **UglifyJS**
 
@@ -1073,14 +1059,6 @@ https://github.com/webpack/webpack-dev-server
 Copyright JS Foundation and other contributors
 
 MIT License
-
- **xmlbeans**
-
-https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans
-
-Copyright property of respective owners
-
-Apache License 2.0
 
 # GNU Lesser General Public License v2.1 or later #
 
@@ -1667,6 +1645,3 @@ Version 1.0
 
    As between Initial Developer and the Contributors, each party is responsible for claims and damages arising, directly or indirectly, out of its utilization of rights under this License and You agree to work with Initial Developer and Contributors to distribute such responsibility on an equitable basis. Nothing herein is intended or shall be deemed to constitute any admission of liability.
 ``````````
-
-
-[https_github.com_karma-runner_karma-webdriver-launcher_readme]: https://github.com/karma-runner/karma-webdriver-launcher#readme
