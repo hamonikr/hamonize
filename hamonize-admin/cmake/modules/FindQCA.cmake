@@ -46,7 +46,6 @@ else(QCA_INCLUDE_DIR AND QCA_LIBRARY)
       /usr/local/include
       PATH_SUFFIXES QtCrypto qt5/QtCrypto Qca-qt5/QtCrypto qt/Qca-qt5/QtCrypto qt5/Qca-qt5/QtCrypto
   )
-
   if(QCA_LIBRARY AND QCA_INCLUDE_DIR)
     set(QCA_FOUND TRUE)
   endif()
@@ -54,7 +53,13 @@ else(QCA_INCLUDE_DIR AND QCA_LIBRARY)
 endif(QCA_INCLUDE_DIR AND QCA_LIBRARY)
 
 if(NOT QCA_FOUND)
+  if(QCA_LIBRARY)
+    set(QCA_INCLUDE_DIR /usr/local/include/Qca-qt5/QtCrypto)
+    set(QCA_FOUND TRUE)
+  endif(QCA_LIBRARY)
+endif(NOT QCA_FOUND)
 
+if(NOT QCA_FOUND)
   if(QCA_FIND_REQUIRED)
     message(FATAL_ERROR "Could not find QCA")
   else()
