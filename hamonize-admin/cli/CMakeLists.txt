@@ -11,7 +11,7 @@ ADD_WINDOWS_RESOURCE(hamonize-cli ${CMAKE_CURRENT_BINARY_DIR}/hamonize-cli.rc)
 MAKE_CONSOLE_APP(hamonize-cli)
 
 IF(VEYON_BUILD_WIN32)
-build_hamonize_application(hamonize-wcli ${cli_SOURCES})
+build_veyon_application(hamonize-wcli ${cli_SOURCES})
 TARGET_LINK_LIBRARIES(hamonize-wcli hamonize-core Qt5::Network)
 
 ADD_WINDOWS_RESOURCE(hamonize-wcli ${CMAKE_CURRENT_BINARY_DIR}/hamonize-wcli.rc)
