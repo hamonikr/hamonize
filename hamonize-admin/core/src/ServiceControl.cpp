@@ -61,7 +61,7 @@ bool ServiceControl::isServiceRunning()
 
 void ServiceControl::startService()
 {
-	serviceControl( tr( "Starting service %1" ).arg( m_name ),
+	serviceControl( tr( "Starting service Hamonize" ).arg( m_name ),
 					QtConcurrent::run( [=]() { VeyonCore::platform().serviceFunctions().start( m_name ); } ) );
 }
 
@@ -70,7 +70,7 @@ void ServiceControl::startService()
 
 void ServiceControl::stopService()
 {
-	serviceControl( tr( "Stopping service %1" ).arg( m_name ),
+	serviceControl( tr( "Stopping service Hamonize" ).arg( m_name ),
 					QtConcurrent::run( [=]() { VeyonCore::platform().serviceFunctions().stop( m_name ); } ) );
 }
 
@@ -78,7 +78,7 @@ void ServiceControl::stopService()
 
 void ServiceControl::registerService()
 {
-	serviceControl( tr( "Registering service %1" ).arg( m_name ),
+	serviceControl( tr( "Registering service Hamonize" ).arg( m_name ),
 					QtConcurrent::run( [=]() { VeyonCore::platform().serviceFunctions().install( m_name,
 																								 m_filePath,
 																								 PlatformServiceFunctions::StartMode::Auto,
@@ -89,7 +89,7 @@ void ServiceControl::registerService()
 
 void ServiceControl::unregisterService()
 {
-	serviceControl( tr( "Unregistering service %1" ).arg( m_name ),
+	serviceControl( tr( "Unregistering service Hamonize" ).arg( m_name ),
 					QtConcurrent::run( [=]() { VeyonCore::platform().serviceFunctions().uninstall( m_name ); } ) );
 
 }

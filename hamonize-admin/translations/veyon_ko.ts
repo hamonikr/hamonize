@@ -3460,12 +3460,12 @@ Please save your work and close all programs.</source>
         <translation>플러그인:</translation>
     </message>
     <message>
-        <source>Restart %1 Service</source>
-        <translation>%1 서비스 재시작</translation>
+        <source>Restart Hamonize Service</source>
+        <translation>Hamonize 서비스 재시작</translation>
     </message>
     <message>
-        <source>All settings were saved successfully. In order to take effect the %1 service needs to be restarted. Restart it now?</source>
-        <translation>모든 설정이 성공적으로 저장됨. %1 서비스가 작동하려면 재시작해야 합니다. 지금 재시작 할까요 ?</translation>
+        <source>All settings were saved successfully. In order to take effect the Hamonize service needs to be restarted. Restart it now?</source>
+        <translation>모든 설정이 성공적으로 저장됨. Hamonize 서비스가 작동하려면 재시작해야 합니다. 지금 재시작 할까요 ?</translation>
     </message>
     <message>
         <source>Running</source>
@@ -3529,20 +3529,20 @@ Typically this is required to support terminal servers.</source>
 <context>
     <name>ServiceControl</name>
     <message>
-        <source>Starting service %1</source>
-        <translation>서비스 %1 시작중</translation>
+        <source>Starting service Hamonize</source>
+        <translation>서비스 Hamonize 시작중</translation>
     </message>
     <message>
-        <source>Stopping service %1</source>
-        <translation>서비스 %1 중지중</translation>
+        <source>Stopping service Hamonize</source>
+        <translation>서비스 Hamonize 중지중</translation>
     </message>
     <message>
-        <source>Registering service %1</source>
-        <translation>서비스 %1 를 등록중</translation>
+        <source>Registering service Hamonize</source>
+        <translation>서비스 Hamonize 를 등록중</translation>
     </message>
     <message>
-        <source>Unregistering service %1</source>
-        <translation>서비스 %1 를 등록 해제중</translation>
+        <source>Unregistering service Hamonize</source>
+        <translation>서비스 Hamonize 를 등록 해제중</translation>
     </message>
     <message>
         <source>Service control</source>
