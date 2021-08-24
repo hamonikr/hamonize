@@ -484,7 +484,7 @@ QString ComputerControlListModel::computerStateDescription( const ComputerContro
 		return tr( "Computer offline or switched off" );
 
 	case ComputerControlInterface::State::ServerNotRunning:
-		return tr( "Veyon Server unreachable or not running" );
+		return tr( "Hamonize Server unreachable or not running" );
 
 	case ComputerControlInterface::State::AuthenticationFailed:
 		return tr( "Authentication failed or access denied" );
