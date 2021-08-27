@@ -1,4 +1,4 @@
-# HAMONIZE
+# ![Hamonize](./img/halogo.png)
 
 ![GitHub
 License](https://img.shields.io/github/license/hamonikr/hamonize)
@@ -14,85 +14,130 @@ forks](https://img.shields.io/github/forks/hamonikr/hamonize?style=social)
 ![GitHub
 issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/yeji0407"><img src="https://avatars.githubusercontent.com/u/55476302?v=4?s=100" width="100px;" alt=""/><br /><sub><b>yeji0407</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=yeji0407" title="Code">💻</a></td>
-    <td align="center"><a href="https://hamonikr.org"><img src="https://avatars.githubusercontent.com/u/405502?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kevin Kim</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=chaeya" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/jullee96"><img src="https://avatars.githubusercontent.com/u/66409676?v=4?s=100" width="100px;" alt=""/><br /><sub><b>julie lee</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=jullee96" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/bdh1993"><img src="https://avatars.githubusercontent.com/u/58254473?v=4?s=100" width="100px;" alt=""/><br /><sub><b>JamesBae</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bdh1993" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/choonsik2"><img src="https://avatars.githubusercontent.com/u/62954933?v=4?s=100" width="100px;" alt=""/><br /><sub><b>choonsik</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=choonsik2" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/gon1942"><img src="https://avatars.githubusercontent.com/u/31919227?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ryan</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=gon1942" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/bigeden"><img src="https://avatars.githubusercontent.com/u/51899018?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eden</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bigeden" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+<br>
+<img width="700" src="./img/hamonize.png">
 
 
-## 개요
-하모나이즈는 하모니카PC를 사용하는 조직에서 전사적 관리를 필요로 하는 경우를 지원하기 위한 솔루션입니다.
 
-조직 내 전체 하모니카 사용자에 대한 자산 관리, 보안 관리, 사용자 관리, 활동 감사, 원격 제어 등을 수행할 수 있습니다.
+<br>
 
-하모나이즈는 인텔 AMT 기술을 이용하여 현장의 방문없이 원격에서 운영체제의 재설치가 가능하며, PC가 꺼진 상태에서도 원격접속 기능을 제공합니다.
+## 📌 Table of Contents 
+- [!Hamonize](#)
+  - [📌 Table of Contents](#-table-of-contents)
+  - [📦 Packages](#-packages)
+  - [😎 What is Hamonize?](#-what-is-hamonize)
+  - [🎨 Features](#-features)
+  - [🔗 Examples](#-examples)
+  - [🛠 Pull Request Steps](#-pull-request-steps)
+    - [Setup](#setup)
+    - [Pull Request](#pull-request)
+  - [👍 Contributing](#-contributing)
+  - [📜 License](#-license)
 
-모든 데이터는 AES-256-CBC(256Bit) 블록모드 암호화 알고리즘으로 암호화된 데이터를 Split Tunneling 로 제공하여 안전한 보안성을 제공합니다.
+<br>
 
-## 주요기능
-### CENTER 
- 자산관리, 사용자관리, 모니터링, 보안관리, 백업 및 복구, 로그감사, 매체제어, 통계 및 보고서, 업데이트 관리, 프로그램 관리
- 
- #### 사용기술
- - spring boot + maven 를 사용하여 편리한 라이브러리 관리 
- - docker로 was(tomcat) 서버 구축
- - docker로 postgresql 서버 구축
- - docker로 디렉토리 서버 구축 : openldap
- - docker로 pc의 logging 서버 구축 : telegraf + influxdb + grafana를 사용하여 **윈도우** 및 **리눅스** 디바이스들에서 시계열 데이터를 수집하여 출력 (예정) 
- 
-센터에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-center)에서 확인해볼 수 있습니다
- 
-### AGENT
-하드웨어 변경 감사, 사용자 로그전송, 주요 프로그램 보호, 보안정책 구현, 매체제어 관리
- 
- #### 사용기술
-- Node.JS + shellscript 로 **리눅스** H/W 디바이스를 제어
-- Node.JS 프로젝트를 데비안 소스 패키징
-- Node.JS로 윈도우 H/W 디바이스를 제어(예정)
-- Node.JS 프로젝트를 Windows 어플리케이션 패키징(예정)
-
-에이전트에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent)에서 확인해볼 수 있습니다
+## 📦 Packages
 
 
-### ADMIN
- 하드웨어 감사, 원격파일전송, 세션잠금 관리, 원격전원관리, 모니터링, 스크린 브로드캐스팅, 원격프로그램 실행, 원격화면캡쳐, 실시간 메시지 전송, 디렉토리서비스 연동, 바이오스 제어, 원격운영체제 설치, 원격 시리얼 콘솔, 원격데스크톱, 스케쥴 부팅
- 
- #### 사용기술
-- c++과 c 언어 사용, cmake와 ninja를 통한 빌드
-- 각종 mingw 패키지를 통한 윈도우 크로스 컴파일 방식 사용
-- Qt5를 사용한 데이스크톱 애플리케이션
-- OpenLDAP과의 연동으로 조직 정보 활용
+| Name                                                                                | Description                         |
+| ----------------------------------------------------------------------------------- | ----------------------------------- |
+| [Hamonize-center](https://github.com/hamonikr/hamonize/tree/master/hamonize-center) | spring boot 기반의 java 웹 프로그램 |
 
-어드민에 대한 자세한 내용은 [여기](https://github.com/hamonikr/hamonize/tree/master/hamonize-admin)에서 확인해볼 수 있습니다
+| Name                                                                              | Description                              |
+| --------------------------------------------------------------------------------- | ---------------------------------------- |
+| [Hamonize-agent](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent) | node+shell script 기반의 pc관리 프로그램 |
 
-### 아키텍처
+| Name                                                                              | Description                  |
+| --------------------------------------------------------------------------------- | ---------------------------- |
+| [Hamonize-admin](https://github.com/hamonikr/hamonize/tree/master/hamonize-admin) | c++ 기반의 원격관리 프로그램 |
 
-![architecture](./img/Hamonize_architecture.png)
+| Name                                                                                      | Description                                 |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------- |
+| [Hamonize-connector](https://github.com/hamonikr/hamonize/tree/master/hamonize-connector) | electron+shell 기반의 pc 초기 설정 프로그램 |
 
-## 라이선스
-* [hamonize-center 라이선스 문서](https://github.com/hamonikr/hamonize/blob/master/hamonize-center/NOTICE.md)
 
-* [hamonize-agent 라이선스 문서](https://github.com/hamonikr/hamonize/blob/master/hamonize-agent/NOTICE.md)
+<br>
 
-* [hamonize-admin 라이선스 문서](https://github.com/hamonikr/hamonize/blob/master/hamonize-admin/COPYING)
+## 😎 What is Hamonize?
+
+하모나이즈는 개방형 OS 및 윈도우 OS를 사용하는 원격지의 PC들을 통합관리 할 수 있는 솔루션입니다. <br>
+하모나이즈 프로젝트는 크게 하모나이즈 센터, 하모나이즈 에이전트, 하모나이즈 어드민으로 이루어져 있습니다.
+
+<br>
+
+<img width="700" src="./img/Hamonize_architecture.png"> <br>
+
+
+`하모나이즈 센터`는 크게 세가지의 기능을 갖고있습니다.  <br>
+- 첫번째로 관리자가 원격지의 대상 PC들에게 백업및 복구, 프로그램 설치, 차단 등의 정책을 내리고 정책이 정상적으로 내려졌는지 수행결과를 볼 수 있습니다  
+- 두번째로 원격지 PC들의 실시간 cpu, memory 등의 사용량을 한눈에 확인하고 자원을 관리할 수 있습니다.
+- 세번째로 원격지의 PC에 원격 접속을 하여 문제가 생겼을 경우 즉각적이고 효율적으로 대응을 할 수 있습니다.
+
+`하모나이즈 에이전트`는 별도의 화면 없이 하모나이즈 센터에서 내린 정책을 수행하고 수행결과를 보내는 역할을 합니다.
+
+`하모나이즈 어드민`에서는 하모나이즈 센터에서 원격접속을 할 수 있도록 기능을 제공하고 별도로 하모나이즈 어드민 데스크탑 어플리케이션을 통해서도 연결된 원격지의 PC들의 원격제어, 세션관리,전원 관리 등의 기능을 할  수 있습니다.
+
+<br>
+
+## 🎨 Features
+* 하모니카OS 뿐만아니라 다양한 개방형OS와 윈도우OS까지 지원
+* 하모나이즈 서비스 구동을 위한 필요 서버들을 도커로 구성하여 제공 
+* HMACSHA256 키 지정 hash 알고리즘으로 데이터를 암호화해 제공하여 안전한 보안성을 제공
+
+<br>
+
+## 🔗 Examples
+
+<br>
+
+## 🛠 Pull Request Steps
+**Hamonize**는 오픈소스임으로 이슈를 해결한 후에 PR을 보내주세요. 소스를 실행하고 아래의 프로세스 대로 개발해주세요.
+
+### Setup
+먼저, 자신의 레파지토리로 `main` 브랜치에서 fork를 해주세요. 그다음에 로컬 컴퓨터 환경에 clone한 다음에 개발을 진행해주세요.
+
+```
+git clone git@github.com:{your-own-repo}/hamonize.git
+```
+
+### Pull Request
+PR을 생성하기 전에 error가 있는지 확인을 해주세요. 에러가 없다면 commit하고 push해주세요.
+더 많은 정보를 원하시면 **Contributing** 문서들을 참고해주세요
+
+<br>
+
+## 👍 Contributing 
+* [Code of Conduct](https://github.com/hamonikr/hamonize/blob/master/CODE_OF_CONDUCT.md)
+* [Contributing Guideline](https://github.com/hamonikr/hamonize/blob/master/CONTRIBUTING.md)
+* [Issue Guidelines](https://github.com/hamonikr/hamonize/blob/master/ISSUE_TEMPLATE.md)
+
+* **Contributers** ✨
+  
+  
+    하모나이즈 프로젝트에 참여해주신 멋진 분들입니다 
+
+    <table>
+      <tr>
+        <td align="center"><a href="https://github.com/yeji0407"><img src="https://avatars.githubusercontent.com/u/55476302?v=4?s=100" width="100px;" alt=""/><br /><sub><b>yeji0407</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=yeji0407" title="Code">💻</a></td>
+        <td align="center"><a href="https://hamonikr.org"><img src="https://avatars.githubusercontent.com/u/405502?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kevin Kim</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=chaeya" title="Code">💻</a></td>
+        <td align="center"><a href="https://github.com/jullee96"><img src="https://avatars.githubusercontent.com/u/66409676?v=4?s=100" width="100px;" alt=""/><br /><sub><b>julie lee</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=jullee96" title="Code">💻</a></td>
+        <td align="center"><a href="https://github.com/bdh1993"><img src="https://avatars.githubusercontent.com/u/58254473?v=4?s=100" width="100px;" alt=""/><br /><sub><b>JamesBae</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bdh1993" title="Code">💻</a></td>
+        <td align="center"><a href="https://github.com/choonsik2"><img src="https://avatars.githubusercontent.com/u/62954933?v=4?s=100" width="100px;" alt=""/><br /><sub><b>choonsik</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=choonsik2" title="Code">💻</a></td>
+        <td align="center"><a href="https://github.com/gon1942"><img src="https://avatars.githubusercontent.com/u/31919227?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ryan</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=gon1942" title="Code">💻</a></td>
+        <td align="center"><a href="https://github.com/bigeden"><img src="https://avatars.githubusercontent.com/u/51899018?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eden</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bigeden" title="Code">💻</a></td>
+      </tr>
+    </table>
+
+    이 프로젝트는 [모든 기여자](https://github.com/all-contributors/all-contributors)들의 
+    의사를 존중하고 어떤 종류의 기여라도 환영합니다!
+
+<br>
+
+## 📜 License 
+* [hamonize-center](https://github.com/hamonikr/hamonize/blob/master/hamonize-center/NOTICE.md)
+
+* [hamonize-agent](https://github.com/hamonikr/hamonize/blob/master/hamonize-agent/NOTICE.md)
+
+* [hamonize-admin](https://github.com/hamonikr/hamonize/blob/master/hamonize-admin/COPYING)
+
+* [hamonize-connector](https://github.com/hamonikr/hamonize/blob/master/hamonize-connector/NOTICE.md) 
