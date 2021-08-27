@@ -15,7 +15,7 @@ forks](https://img.shields.io/github/forks/hamonikr/hamonize?style=social)
 issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
 <br>
-<img width="700" src="./img/hamonize.png">
+<img width="800" src="./img/hamonize.png">
 
 
 
