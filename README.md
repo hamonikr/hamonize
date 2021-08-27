@@ -22,17 +22,15 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 <br>
 
 ## 📌 Table of Contents 
-- [!Hamonize](#)
-  - [📌 Table of Contents](#-table-of-contents)
-  - [📦 Packages](#-packages)
-  - [😎 What is Hamonize?](#-what-is-hamonize)
-  - [🎨 Features](#-features)
-  - [🔗 Examples](#-examples)
-  - [🛠 Pull Request Steps](#-pull-request-steps)
-    - [Setup](#setup)
-    - [Pull Request](#pull-request)
-  - [👍 Contributing](#-contributing)
-  - [📜 License](#-license)
+- [📦 Packages](#-packages)
+- [😎 What is Hamonize?](#-what-is-hamonize)
+- [🎨 Features](#-features)
+- [🔗 Examples](#-examples)
+- [🛠 Pull Request Steps](#-pull-request-steps)
+  - [Setup](#setup)
+  - [Pull Request](#pull-request)
+- [👍 Contributing](#-contributing)
+- [📜 License](#-license)
 
 <br>
 
@@ -79,6 +77,10 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
 <br>
 
+📕 자세한 사용법을 알고싶으면 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339494)를 참고하세요 
+
+<br>
+
 ## 🎨 Features
 * 하모니카OS 뿐만아니라 다양한 개방형OS와 윈도우OS까지 지원
 * 하모나이즈 서비스 구동을 위한 필요 서버들을 도커로 구성하여 제공 
@@ -87,6 +89,12 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 <br>
 
 ## 🔗 Examples
+
+`하모나이즈` 솔루션은 이미 국방부에서 사이버지식정보방에 12,500대의 PC를 운용하는데 사용되고 있는 솔루션입니다.
+
+<br>
+<img width="600" src="./img/hamonize_ex1.png"> <br>
+
 
 <br>
 
