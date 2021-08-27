@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
- 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.mapper.IPcMangrMapper">
-	
+
 	<insert id="pcIpchnLog" parameterType="com.model.PcMangrVo">
         INSERT 
         	INTO tbl_pc_mangr_ip_chn_log
@@ -31,13 +31,13 @@
 				now() 
 	        )
 	</insert>
-	
+
 	<select id="inserPcInfoChk" parameterType="com.model.PcMangrVo" resultType="Integer">
 		SELECT COUNT(*) FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid}
 	</select>
-	
+
 	<!-- updatePcinfo -->
-	<update id="updatePcinfo" parameterType="com.model.PcMangrVo" >
+	<update id="updatePcinfo" parameterType="com.model.PcMangrVo">
 		update tbl_pc_mangr
 		set 	
 				pc_ip = #{pc_ip},
@@ -47,7 +47,7 @@
 				pc_disk_id = #{pc_disk_id}
 		where pc_uuid = #{pc_uuid}
 	</update>
-	
+
 	<!-- vpn-auto-connection act -->
 	<!-- <update id="pcInfoChange" parameterType="com.model.PcMangrVo" >
 		update tbl_pc_mangr
@@ -76,8 +76,8 @@
 			last_date = now()
 		where pc_uuid = #{pc_uuid}
 	</update> -->
-	
-	<update id="updateVpnInfo" parameterType="com.model.PcMangrVo" >
+
+	<update id="updateVpnInfo" parameterType="com.model.PcMangrVo">
 		update tbl_pc_mangr
 		set 	
 			pc_vpnip = #{pc_vpnip},
@@ -90,27 +90,27 @@
 		from tbl_org 
 		where trim(org_nm) = #{deptname}
 	</select>
-	
+
 	<select id="chkPcinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
 		select seq, pc_uuid, pc_ip, pc_vpnip, pc_macaddress
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid}
 	</select>
-		
+
 	<select id="chkUserSabun" parameterType="com.model.PcMangrVo" resultType="com.model.UserVo">
 		select *
 		from tbl_user tu 
 		where trim(user_sabun) = #{sabun}
 	</select>
-		
-	
+
+
 	<select id="maxSgbPcCntByorgSeq" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
 		select org_seq,count(org_seq) as maxSgbPcCntByorgSeq
 		from tbl_pc_mangr
 		where org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid} )
 		group by org_seq;
 	</select>
-		
+
 	<!-- pc 정보 저장 -->
 	<insert id="inserPcInfo" parameterType="com.model.PcMangrVo">
         INSERT 
@@ -155,30 +155,30 @@
 				WHERE NOT EXISTS (SELECT * FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid})
 
 	</insert>
-	
-	
+
+
 	<select id="pchk" parameterType="com.model.PcMangrVo" resultType="Integer">
 		select count(*)
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid}
 	</select>
-	
+
 	<!-- PcController.mngrListInfo -->
-	<select id="pcMntrngListInfo" resultType="com.model.PcMangrVo"  parameterType="com.model.PcMangrVo">
+	<select id="pcMntrngListInfo" resultType="com.model.PcMangrVo" parameterType="com.model.PcMangrVo">
 		SELECT 
 			seq,
 			pc_hostname,
 			pc_uuid
 		FROM tbl_pc_mangr
 		<where>
-		<if test="org_seq != 1 ">
+			<if test="org_seq != 1 ">
 				org_seq = #{org_seq}
 		</if>
 		</where>
-		 
+
 	</select>
-	
-	
+
+
 	<!-- PcController.mngrListInfo -->
 	<select id="pcListInfo" resultType="com.model.PcMangrVo" parameterType="hashmap">
 		SELECT 
@@ -202,8 +202,8 @@
 			(select seq from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_seq
 		FROM tbl_pc_mangr
 		<where>
-			1=1		
-		<if test="pcMangrVo.org_seq != null and pcMangrVo.org_seq != ''">
+			1=1
+			<if test="pcMangrVo.org_seq != null and pcMangrVo.org_seq != ''">
 		and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -217,41 +217,40 @@
 				from search_org
 				)
 		</if>
-		<if test="pcMangrVo.pc_change != null and pcMangrVo.pc_change != ''">
+			<if test="pcMangrVo.pc_change != null and pcMangrVo.pc_change != ''">
 		and pc_change != 'C' and pc_change != ''
 		</if>
-		<if test="pcMangrVo.txtSearch != null and pcMangrVo.txtSearch != ''" >
-			<if test="pcMangrVo.keyWord == 1 " >
+			<if test="pcMangrVo.txtSearch != null and pcMangrVo.txtSearch != ''">
+				<if test="pcMangrVo.keyWord == 1 ">
 				and (select sido from tbl_org where seq = org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 2 " >
+				<if test="pcMangrVo.keyWord == 2 ">
 				and (select org_nm from tbl_org where seq = org_seq) = #{pcMangrVo.txtSearch}
 			</if>
-			<if test="pcMangrVo.keyWord == 3 " >
+				<if test="pcMangrVo.keyWord == 3 ">
 				and pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 4 " >
+				<if test="pcMangrVo.keyWord == 4 ">
 				and pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 5 " >
+				<if test="pcMangrVo.keyWord == 5 ">
 				and LOWER(pc_hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 0 " >
+				<if test="pcMangrVo.keyWord == 0 ">
 				and ((select sido from tbl_org where seq = org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
 				or (select org_nm from tbl_org where seq = org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
 				or pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
 				or pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
 				or LOWER(pc_hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%')
 			</if>
-		</if>
-		
-		</where> 
+			</if>
+
+		</where>
 		order by seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
 	</select>
-	
-	
+
+
 	<select id="pcMngrListExcel" resultType="hashmap" parameterType="com.model.PcMangrVo">
 		SELECT 
 		(ROW_NUMBER() OVER()) AS rownum,
@@ -274,75 +273,11 @@
 			(select org_nm from tbl_org where seq = org_seq)as deptname,
 			(select sido from tbl_org where seq = org_seq) as deptsido
 		FROM tbl_pc_mangr
-
 		<where>
 			1=1
 			<!-- <if test="pcMangrVo.selectOrgSeq != null and pcMangrVo.selectOrgSeq != '' ">
 					org_seq = #{pcMangrVo.selectOrgSeq}
 			</if> -->
-		<if test="org_seq != null and org_seq != ''">
-		and org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-				from tbl_org a
-				where a.seq = #{org_seq}
-				union all
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and not cycle)
-				select seq
-				from search_org
-				)
-		</if>
-		<if test="pc_change != null and pc_change != ''">
-		and pc_change != 'C' and pc_change != ''
-		</if>
-		<if test="date_fr != null and date_fr != ''">
-		<![CDATA[
-		and first_date >= #{date_fr}::date 
-		]]>
-		</if>
-		<if test="date_to != null and date_to != ''">
-		<![CDATA[
-		and first_date <= #{date_to}::date 
-		]]>
-		</if>
-		<if test="txtSearch != null and txtSearch != ''" >
-			<if test="keyWord == 1 " >
-				and (select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 2 " >
-				and (select org_nm from tbl_org where seq = org_seq) = #{txtSearch}
-			</if>
-			<if test="keyWord == 3 " >
-				and pc_ip like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 4 " >
-				and pc_macaddress like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 5 " >
-				and pc_hostname like '%' || #{txtSearch} || '%'
-			</if>
-			<if test="keyWord == 0 " >
-				and ((select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
-				or (select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
-				or pc_ip like '%' || #{txtSearch} || '%'
-				or pc_macaddress like '%' || #{txtSearch} || '%'
-				or pc_hostname like '%' || #{txtSearch} || '%')
-			</if>
-		</if>
-		</where>
-		order by first_date asc 
-
-	</select>
-	
-	
-	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">
-		SELECT 
-			count(*)  as tbl_cnt
-		FROM tbl_pc_mangr
-		<where>
-		1=1
 			<if test="org_seq != null and org_seq != ''">
 		and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
@@ -357,55 +292,117 @@
 				from search_org
 				)
 		</if>
-		<if test="pc_change != null and pc_change != ''">
+			<if test="pc_change != null and pc_change != ''">
 		and pc_change != 'C' and pc_change != ''
 		</if>
-		<if test="txtSearch != null and txtSearch != ''" >
-			<if test="keyWord == 1 " >
+			<if test="date_fr != null and date_fr != ''">
+				<![CDATA[
+		and first_date >= #{date_fr}::date 
+		]]>
+			</if>
+			<if test="date_to != null and date_to != ''">
+				<![CDATA[
+		and first_date <= #{date_to}::date 
+		]]>
+			</if>
+			<if test="txtSearch != null and txtSearch != ''">
+				<if test="keyWord == 1 ">
 				and (select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 2 " >
+				<if test="keyWord == 2 ">
 				and (select org_nm from tbl_org where seq = org_seq) = #{txtSearch}
 			</if>
-			<if test="keyWord == 3 " >
+				<if test="keyWord == 3 ">
 				and pc_ip like '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 4 " >
+				<if test="keyWord == 4 ">
 				and pc_macaddress like '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 5 " >
+				<if test="keyWord == 5 ">
 				and pc_hostname like '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 0 " >
+				<if test="keyWord == 0 ">
 				and ((select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
 				or (select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
 				or pc_ip like '%' || #{txtSearch} || '%'
 				or pc_macaddress like '%' || #{txtSearch} || '%'
 				or pc_hostname like '%' || #{txtSearch} || '%')
 			</if>
-		</if>
-		</where> 
+			</if>
+		</where>
+		order by first_date asc
 	</select>
-	
-	<update id="changeStts" parameterType="com.model.PcMangrVo" >
+
+
+	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">
+		SELECT 
+			count(*)  as tbl_cnt
+		FROM tbl_pc_mangr
+		<where>
+			1=1
+			<if test="org_seq != null and org_seq != ''">
+		and org_seq in (
+				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{org_seq}
+				union all
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				from tbl_org a, search_org so 
+				where a.p_seq = so.seq and not cycle)
+				select seq
+				from search_org
+				)
+		</if>
+			<if test="pc_change != null and pc_change != ''">
+		and pc_change != 'C' and pc_change != ''
+		</if>
+			<if test="txtSearch != null and txtSearch != ''">
+				<if test="keyWord == 1 ">
+				and (select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
+			</if>
+				<if test="keyWord == 2 ">
+				and (select org_nm from tbl_org where seq = org_seq) = #{txtSearch}
+			</if>
+				<if test="keyWord == 3 ">
+				and pc_ip like '%' || #{txtSearch} || '%'
+			</if>
+				<if test="keyWord == 4 ">
+				and pc_macaddress like '%' || #{txtSearch} || '%'
+			</if>
+				<if test="keyWord == 5 ">
+				and pc_hostname like '%' || #{txtSearch} || '%'
+			</if>
+				<if test="keyWord == 0 ">
+				and ((select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
+				or (select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
+				or pc_ip like '%' || #{txtSearch} || '%'
+				or pc_macaddress like '%' || #{txtSearch} || '%'
+				or pc_hostname like '%' || #{txtSearch} || '%')
+			</if>
+			</if>
+		</where>
+	</select>
+
+	<update id="changeStts" parameterType="com.model.PcMangrVo">
 	update tbl_pc_mangr
 	set pc_change = #{pc_change}
 	where seq = #{seq}
 	</update>
-	
+
 	<select id="requestCount" resultType="Integer">
 	SELECT COUNT(*) FROM TBL_PC_MANGR WHERE PC_CHANGE='R' OR PC_CHANGE='P'
 	</select>
-	
+
 	<select id="pcMoveInfo" resultType="com.model.PcMangrVo" parameterType="com.model.PcMangrVo">
 	select (select org_nm from tbl_org where seq = org_seq) as org_nm,(select org_nm from tbl_org where seq = move_org_seq) as move_org_nm from tbl_pc_mangr_history  where pc_change='R' and seq=#{seq} order by seq desc limit 1;
 	</select>
-	
+
 	<insert id="changeInsertHistory" parameterType="com.model.PcMangrVo">
-	<selectKey keyProperty="seq" resultType="int" order="AFTER">
+		<selectKey keyProperty="seq" resultType="int" order="AFTER">
 	SELECT SEQ FROM TBL_PC_MANGR_HISTORY ORDER BY SEQ DESC LIMIT 1
 	</selectKey>
-	INSERT INTO TBL_PC_MANGR_HISTORY
+		INSERT INTO TBL_PC_MANGR_HISTORY
 	(seq, pc_status, pc_cpu, pc_memory, 
 	pc_disk, pc_macaddress, pc_ip, first_date, 
 	last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, 
@@ -415,23 +412,23 @@
 	last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, 
 	pc_cpu_id, pc_uuid, pc_change, pc_os,pc_sn FROM TBL_PC_MANGR WHERE seq = #{seq}
 	</insert>
-	<update id="updateHistory" parameterType="com.model.PcMangrVo" >
+	<update id="updateHistory" parameterType="com.model.PcMangrVo">
 	UPDATE TBL_PC_MANGR_HISTORY
 	set move_org_nm = #{move_org_nm},
 	move_org_seq = (select seq from tbl_org where org_nm=#{move_org_nm}),
 	last_date = now()
 	where seq = #{seq}
 	</update>
-	
+
 	<insert id="insertMoveInfo" parameterType="com.model.PcMangrVo">
 	INSERT INTO TBL_PC_MANGR_MOVE 
 	SELECT * FROM TBL_PC_MANGR_HISTORY WHERE SEQ = #{seq}
 	</insert>
-	
+
 	<insert id="deleteMoveInfo" parameterType="com.model.PcMangrVo">
 		DELETE FROM TBL_PC_MANGR_MOVE WHERE seq = #{seq}
-	</insert>	
-	
+	</insert>
+
 	<insert id="insertPcAmtJson" parameterType="java.util.HashMap">
 		INSERT INTO TBL_PC_AMT_JSON 
 				(pc_hostname
@@ -465,7 +462,7 @@
 			</if>
 		</foreach>
 	</insert>
-	
+
 	<select id="pcDetailInfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
 	SELECT 
 		* 
@@ -473,9 +470,8 @@
 		TBL_PC_MANGR
 		WHERE pc_uuid = #{pc_uuid}
 	</select>
-	
-	
-	
+
+
 	<select id="pcBlockListInfo" resultType="com.model.PcMangrVo" parameterType="hashmap">
 		SELECT 
 			a.seq, 
@@ -493,7 +489,7 @@
 		on a.seq = b.seq
 		<where>
 			1=1
-		<if test="pcMangrVo.org_seq != null and pcMangrVo.org_seq != ''">
+			<if test="pcMangrVo.org_seq != null and pcMangrVo.org_seq != ''">
 		and a.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -507,87 +503,86 @@
 					from search_org
 				)
 		</if>
-		<if test="pcMangrVo.pc_change != null and pcMangrVo.pc_change != ''">
+			<if test="pcMangrVo.pc_change != null and pcMangrVo.pc_change != ''">
 		and a.pc_change != 'C' and a.pc_change != ''
 		</if>
-		<if test="pcMangrVo.txtSearch != null and pcMangrVo.txtSearch != ''" >
-			<if test="pcMangrVo.keyWord == 1 " >
+			<if test="pcMangrVo.txtSearch != null and pcMangrVo.txtSearch != ''">
+				<if test="pcMangrVo.keyWord == 1 ">
 				and (select sido from tbl_org where seq = a.org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 2 " >
+				<if test="pcMangrVo.keyWord == 2 ">
 				and (select org_nm from tbl_org where seq = a.org_seq) = #{pcMangrVo.txtSearch}
 			</if>
-			<if test="pcMangrVo.keyWord == 3 " >
+				<if test="pcMangrVo.keyWord == 3 ">
 				and a.pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 4 " >
+				<if test="pcMangrVo.keyWord == 4 ">
 				and a.pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 5 " >
+				<if test="pcMangrVo.keyWord == 5 ">
 				and LOWER(a.pc_hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%'
 			</if>
-			<if test="pcMangrVo.keyWord == 0 " >
+				<if test="pcMangrVo.keyWord == 0 ">
 				and ((select sido from tbl_org where seq = a.org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
 				or (select org_nm from tbl_org where seq = a.org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
 				or a.pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
 				or a.pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
 				or LOWER(a.pc_hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%')
 			</if>
-		</if>
-		
-		</where> 
+			</if>
+
+		</where>
 		order by a.seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
 	</select>
-	
+
 	<select id="getPcBlockStatus" resultType="com.model.PcMangrVo">
 		SELECT *
 		FROM tbl_pc_block
 		WHERE seq = (select seq from public.tbl_pc_mangr where pc_uuid = #{pc_uuid} )
 	</select>
-	
-	<update id="updateBlock" parameterType="com.model.PcMangrVo" >
+
+	<update id="updateBlock" parameterType="com.model.PcMangrVo">
 		WITH upsert AS(
 		UPDATE TBL_PC_BLOCK set status = 'N' , insert_dt = now() 
 		where seq in
-			<foreach collection="updateBlockList" item="item" separator="," index="index" open="(" close=")">
+		<foreach collection="updateBlockList" item="item" separator="," index="index" open="(" close=")">
 					${updateBlockList[index]}
-			</foreach> 
-			RETURNING*)
-			INSERT INTO TBL_PC_BLOCK (seq,status,insert_dt) 
-			<foreach collection="updateBlockList" item="item" index="index">
+			</foreach>
+		RETURNING*)
+			INSERT INTO TBL_PC_BLOCK (seq,status,insert_dt)
+		<foreach collection="updateBlockList" item="item" index="index">
 			SELECT
 					${updateBlockList[index]} ,'N',now()
 			WHERE NOT EXISTS (SELECT * FROM upsert)
 			<if test="updateBlockList.length > index+1">
 			UNION ALL
 			</if>
-			</foreach>
+		</foreach>
 	</update>
-	
-	<update id="updateUnblock" parameterType="com.model.PcMangrVo" >
-	WITH upsert AS(
+
+	<update id="updateUnblock" parameterType="com.model.PcMangrVo">
+		WITH upsert AS(
 	UPDATE TBL_PC_BLOCK set status = 'Y' , insert_dt = now() 
 	where seq in
 		<foreach collection="updateUnblockList" item="item" separator="," index="index" open="(" close=")">
 				${updateUnblockList[index]}
-		</foreach> 
+		</foreach>
 		RETURNING*)
-		INSERT INTO TBL_PC_BLOCK (seq,status,insert_dt) 
+		INSERT INTO TBL_PC_BLOCK (seq,status,insert_dt)
 		<foreach collection="updateUnblockList" item="item" index="index">
-		SELECT
+			SELECT
 				${updateUnblockList[index]} ,'Y',now()
 		 WHERE NOT EXISTS (SELECT * FROM upsert)
-		 <if test="updateUnblockList.length > index+1">
+			<if test="updateUnblockList.length > index+1">
 		 UNION ALL
 		 </if>
 		</foreach>
 	</update>
-	
+
 	<!-- 정책배포결과 업데이트 -->
 	<select id="pcPolicyUpdtList" resultType="map" parameterType="map">
-	SELECT
+		SELECT
     DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver
 		FROM (
 			SELECT
@@ -631,16 +626,16 @@
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.insert_dt DESC
-			<if test="type == 'main'">
+		<if test="type == 'main'">
 			limit 5
 			</if>
-			--TA.debname,  TA.gubun DESC
+		--TA.debname,  TA.gubun DESC
 		) PA
 	</select>
 
 	<!-- 정책배포결과 프로그램 -->
 	<select id="pcPolicyProgrmList" resultType="map" parameterType="map">
-	SELECT
+		SELECT
     DISTINCT PA.count, PA.progrmname, PA.status , (CASE WHEN PA.status_yn = 'N'  THEN '허용' ELSE '차단' END ) as status_yn , PA.ins_date
 		FROM (
 			SELECT
@@ -690,16 +685,16 @@
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.ins_date DESC
-			<if test="type == 'main'">
+		<if test="type == 'main'">
 			limit 5
 			</if>
-			--TA.debname,  TA.gubun DESC
+		--TA.debname,  TA.gubun DESC
 		) PA
 	</select>
 
 	<!-- 정책배포결과 방화벽 -->
 	<select id="pcPolicyFirewallList" resultType="map" parameterType="map">
-	SELECT
+		SELECT
     DISTINCT PA.count, PA.retport, (CASE WHEN PA.status = 'allow'  THEN '허용' ELSE '차단' END ) as status , (CASE WHEN PA.status_yn = 'Y'  THEN '완료' ELSE '미완료' END ) as status_yn, PA.ins_date
 		FROM (
 			SELECT
@@ -744,7 +739,7 @@
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.ins_date DESC
-			<if test="type == 'main'">
+		<if test="type == 'main'">
 			limit 5
 			</if>
 		) PA
@@ -752,8 +747,8 @@
 
 	<!-- 정책배포결과 디바이스 -->
 	<select id="pcPolicyDeviceList" resultType="map" parameterType="map">
-	SELECT
-    DISTINCT PA.count, PA.product||'('||PA.vendorcode||':'||PA.productcode||')' as product, (CASE WHEN PA.status_yn = 'Y'  THEN '차단' ELSE '허용' END ) as status_yn, PA.ins_date
+		SELECT
+    DISTINCT PA.count, PA.product||'('||PA.vendorcode||':'||PA.productcode||')' as product, (CASE WHEN PA.status_yn = 'Y'  THEN '허용' ELSE '차단' END ) as status_yn, PA.ins_date
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER( PARTITION BY TA.product, TA.status_yn ),
@@ -795,14 +790,11 @@
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.ins_date DESC
-			<if test="type == 'main'">
+		<if test="type == 'main'">
 			limit 5
 			</if>
 		) PA
 	</select>
-	
-			
-			
-	
-				
+
+
 </mapper>
