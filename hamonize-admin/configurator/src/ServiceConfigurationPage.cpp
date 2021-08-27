@@ -86,9 +86,9 @@ void ServiceConfigurationPage::applyConfiguration()
 	VeyonServiceControl serviceControl( this );
 
 	if( serviceControl.isServiceRunning() &&
-		QMessageBox::question( this, tr( "Restart %1 Service" ).arg( VeyonCore::applicationName() ),
+		QMessageBox::question( this, tr( "Restart Hamonize Service" ).arg( VeyonCore::applicationName() ),
 			tr( "All settings were saved successfully. In order to take "
-				"effect the %1 service needs to be restarted. "
+				"effect the Hamonize service needs to be restarted. "
 				"Restart it now?" ).arg( VeyonCore::applicationName() ),
 			QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes ) == QMessageBox::Yes )
 	{

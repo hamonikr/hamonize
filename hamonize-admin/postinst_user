@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+sudo systemctl daemon-reload
+sudo systemctl start hamonize.service

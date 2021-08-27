@@ -10,27 +10,20 @@
 
 <br>
 
-## License
 
-Copyright (c) 2004-2021 Invesume Inc / Tobias Junghans / Veyon Solutions
-
-See the file COPYING for the GNU GENERAL PUBLIC LICENSE.
-
-<br>
-
-## Usage
+## 사용법
 
 <img width="500" src="../img/admin_main.png">
 <br>
 
- 자세한 내용은 [사용자 매뉴얼](hhttp://pms.invesume.com:8090/pages/viewpage.action?pageId=73339498) 을 참고하세요
+ 자세한 내용은 [사용자 매뉴얼](http://team.hamonikr.org:18090/pages/viewpage.action?pageId=2458819) 을 참고하세요
 
 
 <br>
 
-## BUILD
+## 빌드하기
 
-### First, Download source
+### 소스 다운로드
 
 먼저 깃 저장소를 복제하고 모든 서브모듈을 가져와야 합니다.
 
@@ -45,9 +38,9 @@ cd hamonize
 git submodule init
 git submodule update
 ```
+<br>
 
-
-### Installing dependencies
+### 빌드에 필요한 패키지 설치
 
 데비안 기반의 빌드 환경에 필요한 의존성입니다:
 - Build tools: g++ make cmake
@@ -67,8 +60,21 @@ root 에서 실행해주세요
 ```
 apt install g++ make cmake qtbase5-dev qtbase5-dev-tools qttools5-dev qttools5-dev-tools libqca-qt5-2-plugins xorg-dev libxtst-dev libjpeg-dev zlib1g-dev libssl-dev libpam0g-dev libprocps-dev liblzo2-dev libqca-qt5-2-dev libldap2-dev libsasl2-dev
 ```
+<br>
 
-### Configuring and building sources for Linux
+### 빌드 설정과 소스 빌드
+
+#### 유저버전 빌드
+
+hamonize-admin 의 유저버전인 hamonize-user를 빌드하고자 한다면 다음 명령어 수행 후 어드민 빌드를 시작하세요.
+```
+cd hamonize-admin
+mv postinst postinst_admin && mv postinst_user postinst
+mv CMakeLists.txt CMakeLists_admin.txt && mv CMakeLists_user.txt CMakeLists.txt
+mv cmake/CPackDefinitions.cmake cmake/CPackDefinitions_admin.cmake && mv cmake/CPackDefinitions_user.cmake cmake/CPackDefinitions.cmake
+```
+
+#### 어드민 빌드
 
 다음 커맨드에 따라 실행해주세요
 ```
@@ -110,6 +116,50 @@ sudo systemctl daemon-reload
 ```
 make install
 ```
+
+#### 어드민 빌드 for Windows
+
+Windows 실행파일을 빌드하기 위한 Cross compiling 방법입니다.
+
+아래 명령어를 통해 Windows 빌드 환경이 구축된 Docker 이미지를 내려받고 컨테이너에 접속합니다.
+```
+docker pull yeji0407/admin_win:1.0
+docker run -it yeji0407/admin_win:1.0 bash
+```
+아래 명령어를 통해 하모나이즈 소스코드를 내려받습니다.
+
+```
+git clone --recursive https://github.com/hamonikr/hamonize.git
+```
+
+하모나이즈 어드민의 빌드를 수행할 위치로 이동합니다.
+
+```
+mkdir /tmp/build-64 && cd /tmp/build-64
+```
+
+아래 명령어를 통해 빌드합니다.
+
+```
+cmake /hamonize/hamonize-admin/ -DCMAKE_TOOLCHAIN_FILE=/hamonize/hamonize-admin/cmake/modules/Win64Toolchain.cmake -DCMAKE_MODULE_PATH=/hamonize/hamonize-admin/cmake/modules/
+
+make windows-binaries
+
+cd hamonize-win64-[version]
+
+makeinsis hamonize.nsi
+```
+현재 위치한 경로에 생성된 hamonize-[version]-win64-setup.exe 실행파일을 Windows에서 다운로드 받고 실행합니다. 
+
+<br>
+
+## License
+
+Copyright (c) 2004-2021 Invesume Inc / Tobias Junghans / Veyon Solutions
+
+See the file COPYING for the GNU GENERAL PUBLIC LICENSE.
+
+<br>
 
 ### Debugging
 
