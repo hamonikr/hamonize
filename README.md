@@ -27,8 +27,6 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 - [🎨 Features](#-features)
 - [🔗 Examples](#-examples)
 - [🛠 Pull Request Steps](#-pull-request-steps)
-  - [Setup](#setup)
-  - [Pull Request](#pull-request)
 - [👍 Contributing](#-contributing)
 - [📜 License](#-license)
 
@@ -107,9 +105,24 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 ```
 git clone git@github.com:{your-own-repo}/hamonize.git
 ```
+`하모나이즈`는 여러개의 서브 프로젝트로 이루어진 솔루션입니다. 
+
+각 프로젝트별 빌드 방법은 각 프로젝트별 리드미를 참고해주세요.
+
+`hamonize` <br>
+│ <br> 
+├── [hamonize-admin](https://github.com/hamonikr/hamonize/tree/master/hamonize-admin) <br>
+├── [hamonize-agent](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent) <br>
+├── [hamonize-center](https://github.com/hamonikr/hamonize/tree/master/hamonize-center) <br>
+├── [hamonize-connector](https://github.com/hamonikr/hamonize/tree/master/hamonize-connector) <br>
+├── [hamonize-noti-App](https://github.com/hamonikr/hamonize/tree/master/hamonize-noti-App) <br>
+└── [hamonize-vpn](https://github.com/hamonikr/hamonize/tree/master/hamonize-vpn)
+
+<br>
+
 
 ### Pull Request
-PR을 생성하기 전에 error가 있는지 확인을 해주세요. 에러가 없다면 commit하고 push해주세요.
+PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 없다면 commit하고 push해주세요.
 더 많은 정보를 원하시면 **Contributing** 문서들을 참고해주세요
 
 <br>
@@ -149,3 +162,4 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. 에러가 �
 * [hamonize-admin](https://github.com/hamonikr/hamonize/blob/master/hamonize-admin/COPYING)
 
 * [hamonize-connector](https://github.com/hamonikr/hamonize/blob/master/hamonize-connector/NOTICE.md) 
+
