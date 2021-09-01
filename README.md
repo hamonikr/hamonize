@@ -86,9 +86,9 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
 <br>
 
-## 🔗 Examples
+## 🔗 Usecase
 
-`하모나이즈` 솔루션은 이미 국방부에서 사이버지식정보방에 12,500대의 PC를 운용하는데 사용되고 있는 솔루션입니다.
+`하모나이즈` 솔루션은 국방부에서 사이버지식정보방에 설치되어 40만 국군장병이 PC를 사용하는데 적용되고 있는 솔루션입니다. (12,500대)
 
 <br>
 <img width="600" src="./img/hamonize_ex1.png"> <br>
@@ -97,7 +97,7 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 <br>
 
 ## 🛠 Pull Request Steps
-**Hamonize**는 오픈소스임으로 이슈를 해결한 후에 PR을 보내주세요. 소스를 실행하고 아래의 프로세스 대로 개발해주세요.
+**Hamonize** 프로젝트에 기여하시려면 아래의 순서대로 개발한 후에 PR(Pull Request)을 보내주세요.
 
 ### Setup
 먼저, 자신의 레파지토리로 `main` 브랜치에서 fork를 해주세요. 그다음에 로컬 컴퓨터 환경에 clone한 다음에 개발을 진행해주세요.
@@ -107,7 +107,7 @@ git clone git@github.com:{your-own-repo}/hamonize.git
 ```
 `하모나이즈`는 여러개의 서브 프로젝트로 이루어진 솔루션입니다. 
 
-각 프로젝트별 빌드 방법은 각 프로젝트별 리드미를 참고해주세요.
+각 프로젝트별 빌드 방법은 각 프로젝트 폴더안의 안내문(README.md)를 참고해주세요.
 
 `hamonize` <br>
 │ <br> 
@@ -155,6 +155,9 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 <br>
 
 ## 📜 License 
+
+이 프로젝트에 사용된 컴포넌트 및 라이브러이의 라이선스 목록은 아래 문서를 참고하세요.
+
 * [hamonize-center](https://github.com/hamonikr/hamonize/blob/master/hamonize-center/NOTICE.md)
 
 * [hamonize-agent](https://github.com/hamonikr/hamonize/blob/master/hamonize-agent/NOTICE.md)
@@ -163,3 +166,9 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 
 * [hamonize-connector](https://github.com/hamonikr/hamonize/blob/master/hamonize-connector/NOTICE.md) 
 
+
+## 📜 Governance 
+
+이 프로젝트는 아래의 거버넌스 정책에 따라서 관리되고 있습니다.
+
+* [Governance](https://github.com/hamonikr/hamonize/wiki/Governance)
