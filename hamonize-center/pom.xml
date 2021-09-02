@@ -121,7 +121,7 @@
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
+			<version>1.8.11</version>
 		</dependency>
 
 		<!-- 운영 반영시 embed tomcat 주석 / ide 사용시 주석 해제 -->
