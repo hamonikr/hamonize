@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,9 +24,9 @@ public class CurlAgentNxssController {
 	@Autowired
 	private IGetAgentNxssMapper getAgentNxssMapper;
 
-	
 
-	@RequestMapping("/nxss")
+
+	@RequestMapping(value = "/nxss", method = RequestMethod.GET)
 	public String getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid,
 			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
 
@@ -35,42 +36,43 @@ public class CurlAgentNxssController {
 
 		// uuid로 부서정보 가져오기
 		int segSeq = sgbUUID(sgbUuid);
-		if( segSeq == 0 ) {
-			return  "nodata";
+		if (segSeq == 0) {
+			return "nodata";
 		}
-		
+
 		GetAgentNxssVo agentNxssVo = new GetAgentNxssVo();
 		agentNxssVo.setPcm_uuid(sgbUuid);
 
 		GetAgentNxssVo chkProgrmPolicy = getAgentNxssMapper.getAgentWorkYn(agentNxssVo);
-		
-		if( chkProgrmPolicy == null  ) {
-			System.out.println("//=== init " );
-			
+
+		if (chkProgrmPolicy == null) {
+			System.out.println("//=== init ");
+
 			int retInsertSelectVal = getAgentNxssMapper.setInsertSelect(agentNxssVo);
 			JSONObject jsonNxssData = progrmPolicyData(agentNxssVo);
 			output = jsonNxssData.toJSONString();
-		}else {		
-			if( chkProgrmPolicy.getHist_seq() != 0 && (chkProgrmPolicy.getSma_history_seq() != chkProgrmPolicy.getHist_seq() )) {
+		} else {
+			if (chkProgrmPolicy.getHist_seq() != 0
+					&& (chkProgrmPolicy.getSma_history_seq() != chkProgrmPolicy.getHist_seq())) {
 				int retInsertSelectVal = getAgentNxssMapper.setInsertSelect(agentNxssVo);
 				JSONObject jsonNxssData = progrmPolicyData(agentNxssVo);
 				output = jsonNxssData.toJSONString();
-			}else {
+			} else {
 				output = "nodata";
 			}
-			
+
 		}
 
-		
+
 		System.out.println("//===================================");
 		System.out.println("//result data is : " + output);
 		System.out.println("//===================================");
-		
+
 		return output;
 	}
 
-	
-	
+
+
 	public JSONObject progrmPolicyData(GetAgentNxssVo agentNxssVo) {
 
 		JSONObject jsonObject = new JSONObject();
@@ -78,17 +80,17 @@ public class CurlAgentNxssController {
 		String nxssList = "", fording = "", message = "";;
 		int nxssListCnt = 0;
 		List<GetAgentNxssVo> nxssData = getAgentNxssMapper.getListNxssPolicy(agentNxssVo);
-		
-		for( GetAgentNxssVo bnif : nxssData ){
-			if( "B".equals(bnif.getSma_gubun())) {
-				nxssList += bnif.getSma_domain() +"\n";
+
+		for (GetAgentNxssVo bnif : nxssData) {
+			if ("B".equals(bnif.getSma_gubun())) {
+				nxssList += bnif.getSma_domain() + "\n";
 				nxssListCnt++;
-			}else if( "F".equals(bnif.getSma_gubun())) {
-				fording += bnif.getSma_domain() +"\n";
-				message += bnif.getSma_info() +"\n";
+			} else if ("F".equals(bnif.getSma_gubun())) {
+				fording += bnif.getSma_domain() + "\n";
+				message += bnif.getSma_info() + "\n";
 			}
 		}
-		System.out.println("nxssListCnt======================"+ nxssListCnt);
+		System.out.println("nxssListCnt======================" + nxssListCnt);
 		jsonObject.put("nxssList", nxssList);
 		jsonObject.put("nxssListCnt", nxssListCnt);
 		jsonObject.put("fording", fording);
@@ -114,8 +116,8 @@ public class CurlAgentNxssController {
 		agentVo.setPc_uuid(sgbUuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = 0;
-		if(agentVo != null ) {
-			segSeq = agentVo.getSeq();	
+		if (agentVo != null) {
+			segSeq = agentVo.getSeq();
 		}
 		return segSeq;
 	}

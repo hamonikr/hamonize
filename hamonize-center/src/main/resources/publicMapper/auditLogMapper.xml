@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
- 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.mapper.IAuditLogMapper">
-	
-	<select id="pcMntrngListInfo" resultType="com.model.PcMangrVo"  parameterType="com.model.PcMangrVo">
+
+	<select id="pcMntrngListInfo" resultType="com.model.PcMangrVo" parameterType="com.model.PcMangrVo">
 		SELECT 
 			seq,
 			pc_hostname,
 			pc_uuid
 		FROM tbl_pc_mangr
 		<where>
-		<if test="org_seq != 1 ">
+			<if test="org_seq != 1 ">
 				org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -25,9 +25,9 @@
 				)
 		</if>
 		</where>
-		 
+
 	</select>
-	
+
 	<select id="userLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT  
 			a.seq, 
@@ -39,10 +39,10 @@
 			b.org_seq,
 			(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm,
 			last_value (a.seq) over(partition by a.uuid order by a.seq ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_seq
-		FROM tbl_loginout a left outer join tbl_pc_mangr b on a.uuid = b.pc_uuid 		
+		FROM tbl_loginout a left outer join tbl_pc_mangr b on a.uuid = b.pc_uuid
 		<where>
-		1=1		
-		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''" >
+			1=1
+			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 			and b.org_seq in (
 					with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 						select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -55,36 +55,27 @@
 						select seq
 						from search_org
 					)
-		</if>
-		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+			</if>
+			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
 				<![CDATA[
 				and a.login_dt >= #{auditLogVo.date_fr}::TIMESTAMP
 				]]>
-				</if>
-				<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+			</if>
+			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
 				<![CDATA[
 				and a.login_dt <= #{auditLogVo.date_to}::TIMESTAMP
 				]]>
 			</if>
-		<if test="auditLogVo.txtSearch != ''">
-		<if test="auditLogVo.keyWord == 1">
-			and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
-		</if>
-		<!-- <if test="auditLogVo.keyWord == 2">
-			and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
-		</if>
-		<if test="auditLogVo.keyWord == 0">
-			and (b.pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
-			or (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
-			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
-			)
-		</if> -->
-		</if>
+			<if test="auditLogVo.txtSearch != ''">
+				<if test="auditLogVo.keyWord == 1">
+					and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
+				</if>
+			</if>
 		</where>
 		order by login_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
 	</select>
+
 	<select id="countUserLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
@@ -92,48 +83,39 @@
  		left outer join tbl_pc_mangr b
  		on a.uuid = b.pc_uuid
 		<where>
-		1=1
-		<if test="org_seq != null and org_seq != ''">
-		and b.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-					from tbl_org a
-					where a.seq = #{org_seq}
-					union all
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-					from tbl_org a, search_org so 
-					where a.p_seq = so.seq and not cycle)
-					select seq
-					from search_org
-				)
-		</if>
-		<if test="date_fr != null and date_fr != ''">
+			1=1
+			<if test="org_seq != null and org_seq != ''">
+				and b.org_seq in (
+						with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+							select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+							from tbl_org a
+							where a.seq = #{org_seq}
+							union all
+							select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+							from tbl_org a, search_org so 
+							where a.p_seq = so.seq and not cycle)
+							select seq
+							from search_org
+						)
+			</if>
+			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
 				and a.login_dt >= #{date_fr}::TIMESTAMP
 				]]>
-				</if>
-				<if test="date_to != null and date_to != ''">
+			</if>
+			<if test="date_to != null and date_to != ''">
 				<![CDATA[
 				and a.login_dt <= #{date_to}::TIMESTAMP
 				]]>
-		</if>
-		<if test="txtSearch != ''">
-		<if test="keyWord == 1">
-			and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
-		</if>
-		<!-- <if test="auditLogVo.keyWord == 2">
-			and (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
-		</if>
-		<if test="auditLogVo.keyWord == 0">
-			and (b.pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
-			or (select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid)) = #{auditLogVo.txtSearch}
-			or (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
-			)
-		</if> -->
-		</if>
-		</where> 
+			</if>
+			<if test="txtSearch != ''">
+				<if test="keyWord == 1">
+					and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
+				</if>
+			</if>
+		</where>
 	</select>
-	
+
 	<select id="userLogListExcel" resultType="hashmap" parameterType="com.model.AuditLogVo">
 		SELECT  
 		(ROW_NUMBER() OVER()) AS rownum,
@@ -155,8 +137,8 @@
 			 FROM tbl_loginout a 
 			 left outer join tbl_user b
 			 on a.seq = b.seq
-			 <where>
-			 <if test="org_seq != null and org_seq != ''" >
+		<where>
+			<if test="org_seq != null and org_seq != ''">
 				and b.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 			    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -174,8 +156,8 @@
 				<![CDATA[
 				and to_char(login_dt,'yyyymmdd') >= #{date_fr}
 				]]>
-				</if>
-				<if test="date_to != null and date_to != ''">
+			</if>
+			<if test="date_to != null and date_to != ''">
 				<![CDATA[
 				and to_char(login_dt,'yyyymmdd') <= #{date_to}
 				]]>
@@ -183,17 +165,17 @@
 			<if test="keyWord == 1">
 				and b.user_name like '%' || #{txtSearch} || '%'
 				</if>
-				<if test="keyWord == 2">
+			<if test="keyWord == 2">
 				and b.user_id like '%' || #{txtSearch} || '%'
 				</if>
-				<if test="keyWord == 0">
+			<if test="keyWord == 0">
 				and (b.user_name like '%' || #{txtSearch} || '%'
 				or b.user_id like '%' || #{txtSearch} || '%')
 			</if>
-			 </where>
-			 </select>
-	
-	
+		</where>
+	</select>
+
+
 	<select id="iNetLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT
 		a.user_id,a.pc_ip,a.cnnc_url,a.pc_uuid,a.hostname,
@@ -217,8 +199,8 @@
 			 join tbl_user b
 			 on a.user_id = b.user_id
 		<where>
-		1=1
-		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
+			1=1
+			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 		and b.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -232,57 +214,56 @@
     from search_org
 				)
 		</if>
-		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
 				<![CDATA[
 				and to_char(reg_dt,'yyyymmdd') >= #{auditLogVo.date_fr} 
 				]]>
-				</if>
-				<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+			</if>
+			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
 				<![CDATA[
 				and to_char(reg_dt,'yyyymmdd') <= #{auditLogVo.date_to}
 				]]>
 			</if>
-		<if test="auditLogVo.keyWord == 1">
+			<if test="auditLogVo.keyWord == 1">
 		and b.user_name like '%' || #{auditLogVo.txtSearch} || '%'
 		</if>
-		<if test="auditLogVo.keyWord == 2">
+			<if test="auditLogVo.keyWord == 2">
 		and b.user_id like '%' || #{auditLogVo.txtSearch} || '%'
 		</if>
-		<if test="auditLogVo.keyWord == 0">
+			<if test="auditLogVo.keyWord == 0">
 		and (b.user_name like '%' || #{auditLogVo.txtSearch} || '%'
 		or b.user_id like '%' || #{auditLogVo.txtSearch} || '%')
 		</if>
-		<if test="auditLogVo.prcssname == 1">
-			<if test="auditLogVo.txtSearch0 == 1">
+			<if test="auditLogVo.prcssname == 1">
+				<if test="auditLogVo.txtSearch0 == 1">
 			and a.state = 'connect'
 			</if>
-			<if test="auditLogVo.txtSearch0 == 2">
+				<if test="auditLogVo.txtSearch0 == 2">
 			and a.state = 'Illegal'
 			</if>
-			<if test="auditLogVo.txtSearch1 != ''">
+				<if test="auditLogVo.txtSearch1 != ''">
 			and b.user_name like '%' || #{auditLogVo.txtSearch1} || '%'
 			</if>
-			<if test="auditLogVo.txtSearch2 != ''">
+				<if test="auditLogVo.txtSearch2 != ''">
 			and b.user_id like '%' || #{auditLogVo.txtSearch2} || '%'
 			</if>
-			<if test="auditLogVo.txtSearch3 != ''">
+				<if test="auditLogVo.txtSearch3 != ''">
 			and a.hostname = #{auditLogVo.txtSearch3}
 			</if>
-			<if test="auditLogVo.txtSearch4 != ''">
+				<if test="auditLogVo.txtSearch4 != ''">
 			and a.cnnc_url like '%' || #{auditLogVo.txtSearch4} || '%'
 			</if>
-			<if test="auditLogVo.txtSearch5 != 0">
+				<if test="auditLogVo.txtSearch5 != 0">
 			and b.rank = #{auditLogVo.txtSearch5}
 			</if>
-		</if>
-		and cnnc_url != '-c'
-		</where> 
+			</if>
+			and cnnc_url != '-c'
+		</where>
 		order by a.reg_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
 	</select>
-	
-	
+
+
 	<select id="countInetLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
@@ -290,8 +271,8 @@
  		join tbl_user b
  		on a.user_id = b.user_id
 		<where>
-		1=1
-		<if test="org_seq != null and org_seq != ''">
+			1=1
+			<if test="org_seq != null and org_seq != ''">
 		and b.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -305,53 +286,53 @@
     from search_org
 				)
 		</if>
-		<if test="date_fr != null and date_fr != ''">
+			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
 				and to_char(reg_dt,'yyyymmdd') >= #{date_fr} 
 				]]>
-				</if>
-				<if test="date_to != null and date_to != ''">
+			</if>
+			<if test="date_to != null and date_to != ''">
 				<![CDATA[
 				and to_char(reg_dt,'yyyymmdd') <= #{date_to}
 				]]>
 			</if>
-		<if test="keyWord == 1">
+			<if test="keyWord == 1">
 		and b.user_name like '%' || #{txtSearch} || '%'
 		</if>
-		<if test="keyWord == 2">
+			<if test="keyWord == 2">
 		and b.user_id like '%' || #{txtSearch} || '%'
 		</if>
-		<if test="keyWord == 0">
+			<if test="keyWord == 0">
 		and (b.user_name like '%' || #{txtSearch} || '%'
 		or b.user_id like '%' || #{txtSearch} || '%')
 		</if>
-		<if test="prcssname == 1">
-			<if test="txtSearch0 == 1">
+			<if test="prcssname == 1">
+				<if test="txtSearch0 == 1">
 			and a.state = 'connect'
 			</if>
-			<if test="txtSearch0 == 2">
+				<if test="txtSearch0 == 2">
 			and a.state = 'Illegal'
 			</if>
-			<if test="txtSearch1 != ''">
+				<if test="txtSearch1 != ''">
 			and b.user_name like '%' || #{txtSearch1} || '%'
 			</if>
-			<if test="txtSearch2 != ''">
+				<if test="txtSearch2 != ''">
 			and b.user_id like '%' || #{txtSearch2} || '%'
 			</if>
-			<if test="txtSearch3 != ''">
+				<if test="txtSearch3 != ''">
 			and a.hostname = #{txtSearch3}
 			</if>
-			<if test="txtSearch4 != ''">
+				<if test="txtSearch4 != ''">
 			and a.cnnc_url like '%' || #{txtSearch4} || '%'
 			</if>
-			<if test="txtSearch5 != 0">
+				<if test="txtSearch5 != 0">
 			and b.rank = #{txtSearch5}
 			</if>
-		</if>
-		and cnnc_url != '-c'
-		</where> 
+			</if>
+			and cnnc_url != '-c'
+		</where>
 	</select>
-	
+
 	<select id="iNetLogListExcel" resultType="hashmap" parameterType="hashmap">
 		SELECT
 		(ROW_NUMBER() OVER()) AS rownum,
@@ -377,8 +358,8 @@
 			 FROM tbl_inet_log a 
 			 join tbl_user b
 			 on a.user_id = b.user_id
-			  <where>
-			 <if test="org_seq != null and org_seq != ''" >
+		<where>
+			<if test="org_seq != null and org_seq != ''">
 				and b.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -396,8 +377,8 @@
 				<![CDATA[
 				and to_char(reg_dt,'yyyymmdd') >= #{date_fr} 
 				]]>
-				</if>
-				<if test="date_to != null and date_to != ''">
+			</if>
+			<if test="date_to != null and date_to != ''">
 				<![CDATA[
 				and to_char(reg_dt,'yyyymmdd') <= #{date_to}
 				]]>
@@ -405,10 +386,10 @@
 			<if test="keyWord == 1">
 				and b.user_name like '%' || #{txtSearch} || '%'
 				</if>
-				<if test="keyWord == 2">
+			<if test="keyWord == 2">
 				and b.user_id like '%' || #{txtSearch} || '%'
 				</if>
-				<if test="keyWord == 0">
+			<if test="keyWord == 0">
 				and (b.user_name like '%' || #{txtSearch} || '%'
 				or b.user_id like '%' || #{txtSearch} || '%')
 			</if>
@@ -436,9 +417,9 @@
 				</if>
 			</if>
 			and cnnc_url != '-c'
-			 </where>
-			 </select>
-	
+		</where>
+	</select>
+
 	<select id="pcChangeLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT
 			pc_cpu, 
@@ -453,7 +434,7 @@
 			to_char(insert_dt,'YYYY-MM-DD HH24:MI:SS') as insert_dt
 			from tbl_pc_change_info
 		<where>
-		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
+			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 		org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -467,32 +448,31 @@
 				from search_org
 				)
 		</if>
-		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
-			<![CDATA[
+			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+				<![CDATA[
 			and insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
 			]]>
-		</if>
-		<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
-			<![CDATA[
+			</if>
+			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+				<![CDATA[
 			and insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
 			]]>
-		</if>
-		<if test="auditLogVo.txtSearch != ''">
-			<if test="auditLogVo.keyWord == 1">
+			</if>
+			<if test="auditLogVo.txtSearch != ''">
+				<if test="auditLogVo.keyWord == 1">
 			and pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
 			</if>
-		</if>
-		</where> 
+			</if>
+		</where>
 		order by insert_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
 	</select>
-	
-	
+
+
 	<select id="countPcChangeLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		FROM tbl_pc_change_info 
+		FROM tbl_pc_change_info
 		<where>
 			<if test="org_seq != null and org_seq != ''">
 			org_seq in (
@@ -508,24 +488,24 @@
     from search_org
 				)
 		</if>
-		<if test="date_fr != null and date_fr != ''">
-			<![CDATA[
+			<if test="date_fr != null and date_fr != ''">
+				<![CDATA[
 			and insert_dt >= #{date_fr}::TIMESTAMP
 			]]>
 			</if>
 			<if test="date_to != null and date_to != ''">
-			<![CDATA[
+				<![CDATA[
 			and insert_dt <= #{date_to}::TIMESTAMP
 			]]>
-		</if>
-		<if test="txtSearch != ''">
-			<if test="keyWord == 1">
+			</if>
+			<if test="txtSearch != ''">
+				<if test="keyWord == 1">
 			and pc_hostname like '%' || #{txtSearch} || '%'
 			</if>
-		</if>
-		</where> 
+			</if>
+		</where>
 	</select>
-	
+
 	<select id="unAuthLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT
 			tu.pc_uuid, 
@@ -536,7 +516,7 @@
 			tu.insert_dt
 			from tbl_unauthroized tu left join tbl_pc_mangr tpm on tpm.pc_uuid = tu.pc_uuid
 		<where>
-		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
+			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 		tu.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -550,28 +530,27 @@
 					from search_org
 				)
 		</if>
-		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
-			<![CDATA[
+			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+				<![CDATA[
 			and tu.insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
 			]]>
-		</if>
-		<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
-			<![CDATA[
+			</if>
+			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+				<![CDATA[
 			and tu.insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
 			]]>
-		</if>
-		<if test="auditLogVo.txtSearch != ''">
-			<if test="auditLogVo.keyWord == 1">
+			</if>
+			<if test="auditLogVo.txtSearch != ''">
+				<if test="auditLogVo.keyWord == 1">
 			and tpm.pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
 			</if>
-		</if>
-		</where> 
+			</if>
+		</where>
 		order by tu.insert_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
 	</select>
-	
-	
+
+
 	<select id="countUnAuthLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
@@ -591,24 +570,24 @@
 					from search_org
 				)
 		</if>
-		<if test="date_fr != null and date_fr != ''">
-			<![CDATA[
+			<if test="date_fr != null and date_fr != ''">
+				<![CDATA[
 			and tu.insert_dt >= #{date_fr}::TIMESTAMP
 			]]>
-		</if>
-		<if test="date_to != null and date_to != ''">
-			<![CDATA[
+			</if>
+			<if test="date_to != null and date_to != ''">
+				<![CDATA[
 			and tu.insert_dt <= #{date_to}::TIMESTAMP
 			]]>
-		</if>
-		<if test="txtSearch != ''">
-			<if test="keyWord == 1">
+			</if>
+			<if test="txtSearch != ''">
+				<if test="keyWord == 1">
 			and tpm.pc_hostname like '%' || #{txtSearch} || '%'
 			</if>
-		</if>
-		</where> 
+			</if>
+		</where>
 	</select>
-	
+
 	<select id="unAuthLogListExcel" resultType="hashmap" parameterType="hashmap">
 		SELECT
 		(ROW_NUMBER() OVER()) AS rownum,
@@ -618,8 +597,8 @@
 			 FROM tbl_unauthroized a 
 			 join tbl_user b
 			 on a.pc_user = b.user_id
-			  <where>
-			 <if test="org_seq != null and org_seq != ''" >
+		<where>
+			<if test="org_seq != null and org_seq != ''">
 				and b.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -633,21 +612,22 @@
     from search_org
 				)
 			</if>
-			 </where>
-			 </select>
-	
+		</where>
+	</select>
+
 	<select id="prcssBlockLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT
 		HOSTNAME,
 		(select org_nm from tbl_org where seq = org_seq)as ORG_NM,
 		PRCSSNAME,
 		ipaddress,
+		(select pc_ip from tbl_pc_mangr where pc_uuid = uuid)as pc_ip,
 		INSERT_DT,
 		ORG_SEQ
 		FROM TBL_PRCSS_BLOCK_LOG
 		<where>
-		1=1
-		<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
+			1=1
+			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 		and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 		select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -661,38 +641,37 @@
 		from search_org
 				)
 		</if>
-		<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
-			<![CDATA[
+			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
+				<![CDATA[
 			and insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
 			]]>
-		</if>
-		<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
-			<![CDATA[
+			</if>
+			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
+				<![CDATA[
 			and insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
 			]]>
-		</if>
-		<if test="auditLogVo.txtSearch != ''">
-			<if test="auditLogVo.keyWord == 1">
+			</if>
+			<if test="auditLogVo.txtSearch != ''">
+				<if test="auditLogVo.keyWord == 1">
 			and HOSTNAME like '%' || #{auditLogVo.txtSearch} || '%'
 			</if>
-			<if test="auditLogVo.keyWord == 2">
+				<if test="auditLogVo.keyWord == 2">
 			and PRCSSNAME like '%' || #{auditLogVo.txtSearch} || '%'
 			</if>
-		</if>
-		</where> 
+			</if>
+		</where>
 		order by insert_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
-		
 	</select>
-	
-	
+
+
 	<select id="countPrcssBlockLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		FROM TBL_PRCSS_BLOCK_LOG 
+		FROM TBL_PRCSS_BLOCK_LOG
 		<where>
-		1=1
-		<if test="org_seq != null and org_seq != ''">
+			1=1
+			<if test="org_seq != null and org_seq != ''">
 		and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 		select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -706,27 +685,27 @@
 		from search_org
 		)
 		</if>
-		<if test="date_fr != null and date_fr != ''">
-			<![CDATA[
+			<if test="date_fr != null and date_fr != ''">
+				<![CDATA[
 			and insert_dt >= #{date_fr}::TIMESTAMP
 			]]>
-		</if>
-		<if test="date_to != null and date_to != ''">
-			<![CDATA[
+			</if>
+			<if test="date_to != null and date_to != ''">
+				<![CDATA[
 			and insert_dt <= #{date_to}::TIMESTAMP
 			]]>
-		</if>
-		<if test="txtSearch != ''">
-			<if test="keyWord == 1">
+			</if>
+			<if test="txtSearch != ''">
+				<if test="keyWord == 1">
 			and HOSTNAME like '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 2">
+				<if test="keyWord == 2">
 			and PRCSSNAME like '%' || #{txtSearch} || '%'
 			</if>
-		</if>
-		</where> 
+			</if>
+		</where>
 	</select>
-	
+
 	<select id="prcssBlockLogListExcel" resultType="hashmap" parameterType="hashmap">
 		SELECT
 		(ROW_NUMBER() OVER()) AS rownum,
@@ -739,8 +718,8 @@
 		USER_ID,
 		ORG_SEQ
 		FROM TBL_PRCSS_BLOCK_LOG
-			  <where>
-			 <if test="org_seq != null and org_seq != ''" >
+		<where>
+			<if test="org_seq != null and org_seq != ''">
 				and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
     select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
@@ -758,8 +737,8 @@
 				<![CDATA[
 				and to_date(insert_dt,'yyyy/mm/dd') >= #{date_fr}::date
 				]]>
-				</if>
-				<if test="date_to != null and date_to != ''">
+			</if>
+			<if test="date_to != null and date_to != ''">
 				<![CDATA[
 				and to_date(insert_dt,'yyyy/mm/dd') <= #{date_to}::date
 				]]>
@@ -767,49 +746,49 @@
 			<if test="keyWord == 1">
 				and (select org_nm from tbl_org where seq = org_seq) = #{txtSearch}
 				</if>
-				<if test="keyWord == 2">
+			<if test="keyWord == 2">
 				and user_id like '%' || #{txtSearch} || '%'
 				</if>
-				<if test="keyWord == 0">
+			<if test="keyWord == 0">
 				and ((select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
 				or user_id like '%' || #{txtSearch} || '%')
 			</if>
-			 </where>
-			 </select>
-			 
-			 <!-- 업데이트 정책 배포 -->
-			 <select id="udptPackageList" resultType="String">
-				SELECT PU_NAME FROM TBL_PROGRM_UDPT
-			 </select>
-			 
-			 <select id="updtList" resultType="map" parameterType="hashmap" >
-				    <foreach collection="debList" item="item" index="index">
-						(select
-							    *
-						  from
-						    tbl_updt_policy_action_result tb1
-						    ,tbl_progrm_udpt tb2
-						  where
-						    tb1.debname = tb2.pu_name
-						    --and tb1.debver = tb2.deb_new_version
-						    and tb1.pc_uuid = #{uuid}
-						    and tb1.debname = #{item}  
-						  order by
-						    tb1.insert_dt desc limit 1)
-						     <if test="debListCnt > index+1">
-				            	UNION ALL
-				            </if>
-					</foreach>
-			 </select>
-			 
-			 <!-- 프로그램 차단 정책 배포 -->
-			 <select id="programPackageList" resultType="String">
-				SELECT pcm_name
-					FROM tbl_program_mngr
-			 </select>
-			 <select id="programList" resultType="map" parameterType="hashmap" >
-				    <foreach collection="debList" item="item" index="index">
-						(select
+		</where>
+	</select>
+
+	<!-- 업데이트 정책 배포 -->
+	<select id="udptPackageList" resultType="String">
+		SELECT PU_NAME FROM TBL_PROGRM_UDPT
+	</select>
+
+	<select id="updtList" resultType="map" parameterType="hashmap">
+		<foreach collection="debList" item="item" index="index">
+			(	select
+					*
+				from
+					tbl_updt_policy_action_result tb1
+					,tbl_progrm_udpt tb2
+					where
+					tb1.debname = tb2.pu_name
+					and tb1.pc_uuid = #{uuid}
+					and tb1.debname = #{item}  
+				order by tb1.insert_dt desc limit 1
+			)
+			<if test="debListCnt > index+1">
+				UNION ALL
+			</if>
+		</foreach>
+	</select>
+
+	<!-- 프로그램 차단 정책 배포 -->
+	<select id="programPackageList" resultType="String">
+		SELECT pcm_name
+		FROM tbl_program_mngr
+	</select>
+
+	<select id="programList" resultType="map" parameterType="hashmap">
+		<foreach collection="debList" item="item" index="index">
+			(select
 						    *
 						  from
 						    tbl_act_progrm_log tb1
@@ -820,20 +799,20 @@
 						    and tb1.progrmname =  #{item} 
 						  order by
 						    tb1.ins_date desc limit 1)
-						     <if test="debListCnt > index+1">
+			<if test="debListCnt > index+1">
 				            	UNION ALL
 				            </if>
-					</foreach>
-			 </select>
-			 
-			 <!-- 방화벽 허용 정책 배포 -->
-			 <select id="firewallPackageList" resultType="String">
+		</foreach>
+	</select>
+
+	<!-- 방화벽 허용 정책 배포 -->
+	<select id="firewallPackageList" resultType="String">
 				SELECT sm_port
 					FROM tbl_security_mngr where sm_gubun='P'
 			 </select>
-			 <select id="firewallList" resultType="map" parameterType="hashmap" >
-				    <foreach collection="debList" item="item" index="index">
-						(select
+	<select id="firewallList" resultType="map" parameterType="hashmap">
+		<foreach collection="debList" item="item" index="index">
+			(select
 						    *
 						  from
 						    tbl_act_firewall_log tb1
@@ -844,14 +823,14 @@
 						    and tb1.retport =  #{item} 
 						  order by
 						    tb1.ins_date desc limit 1)
-						     <if test="debListCnt > index+1">
+			<if test="debListCnt > index+1">
 				            	UNION ALL
 				            </if>
-					</foreach>
-			 </select>
-			 
-			 <!-- 디바이스 허용 정책 배포 -->
-			 <select id="devicePackageList" parameterType="hashmap" resultType="String">
+		</foreach>
+	</select>
+
+	<!-- 디바이스 허용 정책 배포 -->
+	<select id="devicePackageList" parameterType="hashmap" resultType="String">
 				SELECT distinct product 
 				FROM tbl_act_device_log
 				WHERE org_seq in (
@@ -862,24 +841,24 @@
 
 			 </select>
 
-			 <select id="deviceList" parameterType="hashmap" resultType="map">
-				    <foreach collection="debList" item="item" index="index">
-						(select t.*
+	<select id="deviceList" parameterType="hashmap" resultType="map">
+		<foreach collection="debList" item="item" index="index">
+			(select t.*
 							from(
 							select row_number () over (order by ins_date desc) as row,*
 							from tbl_act_device_log
 							where uuid =  #{uuid} and product = #{item}
 							) t
 							limit 1
-						) 
-						<if test="debListCnt > index+1">
+						)
+			<if test="debListCnt > index+1">
 				            	UNION ALL
 				        </if>
-					</foreach>
-			 </select>
+		</foreach>
+	</select>
 
-			 <!-- 유해사이트 정책 배포 -->
-			 <select id="nxssList" resultType="map" parameterType="hashmap" >
+	<!-- 유해사이트 정책 배포 -->
+	<select id="nxssList" resultType="map" parameterType="hashmap">
 				    (select
 						    *
 						  from
@@ -889,5 +868,5 @@
 						  order by
 						    tb1.ins_date desc limit 2)
 			 </select>
-		
+
 </mapper>

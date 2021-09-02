@@ -1,8 +1,7 @@
 package com.paging;
 
 
-import java.io.Serializable; 
-
+import java.io.Serializable;
 
 
 
@@ -25,10 +24,9 @@ public class Pagination implements Serializable {
 
 	public static final String PAGINATION_KEY = "pagination";
 
-	private int max = 0;
-	private int page = 1;
-	private int totalCount = 0;
-	private boolean enable = false;
+	private double max = 0;
+	private double page = 1;
+	private double totalCount = 0;
 
 
 	public int getBegin() {
@@ -62,12 +60,12 @@ public class Pagination implements Serializable {
 
 
 	public int getEndPage() {
-		return Math.min(getBeginPage() + 9, getTotalPage());
+		return (int) Math.min(getBeginPage() + 9, getTotalPage());
 	}
 
 
 	public int getBeginList() {
-		return (totalCount - (page - 1) * max);
+		return (int) (totalCount - (page - 1) * max);
 	}
 
 
@@ -75,20 +73,5 @@ public class Pagination implements Serializable {
 		return page * max >= totalCount;
 	}
 
-
-	/*public static void main(String... args) {
-		Pagination p = new Pagination();
-		p.setMax(10);
-		p.setTotalCount(182);
-		p.setPage(18);
-
-		System.out.println(p);
-		System.out.println(p.getBeginPage());
-		System.out.println(p.getPrev());
-		System.out.println(p.getBegin());
-		System.out.println(p.getEnd());
-		System.out.println(p.getBeginList());
-		System.out.println(p.isEnded());
-	}*/
 
 }

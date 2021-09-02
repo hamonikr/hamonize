@@ -1,23 +1,13 @@
 package com.controller;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.json.simple.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.mapper.ISvrlstMapper;
 import com.model.AdminVo;
 import com.model.OrgVo;
@@ -29,7 +19,17 @@ import com.service.OrgService;
 import com.service.SvrlstService;
 import com.util.Constant;
 import com.util.SHA256Util;
-import com.util.StringUtil;
+import org.json.simple.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin")
@@ -47,14 +47,18 @@ public class AdminController {
 	@Autowired
 	private ISvrlstMapper svrlstMapper;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final String SUCCESS = "success";
+
+
 	// 서버 관리자
-	@RequestMapping("/serverlist")
-	public String serverlist(HttpSession session, Model model, AdminVo vo) throws Exception {
+	@GetMapping("/serverlist")
+	public String serverlist(HttpSession session, Model model, AdminVo vo) {
 		return "/svrlst/list";
 	}
 
 	@ResponseBody
-	@RequestMapping("serverlist.proc")
+	@PostMapping("/serverlist.proc")
 	public Map<String, Object> serverlistProc(SvrlstVo vo, PagingVo pagingVo, HttpSession session,
 			HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
@@ -74,21 +78,19 @@ public class AdminController {
 			jsonObject.put("list", gbList);
 			jsonObject.put("pagingVo", pagingVo);
 
-			jsonObject.put("success", true);
+			jsonObject.put(SUCCESS, true);
 		} catch (Exception e) {
-			jsonObject.put("success", false);
-			e.printStackTrace();
+			jsonObject.put(SUCCESS, false);
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
 	}
 
 
-	@RequestMapping("serverlistDelete.proc")
+	@PostMapping("serverlistDelete.proc")
 	public String serverlistDelete(SvrlstVo vo, PagingVo pagingVo, HttpSession session,
 			HttpServletRequest request) {
-		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
 		svrlstMapper.svrlstDelete(vo);
 
 		return "/svrlst/list";
@@ -97,9 +99,8 @@ public class AdminController {
 
 
 	@ResponseBody
-	@RequestMapping(value = "serverlistInsert.proc")
-	public Map<String, Object> serverlistInsert(HttpSession session, SvrlstVo nVo)
-			throws Exception {
+	@PostMapping("serverlistInsert.proc")
+	public Map<String, Object> serverlistInsert(HttpSession session, SvrlstVo nVo) {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
@@ -107,20 +108,20 @@ public class AdminController {
 			svrlstService.svrlstInsert(nVo);
 
 			jsonObject.put("msg", Constant.Board.SUCCESS_GROUP_BOARD);
-			jsonObject.put("success", true);
+			jsonObject.put(SUCCESS, true);
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+			logger.error(sqle.getMessage(), sqle);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
-			jsonObject.put("success", false);
+			jsonObject.put(SUCCESS, false);
 		} catch (DataIntegrityViolationException dive) {
-			dive.printStackTrace();
+			logger.error(dive.getMessage(), dive);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
-			jsonObject.put("success", false);
+			jsonObject.put(SUCCESS, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
-			jsonObject.put("success", false);
+			jsonObject.put(SUCCESS, false);
 		}
 
 
@@ -129,9 +130,9 @@ public class AdminController {
 
 
 	// 센터 관리자
-	@RequestMapping("/list")
-	public String list(HttpSession session, Model model, AdminVo vo) throws Exception {
-		List<AdminVo> list = new ArrayList<AdminVo>();
+	@GetMapping("/list")
+	public String list(HttpSession session, Model model, AdminVo vo) {
+		List<AdminVo> list = new ArrayList<>();
 
 		// 페이징
 		vo.setCurrentPage(vo.getAdminListInfoCurrentPage());
@@ -149,8 +150,8 @@ public class AdminController {
 		return "/admin/list";
 	}
 
-	@RequestMapping("/view")
-	public String view(Model model, AdminVo vo) throws Exception {
+	@PostMapping("/view")
+	public String view(Model model, AdminVo vo) {
 
 		if (vo.getUser_id() != null) {
 			AdminVo avo = adminservice.adminView(vo);
@@ -161,22 +162,27 @@ public class AdminController {
 
 	}
 
-	@RequestMapping("/save")
+	@PostMapping("/save")
 	@ResponseBody
-	public int save(Model model, AdminVo vo) throws NoSuchAlgorithmException {
+	public int save(Model model, AdminVo vo) {
 		int result = 0;
-		vo.setPass_wd(StringUtil.EncodingSHA256(vo.getPass_wd()));
+		String salt = SHA256Util.generateSalt();
+		vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
+		vo.setSalt(salt);
+
 		result = adminservice.adminSave(vo);
 		return result;
 
 	}
 
-	@RequestMapping("/modify")
+	@PostMapping("/modify")
 	@ResponseBody
-	public int modify(Model model, AdminVo vo) throws Exception {
+	public int modify(Model model, AdminVo vo) {
 		int result = 0;
-		if (vo.getPass_wd() != null || vo.getPass_wd() != "") {
-			vo.setPass_wd(StringUtil.EncodingSHA256(vo.getPass_wd()));
+		if (vo.getPass_wd() != null || !vo.getPass_wd().trim().isEmpty()) {
+			String salt = SHA256Util.generateSalt();
+			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
+			vo.setSalt(salt);
 		}
 
 		result = adminservice.adminModify(vo);
@@ -184,18 +190,18 @@ public class AdminController {
 
 	}
 
-	@RequestMapping("/delete")
+	@PostMapping("/delete")
 	@ResponseBody
-	public int delete(Model model, AdminVo vo) throws Exception {
+	public int delete(Model model, AdminVo vo) {
 		int result = 0;
 		result = adminservice.adminDelete(vo);
 		return result;
 
 	}
 
-	@RequestMapping("/idDuplCheck")
+	@PostMapping("/idDuplCheck")
 	@ResponseBody
-	public int idDuplCheck(Model model, AdminVo vo) throws Exception {
+	public int idDuplCheck(Model model, AdminVo vo) {
 		int result = 0;
 		result = adminservice.adminIdCheck(vo);
 		return result;
@@ -204,9 +210,9 @@ public class AdminController {
 
 
 	// 부서 관리자
-	@RequestMapping("/managerlist")
-	public String managerlist(HttpSession session, Model model, AdminVo vo) throws Exception {
-		List<AdminVo> list = new ArrayList<AdminVo>();
+	@PostMapping("/managerlist")
+	public String managerlist(HttpSession session, Model model, AdminVo vo) {
+		List<AdminVo> list = new ArrayList<>();
 
 		// 페이징
 		vo.setCurrentPage(vo.getCurrentPage());
@@ -224,30 +230,36 @@ public class AdminController {
 		return "/sgbManager/list";
 	}
 
-	@RequestMapping("/managerview")
-	public String managerview(Model model, AdminVo vo) throws Exception {
+	@PostMapping("/managerview")
+	public String managerview(Model model, AdminVo vo) {
 
 
 		if (vo.getUser_id() != null) {
-			System.out.println("vo===" + vo.toString());
 			AdminVo avo = adminservice.sgbManagerView(vo);
 			model.addAttribute("result", avo);
 		}
 		JSONArray orgList = null;
 		OrgVo orgvo = new OrgVo();
-		orgList = oService.orgList(orgvo);
+		try {
+			orgList = oService.orgList(orgvo);
+		} catch (NamingException e) {
+			logger.error(e.getMessage(), e);
+		}
 		model.addAttribute("oList", orgList);
 		return "/sgbManager/view";
 
 	}
 
-	@RequestMapping("/managersave")
+	@PostMapping("/managersave")
 	@ResponseBody
-	public int managersave(Model model, AdminVo vo) throws NoSuchAlgorithmException {
+	public int managersave(Model model, AdminVo vo) {
 		int result = 0;
 		result = adminservice.sgbManagerIdCheck(vo);
 		if (result == 0) {
-			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
+			String salt = SHA256Util.generateSalt();
+			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
+			vo.setSalt(salt);
+
 			result = adminservice.sgbManagerSave(vo);
 		} else {
 			result += 10;
@@ -256,30 +268,33 @@ public class AdminController {
 
 	}
 
-	@RequestMapping("/managermodify")
+	@PostMapping("/managermodify")
 	@ResponseBody
-	public int managermodify(Model model, AdminVo vo) throws Exception {
+	public int managermodify(Model model, AdminVo vo) {
 		int result = 0;
-		if (vo.getPass_wd() != null || vo.getPass_wd() != "") {
-			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
+		if (vo.getPass_wd() != null || !vo.getPass_wd().trim().isEmpty()) {
+			String salt = SHA256Util.generateSalt();
+			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
+			vo.setSalt(salt);
+
 		}
 		result = adminservice.sgbManagerModify(vo);
 		return result;
 
 	}
 
-	@RequestMapping("/managerdelete")
+	@PostMapping("/managerdelete")
 	@ResponseBody
-	public int managerdelete(Model model, AdminVo vo) throws Exception {
+	public int managerdelete(Model model, AdminVo vo) {
 		int result = 0;
 		result = adminservice.sgbManagerDelete(vo);
 		return result;
 
 	}
 
-	@RequestMapping("/manageridDuplCheck")
+	@PostMapping("/manageridDuplCheck")
 	@ResponseBody
-	public int manageridDuplCheck(Model model, AdminVo vo) throws Exception {
+	public int manageridDuplCheck(Model model, AdminVo vo) {
 		int result = 0;
 		result = adminservice.sgbManagerIdCheck(vo);
 		return result;

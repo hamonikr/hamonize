@@ -73,7 +73,7 @@
 
 <div class="login_wrap">
         <div class="hamologin">
-           <h1><img src="/images/login_tit.png"></h1>
+           <h1><img alt="login image" src="/images/login_tit.png"></h1>
            <form id="mainform" name="mainform" action="" method="post" onsubmit="fn_signIn();return false;">
            <input type="hidden" name="user_ip" id="user_ip" class="input_type1" />
            <ul class="memberin">

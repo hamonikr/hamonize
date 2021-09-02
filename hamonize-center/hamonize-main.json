@@ -61,7 +61,7 @@
         "valueName": "current"
       },
       "default_title_for_rows": "uuid",
-      "first_column_link": "http://ts.hamonikr.org/mntrng/pcView.do?uuid=_row_name_",
+      "first_column_link": "http://192.168.0.225:8080/mntrng/pcView.do?uuid=_row_name_",
       "font_size": "1.2em",
       "gridPos": {
         "h": 9,

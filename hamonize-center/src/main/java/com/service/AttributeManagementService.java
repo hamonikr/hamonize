@@ -16,15 +16,13 @@ public class AttributeManagementService {
 
 	public void addAttribute(AttributeVo aVo) {
 
-		String attrValueCode = "";
-		
-		if( "A".equals(aVo.getOptradio()) ){
+		if ("A".equals(aVo.getOptradio())) {
 			aVo.setAttr_value_code("000");
 			aVo.setAttr_value_name("선택");
-		}else{
+		} else {
 			aVo.setAttr_value_code(attributeDao.getMaxAttrCode(aVo));
 		}
-		
+
 		AttributeVo attributeVo = new AttributeVo();
 
 		attributeVo.setAttr_code(aVo.getAttr_code());
@@ -44,7 +42,7 @@ public class AttributeManagementService {
 
 			AttributeVo attributeVo = new AttributeVo();
 
-			if (value.length() != 0 || value != "") {
+			if (value.length() != 0 || !value.equals("")) {
 
 				attributeVo.setAttr_code(attrCode);
 				attributeVo.setAttr_name(nameValue);

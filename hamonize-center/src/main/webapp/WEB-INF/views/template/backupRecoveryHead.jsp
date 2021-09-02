@@ -1,4 +1,6 @@
 <head>
+  <title>backup RC head</title>
+
 	<link rel="stylesheet" type="text/css" href="/css/template/bootstrap_custom.css" />
 	
 	<link rel="stylesheet" href="/css/template/jquery.timepicker_1.3.3.min.css">

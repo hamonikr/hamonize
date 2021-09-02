@@ -16,12 +16,12 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 @SpringBootApplication
-public class HamoeyesApplication{
+public class HamoeyesApplication {
 
-	public static void main(String[] args){
-		SpringApplication.run(HamoeyesApplication.class, args);
+	public static void main(String[] args) {
+		SpringApplication.run(HamoeyesApplication.class);
 	}
-	
+
 	@Bean
 	public HttpMessageConverter<String> responseBodyConverter() {
 		return new StringHttpMessageConverter(Charset.forName("UTF-8"));
@@ -41,21 +41,22 @@ public class HamoeyesApplication{
 		return filter;
 	}
 
-	
+
 	@Bean
 	public EmbeddedServletContainerCustomizer containerCustomizer() {
 		return new EmbeddedServletContainerCustomizer() {
 
 			@Override
 			public void customize(ConfigurableEmbeddedServletContainer container) {
-				ErrorPage error403Page = new ErrorPage(HttpStatus.FORBIDDEN, "/error-404.html");
+				ErrorPage error403Page = new ErrorPage(HttpStatus.FORBIDDEN, "/error-403.html");
 				ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/error-404.html");
-				ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error-404.html");
+				ErrorPage error500Page =
+						new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error-405.html");
 
 				container.addErrorPages(error403Page, error404Page, error500Page);
 			}
 		};
 	}
-	
-	
+
+
 }

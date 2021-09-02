@@ -80,7 +80,6 @@ text-decoration: none;
 				           }else{
 				        	   hostnameVal =agrs[i].pc_hostname; 
 				            }
-							
 							if( agrs[i].pc_status == "true"){
 								strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'">'+hostnameVal+'</a></li>'
 							}else{
@@ -179,10 +178,7 @@ function fnSave(){
 		alert("부대명을 입력해주세요.");
 		return false;
 	}
-    console.log($("#seq").val());
-    console.log($("#p_seq").val());
-    console.log($("#org_nm").val());
-
+	
     $('form[name=frm]').append("<input type='hidden' name='type' value='save' />");        
     $('form[name=frm]').submit();
     alert("정상적으로 저장되었습니다.");

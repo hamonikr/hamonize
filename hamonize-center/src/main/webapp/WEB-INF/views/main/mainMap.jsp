@@ -48,20 +48,16 @@
        <div class="col-xl-3 col-lg-4">
            <div class="card tilebox-one">
                <div class="card-body">
-                   <i class="zmdi zmdi-desktop-windows float-end"></i>
+                   <em class="zmdi zmdi-desktop-windows float-end"></em>
                    <h6 class="text-uppercase mt-0">Total Computers</h6>
                    <h2 class="my-2" id="totalComputers"></h2>
-<!-- <p class="mb-0 text-muted"> -->
-<!-- <span class="text-success me-2"><span class="mdi mdi-arrow-up-bold"></span> 5.27%</span> -->
-<!-- <span class="text-nowrap">Since last month</span>   -->
-<!-- </p> -->
                </div> <!-- end card-body-->
            </div>
            <!--end card-->
 
            <div class="card tilebox-one">
                <div class="card-body">
-                   <i class="zmdi zmdi-devices float-end"></i>
+                   <em class="zmdi zmdi-devices float-end"></em>
                    <h6 class="text-uppercase mt-0">Active Computers</h6>
                    <h2 class="my-2" id="onComputers"></h2>
                </div> <!-- end card-body-->
@@ -70,7 +66,7 @@
            
            <div class="card tilebox-one">
                <div class="card-body">
-                   <i class="zmdi zmdi-devices-off float-end"></i>
+                   <em class="zmdi zmdi-devices-off float-end"></em>
                    <h6 class="text-uppercase mt-0">Off Computers</h6>
                    <h2 class="my-2" id="offComputers"></h2>
                </div> <!-- end card-body-->
@@ -85,8 +81,8 @@
                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
                        	PC 사용현황
                    </div>
-						<iframe src="http://106.254.251.74:13001/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0"></iframe>
-                       </div> <!-- end card-body-->
+						<iframe title="Main monitoring" src="http://192.168.0.225:3000/d-solo/UIrYV17nk/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
+                </div> <!-- end card-body-->
            </div> <!-- end card-->
        </div>
        
@@ -143,12 +139,14 @@
 					var chk = 1;
 					if((i+1) == data.policyUpdtResult.length){
 						chk=0;
-						}
+					}
 					if(data.policyUpdtResult[i].debname != data.policyUpdtResult[i+chk].debname){
 						var inset_dt = data.policyUpdtResult[i].ins_date;
 						var date = new Date(inset_dt);
 						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						
 						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
+						console.log("data.policyUpdtResult[i].count : "+data.policyUpdtResult[i].count)
 						shtml += "<tr>";
 						shtml += "<td>"+data.policyUpdtResult[i].debname+"</td>";
 						if(typeof data.policyUpdtResult[i].debver === "undefined")
@@ -160,7 +158,7 @@
 						shtml += "<td>"+data.policyUpdtResult[i].count+"</td>";
 						shtml += "<td>"+noinstall+"</td>";
 						shtml += "</tr>";
-						}else if((i+1) == data.policyUpdtResult.length){
+					}else if((i+1) == data.policyUpdtResult.length){
 							console.log("last");
 							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
@@ -174,7 +172,7 @@
 							shtml += "<td>"+data.policyUpdtResult[i].count+"</td>";
 							shtml += "<td>"+noinstall+"</td>";
 							shtml += "</tr>";
-							}
+						}
 					}
 
 					shtml += "</tbody>";
@@ -208,12 +206,11 @@
                     for(var i = 0;i < data.policyProgrmResult.length;i++){
 					console.log(i);
 					console.log(i+1);
-					//console.log(data.policyProgrmResult.length);
-					//console.log(data.policyProgrmResult[i].progrmname);
+				
 					var chk = 1;
 					if((i+1) == data.policyProgrmResult.length){
 						chk=0;
-						}
+					}
 					if(data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i+chk].progrmname){
 						var inset_dt = data.policyProgrmResult[i].ins_date;
 						var date = new Date(inset_dt);
@@ -226,7 +223,7 @@
 						shtml += "<td>"+data.policyProgrmResult[i].count+"</td>";
 						shtml += "<td>"+noinstall+"</td>";
 						shtml += "</tr>";
-						}else if((i+1) == data.policyProgrmResult.length){
+					}else if((i+1) == data.policyProgrmResult.length){
 							console.log("last");
 							var inset_dt = data.policyProgrmResult[i].ins_date;
 							var date = new Date(inset_dt);
@@ -239,7 +236,7 @@
 							shtml += "<td>"+data.policyProgrmResult[i].count+"</td>";
 							shtml += "<td>"+noinstall+"</td>";
 							shtml += "</tr>";
-							}
+						}
 					}
 
                     shtml += "</tbody>";
@@ -370,7 +367,7 @@
                 $("#list").append(shtml);
 				
 			}else{  
-				gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+				shtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 			}
 
 		});
@@ -388,7 +385,6 @@ if(window.XMLHttpRequest){
 xmlhttp.onreadystatechange = function(){
 	if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
 		 var data = JSON.parse(xmlhttp.responseText);
-		 
 		 $("#totalComputers").text(data.pcList.length); 
 		 $("#onComputers").text(data.on);
 		 $("#offComputers").text(data.off);

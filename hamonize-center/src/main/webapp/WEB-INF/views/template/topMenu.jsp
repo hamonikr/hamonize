@@ -15,45 +15,7 @@
  }
  </style>
  <script>
- $(document).ready(function(){
-	 $("#adminBtn").on("click",function(){
-		 $("#header_layer").empty();
-		 var shtml;
-		 shtml += "<ul>";
-		 shtml += "<li style='text-align: center;'><a href='/login/logout.do' class='btn_logout'>로그아웃</a></li>";
-		 shtml += "</ul>";
-		 $("#header_layer").append(shtml);
-		 if($("#header_layer").css("display") == "none")
-			 $("#header_layer").show();
-		 else
-			 $("#header_layer").hide();
-	 });
-	 $("#settingBtn").on("click",function(){
-		 $("#header_layer").empty();
-		 var shtml;
-		 shtml += "<ul>";
-		 shtml += "<li style='text-align: center;'><a href='/admin/list.do' >관리자관리</a></li>";
-		 shtml += "<li style='text-align: center;'><a href='/admin/managerlist.do' >사지방매니저관리</a></li>";
-		 shtml += "<li style='text-align: center;'><a href='/gplcs/jsonInsertPc.do' >Json파일등록</a></li>";
-		 shtml += "</ul>"; 
-		 $("#header_layer").append(shtml);
-		 if($("#header_layer").css("display") == "none")
-			 $("#header_layer").show();
-		 else
-			 $("#header_layer").hide();
-	 });
-			
-	 $.post("/pcMngr/requestCount",{org_seq:""},
-					function(data){
-		 		console.log(data)
-				var shtml;
-				 shtml += "<p>PC 하드웨어 변경요청이<a href='/pcMngr/pcMngrList?pc_change=R'><em>"+data+"건</em></a>이 있습니다.</p>";
-				 $("#pcChange").append(shtml);
 
-				
-			});		
-
- });
  function numberWithCommas(x) {
 	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
@@ -87,7 +49,7 @@ function getMonthAgoday(){
             <ul class="admin_sinfo">
 				<li><div class="dropdown">
 					<div class="admin">
-						<img src="/images/icon_setting.png" />
+						<img alt="설정" src="/images/icon_setting.png" />
 						<span></span>
 					</div>
 					<div class="dropdown_content" >
@@ -99,7 +61,7 @@ function getMonthAgoday(){
             </ul>
         </div>
 
-        <h1 class="logo"><a href="/main"><img src="/images/hlogo.png" /></a></h1>
+        <h1 class="logo"><a href="/main"><img alt="하모나이즈 로고" src="/images/hlogo.png" /></a></h1>
 
         <div class="menubar">
             <ul>
