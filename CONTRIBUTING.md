@@ -106,19 +106,34 @@ $ git commit -a -m '[commit message]'
 git push origin myfeature
 ```
 
-**6. Pull Request 생성하기**
+**6. 빌드 테스트**
+
+* travis-ci 를 통해 수정한 소스코드가 정상적으로 빌드 되는 것을 확인해 주세요.
+```text
+1) travis-ci.com 에 접속, github 계정으로 로그인
+
+2) 포크한 hamonize 저장소 활성화
+
+3) 환경변수 GITHUB_TOKEN 등록
+
+4) release 브랜치를 작업한 브랜치의 상태로 업데이트
+
+5) travis-ci에서 이뤄진 빌드가 'passed' 인 것을 확인
+```
+
+**7. Pull Request 생성하기**
 
 * 자신의 Github Repository에서 수정 및 테스팅이 완료되면, New pull request 버튼을 클릭해 Pull Request를 생성합니다.
 
 * Pull Request를 생성할 때, comment로 해당 이슈가 논의된 위치와 수정된 사항에 대한 설명을 포함해 주세요.
 
-**7. CLA**
+**8. CLA**
 
 * 생성한 Pull Request에 [Contributor License Agreement](https://ko.wikipedia.org/wiki/%EA%B8%B0%EC%97%AC%EC%9E%90_%EB%9D%BC%EC%9D%B4%EC%84%A0%EC%8A%A4_%EB%8F%99%EC%9D%98) 사인 방법을 안내하는 댓글이 생성됩니다.
 
 * 안내에 따라 CLA 사인을 완료하면, Upstream Repository의 관리자가 요청된 Pull Request를 검토할 것입니다.
 
-**8. Feedback**
+**9. Feedback**
 
 * 프로젝트 관리자가 Pull Request를 검토한 후, 수정을 요청하거나, 거절하거나, 수락할 것입니다.
 </br></br>

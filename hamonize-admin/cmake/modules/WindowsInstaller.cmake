@@ -1,4 +1,4 @@
-set(WINDOWS_INSTALL_FILES "veyon-${MINGW_PLATFORM}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_BUILD}")
+set(WINDOWS_INSTALL_FILES "hamonize-${MINGW_PLATFORM}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_BUILD}")
 
 set(DLLDIR "${MINGW_PREFIX}/bin")
 set(DLLDIR_LIB "${MINGW_PREFIX}/lib")
@@ -17,8 +17,8 @@ add_custom_target(windows-binaries
 	COMMAND mkdir -p ${WINDOWS_INSTALL_FILES}/interception
 	COMMAND cp ${CMAKE_SOURCE_DIR}/3rdparty/interception/* ${WINDOWS_INSTALL_FILES}/interception
 	COMMAND cp ${CMAKE_SOURCE_DIR}/3rdparty/ddengine/${DLL_DDENGINE} ${WINDOWS_INSTALL_FILES}
-	COMMAND cp core/veyon-core.dll ${WINDOWS_INSTALL_FILES}
-	COMMAND find . -mindepth 2 -name 'veyon-*.exe' -exec cp '{}' ${WINDOWS_INSTALL_FILES}/ '\;'
+	COMMAND cp core/hamonize-core.dll ${WINDOWS_INSTALL_FILES}
+	COMMAND find . -mindepth 2 -name 'hamonize-*.exe' -exec cp '{}' ${WINDOWS_INSTALL_FILES}/ '\;'
 	COMMAND mkdir -p ${WINDOWS_INSTALL_FILES}/plugins
 	COMMAND find plugins/ -name '*.dll' -exec cp '{}' ${WINDOWS_INSTALL_FILES}/plugins/ '\;'
 	COMMAND mv ${WINDOWS_INSTALL_FILES}/plugins/lib*.dll ${WINDOWS_INSTALL_FILES}
@@ -54,19 +54,19 @@ add_custom_target(windows-binaries
 	COMMAND cp ${CMAKE_SOURCE_DIR}/README.md ${WINDOWS_INSTALL_FILES}/README.TXT
 	COMMAND todos ${WINDOWS_INSTALL_FILES}/*.TXT
 	COMMAND cp -ra ${CMAKE_SOURCE_DIR}/nsis ${WINDOWS_INSTALL_FILES}
-	COMMAND cp ${CMAKE_BINARY_DIR}/nsis/veyon.nsi ${WINDOWS_INSTALL_FILES}
+	COMMAND cp ${CMAKE_BINARY_DIR}/nsis/hamonize.nsi ${WINDOWS_INSTALL_FILES}
 	COMMAND find ${WINDOWS_INSTALL_FILES} -ls
 )
 
 add_custom_target(create-windows-installer
-	COMMAND makensis ${WINDOWS_INSTALL_FILES}/veyon.nsi
-	COMMAND mv ${WINDOWS_INSTALL_FILES}/veyon-*setup.exe .
+	COMMAND makensis ${WINDOWS_INSTALL_FILES}/hamonize.nsi
+	COMMAND mv ${WINDOWS_INSTALL_FILES}/hamonize-*setup.exe .
 	COMMAND rm -rf ${WINDOWS_INSTALL_FILES}
 	DEPENDS windows-binaries
 )
 
 add_custom_target(prepare-dev-nsi
-	COMMAND sed -i ${WINDOWS_INSTALL_FILES}/veyon.nsi -e "s,/SOLID lzma,zlib,g"
+	COMMAND sed -i ${WINDOWS_INSTALL_FILES}/hamonize.nsi -e "s,/SOLID lzma,zlib,g"
 	DEPENDS windows-binaries)
 
 add_custom_target(dev-nsi
