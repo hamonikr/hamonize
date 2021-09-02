@@ -113,6 +113,7 @@ function expandNode(e) {
 	} 
 }
 
+// pc 별상세 내역 출력
 function detail(uuid){
 	$(".result_detail").remove();
 	$(".content_bapo").remove();
@@ -142,10 +143,21 @@ function detail(uuid){
 				shtml += "<td>"+value.debname+"</td>";
 				shtml += "<td>"+value.debver+"</td>";
 				shtml += "<td>"+value.gubun+"</td>";
-				if(value.state == "1")
-					shtml += "<td>완료</td>";
-				else
-					shtml += "<td>미완료</td>";
+				console.log('value.state : '+value.state);
+				
+				if(value.gubun == "INSTALL" || value.gubun == "UPGRADE" ){
+					if(value.state == 1){
+						shtml += "<td>완료</td>";
+					}else{
+						shtml += "<td>미완료</td>";
+					}
+				}else if(value.gubun == "DELETE"){
+					if(value.state == 0){
+						shtml += "<td>완료</td>";
+					}else{
+						shtml += "<td>미완료</td>";
+					}
+				}			
 				shtml += "<td>"+date+"</td>";
 				shtml += "</tr>";
 			});	
@@ -256,7 +268,8 @@ function detail(uuid){
 function addZero(data){
     return (data<10) ? "0"+data : data;
 }
-//메뉴 Tree onClick
+
+//메뉴 Tree onClick - 부서별 정책 결과
 function onClick(event, treeId, treeNode, clickFlag) {
 		$(".monitor_list").remove();
 		$("#list_info").empty();
@@ -321,13 +334,13 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						shtml_r += "<td>"+data.policyUpdtResult[i].debname+"</td>";
 						if(typeof data.policyUpdtResult[i].debver === "undefined")
 							shtml_r += "<td>-</td>";
-							else
-						shtml_r += "<td>"+data.policyUpdtResult[i].debver+"</td>";
-						shtml_r += "<td>"+data.policyUpdtResult[i].gubun+"</td>";
-						shtml_r += "<td>"+data.pcList.length+"</td>";
-						shtml_r += "<td>"+data.policyUpdtResult[i].count+"</td>";
-						shtml_r += "<td>"+noinstall+"</td>";
-						shtml_r += "</tr>";
+						else
+							shtml_r += "<td>"+data.policyUpdtResult[i].debver+"</td>";
+							shtml_r += "<td>"+data.policyUpdtResult[i].gubun+"</td>";
+							shtml_r += "<td>"+data.pcList.length+"</td>";
+							shtml_r += "<td>"+data.policyUpdtResult[i].count+"</td>";
+							shtml_r += "<td>"+noinstall+"</td>";
+							shtml_r += "</tr>";
 						}else if((i+1) == data.policyUpdtResult.length){
 							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
@@ -341,7 +354,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							shtml_r += "<td>"+data.policyUpdtResult[i].count+"</td>";
 							shtml_r += "<td>"+noinstall+"</td>";
 							shtml_r += "</tr>";
-							}
+						}
 					}
 				
 				shtml_r += "</tbody>";
@@ -637,10 +650,10 @@ function searchView(viewName, page){
             <h3>PC리스트</h3>
             <ul class="veiwcheck" style="margin-right:50px; display:none">
                     <li>
-                        <font class="on">●</font>ON
+                        <div class="on">●</div>ON
                     </li>
                     <li>
-                        <font class="off">○</font>OFF
+                        <div class="off">○</div>OFF
                     </li>
                 </ul>
             <div class="info">부서 또는 팀을 선택해주세요.</div>

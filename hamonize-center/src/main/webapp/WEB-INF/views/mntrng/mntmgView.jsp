@@ -50,7 +50,7 @@ $( "#sp_on" ).click(function() {
 		<span id="sp_on">▼펼치기</span>
 			컴퓨터 정보
 			&nbsp;
-			 <button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
+			 <button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
 		<span></span>
 		</div>
 
@@ -86,10 +86,10 @@ $( "#sp_on" ).click(function() {
 				<h5>IpAddress</h5>
 				<p><c:out value="${pcvo.pc_ip}" /></p>
 			  </div>
-			  <div class="callout callout-info">
+			  <%-- <div class="callout callout-info">
 				<h5>VpnIpAddress</h5>
 				<p><c:out value="${pcvo.pc_vpnip}" /></p>
-			  </div>
+			  </div> --%>
 			  <div class="callout callout-info">
 				<h5>MacAddress</h5>
 				<p><c:out value="${pcvo.pc_macaddress}" /></p>
@@ -102,21 +102,21 @@ $( "#sp_on" ).click(function() {
 								실시간 사용 정보
 							<span></span>
 							</div>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=7" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=9" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=11" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=14" width="19.5%" height="200" frameborder="1"></iframe>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=13" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=7" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=9" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=11" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=14" width="19.5%" height="200" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=13" width="19.5%" height="200" frameborder="1"></iframe>
 						</div>
 						<div style="margin:0 auto;">
 							<div class="main_title" style="margin-bottom: 20px;">
 								그래프 정보
 							<span></span>
 							</div>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=2" width="49.5%" height="300" frameborder="1"></iframe>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=5" width="49.5%" height="300" frameborder="1"></iframe>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=4" width="49.5%" height="300" frameborder="1"></iframe>
-							<iframe src="http://106.254.251.74:13001/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=3" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=2" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=5" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=4" width="49.5%" height="300" frameborder="1"></iframe>
+							<iframe title="Monitoring detail view" src="http://192.168.0.225:3000/d-solo/IDKTE7Gnz/hamonize-monitoring?orgId=1&refresh=10s&var-host=${pcvo.pc_uuid}&panelId=3" width="49.5%" height="300" frameborder="1"></iframe>
 
 						</div>
 					</div>

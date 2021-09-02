@@ -8,10 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -42,6 +45,8 @@ public class AuditLogController {
 	@Autowired
 	private IAuditLogMapper logMapper;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
 	/*
 	 * PC 사용 로그
@@ -50,14 +55,14 @@ public class AuditLogController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/pcUserLog")
+	@RequestMapping(value = "/pcUserLog", method = RequestMethod.GET)
 	public String pcUserLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -65,7 +70,7 @@ public class AuditLogController {
 	}
 
 	@ResponseBody
-	@RequestMapping("userLogList.proc")
+	@RequestMapping(value = "userLogList.proc", method = RequestMethod.POST)
 	public Map<String, Object> listProc(AuditLogVo vo, PagingVo pagingVo, HttpSession session,
 			HttpServletRequest request) {
 
@@ -104,7 +109,7 @@ public class AuditLogController {
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
@@ -118,14 +123,14 @@ public class AuditLogController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/pcChangeLog")
+	@RequestMapping(value = "/pcChangeLog", method = RequestMethod.GET)
 	public String pcChangeLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -133,7 +138,7 @@ public class AuditLogController {
 	}
 
 	@ResponseBody
-	@RequestMapping("pcChangeLogList.proc")
+	@RequestMapping(value = "pcChangeLogList.proc", method = RequestMethod.POST)
 	public Map<String, Object> pcChangeLogList(AuditLogVo vo, PagingVo pagingVo,
 			HttpSession session, HttpServletRequest request) {
 
@@ -161,7 +166,7 @@ public class AuditLogController {
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
@@ -174,14 +179,14 @@ public class AuditLogController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/unAuthLog")
+	@RequestMapping(value = "/unAuthLog", method = RequestMethod.GET)
 	public String unAuthLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -189,7 +194,7 @@ public class AuditLogController {
 	}
 
 	@ResponseBody
-	@RequestMapping("unAuthLogList.proc")
+	@RequestMapping(value = "unAuthLogList.proc", method = RequestMethod.POST)
 	public Map<String, Object> unAuthLogListproc(AuditLogVo vo, PagingVo pagingVo,
 			HttpSession session, HttpServletRequest request) {
 
@@ -218,7 +223,7 @@ public class AuditLogController {
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
@@ -232,14 +237,14 @@ public class AuditLogController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/prcssBlockLog")
+	@RequestMapping(value = "/prcssBlockLog", method = RequestMethod.GET)
 	public String prcssBlockLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -247,7 +252,7 @@ public class AuditLogController {
 	}
 
 	@ResponseBody
-	@RequestMapping("prcssBlockLogList.proc")
+	@RequestMapping(value = "prcssBlockLogList.proc", method = RequestMethod.POST)
 	public Map<String, Object> prcssBlockLogList(AuditLogVo vo, PagingVo pagingVo,
 			HttpSession session, HttpServletRequest request) {
 
@@ -275,7 +280,7 @@ public class AuditLogController {
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
@@ -288,14 +293,14 @@ public class AuditLogController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/updateCheckLog")
+	@RequestMapping(value = "/updateCheckLog", method = RequestMethod.GET)
 	public String updateCheckLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -311,14 +316,14 @@ public class AuditLogController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/userLog")
+	@RequestMapping(value = "/userLog", method = RequestMethod.POST)
 	public String userLogPage(Model model) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -327,7 +332,7 @@ public class AuditLogController {
 
 
 	@ResponseBody
-	@RequestMapping("pcMngrList.proc")
+	@RequestMapping(value = "pcMngrList.proc", method = RequestMethod.POST)
 	public Map<String, Object> listProc(PcMangrVo vo, PagingVo pagingVo, HttpSession session,
 			HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
@@ -344,19 +349,18 @@ public class AuditLogController {
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
 	}
 
 	@ResponseBody
-	@RequestMapping("detailPolicy.proc")
+	@RequestMapping(value = "detailPolicy.proc", method = RequestMethod.POST)
 	public HashMap<String, Object> detailPolicy(@RequestParam HashMap<String, Object> params,
 			HttpSession session) {
 
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
-		System.out.println("params : " + params.get("pc_uuid"));
 
 		try {
 			jsonObject.put("udpt", logService.udptList(params));
@@ -365,7 +369,7 @@ public class AuditLogController {
 			jsonObject.put("firewall", logService.firewallList(params));
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
@@ -544,7 +548,7 @@ public class AuditLogController {
 	// OrgVo orgvo = new OrgVo();
 	// jsonArray = oService.orgList(orgvo);
 	// } catch (Exception e) {
-	// e.printStackTrace();
+	// logger.error(e.getMessage(), e);
 	// // FAIL_GET_LIST
 	// }
 	// System.out.println("1==="+vo.getPrcssname());
@@ -591,7 +595,7 @@ public class AuditLogController {
 	// jsonObject.put("success", true);
 	// } catch (Exception e) {
 	// jsonObject.put("success", false);
-	// e.printStackTrace();
+	// logger.error(e.getMessage(), e);
 	// }
 
 	// return jsonObject;

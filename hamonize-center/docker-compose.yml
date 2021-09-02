@@ -4,7 +4,7 @@ services :
         image: postgres:10.16
         environment:
             POSTGRES_USER : hamonize
-            POSTGRES_PASSWORD : {your own db pw}
+            POSTGRES_PASSWORD : password
             POSTGRES_DB : hamonize_center
         ports:
             - "5432:5432"
@@ -30,8 +30,8 @@ services :
             LOG_LEVEL: 256
             LDAP_DOMAIN: hamonize.com
             LDAP_BASE_DN: dc=hamonize,dc=com
-            LDAP_ADMIN_PASSWORD: {your own ldap pw}
-            LDAP_ORGANISATION: {your own ldap company} 
+            LDAP_ADMIN_PASSWORD: admin
+            LDAP_ORGANISATION: invesume
         volumes:
             - ldap-data:/var/lib/openldap
             - ./ldap/config:/etc/openldap/slapd.d              

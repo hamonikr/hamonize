@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,15 +27,18 @@ public class CurlAgentBackupController {
 	@Autowired
 	private IGetAgentBackupMapper getAgentBackupMapper;
 
-	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
 	/**
-	 * 에이전트에 백업 정책 보내는 매서드 
+	 * 에이전트에 백업 정책 보내는 매서드
+	 * 
 	 * @param pcUuid
 	 * @param wget
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/backup")
+	@RequestMapping(value = "/backup", method = RequestMethod.GET)
 	public String getAgentJob(@RequestParam(value = "name", required = false) String pcUuid,
 			@RequestParam(value = "wget", required = false) String wget) throws Exception {
 
@@ -42,8 +48,8 @@ public class CurlAgentBackupController {
 
 		// uuid로 부서정보 가져오기
 		int segSeq = pcUUID(pcUuid);
-		if( segSeq == 0 ) {
-			return  "nodata";
+		if (segSeq == 0) {
+			return "nodata";
 		}
 
 		GetAgentBackupVo agentBackupVo = new GetAgentBackupVo();
@@ -51,72 +57,74 @@ public class CurlAgentBackupController {
 		agentBackupVo.setPcm_uuid(pcUuid);
 
 		int chkProgrmPolicy = getAgentBackupMapper.getAgentWorkYn(agentBackupVo);
-		
-		if ( chkProgrmPolicy == 0 ) {
+
+		if (chkProgrmPolicy == 0) {
 			JSONObject jsonProgrmData = progrmPolicyData(agentBackupVo);
-			
-			if( jsonProgrmData.size() == 0 ) {
+
+			if (jsonProgrmData.size() == 0) {
 				output = "nodata";
-			}else {
-				if( jsonProgrmData.get("nodata") != null ) {
-					output =  jsonProgrmData.get("nodata").toString();	
-				}else {
+			} else {
+				if (jsonProgrmData.get("nodata") != null) {
+					output = jsonProgrmData.get("nodata").toString();
+				} else {
 					output = jsonProgrmData.toJSONString();
 				}
-				
+
 			}
-			
+
 		} else {
 			output = "nodata";
 		}
-		
+
 
 		System.out.println("//===================================");
 		System.out.println("//result data is : " + output);
 		System.out.println("//===================================");
-		
+
 		return output;
 	}
 
-	
-	
+
+
 	public JSONObject progrmPolicyData(GetAgentBackupVo agentBackupVo) {
 
 		JSONObject jsonObject = new JSONObject();
 
-		
+
 		int retInsertSelectVal = getAgentBackupMapper.setInsertSelect(agentBackupVo);
-		
+
 		System.out.println("//===============================");
-		System.out.println("//====retInsertSelectVal is : "+ retInsertSelectVal);
+		System.out.println("//====retInsertSelectVal is : " + retInsertSelectVal);
 		System.out.println("//===============================");
 
-		// 정책 가져오기 
-		List<GetAgentBackupVo> progrmBackupData = getAgentBackupMapper.getListBackupPolicy(agentBackupVo);
-		System.out.println("//+progrmPolicyData.size() ==="+ progrmBackupData.size() );
-		if( progrmBackupData.size() == 0  ) {
+		// 정책 가져오기
+		List<GetAgentBackupVo> progrmBackupData =
+				getAgentBackupMapper.getListBackupPolicy(agentBackupVo);
+		System.out.println("//+progrmPolicyData.size() ===" + progrmBackupData.size());
+		if (progrmBackupData.size() == 0) {
 			jsonObject.put("nodata", "nodata");
 			return jsonObject;
 		}
-		
-		
+
+
 		JSONObject backupInfo = new JSONObject();
 		String arrAgentProgrmY = "", arrAgentProgrmN = "";
 		for (GetAgentBackupVo set : progrmBackupData) {
-			System.out.println("----> " + set.getBac_seq() + "==" + set.getOrg_seq() + "==" + set.getBac_cycle_option() + "=="
-					+ set.getBac_cycle_time() + "==" + set.getBac_gubun());
-			
+			System.out.println("----> " + set.getBac_seq() + "==" + set.getOrg_seq() + "=="
+					+ set.getBac_cycle_option() + "==" + set.getBac_cycle_time() + "=="
+					+ set.getBac_gubun());
+
 			backupInfo = new JSONObject();
 			backupInfo.put("cycle_option", set.getBac_cycle_option());
 			backupInfo.put("cycle_time", set.getBac_cycle_time());
 			backupInfo.put("Bac_gubun", set.getBac_gubun());
 		}
-		
+
 
 		JSONArray backupArray = new JSONArray();
 		backupArray.add(backupInfo);
-		
-        jsonObject.put("backup", backupArray);
+
+		jsonObject.put("backup", backupArray);
 		return jsonObject;
 	}
 
@@ -125,6 +133,7 @@ public class CurlAgentBackupController {
 	 * 부서 UUID로 부서 seq 가져오기
 	 * 
 	 * @param pcUuid
+	 * 
 	 * @return 부서seq
 	 */
 	public int pcUUID(String pcUUID) {
@@ -132,8 +141,8 @@ public class CurlAgentBackupController {
 		agentVo.setPc_uuid(pcUUID);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		int segSeq = 0;
-		if(agentVo != null ) {
-			segSeq = agentVo.getSeq();	
+		if (agentVo != null) {
+			segSeq = agentVo.getSeq();
 		}
 		return segSeq;
 	}

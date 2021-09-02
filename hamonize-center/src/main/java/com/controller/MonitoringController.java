@@ -7,11 +7,14 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -36,14 +39,16 @@ public class MonitoringController {
 	@Autowired
 	private IPcMangrMapper pcmp;
 
-	@RequestMapping(value = "/pcControlList")
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@RequestMapping(value = "/pcControlList", method = RequestMethod.GET)
 	public String pcControlPage(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -58,7 +63,7 @@ public class MonitoringController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/pcList")
+	@RequestMapping(value = "/pcList", method = RequestMethod.POST)
 	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -68,9 +73,6 @@ public class MonitoringController {
 		try {
 			list = mService.pcListInfo(params);
 			for (int i = 0; i < list.size(); i++) {
-
-				// if (list.get(i).get("pc_status") != null && list.get(i).get("pc_status") != "" )
-				// {
 				if (!ObjectUtils.isEmpty(list.get(i).get("pc_status"))) {
 					on++;
 				} else {
@@ -79,11 +81,9 @@ public class MonitoringController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
-		System.out.println("on==={" + on);
-		System.out.println("off==={" + off);
 
 		result.put("pcList", list);
 		result.put("on", on);
@@ -101,7 +101,7 @@ public class MonitoringController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/pcPolicyList")
+	@RequestMapping(value = "/pcPolicyList", method = RequestMethod.POST)
 	public HashMap<String, Object> pcPolicyList(Model model,
 			@RequestParam Map<String, Object> params) {
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
@@ -110,8 +110,6 @@ public class MonitoringController {
 
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		params.put("type", params.get("type").toString());
-
-		System.out.println("type========" + params.get("type").toString());
 
 		int on = 0;
 		int off = 0;
@@ -124,9 +122,6 @@ public class MonitoringController {
 				else
 					off++;
 			}
-
-			System.out.println("on====" + on);
-			System.out.println("off====" + off);
 			result = pcmp.pcPolicyUpdtList(params);
 			jsonObject.put("pcList", list);
 			jsonObject.put("policyUpdtResult", result);
@@ -135,7 +130,7 @@ public class MonitoringController {
 			jsonObject.put("policyDeviceResult", pcmp.pcPolicyDeviceList(params));
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("on", on);
 		model.addAttribute("off", off);
@@ -146,7 +141,7 @@ public class MonitoringController {
 	 * 상세 로깅정보 출력 화면
 	 * 
 	 */
-	@RequestMapping(value = "/pcView")
+	@RequestMapping(value = "/pcView", method = RequestMethod.GET)
 	public String pcInfo(Model model, @RequestParam Map<String, Object> params) {
 		String uuid = "";
 		PcMangrVo vo = new PcMangrVo();
@@ -154,7 +149,6 @@ public class MonitoringController {
 			uuid = params.get("uuid").toString();
 			vo.setPc_uuid(uuid);
 			vo = pcmp.pcDetailInfo(vo);
-			// System.out.println("vo===="+vo.toString());
 
 		}
 
@@ -165,7 +159,7 @@ public class MonitoringController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/memoryUsage")
+	@RequestMapping(value = "/memoryUsage", method = RequestMethod.POST)
 	public JSONArray memoryUsage(Model model, @RequestParam Map<String, Object> params) {
 		List<PcMemoryDataVo> list = mService.getMemory(params.get("uuid").toString());
 		JSONObject mem;
@@ -179,14 +173,13 @@ public class MonitoringController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/cpuUsage")
+	@RequestMapping(value = "/cpuUsage", method = RequestMethod.POST)
 	public JSONArray cpuUsage(Model model, @RequestParam Map<String, Object> params) {
 		List<PcDataVo> list = mService.getCpu(params.get("uuid").toString());
 		JSONObject cpu;
 		JSONArray ja = new JSONArray();
 		for (int i = 0; i < list.size(); i++) {
 			cpu = new JSONObject();
-			System.out.println("cpu====" + list.get(i).getValue());
 			cpu.put("cpu", list.get(i).getValue());
 			ja.add(cpu);
 		}

@@ -10,12 +10,17 @@ import com.model.LoginVO;
 
 @Service
 public class LoginService {
-	
+
 	@Autowired
 	ILoginMapper loginMapper;
 
+	public LoginVO getSalt(Map<String, Object> params) throws Exception {
+
+		return loginMapper.getSalt(params);
+	}
+
 	public LoginVO getLoginInfo(Map<String, Object> params) throws Exception {
-		
+
 		return loginMapper.getLoginInfo(params);
 	}
 
@@ -25,7 +30,7 @@ public class LoginService {
 
 
 	public int getSeqMax() throws Exception {
-		
+
 		return loginMapper.getSeqMax();
 	}
 
@@ -36,9 +41,9 @@ public class LoginService {
 
 
 	public LoginVO getSSOLoginInfo(Map<String, String> params) throws Exception {
-		
+
 		return loginMapper.getSSOLoginInfo(params);
-		
+
 	}
-   
+
 }

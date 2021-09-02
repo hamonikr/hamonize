@@ -1,6 +1,6 @@
 package com;
 
-import org.influxdb.dto.Point; 
+import org.influxdb.dto.Point;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,21 +15,19 @@ public class InfluxDatabaseConfig {
 
 	@Bean
 	public InfluxDBConnectionFactory connectionFactory(final InfluxDBPropertiesCustom properties) {
-        System.out.println("InfluxDBConnectionFactory properties >> "+properties.getUrl());
-        System.out.println("InfluxDBConnectionFactory properties >> "+properties.getDatabase());
-        System.out.println("InfluxDBConnectionFactory properties >> "+properties.getUsername());
-
 		return new InfluxDBConnectionFactory(properties);
 	}
-	
+
 	@Bean
-	public InfluxDBTemplate<Point> influxDBTemplate(final InfluxDBConnectionFactory connectionFactory) {
-		 return new InfluxDBTemplate<>(connectionFactory, new PointConverter());
+	public InfluxDBTemplate<Point> influxDBTemplate(
+			final InfluxDBConnectionFactory connectionFactory) {
+		return new InfluxDBTemplate<>(connectionFactory, new PointConverter());
 	}
-	
+
 	@Bean
-	public DefaultInfluxDBTemplate defaultTemplate(final InfluxDBConnectionFactory connectionFactory) {
+	public DefaultInfluxDBTemplate defaultTemplate(
+			final InfluxDBConnectionFactory connectionFactory) {
 		return new DefaultInfluxDBTemplate(connectionFactory);
 	}
-	
+
 }

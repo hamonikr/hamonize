@@ -132,10 +132,20 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				var totalRecordSize = data.pagingVo.totalRecordSize;
 				$.each(data.list, function(index, value) {
 					var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-					if(value.logout_dt == null){
-						value.logout_dt = "비정상적인 종료입니다."
-						value.spent_time = "비정상적인 종료입니다.";
+					const unexpt_shutdwon = "비정상적인 종료입니다.";
+
+					if(value.logout_dt == null && value.last_seq != value.seq){
+						value.logout_dt = unexpt_shutdwon;
+						value.spent_time = unexpt_shutdwon;
+					}else if(value.logout_dt == null && value.last_seq == value.seq){
+						value.logout_dt = "-";
+						value.spent_time = "-";
 					}
+					if(value.logout_dt == '-' && value.state == 'N'){
+						value.logout_dt = unexpt_shutdwon;
+						value.spent_time = unexpt_shutdwon;
+					}
+
 					gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
 					gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 					gbInnerHtml += "<td>"+value.org_nm+"</td>";

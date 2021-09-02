@@ -15,41 +15,44 @@ import org.springframework.stereotype.Service;
 
 import com.model.PcDataVo;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Service
 public class PcService {
-	
+
 	@Autowired
 	private InfluxDBTemplate<Point> influxDBTemplate;
-	
-	
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	public List<PcDataVo> list() {
 		JSONArray jsonArray = new JSONArray();
 		Object jObj = null;
-		
+
 		Query query = QueryBuilder.newQuery("SELECT * FROM cpu_value LIMIT 10")
-		        .forDatabase("collectd")
-		        .create();
+				.forDatabase("collectd").create();
 
 
 
-		QueryResult queryResultCpu = influxDBTemplate.query(query);		
-		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper(); // thread-safe - can be reused
+		QueryResult queryResultCpu = influxDBTemplate.query(query);
+		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper(); // thread-safe - can be
+																		// reused
 		JSONParser parser = new JSONParser();
-		
+
 		String str = queryResultCpu.toString();
-		str = str.replace("QueryResult [results=[Result [series=[Series [", "{").split("]]]],")[0] + "]]}";
-		
+		str = str.replace("QueryResult [results=[Result [series=[Series [", "{").split("]]]],")[0]
+				+ "]]}";
+
 		try {
 			jObj = parser.parse(str);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
-		
+
 		jsonArray.add(jObj);
-		
+
 		return resultMapper.toPOJO(queryResultCpu, PcDataVo.class);
 	}
 }

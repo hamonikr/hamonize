@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.model.GroupVo;
 import com.service.GroupService;
-
-
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 @Controller
@@ -27,16 +27,20 @@ public class GroupController {
 	@Autowired
 	private GroupService gService;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	/*
 	 * 부서관리 페이지
 	 * 
 	 * @model gList : jsonGroupList
+	 * 
 	 * @return
+	 * 
 	 * @throws Exception
 	 */
-	@RequestMapping("/groupManagement")
+	@RequestMapping(value = "/groupManagement", method = RequestMethod.POST)
 	public String groupManagementPage(HttpSession session, Model model) {
-		
+
 		JSONArray groupList = null;
 
 		try {
@@ -44,29 +48,33 @@ public class GroupController {
 			gvo.setGroup_gubun("group");
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
-			e.printStackTrace();
-			// FAIL_GET_LIST
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
 
 		return "/group/groupManagement";
 	}
-	
-	
-	
+
+
 
 	/*
 	 * 조직등록
 	 * 
 	 * @param groupVo.name
+	 * 
 	 * @param groupVo.step
+	 * 
 	 * @param groupVo.orguppercode
+	 * 
 	 * @param groupVo.orgcode
+	 * 
 	 * @return msg
+	 * 
 	 * @throws Exception
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/insert", method = RequestMethod.POST, produces = "application/text; charset=utf8")
+	@RequestMapping(value = "/insert", method = RequestMethod.POST,
+			produces = "application/text; charset=utf8")
 	public Object groupInsert(@Valid GroupVo groupVo) {
 		String msg = "";
 
@@ -74,7 +82,7 @@ public class GroupController {
 			msg = gService.groupInsert(groupVo);
 		} catch (Exception e) {
 			// 에러가 구체적으로 나뉠 경우 개별로 나누어 처리
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return new ResponseEntity<String>(msg, HttpStatus.OK);
 	}
@@ -83,33 +91,40 @@ public class GroupController {
 	 * 조직삭제
 	 * 
 	 * @param groupVo.orguppercode
+	 * 
 	 * @param groupVo.orgcode
+	 * 
 	 * @return msg
+	 * 
 	 * @throws Exception
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/text; charset=utf8")
+	@RequestMapping(value = "/delete", method = RequestMethod.POST,
+			produces = "application/text; charset=utf8")
 	public Object groupDelete(GroupVo groupVo) {
-		
-		System.out.println("=groupVo==="+ groupVo);
-		
+
+		System.out.println("=groupVo===" + groupVo);
+
 		String msg = "";
 
-		 msg = gService.groupDelete(groupVo);
-		 System.out.println("con=="+ msg);
+		msg = gService.groupDelete(groupVo);
+		System.out.println("con==" + msg);
 		return new ResponseEntity<String>(msg, HttpStatus.OK);
 	}
-	
-	
+
+
 	/*
 	 * 부서관리
+	 * 
 	 * @param session
+	 * 
 	 * @param model
+	 * 
 	 * @return
 	 */
-	@RequestMapping("/sgbManagement")
+	@RequestMapping(value = "/sgbManagement", method = RequestMethod.POST)
 	public String sgbManagementPage(HttpSession session, Model model) {
-		
+
 		JSONArray groupList = null;
 
 		try {
@@ -117,15 +132,16 @@ public class GroupController {
 			gvo.setGroup_gubun("sgb");
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
 
 		return "/group/sgbManagement";
 	}
-	
+
 	@ResponseBody
-	@RequestMapping(value = "/sgbInsert", method = RequestMethod.POST, produces = "application/text; charset=utf8")
+	@RequestMapping(value = "/sgbInsert", method = RequestMethod.POST,
+			produces = "application/text; charset=utf8")
 	public Object sgbInsert(@Valid GroupVo groupVo) {
 		String msg = "";
 
@@ -134,10 +150,10 @@ public class GroupController {
 			msg = gService.groupInsert(groupVo);
 		} catch (Exception e) {
 			// 에러가 구체적으로 나뉠 경우 개별로 나누어 처리
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return new ResponseEntity<String>(msg, HttpStatus.OK);
 	}
-	
-	
+
+
 }

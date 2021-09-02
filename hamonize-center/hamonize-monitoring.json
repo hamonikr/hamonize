@@ -1788,8 +1788,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "9ebf8fac814a458c8c14701c30a1e44e",
-          "value": "9ebf8fac814a458c8c14701c30a1e44e"
+          "text": "",
+          "value": ""
         },
         "datasource": "PostgreSQL",
         "definition": "select pc_uuid from tbl_pc_mangr",

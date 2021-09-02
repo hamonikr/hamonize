@@ -1,6 +1,5 @@
 package com.util;
 
-import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -8,8 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 public class EgovWebUtil {
-	
-	public static String cookieRead( HttpServletRequest request, String chk){
+
+	public static String cookieRead(HttpServletRequest request, String chk) {
 		// 쿠키값 가져오기
 		Cookie[] cookies = request.getCookies();
 		String cValue = "";
@@ -20,27 +19,20 @@ public class EgovWebUtil {
 				String cName = c.getName();
 				// 쿠키값을 가져온다
 
-				if( cName.equals(chk)){
-					cValue = c.getValue();	
+				if (cName.equals(chk)) {
+					cValue = c.getValue();
 				}
 			}
 		}
 		return cValue;
 	}
-	
-	public static void cookieMake(HttpServletRequest request, HttpServletResponse response, String hn){
-		
-		Cookie cookie = new Cookie("HTGno", hn);
-	    cookie.setMaxAge(60*60*24*365);            // 쿠키 유지 기간 - 1년
-	    cookie.setPath("/");                               // 모든 경로에서 접근 가능하도록 
-	    response.addCookie(cookie);                // 쿠키저장
-	    
-	}
+
+
 	public static String clearXSSMinimum(String value) {
 		if (value == null || value.trim().equals("")) {
 			return "";
 		}
-		
+
 		String returnValue = value;
 
 		returnValue = returnValue.replaceAll("&", "&amp;");
@@ -102,61 +94,22 @@ public class EgovWebUtil {
 	}
 
 	public static String filePathWhiteList(String value) {
-		return value; // TODO
+		return value;
 	}
-	
-	 public static boolean isIPAddress(String str) {
-		Pattern ipPattern = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
-		
-		return ipPattern.matcher(str).matches();
-    }
-	 
-	 public static String removeCRLF(String parameter) {
-		 return parameter.replaceAll("\r", "").replaceAll("\n", "");
-	 }
-	 
-	 public static String removeSQLInjectionRisk(String parameter) {
-		 return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("%", "").replaceAll(";", "").replaceAll("-", "").replaceAll("\\+", "").replaceAll(",", "");
-	 }
-	 
-	 public static String removeOSCmdRisk(String parameter) {
-		 return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("|", "").replaceAll(";", "");
-	 }
-	 
-	 
-    /*
-    public static void main(String[] args) {
-	String test = null;
-	
-	test = "<script language='javascript' encoding=\"utf-8\">q&a</script>";
-	System.out.println("clearXSSMinimum() Test");
-	System.out.println(test);
-	System.out.println("=>");
-	System.out.println(clearXSSMinimum(test));
-	System.out.println();
-	
-	test = "/a/b/c../..\\";
-	System.out.println("clearXSSMaximum() Test");
-	System.out.println(test);
-	System.out.println(" =>");
-	System.out.println(clearXSSMaximum(test));
-	System.out.println();
-	
-	test = "/a/b/c/../../../..\\..\\";
-	System.out.println("filePathBlackList() Test");
-	System.out.println(test);
-	System.out.println("=>");
-	System.out.println(filePathBlackList(test));
-	System.out.println();
-	
-	test = "192.168.0.1";
-	System.out.println("isIPAddress() test");
-	System.out.println("IP : " + test + " => " + isIPAddress(test));
-	
-	test = "abc def*%;-+,ghi";
-	System.out.println("removeSQLInjectionRisk() test");
-	System.out.println(test + " => " + removeSQLInjectionRisk(test));
-    }
-    //*/
+
+	public static String removeCRLF(String parameter) {
+		return parameter.replaceAll("\r", "").replaceAll("\n", "");
+	}
+
+	public static String removeSQLInjectionRisk(String parameter) {
+		return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("%", "")
+				.replaceAll(";", "").replaceAll("-", "").replaceAll("\\+", "").replaceAll(",", "");
+	}
+
+	public static String removeOSCmdRisk(String parameter) {
+		return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("\\|", "")
+				.replaceAll(";", "");
+	}
+
 
 }

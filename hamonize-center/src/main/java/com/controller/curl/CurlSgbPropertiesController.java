@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IGetAgentJobMapper;
@@ -28,73 +30,74 @@ public class CurlSgbPropertiesController {
 	@Autowired
 	private ISvrlstMapper svrlstMapper;
 
-	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping("/sgbprt")
+
+	@RequestMapping(value = "/sgbprt", method = RequestMethod.POST)
 	public String getAgentJob(HttpServletRequest request) throws Exception {
 
 		String output = "";
-		
+
 		JSONObject jsonObject = new JSONObject();
 		JSONObject jsonList = new JSONObject();
 		JSONArray itemList = new JSONArray();
 
-		
+
 		StringBuffer json = new StringBuffer();
-	    String line = null;
-	 
-	    try {
-	        BufferedReader reader = request.getReader();
-	        while((line = reader.readLine()) != null) {
-	            json.append(line);
-	        }
-	 
-	    }catch(Exception e) {
-	        System.out.println("Error reading JSON string: " + e.toString());
-	    }
-	    
-	    
+		String line = null;
+
+		try {
+			BufferedReader reader = request.getReader();
+			while ((line = reader.readLine()) != null) {
+				json.append(line);
+			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+
 		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
+		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
 		JSONArray inetvalArray = (JSONArray) jsonObj.get("events");
 		JSONObject object = (JSONObject) inetvalArray.get(0);
-    	
-		System.out.println("====> "+ object.get("uuid").toString());
-		
-		
-		List<SvrlstVo> svrlstVo = svrlstMapper.getSvrlstDataList();
-		
 
-		for( SvrlstVo svrlstData : svrlstVo ){
-			System.out.println("svrlstData===>=="+ svrlstData.getSvr_port()+"=="+ svrlstData.getSvr_domain() +"=="+ svrlstData.getSvr_ip());
-			
+		logger.debug("====> {}", object.get("uuid").toString());
+
+
+		List<SvrlstVo> svrlstVo = svrlstMapper.getSvrlstDataList();
+
+
+		for (SvrlstVo svrlstData : svrlstVo) {
+			System.out.println("svrlstData===>==" + svrlstData.getSvr_port() + "=="
+					+ svrlstData.getSvr_domain() + "==" + svrlstData.getSvr_ip());
+
 			JSONObject tmpObject = new JSONObject();
-			
+
 			tmpObject.put("sgbname", svrlstData.getSvr_nm());
 			tmpObject.put("sgbdomain", svrlstData.getSvr_domain());
-			
-			if( "N".equals(svrlstData.getSvr_port()) ) {
-				tmpObject.put("sgbip", svrlstData.getSvr_ip());	
-			}else {
-				tmpObject.put("sgbip", svrlstData.getSvr_ip() +":"+ svrlstData.getSvr_port());
+
+			if ("N".equals(svrlstData.getSvr_port())) {
+				tmpObject.put("sgbip", svrlstData.getSvr_ip());
+			} else {
+				tmpObject.put("sgbip", svrlstData.getSvr_ip() + ":" + svrlstData.getSvr_port());
 			}
-			
-			
+
+
 			itemList.add(tmpObject);
 		}
 		jsonObject.put("sgbdata", itemList);
 
 		output = jsonObject.toJSONString();
-		
+
 		System.out.println("//===================================");
 		System.out.println("//result data is : " + output);
 		System.out.println("//===================================");
-		
+
 		return output;
 	}
 
-	
-	
+
 
 	public int deptUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();

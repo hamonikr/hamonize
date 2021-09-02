@@ -18,6 +18,8 @@ import com.model.PcMangrVo;
 import com.service.GroupService;
 import com.service.MntrgService;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 @Controller
 @RequestMapping("/mntrng")
@@ -29,53 +31,52 @@ public class MntrngController {
 	@Autowired
 	private GroupService groupService;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	/*
 	 * 모니터링 페이지
 	 * 
 	 * @param model
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/pcControl")
+	@RequestMapping(value = "/pcControl", method = RequestMethod.POST)
 	public String pcControlPage(Model model) {
 		JSONArray groupList = null;
 
 		try {
 			GroupVo gvo = new GroupVo();
 			groupList = groupService.groupList(gvo);
-			
-			System.out.println("groupList========"+ groupList);
+
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
-		
+
 
 		return "/mntrng/mntrngControl";
 	}
 
 	@ResponseBody
-	@RequestMapping("pcControl.proc")
-	public Map<String, Object> pcControlProc( PcMangrVo pvo ) {
+	@RequestMapping(value = "/pcControl.proc", method = RequestMethod.POST)
+	public Map<String, Object> pcControlProc(PcMangrVo pvo) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {
-			System.out.println("pvo==+"+ pvo);
-			
 			List<PcMangrVo> retData = mntrgService.pcMntrgList(pvo);
-			System.out.println("retData========"+ retData.size());
 			jsonObject.put("influxData", retData);
 		} catch (Exception e) {
-			jsonObject.put("influxData", "ssssssss");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
 	}
-	
+
 	/*
 	 * PC 정보 페이지
 	 * 
 	 * @param code
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/pcinfo", method = RequestMethod.POST)
@@ -86,7 +87,7 @@ public class MntrngController {
 			GroupVo gvo = new GroupVo();
 			groupList = groupService.groupList(gvo);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
 
