@@ -139,10 +139,6 @@
 										<option value="답변완료">답변완료</option>
 								</select></td>
 							</tr>
-							<!-- <tr>
-                                <th>파일첨부</th>
-                                <td colspan="3"><a href="#"><img src="/images/icon_file.gif" alt="file" /> 2019file.hwp</a></td>
-                            </tr> -->
 							<tr>
 								<td colspan="4" class="view"><c:out
 										value="${ viewVo.content }" escapeXml="false" /></td>
@@ -155,8 +151,8 @@
 									<img src="/images/icon_admin.png" alt="관리자" />${item.admin_id}(${item.admin_name})
 										${ item.as_content }</span>
 										<span class="right t_right inblock" style="width:30%">
-                                        <font class="gray txt13">등록일시 : ${ item.as_insert_dt }</font>
-                                        <font class="mL20"><button type="button" class="btn_type3 card-delete-btn" data-value="${ item.as_seq }"> 삭제</button></font> 
+                                        <div class="gray txt13">등록일시 : ${ item.as_insert_dt }</div>
+                                        <div class="mL20"><button type="button" class="btn_type3 card-delete-btn" data-value="${ item.as_seq }"> 삭제</button></div> 
                                     </span>
 									</td>
 								</tr>

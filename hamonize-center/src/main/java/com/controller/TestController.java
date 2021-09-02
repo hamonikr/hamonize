@@ -6,10 +6,13 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mapper.IAttributeMapper;
@@ -24,28 +27,30 @@ public class TestController {
 
 	@Autowired
 	private GroupService gService;
+
 	@Autowired
 	private AttributeManagementService attributeService;
-	
-	
+
 	@Autowired
 	private IAttributeMapper attributeMapper;
 
-	@RequestMapping("/home")
-	public String home( Model model ) {
-		
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@RequestMapping(value = "/home", method = RequestMethod.POST)
+	public String home(Model model) {
+
 		return "/home";
 	}
-	
-	@RequestMapping("/tree")
-	public String tree( Model model ) {
-		
+
+	@RequestMapping(value = "/tree", method = RequestMethod.POST)
+	public String tree(Model model) {
+
 		return "/test/test";
 	}
-	
-	@RequestMapping("/treefrom")
-	public String treefrom( Model model ) {
-		
+
+	@RequestMapping(value = "/treefrom", method = RequestMethod.POST)
+	public String treefrom(Model model) {
+
 		JSONArray groupList = null;
 
 		try {
@@ -53,72 +58,51 @@ public class TestController {
 			gvo.setGroup_gubun("group");
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
-		
+
 		return "/test/treefrom";
 	}
-	
-	@RequestMapping("/treeMenu")
-	public String treeMenu( Model model ) {
-		
+
+	@RequestMapping(value = "/treeMenu", method = RequestMethod.POST)
+	public String treeMenu(Model model) {
+
 		return "/test/treeMenu";
 	}
-	
-	
-	
-	@RequestMapping("/info")
-	public String addAttribute( Model model ) {
-		
+
+
+
+	@RequestMapping(value = "/info", method = RequestMethod.POST)
+	public String addAttribute(Model model) {
+
 		AttributeVo attrVo = new AttributeVo();
 		attrVo.setAttr_code("001");
 		List<AttributeVo> retAttributeVo = attributeMapper.commcodeListInfo(attrVo);
-		
-		System.out.println("retAttributeVo==="+ retAttributeVo);
-		
+
 		model.addAttribute("retAttributeVo", retAttributeVo);
-		
-		
+
 		return "/test/test";
 	}
-	
-	
+
+
 
 	@ResponseBody
-	@RequestMapping("test.proc")
-	public Map<String, Object> listProc( AttributeVo aVo) {
-/*		public Map<String, Object> listProc(@RequestParam(value = "attrValueName") List<String> attrValueNames,
-				@RequestParam(value = "attrName") String nameValue) {
-*/
+	@RequestMapping(value = "test.proc", method = RequestMethod.POST)
+	public Map<String, Object> listProc(AttributeVo aVo) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		System.out.println("get aVo === " + aVo);
-		
+
 		try {
-			
-//			attributeService.addAttribute(nameValue, attrValueNames);
 			attributeService.addAttribute(aVo);
-			
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
 	}
-	
-	
-	
-/*	
-	@RequestMapping(value = "/test.proc", method = RequestMethod.POST)
-	public String updateAttribute(@RequestParam(value = "attrValueName") List<String> attrValueNames,
-			@RequestParam(value = "attrName") String nameValue) {
 
-		attributeService.addAttribute(nameValue, attrValueNames);
-
-		return "redirect:/goods/attributeManagement/attributeManagement.html";
-	}
-	*/
 }

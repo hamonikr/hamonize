@@ -1,7 +1,10 @@
 package com.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException; 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <pre>
@@ -15,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class JsonConvertData {
+	private static Logger logger = LoggerFactory.getLogger(JsonConvertData.class);
 
 	/**
 	 * <pre>
@@ -30,8 +34,7 @@ public class JsonConvertData {
 		try {
 			result = objectMapper.writeValueAsString(paramDataMap);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return result;

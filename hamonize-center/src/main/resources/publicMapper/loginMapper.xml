@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
- 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.mapper.ILoginMapper">
 
-<select id="getLoginInfo" parameterType="java.util.HashMap" resultType="com.model.LoginVO">
+	<select id="getSalt" parameterType="java.util.HashMap" resultType="com.model.LoginVO">
+		SELECT 
+			salt
+		FROM TBL_ADMIN_USER
+		WHERE USER_ID=#{user_id}
+	</select>
+
+	<select id="getLoginInfo" parameterType="java.util.HashMap" resultType="com.model.LoginVO">
 		SELECT 
 			USER_ID,
 			USER_NAME,
@@ -13,10 +20,9 @@
 		FROM TBL_ADMIN_USER
 		WHERE USER_ID=#{user_id}
 		  AND PASS_WD=#{pass_wd}	
-	
-</select>
+	</select>
 
- <insert id="insertLoginInfo" parameterType="com.model.LoginVO">   
+	<insert id="insertLoginInfo" parameterType="com.model.LoginVO">   
 		INSERT INTO TBL_ADMIN_LOGIN_HISTORY
 		(
 		    SEQ
@@ -32,18 +38,17 @@
 		,   now()  
 		)
 	</insert>
-	
+
 	<select id="getSeqMax" resultType="int">
 	   SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_ADMIN_LOGIN_HISTORY
     </select>
-	
-	 <update id="updateLoginInfo" parameterType="com.model.LoginVO">
+
+	<update id="updateLoginInfo" parameterType="com.model.LoginVO">
 		UPDATE TBL_ADMIN_LOGIN_HISTORY
 		   SET LOGOUT_DATE = now()
 		      ,TIME_SPENT  = AGE(now(),LOGIN_DATE)
 		 WHERE SEQ         = #{loginKey}
  	</update>
-
 
 
 </mapper>

@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IUnauthorizedMapper;
@@ -23,45 +24,45 @@ public class CurlUnAuthorizedController {
 
 	@Autowired
 	IUnauthorizedMapper iUnauthorizedMapper;
-	
+
 	/**
-	 * 비인가 디바이스의 접속 로그 
-	 * 에이전트에서 비인가디바이스 접속 로그 전송
+	 * 비인가 디바이스의 접속 로그 에이전트에서 비인가디바이스 접속 로그 전송
+	 * 
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/unauth")
+	@RequestMapping(value = "/unauth", method = RequestMethod.POST)
 	public String getAgentJob(HttpServletRequest request) throws Exception {
-		
+
 		StringBuffer json = new StringBuffer();
-	    String line = null;
-	 
-	    try {
-	        BufferedReader reader = request.getReader();
-	        while((line = reader.readLine()) != null) {
-	            json.append(line);
-	        }
-	 
-	    }catch(Exception e) {
-	        System.out.println("Error reading JSON string: " + e.toString());
-	    }
-	    
-	    
+		String line = null;
+
+		try {
+			BufferedReader reader = request.getReader();
+			while ((line = reader.readLine()) != null) {
+				json.append(line);
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error reading JSON string: " + e.toString());
+		}
+
+
 		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObj = (JSONObject) jsonParser.parse( json.toString());
-		
+		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
+
 		JSONArray inetvalArray = (JSONArray) jsonObj.get("events");
-		System.out.println("====> "+ jsonObj.get("events"));
+		System.out.println("====> " + jsonObj.get("events"));
 
-		List <UnauthorizedVo> list = new ArrayList<UnauthorizedVo>();
-		System.out.println("inetvalArray size : "+ inetvalArray.size());
+		List<UnauthorizedVo> list = new ArrayList<UnauthorizedVo>();
+		System.out.println("inetvalArray size : " + inetvalArray.size());
 
-		for(int i=0 ; i<inetvalArray.size() ; i++){
-		    JSONObject tempObj = (JSONObject) inetvalArray.get(i);
-    		UnauthorizedVo tmpVo = new UnauthorizedVo();
-			System.out.println("tempObj : "+ tempObj);
-        	tmpVo.setPc_uuid(tempObj.get("uuid").toString());
+		for (int i = 0; i < inetvalArray.size(); i++) {
+			JSONObject tempObj = (JSONObject) inetvalArray.get(i);
+			UnauthorizedVo tmpVo = new UnauthorizedVo();
+			System.out.println("tempObj : " + tempObj);
+			tmpVo.setPc_uuid(tempObj.get("uuid").toString());
 			tmpVo.setVendor(tempObj.get("vendor").toString());
 			tmpVo.setProduct(tempObj.get("product").toString());
 			tmpVo.setInfo(tempObj.get("usbinfo").toString());
@@ -69,20 +70,20 @@ public class CurlUnAuthorizedController {
 			tmpVo.setInsert_dt(tempObj.get("datetime").toString());
 
 			list.add(tmpVo);
-			System.out.println("setInetLogVo==="+ list.get(i).toString());
-  
-        }
-        
-              
+			System.out.println("setInetLogVo===" + list.get(i).toString());
+
+		}
+
+
 		int retVal = iUnauthorizedMapper.unAuthorizedInsert(list);
-		System.out.println("=========retVal is =="+ retVal);
-		
-		if( retVal == 1) {
+		System.out.println("=========retVal is ==" + retVal);
+
+		if (retVal == 1) {
 			return "Y";
-		}else {
+		} else {
 			return "N";
 		}
-        
+
 	}
 
 

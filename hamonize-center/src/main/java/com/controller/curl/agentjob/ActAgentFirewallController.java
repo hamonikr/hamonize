@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IActAgentDeviceMapper;
@@ -30,12 +31,7 @@ import com.model.LogInOutVo;
 
 
 /**
- * 에이전트에서 정책 수행결과를 리턴하는 컨트롤러
- * 사용자 로그인/아웃
- * 방화벽 정책
- * 디바이스 정책
- * 프로그램 차단 정책
- * 복구 결과 
+ * 에이전트에서 정책 수행결과를 리턴하는 컨트롤러 사용자 로그인/아웃 방화벽 정책 디바이스 정책 프로그램 차단 정책 복구 결과
  * 
  */
 @RestController
@@ -60,7 +56,7 @@ public class ActAgentFirewallController {
 	@Autowired
 	private IActAgentLogInOutMapper actAgentLogInOutMapper;
 
-	@RequestMapping("/loginout")
+	@RequestMapping(value = "/loginout", method = RequestMethod.POST)
 	public void login(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
@@ -104,10 +100,10 @@ public class ActAgentFirewallController {
 			retVal = actAgentLogInOutMapper.updateLoginLog(inputVo);
 		}
 
-	
+
 	}
 
-	@RequestMapping("/firewallAct")
+	@RequestMapping(value = "/firewallAct", method = RequestMethod.POST)
 	public void firewallAct(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
@@ -152,11 +148,12 @@ public class ActAgentFirewallController {
 
 	/**
 	 * 디바이스 정책 배포 결과
+	 * 
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/deviceAct")
+	@RequestMapping(value = "/deviceAct", method = RequestMethod.POST)
 	public void deviceAct(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
@@ -170,8 +167,6 @@ public class ActAgentFirewallController {
 		} catch (Exception e) {
 			System.out.println("Error reading JSON string: " + e.toString());
 		}
-
-		System.out.println("json===> " + json.toString());
 
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
@@ -194,16 +189,17 @@ public class ActAgentFirewallController {
 
 		int retVal = actAgentDeviceMapper.insertActAgentDevice(inputVoList);
 		System.out.println("retVal ==== " + retVal);
-		
+
 	}
 
 	/**
 	 * insresert : 프로그램 정책 적용 (ins:적용, del:해제)
+	 * 
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/progrmAct")
+	@RequestMapping(value = "/progrmAct", method = RequestMethod.POST)
 	public void progrmAct(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
@@ -220,7 +216,7 @@ public class ActAgentFirewallController {
 
 		JSONParser Parser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) Parser.parse(json.toString());
-	
+
 		JSONArray insArray = (JSONArray) jsonObj.get("insresert");
 		ActAgentProgrmVo[] inputVo = new ActAgentProgrmVo[insArray.size()];
 
@@ -247,14 +243,15 @@ public class ActAgentFirewallController {
 
 	}
 
-	 /**
-	  * 에이전트에서 복구 실행결과 리턴
-	  * @param request
-	  * @return
-	  * @throws Exception
-	  */
-	@RequestMapping("/stBackupRecoveryJob")
-	public void stBackupRecoveryAct(HttpServletRequest request) throws Exception {		
+	/**
+	 * 에이전트에서 복구 실행결과 리턴
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/stBackupRecoveryJob", method = RequestMethod.POST)
+	public void stBackupRecoveryAct(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
@@ -294,7 +291,8 @@ public class ActAgentFirewallController {
 			/**
 			 * 복구 실행 후 기존 작업 내역 삭제
 			 */
-			ActAgentBackupRecoveryVo retVo = getAgentRecoveryMapper.getDataActAgentBackupRecovery(inputVo);
+			ActAgentBackupRecoveryVo retVo =
+					getAgentRecoveryMapper.getDataActAgentBackupRecovery(inputVo);
 
 			if ("N".equals(retVo.getResult())) {
 				try {

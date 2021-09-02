@@ -11,6 +11,8 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -40,12 +42,13 @@ public class PolicyFireWallController {
 
 	@Autowired
 	private PolicyFireWallService fService;
-	
+
 	@Autowired
 	private IPolicyFireWallMapper policyFireWallMapper;
-	
 
-	@RequestMapping("/fmanage")
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@RequestMapping(value = "/fmanage", method = RequestMethod.GET)
 	public String manage(HttpSession session, Model model) {
 
 		JSONArray jsonArray = new JSONArray();
@@ -58,7 +61,7 @@ public class PolicyFireWallController {
 			pList = fService.firewallList(vo);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 		model.addAttribute("pList", pList);
@@ -68,30 +71,31 @@ public class PolicyFireWallController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/fsave")
-	public String finsert(HttpSession session, Model model, @RequestParam Map<String, Object> params) {
+	@RequestMapping(value = "/fsave", method = RequestMethod.POST)
+	public String finsert(HttpSession session, Model model,
+			@RequestParam Map<String, Object> params) {
 
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
 		JsonArray jsonArray = (JsonArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
-	
+
 		for (int i = 0; i < jsonArray.size(); i++) {
 			resultMap = new HashMap<String, Object>();
 			String ch = jsonArray.get(i).toString().replaceAll("[^0-9]", "");
 			resultMap.put("org_seq", Integer.parseInt(ch));
 			resultSet.add(resultMap);
 		}
-	
+
 		params.put("data", resultSet);
-	
+
 		System.out.println("params..." + params);
 		int result = 0;
-	
+
 		fService.fireWallDelete(params);
 		result = fService.fireWallSave(params);
-	
+
 		if (result >= 1)
 			return "SUCCESS";
 		else
@@ -100,50 +104,50 @@ public class PolicyFireWallController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/fshow")
+	@RequestMapping(value = "/fshow", method = RequestMethod.POST)
 	public JSONObject fshow(HttpSession session, Model model, PolicyFireWallVo vo) {
 		JSONObject data = new JSONObject();
 		try {
 			vo = fService.fireWallApplcView(vo);
 			data.put("dataInfo", vo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
-	
+
 		return data;
 
 	}
 
-	@RequestMapping("fManagePop")
+	@RequestMapping(value = "fManagePop", method = RequestMethod.POST)
 	public String dManagePop() {
 		return "/policy/fireWallManagePop";
 	}
 
 	@ResponseBody
-	@RequestMapping("fManagePopList")
-	public Map<String, Object> dManagePopList(PolicyFireWallVo vo, PagingVo pagingVo, HttpSession session,
-			HttpServletRequest request) {
+	@RequestMapping(value = "fManagePopList", method = RequestMethod.POST)
+	public Map<String, Object> dManagePopList(PolicyFireWallVo vo, PagingVo pagingVo,
+			HttpSession session, HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
 
 		// 페이징
 		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.LayerPopupPaging, pagingVo);
-		
+
 		int cnt = policyFireWallMapper.fireWallPopCount(vo);
 		pagingVo.setTotalRecordSize(cnt);
 		pagingVo = PagingUtil.setPaging(pagingVo);
-		  
+
 		try {
 			List<PolicyFireWallVo> gbList = fService.fManagePopList(vo, pagingVo);
-			
+
 			jsonObject.put("list", gbList);
 			jsonObject.put("mngeVo", vo);
 			jsonObject.put("pagingVo", pagingVo);
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
@@ -151,7 +155,8 @@ public class PolicyFireWallController {
 
 	@ResponseBody
 	@RequestMapping(value = "/fManagePopSave", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopSave(HttpSession session, PolicyFireWallVo vo) throws Exception {
+	public Map<String, Object> dManagePopSave(HttpSession session, PolicyFireWallVo vo)
+			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {
@@ -161,15 +166,15 @@ public class PolicyFireWallController {
 			jsonObject.put("success", true);
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+			logger.error(sqle.getMessage(), sqle);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		} catch (DataIntegrityViolationException dive) {
-			dive.printStackTrace();
+			logger.error(dive.getMessage(), dive);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		}
@@ -178,7 +183,8 @@ public class PolicyFireWallController {
 
 	@ResponseBody
 	@RequestMapping(value = "/fManagePopDelete", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyFireWallVo vo) throws Exception {
+	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyFireWallVo vo)
+			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {
@@ -188,15 +194,15 @@ public class PolicyFireWallController {
 			jsonObject.put("success", true);
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+			logger.error(sqle.getMessage(), sqle);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		} catch (DataIntegrityViolationException dive) {
-			dive.printStackTrace();
+			logger.error(dive.getMessage(), dive);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		}

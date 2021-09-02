@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -34,24 +36,23 @@ public class SecurityControllerTMP_X {
 
 	@Autowired
 	private GroupService gService;
-	
+
 	@Autowired
 	private HmprogramService hmprogramService;
 
 	@Autowired
 	private IHmprogramMapper hmprogramMapper;
 
-	
-	
-	
-	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
 	/**
 	 * 업데이트 관리 페이지
 	 * 
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/updateManagement")
+	@RequestMapping(value = "/updateManagement", method = RequestMethod.POST)
 	public String updateManagementPage(Model model) {
 		JSONArray groupList = null;
 
@@ -59,7 +60,7 @@ public class SecurityControllerTMP_X {
 			GroupVo gvo = new GroupVo();
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
 
@@ -72,7 +73,7 @@ public class SecurityControllerTMP_X {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/programManagement")
+	@RequestMapping(value = "/programManagement", method = RequestMethod.POST)
 	public String programManagementPage(Model model) {
 		JSONArray groupList = null;
 
@@ -80,18 +81,18 @@ public class SecurityControllerTMP_X {
 			GroupVo gvo = new GroupVo();
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
 
 		return "/secrty/programManagement";
 	}
-	
-	
+
+
 	@ResponseBody
-	@RequestMapping("programManagement.proc")
-	public Map<String, Object> programManagementProc(HmprogramVo vo, PagingVo pagingVo, HttpSession session,
-			HttpServletRequest request) {
+	@RequestMapping(value = "programManagement.proc", method = RequestMethod.POST)
+	public Map<String, Object> programManagementProc(HmprogramVo vo, PagingVo pagingVo,
+			HttpSession session, HttpServletRequest request) {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
@@ -111,57 +112,53 @@ public class SecurityControllerTMP_X {
 			jsonObject.put("success", true);
 		} catch (Exception e) {
 			jsonObject.put("success", false);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return jsonObject;
 	}
 
-	
+
 	@ResponseBody
-	@RequestMapping(value="programManagementInsert.proc", method=RequestMethod.POST)
-	public Map<String, Object> programManagementInsertProc(HttpSession session, HmprogramVo hVo) throws Exception {
-		
-		System.out.println("hVo==="+ hVo);
-		System.out.println("hVo==="+ hVo.getOrgNmCheckedList()[0]);
-		System.out.println("hVo==="+ hVo.getProgrmCheckedList());
-		
+	@RequestMapping(value = "programManagementInsert.proc", method = RequestMethod.POST)
+	public Map<String, Object> programManagementInsertProc(HttpSession session, HmprogramVo hVo)
+			throws Exception {
+
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		
-		
+
 		try {
 			hmprogramService.programManagementInsert(hVo);
-			
+
 			jsonObject.put("msg", Constant.Board.SUCCESS_GROUP_BOARD);
 			jsonObject.put("success", true);
-			
+
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
+			logger.error(sqle.getMessage(), sqle);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
-		} catch (DataIntegrityViolationException dive ){
-			dive.printStackTrace();
+		} catch (DataIntegrityViolationException dive) {
+			logger.error(dive.getMessage(), dive);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
 			jsonObject.put("success", false);
 		}
-		
-		
+
+
 		return jsonObject;
 	}
 
-	
-	
+
+
 	/**
 	 * 보안관리 페이지
 	 * 
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/securityManagement")
+	@RequestMapping(value = "/securityManagement", method = RequestMethod.POST)
 	public String securityManagementPage(Model model) {
 		JSONArray groupList = null;
 
@@ -169,7 +166,7 @@ public class SecurityControllerTMP_X {
 			GroupVo gvo = new GroupVo();
 			groupList = gService.groupList(gvo);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("gList", groupList);
 

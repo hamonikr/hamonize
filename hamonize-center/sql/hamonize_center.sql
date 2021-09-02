@@ -1812,8 +1812,8 @@ INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_por
 	('CLOUDURL','','',NULL,NULL,''),
     ('APPURL','','',NULL,NULL,''),
 	('APTURL','','',NULL,NULL,''),
-	('COLLECTDIP','','10.8.0.2',NULL,NULL,''),
-	('CENTERURL','','ts.hamonikr.org',NULL,NULL,'');
+	('COLLECTDIP','','192.168.0.8086',NULL,NULL,''),
+	('CENTERURL','','192.168.0.225:8080',NULL,NULL,'');
 
 
 -- admin user --

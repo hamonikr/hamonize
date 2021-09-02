@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,20 +40,24 @@ public class UserController {
 	@Autowired
 	private UserService userSerivce;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
 	/*
 	 * 사용자관리 페이지
 	 * 
 	 * @return
+	 * 
 	 * @throws Exception
 	 */
-	@RequestMapping("/userList")
+	@RequestMapping(value = "/userList", method = RequestMethod.POST)
 	public String userList(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		model.addAttribute("oList", jsonArray);
 
@@ -59,13 +65,14 @@ public class UserController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/eachList")
-	public Map<String,Object> eachList(Model model, UserVo vo, @RequestParam Map<String, Object> params) throws Exception {
-		Map<String,Object> dataMap = new HashMap<String, Object>();
+	@RequestMapping(value = "/eachList", method = RequestMethod.POST)
+	public Map<String, Object> eachList(Model model, UserVo vo,
+			@RequestParam Map<String, Object> params) throws Exception {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
 		List<UserVo> list = new ArrayList<UserVo>();
 		vo.setOrg_seq(Integer.parseInt(params.get("org_seq").toString()));
-		
-		System.out.println("선택된 org_seq : "+vo.getOrg_seq());
+
+		System.out.println("선택된 org_seq : " + vo.getOrg_seq());
 
 		// 페이징
 		vo.setCurrentPage(vo.getListInfoCurrentPage());
@@ -80,8 +87,8 @@ public class UserController {
 
 		return dataMap;
 	}
-	
-	@RequestMapping(value = "/view/{seq}")
+
+	@RequestMapping(value = "/view/{seq}", method = RequestMethod.POST)
 	public String userView(@PathVariable("seq") int seq, UserVo vo, Model model) throws Exception {
 		OrgVo ovo = new OrgVo();
 
@@ -95,24 +102,24 @@ public class UserController {
 
 	}
 
-	@RequestMapping("/userAdd")
-	public String userAddView(Model model, OrgVo vo) {		
+	@RequestMapping(value = "/userAdd", method = RequestMethod.POST)
+	public String userAddView(Model model, OrgVo vo) {
 		List<OrgVo> list = userSerivce.getOrgList(vo);
 		model.addAttribute("olist", list);
 
 		return "/user/userAdd";
 	}
 
-	@RequestMapping("/idDuplCheck")
+	@RequestMapping(value = "/idDuplCheck", method = RequestMethod.POST)
 	@ResponseBody
-	public int idDuplCheck(Model model,UserVo vo) throws Exception{
-		int result = 0;	
+	public int idDuplCheck(Model model, UserVo vo) throws Exception {
+		int result = 0;
 		result = userSerivce.userIdCheck(vo);
 		return result;
-		
+
 	}
 
-	@RequestMapping("/userSave")
+	@RequestMapping(value = "/userSave", method = RequestMethod.POST)
 	public String save(Model model, UserVo vo) throws Exception {
 		int result = userSerivce.userSave(vo);
 
@@ -120,41 +127,42 @@ public class UserController {
 	}
 
 
-	@RequestMapping("/modify")
+	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	@ResponseBody
 	public int modify(Model model, UserVo vo) throws Exception {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		SimpleDateFormat timefomat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		System.out.println("timefomat : " + timefomat.format(timestamp));
 
-		int result=0;
-		
-		if(vo.getGubun().equals("R")){
+		int result = 0;
+
+		if (vo.getGubun().equals("R")) {
 			vo.setDischarge_dt(timefomat.format(timestamp));
 		}
-		System.out.println("vo : " +vo.toString());
-		
+		System.out.println("vo : " + vo.toString());
+
 		result = userSerivce.userModify(vo);
 		return result;
-		
+
 	}
-	
+
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
-	public int delete(Model model, @RequestParam(value = "seqs[]") List<Integer> list ) throws Exception{
-		int result =0;
-		List<UserVo> voList = new ArrayList<> ();
-	
-		for(int i=0;i<list.size();i++){
+	public int delete(Model model, @RequestParam(value = "seqs[]") List<Integer> list)
+			throws Exception {
+		int result = 0;
+		List<UserVo> voList = new ArrayList<>();
+
+		for (int i = 0; i < list.size(); i++) {
 			UserVo tmp = new UserVo();
 			tmp.setSeq(list.get(i));
 			voList.add(tmp);
 		}
 
 		result = userSerivce.userDelete(voList);
-	
+
 		return result;
-		
+
 	}
-	
+
 }

@@ -3,9 +3,7 @@
         <ul class="foot_con">
             
             <li class="pos">
-                <span><img src="/images/hlogo.png" /></span>
-                <!-- <span><img src="../images/icon_mail.png" alt="" /><a href="mailto:abcmil@mnd.go.kr">abcmil@mnd.go.kr</a></span>
-                <span><img src="../images/icon_call.png" alt="" /> 02-2000-2000</span> -->
+                <span><img alt="hlogo image" src="/images/hlogo.png" /></span>
             </li>
         </ul>
         

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mapper.IAdminMapper">
 	<!-- 센터 관리자  -->
@@ -13,56 +13,54 @@
 		ins_date
 		FROM TBL_ADMIN_USER
 		<where>
-		<if test="keyWord != null and keyWord != ''" >
-			<if test="keyWord == 1">
+			<if test="keyWord != null and keyWord != ''">
+				<if test="keyWord == 1">
 			USER_ID LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 2">
+				<if test="keyWord == 2">
 			USER_NAME LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 3">
+				<if test="keyWord == 3">
 			DEPT_NAME LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 0">
+				<if test="keyWord == 0">
 			(USER_ID LIKE '%' || #{txtSearch} || '%'
 			OR USER_NAME LIKE '%' || #{txtSearch} || '%'
 			OR DEPT_NAME LIKE '%' || #{txtSearch} || '%'
 			)
 			</if>
-		</if>
+			</if>
 		</where>
 		ORDER BY ins_date DESC
 		OFFSET #{limitStart} LIMIT #{recordSize}
 	</select>
 
-	<select id="countListInfo" parameterType="com.model.AdminVo"
-		resultType="Integer">
+	<select id="countListInfo" parameterType="com.model.AdminVo" resultType="Integer">
 		SELECT
 		count(*) as tbl_cnt
 		FROM TBL_ADMIN_USER
 		<where>
-		<if test="keyWord != null and keyWord != ''" >
-			<if test="keyWord == 1">
+			<if test="keyWord != null and keyWord != ''">
+				<if test="keyWord == 1">
 			USER_ID LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 2">
+				<if test="keyWord == 2">
 			USER_NAME LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 3">
+				<if test="keyWord == 3">
 			DEPT_NAME LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 0">
+				<if test="keyWord == 0">
 			(USER_ID LIKE '%' || #{txtSearch} || '%'
 			OR USER_NAME LIKE '%' || #{txtSearch} || '%'
 			OR DEPT_NAME LIKE '%' || #{txtSearch} || '%'
 			)
 			</if>
-		</if>
+			</if>
 		</where>
 	</select>
 
-	<select id="adminView" parameterType="com.model.AdminVo"
-		resultType="com.model.AdminVo">
+	<select id="adminView" parameterType="com.model.AdminVo" resultType="com.model.AdminVo">
 		SELECT
 		USER_ID,
 		USER_NAME,
@@ -73,13 +71,13 @@
 		FROM TBL_ADMIN_USER
 		WHERE USER_ID = #{user_id}
 	</select>
+
 	<insert id="adminSave" parameterType="com.model.AdminVo">
 		INSERT
 		INTO TBL_ADMIN_USER
-		(USER_ID , USER_NAME , PASS_WD , DEPT_NAME , GUBUN
-		, ins_date)
+		(USER_ID , USER_NAME , PASS_WD , DEPT_NAME , GUBUN ,salt , ins_date)
 		VALUES(#{user_id} , #{user_name} , #{pass_wd} ,
-		#{dept_name} , #{gubun} , now())
+		#{dept_name} , #{gubun} , #{salt}, now())
 
 	</insert>
 
@@ -90,11 +88,13 @@
 		<if test="pass_wd != null">
 			PASS_WD = #{pass_wd},
 		</if>
+		<if test="salt != null">
+			salt = #{salt},
+		</if>
 		DEPT_NAME = #{dept_name},
 		GUBUN = #{gubun},
 		UPD_DATE = now()
 		WHERE USER_ID = #{user_id}
-
 	</update>
 
 	<delete id="adminDelete" parameterType="com.model.AdminVo">
@@ -102,8 +102,7 @@
 		WHERE USER_ID = #{user_id}
 	</delete>
 
-	<select id="adminIdCheck" parameterType="com.model.AdminVo"
-		resultType="Integer">
+	<select id="adminIdCheck" parameterType="com.model.AdminVo" resultType="Integer">
 		SELECT
 		COUNT(USER_ID)
 		FROM TBL_ADMIN_USER
@@ -122,55 +121,53 @@
 		GENERAL_YN
 		FROM TBL_MANAGER
 		<where>
-		<if test="keyWord != null and keyWord != ''" >
-			<if test="keyWord == 1">
+			<if test="keyWord != null and keyWord != ''">
+				<if test="keyWord == 1">
 			USER_ID LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 2">
+				<if test="keyWord == 2">
 			USER_NAME LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 3">
+				<if test="keyWord == 3">
 			(SELECT ORG_NM FROM TBL_ORG WHERE SEQ = ARR_ORG_SEQ::int) = #{txtSearch}
 			</if>
-			<if test="keyWord == 0">
+				<if test="keyWord == 0">
 			(USER_ID LIKE '%' || #{txtSearch} || '%'
 			OR USER_NAME LIKE '%' || #{txtSearch} || '%'
 			)
 			</if>
-		</if>
+			</if>
 		</where>
 		ORDER BY insert_dt DESC
 		OFFSET #{limitStart} LIMIT #{recordSize}
 	</select>
 
-	<select id="sgbManagercountListInfo" parameterType="com.model.AdminVo"
-		resultType="Integer">
+	<select id="sgbManagercountListInfo" parameterType="com.model.AdminVo" resultType="Integer">
 		SELECT
 		count(*) as tbl_cnt
 		FROM TBL_MANAGER
 		<where>
-		<if test="keyWord != null and keyWord != ''" >
-			<if test="keyWord == 1">
+			<if test="keyWord != null and keyWord != ''">
+				<if test="keyWord == 1">
 			USER_ID LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 2">
+				<if test="keyWord == 2">
 			USER_NAME LIKE '%' || #{txtSearch} || '%'
 			</if>
-			<if test="keyWord == 3">
+				<if test="keyWord == 3">
 			 (SELECT ORG_NM FROM TBL_ORG WHERE SEQ = ARR_ORG_SEQ::int) = #{txtSearch}
 			</if>
-			<if test="keyWord == 0">
-			(USER_ID LIKE '%' || #{txtSearch} || '%'
+				<if test="keyWord == 0">
+					(USER_ID LIKE '%' || #{txtSearch} || '%'
 			OR USER_NAME LIKE '%' || #{txtSearch} || '%'
-			<!-- OR (SELECT ORG_NM FROM TBL_ORG WHERE SEQ = ARR_ORG_SEQ::int) = #{txtSearch} -->
-			)
+					<!-- OR (SELECT ORG_NM FROM TBL_ORG WHERE SEQ = ARR_ORG_SEQ::int) = #{txtSearch} -->
+					)
+				</if>
 			</if>
-		</if>
 		</where>
 	</select>
 
-	<select id="sgbManagerView" parameterType="com.model.AdminVo"
-		resultType="com.model.AdminVo">
+	<select id="sgbManagerView" parameterType="com.model.AdminVo" resultType="com.model.AdminVo">
 		SELECT
 		USER_ID,
 		USER_NAME,
@@ -198,7 +195,7 @@
 		<foreach collection="org_seq" item="item" separator=",">
 	           ((SELECT COALESCE(max(seq),0) AS seq FROM TBL_MANAGER) , #{user_id} ,#{item})
 	    </foreach>
-		
+
 
 	</insert>
 
@@ -216,7 +213,6 @@
 		UPDATE_DT = now()
 		WHERE USER_ID
 		= #{user_id}
-
 	</update>
 
 	<delete id="sgbManagerDelete" parameterType="com.model.AdminVo">
@@ -224,8 +220,7 @@
 		WHERE USER_ID = #{user_id}
 	</delete>
 
-	<select id="sgbManagerIdCheck" parameterType="com.model.AdminVo"
-		resultType="Integer">
+	<select id="sgbManagerIdCheck" parameterType="com.model.AdminVo" resultType="Integer">
 		SELECT
 		COUNT(USER_ID)
 		FROM TBL_MANAGER

@@ -137,7 +137,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					gbInnerHtml += "<td>"+value.org_nm+"</td>";
 					gbInnerHtml += "<td>"+value.prcssname+"</td>";
 					gbInnerHtml += "<td>"+value.hostname+"</td>"; 
-					gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
+					// gbInnerHtml += "<td>"+value.ipaddress+"</td>";
+					gbInnerHtml += "<td>"+value.pc_ip+"</td>"; 
 					gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 					gbInnerHtml += "</tr>";
 				
@@ -188,7 +189,8 @@ var iNetLogGetSuccess = function(data, status, xhr, groupId){
 			gbInnerHtml += "<td>"+value.org_nm+"</td>";
 			gbInnerHtml += "<td>"+value.prcssname+"</td>";
 			gbInnerHtml += "<td>"+value.hostname+"</td>"; 
-			gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
+			// gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
+			gbInnerHtml += "<td>"+value.pc_ip+"</td>"; 
 			gbInnerHtml += "<td>"+value.insert_dt+"</td>"; 
 			gbInnerHtml += "</tr>";
 		
@@ -326,7 +328,7 @@ function searchView(viewName, page){
                                 <th>부서명</th>
                                 <th>프로그램명</th>
                                 <th>PC호스트이름</th>
-                                <th>VPNIP</th>
+                                <th>IP</th>
                                 <th>차단시간</th>
                             </tr>
                         </thead>
