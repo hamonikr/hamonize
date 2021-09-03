@@ -7,7 +7,7 @@ Harmonize is an erp solution consist of several subprojects. The table below sho
 | ----------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------- |
 | [hamonize-center](https://github.com/jullee96/hamonize/blob/master/hamonize-center/COPYING)     | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-center/NOTICE.md)    |
 | [hamonize-agent](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/COPYING)       | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/NOTICE.md)     |
-| [hamonize-admin](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/COPYING)       | GPL 3              | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/NOTICE.md)     |
+| [hamonize-admin](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/COPYING)       | GNU General Public License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/NOTICE.md)     |
 | [hamonize-connect](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/COPYING) | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/NOTICE.md) |
 
 
