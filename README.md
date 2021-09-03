@@ -163,7 +163,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 | ----------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------- |
 | [hamonize-center](https://github.com/jullee96/hamonize/blob/master/hamonize-center/COPYING)     | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-center/NOTICE.md)    |
 | [hamonize-agent](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/COPYING)       | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/NOTICE.md)     |
-| [hamonize-admin](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/COPYING)       | GPL 3              | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/NOTICE.md)     |
+| [hamonize-admin](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/COPYING)       | GPL 2.0             | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/NOTICE.md)     |
 | [hamonize-connect](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/COPYING) | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/NOTICE.md) |
 
 
