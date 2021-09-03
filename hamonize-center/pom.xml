@@ -118,11 +118,6 @@
 			<version>1.0.0</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.8.11</version>
-		</dependency>
 
 		<!-- 운영 반영시 embed tomcat 주석 / ide 사용시 주석 해제 -->
 		<dependency>
