@@ -6,15 +6,6 @@
 <script type="text/javascript" src="/js/common.js"></script>
 
 
-
-
- <style> 
-/* .contentLayer {
-  max-width: 1000px;
-  margin: 0 auto;
-}  */
-</style>
-
 <body>
 
 	<%@ include file="../template/topMenu.jsp" %>
@@ -32,14 +23,6 @@
             <!-- content list -->
             <div class="con_box">
                 <!-- 검색 -->
-                <div class="top_search">
-                    <select id="" name="" title="" class="sel_type1">
-                        <option value="">전체</option>
-                        <option value="">-</option>
-                    </select>
-                    <label for=""></label><input type="text" name="" id="" class="input_type1" />
-                    <button type="button" class="btn_type3"> 검색</button>
-                </div><!-- //검색 -->
                 <div class="board_view2 mT20">
                 <form method="post" id="addForm" class="form-inline col-md-12 row" style="display:none;">
 					<input type="hidden" name="seq" id="seq" value=0> 
@@ -47,8 +30,6 @@
                         <colgroup>
                             <col style="width:7%;" />
                             <col style="width:10%;" />
-                            <!-- <col style="width:7%;" />
-                            <col style="width:13%;" /> -->
                             <col style="width:7%;" />
                             <col style="width:13%;" />
                             <col style="width:7%;" />
@@ -58,9 +39,7 @@
                         <tbody>
                             <tr>
                                 <th>서버명</th>
-                                <td><input type="text" name="svr_nm" id="svr_nm" class="input_type1"></td>
-                                <!-- <th>도메인</th>
-                                <td><input type="text" name="svr_domain" id="svr_domain" class="input_type1"></td> -->
+                                <td><input type="text" style="border:none;" name="svr_nm" id="svr_nm" class="input_type1" readonly></td>
                                 <th>IP</th>
                                 <td><input type="text" name="svr_ip" id="svr_ip" class="input_type1"></td>
                                 <th>Port</th>
@@ -100,69 +79,16 @@
                 <div class="mT20 inblock">
                     <button type="button" class="btn_type3" id="chkDel">선택삭제</button>
                 </div>
-                <div class="right mT20">
+                <%-- <div class="right mT20">
                     <button type="button" class="btn_type2 insertBtn"> 서버 등록</button>
-                </div>
+                </div> --%>
                 <!-- page number -->
                 <div class="page_num">
                 </div>
             </div><!-- //con_box -->
         </div>
     </div><!-- //content -->
-	
-	<!-- content body -->
-	<!--  <section class="contentLayer">
-	
 
-		<article>
-			<div class="code-html">
-				    
-				<hr/>
-		  				
-				<input type="button" value="서버등록" id="btnAdd" class="btn insertBtn " style="float: right;">
-		        
-				<div class="table-responsive" id="grid">
-					<input type="hidden" id="svrlstInfoCurrentPage" name="svrlstInfoCurrentPage" value="1" >
-					<table data-toggle="table" id="dataTable" width="100%" cellspacing="0" border=0 class="table table-striped table-bordered" >
-						<thead>
-						<tr class="filters">
-	                        <th width="15%">
-	                        	<input id="allCheck" type="checkbox" onclick="allChk(this);" style="display: -webkit-inline-box;"/>
-	                        	<input type="button" class="" value="삭제" id="chkDel" >
-	                        </th>
-	                        <input type="text" class="form-control"  >
-	                        <th><input type="text" class="form-control" placeholder="번호" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="서버명" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="도메인" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="IP" disabled></th>
-	                        <th><input type="text" class="form-control" placeholder="등록일" disabled></th>
-	                    </tr>
-		        		</thead>
-						<tbody id="pageGrideInSvrlstListTb">
-							<div id="addInputLayer" style="display:none; float: right;">
-							<br>
-								<form method="post">
-								서버명:<input type="text" name="svr_nm" id="svr_nm"> 
-								도메인:<input type="text" name="svr_domain" id="svr_domain"> 
-								IP:<input type="text" name="svr_ip" id="svr_ip">
-								port:<input type="text" name="svr_port" id="svr_port">
-								
-           		 				<input type="button" class="btnAdd" value="등록">
-           		 				<input type="button" class="btnCancle" value="취소">
-           		 				</form>
-							</div>
-						</tbody>
-					</table>
-				</div>
-				
-				페이징
-				<ul class="pagination" id="pagginationInSvrlstList"></ul>
-				
-				
-		    </div>
-		</article>
-	</section> -->
-	
 	
 
 	
@@ -179,7 +105,6 @@ $(document).ready (function () {
     	$("#svr_nm").val('');
     	$("#svr_domain").val('');
     	$("#svr_ip").val('');
-    	$("#svr_port").val('');
     	$('#addInputLayer').css("display", "none");   
     }); // end click    
     
@@ -206,19 +131,7 @@ $(document).ready (function () {
 			}
 		}); 
     }); // end click     
- // 관리 버튼
-	$('.insertBtn').on('click', function(){
-		var ipt = $('#insert');
-		var form = $('#addForm');
-		if(form.css('display') == 'none') {
-			form.css('display', 'block');
-			ipt.css('opacity', '1');
-		}else{
-			form.css('display', 'none');
-			ipt.css('opacity', '0');
-			fromReset();
-		}
-	});
+
     
     //선택삭제
     $('#chkDel').click(function() {
@@ -280,6 +193,11 @@ function edit(seq,servernm,ip,port){
 		$("#svr_port").val("");
 		console.log($("#seq").val())
 	}else{
+				
+		if(port == "null"){
+			port = '';
+		}
+
 		form.css('display','block');
 		$("#seq").val(seq);
 		$("#svr_nm").val(servernm);
@@ -287,14 +205,6 @@ function edit(seq,servernm,ip,port){
 		$("#svr_port").val(port);
 	}
 }
-
-//입력폼 초기화
-function fromReset(){
-	$('#svr_nm').val('');
-	$('#svr_domain').val('');
-	$('#svr_ip').val('');
-	$('#svr_port').val('');
-	}
 
 /*
  * 이전 페이지
@@ -342,14 +252,25 @@ var svrlstGetSuccess = function(data, status, xhr, groupId){
 	if( data.list.length > 0 ){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-			if(value.svr_port == null)
-			value.svr_port = "-";
+			console.log("value.svr_nm : "+value.svr_nm);
+			
+			console.log("value.svr_port : "+value.svr_port);
+			
 			gbInnerHtml += "<tr data-code='" + value.seq + "'>";
 			gbInnerHtml += "<td><input type='checkbox' name='RowCheck' value='" + value.seq + "' style=\"display: -webkit-inline-box;\"></td>";
 			gbInnerHtml += "<td><span>"+no+"</span></td>";
-			gbInnerHtml += "<td><a href='#' onclick=\"edit("+value.seq+",'"+value.svr_nm+"','"+value.svr_ip+"','"+value.svr_port+"'); return false;\" >"+value.svr_nm+"</a></td>";
+			gbInnerHtml += "<td><a style='color: steelblue;' href='#' onclick=\"edit("+value.seq+",'"+value.svr_nm+"','"+value.svr_ip+"','"+value.svr_port+"'); return false;\" >"+value.svr_nm+"</a></td>";
 			gbInnerHtml += "<td>"+value.svr_ip+"</td>";
-			gbInnerHtml += "<td>"+value.svr_port+"</td>";
+			
+			if(value.svr_port != null ){
+				if(value.svr_port !=''){
+					gbInnerHtml += "<td>"+value.svr_port+"</td>";
+				}else{
+					gbInnerHtml += "<td>"+ "-" +"</td>";
+				}
+			}else{
+				gbInnerHtml += "<td>"+ "-" +"</td>";
+			}
 			gbInnerHtml += "</tr>";
 		});	 
 	}else{ 
