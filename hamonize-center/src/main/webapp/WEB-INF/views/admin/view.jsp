@@ -10,7 +10,7 @@
 	});
 	var mailFilter = /^[_a-zA-Z0-9-\.]+@[\.a-zA-Z0-9-]+\.[a-zA-Z]+$/;
 	var phoneFilter = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-	var pwdFilter = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+	// var pwdFilter = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 	
 
 	/*  $(function() {
@@ -90,23 +90,7 @@
 			$('#pass_wd_cfm').focus();
 			return true;
 		}
-		console.log("chkpasswd==="+$('#pass_wd').val().search(pwdFilter));
-		 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
-		{
-			 console.log("chkpasswd==="+$('#pass_wd').val().search (pwdFilter));
-			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
-			$('#pwd_no').val('');
-			$('#pwd_no').focus();
-			return true;
-		} 
-		
-		 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
-		{
-			alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
-			$('#pwd_no_cfm').val('');
-			$('#pwd_no_cfm').focus();
-			return true;
-		} 
+			
 		
 		if($('#user_name').val() == '')
 		{
@@ -161,26 +145,10 @@
 	} 
 
 	function goModify(){
-		//alert($('#deptno option:selected').text());
 		var gubun = $("#gubun option:checked").val();
 		$('#gubun').val(gubun);
 		
-		/* if($('#user_id').val() != $('#old_user_id').val())
-		{
-			if($('#id_check').val() == '')
-			{
-				alert('아이디 중복 체크를 확인해 주세요.');
-				$('#idCheck').focus();
-				return true;
-			}
-		} */
 		
-		/* if($('#grade').val() == '')
-		{
-			alert('등급을 선택해 주세요.');
-			$('#grade').focus();
-			return;
-		} */
 		if($('#pass_wd').val() == '')
 		{
 			alert('비밀번호는 필수 입력 입니다. 다시 입력해주시기 바랍니다.');
@@ -201,28 +169,26 @@
 			$('#pass_wd_cfm').focus();
 			return true;
 		}
+		
 		console.log("passwd==="+$('#pass_wd').val())
-		if($('#pass_wd').val() != '')
+		
+		if($('#pass_wd').val() == '')
 		{
-			 if(String($('#pass_wd').val()).search (pwdFilter) < 0)
-			{
-				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
-				$('#pass_wd').val('');
-				$('#pass_wd').focus();
-				return true;
-			} 
+			alert('변경할 비밀번호를 입력하세요.');
+			$('#pass_wd').val('');
+			$('#pass_wd').focus();
+			return true;
+			
 		}
 		
-		if($('#pass_wd_cfm').val() != '')
+		if($('#pass_wd_cfm').val() == '')
 		{
-			 if(String($('#pass_wd_cfm').val()).search (pwdFilter) < 0)
-			{
-				alert('비밀번호는 영숫자와 특수문자(!#$%&()*+-.:;<=>?@^_{|}~)를 조합하여 8자이상으로 입력하세요.');
-				$('#pass_wd_cfm').val('');
-				$('#pass_wd_cfm').focus();
-				return true;
-			} 
+			alert('변경할 비밀번호를 확인하세요.');
+			$('#pass_wd_cfm').val('');
+			$('#pass_wd_cfm').focus();
+			return true;
 		}
+		
 		var msg = "${result.user_name}(${result.user_id})님 정보를 수정하시겠습니까?";
 	    if(!confirm(msg)){
 	    	return false;
@@ -318,7 +284,7 @@
                                 <th>* 비밀번호</th>
                                 <td>
                                     <label for="pass_wd" class="none"></label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" />
-                                    ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상
+                                    <%-- ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상 --%>
                                 </td>
                             </tr>
                             <tr>

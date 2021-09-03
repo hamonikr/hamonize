@@ -27,12 +27,13 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 
 /**
  * connector에서 센터로 데이터를 보내는 컨트롤러
@@ -78,10 +79,9 @@ public class CurlController {
 	 * @return
 	 * @throws Exception
 	 */
-	@Transactional(rollbackOn = {Exception.class})
+	@Transactional(rollbackOn = { Exception.class })
 	@PostMapping("/setPcInfo")
-	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request)
-			throws Exception {
+	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request) throws Exception {
 		LDAPConnection con = new LDAPConnection();
 
 		int retVal = 0;
@@ -110,8 +110,8 @@ public class CurlController {
 			hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
 			hdVo.setDeptname(tempObj.get("deptname").toString()); // 부서이름
 			hdVo.setSabun(tempObj.get("sabun").toString()); // 사번
-			hdVo.setPc_hostname(tempObj.get("hostname").toString()
-					.replaceAll(System.getProperty("line.separator"), ""));
+			hdVo.setPc_hostname(
+					tempObj.get("hostname").toString().replaceAll(System.getProperty("line.separator"), ""));
 			hdVo.setPc_ip(tempObj.get("ipaddr").toString());
 			hdVo.setUsername(tempObj.get("username").toString()); // 사용자 이름
 
@@ -146,10 +146,8 @@ public class CurlController {
 			int chkPc = pcMangrMapper.pchk(hdVo);
 			isAddPcInfo = true;
 
-
 			UserVo sabunChkVo = new UserVo();
 			con.addPC(hdVo, sabunChkVo);
-
 
 		} else {
 			logger.debug("존재하지 않는 부서입니다.");
@@ -176,7 +174,6 @@ public class CurlController {
 			throw e;
 		}
 
-
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
 		JSONArray inetvalArray = (JSONArray) jsonObj.get(EVENTS);
@@ -200,8 +197,6 @@ public class CurlController {
 
 		hmprogramMapper.prcssKillLog(prcssList);
 	}
-
-
 
 	@PostMapping("/pcInfoChkProc")
 	public Boolean pcInfoChkProc(@RequestBody String retData, HttpServletRequest request) {
@@ -232,7 +227,6 @@ public class CurlController {
 			logger.debug("orgNumChkVo====org seq : {}", orgNumChkVo.getSeq());
 
 			UserVo sabunChkVo = pcMangrMapper.chkUserSabun(hdVo);
-
 
 			if (orgNumChkVo.getSeq() != null) {
 				isExistOrg = true;
@@ -272,11 +266,9 @@ public class CurlController {
 			for (int i = 0; i < hmdArray.size(); i++) {
 				JSONObject tempObj = (JSONObject) hmdArray.get(i);
 
-				logger.debug("tempObj.get(\"uuid\").toString()=== {}",
-						tempObj.get("uuid").toString());
+				logger.debug("tempObj.get(\"uuid\").toString()=== {}", tempObj.get("uuid").toString());
 
-				logger.debug("tempObj.get(\"vpnipaddr\").toString()==={}",
-						tempObj.get("vpnipaddr").toString());
+				logger.debug("tempObj.get(\"vpnipaddr\").toString()==={}", tempObj.get("vpnipaddr").toString());
 
 				hdVo.setPc_uuid(tempObj.get("uuid").toString());
 				hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
@@ -285,7 +277,6 @@ public class CurlController {
 			}
 
 			retVal = pcMangrMapper.updateVpnInfo(hdVo);
-
 
 		} catch (Exception e) {
 
@@ -304,7 +295,6 @@ public class CurlController {
 		return isAddPcInfo;
 	}
 
-
 	/*
 	 * 커넥터에서 기본 정보 셋팅 : vpn 연결후 센터 url을 통해 서버정보 get
 	 * 
@@ -314,7 +304,7 @@ public class CurlController {
 	 * 
 	 * @throws Exception
 	 */
-	@PostMapping("/commInfoData")
+	@GetMapping("/commInfoData")
 	public String getAgentJob(HttpServletRequest request) throws Exception {
 
 		String output = "";
@@ -322,29 +312,7 @@ public class CurlController {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray itemList = new JSONArray();
 
-
-		StringBuffer json = new StringBuffer();
-		String line = null;
-
-		try {
-			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
-				json.append(line);
-			}
-
-		} catch (Exception e) {
-			logger.error("Error reading JSON string: {}", e.toString(), e);
-		}
-
-
-		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
-		JSONArray inetvalArray = (JSONArray) jsonObj.get(EVENTS);
-		JSONObject object = (JSONObject) inetvalArray.get(0);
-
-		logger.debug("====> {}", object.get("uuid").toString());
 		List<SvrlstVo> svrlstVo = svrlstMapper.getSvrlstDataList();
-
 
 		for (SvrlstVo svrlstData : svrlstVo) {
 			logger.debug("svrlstData===> {}", svrlstData.getSvr_port());
@@ -362,7 +330,6 @@ public class CurlController {
 				tmpObject.put("pcip", svrlstData.getSvr_ip() + ":" + svrlstData.getSvr_port());
 			}
 
-
 			itemList.add(tmpObject);
 		}
 		jsonObject.put("pcdata", itemList);
@@ -376,11 +343,9 @@ public class CurlController {
 		return output;
 	}
 
-
-
 	@PostMapping("/getPackageInfo")
-	public Boolean getPackageInfo(@RequestBody String retData,
-			@RequestParam Map<String, Object> params, HttpServletRequest request) {
+	public Boolean getPackageInfo(@RequestBody String retData, @RequestParam Map<String, Object> params,
+			HttpServletRequest request) {
 
 		try {
 
@@ -408,7 +373,6 @@ public class CurlController {
 			insertDataMap.put("list", inputVo);
 
 			int insertRetVal = packageInfoMapper.insertPackageInfo(insertDataMap);
-
 
 		} catch (Exception e) {
 			logger.error("Error reading JSON string: {}", e.toString(), e);
@@ -484,12 +448,10 @@ public class CurlController {
 			logger.debug("vpn ip 변경사항없음...");
 		}
 
-
 		return "retval:" + retVal;
 	}
 
-
-	@PostMapping(value = "/getOrgData")
+	@GetMapping(value = "/getOrgData")
 	public String getOrgData(HttpServletRequest request) throws Exception {
 
 		logger.debug("baseInfo===={}", request.getParameter("aseInfo"));
@@ -511,7 +473,6 @@ public class CurlController {
 		return jsonArr.toString();
 	}
 
-
 	public int pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
@@ -521,5 +482,3 @@ public class CurlController {
 	}
 
 }
-
-

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mapper.ISvrlstMapper">
-	
+
 	<delete id="svrlstDelete" parameterType="com.model.SvrlstVo">
 		delete from tbl_svrlst 
 		where seq in (${chkdel})
 		
 	</delete>
-	
+
 	<select id="getSvrlstDataList" resultType="com.model.SvrlstVo" parameterType="com.model.SvrlstVo">
 		SELECT 
 			seq, 
@@ -25,8 +25,8 @@
 			insert_dt 
 		FROM tbl_svrlst
 	</select>
-	
-	
+
+
 	<select id="getSvrlstList" resultType="com.model.SvrlstVo" parameterType="hashmap">
 		SELECT 
 			seq, 
@@ -34,20 +34,21 @@
 			svr_domain, 
 			svr_ip, 
 			svr_dc, 
+			svr_port ,
 			insert_dt 
 		FROM tbl_svrlst
-		order by insert_dt desc
+		order by seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
-	
-	
+
+
 	<select id="countSvrlstListInfo" parameterType="com.model.SvrlstVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
 		FROM tbl_svrlst
 	</select>
-	
-	
+
+
 	<insert id="svrlstInsert" parameterType="com.model.SvrlstVo">
 		with upsert as 
 		(
@@ -72,6 +73,6 @@
 		where not exists(select * from upsert);
 
 	</insert>
-	
+
 
 </mapper>
