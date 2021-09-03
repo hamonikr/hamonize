@@ -159,12 +159,14 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 하모나이즈는 여러 하위 프로젝트로 구성된 솔루션입니다. 아래 표는 각 하위 프로젝트에 대한 라이선스를 보여줍니다. 
 프로젝트별로 사용된 컴포넌트나 라이브러리들 대한 라이선스 공지를 보고 싶다면 각각의 디렉토리에서 NOTICE.md 파일에서 확인할 수 있습니다.
 
-| project                                                                                           | Licenses           |
-| ------------------------------------------------------------------------------------------------- | ------------------ |
-| [hamonize-center](https://github.com/hamonikr/hamonize/blob/master/hamonize-center/COPYING)       | Apache License 2.0 |
-| [hamonize-agent](https://github.com/hamonikr/hamonize/blob/master/hamonize-agent/COPYING)         | Apache License 2.0 |
-| [hamonize-admin](https://github.com/hamonikr/hamonize/blob/master/hamonize-admin/COPYING)         | GPL 2.0            |
-| [hamonize-connector](https://github.com/hamonikr/hamonize/blob/master/hamonize-connector/COPYING) | Apache License 2.0 |
+| project                                                                                         | License            | Dependencies License List                                                               |
+| ----------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------- |
+| [hamonize-center](https://github.com/jullee96/hamonize/blob/master/hamonize-center/COPYING)     | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-center/NOTICE.md)    |
+| [hamonize-agent](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/COPYING)       | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/NOTICE.md)     |
+| [hamonize-admin](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/COPYING)       | GPL 3              | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/NOTICE.md)     |
+| [hamonize-connect](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/COPYING) | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/NOTICE.md) |
+
+
 
 <br>
 
@@ -172,6 +174,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 이 프로젝트는 아래의 거버넌스 정책에 따라서 관리되고 있습니다.
 
 * [Governance](https://github.com/hamonikr/hamonize/wiki/Governance)
+
 
 
 
