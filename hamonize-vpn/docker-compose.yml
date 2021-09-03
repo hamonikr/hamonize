@@ -8,7 +8,7 @@ networks:
 
 services:
   hmon_vpn_vpn:
-    image: hamonikr/hamonize-vpn:0.1
+    image: hamonikr/hamonize-vpn:0.2
     container_name: hmon_vpn_vpn
     cap_add:
      - NET_ADMIN
