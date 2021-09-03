@@ -172,15 +172,25 @@ vpn 서버 구축 하기는 [여기](https://github.com/hamonikr/hamonize/tree/m
 
 ## **3 단계 : 실행하기**<br>
 - grafana : http://localhost:3000 <br> * default id/pw : admin / admin
-  <br> grafana dashboard 설정파일을 제공하고있습니다. 각 파일들을 import 해주세요 - hamonize-main.json, hamonize-monitoring.json <br> <br>
+  <br>1) grafana dashboard 설정파일을 제공하고있습니다. 각 파일들을 import 해주세요 - hamonize-main.json, hamonize-monitoring.json <br> <br>
      <img width="250" src="../img/Grafana1.png"> &nbsp;&nbsp;&nbsp;  <img width="250" src="../img/Grafana2.png"> &nbsp;&nbsp;&nbsp;  <img width="250" src="../img/Grafana3.png">
-
+    <br><br> 2) :gear: > Configuration > datasources 에서 `Add data source` 를 클릭해 
+    - InfluxDB  <br> <img width="300" src="../img/influx.png"> &nbsp;&nbsp;&nbsp;  <img width="400" src="../img/influx2.png"> <br><br>
+    - PostgreSQL <br><br> <img width="400" src="../img/influx3.png"> 
+    
+    <br> 를 추가해주세요. 서비스가 실행된 자신의 {your-own-ip}와 docker-compose.yml 파일에서 설정한 대로 입력해주세요
+    <br><br> 3) default datasources는 influxdb로 설정해주세요
+  
 <br>
 
 - 하모나이즈 센터 : http://localhost:8080 <br> \* **default id/pw : admin / admin** <br><br> <img width="300" src="../img/center_main.png">
   <br>
   <br>
+    - 도커로 생성한 서버들을 센터 및 클라이언트 pc에서 사용할 수 있도록 설정을 해주세요 <br> <br> <img width="250" src="../img/srvlst.png"> 
+    - vpn을 서버를 생성한 경우 vpn 서버의 ip를 입력해주세요. vpn을 사용하지 않는 경우 이 과정은 생략하시면 됩니다. <br> <br><img width="500" src="../img/srvlst2.png">
+  <br>
 
+  
 <br>
 <br>
 
