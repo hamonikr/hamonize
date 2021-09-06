@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+
 import com.GlobalPropertySource;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IHmprogramMapper;
@@ -21,6 +23,7 @@ import com.model.SvrlstVo;
 import com.model.UserVo;
 import com.service.UserService;
 import com.util.LDAPConnection;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -31,8 +34,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -80,6 +83,7 @@ public class CurlController {
 	 * @throws Exception
 	 */
 	@Transactional(rollbackOn = { Exception.class })
+	@ResponseBody
 	@PostMapping("/setPcInfo")
 	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request) throws Exception {
 		LDAPConnection con = new LDAPConnection();

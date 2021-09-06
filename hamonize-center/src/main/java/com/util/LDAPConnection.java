@@ -23,7 +23,6 @@ import com.model.UserVo;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-
 public class LDAPConnection {
 	private DirContext dc = null;
 
@@ -73,7 +72,6 @@ public class LDAPConnection {
 		Attribute attribute = new BasicAttribute("objectClass");
 		String baseDn = "dc=hamonize,dc=com";
 		String upperDn = "";
-
 
 		String str = vo.getAll_org_nm();
 		String[] p_array = str.split("\\|");
@@ -266,14 +264,12 @@ public class LDAPConnection {
 
 	}
 
-
 	public void deleteUser(OrgVo ovo, UserVo uvo) throws NamingException {
 		System.out.println("cn : " + uvo.getUser_name());
 		System.out.println("All_org_nm : " + ovo.getAll_org_nm());
 
 		String baseDn = ",dc=hamonize,dc=com";
 		String upperDn = "";
-
 
 		String str = ovo.getAll_org_nm();
 		logger.debug("str : " + str.trim());
@@ -288,7 +284,6 @@ public class LDAPConnection {
 		baseDn = upperDn + baseDn;
 		String dn = "uid=" + uvo.getUser_name() + ",ou=users" + baseDn;
 		System.out.println("dn : " + dn);
-
 
 		try {
 			dc.destroySubcontext(dn);
@@ -375,7 +370,6 @@ public class LDAPConnection {
 			oldDn = "uid=" + oldVo.getUser_name() + ",ou=users" + oDn + ",dc=hamonize,dc=com";
 		}
 
-
 		try {
 
 			dc.modifyAttributes(oldDn, mods);
@@ -384,7 +378,6 @@ public class LDAPConnection {
 		} catch (NamingException e) {
 			logger.error(e.getMessage(), e);
 		}
-
 
 	}
 
@@ -415,7 +408,6 @@ public class LDAPConnection {
 		oldDn = "cn=" + oldVo.getPc_hostname() + ",ou=computers" + upperDn + ",dc=hamonize,dc=com";
 		newDn = "cn=" + newVo.getPc_hostname() + ",ou=computers" + upperDn + ",dc=hamonize,dc=com";
 
-
 		try {
 
 			dc.modifyAttributes(oldDn, mods);
@@ -424,7 +416,6 @@ public class LDAPConnection {
 		} catch (NamingException e) {
 			logger.error(e.getMessage(), e);
 		}
-
 
 	}
 
@@ -459,8 +450,6 @@ public class LDAPConnection {
 			logger.error(e.getMessage(), e);
 		}
 
-
 	}
 
 }
-

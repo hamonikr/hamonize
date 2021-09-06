@@ -97,7 +97,7 @@ docker-compose.yml 파일은 docker로 was, db, ldap, influxdb 서버등을 도�
 
     <br>
       
-    config.propertis 파일은 센터에서 각서버의 연결정보를 가져오는 설정파일입니다. 기본적으로 home/{user}/ 디렉토리에 위치하고있습니다. <br> <br>
+    config.propertis 파일은 센터에서 각서버의 연결정보를 가져오는 설정파일입니다. env/config.propertis폴더 그대로 자신의 home/{user}/ 디렉토리 위치에 옮겨 주세요. <br> <br>
 
 - env/config.propertis 설정 <br>
   ① **docker-compose** 에서 설정한 **db password**를 입력해주세요 <br>
