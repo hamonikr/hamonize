@@ -256,6 +256,8 @@ function fnSave(){
 			         <!-- update list -->
 			         <ul class="promlist">
          				<c:forEach items="${pList}" var="data" varStatus="status" >
+         				
+         				<c:if test="${data.pu_name ne 'hamonize' and  data.pu_name ne 'hamonize-agent'}">
 			             <li>
 			                 <span>
 			                 	<input type="checkbox" name="pu_seq" id="${data.pu_seq}" class="check2" value="<c:out value="${data.pu_seq}" />"><label for="${data.pu_seq}"></label><c:out value="${data.pu_name}" />
@@ -268,6 +270,7 @@ function fnSave(){
 											<p>신규 프로그램</p>
 											</c:if>
 			             </li>
+			             </c:if>
            			</c:forEach>
 			         </ul>
 			         <!-- //update list -->

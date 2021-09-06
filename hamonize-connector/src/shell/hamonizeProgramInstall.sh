@@ -23,7 +23,7 @@ sudo systemctl stop hamonize-agent.service
 
 # collect]
 echo "$DATETIME ] 2-1. collectd install ================= [start]" >> $LOGFILE
-sudo apt-get install collectd >> $LOGFILE
+sudo apt-get install collectd -y >> $LOGFILE
 echo "$DATETIME ] collectd install === [end]" >> $LOGFILE
 echo "$DATETIME ] `sudo service collectd status`" >> $LOGFILE
 # echo "$DATETIME ] collectd  install status `dpkg -l collectd`" >> $LOGFILE

@@ -1,9 +1,5 @@
 const electron = require('electron');
 const {
-	Tray,
-	Menu
-} = require('electron');
-const {
 	shell
 } = require('electron');
 const {
@@ -16,15 +12,12 @@ const {
 } = require('electron')
 const timestamp = require('time-stamp');
 const path = require('path');
-const watch = require('node-watch');
 const lineReader = require('line-reader');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
 const request = require('request');
 const open = require('open');
 const unirest = require('unirest');
-const CHILD_PADDING = 100;
-// const log = require('./logger');
 
 const si = require('systeminformation');
 const osModule = require("os");
@@ -33,16 +26,16 @@ const options = {
 	name: 'Hamonikr'
 };
 
-
+// require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
-const baseurl = "<Hamonize Center Url>";
-
-
+// const baseurl = "<Hamonize Center Url>";
+const baseurl = "http://192.168.0.225:8080";
 const osType = require('os');
-const dirPath = osType.homedir() + '/.config/support/feedback';
 
 let mainWindow, settingWindow;
+
+
 
 function createWindow() {
 
@@ -91,66 +84,9 @@ function createWindow() {
 
 }
 
-
-
-const toggleWindow = () => {
-	mainWindow.isVisible() ? mainWindow.hide() : showWindow();
-}
-const showWindow = () => {
-	const position = getWindowPosition();
-	mainWindow.setPosition(position.x, position.y, false);
-	mainWindow.show();
-}
-const getWindowPosition = () => {
-	const windowBounds = mainWindow.getBounds();
-	const trayBounds = trayIcon.getBounds();
-
-	// Center window horizontally below the tray icon
-	const x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2))
-	// Position window 4 pixels vertically below the tray icon
-	const y = Math.round(trayBounds.y + trayBounds.height + 4)
-	return {
-		x: x,
-		y: y
-	}
-}
-const createTray = () => {
-	trayIcon = new Tray(__dirname + '/icons/icon16.png');
-	//tray.setTitle('hello world');
-	const trayMenuTemplate = [{
-			label: 'Hamonikr-finder',
-			//enabled: false
-			click: function () {
-				toggleWindow();
-			}
-		},
-		{
-			label: 'Settings',
-			click: function () {
-				settingWindow.show();
-			}
-		},
-		{
-			label: 'Help',
-			click: function () {}
-		},
-		{
-			label: 'Quit',
-			click: () => {
-				app.quit();
-			}
-		}
-	]
-
-	let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
-	trayIcon.setContextMenu(trayMenu)
-}
-let trayIcon = null;
-
 app.on('ready', () => {
-	// createTray();
-	// setTimeout(createWindow, 500);
-	createWindow();
+	setTimeout(createWindow, 500);
+	// createWindow();
 
 
 });
@@ -180,7 +116,6 @@ ipcMain.on('shutdown', (event, path) => {
 });
 
 
-
 //========================================================================
 //== STEP 1. install_program_version_chkeck  =============================
 //========================================================================
@@ -188,68 +123,66 @@ ipcMain.on('shutdown', (event, path) => {
 ipcMain.on('install_program_version_chkeck', (event) => {
 	console.log(`STEP 1. install_program_version_chkeck`);
 	install_program_version_chkeckAsync(event);
-	getOrgData(event);
 
-	// 	const process = require('process'); 
-	// 	// Check whether the method exists or not 
-	// 	if (process.getuid) { 
-	// 	console.log("The numerical user identity "
-	// 				+ "of the Node.js process: "
-	// 				+ process.getuid()); 
-	// 	} 
-	// 	var isRoot = (process.getuid && process.getuid() === 0)
-	// 	console.log("isRoot======111======="+isRoot);
+	// var isRoot = (process.getuid && process.getuid() === 0)
+	// console.log("isRoot======111=======" + isRoot);
 
-	// 	// if (!isRoot) {
-	// 	// }
-	// 	var env = process.env;
-	//    	var home = env.HOME;
-	//    	var user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME;
-	// 	if (process.platform === 'linux') {
-	// 		home || (process.getuid() === 0 ? '/root' : (user ? '/home/' + user : null));
-	// 	}
+	// // if (!isRoot) {
+	// // }
+	// var env = process.env;
+	// var home = env.HOME;
+	// var user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME;
+	// if (process.platform === 'linux') {
+	// 	home || (process.getuid() === 0 ? '/root' : (user ? '/home/' + user : null));
+	// }
 
-	// 	console.log("home==" + home);
+	// console.log("home==" + home);
 
 });
 
 
 const install_program_version_chkeckAsync = async (event) => {
 	try {
+
 		// #step 1. 기본 폴더 및 파일 생성 및 기본 프로그램 설치
 		let initJobResult = await initHamonizeJob();
-		console.log("111111111111initJobResult============" + initJobResult);
-
-
-		await vpnCreate();
-		let vpnCreateResultVal = await vpnCreateChk();
-		console.log("222222222vpnCreateResultVal========================++" + vpnCreateResultVal);
-
-		if (vpnCreateResultVal != 'Y') {
-			// fail vpn create 
-			event.sender.send('install_program_ReadyProcResult', 'N002');
-		}
-
+		console.log("STEP 1. install_program_version_chkeck Result :: " + initJobResult);
 
 		if (initJobResult == 'Y') {
 
+			let setServerInfoResult = await setServerInfo();
+			console.log("setServerInfoResult============" + setServerInfoResult);
 
-			//apt repository chk....update.skir.kr 허용 여부 체크
-			let mkfolderResult = await aptRepositoryChkProc();
-			console.log("aptRepositoryChkProc==" + mkfolderResult);
+			// pcInfoUpdate(); // vpn 연결후 pc 정보 업데이트
+
+			if (setServerInfoResult == 'Y') {
+				console.log("########### install  program version check ###################");
+				// event.sender.send('install_program_ReadyProcResult', 'Y');
+
+				// apt repository chk & add ....
+				let aptRepositoryChkResult = await aptRepositoryChkProc();
+				console.log("aptRepositoryChkResult=============================>" + aptRepositoryChkResult);
 
 
+				// #step 2. 설치 프로그램 버전 체크
+				let installProgramVersionResult = await install_program_version_chkeckProc();
+				console.log("설치 프로그램 버전 체크 Result===============>>>>>>>>>>>>>>>>>" + installProgramVersionResult);
 
-			// #step 2. 설치 프로그램 버전 체크
-			let installProgramVersionResult = await install_program_version_chkeckProc();
-			console.log("333333333333333333install_program_version_chkeckProc===============" + installProgramVersionResult);
+				if (installProgramVersionResult > 0) { // 설치 프로그램 업데이트 필요..
+					event.sender.send('install_program_version_chkeckResult', 'U999');
 
-			if (installProgramVersionResult > 0) { // 설치 프로그램 업데이트 필요..
-				event.sender.send('install_program_version_chkeckResult', 'U999');
+				} else { // 설치 프로그램 최신버전
+					event.sender.send('install_program_version_chkeckResult', 'Y');
+				}
 
-			} else { // 설치 프로그램 최신버전
-				event.sender.send('install_program_version_chkeckResult', 'Y');
+
+			} else {
+				// fail get Agent Server Info 
+				event.sender.send('install_program_ReadyProcResult', 'N004');
+				// event.sender.send('install_program_ReadyProcResult', 'N003');
 			}
+
+
 
 		} else {
 			// fail make folder 
@@ -279,7 +212,17 @@ const install_program_ReadyAsync = async (event) => {
 	try {
 
 		// #step . vpn create & conn
-		// await vpnCreate();
+		await vpnCreate();
+
+		// let vpnCreateResultVal = await vpnCreateChk();
+		// console.log("222222222vpnCreateResultVal========================++" + vpnCreateResultVal);
+
+		// if (vpnCreateResultVal != 'Y') {
+		// 	// fail vpn create 
+		// 	event.sender.send('install_program_ReadyProcResult', 'N002');
+		// }
+
+
 		let vpnCreateResult = await vpnCreateChk();
 		console.log("vpnCreateResult========================++" + vpnCreateResult);
 
@@ -287,20 +230,19 @@ const install_program_ReadyAsync = async (event) => {
 
 			console.log("###########get Agent Info ###################");
 
-			// #step . 에이전트에서 사용하는 정보 셋팅
-			// let getAgentPcInfoResult = 'Y'; //await getAgentPcInfo();
-			let getAgentPcInfoResult = await getAgentPcInfo();
-			console.log("getAgentPcInfo============" + getAgentPcInfoResult);
+			// #step . 에이전트에서 사용하는 정보 셋팅aaa
+			// let getAgentPcInfoResult = await getAgentPcInfo();
+			// console.log("getAgentPcInfo============" + getAgentPcInfoResult);
 
 			pcInfoUpdate(); // vpn 연결후 pc 정보 업데이트
 
-			if (getAgentPcInfoResult == 'Y') {
-				console.log("########### install  program version check ###################");
-				event.sender.send('install_program_ReadyProcResult', 'Y');
-			} else {
-				// fail get Agent Server Info 
-				event.sender.send('install_program_ReadyProcResult', 'N003');
-			}
+			// if (getAgentPcInfoResult == 'Y') {
+			// 	console.log("########### install  program version check ###################");
+			event.sender.send('install_program_ReadyProcResult', 'Y');
+			// } else {
+			// 	// fail get Agent Server Info 
+			// 	event.sender.send('install_program_ReadyProcResult', 'N003');
+			// }
 
 		} else {
 			// fail vpn create 
@@ -338,7 +280,7 @@ const hamonizeProgramInstallAsync = async (event) => {
 function hamonizeProgramInstallProc() {
 	return new Promise(function (resolve, reject) {
 
-		console.log("====__dirname===" + __dirname);
+		console.log("====hamonizeProgramInstallProc==");
 		var aptRepositoryChkJobShell = "sh " + __dirname + "/shell/hamonizeProgramInstall.sh";
 
 		sudo.exec(aptRepositoryChkJobShell, options,
@@ -407,11 +349,11 @@ function hamonizeSystemBackupAsyncProc() {
 
 
 //== get Agent Server Info   ===========================================
-function getAgentPcInfo() {
+function setServerInfo() {
 	return new Promise(function (resolve, reject) {
 
-		console.log("====__dirname===" + __dirname);
-		var getAgentInfo = "sh " + __dirname + "/shell/getAgentPcInfo.sh";
+		console.log("====get Agent Server Info");
+		var getAgentInfo = "sh " + __dirname + "/shell/setServerInfo.sh";
 
 		sudo.exec(getAgentInfo, options,
 			function (error, stdout, stderr) {
@@ -419,8 +361,8 @@ function getAgentPcInfo() {
 					console.log("error is " + error);
 					return resolve("N");
 				} else {
-					console.log('sgetAgentPcInfo   tdout: ' + stdout);
-					console.log('getAgentPcInfo   stderr: ' + stderr);
+					console.log('setServerInfo   tdout: ' + stdout);
+					console.log('setServerInfo   stderr: ' + stderr);
 
 					if (stdout.indexOf('skir')) {
 						resolve('Y');
@@ -466,8 +408,7 @@ function install_program_version_chkeckProc() {
 		sudo.exec(versionChk, options,
 			function (error, stdout, stderr) {
 				if (error) {
-					console.log("error is " + error);
-					return resolve("N");
+					return reject("N");
 				} else {
 					console.log('install_program_version_chkeckProc---stdout: ' + stdout);
 					console.log('install_program_version_chkeckProc---stderr: ' + stderr);
@@ -483,7 +424,7 @@ function install_program_version_chkeckProc() {
 //== vpn create  Shell Job  ===========================================
 function vpnCreate() {
 	return new Promise(function (resolve, reject) {
-		var initJobShell = "sh " + __dirname + "/shell/vpnInstall.sh";
+		var initJobShell = "/bin/bash " + __dirname + "/shell/vpnInstall.sh";
 		sudo.exec(initJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
@@ -708,7 +649,7 @@ const sysInfo = async (event, groupname, sabun, username) => {
 	});
 
 	let vpnipaddr = '';
-	let vpnInfoData = vpnchk();
+	let vpnInfoData = ''; // vpnchk();
 
 	if (vpnInfoData.length == 0) {
 		vpnipaddr = 'no vpn';
@@ -724,14 +665,28 @@ const sysInfo = async (event, groupname, sabun, username) => {
 	let fileDir = "/etc/hamonize/hwinfo/hwinfo.hm";
 	fs.writeFile(fileDir, hwData, (err) => {
 		if (err) {
-			// log.info("//== sysInfo hw check() error  "+ err.message)
+			// log.info("//== sysInfo hw check create file error  "+ err.message)
 		}
 	});
 
-	var unirest = require('unirest');
+
+	console.log("machindid == " + machindid);
+	console.log("cpuinfo == " + cpuinfo);
+	console.log("diskSerialNum == " + diskSerialNum);
+	console.log("diskInfo == " + diskInfo);
+	console.log("macs == " + macs[0]);
+	console.log("ipinfo.address() == " + ipinfo.address());
+	console.log("vpnipaddr == " + vpnipaddr);
+	console.log("pcHostname == " + pcHostname);
+	console.log("osinfo == " + osinfo);
+	console.log("raminfo == " + raminfo);
+	console.log("groupname == " + groupname);
+	console.log("username == " + username);
+
 
 	console.log("등록 버튼 클릭시 center url >> " + baseurl + '/hmsvc/setPcInfo');
 	unirest.post(baseurl + '/hmsvc/setPcInfo')
+		// unirest.post(baseurl + '/hmsvc/setPcInfo')
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
@@ -778,9 +733,6 @@ function pcInfoUpdate() {
 
 	// const getHostname = execShellCommand('hostname');
 
-
-	var unirest = require('unirest');
-	// unirest.post(baseurl+'/hmsvr/setVpnUpdate')
 
 	unirest.post(baseurl + '/hmsvr/setVpnUpdate')
 		// unirest.post('http://192.168.0.210:8080/hmsvr/setVpnUpdate')
@@ -878,12 +830,8 @@ function aptRepositoryChkProc() {
 
 
 // 조직정보 
-
-
-const getOrgData = async (event) => {
-	var unirest = require('unirest');
-	console.log("조직정보======================");
-	unirest.post(baseurl + '/hmsvc/getOrgData')
+ipcMain.on('getOrgData', (event) => {
+	unirest.get(baseurl + '/hmsvc/getOrgData')
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
@@ -891,7 +839,7 @@ const getOrgData = async (event) => {
 			}]
 		})
 		.end(function (response) {
-			console.log("조직정보===1===getOrgData.body===" + JSON.stringify(response.body));
+			// console.log("조직정보===1===return data===" + JSON.stringify(response.body));
 			event.sender.send('getOrgDataResult', response.body);
 		});
-}
+});
