@@ -22,7 +22,7 @@ function myFunc(arg) {
 
 	sysInfo();
 
-	loginInfoAction();
+	// loginInfoAction();
 
 	var backupData = backupFileData();
 	log.info("myFuncBackupData---_" + backupData);
@@ -79,7 +79,6 @@ poller.onPoll(() => {
 	poller.poll(); // Go for the next poll
 
 });
-
 
 // Initial start
 poller.poll();
@@ -662,6 +661,9 @@ function getProgrmDataCall(uuid) {
 	//	progrm 정책 정보 조회
 	var setUrl = "http://" + centerUrl + "/getAgent/progrm?name=" + uuid;
 	log.info("progrm 정책 정보 조회" + setUrl);
+	var os = require("os");
+	var hostname = os.hostname();
+	var datetime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
 	http.get(setUrl, (res) => {
 		res.on('data', (data) => {
@@ -669,11 +671,21 @@ function getProgrmDataCall(uuid) {
 			if (data != 'nodata') {
 				var fileDir = "/etc/hamonize/progrm/progrm.hm";
 				let content = '';
-
+				
 				if (data == 'DATAINIT') {
-					content = '';
-				} else {
+					var DataObj = '';
+				} 
+				else {
 					content = data;
+					var DataObj = JSON.stringify(JSON.parse(data).INS);
+				}
+				var text = fs.readFileSync(fileDir, 'utf8');
+				var arr = text.replace('{"INS":', '').replace('}','').replace('"','').replace('"','').split(',');
+				var delarr = [];
+				for (i in arr){
+					if (!DataObj.includes(arr[i])){
+						delarr.push(arr[i]);
+					}
 				}
 
 				fs.writeFile(fileDir, content, (err) => {
@@ -684,6 +696,26 @@ function getProgrmDataCall(uuid) {
 						fnProgrmJob(content);
 					}
 				});
+
+				var sendarr = [];
+				for (i in delarr){
+					sendarr.push({progrmname: delarr[i], status_yn: "N", status: "del", datetime: datetime, hostname: hostname, uuid: uuid,});
+				}
+
+				var send_data = JSON.stringify(sendarr);
+				if (typeof send_data !== 'undefined' && send_data.length > 0){
+					var send_parsed = JSON.parse(send_data);
+
+					var unirest = require('unirest');
+					unirest.post('http://' + centerUrl + '/act/progrmAct')
+						.header({'User-Agent': 'HamoniKR OS', 'content-type': 'application/json'})
+						.send({
+							insresert: send_parsed
+						})
+						.end(function (response) {
+							console.log("response.body==="+JSON.stringify(response));
+						});
+				}
 			} else {
 				log.info("//== progrm 정책 didn't working");
 			}
@@ -695,11 +727,12 @@ function getProgrmDataCall(uuid) {
 
 function fnProgrmJob(retData) {
 
-	var progrmDataObj = JSON.parse(retData);
-	log.info("//==progrm 정책:: progrmDataObj Data is : " + JSON.stringify(progrmDataObj));
-	log.info("//==progrm 정책:: progrmDataObj.INS Data is : " + JSON.stringify(progrmDataObj.INS));
-	log.info("//==progrm 정책:: progrmDataObj.DEL Data is : " + JSON.stringify(progrmDataObj.DEL));
-
+	if (retData != ''){
+		var progrmDataObj = JSON.parse(retData);
+		log.info("//==progrm 정책:: progrmDataObj Data is : " + JSON.stringify(progrmDataObj));
+		log.info("//==progrm 정책:: progrmDataObj.INS Data is : " + JSON.stringify(progrmDataObj.INS));
+		log.info("//==progrm 정책:: progrmDataObj.DEL Data is : " + JSON.stringify(progrmDataObj.DEL));
+	}
 	var exec = require('child_process').exec;
 	// exec('sudo sh /usr/share/hamonize-agent/shell/progrmjob.sh  ', function (err, stdout, stderr) {
 	exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
@@ -711,9 +744,6 @@ function fnProgrmJob(retData) {
 
 
 }
-
-
-
 
 
 //========================================================================
@@ -742,7 +772,6 @@ function getBackupDataCall(uuid) {
 		log.info(e);
 	});
 }
-// fnBackupJob('a');
 function fnBackupJob(retData) {
 
 	//	 데이터 sample
@@ -795,16 +824,11 @@ function fnBackupJob(retData) {
 	// //	일별
 	if (backup_gubun == 'E') {
 		schedule.cancelJob('cronbackup');
-		// const scheduler = schedule.scheduleJob('cronbackup', '01 '+minutes+' '+hours+' * * *', function(){ 
-		// 	console.log("일별 백업 스케쥴");
-		// });
-		// const scheduler = schedule.scheduleJob('cronbackup', '01 ' + minutes + ' * * * *', function () {
 		const scheduler = schedule.scheduleJob('cronbackup', '01 ' + minutes + ' ' + hours + ' * * *', function () {
 			log.info('//==Backup 정책(일별) ::===backup cycle all day : ' + hours + "/" + minutes + "==" + backup_cycle);
 			var exec = require('child_process').exec;
 
 			exec(' sudo sh /usr/share/hamonize-agent/shell/backupJob.sh  ', function (err, stdout, stderr) {
-				// exec(' sudo sh /home/ryan/works_job/2021/rnd/rnd_gs/agent/src/shell/backupJob.sh  ', function (err, stdout, stderr) {
 
 				log.info('//==Backup 정책(일별) ::===backup cycle all daystdout: ' + stdout);
 				log.info('//==Backup 정책(일별) ::===backup cycle all daystderr: ' + stderr);
@@ -1229,31 +1253,31 @@ const sysInfo = async () => {
 }
 
 
-const loginInfoAction = async () => {
-	log.info("=========login=======================");
-	var moment = require('moment');
-	require('moment-timezone');
-	moment.tz.setDefault("Asia/Seoul");
-	var date = moment().format('YYYY-MM-DD HH:mm:ss');
+// const loginInfoAction = async () => {
+// 	log.info("=========login=======================");
+// 	var moment = require('moment');
+// 	require('moment-timezone');
+// 	moment.tz.setDefault("Asia/Seoul");
+// 	var date = moment().format('YYYY-MM-DD HH:mm:ss');
 
-	const machineIdSync = require('node-machine-id').machineIdSync;
-	let machindid = machineIdSync({
-		original: true
-	});
+// 	const machineIdSync = require('node-machine-id').machineIdSync;
+// 	let machindid = machineIdSync({
+// 		original: true
+// 	});
 
-	var unirest = require('unirest');
-	unirest.post('http://' + centerUrl + '/act/loginout')
-		.header('content-type', 'application/json')
-		.send({
-			events: [{
-				datetime: date,
-				uuid: machindid,
-				// user: usernm,
-				gubun: 'LOGIN'
-			}]
-		})
-		.end(function (response) {
-			// console.log("response.body==="+JSON.stringify(response));
-			console.log("\loginInfoAction      .body===" + response.body);
-		});
-}
+// 	var unirest = require('unirest');
+// 	unirest.post('http://' + centerUrl + '/act/loginout')
+// 		.header('content-type', 'application/json')
+// 		.send({
+// 			events: [{
+// 				datetime: date,
+// 				uuid: machindid,
+// 				// user: usernm,
+// 				gubun: 'LOGIN'
+// 			}]
+// 		})
+// 		.end(function (response) {
+// 			// console.log("response.body==="+JSON.stringify(response));
+// 			console.log("\loginInfoAction      .body===" + response.body);
+// 		});
+// }
