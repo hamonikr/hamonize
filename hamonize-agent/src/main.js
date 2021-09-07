@@ -44,7 +44,7 @@ function myFunc(arg) {
 }
 
 
-// setTimeout(myFunc, 6000, 'funky');
+setTimeout(myFunc, 6000, 'funky');
 function hamonizeVersion() {
 
 	var exec = require('child_process').exec;
