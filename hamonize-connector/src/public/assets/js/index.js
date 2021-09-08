@@ -18,9 +18,8 @@ function install_program_version_chkeck() {
 	ipcRenderer.send('install_program_version_chkeck');
 }
 
-
+// 조직정보 
 ipcRenderer.on('getOrgDataResult', (event, orgData) => {
-	console.log("getOrgDataResult===="+orgData);
 	var option = "";
 	$('#groupName').empty();
 	$.each(orgData,function(key,value) {
@@ -30,7 +29,6 @@ ipcRenderer.on('getOrgDataResult', (event, orgData) => {
 		
 	});
 	$('#groupName').append(option);
-	
 });
 
 ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
@@ -44,6 +42,7 @@ ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 		// document.getElementById("groupName").focus();
 		$modal.hide();
 		$("#loadingInfoText").text("");
+		ipcRenderer.send('getOrgData');
 
 	} else if (isChkVal == 'N001') {
 		//fail make folder 
@@ -56,6 +55,10 @@ ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 	} else if (isChkVal == 'N003') {
 		// fail get Agent Server Info 
 		fn_alert("프로그램 버전 확인중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. \n Error Code :: [N003]");
+		return false;
+	} else if (isChkVal == 'N004') {
+		// fail get Agent Server Info 
+		fn_alert("프로그램 서버 정보 셋팅 오류. 관리자에게 문의 바랍니다. \n Error Code :: [N004]");
 		return false;
 	} else if (isChkVal == 'U999') {
 		console.log("U999====")

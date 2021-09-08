@@ -3,7 +3,7 @@
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 
 PCUUID=`cat /etc/hamonize/uuid`
-VPNKEY=nclt-${PCUUID}
+VPNKEY=hm-${PCUUID}
 VPNCNT=`nmcli con|grep ^${VPNKEY}.*vpn|awk '{print $2}' | wc -l`
 PCHOSTNAME=`hostname`
 LOGFILE="/var/log/hamonize/agentjob/updp.log"

@@ -8,7 +8,7 @@ CENTERURL="http://$CENTERURLINFO/hmsvc/setVpnUpdate"
 Log_output="/var/log/hamonize/vpnlog/vpnlog.hm"
 
 
-if [ `nmcli c | grep "nclt*" | awk '{print $4}'` = '--' ];
+if [ `nmcli c | grep "hm-*" | awk '{print $4}'` = '--' ];
 then
 		vpn="FAIL"
 else
