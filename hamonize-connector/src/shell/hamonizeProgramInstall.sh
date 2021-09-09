@@ -78,10 +78,11 @@ echo "$DATETIME ] udev rules check :: `ls /etc/udev/rules.d/`" >> $LOGFILE
 #==== user loginout chk =================================================
 echo "$DATETIME ] 5. user loginout install ============== [start]" >> $LOGFILE
 cp $WORK_PATH/hamonize-logout.service /etc/systemd/system/
-# cp $WORK_PATH/hamonize-login.service  /etc/systemd/system/
+cp $WORK_PATH/hamonize-login.service  /etc/systemd/system/
 cp $WORK_PATH/run-script-on-boot.sh /etc/hamonize/
 
 systemctl daemon-reload >>$LOGFILE 
+systemctl enable hamonize-login >>$LOGFILE 
 systemctl enable hamonize-logout >>$LOGFILE 
 
 # systemctl enable hamonize-login >>$LOGFILE 
