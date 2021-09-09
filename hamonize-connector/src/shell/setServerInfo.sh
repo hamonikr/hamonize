@@ -13,8 +13,8 @@ CENTERURLINFO=$(cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}')
 
 # 초기 필수 정보......
 # vpn 연결후  센터 url을 통해 서버정보 get
-# CENTERURL="http://<Hamonize Center Url>/hmsvc/commInfoData"
-CENTERURL="http://192.168.0.225:8080/hmsvc/commInfoData"
+CENTERURL="http://<Hamonize Center Url>/hmsvc/commInfoData"
+# CENTERURL="http://ts.hamonikr.org/hmsvc/commInfoData"
 
 DATA_JSON="{\
         \"events\" : [ {\

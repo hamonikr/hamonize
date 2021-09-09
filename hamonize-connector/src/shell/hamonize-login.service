@@ -3,6 +3,7 @@ Description=Run hamonize at Startup
 After=systemd-user-sessions.service
 
 [Service]
+ExecStartPre=/bin/sleep 30
 ExecStart=sudo /etc/hamonize/run-script-on-boot.sh login
 
 [Install]
