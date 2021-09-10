@@ -41,6 +41,8 @@ BK_RECOV_JSON="{\
 }"
 
 echo ${BK_RECOV_JSON} >> ${LOGFILE}
+echo "$DATETIME] logout==========================" >> ${LOGFILE}
+sudo /etc/hamonize/run-script-on-boot.sh logout >> ${LOGFILE}
 
 # RET_RECOV=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$BK_RECOV_JSON" $BK_START_CENTERURL`
 # echo "---------------------->$RET_RECOV">>$LOGFILE
