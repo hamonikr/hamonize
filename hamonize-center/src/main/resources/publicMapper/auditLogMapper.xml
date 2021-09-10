@@ -33,7 +33,7 @@
 			a.seq, 
 			to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
 			to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS') as logout_dt, 
-			to_char(age(a.logout_dt,a.login_dt),'HH24:MI:SS') as spent_time,
+			EXTRACT(EPOCH FROM age(a.logout_dt, a.login_dt)) * interval '1 sec' as spent_time,
 			(select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname,
 			a.uuid as pc_uuid,
 			b.org_seq,

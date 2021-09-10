@@ -41,7 +41,7 @@ docker-compose down
 - component : main 
 
 ```
-## /repo/incoming 디렉토리에 위치 올리고자하는 패키지를 복사해주세요
+## /repo/incoming 디렉토리에 올리고자하는 패키지를 복사해주세요
 # scp -P 2022 {패키지}.deb root@localhost:/repo/incoming
 
 scp -P 2022 -i /repo/ssh/ssh_host_rsa_key hamonize-admin_1.0.0_amd64.deb root@localhost:/repo/incoming  // 예시입니다
