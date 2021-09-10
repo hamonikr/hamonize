@@ -1,0 +1,14 @@
+version: '3'
+services:
+  apt: 
+    image: jullee96/reprepro:last
+    container_name: apt
+    ports: 
+      - "2022:22"
+      - "8088:80"
+    volumes:
+      - reprepro-data:/repo
+     
+volumes:
+  reprepro-data:
+
