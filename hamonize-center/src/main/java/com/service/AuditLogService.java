@@ -9,9 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+
 import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
 import com.paging.PagingVo;
+
 
 @Service
 public class AuditLogService {
@@ -20,13 +23,34 @@ public class AuditLogService {
 	private IAuditLogMapper auditLogMapper;
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public List<AuditLogVo> userLogList(AuditLogVo vo, PagingVo pagingVo) {
+	public List<AuditLogVo> userLogList(AuditLogVo vo, PagingVo pagingVo) throws ParseException {
 
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
-
+		
 		paramMap.put("auditLogVo", vo);
 		paramMap.put("pagingVo", pagingVo);
 		List<AuditLogVo> list = auditLogMapper.userLogListInfo(paramMap);
+		
+		for (AuditLogVo el : list) {
+			logger.info("spent time  --> {}", el.getSpent_time());
+			if(el.getSpent_time() != null){
+				String[] harray = el.getSpent_time().split("\\:");	
+				int hours = Integer.valueOf(harray[0]);
+		
+				if(hours > 24){
+					int days = hours/24;
+					Double d_hours =((hours/24.0) - days)*24; 
+					int n_hours =(int) Math.round(d_hours);
+
+					logger.info("{}일 {}:{}:{}", days,n_hours ,harray[1],harray[2]);
+					String convert_string = days+"일 "+n_hours+":"+harray[1]+":"+harray[2] ;
+					el.setSpent_time(convert_string);
+					
+				}
+					
+			}
+			
+		}
 
 		return list;
 	}

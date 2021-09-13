@@ -14,8 +14,6 @@ forks](https://img.shields.io/github/forks/hamonikr/hamonize?style=social)
 ![GitHub
 issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
-<br>
-
 ### :house: [Hamonize official homepage](https://hamonize.github.io/)
 
 <img width="800" src="./img/hamonize.png">
