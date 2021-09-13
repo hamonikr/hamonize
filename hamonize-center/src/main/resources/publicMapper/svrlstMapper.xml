@@ -35,6 +35,7 @@
 			svr_ip, 
 			svr_dc, 
 			svr_port ,
+			svr_used,
 			insert_dt 
 		FROM tbl_svrlst
 		order by seq desc
@@ -74,5 +75,12 @@
 
 	</insert>
 
-
+	<update id="vpnUsedUpdate" parameterType="com.model.SvrlstVo">
+		update 
+			tbl_svrlst
+		set	
+			svr_used = #{svr_used}
+		where 
+			svr_nm = #{svr_nm}		
+	</update>
 </mapper>

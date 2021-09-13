@@ -740,3 +740,5 @@ function setNav(title){
 	$('.location').html('<li>Home</li><li>'+title+'</li>');
 	/* $('.component-slogan').text(info); */
 }
+
+

@@ -1,28 +1,90 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
-
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
 
+<style>
+/*--------------------
+toggle button
+----------------------*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
 
-<body>
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 
-	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
-	
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+</style>
+
+<%@ include file="../template/topMenu.jsp" %>
+<%@ include file="../template/topNav.jsp" %>
 	
 	 <!-- content -->
     <div class="hamo_container">
         <div class="content_con">
-
-            <h2>서버관리</h2>
+            <h2>서버 환경 설정</h2>
             <ul class="location">
             </ul>
 
             <!-- content list -->
             <div class="con_box">
                 <!-- 검색 -->
+			<h2>도메인 관리</h2>
+            	
                 <div class="board_view2 mT20">
                 <form method="post" id="addForm" class="form-inline col-md-12 row" style="display:none;">
 					<input type="hidden" name="seq" id="seq" value=0> 
@@ -45,7 +107,7 @@
                                 <th>Port</th>
                                 <td><input type="text" name="svr_port" id="svr_port" class="input_type1" style="width:150px" /></td>
                                 <td class="t_right">
-                                    <button type="button" class="btn_type3 btnAdd" >등록</button>
+                                    <button type="button" class="btn_type3 btnAdd" >저장</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -57,11 +119,12 @@
                 <div class="board_list mT20">
                     <table>
                         <colgroup>
-                            <col style="width:10%;" />
-                            <col style="width:10%;" />
+                            <col style="width:5%;" />
+                            <col style="width:5%;" />
                             <col style="width:15%;" />
-                            <col style="width:10%;" />
-                            <col />
+                            <col style="width:20%;" />
+		                    <col style="width:10%;" />
+		                    <col style="width:15%;" />
                         </colgroup>
                         <thead>
                             <tr>
@@ -70,6 +133,8 @@
                                 <th>서버명</th>
                                 <th>IP</th>
                                 <th>Port</th>
+                                <th>사용여부</th>
+
                             </tr>
                         </thead>
                         <tbody id="pageGrideInSvrlstListTb">
@@ -79,13 +144,37 @@
                 <div class="mT20 inblock">
                     <button type="button" class="btn_type3" id="chkDel">선택삭제</button>
                 </div>
-                <%-- <div class="right mT20">
-                    <button type="button" class="btn_type2 insertBtn"> 서버 등록</button>
-                </div> --%>
                 <!-- page number -->
                 <div class="page_num">
                 </div>
             </div><!-- //con_box -->
+
+			<div class="con_box">
+               <h2>프로그램 관리</h2>
+ 				<div class="board_list mT20">
+                        <table>
+                            <colgroup>
+                                <col style="width:10%;" />
+                                <col style="width:15%;" />
+                                <col style="width:20%;" />
+                                <col />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>프로그램명</th>
+                                    <th>폴링 주기</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+							</tbody>
+                        </table>
+                    </div><!-- //List -->
+                   
+			</div>
+
+
+
         </div>
     </div><!-- //content -->
 
@@ -93,7 +182,8 @@
 
 	
 <script type="text/javascript">
-$(document).ready (function () {                
+$(document).ready (function () {       
+	
     $('#btnAdd').click (function () {                                        
     	if($("#addInputLayer").css("display") == "none"){   
             $('#addInputLayer').css("display", "block");   
@@ -180,6 +270,41 @@ $(document).ready (function () {
 	
 	
 });
+
+function vpnCheck(val){
+	var vpn_used = 0;
+	console.log("val : "+val.value);
+	if($("input:checkbox[id='vpn_used']").is(":checked")==true){
+		if(confirm("vpn을 사용하시겠습니까?")==true){
+			vpn_used = 1;
+		}else{
+			$("input:checkbox[id='vpn_used']").removeAttr('checked');
+		}
+	}else{
+		if(confirm("vpn대신 공인IP 사용으로 변경하시겠습니까?")==true){
+			vpn_used = 0;
+		}else{
+			$("input:checkbox[id='vpn_used']").prop("checked", true);
+		}
+	}
+
+
+	$.ajax({
+		url : '/admin/vpnUsed',
+		type: 'POST',
+		data: {svr_used:vpn_used,svr_nm:val.value},
+		success : function(res) {
+			if( res == 1 ){
+				alert("vpn 사용여부가 변경되었습니다.");
+				location.reload();
+			}else{
+				alert("vpn 사용여부 변경이 실패되었습니다. 관리자에게 문의바랍니다.");	
+			}
+		}
+	}); 
+
+
+}
 
 function edit(seq,servernm,ip,port){
 	var form = $('#addForm');
@@ -271,6 +396,21 @@ var svrlstGetSuccess = function(data, status, xhr, groupId){
 			}else{
 				gbInnerHtml += "<td>"+ "-" +"</td>";
 			}
+
+			if(value.svr_nm =="vpnip"){
+				console.log("svr_nm : "+value.svr_nm);
+				console.log("svr_used : "+value.svr_used);
+
+				if(value.svr_used==0){
+					gbInnerHtml += "<td>"+"<label class='switch'>"+ "<input type='checkbox' id='vpn_used' name='svr_used' value='"+value.svr_nm+"' onClick='vpnCheck(this)'><span class='slider round'></span>"+"</label>"+"</td>";
+				}else{
+					gbInnerHtml += "<td>"+"<label class='switch'>"+ "<input type='checkbox' checked id='vpn_used' name='svr_used' value='"+value.svr_nm+"' onClick='vpnCheck(this)'><span class='slider round'></span>"+"</label>"+"</td>";
+				}
+
+				
+			}else{
+				gbInnerHtml += "<td>"+"</td>";
+			}
 			gbInnerHtml += "</tr>";
 		});	 
 	}else{ 
@@ -294,7 +434,7 @@ function allChk(obj){
     var chkObj = document.getElementsByName("RowCheck");
     var rowCnt = chkObj.length - 1;
     var check = obj.checked;
-    if (check) {﻿
+    if (check) {
         for (var i=0; i<=rowCnt; i++){
          if(chkObj[i].type == "checkbox")
              chkObj[i].checked = true; 
@@ -307,6 +447,7 @@ function allChk(obj){
         }
     }
 } 
+
 </script>
 
 </body>

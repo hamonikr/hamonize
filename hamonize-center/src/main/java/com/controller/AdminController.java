@@ -19,6 +19,7 @@ import com.service.OrgService;
 import com.service.SvrlstService;
 import com.util.Constant;
 import com.util.SHA256Util;
+
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,6 +128,19 @@ public class AdminController {
 
 		return jsonObject;
 	}
+
+	//vpn server 사용여부
+	@PostMapping("/vpnUsed")
+	@ResponseBody
+	public int vpnUsed(Model model, SvrlstVo vo) {
+		int result = 0;
+		logger.info("vpnUsed --->  {}", vo.getSvr_nm());
+		logger.info("vpnUsed --->  {}", vo.getSvr_used());
+
+		result = svrlstMapper.vpnUsedUpdate(vo);
+		return result;
+	}
+	
 
 
 	// 센터 관리자

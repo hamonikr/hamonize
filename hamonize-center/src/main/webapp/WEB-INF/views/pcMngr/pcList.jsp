@@ -178,12 +178,21 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 						gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 						gbInnerHtml += "<td>"+value.deptname+"</td>";
+					
 						if(value.pc_os == "H"){
 							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 						}else if(value.pc_os == "W"){
 							gbInnerHtml += "<td>"+windowIcon+"</td>"; 
+						}else if(value.pc_os == "G"){
+							gbInnerHtml += "<td>Gooroom</td>"; 
+						}else if(value.pc_os == "D"){
+							gbInnerHtml += "<td>"+"Debian"+"</td>"; 
+						}else if(value.pc_os == "L"){
+							gbInnerHtml += "<td>"+"Linuxmint"+"</td>"; 
+						}else if(value.pc_os == "U"){
+							gbInnerHtml += "<td>"+"Ubuntu"+"</td>"; 
 						}else{
-							gbInnerHtml += "<td></td>"; 
+							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 						}
 						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
 						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
@@ -250,8 +259,16 @@ function getPcMngrList(){
 				gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 			}else if(value.pc_os == "W"){
 				gbInnerHtml += "<td>"+windowIcon+"</td>"; 
+			}else if(value.pc_os == "G"){
+				gbInnerHtml += "<td>"+"Gooroom"+"</td>"; 
+			}else if(value.pc_os == "D"){
+				gbInnerHtml += "<td>"+"Debian"+"</td>"; 
+			}else if(value.pc_os == "L"){
+				gbInnerHtml += "<td>"+"Linuxmint"+"</td>"; 
+			}else if(value.pc_os == "U"){
+				gbInnerHtml += "<td>"+"Ubuntu"+"</td>"; 
 			}else{
-				gbInnerHtml += "<td></td>"; 
+				gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 			}
 			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
 			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";

@@ -287,7 +287,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			var shtml = "";
 			var shtml_r = "";
 			
-			var textCutLength = 10;		
+			var textCutLength = 20;		
 			
 			if( data.pcList.length > 0){
 				shtml += "<ul class='monitor_list'>";
@@ -300,9 +300,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			            }
 					 if(value.pc_status == "true"){
 						cnt++;
-						shtml += "<li class='on'><a href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+hostnameVal+"</a></li>";
+						shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='"+value.pc_hostname+"' onclick=\"detail('"+value.pc_uuid+"')\">"+hostnameVal+"</a></li>";
 					} else
-						shtml += "<li><a style='color:#555;' href='#' onclick=\"detail('"+value.pc_uuid+"')\">"+hostnameVal+"</a></li>";
+						shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='"+value.pc_hostname+"' onclick=\"detail('"+value.pc_uuid+"')\">"+hostnameVal+"</a></li>";
 					});	
 				shtml_r += "<div class=\"content_bapo\">";
 				shtml_r += "<h4>업데이트 배포결과</h4>";
@@ -673,4 +673,13 @@ function searchView(viewName, page){
 	
 	
 </body>
+<script>
+$(function(){
+	$('[data-toggle="tooltip"]').tooltip({
+	html: true,
+	trigger: 'hover focus'
+	});
+});
+</script>
+
 </html>

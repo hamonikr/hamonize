@@ -17,5 +17,5 @@ public interface ISvrlstMapper {
 
 	public int svrlstDelete(SvrlstVo vo);
 
-
+	public int vpnUsedUpdate(SvrlstVo vo);
 }

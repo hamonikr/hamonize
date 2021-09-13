@@ -142,7 +142,16 @@ public class CurlController {
 				hdVo.setPc_os("H");
 			} else if (hdVo.getPc_hostname().toLowerCase().contains("window")) {
 				hdVo.setPc_os("W");
-			}
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("debian")) {
+				hdVo.setPc_os("D");
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("gooroom")) {
+				hdVo.setPc_os("G");
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("linuxmint")) {
+				hdVo.setPc_os("L");
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("ubuntu")) {
+				hdVo.setPc_os("U");
+			} 
+			
 
 			logger.debug("hdvo ==== > {}", hdVo.toString());
 
