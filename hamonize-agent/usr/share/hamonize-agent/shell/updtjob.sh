@@ -46,7 +46,7 @@ do
         INS_FILE_PATH=`echo $INS_WHEREISPROGRM | awk '{print $2}'`
         echo "ins_awk is ===>$INS_FILE_PATH" >>$LOGFILE
 
-        INS_PKG_VER=`dpkg -l | grep $I | awk '{print $3}'`
+        INS_PKG_VER=`apt-cache policy $I | grep -E '설치|Installed' | awk '{print $2}'`
  
 
         INSRET=$INSRET"{\"debname\":\"${I}\",\"debver\":\"${INS_PKG_VER}\",\"state\":\"$INS_CHK_CNT\",\"path\":\"$INS_FILE_PATH\"}"
@@ -109,7 +109,7 @@ do
         VERSION=$(echo $I | cut -f 2 -d '_' )
         echo "update file version is ===> $VERSION" >>$LOGFILE 
 
-        INSTALLED_VER=`dpkg -l | grep $NAME | awk '{print $3}'`
+        INSTALLED_VER=`apt-cache policy $NAME | grep -E '설치|Installed' | awk '{print $2}'`
         echo "If this package is already installed... ====>$INSTALLED_VER" >>$LOGFILE 
 
         if [ -z $INSTALLED_VER ]; then
@@ -141,7 +141,7 @@ do
                                         sleep 1
                                 fi
 
-                                INSTALLED_VER=`dpkg -l | grep $NAME | awk '{print $3}'`
+                                INSTALLED_VER=`apt-cache policy $NAME | grep -E '설치|Installed' | awk '{print $2}'`
 
                                 if [ `expr $INSTALLED_VER \= $VERSION` = 1 ]; then
                                         break        
@@ -155,7 +155,7 @@ do
                 
         fi
 
-        INSTALLED_VER=`dpkg -l | grep $NAME | awk '{print $3}'`
+        INSTALLED_VER=`apt-cache policy $NAME | grep -E '설치|Installed' | awk '{print $2}'`
 
         echo "It's the same as the new version and the installed version ===> $INSTALLED_VER" >> $LOGFILE        
         # if [ `expr $INSTALLED_VER \= $VERSION` = 1 ]; then
@@ -170,8 +170,6 @@ do
 
         UPS_FILE_PATH=`echo $UPS_WHEREISPROGRM | awk '{print $2}'`
         echo "ins_awk is ===>$UPS_FILE_PATH" >>$LOGFILE
-
-        #UPS_PKG_VER=`apt version $NAME`
 
         UPSRET=$UPSRET"{\"debname\":\"${NAME}\",\"debver\":\"${INSTALLED_VER}\",\"state\":\"$UPS_CHK_CNT\",\"path\":\"$UPS_FILE_PATH\"}"
                         
@@ -235,7 +233,7 @@ do
         DEL_CHK_CNT=`dpkg --get-selections | grep $I | grep -v "[[:graph:]]$I\|$I[[:graph:]]" | wc -l`
         echo "del chk wc -l is ==> $DEL_CHK_CNT" >>$LOGFILE
 
-        DEL_PKG_VER=`dpkg -l | grep $I | awk '{print $3}'`
+        DEL_PKG_VER=`apt-cache policy $NAME | grep -E '설치|Installed' | awk '{print $2}'`
 
 
         DELRET=$DELRET"{\"debname\":\"${I}\",\"debver\":\"${DEL_PKG_VER}\",\"state\":\"$DEL_CHK_CNT\",\"path\":\"\"}"
