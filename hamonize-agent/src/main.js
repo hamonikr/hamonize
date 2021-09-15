@@ -550,19 +550,22 @@ function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
 	var arrDeviceInsData = deviceInsData.split(",");
 
 	for (var a in arrDeviceInsData) {
-		var product = arrDeviceInsData[a].split(",")[0].split("-")[0];
-		var vendorCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[0];
-		var prodcutCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[1];
-		var setData = new Object();
+		if (arrDeviceInsData[a] != '') {
+			var product = arrDeviceInsData[a].split(",")[0].split("-")[0];
+			var vendorCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[0];
+			var prodcutCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[1];
+			var setData = new Object();
 
-		setData.hostname = hostname;
-		setData.uuidVal = uuidVal.trim();
-		setData.product = product;
-		setData.productCode = prodcutCode;
-		setData.vendorCode = vendorCode;
-		setData.statusyn = statusyn;
+			setData.hostname = hostname;
+			setData.uuidVal = uuidVal.trim();
+			setData.product = product;
+			setData.productCode = prodcutCode;
+			setData.vendorCode = vendorCode;
+			setData.statusyn = statusyn;
 
-		arrSetData.push(setData);
+			arrSetData.push(setData);
+		}
+		
 	}
 
 	return arrSetData;
