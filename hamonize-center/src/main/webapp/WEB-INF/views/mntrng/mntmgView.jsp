@@ -1,14 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
-<link rel='stylesheet' type='text/css' href='/css/tui/tui-chart.css'/>
-<link rel='stylesheet' type='text/css' href='/css/tui/codemirror.css'/>
-<link rel='stylesheet' type='text/css' href='/css/tui/lint.css'/>
-<link rel='stylesheet' type='text/css' href='/css/tui/neo.css'/>
-
-<script type='text/javascript' src='/js/tui/core.js'></script>
-<script type='text/javascript' src='/js/tui/tui-code-snippet.min.js'></script>
-<script type='text/javascript' src='/js/tui/raphael.js'></script>
-<script type='text/javascript' src='/js/tui/tui-chart.js'></script>
 
 <style>
 .box {

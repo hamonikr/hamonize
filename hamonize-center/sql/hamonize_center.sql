@@ -164,6 +164,7 @@ CREATE TABLE public.tbl_admin_user (
 	ins_date timestamp NULL,
 	upd_date timestamp NULL,
 	gubun bpchar(1) NOT NULL,
+	salt varchar(300) NULL,
 	CONSTRAINT tbl_admin_user_pkey PRIMARY KEY (user_id)
 );
 COMMENT ON TABLE public.tbl_admin_user IS '관리자 정보';
@@ -638,9 +639,9 @@ GRANT ALL ON TABLE public.tbl_ip TO hamonize;
 
 CREATE TABLE public.tbl_loginout (
 	seq bigserial NOT NULL, -- 시리얼 번호
-	login_dt timestamptz NULL DEFAULT now(), -- 로그인 시간
 	logout_dt timestamptz NULL, -- 로그아웃 시간
 	uuid varchar(100) NULL, -- PC 관리번호
+	login_dt timestamptz NULL DEFAULT now(),
 	CONSTRAINT tbl_loginout_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_loginout IS '로그인/아웃 로그';
@@ -648,7 +649,6 @@ COMMENT ON TABLE public.tbl_loginout IS '로그인/아웃 로그';
 -- Column comments
 
 COMMENT ON COLUMN public.tbl_loginout.seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_loginout.login_dt IS '로그인 시간';
 COMMENT ON COLUMN public.tbl_loginout.logout_dt IS '로그아웃 시간';
 COMMENT ON COLUMN public.tbl_loginout.uuid IS 'PC 관리번호';
 
@@ -1122,6 +1122,56 @@ ALTER TABLE public.tbl_pc_mangr_ip_chn_log OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_pc_mangr_ip_chn_log TO hamonize;
 
 
+-- public.tbl_polling_agent_job definition
+
+-- Drop table
+
+-- DROP TABLE public.tbl_polling_agent_job;
+
+CREATE TABLE public.tbl_polling_agent_job (
+	seq serial NOT NULL,
+	org_seq int8 NULL, -- 부서번호
+	polling_tm int8 NULL, -- 적용된 polling time
+	uuid varchar(100) NULL, -- PC관리번호
+	pu_name varchar(100) NULL, -- 적용프로그램
+	status varchar(50) NULL,
+	insert_dt timestamp NULL,
+	CONSTRAINT tbl_polling_agent_job_pk PRIMARY KEY (seq)
+);
+
+-- Column comments
+
+COMMENT ON COLUMN public.tbl_polling_agent_job.org_seq IS '부서번호';
+COMMENT ON COLUMN public.tbl_polling_agent_job.polling_tm IS '적용된 polling time';
+COMMENT ON COLUMN public.tbl_polling_agent_job.uuid IS 'PC관리번호';
+COMMENT ON COLUMN public.tbl_polling_agent_job.pu_name IS '적용프로그램';
+
+-- Permissions
+
+ALTER TABLE public.tbl_polling_agent_job OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_polling_agent_job TO hamonize;
+
+
+-- public.tbl_polling_applc definition
+
+-- Drop table
+
+-- DROP TABLE public.tbl_polling_applc;
+
+CREATE TABLE public.tbl_polling_applc (
+	seq serial NOT NULL,
+	pu_name varchar(100) NULL,
+	polling_tm int8 NULL,
+	insert_dt timestamp NULL,
+	CONSTRAINT tbl_polling_applc_pk PRIMARY KEY (seq)
+);
+
+-- Permissions
+
+ALTER TABLE public.tbl_polling_applc OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_polling_applc TO hamonize;
+
+
 -- public.tbl_prcss_block_log definition
 
 -- Drop table
@@ -1267,6 +1317,7 @@ CREATE TABLE public.tbl_progrm_udpt (
 	deb_new_version varchar(100) NULL, -- 패키지 신규버전
 	deb_now_version varchar(100) NULL, -- 패키지 현재버전
 	base_deb_yn varchar(10) NULL, -- 설치파일유무
+	polling_tm int8 NOT NULL DEFAULT 0, -- 프로그램 폴링타임/하모나이즈 프로그램만
 	CONSTRAINT tbl_progrm_udpt_pkey PRIMARY KEY (pu_seq)
 );
 COMMENT ON TABLE public.tbl_progrm_udpt IS '프로그램 / OS 업데이트 목록';
@@ -1282,6 +1333,7 @@ COMMENT ON COLUMN public.tbl_progrm_udpt.deb_apply_name IS '패키지명';
 COMMENT ON COLUMN public.tbl_progrm_udpt.deb_new_version IS '패키지 신규버전';
 COMMENT ON COLUMN public.tbl_progrm_udpt.deb_now_version IS '패키지 현재버전';
 COMMENT ON COLUMN public.tbl_progrm_udpt.base_deb_yn IS '설치파일유무';
+COMMENT ON COLUMN public.tbl_progrm_udpt.polling_tm IS '프로그램 폴링타임/하모나이즈 프로그램만';
 
 -- Permissions
 
@@ -1558,13 +1610,21 @@ CREATE TABLE public.tbl_svrlst (
 	seq serial NOT NULL,
 	svr_nm varchar(100) NULL,
 	svr_domain varchar(100) NULL,
-	svr_ip varchar(100) NULL,
+	svr_ip varchar(100) NULL, -- 서버 ip
 	svr_dc varchar(300) NULL,
 	insert_dt timestamp NULL,
 	svr_port varchar(10) NULL,
+	svr_used int8 NULL DEFAULT 1, -- 1:사용/0:미사용
+	svr_vip varchar(100) NULL, -- 서버 vpn ip
 	CONSTRAINT tbl_svrlst_pkey PRIMARY KEY (seq)
 );
 COMMENT ON TABLE public.tbl_svrlst IS '서버 정보';
+
+-- Column comments
+
+COMMENT ON COLUMN public.tbl_svrlst.svr_ip IS '서버 ip';
+COMMENT ON COLUMN public.tbl_svrlst.svr_used IS '1:사용/0:미사용';
+COMMENT ON COLUMN public.tbl_svrlst.svr_vip IS '서버 vpn ip';
 
 -- Permissions
 
@@ -1775,8 +1835,7 @@ CREATE TABLE public.tbl_user (
 	tel varchar(30) NULL, -- 사용자 전화번호
 	kind varchar(20) NULL,
 	CONSTRAINT tbl_user_pkey PRIMARY KEY (seq),
-	CONSTRAINT tbl_user_user_id_key UNIQUE (user_id),
-	CONSTRAINT tbl_user_user_id_unique UNIQUE (user_id)
+	CONSTRAINT tbl_user_user_id_key UNIQUE (user_id)
 );
 COMMENT ON TABLE public.tbl_user IS '사용자 정보';
 
@@ -1802,20 +1861,3 @@ COMMENT ON COLUMN public.tbl_user.tel IS '사용자 전화번호';
 
 ALTER TABLE public.tbl_user OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_user TO hamonize;
-
-
-
---- insert default data ---
-
--- server list --
-INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_port) VALUES
-	('CLOUDURL','','',NULL,NULL,''),
-    ('APPURL','','',NULL,NULL,''),
-	('APTURL','','',NULL,NULL,''),
-	('COLLECTDIP','','192.168.0.8086',NULL,NULL,''),
-	('CENTERURL','','192.168.0.225:8080',NULL,NULL,'');
-
-
--- admin user --
-INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,upd_date,gubun) VALUES
-	 ('admin','admin','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',NULL,'2021-08-10 11:33:17.030959',NULL,'A');

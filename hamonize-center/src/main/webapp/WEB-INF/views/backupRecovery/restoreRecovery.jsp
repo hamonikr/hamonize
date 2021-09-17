@@ -17,7 +17,7 @@
 <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
 
 
-<%@ include file="../template/backupRecoveryHead.jsp" %>
+<%-- <%@ include file="../template/backupRecoveryHead.jsp" %> --%>
 
 <style type="text/css">
 .form-style-10{

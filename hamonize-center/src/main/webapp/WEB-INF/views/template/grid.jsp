@@ -1,11 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!-- <script type="text/javascript" src="/js/template/jquery-1.11.0.js"></script> -->
 <script type="text/javascript" src="/js/template/underscore.js"></script>
-<script type="text/javascript" src="/js/template/backbone.js"></script>
-<script type="text/javascript" src="/js/template/jquery.mockjax.js"></script>
-<script type="text/javascript" src="/js/template/tui-code-snippet.js"></script>
-<script type="text/javascript" src="/js/template/tui-pagination.js"></script>
-<script type="text/javascript" src="/js/template/tui-grid.js"></script>
 <script type="text/javascript">
 $.mockjax({
     url: 'api/readData',

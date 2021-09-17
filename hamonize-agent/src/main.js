@@ -16,30 +16,19 @@ var readline = require('readline');
 FnMkdir();
 
 var centerUrl = getCenterInfo();
-
+var DEFAUT_POLLTIME = 10000;//10s
 
 function myFunc(arg) {
 
 	sysInfo();
 
-	// loginInfoAction();
-
 	var backupData = backupFileData();
 	log.info("myFuncBackupData---_" + backupData);
 	if (backupData != "") {
-		// console.log(schedule.scheduledJobs);
-		// var chkCronJob = JSON.stringify(schedule.scheduledJobs);
 		var chkCronJob = schedule.scheduledJobs;
-		// console.log("chkCronJob============================+"+ chkCronJob.cronbackup);
-		// obj = JSON.parse(chkCronJob);
-
-		// if( typeof chkCronJob.cronbackup  == 'undefined' ){
 		schedule.cancelJob('cobj.cronbackuponbackup');
 		fnBackupJob(backupData);
 		log.info("//==Cron Backup Job status is : " + schedule.scheduledJobs);
-		// }else{
-		//         log.info("//==dont cron backup job");
-		// }
 	}
 }
 
@@ -55,36 +44,67 @@ function hamonizeVersion() {
 
 }
 
+function getPollTime(uuid){
+	log.info("----getPollTime Func start----");
 
-// Set 1s timeout between polls
-// note: this is previous request + processing time + timeout	
-let poller = new Poller(10000);
-// let poller = new Poller(60000); 
-// let poller = new Poller(600000); 
+	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid="+uuid+"&&name=hamonize-agent";
+	log.info("polling time --- " + setUrl);
 
-// Wait till the timeout sent our event to the EventEmitter
-poller.onPoll(() => {
-	log.info("//====agent polling start====")
+	var retval = 0;
+	http.get(setUrl, (res) => {
+		res.on('data', (data) => {
+			var pollingObj = JSON.parse(data);
+			
+			if (pollingObj.data != 'nodata') {
+				var pollingObj = JSON.parse(data);
+				log.info("//====================================");
+				log.info("//== Polling time has changed... " + pollingObj.data);
+				log.info("//====================================");
+				
+				retval = pollingObj.data*1000;
+				Polling(retval);
 
-	getProgrmDataCall(uuidVal); // o
-	getDeviceDataCall(uuidVal); //  Call 비인가 디바이스 정책 
-	getUpdtDataCall(uuidVal); // o
-	getRecoveryDataCall(uuidVal);
-	getFirewallDataCall(uuidVal); // o
-	ipStatusCheck();
-	// hamonizeVersion();
-	getBackupDataCall(uuidVal);
-	sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-
-	poller.poll(); // Go for the next poll
-
-});
-
-// Initial start
-poller.poll();
+			} else {
+				Polling(DEFAUT_POLLTIME);
+				log.info("//== Polling time doesn't changes..");
+			}
+		});
+	});
+}
 
 
 
+
+console.log("DEFAUT_POLLTIME : "+DEFAUT_POLLTIME)
+let cnt =0;
+getPollTime(uuidVal);
+
+function Polling(time){
+	let poller = new Poller();
+	
+	poller.onPoll(() => {
+		log.info("//====agent polling start====");
+		getPollTime(uuidVal);
+		log.info("//==== polling time? ====" +time );		
+		log.info("//==== cnt? ====" +cnt );
+		cnt+=1;
+	
+		// func add
+		getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
+		getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
+		getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
+		getRecoveryDataCall(uuidVal); // Call 복구 정책 
+		getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
+		ipStatusCheck();
+		getBackupDataCall(uuidVal); // Call 백업 주기 정책 
+		sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
+			
+	});
+
+	// Initial start
+	poller.poll(time);
+
+}
 
 
 
@@ -185,10 +205,7 @@ function getRecoveryDataCall(uuid) {
 	http.get(setUrl, (res) => {
 		res.on('data', (data) => {
 			log.info("//== Recovery 정책 data is : " + data);
-			// if(  !data  && data != "nodata" ){
 			if (data != "nodata" && data != "{}") {
-				// if( updtRecovObj.NAME != "undefined" ) {
-
 				var updtRecovObj = JSON.parse(data);
 
 				log.info("//====================================");
@@ -502,7 +519,6 @@ async function fnDeviceJob(retData) {
 
 // 비인가 디바이스 정책 배포 결과 전송
 function fnDeviceJob_result(deviceDataObj, statusyn) {
-	// product, vendorCode, prodcutCode, statusyn){
 	var deviceInsData = "";
 	var returnDataIns = "";
 	var returnDataDel = "";
@@ -876,7 +892,7 @@ function backupFileData() {
 
 	if (stats.isFile()) {
 		var text = fs.readFileSync('/etc/hamonize/backup/backupInfo.hm', 'utf8');
-		log.info("//==백업 정책 데이타 : " + text);
+		log.info("//==백업 정책 데이터 : " + text);
 		output = text;
 	}
 	return output;

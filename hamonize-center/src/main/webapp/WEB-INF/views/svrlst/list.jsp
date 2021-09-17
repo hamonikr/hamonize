@@ -3,6 +3,9 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 
 <style>
 /*--------------------
@@ -71,19 +74,18 @@ input:checked + .slider:before {
 </style>
 
 <%@ include file="../template/topMenu.jsp" %>
-<%@ include file="../template/topNav.jsp" %>
 	
 	 <!-- content -->
     <div class="hamo_container">
         <div class="content_con">
-            <h2>서버 환경 설정</h2>
+            <h2>환경 설정</h2>
             <ul class="location">
             </ul>
 
             <!-- content list -->
             <div class="con_box">
                 <!-- 검색 -->
-			<h2>도메인 관리</h2>
+			<h2>서버 IP 관리</h2>
             	
                 <div class="board_view2 mT20">
                 <form method="post" id="addForm" class="form-inline col-md-12 row" style="display:none;">
@@ -104,7 +106,9 @@ input:checked + .slider:before {
                                 <td><input type="text" style="border:none;" name="svr_nm" id="svr_nm" class="input_type1" readonly></td>
                                 <th>IP</th>
                                 <td><input type="text" name="svr_ip" id="svr_ip" class="input_type1"></td>
-                                <th>Port</th>
+                                <th>VPN IP</th>
+                                <td><input type="text" name="svr_vip" id="svr_vip" class="input_type1"></td>
+								<th>Port</th>
                                 <td><input type="text" name="svr_port" id="svr_port" class="input_type1" style="width:150px" /></td>
                                 <td class="t_right">
                                     <button type="button" class="btn_type3 btnAdd" >저장</button>
@@ -124,7 +128,7 @@ input:checked + .slider:before {
                             <col style="width:15%;" />
                             <col style="width:20%;" />
 		                    <col style="width:10%;" />
-		                    <col style="width:15%;" />
+		                    <col style="width:20%;" />
                         </colgroup>
                         <thead>
                             <tr>
@@ -133,7 +137,7 @@ input:checked + .slider:before {
                                 <th>서버명</th>
                                 <th>IP</th>
                                 <th>Port</th>
-                                <th>사용여부</th>
+                                <th>VPN 사용여부</th>
 
                             </tr>
                         </thead>
@@ -144,9 +148,7 @@ input:checked + .slider:before {
                 <div class="mT20 inblock">
                     <button type="button" class="btn_type3" id="chkDel">선택삭제</button>
                 </div>
-                <!-- page number -->
-                <div class="page_num">
-                </div>
+               
             </div><!-- //con_box -->
 
 			<div class="con_box">
@@ -154,19 +156,55 @@ input:checked + .slider:before {
  				<div class="board_list mT20">
                         <table>
                             <colgroup>
-                                <col style="width:10%;" />
-                                <col style="width:15%;" />
                                 <col style="width:20%;" />
+                                <col style="width:15%;" />
+                                <col style="width:30%;" />
+								<col style="width:30%;" />
+								<col style="width:5%;" />
+
                                 <col />
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th>번호</th>
                                     <th>프로그램명</th>
-                                    <th>폴링 주기</th>
+                                    <th>최신 버전</th>
+                                    <th>설정</th>
+									<th></th>
+									<th></th>
+
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="pageGrideInSvrProgrmListTb">
+								<c:forEach var="list" items="${plist}" varStatus="status">
+								    <tr>
+									<c:if test="${list.pu_name eq 'hamonize-agent' }">
+									<input type="hidden" id ="pu_name" value=${list.pu_name}>
+										<td>${list.pu_name}</td>
+										<td>${list.deb_new_version}</td>
+										<td>
+											<a style="color: steelblue;" href="#" onclick="setPoll();">폴링주기 설정</a>
+										</td>
+										<td>
+											<div id="set_polling" style="display:none;">
+												<select class="form-select" style="width: 60%;" id="polling_tm" name="polling_tm" class="js-example-placeholder-single js-states form-control" style="width:50%;margin-left:5px">
+													<option  >시간을 선택해주세요</option>
+													<option value=10>10초</option>
+													<option value=60>1분</option>
+													<option value=300>5분</option>
+													<option value=600>10분</option>
+													<option value=1800>30분</option>
+													<option value=3600>60분</option>
+												</select>
+											</div>
+										</td>
+										<td>
+											<button id="btn_poll_save" class="btn btn-outline-info" style="display: none;;margin-right:20px;" onclick="savePoll();"> 저장 </button>
+										</td>	
+									
+									</c:if>
+								    </tr>
+								</c:forEach>
+                                
 							</tbody>
                         </table>
                     </div><!-- //List -->
@@ -212,8 +250,8 @@ $(document).ready (function () {
 			    	$('#addInputLayer').css("display", "none");   
 			    	
 					getList();
-				}else{
-					
+
+					location.reload();
 				}
 			},
 			error:function(request,status,error){
@@ -268,22 +306,81 @@ $(document).ready (function () {
 	
 	getList();
 	
+
 	
 });
 
-function vpnCheck(val){
+function setPoll(){
+	if($('#set_polling').css("display") != "none" && $('#btn_poll_save').css("display") != "none"){
+		$('#set_polling').hide();
+		$('#btn_poll_save').hide();
+
+	}else{
+		$('#set_polling').show();
+		$('#btn_poll_save').show();
+	}
+}
+
+function savePoll(){
+	var pu_name = $("#pu_name").val();
+	var polling_tm = $("#polling_tm").val();
+	var aaa = polling_tm/60;
+
+	if(polling_tm==10){
+		aaa = polling_tm+"초로";
+	}else{
+		aaa = aaa+"분으로";
+	}
+	console.log("polling_tm : "+polling_tm);
+	if(confirm("폴링 주기를 "+aaa+" 설정하시겠습니까?")==true){
+		$.ajax({
+			url : '/admin/setPollTime',
+			type: 'POST',
+			data: {pu_name:pu_name, polling_tm: polling_tm},
+			success : function(res) {
+				if( res == "SUCCESS" ){
+					alert("성공적으로 변경했습니다.");
+					location.reload();
+				}else{
+					alert("변경을 실패했습니다. 관리자에게 문의해주세요.");
+					location.reload();
+				}
+			},
+			error:function(request,status,error){
+				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			}
+		}); 
+   
+	}
+
+
+
+}
+
+
+function vpnCheck(val, vip){
 	var vpn_used = 0;
+	var aaa= $("input[name=svr_vip]").val();
+
 	console.log("val : "+val.value);
+	console.log("viplist length : "+viplist.length);
+	
 	if($("input:checkbox[id='vpn_used']").is(":checked")==true){
-		if(confirm("vpn을 사용하시겠습니까?")==true){
-			vpn_used = 1;
+		if(confirm("vpn을 사용하시겠습니까?")==true){	
+			if(viplist.length >= 3){
+
+				vpn_used = 1;
+			} else{
+				alert("vpn ip가 입력되지않았습니다. 다시 확인해주세요.");
+			}
 		}else{
 			$("input:checkbox[id='vpn_used']").removeAttr('checked');
 		}
 	}else{
-		if(confirm("vpn대신 공인IP 사용으로 변경하시겠습니까?")==true){
+		if(confirm("vpn 사용하지 않으시겠습니까?")==true){
 			vpn_used = 0;
 		}else{
+			vpn_used = 1;
 			$("input:checkbox[id='vpn_used']").prop("checked", true);
 		}
 	}
@@ -294,8 +391,7 @@ function vpnCheck(val){
 		type: 'POST',
 		data: {svr_used:vpn_used,svr_nm:val.value},
 		success : function(res) {
-			if( res == 1 ){
-				alert("vpn 사용여부가 변경되었습니다.");
+			if( res >= 4 ){
 				location.reload();
 			}else{
 				alert("vpn 사용여부 변경이 실패되었습니다. 관리자에게 문의바랍니다.");	
@@ -306,7 +402,7 @@ function vpnCheck(val){
 
 }
 
-function edit(seq,servernm,ip,port){
+function edit(seq,servernm,ip,vip,port){
 	var form = $('#addForm');
 	console.log($("#seq").val());
 	console.log(seq);
@@ -315,6 +411,7 @@ function edit(seq,servernm,ip,port){
 		$("#seq").val("");
 		$("#svr_nm").val("");
 		$("#svr_ip").val("");
+		$("#svr_vip").val("");
 		$("#svr_port").val("");
 		console.log($("#seq").val())
 	}else{
@@ -323,10 +420,16 @@ function edit(seq,servernm,ip,port){
 			port = '';
 		}
 
+		if(vip == "null"){
+			vip = '';
+		}
+
+
 		form.css('display','block');
 		$("#seq").val(seq);
 		$("#svr_nm").val(servernm);
 		$("#svr_ip").val(ip);
+		$("#svr_vip").val(vip);
 		$("#svr_port").val(port);
 	}
 }
@@ -368,6 +471,7 @@ function getList(){
 	callAjax('POST', url, vData, svrlstGetSuccess, getError, 'json');
 }
 
+var viplist = new Array();
 
 var svrlstGetSuccess = function(data, status, xhr, groupId){
 	var gbInnerHtml = "";
@@ -377,14 +481,13 @@ var svrlstGetSuccess = function(data, status, xhr, groupId){
 	if( data.list.length > 0 ){
 		$.each(data.list, function(index, value) {
 			var no = data.pagingVo.totalRecordSize -(index ) - ((data.pagingVo.currentPage-1)*10);
-			console.log("value.svr_nm : "+value.svr_nm);
+			console.log("vip : "+value.svr_vip);
 			
-			console.log("value.svr_port : "+value.svr_port);
 			
 			gbInnerHtml += "<tr data-code='" + value.seq + "'>";
 			gbInnerHtml += "<td><input type='checkbox' name='RowCheck' value='" + value.seq + "' style=\"display: -webkit-inline-box;\"></td>";
 			gbInnerHtml += "<td><span>"+no+"</span></td>";
-			gbInnerHtml += "<td><a style='color: steelblue;' href='#' onclick=\"edit("+value.seq+",'"+value.svr_nm+"','"+value.svr_ip+"','"+value.svr_port+"'); return false;\" >"+value.svr_nm+"</a></td>";
+			gbInnerHtml += "<td><a style='color: steelblue;' href='#' onclick=\"edit("+value.seq+",'"+value.svr_nm+"','"+value.svr_ip+"','"+value.svr_vip+"','"+value.svr_port+"'); return false;\" >"+value.svr_nm+"</a></td>";
 			gbInnerHtml += "<td>"+value.svr_ip+"</td>";
 			
 			if(value.svr_port != null ){
@@ -400,16 +503,24 @@ var svrlstGetSuccess = function(data, status, xhr, groupId){
 			if(value.svr_nm =="vpnip"){
 				console.log("svr_nm : "+value.svr_nm);
 				console.log("svr_used : "+value.svr_used);
-
+			
 				if(value.svr_used==0){
 					gbInnerHtml += "<td>"+"<label class='switch'>"+ "<input type='checkbox' id='vpn_used' name='svr_used' value='"+value.svr_nm+"' onClick='vpnCheck(this)'><span class='slider round'></span>"+"</label>"+"</td>";
 				}else{
 					gbInnerHtml += "<td>"+"<label class='switch'>"+ "<input type='checkbox' checked id='vpn_used' name='svr_used' value='"+value.svr_nm+"' onClick='vpnCheck(this)'><span class='slider round'></span>"+"</label>"+"</td>";
 				}
 
-				
 			}else{
-				gbInnerHtml += "<td>"+"</td>";
+				if(value.svr_vip == null || value.svr_vip == '' || value.svr_vip == 'undefined' || value.svr_vip == undefined){
+				}else{
+						viplist.push(value.svr_vip);
+				}
+
+				if(value.svr_used==0){
+					gbInnerHtml += "<td>"+"</td>";
+				}else{
+					gbInnerHtml += "<td>"+value.svr_vip+"</td>";
+				}
 			}
 			gbInnerHtml += "</tr>";
 		});	 
@@ -429,6 +540,11 @@ var svrlstGetSuccess = function(data, status, xhr, groupId){
 	}
 	$('#pageGrideInSvrlstListTb').append(gbInnerHtml);
 }
+
+
+
+
+
 
 function allChk(obj){
     var chkObj = document.getElementsByName("RowCheck");

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,7 +51,8 @@ public class UserController {
 	 * 
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/userList", method = RequestMethod.POST)
+	
+	@PostMapping("/userList")
 	public String userList(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
@@ -65,7 +67,7 @@ public class UserController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/eachList", method = RequestMethod.POST)
+	@PostMapping("/eachList")
 	public Map<String, Object> eachList(Model model, UserVo vo,
 			@RequestParam Map<String, Object> params) throws Exception {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -88,7 +90,7 @@ public class UserController {
 		return dataMap;
 	}
 
-	@RequestMapping(value = "/view/{seq}", method = RequestMethod.POST)
+	@PostMapping("/view/{seq}")
 	public String userView(@PathVariable("seq") int seq, UserVo vo, Model model) throws Exception {
 		OrgVo ovo = new OrgVo();
 
@@ -102,7 +104,7 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "/userAdd", method = RequestMethod.POST)
+	@PostMapping("/userAdd")
 	public String userAddView(Model model, OrgVo vo) {
 		List<OrgVo> list = userSerivce.getOrgList(vo);
 		model.addAttribute("olist", list);
@@ -110,7 +112,7 @@ public class UserController {
 		return "/user/userAdd";
 	}
 
-	@RequestMapping(value = "/idDuplCheck", method = RequestMethod.POST)
+	@PostMapping("/idDuplCheck")
 	@ResponseBody
 	public int idDuplCheck(Model model, UserVo vo) throws Exception {
 		int result = 0;
@@ -119,7 +121,7 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "/userSave", method = RequestMethod.POST)
+	@PostMapping("/userSave")
 	public String save(Model model, UserVo vo) throws Exception {
 		int result = userSerivce.userSave(vo);
 
@@ -127,26 +129,23 @@ public class UserController {
 	}
 
 
-	@RequestMapping(value = "/modify", method = RequestMethod.POST)
+	@PostMapping("/modify")
 	@ResponseBody
 	public int modify(Model model, UserVo vo) throws Exception {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		SimpleDateFormat timefomat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		System.out.println("timefomat : " + timefomat.format(timestamp));
 
 		int result = 0;
 
 		if (vo.getGubun().equals("R")) {
 			vo.setDischarge_dt(timefomat.format(timestamp));
 		}
-		System.out.println("vo : " + vo.toString());
-
 		result = userSerivce.userModify(vo);
 		return result;
 
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@PostMapping("/delete")
 	@ResponseBody
 	public int delete(Model model, @RequestParam(value = "seqs[]") List<Integer> list)
 			throws Exception {

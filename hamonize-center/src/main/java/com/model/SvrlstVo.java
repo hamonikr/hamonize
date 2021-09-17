@@ -13,6 +13,7 @@ public class SvrlstVo {
 	private String svr_nm;
 	private String svr_domain;
 	private String svr_ip;
+	private String svr_vip;
 	private String svr_port;
 	private String svr_dc;
 	private String insert_dt;

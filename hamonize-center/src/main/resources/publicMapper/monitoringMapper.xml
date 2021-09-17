@@ -80,9 +80,9 @@
 			a.pc_status
 		FROM tbl_pc_mangr a 
 		<where>
-			a.pc_os = 'H'
+			<!-- a.pc_os = 'H' -->
 		<if test="org_seq != 1 ">
-			and	org_seq in (
+			org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 		    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 		    from tbl_org a
