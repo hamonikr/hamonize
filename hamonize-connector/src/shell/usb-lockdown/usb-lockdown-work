@@ -28,14 +28,12 @@ case $1 in
                 PRODUCT=$(cat /sys${DEVPATH%/*}/idProduct)
             
             fi
-
-            sudo -u ${RUID} DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${RUSER_UID}/bus" zenity --error --width=300 --height=100 --text "허용된 USB 만 사용 가능합니다.\n\n관리자에 의해서 이 USB 장치 사용이 금지되었습니다.\n\n관리자에게 >문의하세요.\n\nVendor:Product = $VENDOR:$PRODUCT"
-
+            su ${RUID} -c 'zenity --error --width=300 --height=100 --text "허용된 USB 만 사용 가능합니다.\n\n관리자에 의해서 이 USB 장치 사용이 금지되었습니다.\n\n관리자에게 >문의하세요.\n\nVendor:Product = '$VENDOR':'$PRODUCT'"'
+	    
             echo 0 | tee /sys${DEVPATH%/*}/authorized | tee -a $LOGFILE
             
 
             USBNMTMP=`lsusb | grep $VENDOR | grep $PRODUCT`
-           
             echo "{ \"datetime\":\"$DATETIME\", \"uuid\":\"$UUID\", \"vendor\": \"$VENDOR\", \"product\": \"$PRODUCT\", \"usbinfo\": \"$USBNMTMP\", \"user\": \"$USER\" }" >> $UNAUTHLOGFILE
         fi
     ;;
