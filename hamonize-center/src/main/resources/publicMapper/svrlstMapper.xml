@@ -33,12 +33,26 @@
 			svr_nm, 
 			svr_domain, 
 			svr_ip, 
+			svr_vip, 
 			svr_dc, 
 			svr_port ,
+			svr_used,
 			insert_dt 
 		FROM tbl_svrlst
 		order by seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
+	</select>
+
+	<select id="getVpnSvrlstList" resultType="com.model.SvrlstVo">
+		SELECT *
+		FROM tbl_svrlst
+		order by seq desc
+	</select>
+
+	<select id="getVpnSvrUsed" parameterType="com.model.SvrlstVo" resultType="com.model.SvrlstVo">
+		SELECT *
+		FROM tbl_svrlst
+		WHERE  svr_nm = #{svr_nm}
 	</select>
 
 
@@ -55,6 +69,7 @@
 			update tbl_svrlst set 
 				svr_nm = #{svr_nm}
 				,svr_ip = #{svr_ip}
+				,svr_vip = #{svr_vip}
 				,svr_port = #{svr_port}
 			where
 				seq = #{seq}
@@ -64,15 +79,37 @@
 		(
 			svr_nm,
 			svr_ip,
+			svr_vip,
 			svr_port
 		)
 		select 
 			#{svr_nm},
 			#{svr_ip},
+			#{svr_vip},
 			#{svr_port}
 		where not exists(select * from upsert);
 
 	</insert>
 
+	<update id="vpnUsedUpdate" parameterType="com.model.SvrlstVo">
+		update 
+			tbl_svrlst
+		set	
+			svr_used = #{svr_used}
+	</update>
+
+	<select id="getProgrmList" resultType="com.model.HmProgrmUpdtVo">
+		SELECT * FROM TBL_PROGRM_UDPT
+		WHERE pu_name like 'hamonize%';
+	</select>
+
+	<update id="updatePollingTime" parameterType="com.model.HmProgrmUpdtVo">
+		update
+			TBL_PROGRM_UDPT
+		set 
+			polling_tm = #{polling_tm}
+		where 
+			pu_name = #{pu_name}
+	</update>
 
 </mapper>

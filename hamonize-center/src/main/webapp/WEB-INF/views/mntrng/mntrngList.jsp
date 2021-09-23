@@ -5,6 +5,8 @@
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
+
+
 <style>
 a{
 color: white;
@@ -14,8 +16,9 @@ color: #0056b3;
 text-decoration: none; 
 }
 </style>
+
 <script type="text/javascript">
-	var textCutLength = 10;
+	var textCutLength = 20;
 	var setting = {
 			view: {
 				selectedMulti: false
@@ -65,7 +68,6 @@ text-decoration: none;
 	
 	
 });
-	
 	function getMntrngList(){
 		var url ='/mntrng/pcList';
 		$.post(url,{org_seq:1},
@@ -78,12 +80,12 @@ text-decoration: none;
 							if( agrs[i].pc_hostname.length >= textCutLength ){
 				                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
 				           }else{
-				        	   hostnameVal =agrs[i].pc_hostname; 
+				        	   hostnameVal = agrs[i].pc_hostname; 
 				            }
 							if( agrs[i].pc_status == "true"){
-								strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'">'+hostnameVal+'</a></li>'
+								strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
 							}else{
-								strHtml += '<li>'+hostnameVal+'</li>'	
+								strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
 							}
 						}
 						$(".monitor_list").append(strHtml);
@@ -138,13 +140,13 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						if( agrs[i].pc_hostname.length >= textCutLength ){
 			                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
 			           }else{
-			        	   hostnameVal =agrs[i].pc_hostname; 
+			        	   hostnameVal = agrs[i].pc_hostname; 
 			            }
 					 
 						if( agrs[i].pc_status == "true"){
-							strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'">'+hostnameVal+'</a></li>'
+							strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
 						}else{
-							strHtml += '<li>'+hostnameVal+'</li>'	
+							strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
 						}
 					}
 				}else{
@@ -227,13 +229,12 @@ function fnSave(){
                     <li id="off">
                     </li>
                 </ul>
-							<form name="frm" method="post" action="orgManage.do" class="row">					
-								<input type="hidden" name="org_seq"  id="org_seq" value="" />
-								<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
-								<input type="hidden" name="section" id="section" value="" />
-									<ul class="monitor_list"></ul>
-
-							</form>
+				<form name="frm" method="post" action="orgManage.do" class="row">					
+					<input type="hidden" name="org_seq"  id="org_seq" value="" />
+					<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
+					<input type="hidden" name="section" id="section" value="" />
+					<ul class="monitor_list"></ul>
+				</form>
             </div>
         </div>
 
@@ -245,4 +246,15 @@ function fnSave(){
 	
 	
 </body>
+<script>
+
+$(function(){
+	$('[data-toggle="tooltip"]').tooltip({
+	html: true,
+	trigger: 'hover focus'
+	});
+});
+</script>
+
+
 </html>

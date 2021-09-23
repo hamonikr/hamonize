@@ -22,8 +22,6 @@ public class AdminVo extends PagingVo {
 
 	private int adminListInfoCurrentPage;
 
-
-
 	// 사지방 관리자
 	private String arr_org_seq;
 	private String rank;

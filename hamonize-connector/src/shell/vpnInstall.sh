@@ -56,11 +56,9 @@ vpnwork(){
 	HDDID=`hdparm -I $HDDTMP  | grep 'Serial\ Number' |awk -F ':' '{print $2}'`
 	HDDINFO=`hdparm -I $HDDTMP  | grep 'Model\ Number' |awk -F ':' '{print $2}'`
 
-	#### vpn key create & connection ####
-	# echo "a===$VPNIP===$UUID"
-	# curl -o /dev/null -s -w "%{http_code}\n"  http://192.168.0.117:3000/getClients/hmon_vpn_vpn/$UUID
+	## vpn key 생성
+	VPN_KEY_CREATE=`curl http://{Hamonize Vpn server Url}:3000/getClients/hmon_vpn_vpn/$CLIENT`
 	
-	VPN_KEY_CREATE=`curl http://192.168.0.117:3000/getClients/hmon_vpn_vpn/$CLIENT`
 	# echo $VPN_KEY_CREATE
 	# echo $VPN_KEY_CREATE | grep -o "SUCCESS*" | wc -l
 	# echo $VPN_KEY_CREATE | grep -o "DUPLICATION*" | wc -l

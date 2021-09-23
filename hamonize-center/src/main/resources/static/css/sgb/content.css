@@ -122,7 +122,7 @@ h2.tree_head {border-radius:10px 10px 0 0; display: block; line-height: 40px; he
 .veiwcheck li font.off {color:#555;font-size:12px;padding-right: 5px;}
 
 .monitor_list {width:100%;  margin-top: 30px; text-align: left;  clear: both}
-.monitor_list li {width:150px; display: inline-block;border-radius:3px;  color:#555; border:1px solid #ddd; box-sizing: border-box;  line-height:22px; height:100px;  vertical-align: middle; 
+.monitor_list li {width:201.7px; display: inline-block;border-radius:10px;  color:#555; border:1px solid #ddd; box-sizing: border-box;  line-height:22px; height:100px;  vertical-align: middle; 
                 box-shadow:0 1px 2px 0 rgba(0,0,0,.1); background-color: #fff; text-align: center;margin:10px; vertical-align:middle; padding:10px;}
 .monitor_list li.on {background-color: #7759c3; color:#fff;  border:1px solid #7759c3; box-shadow:0 3px 2px 0 rgba(0,0,0,.1);} 
 .monitor_list li span {display: table-cell;  height:80px;  vertical-align:middle; text-align: center;width:140px; }

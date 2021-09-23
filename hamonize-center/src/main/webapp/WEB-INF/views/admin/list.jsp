@@ -60,24 +60,6 @@
 		});	
 	}
 	
-	/* function getPaging(startPage,endPage,totalPageSize,currentPage,viewName){
-		var pagingHtml = '';
-	        
-		pagingHtml += '<ul class="pagination">';
-		pagingHtml += '<li class="paginate_button page-item previous disabled" ><a style="height:20px;" href="javascript:prevPage('+viewName+','+currentPage+');"><i class="fa fa-chevron-left page-link"></i></a></li>';
-		for(startPage; startPage <= endPage; startPage++ ){
-			if(startPage == currentPage){
-				pagingHtml += '<li class="paginate_button page-item active"><a href="javascript:searchView('+viewName+','+startPage+');" class="page-link">'+startPage+'</a></li>';
-			} else {
-				pagingHtml += '<li class="paginate_button page-item "><a href="javascript:searchView('+viewName+','+startPage+');" class="page-link">'+startPage+'</a></li>';
-			}
-		}
-		pagingHtml += '<li class="paginate_button page-item next disabled"><a style="height:20px;" href="javascript:nextPage('+viewName+','+currentPage+','+totalPageSize+');"><i class="fa fa-chevron-right page-link"></i></a></li>';
-		pagingHtml += '</ul>';
-
-		return pagingHtml;
-	} */
-	
 	/*
 	 * 이전 페이지
 	 */

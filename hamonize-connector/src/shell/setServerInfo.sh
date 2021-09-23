@@ -14,7 +14,6 @@ CENTERURLINFO=$(cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}')
 # 초기 필수 정보......
 # vpn 연결후  센터 url을 통해 서버정보 get
 CENTERURL="http://<Hamonize Center Url>/hmsvc/commInfoData"
-# CENTERURL="http://ts.hamonikr.org/hmsvc/commInfoData"
 
 DATA_JSON="{\
         \"events\" : [ {\
@@ -47,7 +46,7 @@ echo "$DATETIME ]-------->center return val is :: " $JQCNT >>$LOGFILE
 SET=$(seq 0 $(expr $JQCNT - 1))
 for i in $SET; do
 
-        TMP_ORGNM=$(echo ${RETDATA} | jq '.pcdata | .['$i'].orgname' | sed -e "s/\"//g")
+        TMP_ORGNM=$(echo ${RETDATA} | jq '.pcdata | .['$i'].svrname' | sed -e "s/\"//g")
         TMP_PCIP=$(echo ${RETDATA} | jq '.pcdata | .['$i'].pcip' | sed -e "s/\"//g")
 
         WRITE_DATA="$TMP_ORGNM=$TMP_PCIP"

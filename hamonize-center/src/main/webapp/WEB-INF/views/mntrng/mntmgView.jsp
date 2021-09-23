@@ -1,14 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
-<link rel='stylesheet' type='text/css' href='/css/tui/tui-chart.css'/>
-<link rel='stylesheet' type='text/css' href='/css/tui/codemirror.css'/>
-<link rel='stylesheet' type='text/css' href='/css/tui/lint.css'/>
-<link rel='stylesheet' type='text/css' href='/css/tui/neo.css'/>
-
-<script type='text/javascript' src='/js/tui/core.js'></script>
-<script type='text/javascript' src='/js/tui/tui-code-snippet.min.js'></script>
-<script type='text/javascript' src='/js/tui/raphael.js'></script>
-<script type='text/javascript' src='/js/tui/tui-chart.js'></script>
 
 <style>
 .box {
@@ -50,7 +41,13 @@ $( "#sp_on" ).click(function() {
 		<span id="sp_on">▼펼치기</span>
 			컴퓨터 정보
 			&nbsp;
-			 <button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
+			<c:if test ="${svo.svr_used == 1}" >
+				<button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
+			</c:if>
+			<c:if test ="${svo.svr_used == 0}" >
+				<button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
+			</c:if>
+
 		<span></span>
 		</div>
 
@@ -86,11 +83,15 @@ $( "#sp_on" ).click(function() {
 				<h5>IpAddress</h5>
 				<p><c:out value="${pcvo.pc_ip}" /></p>
 			  </div>
-			  <%-- <div class="callout callout-info">
+			 
+			<c:if test="${svo.svr_used == 1}">
+			  <div class="callout callout-info">
 				<h5>VpnIpAddress</h5>
 				<p><c:out value="${pcvo.pc_vpnip}" /></p>
-			  </div> --%>
-			  <div class="callout callout-info">
+			  </div>
+     		</c:if> 
+			
+			 <div class="callout callout-info">
 				<h5>MacAddress</h5>
 				<p><c:out value="${pcvo.pc_macaddress}" /></p>
 			  </div>		

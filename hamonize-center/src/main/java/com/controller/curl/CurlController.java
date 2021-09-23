@@ -142,7 +142,16 @@ public class CurlController {
 				hdVo.setPc_os("H");
 			} else if (hdVo.getPc_hostname().toLowerCase().contains("window")) {
 				hdVo.setPc_os("W");
-			}
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("debian")) {
+				hdVo.setPc_os("D");
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("gooroom")) {
+				hdVo.setPc_os("G");
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("linuxmint")) {
+				hdVo.setPc_os("L");
+			} else if (hdVo.getPc_hostname().toLowerCase().contains("ubuntu")) {
+				hdVo.setPc_os("U");
+			} 
+			
 
 			logger.debug("hdvo ==== > {}", hdVo.toString());
 
@@ -160,6 +169,34 @@ public class CurlController {
 		logger.debug("hamonize Connector setPcInfo result :: {}", isAddPcInfo);
 		return isAddPcInfo;
 	}
+
+	@ResponseBody
+	@GetMapping("/isVpnUsed")
+	public String vpnUsed(HttpServletRequest request) throws Exception {
+		logger.debug("-------isVpnUsed------");
+		JSONArray jsonArr = new JSONArray();
+
+		List<SvrlstVo> vpnSvrList = svrlstMapper.getVpnSvrlstList();
+		
+		for (SvrlstVo el : vpnSvrList) {
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("svr_nm", el.getSvr_nm());
+			jsonObject.put("ip", el.getSvr_ip()+":"+el.getSvr_port());
+			jsonObject.put("vip", el.getSvr_vip()+":"+el.getSvr_port());
+			jsonObject.put("vpn_used", el.getSvr_used());
+
+			jsonArr.add(jsonObject);
+		}
+
+		logger.debug("//== vpnUsed jsonObject  data is : {}", jsonArr);
+
+		return jsonArr.toString();
+	}
+
+
+
+
 
 	@PostMapping("/prcssKill")
 	public void prcssKill(HttpServletRequest request) throws Exception {
@@ -322,16 +359,21 @@ public class CurlController {
 			logger.debug("svrlstData===> {}", svrlstData.getSvr_port());
 			logger.debug("svrlstData===> {}", svrlstData.getSvr_domain());
 			logger.debug("svrlstData===> {}", svrlstData.getSvr_ip());
+			logger.debug("svrlstData===> {}", svrlstData.getSvr_vip());
 
 			JSONObject tmpObject = new JSONObject();
 
-			tmpObject.put("orgname", svrlstData.getSvr_nm());
-			tmpObject.put("orgdomain", svrlstData.getSvr_domain());
-
+			tmpObject.put("svrname", svrlstData.getSvr_nm());
+			tmpObject.put("svrdomain", svrlstData.getSvr_domain());
+			
 			if ("N".equals(svrlstData.getSvr_port())) {
 				tmpObject.put("pcip", svrlstData.getSvr_ip());
+				tmpObject.put("pcvip", svrlstData.getSvr_vip());
+
 			} else {
 				tmpObject.put("pcip", svrlstData.getSvr_ip() + ":" + svrlstData.getSvr_port());
+				tmpObject.put("pcvip", svrlstData.getSvr_vip() + ":" + svrlstData.getSvr_port());
+
 			}
 
 			itemList.add(tmpObject);
