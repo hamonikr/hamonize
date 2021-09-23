@@ -12,6 +12,8 @@ public interface ISvrlstMapper {
 	
 	public List<SvrlstVo> getVpnSvrlstList();
 
+	public SvrlstVo getVpnSvrUsed(SvrlstVo vo);
+
 	public int countSvrlstListInfo(SvrlstVo vo);
 
 	public int svrlstInsert(SvrlstVo vo);

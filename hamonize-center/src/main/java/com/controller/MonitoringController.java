@@ -13,16 +13,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mapper.IPcMangrMapper;
+import com.mapper.ISvrlstMapper;
 import com.model.OrgVo;
 import com.model.PcDataVo;
 import com.model.PcMangrVo;
 import com.model.PcMemoryDataVo;
+import com.model.SvrlstVo;
 import com.service.MonitoringService;
 import com.service.OrgService;
 
@@ -39,9 +43,12 @@ public class MonitoringController {
 	@Autowired
 	private IPcMangrMapper pcmp;
 
+	@Autowired
+	private ISvrlstMapper svrlstMapper;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping(value = "/pcControlList", method = RequestMethod.GET)
+	@GetMapping("/pcControlList")
 	public String pcControlPage(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
@@ -63,7 +70,7 @@ public class MonitoringController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/pcList", method = RequestMethod.POST)
+	@PostMapping("/pcList")
 	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -101,9 +108,8 @@ public class MonitoringController {
 	 * 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/pcPolicyList", method = RequestMethod.POST)
-	public HashMap<String, Object> pcPolicyList(Model model,
-			@RequestParam Map<String, Object> params) {
+	@PostMapping("/pcPolicyList")
+	public HashMap<String, Object> pcPolicyList(Model model, @RequestParam Map<String, Object> params) {
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
@@ -141,10 +147,15 @@ public class MonitoringController {
 	 * 상세 로깅정보 출력 화면
 	 * 
 	 */
-	@RequestMapping(value = "/pcView", method = RequestMethod.GET)
+	@GetMapping("/pcView")
 	public String pcInfo(Model model, @RequestParam Map<String, Object> params) {
 		String uuid = "";
 		PcMangrVo vo = new PcMangrVo();
+		SvrlstVo getSvrnm = new SvrlstVo();
+		getSvrnm.setSvr_nm("vpnip");
+
+		SvrlstVo svo = svrlstMapper.getVpnSvrUsed(getSvrnm);
+
 		if (!params.isEmpty()) {
 			uuid = params.get("uuid").toString();
 			vo.setPc_uuid(uuid);
@@ -154,12 +165,13 @@ public class MonitoringController {
 
 		model.addAttribute("uuid", uuid);
 		model.addAttribute("pcvo", vo);
+		model.addAttribute("svo", svo);
 
 		return "/mntrng/mntmgView";
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/memoryUsage", method = RequestMethod.POST)
+	@PostMapping("/memoryUsage")
 	public JSONArray memoryUsage(Model model, @RequestParam Map<String, Object> params) {
 		List<PcMemoryDataVo> list = mService.getMemory(params.get("uuid").toString());
 		JSONObject mem;
@@ -173,7 +185,7 @@ public class MonitoringController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/cpuUsage", method = RequestMethod.POST)
+	@PostMapping("/cpuUsage")
 	public JSONArray cpuUsage(Model model, @RequestParam Map<String, Object> params) {
 		List<PcDataVo> list = mService.getCpu(params.get("uuid").toString());
 		JSONObject cpu;

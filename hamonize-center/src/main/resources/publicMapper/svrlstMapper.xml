@@ -49,6 +49,12 @@
 		order by seq desc
 	</select>
 
+	<select id="getVpnSvrUsed" parameterType="com.model.SvrlstVo" resultType="com.model.SvrlstVo">
+		SELECT *
+		FROM tbl_svrlst
+		WHERE  svr_nm = #{svr_nm}
+	</select>
+
 
 	<select id="countSvrlstListInfo" parameterType="com.model.SvrlstVo" resultType="Integer">
 		SELECT 
