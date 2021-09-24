@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.influxdb.query.FluxRecord;
 import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
 import com.model.OrgVo;
@@ -92,10 +93,10 @@ public class AuditLogController {
 		try {
 			int index = 0;
 			List<AuditLogVo> list = logService.userLogList(vo, pagingVo);
-			List<PcDataVo> influxList = miService.influxInfo();
+			List<FluxRecord> influxList = miService.influxInfo();
 			for (AuditLogVo el : list) {
-				for (PcDataVo pd : influxList) {
-					if (el.getPc_uuid().equals(pd.getHost())) {
+				for (FluxRecord pd : influxList) {
+					if (el.getPc_uuid().equals(pd.getValueByKey("uuid"))) {
 						list.get(index).setState("Y");
 					}
 				}
