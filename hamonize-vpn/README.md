@@ -55,5 +55,7 @@ vpn서버는 하모나이즈 시스템에서 각각의 서버와 클라이언트
    VPN에 연결하고자 하는 서버에서 아래 명령을 수행합니다.
 
     ```
-    sudo nmcli connection import type openvpn file {key-name}.ovpn
+    nmcli connection import type openvpn file {key-name}.ovpn
+    
+    nmcli connection up {key-name}
     ```
