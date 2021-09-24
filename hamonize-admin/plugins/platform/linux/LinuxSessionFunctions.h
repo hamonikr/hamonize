@@ -104,6 +104,11 @@ public:
 	{
 		return QStringLiteral("XDG_SESSION_ID");
 	}
+	
+	static QString xdgSessionPathEnvVarName()
+	{
+		return QStringLiteral("XDG_SESSION_PATH");
+	}
 
 	static bool isOpen( const QString& session );
 	static bool isGraphical( const QString& session );
