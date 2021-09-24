@@ -20,7 +20,7 @@ main.js의 baseurl 정보와 ./shell/getAgentPcInfo.sh의 CenterUrl정보를 수
 * main.js
 const baseurl = "<Hamonize Center Url>";
 
-* getAgentPcInfo.sh
+* setServerInfo.sh
 CENTERURL="http://<Hamonize Center Url>/hmsvc/commInfoData"
 ```
 <br>

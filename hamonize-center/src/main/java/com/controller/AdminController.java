@@ -9,7 +9,10 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.mapper.ISvrlstMapper;
+import com.mapper.IGetAgentPollingMapper;
+
 import com.model.AdminVo;
+import com.model.HmProgrmUpdtVo;
 import com.model.OrgVo;
 import com.model.SvrlstVo;
 import com.paging.PagingUtil;
@@ -19,6 +22,7 @@ import com.service.OrgService;
 import com.service.SvrlstService;
 import com.util.Constant;
 import com.util.SHA256Util;
+
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +51,19 @@ public class AdminController {
 	@Autowired
 	private ISvrlstMapper svrlstMapper;
 
+	@Autowired
+	private IGetAgentPollingMapper getAgentPollingMapper;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	private static final String SUCCESS = "success";
 
 
 	// 서버 관리자
 	@GetMapping("/serverlist")
-	public String serverlist(HttpSession session, Model model, AdminVo vo) {
+	public String serverlist(HttpSession session, Model model) {
+		List<HmProgrmUpdtVo> progrmlist = svrlstMapper.getProgrmList();
+		model.addAttribute("plist", progrmlist);
+
 		return "/svrlst/list";
 	}
 
@@ -72,12 +82,12 @@ public class AdminController {
 
 		pagingVo.setTotalRecordSize(cnt);
 		pagingVo = PagingUtil.setPaging(pagingVo);
-
+	
+	
 		try {
 			List<SvrlstVo> gbList = svrlstService.getSvrlstList(vo, pagingVo);
 			jsonObject.put("list", gbList);
 			jsonObject.put("pagingVo", pagingVo);
-
 			jsonObject.put(SUCCESS, true);
 		} catch (Exception e) {
 			jsonObject.put(SUCCESS, false);
@@ -127,6 +137,16 @@ public class AdminController {
 
 		return jsonObject;
 	}
+
+	//vpn server 사용여부
+	@PostMapping("/vpnUsed")
+	@ResponseBody
+	public int vpnUsed(SvrlstVo vo) {
+		int result = 0;
+		result = svrlstMapper.vpnUsedUpdate(vo);
+		return result;
+	}
+	
 
 
 	// 센터 관리자
@@ -299,6 +319,22 @@ public class AdminController {
 		result = adminservice.sgbManagerIdCheck(vo);
 		return result;
 
+	}
+
+
+	@ResponseBody
+	@PostMapping("/setPollTime")
+	public String setPollTime (HmProgrmUpdtVo vo) {
+		String retval="";
+		logger.info("pu name : {}",vo.getPu_name());
+		logger.info("setPollTime : {}",vo.getPolling_tm());
+		if(svrlstMapper.updatePollingTime(vo)==1 && getAgentPollingMapper.insertPollingData(vo)==1){
+			retval="SUCCESS"; 
+		}else{
+			retval="FAIL"; 
+		}
+
+		return retval;
 	}
 
 }

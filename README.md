@@ -14,7 +14,8 @@ forks](https://img.shields.io/github/forks/hamonikr/hamonize?style=social)
 ![GitHub
 issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
-<br>
+### :house: [Hamonize official homepage](https://hamonize.github.io/)
+
 <img width="800" src="./img/hamonize.png">
 
 
@@ -145,7 +146,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
         <td align="center"><a href="https://github.com/bdh1993"><img src="https://avatars.githubusercontent.com/u/58254473?v=4?s=100" width="100px;" alt=""/><br /><sub><b>JamesBae</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bdh1993" title="Code">💻</a></td>
         <td align="center"><a href="https://github.com/choonsik2"><img src="https://avatars.githubusercontent.com/u/62954933?v=4?s=100" width="100px;" alt=""/><br /><sub><b>choonsik</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=choonsik2" title="Code">💻</a></td>
         <td align="center"><a href="https://github.com/gon1942"><img src="https://avatars.githubusercontent.com/u/31919227?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ryan</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=gon1942" title="Code">💻</a></td>
-        <td align="center"><a href="https://github.com/bigeden"><img src="https://avatars.githubusercontent.com/u/51899018?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eden</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=bigeden" title="Code">💻</a></td>
+        <td align="center"><a href="https://github.com/igothere"><img src="https://avatars.githubusercontent.com/u/51899018?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eden</b></sub></a><br /><a href="https://github.com/hamonikr/hamonize/commits?author=igothere" title="Code">💻</a></td>
       </tr>
     </table>
 

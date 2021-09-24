@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="/css/ztree/zTreeStyle.css" />
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
-<link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+<%-- <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all"> --%>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>

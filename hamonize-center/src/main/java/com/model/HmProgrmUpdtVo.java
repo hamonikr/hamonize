@@ -12,6 +12,8 @@ public class HmProgrmUpdtVo {
 	private String pu_name;
 	private String pu_status; 
 	private String pu_dc; 
+	private String deb_new_version; 
+	private int polling_tm;
 	
 	// search ====
 	private String txtSearch;

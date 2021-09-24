@@ -152,6 +152,10 @@ function expandNode(e) {
 //OS 아이콘
 var windowIcon = "<img src='/images/icon_w.png' style='width:22px; height:22px;'>";
 var hamonikrIcon = "<img src='/images/icon_h.png' style='width:22px; height:22px;'>";
+var gooroomIcon = "<img src='/images/icon_g.png' style='width:22px; height:22px;'>";
+var linuxmintIcon = "<img src='/images/icon_lm.png' style='width:22px; height:22px;'>";
+var debianIcon = "<img src='/images/icon_d.png' style='width:22px; height:22px;'>";
+var ubuntuIcon = "<img src='/images/icon_u.png' style='width:22px; height:22px;'>";
 
 
 //메뉴 Tree onClick
@@ -178,12 +182,21 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
 						gbInnerHtml += "<td style='text-align:center;'>"+no+"</td>";
 						gbInnerHtml += "<td>"+value.deptname+"</td>";
+					
 						if(value.pc_os == "H"){
 							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 						}else if(value.pc_os == "W"){
 							gbInnerHtml += "<td>"+windowIcon+"</td>"; 
+						}else if(value.pc_os == "G"){
+							gbInnerHtml += "<td>"+gooroomIcon+"</td>"; 
+						}else if(value.pc_os == "D"){
+							gbInnerHtml += "<td>"+debianIcon+"</td>"; 
+						}else if(value.pc_os == "L"){
+							gbInnerHtml += "<td>"+linuxmintIcon+"</td>"; 
+						}else if(value.pc_os == "U"){
+							gbInnerHtml += "<td>"+ubuntuIcon+"</td>"; 
 						}else{
-							gbInnerHtml += "<td></td>"; 
+							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 						}
 						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
 						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
@@ -250,8 +263,16 @@ function getPcMngrList(){
 				gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 			}else if(value.pc_os == "W"){
 				gbInnerHtml += "<td>"+windowIcon+"</td>"; 
+			}else if(value.pc_os == "G"){
+				gbInnerHtml += "<td>"+gooroomIcon+"</td>"; 
+			}else if(value.pc_os == "D"){
+				gbInnerHtml += "<td>"+debianIcon+"</td>"; 
+			}else if(value.pc_os == "L"){
+				gbInnerHtml += "<td>"+linuxmintIcon+"</td>"; 
+			}else if(value.pc_os == "U"){
+				gbInnerHtml += "<td>"+ubuntuIcon+"</td>"; 
 			}else{
-				gbInnerHtml += "<td></td>"; 
+				gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 			}
 			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
 			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
@@ -477,6 +498,14 @@ function searchView(viewName, page){
 				pc_os = hamonikrIcon; 
 			}else if(pc_os == "W"){
 				pc_os = windowIcon; 
+			}else if(pc_os == "L"){
+				pc_os = linuxmintIcon; 
+			}else if(pc_os == "D"){
+				pc_os = debianIcon; 
+			}else if(pc_os == "U"){
+				pc_os = ubuntuIcon; 
+			}else if(pc_os == "G"){
+				pc_os = gooroomIcon; 
 			}else{
 			 	pc_os = ""; 
 			}
@@ -502,7 +531,7 @@ function searchView(viewName, page){
 		};
 	</script>
 	
-	<%@ include file="../template/grid.jsp" %>
+	<%-- <%@ include file="../template/grid.jsp" %> --%>
 	<%@ include file="../template/footer.jsp" %>
 	
 	

@@ -1,15 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
 
-<!-- <link rel="stylesheet" type="text/css" href="/css/notice/notice.css" /> -->
 <link rel="stylesheet" type="text/css" href="/css/template/bootstrap4.css" />
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
 
 
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
 <link rel="stylesheet" href="/css/materialize.css">
 <script src="/js/materialize.js"></script>
 
@@ -80,7 +77,6 @@
 	                        <th><input type="text" class="form-control" placeholder="HDD" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="CPU" disabled></th>
 	                        <th><input type="text" class="form-control" placeholder="Memory" disabled></th>
-	                        <!-- <th><input type="text" class="form-control" placeholder="비고" disabled></th> -->
 	                    </tr>
 		        		</thead>
 						<tbody id="pageGrideInPcMngrListTb">

@@ -29,8 +29,7 @@ const options = {
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
-// const baseurl = "<Hamonize Center Url>";
-const baseurl = "http://192.168.0.225:8080";
+const baseurl = "<Hamonize Center Url>";
 const osType = require('os');
 
 let mainWindow, settingWindow;
@@ -204,8 +203,28 @@ const install_program_version_chkeckAsync = async (event) => {
 
 ipcMain.on('install_program_Ready', (event) => {
 	mainWindow.setSize(620, 540);
-	install_program_ReadyAsync(event);
-});
+	var vpn_used;
+	// todo : check vpn cli or gui 셋팅
+		unirest.get(baseurl + '/hmsvc/isVpnUsed')
+		.header('content-type', 'application/json')
+		.end(function (response) {
+			var json = response.body;
+			console.log("vpn_used return json data===" + json);					
+			var obj = eval('(' + json + ')');
+			
+			console.log(obj[0]["vpn_used"]);
+			vpn_used = obj[0]["vpn_used"];
+		});
+
+		if(vpn_used == 1){
+			console.log("vpn install..");
+			install_program_ReadyAsync(event);
+		}else if(vpn_used == 0){
+			console.log("vpn bypass..");
+			event.sender.send('install_program_ReadyProcResult', 'Y');
+		}
+
+	});
 
 
 const install_program_ReadyAsync = async (event) => {
@@ -686,7 +705,6 @@ const sysInfo = async (event, groupname, sabun, username) => {
 
 	console.log("등록 버튼 클릭시 center url >> " + baseurl + '/hmsvc/setPcInfo');
 	unirest.post(baseurl + '/hmsvc/setPcInfo')
-		// unirest.post(baseurl + '/hmsvc/setPcInfo')
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
@@ -709,7 +727,6 @@ const sysInfo = async (event, groupname, sabun, username) => {
 		.end(function (response) {
 			console.log("aaaresponse.body===" + JSON.stringify(response));
 			console.log("\nbbbresponse.body===" + response.body);
-
 			event.sender.send('pcInfoChkProc', response.body);
 		});
 
@@ -731,26 +748,16 @@ function pcInfoUpdate() {
 		original: true
 	});
 
-	// const getHostname = execShellCommand('hostname');
-
-
 	unirest.post(baseurl + '/hmsvr/setVpnUpdate')
-		// unirest.post('http://192.168.0.210:8080/hmsvr/setVpnUpdate')
-
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
-				// datetiem: '',
-				uuid: 's-' + machindid,
+				uuid: machindid,
 				vpnipaddr: vpnipaddr
-				// hostname: hostnameInSerer
-
 			}]
 		})
 		.end(function (response) {
 			console.log("response.body===" + response.body);
-
-			// event.sender.send('serverInfoChkProc', response.body );
 		});
 }
 
@@ -839,7 +846,6 @@ ipcMain.on('getOrgData', (event) => {
 			}]
 		})
 		.end(function (response) {
-			// console.log("조직정보===1===return data===" + JSON.stringify(response.body));
 			event.sender.send('getOrgDataResult', response.body);
 		});
 });

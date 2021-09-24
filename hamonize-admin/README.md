@@ -116,6 +116,7 @@ sudo systemctl daemon-reload
 ```
 make install
 ```
+<br>
 
 #### 어드민 빌드 for Windows
 
@@ -123,8 +124,7 @@ Windows 실행파일을 빌드하기 위한 Cross compiling 방법입니다.
 
 아래 명령어를 통해 Windows 빌드 환경이 구축된 Docker 이미지를 내려받고 컨테이너에 접속합니다.
 ```
-docker pull yeji0407/admin_win:1.0
-docker run -it yeji0407/admin_win:1.0 bash
+docker run -it hamonikr/hamonize-admin.win64 bash
 ```
 아래 명령어를 통해 하모나이즈 소스코드를 내려받습니다.
 
@@ -150,6 +150,46 @@ cd hamonize-win64-[version]
 makeinsis hamonize.nsi
 ```
 현재 위치한 경로에 생성된 hamonize-[version]-win64-setup.exe 실행파일을 Windows에서 다운로드 받고 실행합니다. 
+
+<br>
+
+#### 어드민 빌드 for GooroomOS
+
+GooroomOS 에서 설치, 실행할 수 있는 패키지를 빌드하는 방법입니다.
+
+아래 명령어를 통해 Debian10 빌드 환경이 구축된 Docker 이미지를 내려받고 컨테이너에 접속합니다.
+```
+docker run -it hamonikr/hamonize-admin.buster bash
+```
+
+하모나이즈 소스코드를 내려받고 빌드를 수행합니다.
+```
+git clone --recursive https://github.com/hamonikr/hamonize.git
+cd hamonize/hamonize-admin
+mkdir build && cd build
+cmake -G Ninja -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX=/usr -DWITH_LTO="OFF" ..
+fakeroot ninja package
+```
+
+<br>
+
+#### 어드민 빌드 for Debian11
+
+Debian11 에서 설치, 실행할 수 있는 패키지를 빌드하는 방법입니다.
+
+아래 명령어를 통해 Debian11 빌드 환경이 구축된 Docker 이미지를 내려받고 컨테이너에 접속합니다.
+```
+docker run -it hamonikr/hamonize-admin.bullseye bash
+```
+
+하모나이즈 소스코드를 내려받고 빌드를 수행합니다.
+```
+git clone --recursive https://github.com/hamonikr/hamonize.git
+cd hamonize/hamonize-admin
+mkdir build && cd build
+cmake -G Ninja -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX=/usr -DWITH_LTO="OFF" ..
+fakeroot ninja package
+```
 
 <br>
 

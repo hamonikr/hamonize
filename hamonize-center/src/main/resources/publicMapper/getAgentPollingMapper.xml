@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.IGetAgentPollingMapper">
+	<insert id="insertPollingData" parameterType="com.model.HmProgrmUpdtVo">
+		insert	into 
+			tbl_polling_applc(
+				pu_name,
+				polling_tm,
+				insert_dt
+			)values(
+				#{pu_name},
+				#{polling_tm},
+				now()
+			)
+	</insert>
+
+	<select id="getPollingTime" parameterType="com.model.GetAgentPollingVo" resultType="com.model.GetAgentPollingVo">
+		SELECT polling_tm FROM TBL_PROGRM_UDPT
+		WHERE pu_name = #{pu_name};
+	</select>
+	
+	<select id="getAgentWorkYn" parameterType="com.model.GetAgentPollingVo" resultType="Integer">
+		SELECT 
+		   count(*) AS cnt
+		FROM tbl_polling_agent_job JOIN tbl_polling_applc TB ON TA.seq = TB.seq 
+		WHERE TA.uuid = #{uuid} 
+	</select>
+	
+	
+</mapper>
