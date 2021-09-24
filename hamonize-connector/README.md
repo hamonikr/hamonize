@@ -15,7 +15,7 @@ Hamonize-Connector는
 Hamonize-Center에서 등록된 원격지 컴퓨터들의 정보를 받아오기위해 Hamonize-Center 서버 API통신을 하고있습니다. 
 
 ```
-main.js의 baseurl 정보와 ./shell/getAgentPcInfo.sh의 CenterUrl정보를 수정합니다. 
+main.js의 baseurl 정보와 ./shell/setServerInfo.sh의 CenterUrl정보를 수정합니다. 
 
 * main.js
 const baseurl = "<Hamonize Center Url>";
