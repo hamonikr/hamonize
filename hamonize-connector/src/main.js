@@ -214,15 +214,15 @@ ipcMain.on('install_program_Ready', (event) => {
 			
 			console.log(obj[0]["vpn_used"]);
 			vpn_used = obj[0]["vpn_used"];
-		});
 
-		if(vpn_used == 1){
-			console.log("vpn install..");
-			install_program_ReadyAsync(event);
-		}else if(vpn_used == 0){
-			console.log("vpn bypass..");
-			event.sender.send('install_program_ReadyProcResult', 'Y');
-		}
+			if(vpn_used == 1){
+				console.log("vpn install..");
+				install_program_ReadyAsync(event);
+			}else if(vpn_used == 0){
+				console.log("vpn bypass..");
+				event.sender.send('install_program_ReadyProcResult', 'Y');
+			}
+		});
 
 	});
 
@@ -372,7 +372,7 @@ function setServerInfo() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====get Agent Server Info");
-		var getAgentInfo = "sh " + __dirname + "/shell/setServerInfo.sh";
+		var getAgentInfo = "bash " + __dirname + "/shell/setServerInfo.sh";
 
 		sudo.exec(getAgentInfo, options,
 			function (error, stdout, stderr) {
