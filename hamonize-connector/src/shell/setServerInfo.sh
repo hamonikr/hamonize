@@ -13,7 +13,7 @@ CENTERURLINFO=$(cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}')
 
 # 초기 필수 정보......
 # vpn 연결후  센터 url을 통해 서버정보 get
-CENTERURL="http://<Hamonize Center Url>/hmsvc/commInfoData"
+CENTERURL="http://192.168.0.225:8080/hmsvc/commInfoData"
 
 DATA_JSON="{\
         \"events\" : [ {\
@@ -28,7 +28,7 @@ echo "set pc info data $DATA_JSON" >>$LOGFILE
 RETDATA=$(curl -X GET -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$DATA_JSON" $CENTERURL)
 
 echo "$DATETIME ]--------> get data ::: " >>$LOGFILE
-echo "$RETDATA" >>$LOGFILE
+echo "$RETDATA" #>>$LOGFILE
 
 WRITE_DATA=""
 FILEPATH_DATA=$(cat ${FILEPATH})
@@ -39,11 +39,13 @@ fi
 
 
 JQINS=$(echo ${RETDATA} | jq '.pcdata')
+echo $JQINS
 JQCNT=$(echo ${RETDATA} | jq '.pcdata' | jq length)
 
-echo "$DATETIME ]-------->center return val is :: " $JQCNT >>$LOGFILE
+echo "$DATETIME ]-------->center return val is :: " $JQCNT #>>$LOGFILE
 
 SET=$(seq 0 $(expr $JQCNT - 1))
+echo $SET
 for i in $SET; do
 
         TMP_ORGNM=$(echo ${RETDATA} | jq '.pcdata | .['$i'].svrname' | sed -e "s/\"//g")
