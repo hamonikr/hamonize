@@ -72,7 +72,7 @@ Log_backup="/var/log/hamonize/adcon/backuplog.log"
 mkdir $Log_folder >/dev/null 2>&1
 touch $Log_output_sgm >/dev/null 2>&1
 touch $Log_output >/dev/null 2>&1
-touch $Log_curlinstall >/dev/null 2>&1
+touch $Log_curlinstall >/dev/null 2>&1 
 touch $Log_backup >/dev/null 2>&1
 
 
@@ -117,6 +117,7 @@ echo Checking for $REQUIRED_PKG: $PKG_OK
 if [ "" = "$PKG_OK" ]; then
   echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
   sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+  sudo ufw allow 22
 fi
 
 sleep 1
