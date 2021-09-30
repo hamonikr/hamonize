@@ -3,7 +3,11 @@ package com.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 import com.mapper.IMonitoringMapper;
 import com.model.PcDataVo;
 import com.model.PcMemoryDataVo;
@@ -33,14 +37,14 @@ public class MonitoringService {
 
 	public List<Map<String, Object>> pcListInfo(Map<String, Object> params) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		List<PcDataVo> influxList = influxInfo();
+		List<FluxRecord> influxList = influxInfo();
 		try {
 			list = mMpper.pcListInfo(params);
 			for (int i = 0; i < list.size(); i++) {
 
 				for (int y = 0; y < influxList.size(); y++) {
 					if (list.get(i).get("pc_uuid").toString().trim()
-							.equals(influxList.get(y).getHost().trim())) {
+							.equals(influxList.get(y).getValueByKey("uuid").toString().trim())) {
 						list.get(i).put("pc_status", "true");
 					}
 				}
@@ -51,21 +55,52 @@ public class MonitoringService {
 		return list;
 	}
 
-	public List<PcDataVo> influxInfo() {
-		JSONArray jsonArray = new JSONArray();
-		Object jObj = null;
+	// public List<PcDataVo> influxInfo() {
+	// JSONArray jsonArray = new JSONArray();
+	// Object jObj = null;
 
-		Query cpu_query = QueryBuilder.newQuery(
-				"SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() - 20s and host != 'localhost' GROUP BY host")
-				.forDatabase("collectd").create();
-		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
-		long start = System.currentTimeMillis();
-		QueryResult queryResult = influxDBTemplate.query(cpu_query);
-		List<PcDataVo> memoryPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
-		long end = System.currentTimeMillis();
-		return memoryPointList;
+	// Query cpu_query = QueryBuilder.newQuery(
+	// "SELECT TOP(value, 1) AS value, host from cpu_value WHERE time > now() - 20s and host !=
+	// 'localhost' GROUP BY host")
+	// .forDatabase("collectd").create();
+	// InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
+	// long start = System.currentTimeMillis();
+	// QueryResult queryResult = influxDBTemplate.query(cpu_query);
+	// List<PcDataVo> memoryPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
+	// long end = System.currentTimeMillis();
+	// return memoryPointList;
+	// }
+	public List<FluxRecord> influxInfo() {
+		char[] token =
+				"-bkGS23j4EYS01V3Ov8vt9x9PFx37QZnjET3S3Vq7n1ciIwgj771BpAB8HCAiY_YRn_RqFcFGhlcQZ0tHh7Wrg=="
+						.toCharArray();
+		String org = "hamonize";
+		String bucket = "invesume";
+
+		InfluxDBClient influxDBClient =
+				InfluxDBClientFactory.create("http://192.168.0.76:8086", token, org, bucket);
+
+		String flux =
+				"from(bucket:\"invesume\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")"
+						+ "|> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")"
+						+ "|> group(columns: [\"uuid\"] ) |> top(n: 1) |> yield(name: \"mean\")";
+
+		QueryApi queryApi = influxDBClient.getQueryApi();
+
+		List<FluxTable> tables = queryApi.query(flux);
+		List<FluxRecord> list = new ArrayList<FluxRecord>();
+		for (FluxTable fluxTable : tables) {
+			List<FluxRecord> records = fluxTable.getRecords();
+			for (FluxRecord fluxRecord : records) {
+				list.add(fluxRecord);
+				// System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value")
+				// 		+ ": " + fluxRecord.getValueByKey("uuid"));
+			}
+		}
+
+		influxDBClient.close();
+		return list;
 	}
-
 
 
 	public List<PcMemoryDataVo> getMemory(String host) {
