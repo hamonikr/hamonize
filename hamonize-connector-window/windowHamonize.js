@@ -393,7 +393,7 @@ exports.hamonizeServerInfo = function (baseurl, event) {
             console.log("InfluxOrg===" + InfluxOrg);
             console.log("InfluxToken===" + InfluxToken);
 
-            // getOrgData(event, baseurl);
+            getOrgData(event, baseurl);
 
 
         }, (error) => {
