@@ -72,16 +72,16 @@ public class MonitoringService {
 	// }
 	public List<FluxRecord> influxInfo() {
 		char[] token =
-				"-bkGS23j4EYS01V3Ov8vt9x9PFx37QZnjET3S3Vq7n1ciIwgj771BpAB8HCAiY_YRn_RqFcFGhlcQZ0tHh7Wrg=="
+				"mytoken"
 						.toCharArray();
-		String org = "hamonize";
-		String bucket = "invesume";
+		String org = "myorgname";
+		String bucket = "mybucketname";
 
 		InfluxDBClient influxDBClient =
-				InfluxDBClientFactory.create("http://192.168.0.76:8086", token, org, bucket);
+				InfluxDBClientFactory.create("http://ts.hamonikr.org:8086", token, org, bucket);
 
 		String flux =
-				"from(bucket:\"invesume\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")"
+				"from(bucket:\"mybucketname\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")"
 						+ "|> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")"
 						+ "|> group(columns: [\"uuid\"] ) |> top(n: 1) |> yield(name: \"mean\")";
 
