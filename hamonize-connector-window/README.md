@@ -3,7 +3,6 @@
 ### Hamonize-Connector?
 
 하모나이즈 커넥터는 원격지에서 윈도우 PC를 관리하는데 필요한 기능들을 설치해주는 프로그램입니다
-리눅스 버전의 커넥터는 https://github.com/hamonikr/hamonize/tree/master/hamonize-connector 참조하세요.
 
 
 
