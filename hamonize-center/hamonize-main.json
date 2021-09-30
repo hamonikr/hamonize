@@ -19,22 +19,22 @@
   "links": [],
   "panels": [
     {
-      "activePatternIndex": -3,
+      "activePatternIndex": 0,
       "datasource": null,
       "defaultPattern": {
         "bgColors": "green|orange|red",
         "bgColors_overrides": "0->green|2->red|1->yellow",
         "clickable_cells_link": "",
-        "col_name": "_1_",
-        "decimals": 2,
+        "col_name": "{{metric_name}}",
+        "decimals": "0",
         "defaultBGColor": "transparent",
         "defaultTextColor": "black",
-        "delimiter": ".",
+        "delimiter": "tag",
         "displayTemplate": "_value_",
-        "enable_bgColor": true,
+        "enable_bgColor": false,
         "enable_bgColor_overrides": false,
         "enable_clickable_cells": false,
-        "enable_textColor": false,
+        "enable_textColor": true,
         "enable_textColor_overrides": false,
         "enable_time_based_thresholds": false,
         "enable_transform": false,
@@ -50,8 +50,8 @@
         "null_value": "No data",
         "pattern": "*",
         "row_col_wrapper": "_",
-        "row_name": "_2_",
-        "textColors": "red|orange|green",
+        "row_name": "{{host}}",
+        "textColors": "green|orange|red",
         "textColors_overrides": "0->red|2->green|1->yellow",
         "thresholds": "50,80",
         "time_based_thresholds": [],
@@ -60,8 +60,8 @@
         "transform_values_overrides": "0->down|1->up",
         "valueName": "current"
       },
-      "default_title_for_rows": "uuid",
-      "first_column_link": "http://192.168.0.225:8080/mntrng/pcView.do?uuid=_row_name_",
+      "default_title_for_rows": "",
+      "first_column_link": "http://ts.hamonikr.org/mntrng/pcView.do?uuid=_row_name_",
       "font_size": "1.2em",
       "gridPos": {
         "h": 9,
@@ -70,47 +70,7 @@
         "y": 0
       },
       "id": 2,
-      "patterns": [
-        {
-          "bgColors": "green|orange|red",
-          "bgColors_overrides": "0->green|2->red|1->yellow",
-          "clickable_cells_link": "",
-          "col_name": "_1_",
-          "decimals": 2,
-          "defaultBGColor": "",
-          "defaultTextColor": "",
-          "delimiter": ".",
-          "displayTemplate": "_value_",
-          "enable_bgColor": false,
-          "enable_bgColor_overrides": false,
-          "enable_clickable_cells": false,
-          "enable_textColor": false,
-          "enable_textColor_overrides": false,
-          "enable_time_based_thresholds": false,
-          "enable_transform": false,
-          "enable_transform_overrides": false,
-          "filter": {
-            "value_above": "",
-            "value_below": ""
-          },
-          "format": "none",
-          "name": "New Pattern",
-          "null_color": "darkred",
-          "null_textcolor": "black",
-          "null_value": "No data",
-          "pattern": "^server.*cpu$",
-          "row_col_wrapper": "_",
-          "row_name": "_0_",
-          "textColors": "red|orange|green",
-          "textColors_overrides": "0->red|2->green|1->yellow",
-          "thresholds": "70,90",
-          "time_based_thresholds": [],
-          "tooltipTemplate": "Series : _series_ <br/>Row Name : _row_name_ <br/>Col Name : _col_name_ <br/>Value : _value_",
-          "transform_values": "_value_|_value_|_value_",
-          "transform_values_overrides": "0->down|1->up",
-          "valueName": "avg"
-        }
-      ],
+      "patterns": [],
       "row_col_wrapper": "_",
       "sorting_props": {
         "col_index": -1,
@@ -142,7 +102,7 @@
           "measurement": "cpu_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(\"value\") FROM \"cpu_value\" WHERE (\"type\" = 'percent' AND \"type_instance\" = 'user') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\")\n  |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")\n  |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> set(key: \"_field\", value: \"cpu\")\n  |> yield(name: \"mean\")",
           "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
@@ -175,181 +135,21 @@
           ]
         },
         {
-          "alias": "influx.memory.$tag_host",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "host"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
           "hide": false,
-          "measurement": "memory_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "type",
-              "operator": "=",
-              "value": "percent"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "used"
-            }
-          ]
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"disk\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"path\"] == \"/\" or r[\"path\"] == \"\\\\C:\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> set(key: \"_field\", value: \"disk\")\n  |> yield(name: \"mean\")",
+          "refId": "B"
         },
         {
-          "alias": "influx.swap.$tag_host",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "host"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
           "hide": false,
-          "measurement": "swap_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "type",
-              "operator": "=",
-              "value": "percent"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "used"
-            }
-          ]
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> set(key: \"_field\", value: \"memory\")\n  |> yield(name: \"mean\")",
+          "refId": "C"
         },
         {
-          "alias": "influx.df.$tag_host",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "host"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
           "hide": false,
-          "measurement": "df_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "instance",
-              "operator": "=",
-              "value": "root"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "percent_bytes"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "used"
-            }
-          ]
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"swap\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> set(key: \"_field\", value: \"swap\")\n  |> yield(name: \"mean\")",
+          "refId": "D"
         }
       ],
-      "title": "PC 사용정보",
       "type": "yesoreyeram-boomtable-panel"
     }
   ],
@@ -366,7 +166,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "hamonize-main",
-  "uid": "nprv87G7z",
-  "version": 2
+  "title": "hamonize-main2",
+  "uid": "HjUphTMnk",
+  "version": 31
 }

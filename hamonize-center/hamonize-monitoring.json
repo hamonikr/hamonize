@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1627977436847,
+  "iteration": 1631517621066,
   "links": [],
   "panels": [
     {
@@ -72,52 +72,9 @@
       "pluginVersion": "8.0.6",
       "targets": [
         {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "uptime_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "uptime"
-            }
-          ]
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"system\")\n  |> filter(fn: (r) => r[\"_field\"] == \"uptime\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "queryType": "randomWalk",
+          "refId": "A"
         }
       ],
       "timeFrom": null,
@@ -195,7 +152,7 @@
           "measurement": "cpu_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(value) FROM \"cpu_value\" WHERE (\"host\" =~ /^$host$/ AND \"type\" = 'percent' AND \"type_instance\" = 'user') AND $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\")\n  |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")\n  |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -307,6 +264,7 @@
           "measurement": "memory_value",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "from(bucket: \"invesume\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -417,6 +375,7 @@
           "measurement": "swap_value",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "from(bucket: \"invesume\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"swap\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -527,6 +486,7 @@
           "measurement": "df_value",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "from(bucket: \"invesume\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"disk\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"path\"] == \"\\\\C:\" or r[\"path\"] == \"/\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -640,7 +600,7 @@
           "measurement": "cpu_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(\"value\") FROM \"cpu_value\" WHERE (\"type_instance\" = 'user' AND \"type\" = 'percent' AND \"host\" =~ /^$host$/) AND $timeFilter GROUP BY time($__interval), \"instance\" fill(null) ORDER BY time DESC",
+          "query": "from(bucket: \"invesume\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\")\n  |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")\n  |> filter(fn: (r) => r[\"_field\"] == \"usage_user\" or r[\"_field\"] == \"usage_system\" or r[\"_field\"] == \"usage_idle\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
@@ -663,183 +623,6 @@
               "key": "type_instance",
               "operator": "=",
               "value": "user"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "percent"
-            },
-            {
-              "condition": "AND",
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
-        },
-        {
-          "alias": "wait",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "cpu_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"value\") FROM \"cpu_value\" WHERE (\"type_instance\" = 'user' AND \"type\" = 'percent' AND \"host\" =~ /^$host$/ ) AND $timeFilter GROUP BY time($__interval) fill(null) ORDER BY time DESC",
-          "rawQuery": false,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "type_instance",
-              "operator": "=",
-              "value": "wait"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "percent"
-            },
-            {
-              "condition": "AND",
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
-        },
-        {
-          "alias": "system",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "cpu_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"value\") FROM \"cpu_value\" WHERE (\"type_instance\" = 'system' AND \"type\" = 'percent' AND \"host\" =~ /^$host$/) AND $timeFilter GROUP BY time($__interval) fill(null) ORDER BY time DESC",
-          "rawQuery": false,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "type_instance",
-              "operator": "=",
-              "value": "system"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "percent"
-            },
-            {
-              "condition": "AND",
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
-        },
-        {
-          "alias": "idle",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "cpu_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT mean(\"value\") FROM \"cpu_value\" WHERE (\"type_instance\" = 'idle' AND \"type\" = 'percent' AND \"host\" =~ /^$host$/) AND $timeFilter GROUP BY time($__interval) fill(null) ORDER BY time DESC",
-          "rawQuery": false,
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "type_instance",
-              "operator": "=",
-              "value": "idle"
             },
             {
               "condition": "AND",
@@ -964,7 +747,7 @@
           "measurement": "memory_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(\"value\") FROM \"memory_value\" WHERE (\"host\" =~ /^$host$/ AND \"type_instance\" = 'used') AND $timeFilter GROUP BY time($__interval) fill(null) ORDER BY time DESC",
+          "query": "from(bucket: \"invesume\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem\")\n  |> filter(fn: (r) => r[\"_field\"] == \"total\" or r[\"_field\"] == \"used\" or r[\"_field\"] == \"free\" or r[\"_field\"] == \"cached\" or r[\"_field\"] == \"buffered\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
@@ -993,291 +776,6 @@
               "key": "type_instance",
               "operator": "=",
               "value": "used"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "memory"
-            }
-          ]
-        },
-        {
-          "alias": "free",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "memory_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "free"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "memory"
-            }
-          ]
-        },
-        {
-          "alias": "cached",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "memory_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "cached"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "memory"
-            }
-          ]
-        },
-        {
-          "alias": "buffered",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "memory_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "buffered"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "memory"
-            }
-          ]
-        },
-        {
-          "alias": "slab_recl",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "memory_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "E",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "slab_recl"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "memory"
-            }
-          ]
-        },
-        {
-          "alias": "slab_unrecl",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "memory_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "F",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "slab_unrecl"
             },
             {
               "condition": "AND",
@@ -1377,117 +875,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "Total",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") FROM \"df_value\" WHERE (\"host\" =~ /^$host$/ AND \"type\" = 'df_complex' AND \"instance\" = 'root' AND (\"type_instance\" = 'free' OR \"type_instance\" = 'used')) AND $timeFilter GROUP BY time(10s) fill(null) ORDER BY time ASC",
-          "rawQuery": false,
-          "refId": "C",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "free",
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "df_value",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT sum(\"value\") FROM \"df_value\" WHERE (\"host\" =~ /^$host$/ AND \"type\" = 'df_complex' AND \"instance\" = 'root' AND \"type_instance\" = 'free') AND $timeFilter GROUP BY time($__interval) fill(null) ORDER BY time DESC",
-          "rawQuery": false,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "free"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            },
-            {
-              "condition": "AND",
-              "key": "type",
-              "operator": "=",
-              "value": "df_complex"
-            },
-            {
-              "condition": "AND",
-              "key": "instance",
-              "operator": "=",
-              "value": "root"
-            },
-            {
-              "condition": "AND",
-              "key": "type_instance",
-              "operator": "=",
-              "value": "free"
-            }
-          ],
-          "tz": ""
-        },
-        {
           "alias": "used",
           "groupBy": [
             {
@@ -1508,7 +895,7 @@
           "measurement": "df_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT sum(\"value\") FROM \"df_value\" WHERE (\"host\" =~ /^$host$/ AND \"type\" = 'percent_bytes' AND \"type_instance\" = 'used') AND $timeFilter GROUP BY time($__interval) fill(null) ORDER BY time DESC",
+          "query": "from(bucket: \"invesume\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"disk\")\n  |> filter(fn: (r) => r[\"_field\"] == \"total\" or r[\"_field\"] == \"used\" or r[\"_field\"] == \"free\")\n  |> filter(fn: (r) => r[\"path\"] == \"\\\\C:\" or r[\"path\"] == \"/\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
@@ -1667,51 +1054,8 @@
           "measurement": "interface_rx",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "from(bucket: \"invesume\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"net\")\n  |> filter(fn: (r) => r[\"_field\"] == \"bytes_recv\" or r[\"_field\"] == \"bytes_sent\")\n  |> filter(fn: (r) => r[\"uuid\"] == \"${uuid}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=~",
-              "value": "/^$host$/"
-            }
-          ]
-        },
-        {
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "interface_tx",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
           "resultFormat": "time_series",
           "select": [
             [
@@ -1778,7 +1122,7 @@
       }
     }
   ],
-  "refresh": "10s",
+  "refresh": "",
   "schemaVersion": 30,
   "style": "dark",
   "tags": [],
@@ -1788,20 +1132,20 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "",
-          "value": ""
+          "text": "1eacb0bdb4ee493f9883bd4840784dda",
+          "value": "1eacb0bdb4ee493f9883bd4840784dda"
         },
-        "datasource": "PostgreSQL",
-        "definition": "select pc_uuid from tbl_pc_mangr",
-        "description": "host",
+        "datasource": null,
+        "definition": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(bucket: \"invesume\", tag: \"uuid\")",
+        "description": "uuid",
         "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": "host",
+        "label": "uuid",
         "multi": false,
-        "name": "host",
+        "name": "uuid",
         "options": [],
-        "query": "select pc_uuid from tbl_pc_mangr",
+        "query": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(bucket: \"invesume\", tag: \"uuid\")",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -1819,7 +1163,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "hamonize-monitoring",
-  "uid": "IDKTE7Gnz",
-  "version": 6
+  "title": "hamonize-monitoring2",
+  "uid": "ENCxAtG7k",
+  "version": 20
 }

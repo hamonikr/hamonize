@@ -18,6 +18,8 @@ public interface ISvrlstMapper {
 
 	public int svrlstInsert(SvrlstVo vo);
 
+	public int envInsert(SvrlstVo vo);
+	
 	public List<SvrlstVo> getSvrlstDataList();
 
 	public int svrlstDelete(SvrlstVo vo);

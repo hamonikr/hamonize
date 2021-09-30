@@ -49,12 +49,11 @@ function getMonthAgoday(){
             <ul class="admin_sinfo">
 				<li><div class="dropdown">
 					<div class="admin">
-						<img alt="설정" src="/images/icon_setting.png" />
-						<span></span>
+						<a href="/admin/serverlist.do"><img alt="설정" src="/images/icon_setting.png" /></a>
 					</div>
 					<div class="dropdown_content" >
-						<a href="/admin/list.do">관리자 관리</a>
 						<a href="/admin/serverlist.do">환경 설정</a>
+						<a href="/admin/list.do">관리자 정보 목록</a>
 					</div>
 				</div></li>
                 <li><a href="/login/logout.do"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
@@ -67,9 +66,7 @@ function getMonthAgoday(){
             <ul>
                 <li><a href="/mntrng/pcControlList">모니터링</a></li>
                 <li><a href="/org/orgManage">조직관리</a></li>
-                <%-- <li><a href="/user/userList">사용자정보</a></li>  --%>
-                <li><a href="/pcMngr/pcMngrList">PC정보</a>
-                </li>
+                <li><a href="/pcMngr/pcMngrList">PC정보</a></li>
                 <li><a href="/gplcs/umanage">정책관리</a>
                     <ul>
                         <li><a href="/gplcs/umanage">업데이트관리</a></li>
