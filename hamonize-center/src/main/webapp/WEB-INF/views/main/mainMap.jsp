@@ -21,8 +21,7 @@
 
     <!-- Main CSS-->
 	<link href="css/theme.css" rel="stylesheet" media="all">
-	
-    <link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
+	<link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
     
     
 	<style>
@@ -79,9 +78,9 @@
            <div class="card card-h-100">
                <div class="card-body">
                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
-                       	PC 사용현황
+                       	PC 사용현황 
                    </div>
-						<iframe title="Main monitoring" src="http://192.168.0.225:3000/d-solo/UIrYV17nk/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
+						<iframe title="Main monitoring" src="http://${svo.svr_ip}:3000/d-solo/nprv87G7z/hamonize-main?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
                 </div> <!-- end card-body-->
            </div> <!-- end card-->
        </div>

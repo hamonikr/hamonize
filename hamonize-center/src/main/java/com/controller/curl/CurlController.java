@@ -140,15 +140,15 @@ public class CurlController {
 
 			if (hdVo.getPc_os().toLowerCase().contains("hamonikr")) {
 				hdVo.setPc_os("H");
-			} else if (hdVo.getPc_hostname().toLowerCase().contains("window")) {
+			} else if (hdVo.getPc_os().toLowerCase().contains("window")) {
 				hdVo.setPc_os("W");
-			} else if (hdVo.getPc_hostname().toLowerCase().contains("debian")) {
+			} else if (hdVo.getPc_os().toLowerCase().contains("debian")) {
 				hdVo.setPc_os("D");
-			} else if (hdVo.getPc_hostname().toLowerCase().contains("gooroom")) {
+			} else if (hdVo.getPc_os().toLowerCase().contains("gooroom")) {
 				hdVo.setPc_os("G");
-			} else if (hdVo.getPc_hostname().toLowerCase().contains("linuxmint")) {
+			} else if (hdVo.getPc_os().toLowerCase().contains("linuxmint")) {
 				hdVo.setPc_os("L");
-			} else if (hdVo.getPc_hostname().toLowerCase().contains("ubuntu")) {
+			} else if (hdVo.getPc_os().toLowerCase().contains("ubuntu")) {
 				hdVo.setPc_os("U");
 			} 
 			
@@ -356,28 +356,34 @@ public class CurlController {
 		List<SvrlstVo> svrlstVo = svrlstMapper.getSvrlstDataList();
 
 		for (SvrlstVo svrlstData : svrlstVo) {
-			logger.debug("svrlstData===> {}", svrlstData.getSvr_port());
-			logger.debug("svrlstData===> {}", svrlstData.getSvr_domain());
-			logger.debug("svrlstData===> {}", svrlstData.getSvr_ip());
-			logger.debug("svrlstData===> {}", svrlstData.getSvr_vip());
-
 			JSONObject tmpObject = new JSONObject();
+			if(svrlstData.getSvr_used() == 1 && svrlstData.getSvr_vip() != null){	
+				svrlstData.setSvr_ip(svrlstData.getSvr_vip().trim());
+				if(svrlstData.getSvr_nm().equals("VPNIP")){
+					svrlstData.setSvr_ip(svrlstData.getSvr_ip().trim());
+				}
+			} 
 
-			tmpObject.put("svrname", svrlstData.getSvr_nm());
-			tmpObject.put("svrdomain", svrlstData.getSvr_domain());
-			
 			if ("N".equals(svrlstData.getSvr_port())) {
-				tmpObject.put("pcip", svrlstData.getSvr_ip());
-				tmpObject.put("pcvip", svrlstData.getSvr_vip());
+				tmpObject.put("pcip", svrlstData.getSvr_ip().trim());
 
 			} else {
-				tmpObject.put("pcip", svrlstData.getSvr_ip() + ":" + svrlstData.getSvr_port());
-				tmpObject.put("pcvip", svrlstData.getSvr_vip() + ":" + svrlstData.getSvr_port());
+				String ret = svrlstData.getSvr_ip() + ":" + svrlstData.getSvr_port();
+				tmpObject.put("pcip", ret.trim());
+			}
+
+			tmpObject.put("svrname", svrlstData.getSvr_nm());
+			
+			if(svrlstData.getSvr_domain() != null){
+				tmpObject.put("svrdomain", svrlstData.getSvr_domain().trim());
+			}else{
+				tmpObject.put("svrdomain", svrlstData.getSvr_domain());
 
 			}
 
 			itemList.add(tmpObject);
 		}
+
 		jsonObject.put("pcdata", itemList);
 
 		output = jsonObject.toJSONString();
