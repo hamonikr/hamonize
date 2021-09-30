@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mapper.IPcMangrMapper;
+import com.mapper.ISvrlstMapper;
+
 import com.model.OrgVo;
 import com.model.PcMangrVo;
+import com.model.SvrlstVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.OrgService;
@@ -39,6 +42,9 @@ public class PcMangrController {
 
 	@Autowired
 	private OrgService oService;
+
+	@Autowired
+	private ISvrlstMapper svrlstMapper;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -91,11 +97,17 @@ public class PcMangrController {
 		pagingVo.setTotalRecordSize(cnt);
 		pagingVo = PagingUtil.setPaging(pagingVo);
 
+		SvrlstVo svrnm = new SvrlstVo();
+		svrnm.setSvr_nm("VPNIP");
+		
+		SvrlstVo svo = svrlstMapper.getVpnSvrUsed(svrnm);
+
 		try {
 			List<PcMangrVo> gbList = pcService.pcMangrList(vo, pagingVo);
 
 			jsonObject.put("list", gbList);
 			jsonObject.put("pcVo", vo);
+			jsonObject.put("svo", svo);		
 			jsonObject.put("pagingVo", pagingVo);
 			jsonObject.put("success", true);
 		} catch (Exception e) {

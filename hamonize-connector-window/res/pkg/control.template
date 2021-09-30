@@ -1,0 +1,14 @@
+Package: hamonikr-webmin-ctl
+License: Apache-2.0
+Vendor: kg1942@invesume.com
+Architecture: amd64
+Maintainer: kg1942@invesume.com
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libappindicator3-1, libsecret-1-0
+Provides: hamonikr-webmin
+Conflicts: hamonikr-webmin
+Replaces: hamonikr-webmin
+Section: net
+Priority: extra
+Homepage: https://hamonikr.org
+Description: 
+  A feature-rich client for Matrix.org

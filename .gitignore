@@ -16,3 +16,6 @@ hamonize-admin/svg
 hamonize-admin/Makefile
 hamonize-admin/plugins/addons
 hamonize-admin/plugins/extra
+node_modules
+**/node_modules/*
+*.sh

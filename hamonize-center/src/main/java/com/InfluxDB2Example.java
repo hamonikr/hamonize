@@ -1,93 +1,91 @@
-// package com;
+package com;
 
-// import java.time.Instant;
-// import java.util.List;
+import java.time.Instant;
+import java.util.List;
 
-// import com.influxdb.annotations.Column;
-// import com.influxdb.annotations.Measurement;
-// import com.influxdb.client.InfluxDBClient;
-// import com.influxdb.client.InfluxDBClientFactory;
-// import com.influxdb.client.QueryApi;
-// import com.influxdb.client.WriteApiBlocking;
-// import com.influxdb.client.domain.WritePrecision;
-// import com.influxdb.client.write.Point;
-// import com.influxdb.query.FluxRecord;
-// import com.influxdb.query.FluxTable;
-// import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.QueryApi;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
 
-// @EnableConfigurationProperties(InfluxDBPropertiesCustom.class)
-// public class InfluxDB2Example {
-//     private static char[] token =
-//             "-bkGS23j4EYS01V3Ov8vt9x9PFx37QZnjET3S3Vq7n1ciIwgj771BpAB8HCAiY_YRn_RqFcFGhlcQZ0tHh7Wrg=="
-//                     .toCharArray();
-//     private static String org = "hamonize";
-//     private static String bucket = "invesume";
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-//     public static void main(final String[] args) {
+@EnableConfigurationProperties(InfluxDBPropertiesCustom.class)
+public class InfluxDB2Example {
+    private static char[] token =
+            "dMn7rQBCCtYSW1U3dcJS_ewBQTSPb3q6bqCTJ79INQqsKhNiPBpP4gOx9kAq4pEOQVcSr7_alBdEqK1zJ7uSGQ=="
+                    .toCharArray();
+    private static String org = "myorgname";
+    private static String bucket = "mybucketname";
 
-//         InfluxDBClient influxDBClient =
-//                 InfluxDBClientFactory.create("http://192.168.0.76:8086", token, org, bucket);
+    public static void main(final String[] args) {
 
-//         //
-//         // Write data
-//         //
-//         // WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+        InfluxDBClient influxDBClient =
+                InfluxDBClientFactory.create("http://ts.hamonikr.org:8086", token, org, bucket);
 
-//         //
-//         // Write by Data Point
-//         //
-//         // Point point = Point.measurement("temperature").addTag("location", "west")
-//         // .addField("value", 55D).time(Instant.now().toEpochMilli(), WritePrecision.MS);
+        //
+        // Write data
+        //
+        // WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-//         // writeApi.writePoint(point);
+        //
+        // Write by Data Point
+        //
+        // Point point = Point.measurement("temperature").addTag("location", "west")
+        // .addField("value", 55D).time(Instant.now().toEpochMilli(), WritePrecision.MS);
 
-//         //
-//         // Write by LineProtocol
-//         //
-//         // writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0");
+        // writeApi.writePoint(point);
 
-//         //
-//         // Write by POJO
-//         //
-//         Temperature temperature = new Temperature();
-//         temperature.location = "south";
-//         temperature.value = 62D;
-//         temperature.time = Instant.now();
+        //
+        // Write by LineProtocol
+        //
+        // writeApi.writeRecord(WritePrecision.NS, "temperature,location=north value=60.0");
 
-//         // writeApi.writeMeasurement(WritePrecision.NS, temperature);
+        //
+        // Write by POJO
+        //
+        Temperature temperature = new Temperature();
+        temperature.location = "south";
+        temperature.value = 62D;
+        temperature.time = Instant.now();
 
-//         //
-//         // Query data
-//         //
-//         String flux =
-//                 "from(bucket:\"invesume\") |> range(start: -30d) |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")"
-//                         + "|> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")"
-//                         + "|> group(columns: [\"uuid\"] ) |> top(n: 1) |> yield(name: \"mean\")";
+        // writeApi.writeMeasurement(WritePrecision.NS, temperature);
 
-//         QueryApi queryApi = influxDBClient.getQueryApi();
+        //
+        // Query data
+        //
+        String flux =
+                "from(bucket:\"myorgname\") |> range(start: -30d) |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")"
+                        + "|> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")"
+                        + "|> group(columns: [\"uuid\"] ) |> top(n: 1) |> yield(name: \"mean\")";
 
-//         List<FluxTable> tables = queryApi.query(flux);
-//         for (FluxTable fluxTable : tables) {
-//             List<FluxRecord> records = fluxTable.getRecords();
-//             for (FluxRecord fluxRecord : records) {
-//                 System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value")
-//                         + ": " + fluxRecord.getValueByKey("uuid"));
-//             }
-//         }
+        QueryApi queryApi = influxDBClient.getQueryApi();
 
-//         influxDBClient.close();
-//     }
+        List<FluxTable> tables = queryApi.query(flux);
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value")
+                        + ": " + fluxRecord.getValueByKey("uuid"));
+            }
+        }
 
-//     @Measurement(name = "temperature")
-//     private static class Temperature {
+        influxDBClient.close();
+    }
 
-//         @Column(tag = true)
-//         String location;
+    @Measurement(name = "temperature")
+    private static class Temperature {
 
-//         @Column
-//         Double value;
+        @Column(tag = true)
+        String location;
 
-//         @Column(timestamp = true)
-//         Instant time;
-//     }
-// }
+        @Column
+        Double value;
+
+        @Column(timestamp = true)
+        Instant time;
+    }
+}

@@ -1,23 +1,12 @@
 version : '3'
 services : 
-    db:
-        image: postgres:10.16
-        environment:
-            POSTGRES_USER : hamonize
-            POSTGRES_PASSWORD : password
-            POSTGRES_DB : hamonize_center
-        ports:
-            - "5432:5432"
-        volumes:
-            - ./sql:/docker-entrypoint-initdb.d
-            - psql-data:/var/lib/postgresql/data
-
     web:
         build: .
         volumes:
             - was-logs:/usr/local/tomcat/logs
+            - ../uploads:/root/uploads
         ports:
-            - "8080:8080"
+            - "80:8080"
     
     ldap:
         image: osixia/openldap:latest
@@ -41,7 +30,7 @@ services :
     phpldapadmin:
         image: osixia/phpldapadmin:latest
         ports:
-            - "80:80"
+            - "8080:80"
         environment:
             - PHPLDAPADMIN_LDAP_HOSTS=ldap
             - PHPLDAPADMIN_HTTPS="false"
@@ -50,17 +39,21 @@ services :
         depends_on:
             - ldap
 
-    influxdb:
-        image: influxdb:1.0
+    influxdb2:
+        image: influxdb:2.0.4
         ports:
-        - "8083:8083"
-        - "8086:8086"
-        - "25826:25826/udp"
+          - "8086:8086"
         volumes:
-        - influxdb:/var/lib/influxdb
-        - ./influxdb.conf:/etc/influxdb/influxdb.conf
-        - ./types.db:/usr/share/collectd/types.db:ro
-
+          - influxdb-storage:/var/lib/influxdb
+        environment:
+          - DOCKER_INFLUXDB_INIT_MODE=setup      
+          - DOCKER_INFLUXDB_INIT_USERNAME=admin      
+          - DOCKER_INFLUXDB_INIT_PASSWORD=password      
+          - DOCKER_INFLUXDB_INIT_ORG=myorgname
+          - DOCKER_INFLUXDB_INIT_BUCKET=mybucketname
+          - DOCKER_INFLUXDB_INIT_RETENTION=1w
+          - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
+    
     grafana:
         image: grafana/grafana:latest
         ports:
@@ -73,6 +66,6 @@ volumes:
     hamonize_center.sql:
     psql-data:
     ldap-data:
-    influxdb:
+    influxdb-storage:
     grafana:
     was-logs:
