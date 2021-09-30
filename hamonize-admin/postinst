@@ -14,3 +14,6 @@ if [ ! -x "$XDG_DESKTOP_MENU" ]; then
 else
   "$XDG_DESKTOP_MENU" install --mode system /usr/share/applications/hamonize-remote.desktop
 fi
+
+sudo systemctl enable /lib/systemd/system/hamonize.service
+sudo systemctl start hamonize.service
