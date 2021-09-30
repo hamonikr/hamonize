@@ -318,7 +318,7 @@ function fnSave(){
 		                            </tr>
 		                        </tbody>
 		                    </table>
-		                    </form>
+		                </form>
 		                    <input type="hidden" id="MngeListInfoCurrentPage" name="MngeListInfoCurrentPage" value="1" />
 		                </div>
 						<!-- //List -->

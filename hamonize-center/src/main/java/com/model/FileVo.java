@@ -7,15 +7,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class FileVO {
-    private Integer fileno; 
-    private String parentPK;
+public class FileVo {
+    private Integer seq; 
     private String filename;
-    private String realname;
+    private String filerealname;
     private long filesize;
     private String filepath;
-    private String filerealname;
-    
+    private String keytype;
+
     /**
      * 파일 크기를 정형화하기.
      */

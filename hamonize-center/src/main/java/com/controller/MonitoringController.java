@@ -5,21 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
 import com.model.OrgVo;
@@ -29,6 +14,20 @@ import com.model.PcMemoryDataVo;
 import com.model.SvrlstVo;
 import com.service.MonitoringService;
 import com.service.OrgService;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/mntrng")
@@ -140,6 +139,7 @@ public class MonitoringController {
 		}
 		model.addAttribute("on", on);
 		model.addAttribute("off", off);
+	
 		return jsonObject;
 	}
 
@@ -152,9 +152,14 @@ public class MonitoringController {
 		String uuid = "";
 		PcMangrVo vo = new PcMangrVo();
 		SvrlstVo getSvrnm = new SvrlstVo();
-		getSvrnm.setSvr_nm("vpnip");
+		getSvrnm.setSvr_nm("VPNIP");
 
 		SvrlstVo svo = svrlstMapper.getVpnSvrUsed(getSvrnm);
+
+		SvrlstVo grafanaurl = new SvrlstVo();
+		grafanaurl.setSvr_nm("GRAFANA_URL");
+
+		SvrlstVo gvo = svrlstMapper.getVpnSvrUsed(grafanaurl);
 
 		if (!params.isEmpty()) {
 			uuid = params.get("uuid").toString();
@@ -166,6 +171,7 @@ public class MonitoringController {
 		model.addAttribute("uuid", uuid);
 		model.addAttribute("pcvo", vo);
 		model.addAttribute("svo", svo);
+		model.addAttribute("gvo", gvo);
 
 		return "/mntrng/mntmgView";
 	}
