@@ -10,22 +10,13 @@
 	});
 	var mailFilter = /^[_a-zA-Z0-9-\.]+@[\.a-zA-Z0-9-]+\.[a-zA-Z]+$/;
 	var phoneFilter = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-	// var pwdFilter = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 	
-
-	/*  $(function() {
-		if($("#abroad_code").val("")){
-			$("#abroad_code").prepend("<option value=''>공관 선택</option>");
-		}
-	});  */
 	function goSave(){
 		
 		if(vaildCheck()) return false;
 		var gubun = $("#gubun option:checked").val();
 		$('#gubun').val(gubun);
 		console.log($('#gubun').val());
-		//alert($('#deptno option:selected').text());
-		//$('form[name=frm] input[name=deptname]').val($('#deptno option:selected').text());
 		
 		var msg = "저장하시겠습니까?";
 	    if(!confirm(msg)){
@@ -99,13 +90,7 @@
 			return true;
 		}
 		
-		/* if(String($('#phone_no').val()).search (phoneFilter) < 0)
-		{
-			alert('올바른 전화번호를 입력하세요.');
-			$('#phone_no').val('');
-			$('#phone_no').focus();
-			return true;
-		} */
+
 	}
 
 	 function goIdCheck()
@@ -210,7 +195,7 @@
 	}
 	
 	function goDelete(){
-		//$('#user_id').val(param);
+		$('#user_id').val(param);
 		
 		var msg = "삭제하시겠습니까?";
 	    if(!confirm(msg)){
@@ -233,24 +218,18 @@
 </script>    
 <body>
 
-	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+<%@ include file="../template/topMenu.jsp" %>
+<%@ include file="../template/topNav.jsp" %>
 	
 
-<form id="frm" name="frm" action="" method="post">
-<input type="hidden" id="id_check" name="id_check" />
 <!-- content -->
-    <div class="hamo_container">
+    <div class="hamo_container other">
         <div class="content_con">
-
-            
-            <!-- content list -->
             <div class="con_box">
               <h2>관리자 정보 수정</h2>
-              <ul class="location">
-                  <li>Home</li>
-                  <li>Location</li>
-              </ul>
+
+				<form id="frm" name="frm" action="" method="post">
+				<input type="hidden" id="id_check" name="id_check" />
 
                 <div class="board_view mT20">
                     <table>
@@ -311,9 +290,9 @@
                 </div>
             </div><!-- //con_box -->
         </div>
-    </div><!-- //content -->
-    </form>
-
+	</form>
+</div><!-- //content -->
+    
 
 <%@ include file="../template/footer.jsp" %>
 

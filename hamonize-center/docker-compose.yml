@@ -16,6 +16,7 @@ services :
         build: .
         volumes:
             - was-logs:/usr/local/tomcat/logs
+            - ${HOME}/uploads:/root/uploads
         ports:
             - "8080:8080"
     
