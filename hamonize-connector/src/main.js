@@ -469,7 +469,7 @@ function vpnCreate() {
 //== vpn create  Shell Job  ===========================================
 function vpnCreateChk() {
 	return new Promise(function (resolve, reject) {
-		var initJobShell = "sh " + __dirname + "/shell/vpnInstallChk.sh";
+		var initJobShell = "/bin/bash " + __dirname + "/shell/vpnInstallChk.sh";
 		sudo.exec(initJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
