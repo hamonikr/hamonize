@@ -42,7 +42,7 @@
 									<th>Port</th>
 									<td><input type="text" name="svr_port" id="svr_port" class="input_type1" style="width:150px" /></td>
 									<td>
-										<button type="button" class="btn btn-outline-info" >저장</button>
+										<button type="button" class="btnAdd btn-outline-info" >저장</button>
 								   </td>
 								</tr>
 							</tbody>
@@ -231,7 +231,7 @@
 							<td ><b>Public 키</b></td>
 							<td> 
 								<c:if test="${publickey.filename != null}">
-									<a href="#" onclick="fnFileDownload('${publickey.filepath}',' ${publickey.filename}', '${publickey.filerealname}');" style="color: steelblue;" > <img src="/images/key.svg"> ${publickey.filerealname}</a>
+									<a href="#" onclick="fnFileDownload('${publickey.seq}',' ${publickey.filename}', '${publickey.filerealname}');" style="color: steelblue;" > <img src="/images/key.svg"> ${publickey.filerealname}</a>
 								</c:if>
 								<c:if test="${publickey.filename == null}">
 									<div class="container d-flex justify-content-center">
@@ -248,7 +248,7 @@
 									<button class="btn btn-outline-info" style="margin-right:80%;" onclick="uploadFile('public')">업로드</button>
 								</c:if>
 								<c:if test="${publickey.filename != null}">
-									<button class="btn btn-outline-danger" style="margin-right:80%;" onclick="deleteFile('${publickey.seq}','${publickey.filepath}','${publickey.filename}')">삭제</button>
+									<button class="btn btn-outline-danger" style="margin-right:80%;" onclick="deleteFile('${publickey.seq}','${publickey.filename}')">삭제</button>
 								</c:if>
 							</td>
 						</tr> 
@@ -256,7 +256,7 @@
 							<td> <b>Private 키 </b></td>
 							<td> 
 								<c:if test="${privatekey.filename != null}">
-									<a href="#" onclick="fnFileDownload('${privatekey.filepath}',' ${privatekey.filename}', '${privatekey.filerealname}');" style="color:steelblue;" > <img src="/images/key.svg"> ${privatekey.filerealname}</a>
+									<a href="#" onclick="fnFileDownload('${privatekey.seq}',' ${privatekey.filename}', '${privatekey.filerealname}');" style="color:steelblue;" > <img src="/images/key.svg"> ${privatekey.filerealname}</a>
 								</c:if>
 								<c:if test="${privatekey.filename == null}">
 									<div class="container d-flex justify-content-center">
@@ -273,7 +273,7 @@
 									<button class="btn btn-outline-info" style="margin-right:80%;" onclick="uploadFile('private')">업로드</button>
 								</c:if>
 								<c:if test="${privatekey.filename != null}">
-									<button class="btn btn-outline-danger" style="margin-right:80%;" onclick="deleteFile('${privatekey.seq}','${privatekey.filepath}','${privatekey.filename}')">삭제</button>
+									<button class="btn btn-outline-danger" style="margin-right:80%;" onclick="deleteFile('${privatekey.seq}','${privatekey.filename}')">삭제</button>
 								</c:if>								
 							</td> 
 						</tr>
@@ -282,7 +282,7 @@
 							<td> <b>Config 파일 </b></td>
 							<td> 
 								<c:if test="${config.filename != null}">
-									<a href="#" onclick="fnFileDownload('${config.filepath}',' ${config.filename}', '${config.filerealname}');" style="color:steelblue;" > ${config.filerealname}</a>
+									<a href="#" onclick="fnFileDownload('${config.seq}',' ${config.filename}', '${config.filerealname}');" style="color:steelblue;" > ${config.filerealname}</a>
 								</c:if>
 								<c:if test="${config.filename == null}">
 									<div class="container d-flex justify-content-center">
@@ -300,7 +300,7 @@
 									<button class="btn btn-outline-info" style="margin-right:80%;" onclick="uploadFile('adminconfig')">업로드</button>
 								</c:if>
 								<c:if test="${config.filename != null}">
-									<button class="btn btn-outline-danger" style="margin-right:80%;" onclick="deleteFile('${config.seq}','${config.filepath}','${config.filename}')">삭제</button>
+									<button class="btn btn-outline-danger" style="margin-right:80%;" onclick="deleteFile('${config.seq}','${config.filename}')">삭제</button>
 								</c:if>								
 						</tr>
 						 
@@ -387,7 +387,7 @@
 		
 		}
 		
-		function fnFileDownload(path, filename, filerealname){
+		function fnFileDownload(seq, filename, filerealname){
 			
 			$.ajax({
 				type:"POST",
@@ -395,7 +395,7 @@
 				data: {
 					filename:filename,
 					filerealname:filerealname,
-					filepath : path
+					seq : seq
 				},
 				success: function(ret){
 					var blob = new Blob([ret], { type: "application/octetstream" });
@@ -421,7 +421,7 @@
 			  });
 		}
 		
-		function deleteFile(seq, path, filename){
+		function deleteFile(seq, filename){
 			
 			console.log("seq : "+seq);
 			console.log("filename : "+filename);
@@ -430,7 +430,6 @@
 				url: "/file/delete",
 				data: {
 					seq : seq, 
-					filepath : path,
 					filename : filename
 				},
 				success: function(ret){

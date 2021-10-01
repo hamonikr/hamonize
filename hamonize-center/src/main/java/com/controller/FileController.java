@@ -121,6 +121,8 @@ public class FileController {
     @PostMapping("/download")
     @ResponseBody
     public String file( FileVo vo, HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
+        
+        vo = fileMapper.getFileSeq(vo.getSeq());
         File file = new File(vo.getFilepath());
 		String ret ="";
        
@@ -166,6 +168,7 @@ public class FileController {
     @PostMapping("/delete")
     @ResponseBody
     public String deleteFile(FileVo vo) throws IOException {
+        vo = fileMapper.getFileSeq(vo.getSeq());
         String result ="";
         File file = new File(vo.getFilepath());
 
