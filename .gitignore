@@ -19,3 +19,4 @@ hamonize-admin/plugins/extra
 node_modules
 **/node_modules/*
 *.sh
+dist*
