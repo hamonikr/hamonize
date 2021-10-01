@@ -76,10 +76,52 @@ public class FileController {
         return result;
     }
 
+    @GetMapping("/down")
+    // @ResponseBody
+    public void testfile( FileVo vo, HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
+        // File file = new File(vo.getFilepath());
+        File file = new File("/home/lee/env/config.properties");
+       
+        if (file.exists() && file.isFile()) {
+			response.setContentType("application/octet-stream; charset=utf-8");
+			response.setContentLength((int) file.length());
+		
+            String browser = getBrowser(request);
+		    String disposition = getDisposition(file.getName(), browser);
+         
+            response.setHeader("Content-Disposition", disposition);
+			response.setHeader("Content-Transfer-Encoding", "binary");
+		
+            try {
+                
+                OutputStream out = response.getOutputStream();
+                FileInputStream fis = null;
+            
+                fis = new FileInputStream(file);
+            
+                FileCopyUtils.copy(fis, out);
+         
+                if (fis != null){
+                    fis.close();
+                }
+                
+                out.flush();
+                out.close();
+             
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+        }else{
+            logger.info("파일이 아님");
+        }
+        
+    }
   
     @PostMapping("/download")
     @ResponseBody
     public String file( FileVo vo, HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
+
+        vo = fileMapper.getFileSeq(vo.getSeq());
         File file = new File(vo.getFilepath());
 		String ret ="";
        
@@ -125,6 +167,7 @@ public class FileController {
     @PostMapping("/delete")
     @ResponseBody
     public String deleteFile(FileVo vo) throws IOException {
+        vo = fileMapper.getFileSeq(vo.getSeq());
         String result ="";
         File file = new File(vo.getFilepath());
 

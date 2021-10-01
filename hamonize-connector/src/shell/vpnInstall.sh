@@ -99,8 +99,8 @@ vpnwork(){
 		# vpn auto connection
 		echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-		cp /tmp/vpn-connecter.service /lib/systemd/system/
-		cp /tmp/vpn-auto-connection.sh $VPNSCRIPTPATH
+		cp $WORK_PATH/vpn-connecter.service /lib/systemd/system/
+		cp $WORK_PATH/vpn-auto-connection.sh $VPNSCRIPTPATH
 		
 		sed -i "s|vpn-client-key|$VPNSCRIPT|" /lib/systemd/system/vpn-connecter.service
 		sed -i "s|vpn-client-key|$CLIENT|" $VPNSCRIPTPATH/vpn-auto-connection.sh
