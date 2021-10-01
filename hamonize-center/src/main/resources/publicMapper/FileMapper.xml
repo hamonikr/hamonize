@@ -29,6 +29,12 @@
 		FROM tbl_files
 		WHERE keytype = #{type}
 	</select>
+
+	<select id="getFilePublic" resultType="com.model.FileVo" >
+		SELECT * 
+		FROM tbl_files
+		WHERE keytype = 'public'
+	</select>
 	
 	<select id="getFiles" resultType="com.model.FileVo" >
 		SELECT * 
@@ -39,6 +45,12 @@
         DELETE FROM tbl_files
         WHERE seq = #{seq}
     </delete>
+
+	<select id="getFileSeq" parameterType="Integer" resultType="com.model.FileVo" >
+		SELECT * 
+		FROM tbl_files
+		WHERE seq = #{seq}
+	</select>
 	
 
 </mapper>
