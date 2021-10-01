@@ -77,12 +77,13 @@ text-decoration: none;
 	
 	$("#expandAllBtn").bind("click", {type:"expandAll"}, expandNode);
 	$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
+	
 	fuzzySearch('tree','#key',null,true); //initialize fuzzysearch function
 		
 	getMntrngList();
 	
-	
 });
+
 	function getMntrngList(){
 		var url ='/mntrng/pcList';
 		$.post(url,{org_seq:1},
@@ -226,8 +227,7 @@ function fnSave(){
 				<input type="search" id="key" value=""  placeholder="조직명을 입력해주세요."/>
                 <!-- 트리 리스트 -->               
                  <div class="tree_list">
-					<!-- 조직 검색: <input type="text" id="key" value="" class="empty"  placeholder="검색어를 입력해주세요."/> -->
-                <ul id="tree" class="ztree"></ul>
+               <ul id="tree" class="ztree"></ul>
                 </div>
             </div>
         </div>

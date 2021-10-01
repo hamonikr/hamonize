@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.model.SvrlstVo;
+import com.mapper.ISvrlstMapper;
+
 import com.service.MonitoringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +26,9 @@ public class MainController {
 	@Autowired
 	private MonitoringService miService;
 
+	@Autowired
+	private ISvrlstMapper svrlstMapper;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -37,10 +44,18 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String mainMap() throws Exception {
+	public String mainMap(Model model) throws Exception {
+		
+		SvrlstVo center = new SvrlstVo();
+		center.setSvr_nm("GRAFANA_URL");
+		SvrlstVo svo = svrlstMapper.getVpnSvrUsed(center);
+		logger.info("svo ;; {}",svo.getSvr_ip());
+		model.addAttribute("svo", svo);
+
 		return "/main/mainMap";
 
 	}
+
 
 	@ResponseBody
 	@RequestMapping(value = "/pcList", method = RequestMethod.POST)

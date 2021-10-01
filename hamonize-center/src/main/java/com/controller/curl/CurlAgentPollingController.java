@@ -1,6 +1,11 @@
 package com.controller.curl;
 
-import org.json.simple.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.mapper.IGetAgentPollingMapper;
+import com.model.GetAgentPollingVo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import com.mapper.IGetAgentJobMapper;
-import com.mapper.IGetAgentPollingMapper;
-import com.model.GetAgentPollingVo;
-import com.model.GetAgentJobVo;
 
 @RestController
 @RequestMapping("/getAgent")
@@ -81,25 +78,5 @@ public class CurlAgentPollingController {
 
 		return jsonObject;
 	}
-
-	// /*
-	//  * 부서 UUID로 부서 seq 가져오기
-	//  * 
-	//  * @param uuid
-	//  * 
-	//  * @return 부서seq
-	//  */
-	// public int pcUUID(String uuid) {
-	// 	GetAgentJobVo agentVo = new GetAgentJobVo();
-	// 	agentVo.setPc_uuid(uuid);
-	// 	agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-
-	// 	int segSeq = 0;
-
-	// 	if (agentVo != null) {
-	// 		segSeq = agentVo.getSeq();
-	// 	}
-	// 	return segSeq;
-	// }
 
 }

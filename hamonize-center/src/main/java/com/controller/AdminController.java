@@ -9,9 +9,11 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.mapper.ISvrlstMapper;
+import com.mapper.IFileMapper;
 import com.mapper.IGetAgentPollingMapper;
 
 import com.model.AdminVo;
+import com.model.FileVo;
 import com.model.HmProgrmUpdtVo;
 import com.model.OrgVo;
 import com.model.SvrlstVo;
@@ -52,6 +54,9 @@ public class AdminController {
 	private ISvrlstMapper svrlstMapper;
 
 	@Autowired
+	private IFileMapper fileMapper;
+	
+	@Autowired
 	private IGetAgentPollingMapper getAgentPollingMapper;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -62,7 +67,17 @@ public class AdminController {
 	@GetMapping("/serverlist")
 	public String serverlist(HttpSession session, Model model) {
 		List<HmProgrmUpdtVo> progrmlist = svrlstMapper.getProgrmList();
+		List<SvrlstVo> serverlist = svrlstMapper.getVpnSvrlstList();
+		FileVo publickey = fileMapper.getFile("public");
+		FileVo privatekey = fileMapper.getFile("private");
+		FileVo adminconfig = fileMapper.getFile("adminconfig");
+
 		model.addAttribute("plist", progrmlist);
+		model.addAttribute("slist", serverlist);
+		model.addAttribute("publickey", publickey);
+		model.addAttribute("privatekey", privatekey);
+		model.addAttribute("config", adminconfig);
+
 
 		return "/svrlst/list";
 	}
@@ -336,5 +351,20 @@ public class AdminController {
 
 		return retval;
 	}
+
+
+	@ResponseBody
+	@PostMapping("/setEnv")
+	public String setEnv (SvrlstVo vo) {
+		String retval="";
+		if(svrlstMapper.envInsert(vo) ==1){
+			retval="SUCCESS"; 
+		}else{
+			retval="FAIL"; 
+		}
+
+		return retval;
+	}
+
 
 }
