@@ -22,11 +22,20 @@ import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.influxdb.InfluxDBTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@PropertySources({
+    @PropertySource( value = "file:${user.home}/env/config.properties", ignoreResourceNotFound = true)
+})
 public class MonitoringService {
+
+	@Value("${spring.influxdb.url}")
+    private String url;
 
 	@Autowired
 	private IMonitoringMapper mMpper;
@@ -78,7 +87,7 @@ public class MonitoringService {
 		String bucket = "mybucketname";
 
 		InfluxDBClient influxDBClient =
-				InfluxDBClientFactory.create("http://ts.hamonikr.org:8086", token, org, bucket);
+				InfluxDBClientFactory.create(url, token, org, bucket);
 
 		String flux =
 				"from(bucket:\"mybucketname\") |> range(start: -1m) |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\") |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")"
