@@ -80,7 +80,7 @@
                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
                        	PC 사용현황 
                    </div>
-						<iframe id="monitor" title="Main monitoring" src="http://${svo.svr_ip}:3000/d-solo/nprv87G7z/hamonize-main2?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
+						<iframe title="Main monitoring" src="http://${svo.svr_ip}:3000/d-solo/nprv87G7z/hamonize-main2?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
                 </div> <!-- end card-body-->
            </div> <!-- end card-->
        </div>
@@ -383,10 +383,10 @@ if(window.XMLHttpRequest){
 
 xmlhttp.onreadystatechange = function(){
 	if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
-		 var data = JSON.parse(xmlhttp.responseText);
-		 $("#totalComputers").text(data.pcList.length); 
-		 $("#onComputers").text(data.on);
-		 $("#offComputers").text(data.off);		 
+		var data = JSON.parse(xmlhttp.responseText);
+		$("#totalComputers").text(data.pcList.length); 
+		$("#onComputers").text(data.on);
+		$("#offComputers").text(data.off);		 
 	}else{
 		console.log("fail");
 	}

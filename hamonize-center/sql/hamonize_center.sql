@@ -1,3 +1,25 @@
+-- public.export definition
+
+-- Drop table
+
+-- DROP TABLE public.export;
+
+CREATE TABLE public.export (
+	"INSERT INTO public.tbl_act_backup_recovery_log (org_seq" varchar(55) NULL,
+	uuid varchar(34) NULL,
+	hostname varchar(39) NULL,
+	datetime varchar(39) NULL,
+	status varchar(19) NULL,
+	"result" varchar(10) NULL,
+	"ins_date) VALUES" varchar(75) NULL
+);
+
+-- Permissions
+
+ALTER TABLE public.export OWNER TO hamonize;
+GRANT ALL ON TABLE public.export TO hamonize;
+
+
 -- public.tbl_act_backup_recovery_log definition
 
 -- Drop table
@@ -442,6 +464,36 @@ COMMENT ON TABLE public.tbl_device_applc_history IS '디바이스 정책 로그'
 
 ALTER TABLE public.tbl_device_applc_history OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_device_applc_history TO hamonize;
+
+
+-- public.tbl_files definition
+
+-- Drop table
+
+-- DROP TABLE public.tbl_files;
+
+CREATE TABLE public.tbl_files (
+	seq serial NOT NULL,
+	filename varchar(100) NULL, -- 저장소에 저장된 파일명
+	filerealname varchar(100) NULL, -- 실제 파일명
+	filepath varchar(100) NULL, -- 파일 경로
+	filesize varchar(100) NULL, -- 파일 크기
+	ins_date timestamp NULL,
+	keytype varchar(50) NULL,
+	CONSTRAINT tbl_files_pkey PRIMARY KEY (seq)
+);
+
+-- Column comments
+
+COMMENT ON COLUMN public.tbl_files.filename IS '저장소에 저장된 파일명';
+COMMENT ON COLUMN public.tbl_files.filerealname IS '실제 파일명';
+COMMENT ON COLUMN public.tbl_files.filepath IS '파일 경로';
+COMMENT ON COLUMN public.tbl_files.filesize IS '파일 크기';
+
+-- Permissions
+
+ALTER TABLE public.tbl_files OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_files TO hamonize;
 
 
 -- public.tbl_frwl_agent_job definition
@@ -1838,7 +1890,10 @@ COMMENT ON COLUMN public.tbl_user.tel IS '사용자 전화번호';
 ALTER TABLE public.tbl_user OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_user TO hamonize;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b77a694d3e27688abdde39d5f3fd25ae8bdd809b
 -----insert default data----
 
 INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,upd_date,gubun,salt) VALUES
@@ -1846,6 +1901,7 @@ INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,
 	 ('test','test','i2c+1cHCD2hMB2klY1Apcg7aZIzHwcOwRsO4RJ8Sj38=',NULL,'2021-08-10 11:33:17.030959','2021-09-03 16:12:55.95216','A','24f9ca45fcbe2903');
 
 INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_port,svr_used,svr_vip) VALUES
+<<<<<<< HEAD
 	 ('VPNIP',NULL,'ts.hamonikr.org',NULL,NULL,NULL,0,NULL),
 	 ('COLLECTDIP',NULL,'ts.hamonikr.org',NULL,NULL,NULL,0,NULL),
 	 ('CENTERURL','NULL','ts.hamonikr.org',NULL,NULL,NULL,0,NULL),
@@ -1856,3 +1912,14 @@ INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_por
 	 ('INFLUX_ORG',NULL,'myorgname',NULL,NULL,NULL,0,NULL),
 	 ('INFLUX_TOKEN',NULL,'mytoken',NULL,NULL,NULL,0,NULL);
 
+=======
+	 ('INFLUX_ORG',NULL,'hamonize',NULL,NULL,NULL,0,NULL),
+	 ('CENTERURL','NULL','192.168.0.225',NULL,NULL,'8080',0,NULL),
+	 ('COLLECTDIP',NULL,'192.168.0.225',NULL,NULL,NULL,0,NULL),
+	 ('INFLUX_URL',NULL,'192.168.0.76',NULL,NULL,'8086',0,NULL),
+	 ('GRAFANA_URL',NULL,'192.168.0.225',NULL,NULL,NULL,0,NULL),
+	 ('APTURL','NULL','106.254.251.74',NULL,NULL,'28081',0,NULL),
+	 ('VPNIP',NULL,'192.168.0.117',NULL,NULL,NULL,0,NULL),
+	 ('INFLUX_BUCKET',NULL,'mybucket',NULL,NULL,NULL,0,NULL),
+	 ('INFLUX_TOKEN',NULL,'mytoken',NULL,NULL,NULL,0,NULL);
+>>>>>>> b77a694d3e27688abdde39d5f3fd25ae8bdd809b
