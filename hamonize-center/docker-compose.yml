@@ -61,7 +61,8 @@ services :
         volumes:
         - grafana:/var/lib/grafana
         - ./grafana/plugins:/var/lib/grafana/plugins
-        - ./grafana.ini:/etc/grafana/grafana.ini          
+        - ./grafana.ini:/etc/grafana/grafana.ini
+        - ./grafana/provisioning:/etc/grafana/provisioning        
 volumes:
     hamonize_center.sql:
     psql-data:
