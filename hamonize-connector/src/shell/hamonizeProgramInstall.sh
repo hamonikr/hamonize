@@ -158,7 +158,7 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     sudo hamonize-cli authkeys import ttkey/public /etc/hamonize/ttkey_public_key.pem
 
     # config file down 
-    wget -O /etc/hamonize/hamonize.json "$CENTERURL"/getAgent/getpublickey --content-disposition
+    wget -O /etc/hamonize/hamonize.json "$CENTERURL"/getAgent/getconfigfile --content-disposition
     sudo hamonize-cli config import /etc/hamonize/hamonize.json
 
     sudo hamonize-cli service restart
