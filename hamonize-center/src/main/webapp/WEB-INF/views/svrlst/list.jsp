@@ -289,7 +289,7 @@
 										<div class="file-drop-area"> 
 											<span class="choose-file-button">파일 선택</span> 
 											<span class="file-message">or drag&drop</span>
-												<input id="file-input2" class="file-input" type="file" multiple>
+												<input id="file-input3" class="file-input" type="file" multiple>
 										</div>
 									</div>
 								</c:if>
@@ -351,9 +351,12 @@
 			if(keytype == "public"){
 				InputFiles = $("#file-input")[0];
 				var filename =  $("#file-input").val().split('\\').pop();
-			}else{
+			}else if(keytype == "private"){
 				InputFiles = $("#file-input2")[0];
 				var filename =  $("#file-input2").val().split('\\').pop();
+			}else{
+				InputFiles = $("#file-input3")[0];
+				var filename =  $("#file-input3").val().split('\\').pop();
 			}
 		
 			if(InputFiles.files.length === 0){

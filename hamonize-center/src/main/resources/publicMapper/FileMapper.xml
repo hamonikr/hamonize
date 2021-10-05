@@ -35,6 +35,12 @@
 		FROM tbl_files
 		WHERE keytype = 'public'
 	</select>
+
+	<select id="getFileConfig" resultType="com.model.FileVo" >
+		SELECT * 
+		FROM tbl_files
+		WHERE keytype = 'adminconfig'
+	</select>
 	
 	<select id="getFiles" resultType="com.model.FileVo" >
 		SELECT * 
