@@ -7,3 +7,4 @@
 .history
 .mvn/
 target/
+/.metadata/

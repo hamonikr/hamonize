@@ -19,32 +19,32 @@ sudo systemctl stop hamonize-agent.service
 # ===================================================================================
 
 # collect]
-echo "$DATETIME ] 2-1. collectd install ================= [start]" >>$LOGFILE
-sudo apt-get install collectd -y >>$LOGFILE
-echo "$DATETIME ] collectd install === [end]" >>$LOGFILE
-echo "$DATETIME ] $(sudo service collectd status)" >>$LOGFILE
-# echo "$DATETIME ] collectd  install status `dpkg -l collectd`" >> $LOGFILE
-
-# ===================================================================================
-
-sleep 2
-
-# collectd setting ========================================================
-echo "$DATETIME ] 2-2. collectd setting ================= [start]" >>$LOGFILE
-INFOHM="/etc/hamonize/propertiesJob/propertiesInfo.hm"
-COLLECTDIP=$(cat $INFOHM | grep COLLECTDIP | awk -F '=' '{print $2}')
-sudo mv /etc/collectd/collectd.conf /etc/collectd/collectd.conf_bak
-sudo cp $WORK_PATH/collectd.conf /etc/collectd/
-sudo sed -i "s/changeip/$COLLECTDIP/" /etc/collectd/collectd.conf
-
-sudo /etc/init.d/collectd restart >/dev/null
-sleep 2
-
-echo "$DATETIME ] $(sudo service collectd status)" >>$LOGFILE
+# echo "$DATETIME ] 2-1. collectd install ================= [start]" >>$LOGFILE
+# sudo apt-get install collectd -y >>$LOGFILE
+# echo "$DATETIME ] collectd install === [end]" >>$LOGFILE
+# echo "$DATETIME ] $(sudo service collectd status)" >>$LOGFILE
+# # echo "$DATETIME ] collectd  install status `dpkg -l collectd`" >> $LOGFILE
 
 # ===================================================================================
 
 # sleep 2
+
+# # collectd setting ========================================================
+# echo "$DATETIME ] 2-2. collectd setting ================= [start]" >>$LOGFILE
+# INFOHM="/etc/hamonize/propertiesJob/propertiesInfo.hm"
+# COLLECTDIP=$(cat $INFOHM | grep COLLECTDIP | awk -F '=' '{print $2}')
+# sudo mv /etc/collectd/collectd.conf /etc/collectd/collectd.conf_bak
+# sudo cp $WORK_PATH/collectd.conf /etc/collectd/
+# sudo sed -i "s/changeip/$COLLECTDIP/" /etc/collectd/collectd.conf
+
+# sudo /etc/init.d/collectd restart >/dev/null
+# sleep 2
+
+# echo "$DATETIME ] $(sudo service collectd status)" >>$LOGFILE
+
+# ===================================================================================
+
+sleep 2
 #==== process-mngr ================================
 #
 echo "$DATETIME] 3. process-mngr install ============ [start]" >>$LOGFILE
@@ -98,9 +98,9 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     echo "$DATETIME ] 6.  telegraf install ============== [start]" >>$LOGFILE
     wget https://dl.influxdata.com/telegraf/releases/telegraf_1.20.0-1_amd64.deb >>$LOGFILE
     sudo dpkg -i telegraf_1.20.0-1_amd64.deb >>$LOGFILE
-    
+
     echo "$DATETIME ] 6. telegraf install ============== [end]" >>$LOGFILE
-    
+
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [start]" >>$LOGFILE
     mv /etc/telegraf/telegraf.conf /etc/telegraf/telegraf.conf_bak
 
@@ -142,6 +142,27 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
 
     sudo service telegraf restart
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [end]" >>$LOGFILE
+fi
+
+sleep 2
+#== hamonize-user  =================================================
+if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
+    echo "$DATETIME ] 8.  hamonize-user install ============== [start]"# >>$LOGFILE
+    sudo apt-get install -y hamonize-user #>>$LOGFILE
+    echo "$DATETIME ] 8.  hamonize-user install ============== [end]" #>>$LOGFILE
+
+    echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" #>>$LOGFILE
+
+    # public key down
+    wget -O /etc/hamonize/ttkey_public_key.pem "$CENTERURL"/getAgent/getpublickey --content-disposition
+    sudo hamonize-cli authkeys import ttkey/public /etc/hamonize/ttkey_public_key.pem
+
+    # config file down 
+    wget -O /etc/hamonize/hamonize.json "$CENTERURL"/getAgent/getpublickey --content-disposition
+    sudo hamonize-cli config import /etc/hamonize/hamonize.json
+
+    sudo hamonize-cli service restart
+    
 fi
 
 # sleep 2
