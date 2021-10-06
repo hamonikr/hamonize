@@ -147,11 +147,11 @@ fi
 sleep 2
 #== hamonize-user  =================================================
 if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
-    echo "$DATETIME ] 8.  hamonize-user install ============== [start]"# >>$LOGFILE
+    echo "$DATETIME ] 8.  hamonize-user install ============== [start]" >>$LOGFILE
     sudo apt-get install -y hamonize-user #>>$LOGFILE
-    echo "$DATETIME ] 8.  hamonize-user install ============== [end]" #>>$LOGFILE
+    echo "$DATETIME ] 8.  hamonize-user install ============== [end]" >>$LOGFILE
 
-    echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" #>>$LOGFILE
+    echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
 
     # public key down
     wget -O /etc/hamonize/ttkey_public_key.pem "$CENTERURL"/getAgent/getpublickey --content-disposition
