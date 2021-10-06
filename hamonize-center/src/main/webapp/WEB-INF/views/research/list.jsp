@@ -494,7 +494,7 @@ function searchView(viewName, page){
     </div><!-- //content -->
     
     
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 	

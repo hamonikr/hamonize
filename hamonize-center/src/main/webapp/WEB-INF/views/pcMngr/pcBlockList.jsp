@@ -438,7 +438,7 @@ function updateBlockList(){
 		</div>
 	</div>
 	
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 </body>

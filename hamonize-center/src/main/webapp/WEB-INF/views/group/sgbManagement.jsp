@@ -35,7 +35,7 @@ var data = <%= request.getAttribute("gList") %>;
 	
 	<p id="data"></p>
 	
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 	

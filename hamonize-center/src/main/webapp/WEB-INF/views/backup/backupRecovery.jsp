@@ -343,7 +343,7 @@ function fnSave(){
 	<form>
 </form>
 
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 	
