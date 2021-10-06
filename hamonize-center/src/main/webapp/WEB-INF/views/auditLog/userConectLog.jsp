@@ -157,7 +157,7 @@
 		</article>
 	</section>
 	
-	<%-- <%@ include file="../template/grid.jsp" %> --%>
+	
 	<%@ include file="../template/footer.jsp" %>	
 	
 	<script type="text/javascript" class="code-js">
