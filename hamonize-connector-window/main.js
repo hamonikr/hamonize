@@ -410,7 +410,7 @@ const makePsFile = async (event) => {
 	console.log("setInstallProgm============+" + setInstallProgm_result);
 
 	// telegraf 설치 및 설정 
-	let telegrafFile_result = await winHamonize.fn_install_Program_settings_step_telegraf(winFolderDir);
+	let telegrafFile_result = await winHamonize.fn_install_Program_settings_step_telegraf(winFolderDir, winHamonize.winUUID);
 	console.log("telegrafFile_result===========++" + telegrafFile_result);
 
 	// GOP Settings

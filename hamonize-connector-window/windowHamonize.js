@@ -145,7 +145,7 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
 
 
 
-exports.fn_install_Program_settings_step_telegraf = function ( winFolderDir ) {
+exports.fn_install_Program_settings_step_telegraf = function ( winFolderDir, winUUID ) {
     return new Promise(function (resolve, reject) {
 
         var StringPsData = "";
@@ -184,7 +184,7 @@ exports.fn_install_Program_settings_step_telegraf = function ( winFolderDir ) {
         telegrafConfFile += '[[inputs.swap]] \r\n';
         telegrafConfFile += '[[inputs.system]] \r\n';
         telegrafConfFile += '[global_tags] \r\n';
-        telegrafConfFile += 'uuid = "telegrafsvc03" \r\n';
+        telegrafConfFile += 'uuid = "'+winUUID+'" \r\n';
 
         StringPsData = "wget https://dl.influxdata.com/telegraf/releases/telegraf-1.20.0~rc0_windows_amd64.zip -UseBasicParsing -O '" + winFolderDir + "telegraf.zip" + "' \r\n";
         // StringPsData += "\r\n unzip telegraf-1.20.0~rc0_windows_amd64.zip";
