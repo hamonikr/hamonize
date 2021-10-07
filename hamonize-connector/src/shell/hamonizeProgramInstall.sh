@@ -103,6 +103,8 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
 
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [start]" >>$LOGFILE
     mv /etc/telegraf/telegraf.conf /etc/telegraf/telegraf.conf_bak
+    
+    PCUUID=`cat /etc/hamonize/uuid`
 
     echo '[agent]
     interval = "10s"
@@ -137,7 +139,7 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     [[inputs.swap]]
     [[inputs.system]]
     [global_tags]
-    uuid = "winwin"
+    uuid = "'+PCUUID+'"
     ' >>/etc/telegraf/telegraf.conf
 
     sudo service telegraf restart

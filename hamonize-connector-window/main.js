@@ -28,7 +28,8 @@ const si = require('systeminformation');
 const md5 = require('md5');
 const electronLocalshortcut = require('electron-localshortcut');
 const axios = require('axios')
-const baseurl = "<Hamonize Center Url>";
+const baseurl = "http://192.168.0.76:8080";
+// const baseurl = "<Hamonize Center Url>";
 const winHamonize = require('./windowHamonize');
 const fs = require('fs');
 
