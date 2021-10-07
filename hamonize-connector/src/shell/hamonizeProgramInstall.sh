@@ -145,7 +145,7 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     sudo service telegraf restart
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [end]" >>$LOGFILE
 fi
-
+ 
 sleep 2
 #== hamonize-user  =================================================
 if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
@@ -156,8 +156,8 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
 
     # public key down
-    wget -O /etc/hamonize/ttkey_public_key.pem "$CENTERURL"/getAgent/getpublickey --content-disposition
-    sudo hamonize-cli authkeys import ttkey/public /etc/hamonize/ttkey_public_key.pem
+    wget -O /etc/hamonize/hamonize_public_key.pem "$CENTERURL"/getAgent/getpublickey --content-disposition
+    sudo hamonize-cli authkeys import hamonize/public /etc/hamonize/hamonize_public_key.pem
 
     # config file down 
     wget -O /etc/hamonize/hamonize.json "$CENTERURL"/getAgent/getconfigfile --content-disposition

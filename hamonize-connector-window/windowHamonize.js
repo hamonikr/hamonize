@@ -73,15 +73,15 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
                 var objData = JSON.parse(JSON.stringify(response.data.assets));
 
                 for (var i = 0; i < objData.length; i++) {
-                    const objDataMatch = objData[i].browser_download_url.match(/hamonize-admin.*.exe/);
+                    const objDataMatch = objData[i].browser_download_url.match(/hamonize-user.*.exe/);
 
                     if (objDataMatch != null) {
 
                         if (vpnused != '0') {
-                            installProgName += "'openvpn-install.msi', 'hamonize-admin.exe'";
+                            installProgName += "'openvpn-install.msi', 'hamonize-user.exe'";
                             installExe += "'https://swupdate.openvpn.org/community/releases/OpenVPN-2.5.3-I601-amd64.msi','" + objData[i].browser_download_url + "'";
                         } else {
-                            installProgName += "'hamonize-admin.exe'";
+                            installProgName += "'hamonize-user.exe'";
                             installExe += "'" + objData[i].browser_download_url + "'";
                         }
 

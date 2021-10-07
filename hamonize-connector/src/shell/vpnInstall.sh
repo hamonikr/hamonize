@@ -57,7 +57,7 @@ vpnwork(){
 	HDDINFO=`hdparm -I $HDDTMP  | grep 'Model\ Number' |awk -F ':' '{print $2}'`
 
 	## vpn key 생성
-	VPN_KEY_CREATE=`curl http://{Hamonize Vpn server Url}:3000/getClients/hmon_vpn_vpn/$CLIENT`
+	VPN_KEY_CREATE=`curl http://$VPNIP:3000/getClients/hmon_vpn_vpn/$CLIENT`
 	
 	# echo $VPN_KEY_CREATE
 	# echo $VPN_KEY_CREATE | grep -o "SUCCESS*" | wc -l
@@ -73,7 +73,7 @@ vpnwork(){
 	# fi
 
 
-	wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "http://192.168.0.117:3000/getClientsDownload/$CLIENT" 2>&1 )
+	wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "http://$VPNIP:3000/getClientsDownload/$CLIENT" 2>&1 )
   	exit_status=$?
   	wget_status=$( awk '/HTTP\//{ print $2 }' <<< $wget_key | tail -n 1 )
   	# echo $wget_status

@@ -630,11 +630,11 @@ function getPublicIp() {
 }
 
 
-// 부대번호 svrgroupnum, 서버번호 svrpcnum
-
+const pcHostNameVal = "";
 const sysInfo = async (event, groupname, sabun, username) => {
 	let retData = {}
 	const pcHostname = await execShellCommand('hostname');
+	pcHostNameVal = pcHostname;
 	const cpu = await si.cpu(); // CPU Info
 	let cpuinfo = ` ${cpu.manufacturer} ${cpu.brand} ${cpu.speed}GHz`;
 	cpuinfo += ` ${cpu.cores} (${cpu.physicalCores} Physical)`;
@@ -725,8 +725,6 @@ const sysInfo = async (event, groupname, sabun, username) => {
 			}]
 		})
 		.end(function (response) {
-			console.log("aaaresponse.body===" + JSON.stringify(response));
-			console.log("\nbbbresponse.body===" + response.body);
 			event.sender.send('pcInfoChkProc', response.body);
 		});
 
@@ -742,18 +740,18 @@ function pcInfoUpdate() {
 		vpnipaddr = vpnInfoData;
 	}
 
-
 	const machineIdSync = require('node-machine-id').machineIdSync;
 	let machindid = machineIdSync({
 		original: true
 	});
 
-	unirest.post(baseurl + '/hmsvr/setVpnUpdate')
+	unirest.post(baseurl + '/hmsvc/setVpnUpdate')
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
 				uuid: machindid,
-				vpnipaddr: vpnipaddr
+				vpnipaddr: vpnipaddr,
+				hostname: pcHostNameVal
 			}]
 		})
 		.end(function (response) {
