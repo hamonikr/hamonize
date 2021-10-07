@@ -124,6 +124,16 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
 
 
                 programInstallFileData += "\r\n";
+
+
+                
+                programInstallFileData += ' wget '+gopBaseUrl+'/getAgent/getpublickey -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem \r\n';
+                programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' authkeys import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem  \r\n';
+                programInstallFileData += ' wget '+gopBaseUrl+'/getAgent/getconfigfile -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
+                programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' config import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json  \r\n';
+                programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' service restart  \r\n';
+
+                
                 // programInstallFileData += settingsHamonize() ;
 
                 programInstallFileData += "\r\n";
