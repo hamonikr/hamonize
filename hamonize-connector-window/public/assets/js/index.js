@@ -40,6 +40,7 @@ ipcRenderer.on('getOrgDataResult', (event, orgData) => {
 var doubleSubmitFlag = false;
 const pcChkBtn = document.getElementById('pcChkBtn');
 pcChkBtn.addEventListener('click', function (event) {
+	$modal.show();
 	if (!doubleSubmitFlag) {
 
 		let groupname = $("#groupName option:selected").val(); //$("#groupName").val(); //부서번호
@@ -155,7 +156,7 @@ ipcRenderer.on('hamonizeProgramInstallResult', (event, mkfolderResult) => {
 	if (mkfolderResult == 'Y') {
 		console.log("pc 관리 프로그램 설치 및 셋팅 완료");
 		$("#stepB").removeClass("br animate");
-		$("#stepC").addClass("br animate");
+		// $("#stepC").addClass("br animate");
 		$("#infoStepB").text("완료");
 		// hamonizeSystemBackup();
 		$("#EndBody").show();

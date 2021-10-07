@@ -118,10 +118,12 @@
         "zip",
         "nsis"
       ],
+      "requestedExecutionLevel": "requireAdministrator",
       "icon": "res/bin/icon.ico"
     },
     "nsis": {
       "oneClick": false,
+      "perMachine" : true,
       "allowToChangeInstallationDirectory": true
     },
     "directories": {

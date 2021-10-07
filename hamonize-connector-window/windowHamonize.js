@@ -46,9 +46,9 @@ let installProgName = "";
 exports.fn_mk_base_folder = function (winFolderDir) {
     return new Promise(function (resolve, reject) {
 
-        let data = "mkdir 'C:\\Program Files\\Hamonize-connect\\Settings\\' -ErrorAction SilentlyContinue \r\n";
-        data += "mkdir 'C:\\Program Files\\Hamonize-connect\\Settings\\log' -ErrorAction SilentlyContinue \r\n";
-        data += "mkdir 'C:\\ProgramData\\Hamonize-connect\\OSLogOnOffLog' -ErrorAction SilentlyContinue \r\n";
+        let data = "mkdir -p 'C:\\ProgramData\\Hamonize-connect-utils\\Settings\\' -ErrorAction SilentlyContinue \r\n";
+        data += "mkdir 'C:\\ProgramData\\Hamonize-connect-utils\\Settings\\log' -ErrorAction SilentlyContinue \r\n";
+        data += "mkdir 'C:\\ProgramData\\Hamonize-connect-utils\\OSLogOnOffLog' -ErrorAction SilentlyContinue \r\n";
 
         fileDir = winFolderDir + "mkBaseHamonize.ps1";
         console.log("fileDir==============================" + fileDir);
@@ -94,7 +94,7 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
                 console.log(error);
             })
             .then(function () {
-                programInstallFileData += '$log_path_file = "C:\\Users\\rnd\\test\\installlog.log" \r\n';
+                programInstallFileData += '$log_path_file = "$env:temp\\installlog.log" \r\n';
                 programInstallFileData += '$machine_name = Invoke-Command -ScriptBlock {hostname}  \r\n';
                 programInstallFileData += '$date = (Get-Date -format "yyyy-MM-dd") \r\n';
                 programInstallFileData += '$msi = @(' + installExe + ') \r\n';
@@ -112,7 +112,8 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
                 programInstallFileData += 'if( $LocalInstaller.indexof(".exe") -lt 0 ){ \r\n';
                 programInstallFileData += '	Start-Process -FilePath "$env:systemroot\\system32\\msiexec.exe" -ArgumentList "/i `"$env:temp\\$LocalInstaller`" /qn /passive /log $log_path_file " -Wait \r\n';
                 programInstallFileData += '}else{ \r\n';
-                programInstallFileData += '	Start-Process $env:temp\\$LocalInstaller -ArgumentList  /S  \r\n';
+                programInstallFileData += '	Start-Process $env:temp\\$LocalInstaller -ArgumentList  /passive  \r\n';
+                // programInstallFileData += '	Start-Process $env:temp\\$LocalInstaller -ArgumentList  /S  \r\n';
                 programInstallFileData += '} \r\n';
                 programInstallFileData += 'Start-Sleep 5 \r\n';
                 programInstallFileData += '} \r\n';
@@ -187,18 +188,18 @@ exports.fn_install_Program_settings_step_telegraf = function ( winFolderDir ) {
 
         StringPsData = "wget https://dl.influxdata.com/telegraf/releases/telegraf-1.20.0~rc0_windows_amd64.zip -UseBasicParsing -O '" + winFolderDir + "telegraf.zip" + "' \r\n";
         // StringPsData += "\r\n unzip telegraf-1.20.0~rc0_windows_amd64.zip";
-        StringPsData += "Expand-Archive " + winFolderDir + "telegraf.zip -DestinationPath 'C:\\Program Files\\Hamonize-connect\\telegraf\\' \r\n";
-        StringPsData += "cd 'C:\\Program Files\\Hamonize-connect\\telegraf\\' \r\n";
-        StringPsData += "mv 'C:\\Program Files\\Hamonize-connect\\telegraf\\telegraf-1.20.0\\telegraf.*' . \r\n";
-        StringPsData += "del 'C:\\Program Files\\Hamonize-connect\\telegraf\\telegraf-1.20.0\\' \r\n";
-        StringPsData += "mv  'C:\\Program Files\\Hamonize-connect\\telegraf\\telegraf.conf' 'C:\\Program Files\\Hamonize-connect\\telegraf\\telegraf.conf_bak' \r\n";
+        StringPsData += "Expand-Archive " + winFolderDir + "telegraf.zip -DestinationPath 'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\' \r\n";
+        StringPsData += "cd 'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\' \r\n";
+        StringPsData += "mv 'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\telegraf-1.20.0\\telegraf.*' . \r\n";
+        StringPsData += "del 'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\telegraf-1.20.0\\' \r\n";
+        StringPsData += "mv  'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\telegraf.conf' 'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\telegraf.conf_bak' \r\n";
 
         //  create telegraf conf file 
         StringPsData += "New-Item -Name telegraf.conf -Value '" + telegrafConfFile + "' \r\n";
 
         StringPsData += "Start-Sleep -s 2 \r\n";
         // telegraf install & service install 
-        StringPsData += "  & 'C:\\Program Files\\Hamonize-connect\\telegraf\\telegraf.exe' --service install --service-name telegrafsvc03 --config 'C:\\Program Files\\Hamonize-connect\\telegraf\\telegraf.conf'   \r\n";
+        StringPsData += "  & 'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\telegraf.exe' --service install --service-name telegrafsvc03 --config 'C:\\ProgramData\\Hamonize-connect-utils\\telegraf\\telegraf.conf'   \r\n";
         StringPsData += 'net start telegrafsvc03 \r\n';
 
         StringPsData += '#######################[ TELEGRAF END ]################# \r\n';
@@ -229,13 +230,13 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         }
 
         hamonizeWinOSLogDataPSFile += '$ErrorActionPreference = "SilentlyContinue" \r\n';
-        hamonizeWinOSLogDataPSFile += '$centerurl="http://' + gopBaseUrl + '/act/loginout";';
+        hamonizeWinOSLogDataPSFile += '$centerurl="' + gopBaseUrl + '/act/loginout"; \r\n';
         hamonizeWinOSLogDataPSFile += '$strName = $env:username \r\n';
         hamonizeWinOSLogDataPSFile += '$strComputerName = $env:ComputerName \r\n';
         hamonizeWinOSLogDataPSFile += '$strTime = Get-Date -Format "HH:mm:ss" \r\n';
         hamonizeWinOSLogDataPSFile += '$strDate = Get-Date -format "yyyy-MM-dd" \r\n';
         hamonizeWinOSLogDataPSFile += '$strFile = Get-Date -format "yyyy-MM" \r\n';
-        hamonizeWinOSLogDataPSFile += '$strFileName = "C:\\ProgramData\\Hamonize-connect\\OSLogOnOffLog\\" \r\n';
+        hamonizeWinOSLogDataPSFile += '$strFileName = "C:\\ProgramData\\Hamonize-connect-utils\\OSLogOnOffLog\\" \r\n';
         hamonizeWinOSLogDataPSFile += '$strFileName += [string]$strFile + ".txt" \r\n';
         hamonizeWinOSLogDataPSFile += '$strDate + "," + $strTime + "," + $strName + "," + $strComputerName + "," + "Status :LOGIN"  | Out-File $strFileName -append -Encoding ASCII \r\n';
         hamonizeWinOSLogDataPSFile += '\r\n';
@@ -251,13 +252,13 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         hamonizeWinOSLogDataPSFile += 'curl $centerurl -contenttype "application/json" -method post -Body $datajson \r\n'
 
         let hamonizeWinOSLogDataPSFile_OFF = "\r\n";
-        hamonizeWinOSLogDataPSFile_OFF += '$centerurl="http://' + gopBaseUrl + '/act/loginout";';
+        hamonizeWinOSLogDataPSFile_OFF += '$centerurl="' + gopBaseUrl + '/act/loginout";';
         hamonizeWinOSLogDataPSFile_OFF += '$strName = $env:username \r\n';
         hamonizeWinOSLogDataPSFile_OFF += '$strComputerName = $env:ComputerName \r\n';
         hamonizeWinOSLogDataPSFile_OFF += '$strTime = Get-Date -Format "HH:mm:ss" \r\n';
         hamonizeWinOSLogDataPSFile_OFF += '$strDate = Get-Date -format "yyyy-MM-dd" \r\n';
         hamonizeWinOSLogDataPSFile_OFF += '$strFile = Get-Date -format "yyyy-MM" \r\n';
-        hamonizeWinOSLogDataPSFile_OFF += '$strFileName = "C:\\ProgramData\\Hamonize-connect\\OSLogOnOffLog\\" \r\n';
+        hamonizeWinOSLogDataPSFile_OFF += '$strFileName = "C:\\ProgramData\\Hamonize-connect-utils\\OSLogOnOffLog\\" \r\n';
         hamonizeWinOSLogDataPSFile_OFF += '$strFileName += [string]$strFile + ".txt" \r\n';
         hamonizeWinOSLogDataPSFile_OFF += '$strDate + "," + $strTime + "," + $strName + "," + $strComputerName + "," + "Status :LOGOUT"  | Out-File $strFileName -append -Encoding ASCII \r\n';
         hamonizeWinOSLogDataPSFile_OFF += '\r\n';
@@ -277,15 +278,15 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         hamonizeWinOSGOPScirptFile += "StartExecutePSFirst=true \r\n";
         hamonizeWinOSGOPScirptFile += "EndExecutePSFirst=true \r\n";
         hamonizeWinOSGOPScirptFile += "[Logon] \r\n";
-        hamonizeWinOSGOPScirptFile += "0CmdLine=C:\\Program Files\\Hamonize-connect\\Settings\\hamonizeWinOSLogDataFile.ps1 \r\n";
+        hamonizeWinOSGOPScirptFile += "0CmdLine=C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonizeWinOSLogDataFile.ps1 \r\n";
         hamonizeWinOSGOPScirptFile += "0Parameters='Logon' \r\n";
         hamonizeWinOSGOPScirptFile += "[Logoff] \r\n";
-        hamonizeWinOSGOPScirptFile += "0CmdLine=C:\\Program Files\\Hamonize-connect\\Settings\\hamonizeWinOSLogDataFile_OFF.ps1 \r\n";
+        hamonizeWinOSGOPScirptFile += "0CmdLine=C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonizeWinOSLogDataFile_OFF.ps1 \r\n";
         hamonizeWinOSGOPScirptFile += "0Parameters='Logoff' \r\n";
 
 
         let StringPsData = "";
-        StringPsData += "cd 'C:\\Program Files\\Hamonize-connect\\Settings\\' \r\n";
+        StringPsData += "cd 'C:\\ProgramData\\Hamonize-connect-utils\\Settings\\' \r\n";
         StringPsData += "New-Item -Name hamonizeWinOSLogDataFile.ps1 -Value '" + hamonizeWinOSLogDataPSFile + "' \r\n";
         StringPsData += "New-Item -Name hamonizeWinOSLogDataFile_OFF.ps1 -Value '" + hamonizeWinOSLogDataPSFile_OFF + "' \r\n";
 

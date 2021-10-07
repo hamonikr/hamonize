@@ -443,6 +443,8 @@ public class CurlController {
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
+		System.out.println("=============================");
+		
 		try {
 			BufferedReader reader = request.getReader();
 			while ((line = reader.readLine()) != null) {
