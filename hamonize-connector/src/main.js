@@ -234,35 +234,13 @@ const install_program_ReadyAsync = async (event) => {
 		// #step . vpn create & conn
 		await vpnCreate();
 
-		// let vpnCreateResultVal = await vpnCreateChk();
-		// console.log("222222222vpnCreateResultVal========================++" + vpnCreateResultVal);
-
-		// if (vpnCreateResultVal != 'Y') {
-		// 	// fail vpn create 
-		// 	event.sender.send('install_program_ReadyProcResult', 'N002');
-		// }
-
-
 		let vpnCreateResult = await vpnCreateChk();
 		console.log("vpnCreateResult========================++" + vpnCreateResult);
 
 		if (vpnCreateResult == 'Y') {
-
-			console.log("###########get Agent Info ###################");
-
-			// #step . 에이전트에서 사용하는 정보 셋팅aaa
-			// let getAgentPcInfoResult = await getAgentPcInfo();
-			// console.log("getAgentPcInfo============" + getAgentPcInfoResult);
-
-			pcInfoUpdate(); // vpn 연결후 pc 정보 업데이트
-
-			// if (getAgentPcInfoResult == 'Y') {
-			// 	console.log("########### install  program version check ###################");
+			// vpn 연결후 pc 정보 업데이트
+			pcInfoUpdate(); 
 			event.sender.send('install_program_ReadyProcResult', 'Y');
-			// } else {
-			// 	// fail get Agent Server Info 
-			// 	event.sender.send('install_program_ReadyProcResult', 'N003');
-			// }
 
 		} else {
 			// fail vpn create 
@@ -404,12 +382,8 @@ function initHamonizeJob() {
 		sudo.exec(initJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
-					console.log("error is " + error);
 					return resolve("N");
 				} else {
-					console.log('stdout: ' + stdout);
-					console.log('stderr: ' + stderr);
-					// resolve(stdout);
 					resolve('Y');
 				}
 			}
@@ -424,7 +398,6 @@ function install_program_version_chkeckProc() {
 	return new Promise(function (resolve, reject) {
 
 		var versionChk = "/bin/bash " + __dirname + "/shell/initVersionChk.sh";
-		// var versionChk =  "apt list --upgradable 2>/dev/null | grep hamonize-connect | wc -l";
 		sudo.exec(versionChk, options,
 			function (error, stdout, stderr) {
 				if (error) {
@@ -451,16 +424,7 @@ function vpnCreate() {
 					console.log("error is " + error);
 					return resolve("N");
 				} else {
-					// console.log('stdout: ' + stdout);
-					console.log('stderr vpn,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,: ' + stderr);
-					// resolve(stdout);
-
-
-					// if( stdout == 'SUCCESS'){
 					resolve('Y');
-					// }else{
-					// 	resolve('N');
-					// }
 				}
 			}
 		);
@@ -477,12 +441,9 @@ function vpnCreateChk() {
 					console.log("error is " + error);
 					return resolve("N");
 				} else {
-					// console.log('stdout: ' + stdout);
 					console.log('stderr vpn, chk,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,: ' + stderr);
 					console.log('stdout vpn, chk,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,: ' + stdout + "--" + stdout.indexOf('SUCCESS'));
-					// resolve(stdout);
-
-
+				
 					resolve('Y');
 				}
 			}
@@ -523,7 +484,6 @@ function install_program_lastversion_installProc() {
 				} else {
 					console.log('stdout: ' + stdout);
 					console.log('stderr: ' + stderr);
-					// resolve(stdout);
 					resolve('Y');
 				}
 			}
@@ -734,6 +694,7 @@ const sysInfo = async (event, groupname, sabun, username) => {
 function pcInfoUpdate() {
 	let vpnipaddr = '';
 	let vpnInfoData = vpnchk();
+	console.log("vpnInfoData===="+vpnInfoData);
 	if (vpnInfoData.length == 0) {
 		vpnipaddr = 'no vpn';
 	} else {
@@ -769,23 +730,20 @@ function vpnchk() {
 		var tmpIfname = "";
 		ifaces[ifname].forEach(function (iface) {
 			if (iface.internal !== false) {
-				// if ('IPv4' !== iface.family || iface.internal !== false) {
 				console.log('not conn');
 				tmpIfname = 'ERROR-1944';
-				//return;
 			}
 			if (alias >= 1) {
 				console.log("alias >= 1  : " + ifname + ':' + alias, iface.address);
 			} else {
-				// console.log("this interface has only one ipv4 adress is :" + ifname, iface.address);
+				console.log("this interface has only one ipv4 adress is :" + ifname, iface.address);
 				if (ifname == 'tun0') {
-					// tmpIfname = ifname;	
-					tmpIfname = iface.address;
+					retVal = iface.address;
+					console.log("tmpIfname : "+retVal);
 				}
 			}
 			++alias;
 		});
-		retVal = tmpIfname;
 	});
 	return retVal;
 

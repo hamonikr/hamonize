@@ -26,7 +26,8 @@ CLIENT="hm-$MACHIDTMP"
 Log_output="/var/log/hamonize/vpnlog/vpnlog.hm"
 touch $Log_output
 cat  /dev/null > $Log_output 
-
+INFOHM="/etc/hamonize/propertiesJob/propertiesInfo.hm"
+VPNIP=`cat $INFOHM | grep VPNIP | awk -F '=' '{print $2}'`
 
 vpnwork(){
 	
@@ -34,15 +35,6 @@ vpnwork(){
 	# VPN Value
 	VPNSCRIPTPATH="/etc/hamonize"
 	VPNSCRIPT=$VPNSCRIPTPATH"/vpn-auto-connection.sh"
-	# VPNPATH="/tmp/penclient"
-	# PROTOCOL="udp"
-	# SERVER1="<VPN Server IP>"
-	# SERVERPORT="<VPN Server Port>"
-
-	# OVPNTARPATH="./gcloudvpn/openvpn.tar"
-	# OVPNPATH="./gcloudvpn/openvpn"
-	
-	# VPNIP=""
 
 	DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 	UUID=`cat /etc/hamonize/uuid |head -1`
@@ -58,20 +50,7 @@ vpnwork(){
 
 	## vpn key 생성
 	VPN_KEY_CREATE=`curl http://$VPNIP:3000/getClients/hmon_vpn_vpn/$CLIENT`
-	
-	# echo $VPN_KEY_CREATE
-	# echo $VPN_KEY_CREATE | grep -o "SUCCESS*" | wc -l
-	# echo $VPN_KEY_CREATE | grep -o "DUPLICATION*" | wc -l
 	RET_VPNKEY=$VPN_KEY_CREATE | grep -o "SUCCESS" | wc -l
-	# echo "ret-$VPN_KEY_CREATE"
-
-	# vpn key dup chkeck 
-	# if [ "$VPN_KEY_CREATE" = "SUCCESS" ]; then
-	# 	echo "Y:ret-$VPN_KEY_CREATE"
-	# else 
-	# 	echo "N:ret-$VPN_KEY_CREATE"
-	# fi
-
 
 	wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "http://$VPNIP:3000/getClientsDownload/$CLIENT" 2>&1 )
   	exit_status=$?
@@ -149,7 +128,6 @@ vpn_create(){
         echo "file not exitst" >>$Log_output
 		vpnwork
 	fi
-
 
 }
 

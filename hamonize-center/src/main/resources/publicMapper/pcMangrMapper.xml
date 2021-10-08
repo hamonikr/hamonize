@@ -92,7 +92,7 @@
 	</select>
 
 	<select id="chkPcinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
-		select seq, pc_uuid, pc_ip, pc_vpnip, pc_macaddress
+		select seq, pc_uuid, pc_ip, pc_vpnip, pc_macaddress, org_seq
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid}
 	</select>
