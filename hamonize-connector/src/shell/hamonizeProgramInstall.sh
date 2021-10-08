@@ -123,11 +123,11 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
 
     # public key down
-    wget -O /etc/hamonize/hamonize_public_key.pem "$CENTERURL"/getAgent/getpublickey --content-disposition
+    wget -O /etc/hamonize/hamonize_public_key.pem http://192.168.0.210:8080/getAgent/getpublickey --content-disposition
     sudo hamonize-cli authkeys import hamonize/public /etc/hamonize/hamonize_public_key.pem
 
     # config file down 
-    wget -O /etc/hamonize/hamonize.json "$CENTERURL"/getAgent/getconfigfile --content-disposition
+    wget -O /etc/hamonize/hamonize.json http://192.168.0.210:8080/getAgent/getconfigfile --content-disposition
     sudo hamonize-cli config import /etc/hamonize/hamonize.json
 
     sudo hamonize-cli service restart

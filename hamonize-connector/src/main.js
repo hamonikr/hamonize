@@ -29,7 +29,8 @@ const options = {
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
-const baseurl = "<Hamonize Center Url>";
+// const baseurl = "<Hamonize Center Url>";
+const baseurl = "http://192.168.0.210:8080";
 const osType = require('os');
 
 let mainWindow, settingWindow;
@@ -629,8 +630,7 @@ function getPublicIp() {
 	});
 }
 
-
-const pcHostNameVal = "";
+let pcHostNameVal = "";
 const sysInfo = async (event, groupname, sabun, username) => {
 	let retData = {}
 	const pcHostname = await execShellCommand('hostname');
