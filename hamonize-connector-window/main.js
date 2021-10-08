@@ -28,8 +28,7 @@ const si = require('systeminformation');
 const md5 = require('md5');
 const electronLocalshortcut = require('electron-localshortcut');
 const axios = require('axios')
-const baseurl = "http://192.168.0.76:8080";
-// const baseurl = "<Hamonize Center Url>";
+const baseurl = "<Hamonize Center Url>";
 const winHamonize = require('./windowHamonize');
 const fs = require('fs');
 
@@ -268,20 +267,7 @@ const sysInfo = async (event, groupname, sabun, username) => {
 	}
 
 
-	// var md5 = require('md5');
-	// let hwinfoMD5 = cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
-	// let hwData = md5(hwinfoMD5);
-
-	// let fileDir = "/etc/hamonize/hwinfo/hwinfo.hm";
-	// fs.writeFile(fileDir, hwData, (err) => {
-	// 	if (err) {
-	// 		// log.info("//== sysInfo hw check() error  "+ err.message)
-	// 	}
-	// });
-
-
 	var unirest = require('unirest');
-	console.log("등록 버튼 클릭시 center url >> " + baseurl + '/hmsvc/setPcInfo');
 	unirest.post(baseurl + '/hmsvc/setPcInfo')
 		.header('content-type', 'application/json')
 		.send({

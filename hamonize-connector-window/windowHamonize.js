@@ -126,14 +126,14 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
                 programInstallFileData += "\r\n";
 
 
-                
-                programInstallFileData += ' wget '+gopBaseUrl+'/getAgent/getpublickey -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem \r\n';
+                programInstallFileData += "# Hamonize-Admin key & config Settings \r\n";
+                programInstallFileData += ' wget ' + gopBaseUrl + '/getAgent/getpublickey -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem \r\n';
                 programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' authkeys import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem  \r\n';
-                programInstallFileData += ' wget '+gopBaseUrl+'/getAgent/getconfigfile -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
+                programInstallFileData += ' wget ' + gopBaseUrl + '/getAgent/getconfigfile -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
                 programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' config import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json  \r\n';
                 programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' service restart  \r\n';
 
-                
+
                 // programInstallFileData += settingsHamonize() ;
 
                 programInstallFileData += "\r\n";
@@ -155,7 +155,7 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
 
 
 
-exports.fn_install_Program_settings_step_telegraf = function ( winFolderDir, winUUID ) {
+exports.fn_install_Program_settings_step_telegraf = function (winFolderDir, winUUID) {
     return new Promise(function (resolve, reject) {
 
         var StringPsData = "";
@@ -194,7 +194,7 @@ exports.fn_install_Program_settings_step_telegraf = function ( winFolderDir, win
         telegrafConfFile += '[[inputs.swap]] \r\n';
         telegrafConfFile += '[[inputs.system]] \r\n';
         telegrafConfFile += '[global_tags] \r\n';
-        telegrafConfFile += 'uuid = "'+winUUID+'" \r\n';
+        telegrafConfFile += 'uuid = "' + winUUID + '" \r\n';
 
         StringPsData = "wget https://dl.influxdata.com/telegraf/releases/telegraf-1.20.0~rc0_windows_amd64.zip -UseBasicParsing -O '" + winFolderDir + "telegraf.zip" + "' \r\n";
         // StringPsData += "\r\n unzip telegraf-1.20.0~rc0_windows_amd64.zip";
@@ -231,13 +231,9 @@ exports.fn_install_Program_settings_step_telegraf = function ( winFolderDir, win
 exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn, winUUID) {
     return new Promise(function (resolve, reject) {
 
-        
+
         let hamonizeWinOSLogDataPSFile = "\r\n";
-        
-        if( vpnusedYn == 1 ){
-            hamonizeWinOSLogDataPSFile += 'cd  "C:\\Program Files\\OpenVPN\\bin" \r\n';
-            hamonizeWinOSLogDataPSFile += './openvpn-gui.exe --connect hamonize-winkey \r\n';
-        }
+
 
         hamonizeWinOSLogDataPSFile += '$ErrorActionPreference = "SilentlyContinue" \r\n';
         hamonizeWinOSLogDataPSFile += '$centerurl="' + gopBaseUrl + '/act/loginout"; \r\n';
@@ -248,18 +244,54 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         hamonizeWinOSLogDataPSFile += '$strFile = Get-Date -format "yyyy-MM" \r\n';
         hamonizeWinOSLogDataPSFile += '$strFileName = "C:\\ProgramData\\Hamonize-connect-utils\\OSLogOnOffLog\\" \r\n';
         hamonizeWinOSLogDataPSFile += '$strFileName += [string]$strFile + ".txt" \r\n';
+
+        if (vpnusedYn == 1) {
+            hamonizeWinOSLogDataPSFile += 'cd  "C:\\Program Files\\OpenVPN\\bin" \r\n';
+            hamonizeWinOSLogDataPSFile += './openvpn-gui.exe --connect hamonize-winkey \r\n';
+
+            hamonizeWinOSLogDataPSFile += ' \r\n';
+            hamonizeWinOSLogDataPSFile += ' \r\n';
+        }
+
         hamonizeWinOSLogDataPSFile += '$strDate + "," + $strTime + "," + $strName + "," + $strComputerName + "," + "Status :LOGIN"  | Out-File $strFileName -append -Encoding ASCII \r\n';
         hamonizeWinOSLogDataPSFile += '\r\n';
         hamonizeWinOSLogDataPSFile += '$datajson = @" \r\n'
         hamonizeWinOSLogDataPSFile += '{ \r\n'
         hamonizeWinOSLogDataPSFile += '"events":[{ \r\n'
-        hamonizeWinOSLogDataPSFile += '"uuid":"'+winUUID+'", \r\n'
+        hamonizeWinOSLogDataPSFile += '"uuid":"' + winUUID + '", \r\n'
         hamonizeWinOSLogDataPSFile += '"gubun":"LOGIN", \r\n'
         hamonizeWinOSLogDataPSFile += '"datetime":"$strDate $strTime" \r\n'
         hamonizeWinOSLogDataPSFile += '}] \r\n'
         hamonizeWinOSLogDataPSFile += '} \r\n'
         hamonizeWinOSLogDataPSFile += '"@ \r\n'
         hamonizeWinOSLogDataPSFile += 'curl $centerurl -contenttype "application/json" -method post -Body $datajson \r\n'
+
+
+
+        if (vpnusedYn == 1) {
+            hamonizeWinOSLogDataPSFile += ' \r\n';
+            hamonizeWinOSLogDataPSFile += '$ipdatajson = @" \r\n';
+            hamonizeWinOSLogDataPSFile += '{ \r\n';
+            hamonizeWinOSLogDataPSFile += '"events":[{ \r\n';
+            hamonizeWinOSLogDataPSFile += '"datetime":"$strDate $strTime" , \r\n';
+            hamonizeWinOSLogDataPSFile += '"macaddr":"macaddr", \r\n';
+            hamonizeWinOSLogDataPSFile += '"ipaddr": "$(ipconfig | where {$_ -match \'IPv4.+\s(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\' } | out-null; $Matches[1])", \r\n';
+            hamonizeWinOSLogDataPSFile += '"vpnipaddr":"$(ipconfig | where {$_ -match \'IPv4.+\s(\d{1,2}\.\d{1,3}\.\d{1,3}\.\d{1,3})\' } | out-null; $Matches[1])", \r\n';
+            hamonizeWinOSLogDataPSFile += '"hostname":"$env:computername", \r\n';
+            hamonizeWinOSLogDataPSFile += '"CPUID":"cpuid", \r\n';
+            hamonizeWinOSLogDataPSFile += '"pcuuid":"b56bac1f-0bc1-4071-a863-efbbd0b9bb65", \r\n';
+            hamonizeWinOSLogDataPSFile += '"action":"VPNIPCHNGE" \r\n';
+            hamonizeWinOSLogDataPSFile += '}] \r\n';
+            hamonizeWinOSLogDataPSFile += '} \r\n';
+            hamonizeWinOSLogDataPSFile += '"@ \r\n';
+
+            hamonizeWinOSLogDataPSFile += 'curl '+gopBaseUrl+'/hmsvc/pcInfoChange -contenttype "application/json" -method post -Body $ipdatajson \r\n';
+
+
+
+        }
+
+
 
         let hamonizeWinOSLogDataPSFile_OFF = "\r\n";
         hamonizeWinOSLogDataPSFile_OFF += '$centerurl="' + gopBaseUrl + '/act/loginout";';
@@ -275,7 +307,7 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         hamonizeWinOSLogDataPSFile_OFF += '$datajson = @" \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '{ \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '"events":[{ \r\n'
-        hamonizeWinOSLogDataPSFile_OFF += '"uuid":"'+winUUID+'", \r\n'
+        hamonizeWinOSLogDataPSFile_OFF += '"uuid":"' + winUUID + '", \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '"gubun":"LOGOUT", \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '"datetime":"$strDate $strTime" \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '}] \r\n'
@@ -307,8 +339,8 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         StringPsData += "cd 'C:\\Windows\\System32\\GroupPolicy\\User\\Scripts\\' \r\n";
         StringPsData += 'New-Item -Name psscripts.ini -Value "' + hamonizeWinOSGOPScirptFile + '" \r\n';
 
-        if( vpnusedYn == 1 ){
-            StringPsData += "wget http://"+VpnUrl+":3000/getClientsDownload/winovpn -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\hamonize-winkey.ovpn'" + " \r\n";
+        if (vpnusedYn == 1) {
+            StringPsData += "wget http://" + VpnUrl + ":3000/getClientsDownload/winovpn -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\hamonize-winkey.ovpn'" + " \r\n";
         }
 
 
@@ -320,22 +352,22 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         StringPsData += '$GpIni = Join-Path $GpRoot "gpt.ini" \r\n'
         StringPsData += '$MachineGpExtensions = "" \r\n'
         StringPsData += '$UserGpExtensions = \'{42B5FAAE-6536-11D2-AE5A-0000F87571E3}{40B66650-4972-11D1-A7CA-0000F87571E3}\' \r\n'
-        
+
         StringPsData += '$contents = Get-Content $GpIni -ErrorAction SilentlyContinue \r\n'
         StringPsData += '$newVersion = 65537  \r\n'
-        
+
         StringPsData += '$versionMatchInfo = $contents | Select-String -Pattern \'Version=(.+)\' \r\n'
         StringPsData += 'if ($versionMatchInfo.Matches.Groups -and $versionMatchInfo.Matches.Groups[1].Success) { \r\n'
         StringPsData += '$newVersion += [int]::Parse($versionMatchInfo.Matches.Groups[1].Value) \r\n'
         StringPsData += '} \r\n'
-        
+
         StringPsData += '( \r\n'
         StringPsData += '"[General]", \r\n'
         StringPsData += '"gPCMachineExtensionNames=", \r\n'
         StringPsData += '"Version=$newVersion", \r\n'
         StringPsData += '"gPCUserExtensionNames=[$UserGpExtensions]" \r\n'
         StringPsData += ') | Out-File -FilePath $GpIni -Encoding ascii  \r\n'
-        
+
         StringPsData += '# generating registry keys \r\n'
         StringPsData += 'gpupdate \r\n'
 
@@ -377,7 +409,7 @@ exports.hamonizeServerInfo = function (baseurl, event) {
             // console.log(response.data);
 
             var objData = JSON.parse(JSON.stringify(response.data.pcdata));
-            console.log("objData==="+ JSON.stringify(objData));
+            console.log("objData===" + JSON.stringify(objData));
 
             for (var i = 0; i < objData.length; i++) {
 
@@ -428,7 +460,7 @@ const getOrgData = async (event, baseurl) => {
         }
     }).then((response) => {
 
-        
+
         // console.log(response.data);
         event.sender.send('getOrgDataResult', response.data);
 
