@@ -19,8 +19,8 @@ vpnwork(){
 	PROTOCOL="udp"
 	
 	# vpn key 생성
-	SERVER1="106.254.251.74"
-	SERVERPORT="21194"
+	SERVER1="vpnserip"
+	SERVERPORT="port"
 
 	OVPNTARPATH="./gcloudvpn/openvpn.tar"
 	OVPNPATH="./gcloudvpn/openvpn"

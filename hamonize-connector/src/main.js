@@ -300,7 +300,7 @@ function hamonizeProgramInstallProc() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====hamonizeProgramInstallProc==");
-		var aptRepositoryChkJobShell = "sh " + __dirname + "/shell/hamonizeProgramInstall.sh";
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh";
 
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
@@ -342,7 +342,7 @@ function hamonizeSystemBackupAsyncProc() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====__dirname===" + __dirname);
-		var aptRepositoryChkJobShell = "sh " + __dirname + "/shell/hamonizeBackup.sh";
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeBackup.sh";
 
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
@@ -372,7 +372,7 @@ function setServerInfo() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====get Agent Server Info");
-		var getAgentInfo = "bash " + __dirname + "/shell/setServerInfo.sh";
+		var getAgentInfo = "/bin/bash " + __dirname + "/shell/setServerInfo.sh";
 
 		sudo.exec(getAgentInfo, options,
 			function (error, stdout, stderr) {
@@ -399,7 +399,7 @@ function setServerInfo() {
 //== init Shell Job  ===========================================
 function initHamonizeJob() {
 	return new Promise(function (resolve, reject) {
-		var initJobShell = "sh " + __dirname + "/shell/initHamonizeInstall.sh";
+		var initJobShell = "/bin/bash " + __dirname + "/shell/initHamonizeInstall.sh";
 		sudo.exec(initJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
@@ -422,7 +422,7 @@ function initHamonizeJob() {
 function install_program_version_chkeckProc() {
 	return new Promise(function (resolve, reject) {
 
-		var versionChk = "sh " + __dirname + "/shell/initVersionChk.sh";
+		var versionChk = "/bin/bash " + __dirname + "/shell/initVersionChk.sh";
 		// var versionChk =  "apt list --upgradable 2>/dev/null | grep hamonize-connect | wc -l";
 		sudo.exec(versionChk, options,
 			function (error, stdout, stderr) {
@@ -816,7 +816,7 @@ function aptRepositoryChkProc() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====__dirname===" + __dirname);
-		var aptRepositoryChkJobShell = "sh " + __dirname + "/shell/aptCheck.sh";
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/aptCheck.sh";
 
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
