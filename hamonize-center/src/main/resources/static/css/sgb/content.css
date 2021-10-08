@@ -481,10 +481,12 @@ fieldset:disabled a.btn {
   box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5);
 }
 
-.btn-light {
-  color: #212529;
+.btn-light {  
+  height: 22px;
+  width: 87px;
   background-color: #f8f9fa;
-  border-color: #f8f9fa;
+  border-color: #e2e6ea;
+  padding: 0px;
 }
 
 .btn-light:hover {
