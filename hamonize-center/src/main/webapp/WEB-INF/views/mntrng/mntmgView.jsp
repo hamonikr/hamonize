@@ -42,10 +42,10 @@ $( "#sp_on" ).click(function() {
 			컴퓨터 정보
 			&nbsp;
 			<c:if test ="${svo.svr_used == 1}" >
-				<button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
+				<button type="button" class="btn btn-light" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
 			</c:if>
 			<c:if test ="${svo.svr_used == 0}" >
-				<button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
+				<button type="button" class="btn btn-light" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
 			</c:if>
 
 		<span></span>
