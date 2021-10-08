@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
@@ -27,6 +28,7 @@ import com.util.LDAPConnection;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,8 +116,7 @@ public class CurlController {
 			hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
 			hdVo.setDeptname(tempObj.get("deptname").toString()); // 부서이름
 			hdVo.setSabun(tempObj.get("sabun").toString()); // 사번
-			hdVo.setPc_hostname(
-					tempObj.get("hostname").toString().replaceAll(System.getProperty("line.separator"), ""));
+			hdVo.setPc_hostname(tempObj.get("hostname").toString().replaceAll(System.getProperty("line.separator"), ""));
 			hdVo.setPc_ip(tempObj.get("ipaddr").toString());
 			hdVo.setUsername(tempObj.get("username").toString()); // 사용자 이름
 
@@ -289,27 +290,21 @@ public class CurlController {
 
 		return isExist;
 	}
-
+	
 	@PostMapping("/setVpnUpdate")
-	public Boolean setVpnUpdate(@RequestBody String retData, HttpServletRequest request) {
-
-		StringBuffer json = new StringBuffer();
+	public void setVpnUpdate(@RequestBody String retData, HttpServletRequest request) throws NamingException, ParseException {
 		int retVal = 0;
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObj = (JSONObject) jsonParser.parse(retData.toString());
+		JSONArray hmdArray = (JSONArray) jsonObj.get(EVENTS);
+		PcMangrVo hdVo = new PcMangrVo();
 
-		try {
+		logger.debug("hmdArray.size()==={}", hmdArray.size());
 
-			JSONParser jsonParser = new JSONParser();
-			JSONObject jsonObj = (JSONObject) jsonParser.parse(retData.toString());
-			JSONArray hmdArray = (JSONArray) jsonObj.get(EVENTS);
+		for (int i = 0; i < hmdArray.size(); i++) {
+				logger.debug("hmdArray =={}", hmdArray.get(i).toString());
 
-			PcMangrVo hdVo = new PcMangrVo();
-			logger.debug("hmdArray.size()==={}", hmdArray.size());
-			for (int i = 0; i < hmdArray.size(); i++) {
 				JSONObject tempObj = (JSONObject) hmdArray.get(i);
-
-				logger.debug("tempObj.get(\"uuid\").toString()=== {}", tempObj.get("uuid").toString());
-
-				logger.debug("tempObj.get(\"vpnipaddr\").toString()==={}", tempObj.get("vpnipaddr").toString());
 
 				hdVo.setPc_uuid(tempObj.get("uuid").toString());
 				hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
@@ -317,23 +312,31 @@ public class CurlController {
 
 			}
 
-			retVal = pcMangrMapper.updateVpnInfo(hdVo);
+		retVal = pcMangrMapper.updateVpnInfo(hdVo);
 
-		} catch (Exception e) {
+		
+		LDAPConnection con = new LDAPConnection();
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
-			logger.error("Error reading JSON string: {}", e.toString(), e);
-		}
+		Boolean isAddPcInfo = false;
 
-		Boolean isAddPcInfo = true;
-		if (retVal == 1) {
+		PcMangrVo tmpPcVo = pcMangrMapper.chkPcinfo(hdVo);
+		hdVo.setOrg_seq(tmpPcVo.getOrg_seq());
+
+		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+		
+		if (retVal == 1) {			
+			con.updatePcVpn(hdVo);
 			isAddPcInfo = true;
+
 		} else {
 			isAddPcInfo = false;
 		}
 
 		logger.debug("isAddPcInfo==={}", isAddPcInfo);
 
-		return isAddPcInfo;
+		// return isAddPcInfo;
 	}
 
 	/*
@@ -443,8 +446,6 @@ public class CurlController {
 		StringBuffer json = new StringBuffer();
 		String line = null;
 
-		System.out.println("=============================");
-		
 		try {
 			BufferedReader reader = request.getReader();
 			while ((line = reader.readLine()) != null) {
