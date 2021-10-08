@@ -119,7 +119,7 @@
         "nsis"
       ],
       "requestedExecutionLevel": "requireAdministrator",
-      "icon": "res/bin/iconshm/emb2.png"
+      "icon": "res/bin/iconshm/logo3.png"
     },
     "nsis": {
       "oneClick": false,
