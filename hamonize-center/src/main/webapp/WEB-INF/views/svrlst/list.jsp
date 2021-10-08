@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
 <%@ include file="../template/topMenu.jsp" %>
-<%@ include file="../template/topNav.jsp" %>
+
 
 <link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
 <link rel="stylesheet" type="text/css" href="/css/sgb/content.css">
@@ -228,10 +228,10 @@
 	
 						</colgroup>
 						<tr> 
-							<td ><b>Public 키</b></td>
+							<td ><strong>Public 키</strong></td>
 							<td> 
 								<c:if test="${publickey.filename != null}">
-									<a href="#" onclick="fnFileDownload('${publickey.seq}',' ${publickey.filename}', '${publickey.filerealname}');" style="color: steelblue;" > <img src="/images/key.svg"> ${publickey.filerealname}</a>
+									<a href="#" onclick="fnFileDownload('${publickey.seq}',' ${publickey.filename}', '${publickey.filerealname}');" style="color: steelblue;" > <img alt="key_img" src="/images/key.svg"> ${publickey.filerealname}</a>
 								</c:if>
 								<c:if test="${publickey.filename == null}">
 									<div class="container d-flex justify-content-center">
@@ -253,10 +253,10 @@
 							</td>
 						</tr> 
 						<tr> 
-							<td> <b>Private 키 </b></td>
+							<td> <strong>Private 키 </strong></td>
 							<td> 
 								<c:if test="${privatekey.filename != null}">
-									<a href="#" onclick="fnFileDownload('${privatekey.seq}',' ${privatekey.filename}', '${privatekey.filerealname}');" style="color:steelblue;" > <img src="/images/key.svg"> ${privatekey.filerealname}</a>
+									<a href="#" onclick="fnFileDownload('${privatekey.seq}',' ${privatekey.filename}', '${privatekey.filerealname}');" style="color:steelblue;" > <img alt="key_img" src="/images/key.svg"> ${privatekey.filerealname}</a>
 								</c:if>
 								<c:if test="${privatekey.filename == null}">
 									<div class="container d-flex justify-content-center">
@@ -279,7 +279,7 @@
 						</tr>
 
 						<tr> 
-							<td> <b>Config 파일 </b></td>
+							<td> <strong>Config 파일 </strong></td>
 							<td> 
 								<c:if test="${config.filename != null}">
 									<a href="#" onclick="fnFileDownload('${config.seq}',' ${config.filename}', '${config.filerealname}');" style="color:steelblue;" > ${config.filerealname}</a>

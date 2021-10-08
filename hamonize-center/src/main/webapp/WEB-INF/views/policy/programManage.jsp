@@ -208,7 +208,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	<div class="hamo_container other">
 	
@@ -267,7 +267,7 @@ function fnSave(){
 	    	</div>
 		 </div>
 	</div>
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 	

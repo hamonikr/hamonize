@@ -1897,12 +1897,12 @@ INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,
 	 ('test','test','i2c+1cHCD2hMB2klY1Apcg7aZIzHwcOwRsO4RJ8Sj38=',NULL,'2021-08-10 11:33:17.030959','2021-09-03 16:12:55.95216','A','24f9ca45fcbe2903');
 
 INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_port,svr_used,svr_vip) VALUES
-	 ('INFLUX_ORG',NULL,'hamonize',NULL,NULL,NULL,0,NULL),
-	 ('CENTERURL','NULL','192.168.0.225',NULL,NULL,'8080',0,NULL),
-	 ('COLLECTDIP',NULL,'192.168.0.225',NULL,NULL,NULL,0,NULL),
-	 ('INFLUX_URL',NULL,'192.168.0.76',NULL,NULL,'8086',0,NULL),
-	 ('GRAFANA_URL',NULL,'192.168.0.225',NULL,NULL,NULL,0,NULL),
-	 ('APTURL','NULL','106.254.251.74',NULL,NULL,'28081',0,NULL),
-	 ('VPNIP',NULL,'192.168.0.117',NULL,NULL,NULL,0,NULL),
+	 ('INFLUX_ORG',NULL,'localhost',NULL,NULL,NULL,0,NULL),
+	 ('CENTERURL',NULL,'localhost',NULL,NULL,'8080',0,NULL),
+	 ('COLLECTDIP',NULL,'localhost',NULL,NULL,NULL,0,NULL),
+	 ('INFLUX_URL',NULL,'localhost',NULL,NULL,'8086',0,NULL),
+	 ('GRAFANA_URL',NULL,'localhost',NULL,NULL,NULL,0,NULL),
+	 ('APTURL',NULL,'localhost',NULL,NULL,'8088',0,NULL),
+	 ('VPNIP',NULL,'localhost',NULL,NULL,NULL,0,NULL),
 	 ('INFLUX_BUCKET',NULL,'mybucket',NULL,NULL,NULL,0,NULL),
 	 ('INFLUX_TOKEN',NULL,'mytoken',NULL,NULL,NULL,0,NULL);

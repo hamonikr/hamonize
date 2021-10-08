@@ -426,7 +426,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	
 	<!-- width 100% 컨텐츠 other 추가 -->
@@ -499,7 +499,7 @@ function fnSave(){
 
     </div><!-- //content -->
 	
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 	

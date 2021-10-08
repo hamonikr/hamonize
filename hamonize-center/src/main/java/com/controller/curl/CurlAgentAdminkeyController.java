@@ -75,9 +75,9 @@ public class CurlAgentAdminkeyController {
 	}
 
 
-	@RequestMapping("/getpublickey")
-    public String getpublickey( FileVo vo, HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
-        vo = fileMapper.getFilePublic();
+	@GetMapping("/getpublickey")
+    public String getpublickey( HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
+        FileVo vo = fileMapper.getFilePublic();
         File file = new File(vo.getFilepath());
 		String ret ="";
        

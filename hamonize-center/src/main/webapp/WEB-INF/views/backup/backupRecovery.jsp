@@ -281,7 +281,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<div class="hamo_container other">
 
             <!-- 좌측 트리 -->
@@ -343,7 +343,6 @@ function fnSave(){
 	<form>
 </form>
 
-	<%@ include file="../template/grid.jsp" %>
 	<%@ include file="../template/footer.jsp" %>
 	
 	

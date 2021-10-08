@@ -291,6 +291,7 @@ public class CurlController {
 	}
 
 	@PostMapping("/setVpnUpdate")
+	@ResponseBody
 	public Boolean setVpnUpdate(@RequestBody String retData, HttpServletRequest request) {
 
 		StringBuffer json = new StringBuffer();
@@ -308,9 +309,7 @@ public class CurlController {
 				JSONObject tempObj = (JSONObject) hmdArray.get(i);
 
 				logger.debug("tempObj.get(\"uuid\").toString()=== {}", tempObj.get("uuid").toString());
-
 				logger.debug("tempObj.get(\"vpnipaddr\").toString()==={}", tempObj.get("vpnipaddr").toString());
-
 				hdVo.setPc_uuid(tempObj.get("uuid").toString());
 				hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
 				hdVo.setPc_hostname(tempObj.get("hostname").toString());
@@ -318,6 +317,7 @@ public class CurlController {
 			}
 
 			retVal = pcMangrMapper.updateVpnInfo(hdVo);
+			
 
 		} catch (Exception e) {
 

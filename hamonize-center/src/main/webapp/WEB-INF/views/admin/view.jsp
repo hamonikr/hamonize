@@ -219,7 +219,7 @@
 <body>
 
 <%@ include file="../template/topMenu.jsp" %>
-<%@ include file="../template/topNav.jsp" %>
+
 	
 
 <!-- content -->
