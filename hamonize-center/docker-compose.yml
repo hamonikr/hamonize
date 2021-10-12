@@ -25,15 +25,14 @@ services :
             TZ : "Asia/Seoul"
         restart: always
 
-    
     openldap:
         image: osixia/openldap:1.5.0
-        hostname: "ldap-server"        
+        hostname: "ldap-server"
+        # user: 1000:1000   
         ports:            
             - "389:389"
             - "636:636"
         environment:
-            #HOSTNAME: ldap.hamonize.com
             LDAP_LOG_LEVEL: "256"
             LDAP_TLS: "false"
             LDAP_DOMAIN: hamonize.com
@@ -41,7 +40,7 @@ services :
             LDAP_ADMIN_PASSWORD: admin
             LDAP_ORGANISATION: invesume
         volumes:
-            - ./ldap/data:/var/lib/ldap
+            - ${HOME}/ldap/data:/var/lib/ldap
             - /etc/ldap/slapd.d              
         domainname: "hamonize.com"
         restart: always
@@ -49,7 +48,7 @@ services :
     phpldapadmin:
         image: osixia/phpldapadmin:latest
         ports:
-            - "8080:80"
+            - "80:80"
         environment:
             - PHPLDAPADMIN_LDAP_HOSTS=openldap
             - PHPLDAPADMIN_HTTPS="false"
@@ -73,17 +72,22 @@ services :
           - DOCKER_INFLUXDB_INIT_BUCKET=mybucketname
           - DOCKER_INFLUXDB_INIT_RETENTION=1w
           - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
+        
         restart: always
 
     grafana:
         image: grafana/grafana:latest
         ports:
-        - "3000:3000"
+          - "3000:3000"
         volumes:
-        - grafana:/var/lib/grafana
-        - ./grafana/plugins:/var/lib/grafana/plugins
-        - ./grafana.ini:/etc/grafana/grafana.ini
-        - ./grafana/provisioning:/etc/grafana/provisioning     
+          - grafana:/var/lib/grafana
+          - ./grafana/plugins:/var/lib/grafana/plugins
+          - ./grafana.ini:/etc/grafana/grafana.ini
+          - ./grafana/provisioning:/etc/grafana/provisioning
+        links:
+            - influxdb2
+        depends_on:
+            - influxdb2     
            
 volumes:
     hamonize_center.sql:
