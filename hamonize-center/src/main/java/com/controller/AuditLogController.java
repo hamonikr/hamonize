@@ -309,27 +309,6 @@ public class AuditLogController {
 
 
 
-	/*
-	 * 사용자 접속 현황
-	 * 
-	 * @param model
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/userLog", method = RequestMethod.POST)
-	public String userLogPage(Model model) {
-		JSONArray jsonArray = new JSONArray();
-		try {
-			OrgVo orgvo = new OrgVo();
-			jsonArray = oService.orgList(orgvo);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		model.addAttribute("oList", jsonArray);
-
-		return "/auditLog/userConectLog";
-	}
-
 
 	@ResponseBody
 	@RequestMapping(value = "pcMngrList.proc", method = RequestMethod.POST)

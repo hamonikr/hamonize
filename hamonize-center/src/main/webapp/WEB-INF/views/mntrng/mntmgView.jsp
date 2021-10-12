@@ -34,7 +34,7 @@ $( "#sp_on" ).click(function() {
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<div class='wrap'>
     <div class='code-html' id='code-html'>
 		<div class="main_title" style="margin-top: 20px; ">
@@ -42,10 +42,10 @@ $( "#sp_on" ).click(function() {
 			컴퓨터 정보
 			&nbsp;
 			<c:if test ="${svo.svr_used == 1}" >
-				<button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
+				<button type="button" class="btn btn-light" onClick="location.href='hamonizecli://${pcvo.pc_vpnip}'">원격접속</button>
 			</c:if>
 			<c:if test ="${svo.svr_used == 0}" >
-				<button type="button" class="btn btn-link" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
+				<button type="button" class="btn btn-light" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
 			</c:if>
 
 		<span></span>

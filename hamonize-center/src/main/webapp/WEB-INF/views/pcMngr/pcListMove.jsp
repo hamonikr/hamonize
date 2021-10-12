@@ -1,40 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
-<!-- <link rel="stylesheet" href="/css/materialize.css" /> -->
-<!--
-<link rel="stylesheet" type="text/css" href="/css/tdemo.css" />
-<link rel="stylesheet" type="text/css" href="/css/template/tui-grid.css" />
-<link rel="stylesheet" type="text/css" href="/css/template/tui-pagination.css" />
-<link rel="stylesheet" type="text/css" href="/css/ztree/zTreeStyle.css" />
-<script type="text/javascript" src="/js/ztree/jquery.ztree.core.js"></script>
-<script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
-<script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
-<script type="text/javascript" src="/js/common.js"></script>
--->
-
-<!-- <link rel="stylesheet" href="/css/materialize.css"> -->
-
-
-
 <link rel="stylesheet" type="text/css" href="/css/ztree/zTreeStyle.css" />
 <script type="text/javascript" src="/js/ztree/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
 
 <style>
-/* a{
-color: white;
-}
-a:hover{
-color: #0056b3;
-text-decoration: none; 
-}
-#layer_area{
- width: 1200px;
- height: 700px;
- background-color: #fff;
- display:none;
- /*float:left;*/
  z-index: 1;
  position: fixed;
 left: 50%;
@@ -48,17 +19,10 @@ transform: translate(-50%, -50%);
  } */
 </style>
 <script type="text/javascript">
-//<![CDATA[
-	
-	$(document).ready(function(){
-		setNav('PC관리');
-
+$(document).ready(function(){
+	setNav('PC관리');
 	getPcMngrList();
-	//등록버튼
-	//$("#btnSave").click(fnSave);
-	
-	
-	
+
 });
 	
 	
@@ -281,7 +245,7 @@ function searchView(viewName, page){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	<div class="hamo_container other">
 

@@ -7,9 +7,6 @@
     <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
     <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
 
-    <!-- Bootstrap CSS-->
-    <%-- <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all"> --%>
-
     <!-- Vendor CSS-->
     <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
     <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
@@ -21,8 +18,7 @@
 
     <!-- Main CSS-->
 	<link href="css/theme.css" rel="stylesheet" media="all">
-	<link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
-    
+    <link href="http://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
     
 	<style>
         .col-lg-3 {
@@ -131,10 +127,6 @@
             
             
                     for(var i = 0;i < data.policyUpdtResult.length;i++){
-					console.log(i);
-					console.log(i+1);
-					console.log(data.policyUpdtResult.length);
-					console.log(data.policyUpdtResult[i].debname);
 					var chk = 1;
 					if((i+1) == data.policyUpdtResult.length){
 						chk=0;
@@ -145,7 +137,6 @@
 						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
 						
 						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
-						console.log("data.policyUpdtResult[i].count : "+data.policyUpdtResult[i].count)
 						shtml += "<tr>";
 						shtml += "<td>"+data.policyUpdtResult[i].debname+"</td>";
 						if(typeof data.policyUpdtResult[i].debver === "undefined")
@@ -158,7 +149,6 @@
 						shtml += "<td>"+noinstall+"</td>";
 						shtml += "</tr>";
 					}else if((i+1) == data.policyUpdtResult.length){
-							console.log("last");
 							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -203,8 +193,6 @@
             	
 
                     for(var i = 0;i < data.policyProgrmResult.length;i++){
-					console.log(i);
-					console.log(i+1);
 				
 					var chk = 1;
 					if((i+1) == data.policyProgrmResult.length){
@@ -223,7 +211,6 @@
 						shtml += "<td>"+noinstall+"</td>";
 						shtml += "</tr>";
 					}else if((i+1) == data.policyProgrmResult.length){
-							console.log("last");
 							var inset_dt = data.policyProgrmResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -283,7 +270,6 @@
 						shtml += "<td>"+noinstall+"</td>";
 						shtml += "</tr>";
 						}else if((i+1) == data.policyFirewallResult.length){
-							console.log("last");
 							var inset_dt = data.policyFirewallResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -342,7 +328,6 @@
 						shtml += "<td>"+noinstall+"</td>";
 						shtml += "</tr>";
 						}else if((i+1) == data.policyDeviceResult.length){
-							console.log("last");
 							var inset_dt = data.policyDeviceResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
@@ -389,7 +374,7 @@ xmlhttp.onreadystatechange = function(){
 		 $("#offComputers").text(data.off);
 		 
 	}else{
-		console.log("fail");
+		// console.log("fail");
 	}
 }
 xmlhttp.open("POST","pcList.do",true);
@@ -414,7 +399,7 @@ xmlhttp.send();
     </script>
     <script src="vendor/circle-progress/circle-progress.min.js"></script>
     <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+    <%-- <script src="vendor/chartjs/Chart.bundle.min.js"></script> --%>
     <script src="vendor/select2/select2.min.js">
     </script>
 
