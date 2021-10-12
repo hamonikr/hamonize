@@ -2,6 +2,8 @@
 
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 
+CENTER_BASE_URL="$1"
+
 DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
 LOGFILE="/var/log/hamonize/propertiesJob/propertiesJob.log"
 
@@ -63,8 +65,8 @@ fi
 #== telegraf =================================================
 if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     echo "$DATETIME ] 6.  telegraf install ============== [start]" >>$LOGFILE
-    wget https://dl.influxdata.com/telegraf/releases/telegraf_1.20.0-1_amd64.deb >>$LOGFILE
-    sudo dpkg -i telegraf_1.20.0-1_amd64.deb >>$LOGFILE
+    wget -P /tmp https://dl.influxdata.com/telegraf/releases/telegraf_1.20.0-1_amd64.deb >>$LOGFILE
+    sudo dpkg -i /tmp/telegraf_1.20.0-1_amd64.deb >>$LOGFILE
 
     echo "$DATETIME ] 6. telegraf install ============== [end]" >>$LOGFILE
 
@@ -106,8 +108,8 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     [[inputs.swap]]
     [[inputs.system]]
     [global_tags]
-    uuid = "'+PCUUID+'"
-    ' >>/etc/telegraf/telegraf.conf
+    uuid = "'${PCUUID}'"
+    '>>/etc/telegraf/telegraf.conf
 
     sudo service telegraf restart
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [end]" >>$LOGFILE
@@ -123,11 +125,11 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
 
     # public key down
-    wget -O /etc/hamonize/hamonize_public_key.pem http://192.168.0.210:8080/getAgent/getpublickey --content-disposition
+    wget -O /etc/hamonize/hamonize_public_key.pem $CENTER_BASE_URL/getAgent/getpublickey --content-disposition
     sudo hamonize-cli authkeys import hamonize/public /etc/hamonize/hamonize_public_key.pem
 
     # config file down 
-    wget -O /etc/hamonize/hamonize.json http://192.168.0.210:8080/getAgent/getconfigfile --content-disposition
+    wget -O /etc/hamonize/hamonize.json $CENTER_BASE_URL/getAgent/getconfigfile --content-disposition
     sudo hamonize-cli config import /etc/hamonize/hamonize.json
 
     sudo hamonize-cli service restart

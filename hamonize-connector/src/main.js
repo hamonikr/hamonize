@@ -30,7 +30,7 @@ const options = {
 const electronLocalshortcut = require('electron-localshortcut');
 
 // const baseurl = "<Hamonize Center Url>";
-const baseurl = "http://192.168.0.210:8080";
+const baseurl = "http://192.168.0.76:8080";
 const osType = require('os');
 
 let mainWindow, settingWindow;
@@ -154,7 +154,6 @@ const install_program_version_chkeckAsync = async (event) => {
 			console.log("setServerInfoResult============" + setServerInfoResult);
 
 			// pcInfoUpdate(); // vpn 연결후 pc 정보 업데이트
-
 			if (setServerInfoResult == 'Y') {
 				console.log("########### install  program version check ###################");
 				// event.sender.send('install_program_ReadyProcResult', 'Y');
@@ -279,7 +278,7 @@ function hamonizeProgramInstallProc() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====hamonizeProgramInstallProc==");
-		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh";
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl;
 
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
@@ -351,7 +350,7 @@ function setServerInfo() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====get Agent Server Info");
-		var getAgentInfo = "/bin/bash " + __dirname + "/shell/setServerInfo.sh";
+		var getAgentInfo = "/bin/bash " + __dirname + "/shell/setServerInfo.sh " +baseurl;
 
 		sudo.exec(getAgentInfo, options,
 			function (error, stdout, stderr) {
