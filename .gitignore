@@ -5,7 +5,6 @@ b/*
 *.swp
 CMakeLists.txt.u*
 svg
-Makefile
 plugins/extra
 build/
 build-win/
