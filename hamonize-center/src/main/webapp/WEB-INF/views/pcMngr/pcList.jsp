@@ -157,7 +157,7 @@ var linuxmintIcon = "<img src='/images/icon_lm.png' style='width:22px; height:22
 var debianIcon = "<img src='/images/icon_d.png' style='width:22px; height:22px;'>";
 var ubuntuIcon = "<img src='/images/icon_u.png' style='width:22px; height:22px;'>";
 
-var vpn_used;
+// var vpn_used;
 
 //메뉴 Tree onClick
 function onClick(event, treeId, treeNode, clickFlag) {
@@ -173,8 +173,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			function(data){
 				var gbInnerHtml = "";
 				var classGroupList = data.list;
-				vpn_used = data.svo.svr_used;
-				console.log("svr_used"+vpn_used);
+				// vpn_used = data.svo.svr_used;
+				// console.log("svr_used"+vpn_used);
 
 				if( data.list.length > 0 ){
 					
@@ -201,16 +201,19 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else{
 							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 						}
-						if(vpn_used ==1 ){
-							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
-						}else{
-							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
-						}
+
+						// if(vpn_used ==1 ){
+						// 	gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+						// }else{
+						// 	gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+						// }
+						gbInnerHtml += "<td><a style='color:steelblue;' href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+
 
 						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 						gbInnerHtml += "</tr>";
 
-											});	
+					});	
 			}else{  
 				gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 			}
@@ -247,8 +250,8 @@ function getPcMngrList(){
 	$('#pageGrideInPcMngrListTb').empty();
 	$('.page_num').empty();
 	
-	vpn_used = data.svo.svr_used;	
-	console.log("svr_used : "+ vpn_used);
+	// vpn_used = data.svo.svr_used;	
+	// console.log("svr_used : "+ vpn_used);
 
 	if( data.list.length > 0 ){
 
@@ -276,12 +279,14 @@ function getPcMngrList(){
 				gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 			}
 			
-			if(vpn_used ==1 ){
-					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
-			}else{
-				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
-			}
-			
+			// if(vpn_used ==1 ){
+			// 		gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+			// }else{
+			// gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+			// }
+
+			gbInnerHtml += "<td><a style='color:steelblue;' href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+		
 			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 			gbInnerHtml += "</tr>";
 		
@@ -529,6 +534,43 @@ function searchView(viewName, page){
 			$("#bg_fix").show();
 		};
 	
+		function detail_popup_novpn(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
+			console.log("detail_popup_novpn >> ");
+			
+			if(pc_os == "H"){
+				pc_os = hamonikrIcon; 
+			}else if(pc_os == "W"){
+				pc_os = windowIcon; 
+			}else if(pc_os == "L"){
+				pc_os = linuxmintIcon; 
+			}else if(pc_os == "D"){
+				pc_os = debianIcon; 
+			}else if(pc_os == "U"){
+				pc_os = ubuntuIcon; 
+			}else if(pc_os == "G"){
+				pc_os = gooroomIcon; 
+			}else{
+			 	pc_os = ""; 
+			}
+			
+			var innerHtml = "";
+			$("#detail_no").html(no);
+			$("#detail_pc_os").html(pc_os);
+			$("#detail_hostname").html(hostname);
+			$("#detail_name").html(name);
+			$("#detail_pc_ip").html(pc_ip);
+			$("#detail_macaddress").html(macaddress);
+			$("#detail_pc_disk").html(pc_disk);
+			$("#detail_cpu").html(cpu);
+			$("#detail_memory").html(memory);
+			$("#detail_first_date").html(first_date);
+			
+			
+			$('#popup').show();
+			$("#bg_fix").show();
+		};
+		
+
 		function hide_layer() {
 			$('#popup').hide();
 			$("#bg_fix").hide();
