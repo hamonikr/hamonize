@@ -5,7 +5,13 @@
 
 <link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
 <link rel="stylesheet" type="text/css" href="/css/sgb/content.css">
+<style>
+.btnAdd{
+	width:30%;
+	height:60%;
 
+}
+</style>
 
 
 <body>
@@ -24,25 +30,24 @@
 							   <col style="width:10%;" />
 							   <col style="width:10%;" />
 							   <col style="width:10%;" />
-							   <col style="width:15%;" />
+							   <col style="width:20%;" />
 							   <col style="width:10%;" />
-							   <col style="width:15%;" />
-							   <col style="width:10%;" />
-							   <col style="width:15%;" />
-							   <col style="width:5%;" />
+							   <col style="width:20%;" />
+   							   <col style="width:10%;" />
+
 							</colgroup>
 							<tbody>
 								<tr>
 									<th>서버명</th>
 									<td><input type="text" style="border:none;" name="svr_nm" id="svr_nm" class="input_type1" readonly></td>
 									<th>IP</th>
-									<td><input type="text" name="svr_ip" id="svr_ip" class="input_type1"></td>
-									<th>VPN IP</th>
-									<td><input type="text" name="svr_vip" id="svr_vip" class="input_type1"></td>
-									<th>Port</th>
-									<td><input type="text" name="svr_port" id="svr_port" class="input_type1" style="width:150px" /></td>
+									<td><input type="text" name="svr_ip" id="svr_ip"  style="width:80%" class="input_type1"></td>
+									<%-- <th>VPN IP</th>
+									<td><input type="text" name="svr_vip" id="svr_vip" class="input_type1"></td> --%>
+									<th>PORT</th>
+									<td><input type="text" name="svr_port" id="svr_port" class="input_type1" style="width:80%" /></td>
 									<td>
-										<button type="button" class="btnAdd btn-outline-info" >저장</button>
+										<button type="button" class="btnAdd btn-info" >저장</button>
 								   </td>
 								</tr>
 							</tbody>
@@ -53,18 +58,18 @@
 					<div class="board_list mT20">
 						<table>
 							<colgroup>
-								<col style="width:5%;" />
-								<col style="width:15%;" />
-								<col style="width:20%;" />
 								<col style="width:10%;" />
-								<col style="width:20%;" />
+								<col style="width:23%;" />
+								<%-- <col style="width:20%;" /> --%>
+								<col style="width:23%;" />
+								<col style="width:23%;" />
 							</colgroup>
 							<thead>
 								<tr>
 									<th> </th>
 									<th>서버명</th>
 									<th>IP</th>
-									<th>VPN IP</th>
+									<%-- <th>VPN IP</th> --%>
 									<th>PORT</th>
 								</tr>
 							</thead>
@@ -90,7 +95,6 @@
 							<col style="width:30%;" />
 							<col style="width:30%;" />
 							<col style="width:5%;" />
-	
 							<col />
 						</colgroup>
 						<thead>
@@ -149,32 +153,32 @@
 								</tr>
 							</c:forEach>
 	
-						<tr>
-							<c:forEach var="list" items="${slist}" varStatus="status">
-								<c:if test="${list.svr_nm eq 'VPNIP' }">
-									<td>
-										vpn
-									</td>
-									<td>
-										<a style="color: steelblue;" href="#">사용여부 설정</a>
-									</td>
-									<td id="set_vpn">
-										<label class='switch'>
-										<c:if test="${list.svr_used ==1 }">
-											<input type='checkbox' checked id='vpn_used' name='svr_used' value='${list.svr_nm}' onClick='vpnCheck(this)'>
-											<span class='slider round'></span>
-										</c:if>
-										<c:if test="${list.svr_used == 0 }">
-											<input type='checkbox' id='vpn_used' name='svr_used' value='${list.svr_nm}' onClick='vpnCheck(this)'>
-											<span class='slider round'></span>
-										</c:if>
-										</label>
-									</td>
-								</c:if>
-							</c:forEach>
-							<td></td>
-							</tr>	
-							<tr>
+							<%-- <tr>
+								<c:forEach var="list" items="${slist}" varStatus="status">
+									<c:if test="${list.svr_nm eq 'VPNIP' }">
+										<td>
+											vpn
+										</td>
+										<td>
+											<a style="color: steelblue;" href="#">사용여부 설정</a>
+										</td>
+										<td id="set_vpn">
+											<label class='switch'>
+											<c:if test="${list.svr_used ==1 }">
+												<input type='checkbox' checked id='vpn_used' name='svr_used' value='${list.svr_nm}' onClick='vpnCheck(this)'>
+												<span class='slider round'></span>
+											</c:if>
+											<c:if test="${list.svr_used == 0 }">
+												<input type='checkbox' id='vpn_used' name='svr_used' value='${list.svr_nm}' onClick='vpnCheck(this)'>
+												<span class='slider round'></span>
+											</c:if>
+											</label>
+										</td>
+									</c:if>
+								</c:forEach>
+								<td></td>
+							</tr>	 --%>
+							<%-- <tr>
 								<td>influx</td>
 								<td>
 									<a style="color: steelblue;" href="#" onclick="showEnvSet();">환경변수 설정</a>
@@ -209,8 +213,7 @@
 									</div>
 								</td>
 								<td></td>	
-	
-							</tr>
+							</tr> --%>
 						</tbody>
 					</table>
 				</div>	
@@ -483,10 +486,7 @@
 			if(regExp.test($("#svr_ip").val())){
 				alert("ip는 숫자와 . 만 입력해주세요.");
 				return false;
-			} else if(regExp.test($("#svr_vip").val())){
-				alert("vpn ip는 숫자와 . 만 입력해주세요.");
-				return false;
-			}else if(port_regExp.test($("#svr_port").val())){
+			} else if(port_regExp.test($("#svr_port").val())){
 				alert("port는 숫자만 입력해주세요.");
 				return false;
 			}else{
@@ -610,50 +610,51 @@
 		}
 		
 		
-		function vpnCheck(val){
-			var vpn_used = 0;
+		// function vpnCheck(val){
+		// 	var vpn_used = 0;
 			
-			if($("input:checkbox[id='vpn_used']").is(":checked")==true){
-				if(confirm("vpn을 사용하시겠습니까?")==true){	
-					if(viplist.length >= 5){
-						vpn_used = 1;
-						saveVpnUsedVal(vpn_used,val);
-					} else{
-						alert("서버관리의 vpn ip가 모두 입력되지않았습니다. 다시 확인해주세요.");
-						location.reload();
+		// 	if($("input:checkbox[id='vpn_used']").is(":checked")==true){
+		// 		if(confirm("vpn을 사용하시겠습니까?")==true){	
+		// 			if(viplist.length >= 5){
+		// 				vpn_used = 1;
+		// 				saveVpnUsedVal(vpn_used,val);
+		// 			} else{
+		// 				alert("서버관리의 vpn ip가 모두 입력되지않았습니다. 다시 확인해주세요.");
+		// 				location.reload();
 		
-					}
-				}else{
-					$("input:checkbox[id='vpn_used']").removeAttr('checked');
-				}
-			}else{
-				if(confirm("vpn 사용하지 않으시겠습니까?")==true){
-					vpn_used = 0;
-					saveVpnUsedVal(vpn_used,val);
-				}else{
-					vpn_used = 1;
-					saveVpnUsedVal(vpn_used,val);
-					$("input:checkbox[id='vpn_used']").prop("checked", true);
-				}
-			}
+		// 			}
+		// 		}else{
+		// 			$("input:checkbox[id='vpn_used']").removeAttr('checked');
+		// 		}
+		// 	}else{
+		// 		if(confirm("vpn 사용하지 않으시겠습니까?")==true){
+		// 			vpn_used = 0;
+		// 			saveVpnUsedVal(vpn_used,val);
+		// 		}else{
+		// 			vpn_used = 1;
+		// 			saveVpnUsedVal(vpn_used,val);
+		// 			$("input:checkbox[id='vpn_used']").prop("checked", true);
+		// 		}
+		// 	}
 		
-		}
-		function saveVpnUsedVal(vpn_used,val){
-			$.ajax({
-				url : '/admin/vpnUsed',
-				type: 'POST',
-				data: {svr_used:vpn_used, svr_nm:val.value},
-				success : function(res) {
-					if( res >= 6 ){
-						alert("vpn 사용여부가 변경되었습니다.");	
-						location.reload();
-					}else{
-						alert("vpn 사용여부 변경이 실패되었습니다. 관리자에게 문의바랍니다.");	
-					}
-				}
-			}); 
+		// }
+
+		// function saveVpnUsedVal(vpn_used,val){
+		// 	$.ajax({
+		// 		url : '/admin/vpnUsed',
+		// 		type: 'POST',
+		// 		data: {svr_used:vpn_used, svr_nm:val.value},
+		// 		success : function(res) {
+		// 			if( res >= 6 ){
+		// 				alert("vpn 사용여부가 변경되었습니다.");	
+		// 				location.reload();
+		// 			}else{
+		// 				alert("vpn 사용여부 변경이 실패되었습니다. 관리자에게 문의바랍니다.");	
+		// 			}
+		// 		}
+		// 	}); 
 		
-		}
+		// }
 		
 		function edit(seq,servernm,ip,vip,port){
 			var form = $('#addForm');
@@ -741,22 +742,7 @@
 				
 					gbInnerHtml += "<td><a style='color: steelblue;' href='#' onclick=\"edit("+value.seq+",'"+value.svr_nm+"','"+value.svr_ip+"','"+value.svr_vip+"','"+value.svr_port+"'); return false;\" >"+value.svr_nm+"</a></td>";
 					gbInnerHtml += "<td>"+value.svr_ip+"</td>";
-					
-		
-					if(value.svr_nm =="VPNIP"){
-						svrused = value.svr_used;
-						gbInnerHtml += "<td>"+value.svr_vip+"</td>"
-					
-					}else {
-						if(value.svr_vip == null || value.svr_vip == '' || value.svr_vip == 'undefined' || value.svr_vip == undefined){
-							value.svr_vip ='';
-						}else{
-								viplist.push(value.svr_vip);
-						}
-							gbInnerHtml += "<td>"+value.svr_vip+"</td>";
-					}
-		
-		
+			
 					if(value.svr_port != null ){
 						if(value.svr_port !=''){
 							gbInnerHtml += "<td>"+value.svr_port+"</td>";
