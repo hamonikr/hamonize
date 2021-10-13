@@ -8,6 +8,6 @@ Homepage: https://hamonikr.org
 
 Package: hamonize-agent
 Architecture: any
-Depends: jq
+Depends: 
 Description: Agent program that manages pc in Harmonize projects.
  하모나이즈 프로젝트에서 pc를 관리하는 에이전트 프로그램입니다.

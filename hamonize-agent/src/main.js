@@ -16,7 +16,7 @@ var readline = require('readline');
 FnMkdir();
 
 var centerUrl = getCenterInfo();
-var DEFAUT_POLLTIME = 10000;//10s
+var DEFAUT_POLLTIME = 10000; //10s
 
 function myFunc(arg) {
 
@@ -29,11 +29,13 @@ function myFunc(arg) {
 		schedule.cancelJob('cobj.cronbackuponbackup');
 		fnBackupJob(backupData);
 		log.info("//==Cron Backup Job status is : " + schedule.scheduledJobs);
+
 	}
 }
 
 
 setTimeout(myFunc, 6000, 'funky');
+
 function hamonizeVersion() {
 
 	var exec = require('child_process').exec;
@@ -44,24 +46,24 @@ function hamonizeVersion() {
 
 }
 
-function getPollTime(uuid){
+function getPollTime(uuid) {
 	log.info("----getPollTime Func start----");
 
-	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid="+uuid+"&&name=hamonize-agent";
-	log.info("polling time --- " + setUrl);
+	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
 
 	var retval = 0;
 	http.get(setUrl, (res) => {
 		res.on('data', (data) => {
 			var pollingObj = JSON.parse(data);
-			
+
 			if (pollingObj.data != 'nodata') {
 				var pollingObj = JSON.parse(data);
 				log.info("//====================================");
 				log.info("//== Polling time has changed... " + pollingObj.data);
 				log.info("//====================================");
-				
-				retval = pollingObj.data*1000;
+
+				retval = pollingObj.data * 1000;
+				log.info("//== Polling time has result... " + retval);
 				Polling(retval);
 
 			} else {
@@ -75,20 +77,18 @@ function getPollTime(uuid){
 
 
 
-console.log("DEFAUT_POLLTIME : "+DEFAUT_POLLTIME)
-let cnt =0;
+console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
 getPollTime(uuidVal);
 
-function Polling(time){
+
+function Polling(time) {
 	let poller = new Poller();
-	
+
 	poller.onPoll(() => {
 		log.info("//====agent polling start====");
 		getPollTime(uuidVal);
-		log.info("//==== polling time? ====" +time );		
-		log.info("//==== cnt? ====" +cnt );
-		cnt+=1;
-	
+		log.info("//==== polling time? ====" + time);
+
 		// func add
 		getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
 		getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
@@ -98,13 +98,15 @@ function Polling(time){
 		ipStatusCheck();
 		getBackupDataCall(uuidVal); // Call 백업 주기 정책 
 		sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-			
+
+
 	});
 
 	// Initial start
 	poller.poll(time);
 
 }
+
 
 
 
@@ -581,7 +583,7 @@ function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
 
 			arrSetData.push(setData);
 		}
-		
+
 	}
 
 	return arrSetData;
@@ -690,19 +692,18 @@ function getProgrmDataCall(uuid) {
 			if (data != 'nodata') {
 				var fileDir = "/etc/hamonize/progrm/progrm.hm";
 				let content = '';
-				
+
 				if (data == 'DATAINIT') {
 					var DataObj = '';
-				} 
-				else {
+				} else {
 					content = data;
 					var DataObj = JSON.stringify(JSON.parse(data).INS);
 				}
 				var text = fs.readFileSync(fileDir, 'utf8');
-				var arr = text.replace('{"INS":', '').replace('}','').replace('"','').replace('"','').split(',');
+				var arr = text.replace('{"INS":', '').replace('}', '').replace('"', '').replace('"', '').split(',');
 				var delarr = [];
-				for (i in arr){
-					if (!DataObj.includes(arr[i])){
+				for (i in arr) {
+					if (!DataObj.includes(arr[i])) {
 						delarr.push(arr[i]);
 					}
 				}
@@ -717,22 +718,32 @@ function getProgrmDataCall(uuid) {
 				});
 
 				var sendarr = [];
-				for (i in delarr){
-					sendarr.push({progrmname: delarr[i], status_yn: "N", status: "del", datetime: datetime, hostname: hostname, uuid: uuid,});
+				for (i in delarr) {
+					sendarr.push({
+						progrmname: delarr[i],
+						status_yn: "N",
+						status: "del",
+						datetime: datetime,
+						hostname: hostname,
+						uuid: uuid,
+					});
 				}
 
 				var send_data = JSON.stringify(sendarr);
-				if (typeof send_data !== 'undefined' && send_data.length > 0){
+				if (typeof send_data !== 'undefined' && send_data.length > 0) {
 					var send_parsed = JSON.parse(send_data);
 
 					var unirest = require('unirest');
 					unirest.post('http://' + centerUrl + '/act/progrmAct')
-						.header({'User-Agent': 'HamoniKR OS', 'content-type': 'application/json'})
+						.header({
+							'User-Agent': 'HamoniKR OS',
+							'content-type': 'application/json'
+						})
 						.send({
 							insresert: send_parsed
 						})
 						.end(function (response) {
-							console.log("response.body==="+JSON.stringify(response));
+							console.log("response.body===" + JSON.stringify(response));
 						});
 				}
 			} else {
@@ -746,7 +757,7 @@ function getProgrmDataCall(uuid) {
 
 function fnProgrmJob(retData) {
 
-	if (retData != ''){
+	if (retData != '') {
 		var progrmDataObj = JSON.parse(retData);
 		log.info("//==progrm 정책:: progrmDataObj Data is : " + JSON.stringify(progrmDataObj));
 		log.info("//==progrm 정책:: progrmDataObj.INS Data is : " + JSON.stringify(progrmDataObj.INS));
@@ -791,6 +802,7 @@ function getBackupDataCall(uuid) {
 		log.info(e);
 	});
 }
+
 function fnBackupJob(retData) {
 
 	//	 데이터 sample
@@ -865,7 +877,7 @@ function fnBackupJob(retData) {
 		var day = backup_cycle.split("/")[2];
 		schedule.cancelJob('cronbackup');
 
-		const scheduler = schedule.scheduleJob('cronbackup', '01 ' + minutes + ' ' + hours + ' ' + day + ' ' + month + '  *',
+		const scheduler = schedule.scheduleJob('cronbackup', '01 ' + minutes + ' ' + hours + ' ' + day + ' *  *',
 
 			function () {
 				log.info('//==Backup 정책(월별) ::===backup cycle all month : ' + hours + "/" + minutes + "//====month is : " + month + ", day : " + day);
