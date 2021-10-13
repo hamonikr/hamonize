@@ -140,6 +140,9 @@ sleep 2
 
 ##==== 서버 정보 저장(domain,ip etc)===================================
 ##==== crontab reboot으로 부팅시마다 서버 정보를 파일로 저장한다.==============
-sudo cp -r cp $WORK_PATH/hmonInitJob.sh /etc/hamonize/propertiesJob
+IPADDR_SPLIT=($(echo $CENTER_BASE_URL | tr "/" "\n"))
+sudo sed  -i "s/CHANGE_CENTERURL/http:\/\/${IPADDR_SPLIT[1]}/" $WORK_PATH/hmonInitJob.sh 
+
+sudo cp -r $WORK_PATH/hmonInitJob.sh /etc/hamonize/propertiesJob
 sudo sed -i '/@reboot/d' /etc/crontab
 sudo sed -i '$s/$/\n\@reboot root  \/etc\/hamonize\/propertiesJob\/sgbInitJob.sh/g' /etc/crontab
