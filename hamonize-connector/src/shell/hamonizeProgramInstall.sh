@@ -72,8 +72,8 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
 
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [start]" >>$LOGFILE
     mv /etc/telegraf/telegraf.conf /etc/telegraf/telegraf.conf_bak
-    
-    PCUUID=`cat /etc/hamonize/uuid`
+
+    PCUUID=$(cat /etc/hamonize/uuid)
 
     echo '[agent]
     interval = "10s"
@@ -109,12 +109,12 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     [[inputs.system]]
     [global_tags]
     uuid = "'${PCUUID}'"
-    '>>/etc/telegraf/telegraf.conf
+    ' >>/etc/telegraf/telegraf.conf
 
     sudo service telegraf restart
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [end]" >>$LOGFILE
 fi
- 
+
 sleep 2
 #== hamonize-user  =================================================
 if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
@@ -128,10 +128,18 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     wget -O /etc/hamonize/hamonize_public_key.pem $CENTER_BASE_URL/getAgent/getpublickey --content-disposition
     sudo hamonize-cli authkeys import hamonize/public /etc/hamonize/hamonize_public_key.pem
 
-    # config file down 
+    # config file down
     wget -O /etc/hamonize/hamonize.json $CENTER_BASE_URL/getAgent/getconfigfile --content-disposition
     sudo hamonize-cli config import /etc/hamonize/hamonize.json
 
     sudo hamonize-cli service restart
-    
+
 fi
+
+sleep 2
+
+##==== 서버 정보 저장(domain,ip etc)===================================
+##==== crontab reboot으로 부팅시마다 서버 정보를 파일로 저장한다.==============
+sudo cp -r cp $WORK_PATH/hmonInitJob.sh /etc/hamonize/propertiesJob
+sudo sed -i '/@reboot/d' /etc/crontab
+sudo sed -i '$s/$/\n\@reboot root  \/etc\/hamonize\/propertiesJob\/sgbInitJob.sh/g' /etc/crontab

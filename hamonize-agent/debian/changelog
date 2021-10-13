@@ -1,4 +1,8 @@
+hamonize-agent (1.1.1) stable; urgency=low
 
+  * Initial release. 1.1.1
+
+ -- HamoniKR <pkg@hamonikr.org>  Wed, 26 May 2021 15:51:27 +0900
 
 hamonize-agent (1.0.5) stable; urgency=low
 
