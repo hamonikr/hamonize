@@ -38,9 +38,6 @@ input.radio {
 </style>
 
 <style>
-div.radio-holder {
-  /* padding: 10px; */
-}
 input[type="radio"] {
  &:checked+label {
   border-bottom: 2px solid #222222;
@@ -103,57 +100,54 @@ input[type="radio"] {
 		  
 		
   	 //라디오 이벤트 - PC 목록 클릭시
-	 $("#pc_list").on("click", "label", function(){
-		 $(this).prev().prop( "checked", true );
-		 $("#rc_list").empty();
-		 
-		 var seq = $("input:radio[name='dept_seq']:checked").val();
-		 
-		 $.post("backupRCList.do",{seq:seq},
-					function(result){
-							var agrs = result;
-							var strHtml = "";
-					
-							for(var i = 0; i < agrs.length; i++){
-							
-// 								strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
-// 								strHtml += "<label for=\"br_seq"+i+"\" class=\"pR50\">";
-// 								if(agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
-// 								else if(agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
-// 								strHtml += "" + agrs[i].br_backup_name + "";
-// 								strHtml += "</label>";
-								
-								strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
-					           strHtml += "<span>";
-					           strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
-					           strHtml += "<label style='float: unset;' for=\"br_seq"+i+"\" class=\"\">";
+	//  $(".radio-holder").on("click", "label", function(){
+	$("#pc_list").on("click", "input","label", function(event){
+		$(this).prev().prop( "checked", true );
+		$("#rc_list").empty();
+     	console.log("pc_list");
+		// console.log("event : "+event.data[0]);
 
-		 						if(agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
-		 						else if(agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
-		 						strHtml += "</label>";
-					           strHtml += "</span>";
-					           strHtml += "<div style='padding: 10px 10px 10px 22px; font-size: 18px;'> 백업일자 : " + agrs[i].br_backup_name + "</div>";
-								strHtml += "</li>";
-								
-							} 
+		var seq = $("input:radio[name='dept_seq']:checked").val();
+		console.log("seq :"+seq);
+		
+		$.post("backupRCList.do",{seq:seq},
+				function(result){
+					var agrs = result;
+					var strHtml = "";
+			
+					for(var i = 0; i < agrs.length; i++){
+						strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
+						strHtml += "<span>";
+						strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
+						strHtml += "<label style='float: unset;' for=\"br_seq"+i+"\" class=\"\">";
+
+						if(agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
+						else if(agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
+						strHtml += "</label>";
+						strHtml += "</span>";
+						strHtml += "<div style='padding: 10px 10px 10px 22px; font-size: 18px;'> 백업일자 : " + agrs[i].br_backup_name + "</div>";
+						strHtml += "</li>";
+						
+					} 
+					
+					$("#rc_list").append(strHtml);
+					$("#selectPcOne").text('');
+					if(agrs[0] != undefined || agrs[0] != null){
+						$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
+					}							
+					
+					if(agrs.length == 0 ){
+						$("#selectPcOne").text('등록된 정보가 없습니다.');
+						
+					}
 							
-							$("#rc_list").append(strHtml);
-							$("#selectPcOne").text('');
-							if(agrs[0] != undefined || agrs[0] != null){
-								$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
-							}							
-							
-							if(agrs.length == 0 ){
-								$("#selectPcOne").text('등록된 정보가 없습니다.');
-								
-							}
-							
-					});
+				});
 		}); 
   	
   	
 		//라디오 이벤트 - 백업목록 클릭시
 		$("#rc_list").on("click", "label", function(){
+			console.log("rc_list");
 			$(this).children('input').prop('checked', true);
 		});
 
@@ -207,8 +201,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							
 								strHtml += "";							
 								strHtml += "<div class=\"radio-holder\">";
-								strHtml += " <input id='dept_seq"+i+"' name='dept_seq' type='radio' value='"+agrs[i].seq+"'>";
-								strHtml += "<label for='dept_seq"+i+"'>" +agrs[i].pc_hostname+ "</label>";
+								strHtml += "<label for='dept_seq"+i+"'>"+"<input id='dept_seq"+i+"' name='dept_seq' type='radio' value='"+agrs[i].seq+"'>";
+								strHtml += agrs[i].pc_hostname+ "</label>";
 								strHtml += "</div>";
 							  
 							}
@@ -239,6 +233,7 @@ function fnSave(){
 	var button = document.getElementById('btnSave');
 
 	var dept_seq = $('input[name="dept_seq"]:checked').val();
+
 	var br_seq = $('input[name="br_seq"]:checked').val();
 	var org_seq = $("#org_seq").val();
 	
