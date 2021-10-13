@@ -75,7 +75,7 @@
     "read-last-lines": "^1.7.2",
     "sudo-block": "^3.0.0",
     "sudo-prompt": "^9.1.1",
-    "systeminformation": "^5.3.2",
+    "systeminformation": "^5.6.4",
     "time-counter": "^1.0.0",
     "time-stamp": "^2.2.0",
     "tiny-timer": "^1.4.0",
