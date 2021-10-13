@@ -54,7 +54,7 @@
     "fs": "0.0.1-security",
     "ip": "^1.1.5",
     "is-root": "^2.1.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "koa": "^2.11.0",
     "koa-handlebars": "^1.0.0",
     "koa-router": "^8.0.8",
