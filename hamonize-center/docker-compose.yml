@@ -28,7 +28,6 @@ services :
     openldap:
         image: osixia/openldap:1.5.0
         hostname: "ldap-server"
-        # user: 1000:1000   
         ports:            
             - "389:389"
             - "636:636"
@@ -92,7 +91,7 @@ services :
 volumes:
     hamonize_center.sql:
     psql-data:
-    ldap-data:
+    # ldap-data:
     influxdb-storage:
     grafana:
     was-logs:
