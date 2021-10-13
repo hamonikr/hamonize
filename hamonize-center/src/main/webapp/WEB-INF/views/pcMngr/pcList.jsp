@@ -204,7 +204,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						if(vpn_used ==1 ){
 							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
 						}else{
-							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
 						}
 
 						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
@@ -279,7 +279,7 @@ function getPcMngrList(){
 			if(vpn_used ==1 ){
 					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
 			}else{
-				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
 			}
 			
 			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
@@ -490,6 +490,8 @@ function searchView(viewName, page){
 	<!-- 레이어 팝업용 자바스크립트 -->
 	<script type="text/javascript">
 		function detail_popup(no,name,pc_os,hostname,pc_ip,pc_vpnip,macaddress,pc_disk,cpu,memory,first_date) {
+			console.log("detail_popup >> ");
+		
 			if(pc_os == "H"){
 				pc_os = hamonikrIcon; 
 			}else if(pc_os == "W"){
@@ -517,8 +519,9 @@ function searchView(viewName, page){
 			$("#detail_cpu").html(cpu);
 			$("#detail_memory").html(memory);
 			$("#detail_first_date").html(first_date);
-				
-			if(vpn_used ==1 && pc_vpnip != "no vpn"){
+			
+			console.log("vpn_used >> "+vpn_used);
+			if(vpn_used != 0 && pc_vpnip != "no vpn"){
 				innerHtml += "<th>VPN IP</th>";
 				innerHtml += "<td colspan='3'><span id='vpnip_val'></span></td>";
 				$('#detail_vpnip').append(innerHtml);
@@ -528,7 +531,43 @@ function searchView(viewName, page){
 			$('#popup').show();
 			$("#bg_fix").show();
 		};
-	
+		
+		function detail_popup_novpn(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
+			console.log("detail_popup_novpn >> ");
+			
+			if(pc_os == "H"){
+				pc_os = hamonikrIcon; 
+			}else if(pc_os == "W"){
+				pc_os = windowIcon; 
+			}else if(pc_os == "L"){
+				pc_os = linuxmintIcon; 
+			}else if(pc_os == "D"){
+				pc_os = debianIcon; 
+			}else if(pc_os == "U"){
+				pc_os = ubuntuIcon; 
+			}else if(pc_os == "G"){
+				pc_os = gooroomIcon; 
+			}else{
+			 	pc_os = ""; 
+			}
+			
+			var innerHtml = "";
+			$("#detail_no").html(no);
+			$("#detail_pc_os").html(pc_os);
+			$("#detail_hostname").html(hostname);
+			$("#detail_name").html(name);
+			$("#detail_pc_ip").html(pc_ip);
+			$("#detail_macaddress").html(macaddress);
+			$("#detail_pc_disk").html(pc_disk);
+			$("#detail_cpu").html(cpu);
+			$("#detail_memory").html(memory);
+			$("#detail_first_date").html(first_date);
+			
+			
+			$('#popup').show();
+			$("#bg_fix").show();
+		};
+		
 		function hide_layer() {
 			$('#popup').hide();
 			$("#bg_fix").hide();
