@@ -123,6 +123,9 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     # Check hamonize-user.deb file in hamonize apt repository
     CHK_HAMONIZE_REMOTE=$(apt list 2>/dev/null | grep hamonize-user | wc -l)
     echo "chk Hamonize apt repository ====${CHK_HAMONIZE_REMOTE}" >>$LOGFILE
+
+
+    #  Case  OpenOS  (Download by Git repository )
     if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
         OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:])
         
@@ -135,9 +138,10 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
         fi
 
         echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
-        wget -P /tmp  "${JSONDATA}" >>$LOGFILE
+        wget -P /tmp  "${JSONDATA}" | tr -d '\"' >>$LOGFILE
         sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
 
+    # Download APT Repository 
     else
         sudo apt-get install -y hamonize-user >>$LOGFILE
     fi
