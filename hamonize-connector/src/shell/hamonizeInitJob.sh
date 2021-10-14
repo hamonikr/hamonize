@@ -91,13 +91,18 @@ if [ $CHK_AGNET_INSTALLED = 0  ]; then
         sudo apt-get install hamonize-agent -y >> $LOGFILE
 fi
 
-
 CHK_AGENT=`apt list --upgradable 2>/dev/null | grep hamonize-agent | wc -l`
 echo "agent upgrade able is =="$CHK_AGENT >> $LOGFILE
 if [ $CHK_AGENT -gt 0  ]; then
         sudo apt-get --only-upgrade install hamonize-agent -y >/dev/null 2>&1
 fi
 
+
+CHK_PCMNGR_INSTALLED=`dpkg-query -W | grep hamonize-process-mngr | wc -l`
+echo "pcmngr install checked is =="$CHK_PCMNGR_INSTALLED >> $LOGFILE
+if [ $CHK_PCMNGR_INSTALLED = 0  ]; then
+        sudo apt-get install hamonize-process-mngr -y >> $LOGFILE
+fi
 
 CHK_PCMNGR=`apt list --upgradable 2>/dev/null | grep hamonize-process-mngr | wc -l`
 echo "pcmngr upgrade able is =="$CHK_PCMNGR >> $LOGFILE
@@ -106,6 +111,12 @@ if [ $CHK_PCMNGR -gt 0  ]; then
 fi
 
 
+CHK_ADMIN_INSTALLED=`dpkg-query -W | grep hamonize-user | wc -l`
+echo "hamonize-user install checked is =="$CHK_ADMIN_INSTALLED >> $LOGFILE
+if [ $CHK_ADMIN_INSTALLED = 0  ]; then
+        sudo apt-get install hamonize-user -y >> $LOGFILE
+fi
+
 CHK_ADMIN=`apt list --upgradable 2>/dev/null | grep hamonize-user | wc -l`
 echo "hamonize-user upgrade able is =="$CHK_ADMIN >> $LOGFILE
 if [ $CHK_ADMIN -gt 0  ]; then
@@ -113,3 +124,6 @@ if [ $CHK_ADMIN -gt 0  ]; then
 fi
 
 echo "$DATETIME] resboot==========END" >>$LOGFILE
+
+echo "$DATETIME] hamonize-user 필수 포트 allow 11100==========END" >>$LOGFILE
+sudo ufw allow 11100 >>$LOGFILE
