@@ -17,5 +17,9 @@ hamonize-admin/plugins/addons
 hamonize-admin/plugins/extra
 node_modules
 **/node_modules/*
-*.sh
 dist*
+gitAutoPush.sh
+hamonize-agent/dpkga.sh
+hamonize-agent/usr/share/hamonize-agent/shell/agentautoupdate.sh
+hamonize-connector/dpkga.sh
+
