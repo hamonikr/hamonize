@@ -121,34 +121,35 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  hamonize-user install ============== [start]" >>$LOGFILE
 
     # Check hamonize-user.deb file in hamonize apt repository
-    CHK_HAMONIZE_REMOTE=$(apt list 2>/dev/null | grep hamonize-user | wc -l)
-    echo "chk Hamonize apt repository ====${CHK_HAMONIZE_REMOTE}" >>$LOGFILE
-
+    # CHK_HAMONIZE_REMOTE=$(apt list 2>/dev/null | grep hamonize-user | wc -l)
+    # echo "chk Hamonize apt repository ====${CHK_HAMONIZE_REMOTE}" >>$LOGFILE
 
     #  Case  OpenOS  (Download by Git repository )
-    if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
-        OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:])
-        
-        if [ "${OSGUBUN}" = "HAMONIKR" ] && [ "${OSGUBUN}"="LINUXMINT" ] && [ "${OSGUBUN}"="UBUNTU" ]; then
-            JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`
-        elif [ "${OSGUBUN}" = "DEBIAN" ]; then
-            JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url'`
-        elif [ "${OSGUBUN}" = "GOOROOM" ]; then
-            JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url'`
-        fi
+    # if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
+    OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:])
 
-        echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
-        wget -P /tmp  "${JSONDATA}" | tr -d '\"' >>$LOGFILE
-        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
-
-    # Download APT Repository 
-    else
+    if [ "${OSGUBUN}" = "HAMONIKR" ] && [ "${OSGUBUN}"="LINUXMINT" ] && [ "${OSGUBUN}"="UBUNTU" ]; then
+        # JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`
         sudo apt-get install -y hamonize-user >>$LOGFILE
+    elif [ "${OSGUBUN}" = "DEBIAN" ]; then
+        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url')
+        echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
+        wget -P /tmp "${JSONDATA}" | tr -d '\"' >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+    elif [ "${OSGUBUN}" = "GOOROOM" ]; then
+        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url')
+        echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
+        wget -P /tmp "${JSONDATA}" | tr -d '\"' >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
     fi
+
+    # Download APT Repository
+    # else
+    #     sudo apt-get install -y hamonize-user >>$LOGFILE
+    # fi
 
     echo "$DATETIME ] 8.  hamonize-user install ============== [end]" >>$LOGFILE
     sleep 1
-
 
     echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
     # public key down
