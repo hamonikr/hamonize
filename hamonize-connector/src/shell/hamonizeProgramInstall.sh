@@ -119,11 +119,34 @@ sleep 2
 #== hamonize-user  =================================================
 if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  hamonize-user install ============== [start]" >>$LOGFILE
-    sudo apt-get install -y hamonize-user >>$LOGFILE
+
+    # Check hamonize-user.deb file in hamonize apt repository
+    CHK_HAMONIZE_REMOTE=$(apt list 2>/dev/null | grep hamonize-user | wc -l)
+    echo "chk Hamonize apt repository ====${CHK_HAMONIZE_REMOTE}" >>$LOGFILE
+    if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
+        OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:])
+        
+        if [ "${OSGUBUN}" = "HAMONIKR" ] && [ "${OSGUBUN}"="LINUXMINT" ] && [ "${OSGUBUN}"="UBUNTU" ]; then
+            JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`
+        elif [ "${OSGUBUN}" = "DEBIAN" ]; then
+            JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url'`
+        elif [ "${OSGUBUN}" = "GOOROOM" ]; then
+            JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url'`
+        fi
+
+        echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
+        wget -P /tmp  "${JSONDATA}" >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+
+    else
+        sudo apt-get install -y hamonize-user >>$LOGFILE
+    fi
+
     echo "$DATETIME ] 8.  hamonize-user install ============== [end]" >>$LOGFILE
+    sleep 1
+
 
     echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
-
     # public key down
     wget -O /etc/hamonize/hamonize_public_key.pem $CENTER_BASE_URL/getAgent/getpublickey --content-disposition
     sudo hamonize-cli authkeys import hamonize/public /etc/hamonize/hamonize_public_key.pem
@@ -141,7 +164,7 @@ sleep 2
 ##==== 서버 정보 저장(domain,ip etc)===================================
 ##==== crontab reboot으로 부팅시마다 서버 정보를 파일로 저장한다.==============
 IPADDR_SPLIT=($(echo $CENTER_BASE_URL | tr "/" "\n"))
-sudo sed  -i "s/CHANGE_CENTERURL/http:\/\/${IPADDR_SPLIT[1]}/" $WORK_PATH/hamonizeInitJob.sh
+sudo sed -i "s/CHANGE_CENTERURL/http:\/\/${IPADDR_SPLIT[1]}/" $WORK_PATH/hamonizeInitJob.sh
 
 sudo cp -r $WORK_PATH/hamonizeInitJob.sh /etc/hamonize/propertiesJob
 sudo sed -i '/@reboot/d' /etc/crontab
