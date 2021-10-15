@@ -429,23 +429,6 @@
 		DELETE FROM TBL_PC_MANGR_MOVE WHERE seq = #{seq}
 	</insert>
 
-	<insert id="insertPcAmtJson" parameterType="java.util.HashMap">
-		INSERT INTO TBL_PC_AMT_JSON 
-				(pc_hostname
-				,pc_ip
-				,pc_macaddress
-				,ORG_SEQ
-				,pc_os
-				,FIRST_DATE)
-		<foreach collection="data" item="item" index="index">
-			SELECT #{item.pc_hostname},#{item.pc_ip},#{item.pc_macaddress},(select seq from tbl_org where org_nm = #{item.deptname}),#{item.pc_os},to_date(#{item.date},'yyyymmdd')
-			WHERE NOT EXISTS (SELECT * FROM TBL_PC_AMT_JSON WHERE pc_hostname = #{item.pc_hostname})
-			<if test="last > index+1">
-			UNION ALL
-			</if>
-		</foreach>
-	</insert>
-
 	<insert id="insertWindowPc" parameterType="java.util.HashMap">
 		INSERT INTO TBL_PC_MANGR
 				(pc_hostname
