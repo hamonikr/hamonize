@@ -126,20 +126,20 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
 
     #  Case  OpenOS  (Download by Git repository )
     # if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
-    OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:])
+    OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
 
     if [ "${OSGUBUN}" = "HAMONIKR" ] && [ "${OSGUBUN}"="LINUXMINT" ] && [ "${OSGUBUN}"="UBUNTU" ]; then
         # JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`
         sudo apt-get install -y hamonize-user >>$LOGFILE
     elif [ "${OSGUBUN}" = "DEBIAN" ]; then
-        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url')
+        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url')
         echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
-        wget -P /tmp "${JSONDATA}" | tr -d '\"' >>$LOGFILE
+        wget -P /tmp "${JSONDATA}" >>$LOGFILE
         sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
     elif [ "${OSGUBUN}" = "GOOROOM" ]; then
-        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url')
+        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url')
         echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
-        wget -P /tmp "${JSONDATA}" | tr -d '\"' >>$LOGFILE
+        wget -P /tmp "${JSONDATA}" >>$LOGFILE
         sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
     fi
 
