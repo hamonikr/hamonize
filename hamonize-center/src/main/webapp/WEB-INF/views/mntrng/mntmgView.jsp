@@ -47,7 +47,7 @@ $( "#sp_on" ).click(function() {
 			<c:if test ="${svo.svr_used == 0}" >
 				<button type="button" class="btn btn-light" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
 			</c:if> --%>
-						<button type="button" class="btn btn-light" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
+			<button type="button" class="btn btn-light" onClick="location.href='hamonizecli://${pcvo.pc_ip}'">원격접속</button>
 
 		<span></span>
 		</div>

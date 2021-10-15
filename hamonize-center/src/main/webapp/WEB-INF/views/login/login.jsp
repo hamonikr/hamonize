@@ -84,21 +84,7 @@
 			<li> <button type="submit" class="btn_type2"> LOGIN </button></li>
 		</ul> 
 		</form>     
-		<div style="width: 100%;">
-			<table class="div-align">
-				<tr>
-					<td>
-						<button class="btn-admin btn btn-outline-info" onClick="location.href='/admin/admin_manual';"> 관리자 매뉴얼 바로가기</button>
-
-					</td>
-					<td>
-						<button class="btn-admin btn btn-outline-success" onClick="location.href='/admin/user_manual';"> 사용자 매뉴얼 바로가기</button>
-
-					</td>
-				</tr>
-			</table>
-		</div>
-
+		
 	</div>
 </div>
 	

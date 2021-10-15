@@ -1,25 +1,3 @@
--- public.export definition
-
--- Drop table
-
--- DROP TABLE public.export;
-
-CREATE TABLE public.export (
-	"INSERT INTO public.tbl_act_backup_recovery_log (org_seq" varchar(55) NULL,
-	uuid varchar(34) NULL,
-	hostname varchar(39) NULL,
-	datetime varchar(39) NULL,
-	status varchar(19) NULL,
-	"result" varchar(10) NULL,
-	"ins_date) VALUES" varchar(75) NULL
-);
-
--- Permissions
-
-ALTER TABLE public.export OWNER TO hamonize;
-GRANT ALL ON TABLE public.export TO hamonize;
-
-
 -- public.tbl_act_backup_recovery_log definition
 
 -- Drop table
@@ -41,7 +19,6 @@ CREATE TABLE public.tbl_act_backup_recovery_log (
 -- Permissions
 
 ALTER TABLE public.tbl_act_backup_recovery_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_act_backup_recovery_log TO hamonize;
 
 
 -- public.tbl_act_device_log definition
@@ -66,7 +43,6 @@ COMMENT ON TABLE public.tbl_act_device_log IS '디바이스 허용 배포 결과
 -- Permissions
 
 ALTER TABLE public.tbl_act_device_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_act_device_log TO hamonize;
 
 
 -- public.tbl_act_firewall_log definition
@@ -92,31 +68,6 @@ COMMENT ON TABLE public.tbl_act_firewall_log IS '방화벽 정책 배포 결과'
 -- Permissions
 
 ALTER TABLE public.tbl_act_firewall_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_act_firewall_log TO hamonize;
-
-
--- public.tbl_act_nxss_log definition
-
--- Drop table
-
--- DROP TABLE public.tbl_act_nxss_log;
-
-CREATE TABLE public.tbl_act_nxss_log (
-	seq bigserial NOT NULL,
-	org_seq int8 NULL,
-	uuid varchar(200) NULL,
-	hostname varchar(100) NULL,
-	file_gubun varchar(100) NULL,
-	filedate varchar(100) NULL,
-	ins_date timestamp NULL,
-	CONSTRAINT tbl_act_nxss_log_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_act_nxss_log IS '유해사이트 차단 배포 결과';
-
--- Permissions
-
-ALTER TABLE public.tbl_act_nxss_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_act_nxss_log TO hamonize;
 
 
 -- public.tbl_act_progrm_log definition
@@ -142,7 +93,6 @@ COMMENT ON TABLE public.tbl_act_progrm_log IS '프로그램 업데이트 배포 
 -- Permissions
 
 ALTER TABLE public.tbl_act_progrm_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_act_progrm_log TO hamonize;
 
 
 -- public.tbl_admin_login_history definition
@@ -169,7 +119,6 @@ COMMENT ON COLUMN public.tbl_admin_login_history.time_spent IS '머문 시간';
 -- Permissions
 
 ALTER TABLE public.tbl_admin_login_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_admin_login_history TO hamonize;
 
 
 -- public.tbl_admin_user definition
@@ -194,7 +143,6 @@ COMMENT ON TABLE public.tbl_admin_user IS '관리자 정보';
 -- Permissions
 
 ALTER TABLE public.tbl_admin_user OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_admin_user TO hamonize;
 
 
 -- public.tbl_agent_job definition
@@ -218,31 +166,6 @@ COMMENT ON TABLE public.tbl_agent_job IS 'agent 정책파일';
 -- Permissions
 
 ALTER TABLE public.tbl_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_agent_job TO hamonize;
-
-
--- public.tbl_answer definition
-
--- Drop table
-
--- DROP TABLE public.tbl_answer;
-
-CREATE TABLE public.tbl_answer (
-	seq bigserial NOT NULL,
-	tcng_seq int8 NULL,
-	"content" text NULL,
-	ins_date timestamp NULL DEFAULT now(),
-	upd_date timestamp NULL DEFAULT now(),
-	admin_id varchar(100) NULL,
-	admin_name varchar(100) NULL,
-	CONSTRAINT tbl_answer_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_answer IS '댓글';
-
--- Permissions
-
-ALTER TABLE public.tbl_answer OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_answer TO hamonize;
 
 
 -- public.tbl_backup_agent_job definition
@@ -266,7 +189,6 @@ COMMENT ON TABLE public.tbl_backup_agent_job IS '에이전트 백업';
 -- Permissions
 
 ALTER TABLE public.tbl_backup_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_backup_agent_job TO hamonize;
 
 
 -- public.tbl_backup_applc definition
@@ -288,7 +210,6 @@ COMMENT ON TABLE public.tbl_backup_applc IS '백업주기 설정';
 -- Permissions
 
 ALTER TABLE public.tbl_backup_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_backup_applc TO hamonize;
 
 
 -- public.tbl_backup_applc_history definition
@@ -312,7 +233,6 @@ COMMENT ON TABLE public.tbl_backup_applc_history IS '백업주기 히스토리';
 -- Permissions
 
 ALTER TABLE public.tbl_backup_applc_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_backup_applc_history TO hamonize;
 
 
 -- public.tbl_backup_recovery_mngr definition
@@ -346,53 +266,6 @@ COMMENT ON COLUMN public.tbl_backup_recovery_mngr.dept_seq IS 'pc 시퀀스 번�
 -- Permissions
 
 ALTER TABLE public.tbl_backup_recovery_mngr OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_backup_recovery_mngr TO hamonize;
-
-
--- public.tbl_board_files definition
-
--- Drop table
-
--- DROP TABLE public.tbl_board_files;
-
-CREATE TABLE public.tbl_board_files (
-	seq bigserial NOT NULL,
-	board_seq int8 NOT NULL,
-	filerealname varchar(200) NULL,
-	filemakename varchar(200) NULL,
-	filapath varchar(200) NULL,
-	filesize varchar(200) NULL,
-	ins_date timestamp NULL,
-	upd_date timestamp NULL,
-	CONSTRAINT tbl_board_files_pkey PRIMARY KEY (seq)
-);
-
--- Permissions
-
-ALTER TABLE public.tbl_board_files OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_board_files TO hamonize;
-
-
--- public.tbl_comm_code definition
-
--- Drop table
-
--- DROP TABLE public.tbl_comm_code;
-
-CREATE TABLE public.tbl_comm_code (
-	seq serial NOT NULL,
-	attr_code varchar(50) NULL,
-	attr_name varchar(50) NULL,
-	attr_value_code varchar(50) NULL,
-	attr_value_name varchar(100) NULL,
-	CONSTRAINT tbl_comm_code_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_comm_code IS '공통코드관리';
-
--- Permissions
-
-ALTER TABLE public.tbl_comm_code OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_comm_code TO hamonize;
 
 
 -- public.tbl_device_agent_job definition
@@ -417,7 +290,6 @@ COMMENT ON TABLE public.tbl_device_agent_job IS '에이전트 디바이스 비�
 -- Permissions
 
 ALTER TABLE public.tbl_device_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_device_agent_job TO hamonize;
 
 
 -- public.tbl_device_applc definition
@@ -441,7 +313,6 @@ COMMENT ON COLUMN public.tbl_device_applc.ppm_seq IS '디바이스 번호';
 -- Permissions
 
 ALTER TABLE public.tbl_device_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_device_applc TO hamonize;
 
 
 -- public.tbl_device_applc_history definition
@@ -463,7 +334,6 @@ COMMENT ON TABLE public.tbl_device_applc_history IS '디바이스 정책 로그'
 -- Permissions
 
 ALTER TABLE public.tbl_device_applc_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_device_applc_history TO hamonize;
 
 
 -- public.tbl_files definition
@@ -493,7 +363,6 @@ COMMENT ON COLUMN public.tbl_files.filesize IS '파일 크기';
 -- Permissions
 
 ALTER TABLE public.tbl_files OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_files TO hamonize;
 
 
 -- public.tbl_frwl_agent_job definition
@@ -522,7 +391,6 @@ COMMENT ON COLUMN public.tbl_frwl_agent_job.pcm_uuid IS 'PC 관리번호';
 -- Permissions
 
 ALTER TABLE public.tbl_frwl_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_frwl_agent_job TO hamonize;
 
 
 -- public.tbl_frwl_applc definition
@@ -547,7 +415,6 @@ COMMENT ON COLUMN public.tbl_frwl_applc.seq IS '시리얼 번호';
 -- Permissions
 
 ALTER TABLE public.tbl_frwl_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_frwl_applc TO hamonize;
 
 
 -- public.tbl_frwl_applc_history definition
@@ -569,7 +436,6 @@ COMMENT ON TABLE public.tbl_frwl_applc_history IS '방화벽 정책 적용 로�
 -- Permissions
 
 ALTER TABLE public.tbl_frwl_applc_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_frwl_applc_history TO hamonize;
 
 
 -- public.tbl_hamonize_version_chk definition
@@ -593,70 +459,6 @@ COMMENT ON TABLE public.tbl_hamonize_version_chk IS '하모나이즈 버전 체�
 -- Permissions
 
 ALTER TABLE public.tbl_hamonize_version_chk OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_hamonize_version_chk TO hamonize;
-
-
--- public.tbl_inet_log definition
-
--- Drop table
-
--- DROP TABLE public.tbl_inet_log;
-
-CREATE TABLE public.tbl_inet_log (
-	inet_seq bigserial NOT NULL, -- 고유번호
-	user_id varchar(50) NULL, -- 사용자 아이디
-	pc_ip varchar(50) NULL, -- 사용자 pc ip
-	cnnc_url varchar(300) NULL, -- 인터넷 사용 url
-	pc_uuid varchar(100) NULL, -- pc uuid
-	hostname varchar(50) NULL, -- PC 호스트명
-	state varchar(10) NULL, -- start:브라우저시작,stop:브라우저 종료,connect:인터넷접속,illegal:유해사이트접속
-	reg_dt timestamp NULL, -- state별 시간
-	insert_dt timestamp NULL, -- 사용일
-	CONSTRAINT tbl_inet_log_pkey PRIMARY KEY (inet_seq)
-);
-CREATE INDEX tbl_inet_log_reg_dt_index ON public.tbl_inet_log USING btree (reg_dt);
-COMMENT ON TABLE public.tbl_inet_log IS '인터넷 사용로그';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_inet_log.inet_seq IS '고유번호';
-COMMENT ON COLUMN public.tbl_inet_log.user_id IS '사용자 아이디';
-COMMENT ON COLUMN public.tbl_inet_log.pc_ip IS '사용자 pc ip';
-COMMENT ON COLUMN public.tbl_inet_log.cnnc_url IS '인터넷 사용 url';
-COMMENT ON COLUMN public.tbl_inet_log.pc_uuid IS 'pc uuid';
-COMMENT ON COLUMN public.tbl_inet_log.hostname IS 'PC 호스트명';
-COMMENT ON COLUMN public.tbl_inet_log.state IS 'start:브라우저시작,stop:브라우저 종료,connect:인터넷접속,illegal:유해사이트접속';
-COMMENT ON COLUMN public.tbl_inet_log.reg_dt IS 'state별 시간';
-COMMENT ON COLUMN public.tbl_inet_log.insert_dt IS '사용일';
-
--- Permissions
-
-ALTER TABLE public.tbl_inet_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_inet_log TO hamonize;
-
-
--- public.tbl_ip definition
-
--- Drop table
-
--- DROP TABLE public.tbl_ip;
-
-CREATE TABLE public.tbl_ip (
-	seq serial NOT NULL,
-	ipaddress varchar(30) NULL,
-	gubun varchar(2) NULL,
-	info varchar(50) NULL,
-	ins_date date NULL,
-	upd_date date NULL,
-	macaddress varchar(100) NULL,
-	CONSTRAINT tbl_ip_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_ip IS '클라우드컴퓨팅 통합관제시스템 접근 허용 IP';
-
--- Permissions
-
-ALTER TABLE public.tbl_ip OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_ip TO hamonize;
 
 
 -- public.tbl_loginout definition
@@ -683,134 +485,6 @@ COMMENT ON COLUMN public.tbl_loginout.uuid IS 'PC 관리번호';
 -- Permissions
 
 ALTER TABLE public.tbl_loginout OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_loginout TO hamonize;
-
-
--- public.tbl_manager definition
-
--- Drop table
-
--- DROP TABLE public.tbl_manager;
-
-CREATE TABLE public.tbl_manager (
-	seq int8 NOT NULL, -- 시리얼 번호
-	user_id varchar(30) NULL, -- 부서 관리자 아이디
-	pass_wd varchar(300) NULL, -- 비밀번호
-	user_name varchar(50) NULL, -- 부서 관리자 이름
-	insert_dt timestamp NULL, -- 등록일
-	update_dt timestamp NULL, -- 수정일
-	"rank" varchar(30) NULL, -- 직급
-	tel_num varchar(20) NULL, -- 유선 전화번호
-	phone_num varchar(30) NULL, -- 핸드폰번호
-	arr_org_seq varchar(30) NULL, -- 부서방 관리번호
-	manager_yn varchar(3) NULL, -- 상위 부문 관리자 여부
-	general_yn varchar(2) NULL, -- 최상위 부문 관리자 여부
-	CONSTRAINT tbl_manager_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_manager IS '부서 관리자 정보';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_manager.seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_manager.user_id IS '부서 관리자 아이디';
-COMMENT ON COLUMN public.tbl_manager.pass_wd IS '비밀번호';
-COMMENT ON COLUMN public.tbl_manager.user_name IS '부서 관리자 이름';
-COMMENT ON COLUMN public.tbl_manager.insert_dt IS '등록일';
-COMMENT ON COLUMN public.tbl_manager.update_dt IS '수정일';
-COMMENT ON COLUMN public.tbl_manager."rank" IS '직급';
-COMMENT ON COLUMN public.tbl_manager.tel_num IS '유선 전화번호';
-COMMENT ON COLUMN public.tbl_manager.phone_num IS '핸드폰번호';
-COMMENT ON COLUMN public.tbl_manager.arr_org_seq IS '부서방 관리번호';
-COMMENT ON COLUMN public.tbl_manager.manager_yn IS '상위 부문 관리자 여부';
-COMMENT ON COLUMN public.tbl_manager.general_yn IS '최상위 부문 관리자 여부';
-
--- Permissions
-
-ALTER TABLE public.tbl_manager OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_manager TO hamonize;
-
-
--- public.tbl_manager_orgseq definition
-
--- Drop table
-
--- DROP TABLE public.tbl_manager_orgseq;
-
-CREATE TABLE public.tbl_manager_orgseq (
-	seq int8 NULL,
-	user_id varchar(100) NULL,
-	org_seq int4 NULL
-);
-COMMENT ON TABLE public.tbl_manager_orgseq IS '(미사용)';
-
--- Permissions
-
-ALTER TABLE public.tbl_manager_orgseq OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_manager_orgseq TO hamonize;
-
-
--- public.tbl_notice definition
-
--- Drop table
-
--- DROP TABLE public.tbl_notice;
-
-CREATE TABLE public.tbl_notice (
-	seq serial NOT NULL,
-	title varchar(500) NULL,
-	contents text NULL,
-	writer_id varchar NULL,
-	"group" varchar NULL,
-	ins_date date NULL,
-	upd_date date NULL,
-	"rank" varchar(30) NULL,
-	org_seq int8 NULL,
-	orguppercode int4 NULL,
-	hit int8 NULL,
-	CONSTRAINT tbl_notice_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_notice IS '공지사항';
-
--- Permissions
-
-ALTER TABLE public.tbl_notice OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_notice TO hamonize;
-
-
--- public.tbl_object definition
-
--- Drop table
-
--- DROP TABLE public.tbl_object;
-
-CREATE TABLE public.tbl_object (
-	seq serial NOT NULL,
-	status varchar(300) NULL,
-	cpu varchar(300) NULL,
-	memory varchar(300) NULL,
-	disk varchar(300) NULL,
-	macaddress varchar(300) NULL,
-	ipaddress varchar(300) NULL,
-	ins_date timestamp NULL,
-	upd_date timestamp NULL,
-	hostname varchar(300) NULL,
-	org_seq int8 NULL,
-	disk_id varchar(100) NULL,
-	cpu_id varchar(100) NULL,
-	uuid varchar(100) NULL,
-	"change" varchar(2) NULL,
-	vpnip varchar(20) NULL,
-	sn varchar(100) NULL,
-	os varchar(100) NULL,
-	public_ip varchar(20) NULL,
-	"type" varchar(20) NOT NULL,
-	CONSTRAINT tbl_object_pkey PRIMARY KEY (seq)
-);
-
--- Permissions
-
-ALTER TABLE public.tbl_object OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_object TO hamonize;
 
 
 -- public.tbl_org definition
@@ -858,43 +532,6 @@ COMMENT ON COLUMN public.tbl_org.all_org_nm IS '전체경로';
 -- Permissions
 
 ALTER TABLE public.tbl_org OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_org TO hamonize;
-
-
--- public.tbl_pc_amt_json definition
-
--- Drop table
-
--- DROP TABLE public.tbl_pc_amt_json;
-
-CREATE TABLE public.tbl_pc_amt_json (
-	seq bigserial NOT NULL,
-	pc_status varchar(300) NULL,
-	pc_cpu varchar(300) NULL,
-	pc_memory varchar(300) NULL,
-	pc_disk varchar(300) NULL,
-	pc_macaddress varchar(300) NULL,
-	pc_ip varchar(300) NULL,
-	first_date date NULL,
-	last_date date NULL,
-	pc_hostname varchar(300) NULL,
-	pc_guid varchar(300) NULL,
-	org_seq int4 NULL,
-	pc_disk_id varchar(100) NULL,
-	pc_cpu_id varchar(100) NULL,
-	pc_uuid varchar(100) NULL,
-	pc_change varchar(2) NULL,
-	pc_vpnip varchar(20) NULL,
-	pc_os varchar(10) NULL,
-	pc_sn varchar(50) NULL,
-	CONSTRAINT tbl_pc_amt_json_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_pc_amt_json IS '(미사용)';
-
--- Permissions
-
-ALTER TABLE public.tbl_pc_amt_json OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_amt_json TO hamonize;
 
 
 -- public.tbl_pc_block definition
@@ -917,7 +554,6 @@ COMMENT ON TABLE public.tbl_pc_block IS '(미사용)';
 -- Permissions
 
 ALTER TABLE public.tbl_pc_block OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_block TO hamonize;
 
 
 -- public.tbl_pc_change_info definition
@@ -963,7 +599,6 @@ COMMENT ON COLUMN public.tbl_pc_change_info.pc_user IS '사용자 os 계정';
 -- Permissions
 
 ALTER TABLE public.tbl_pc_change_info OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_change_info TO hamonize;
 
 
 -- public.tbl_pc_influxdata definition
@@ -988,7 +623,6 @@ COMMENT ON COLUMN public.tbl_pc_influxdata.pc_status IS '사용여부';
 -- Permissions
 
 ALTER TABLE public.tbl_pc_influxdata OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_influxdata TO hamonize;
 
 
 -- public.tbl_pc_mangr definition
@@ -1046,7 +680,6 @@ COMMENT ON COLUMN public.tbl_pc_mangr.pc_os IS 'OS 구분';
 -- Permissions
 
 ALTER TABLE public.tbl_pc_mangr OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_mangr TO hamonize;
 
 
 -- public.tbl_pc_mangr_history definition
@@ -1105,49 +738,6 @@ COMMENT ON COLUMN public.tbl_pc_mangr_history.pc_os IS 'os구분';
 -- Permissions
 
 ALTER TABLE public.tbl_pc_mangr_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_mangr_history TO hamonize;
-
-
--- public.tbl_pc_mangr_ip_chn_log definition
-
--- Drop table
-
--- DROP TABLE public.tbl_pc_mangr_ip_chn_log;
-
-CREATE TABLE public.tbl_pc_mangr_ip_chn_log (
-	seq bigserial NOT NULL, -- 시리얼번호
-	pc_uuid varchar(100) NULL, -- PC 관리번호
-	pc_ip varchar(20) NULL, -- ip
-	pc_vpnip varchar(20) NULL, -- vpnip
-	macaddr varchar(1000) NULL, -- macaddress
-	hostname varchar(100) NULL, -- PC호스트명
-	insert_dt timestamptz NULL, -- 변경일
-	old_pc_ip varchar(20) NULL, -- 이전ip
-	old_pc_vpnip varchar(20) NULL, -- 이전vpnip
-	old_pc_macaddr varchar(50) NULL, -- 이전macaddress
-	status varchar(100) NULL, -- 상태값
-	CONSTRAINT tbl_pc_mangr_ip_chn_log_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_pc_mangr_ip_chn_log IS 'pc ip 변경 로그';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.seq IS '시리얼번호';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.pc_uuid IS 'PC 관리번호';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.pc_ip IS 'ip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.pc_vpnip IS 'vpnip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.macaddr IS 'macaddress';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.hostname IS 'PC호스트명';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.insert_dt IS '변경일';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.old_pc_ip IS '이전ip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.old_pc_vpnip IS '이전vpnip';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.old_pc_macaddr IS '이전macaddress';
-COMMENT ON COLUMN public.tbl_pc_mangr_ip_chn_log.status IS '상태값';
-
--- Permissions
-
-ALTER TABLE public.tbl_pc_mangr_ip_chn_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_mangr_ip_chn_log TO hamonize;
 
 
 -- public.tbl_polling_agent_job definition
@@ -1177,7 +767,6 @@ COMMENT ON COLUMN public.tbl_polling_agent_job.pu_name IS '적용프로그램';
 -- Permissions
 
 ALTER TABLE public.tbl_polling_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_polling_agent_job TO hamonize;
 
 
 -- public.tbl_polling_applc definition
@@ -1197,7 +786,6 @@ CREATE TABLE public.tbl_polling_applc (
 -- Permissions
 
 ALTER TABLE public.tbl_polling_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_polling_applc TO hamonize;
 
 
 -- public.tbl_prcss_block_log definition
@@ -1221,7 +809,6 @@ COMMENT ON TABLE public.tbl_prcss_block_log IS '프로그램 차단 로그';
 -- Permissions
 
 ALTER TABLE public.tbl_prcss_block_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_prcss_block_log TO hamonize;
 
 
 -- public.tbl_program_mngr definition
@@ -1250,7 +837,6 @@ COMMENT ON COLUMN public.tbl_program_mngr.insert_dt IS '등록일';
 -- Permissions
 
 ALTER TABLE public.tbl_program_mngr OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_program_mngr TO hamonize;
 
 
 -- public.tbl_progrm_agent_job definition
@@ -1284,7 +870,6 @@ COMMENT ON COLUMN public.tbl_progrm_agent_job.pcm_name IS '프로그램명';
 -- Permissions
 
 ALTER TABLE public.tbl_progrm_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_progrm_agent_job TO hamonize;
 
 
 -- public.tbl_progrm_applc definition
@@ -1304,7 +889,6 @@ COMMENT ON TABLE public.tbl_progrm_applc IS '프로그램 적용 테이블';
 -- Permissions
 
 ALTER TABLE public.tbl_progrm_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_progrm_applc TO hamonize;
 
 
 -- public.tbl_progrm_applc_history definition
@@ -1326,7 +910,6 @@ COMMENT ON TABLE public.tbl_progrm_applc_history IS '프로그램 적용 히스�
 -- Permissions
 
 ALTER TABLE public.tbl_progrm_applc_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_progrm_applc_history TO hamonize;
 
 
 -- public.tbl_progrm_udpt definition
@@ -1366,7 +949,6 @@ COMMENT ON COLUMN public.tbl_progrm_udpt.polling_tm IS '프로그램 폴링타�
 -- Permissions
 
 ALTER TABLE public.tbl_progrm_udpt OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_progrm_udpt TO hamonize;
 
 
 -- public.tbl_recovery_agent_job definition
@@ -1399,7 +981,6 @@ COMMENT ON COLUMN public.tbl_recovery_agent_job.pc_seq IS 'PC 번호';
 -- Permissions
 
 ALTER TABLE public.tbl_recovery_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_recovery_agent_job TO hamonize;
 
 
 -- public.tbl_recovery_applc definition
@@ -1427,7 +1008,6 @@ COMMENT ON COLUMN public.tbl_recovery_applc.br_seq IS '백업 이미지 시퀀�
 -- Permissions
 
 ALTER TABLE public.tbl_recovery_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_recovery_applc TO hamonize;
 
 
 -- public.tbl_recovery_applc_history definition
@@ -1453,7 +1033,6 @@ COMMENT ON COLUMN public.tbl_recovery_applc_history.insert_dt IS '복원일';
 -- Permissions
 
 ALTER TABLE public.tbl_recovery_applc_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_recovery_applc_history TO hamonize;
 
 
 -- public.tbl_recovery_log definition
@@ -1481,7 +1060,6 @@ COMMENT ON COLUMN public.tbl_recovery_log.pc_seq IS '복구pc번호';
 -- Permissions
 
 ALTER TABLE public.tbl_recovery_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_recovery_log TO hamonize;
 
 
 -- public.tbl_security_agentjob definition
@@ -1504,7 +1082,6 @@ CREATE TABLE public.tbl_security_agentjob (
 -- Permissions
 
 ALTER TABLE public.tbl_security_agentjob OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_security_agentjob TO hamonize;
 
 
 -- public.tbl_security_mngr definition
@@ -1537,95 +1114,6 @@ COMMENT ON COLUMN public.tbl_security_mngr.sm_device_code IS '벤더코드/제�
 -- Permissions
 
 ALTER TABLE public.tbl_security_mngr OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_security_mngr TO hamonize;
-
-
--- public.tbl_site_agent_job definition
-
--- Drop table
-
--- DROP TABLE public.tbl_site_agent_job;
-
-CREATE TABLE public.tbl_site_agent_job (
-	seq serial NOT NULL,
-	sma_seq int8 NULL,
-	sma_history_seq int8 NULL,
-	pc_uuid varchar(100) NULL,
-	insert_dt timestamp NULL,
-	CONSTRAINT tbl_site_agent_job_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_site_agent_job IS '유해사이트 에이전트 작업';
-
--- Permissions
-
-ALTER TABLE public.tbl_site_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_site_agent_job TO hamonize;
-
-
--- public.tbl_site_mngr_applc definition
-
--- Drop table
-
--- DROP TABLE public.tbl_site_mngr_applc;
-
-CREATE TABLE public.tbl_site_mngr_applc (
-	sma_seq bigserial NOT NULL, -- 시리얼 번호
-	sma_ipaddress varchar(50) NULL, -- 사이트IP관리-IP주소
-	sma_macaddress varchar(100) NULL, -- 사이트IP관리-맥어드레스
-	sma_domain varchar(200) NULL, -- 유해사이트-주소
-	sma_info varchar(200) NULL, -- 설명
-	sma_insert_dt timestamp NULL DEFAULT now(), -- 등록일
-	sma_update_dt timestamp NULL DEFAULT now(), -- 수정일
-	sma_gubun varchar(10) NULL, -- 분류 A:허용사이트 // B:유해사이트 // F:유해사이트포워딩주소(1개)
-	CONSTRAINT tbl_site_mngr_applc_pkey PRIMARY KEY (sma_seq)
-);
-COMMENT ON TABLE public.tbl_site_mngr_applc IS '사이트IP관리 및 유해사이트관리';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_ipaddress IS '사이트IP관리-IP주소';
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_macaddress IS '사이트IP관리-맥어드레스';
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_domain IS '유해사이트-주소';
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_info IS '설명';
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_insert_dt IS '등록일';
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_update_dt IS '수정일';
-COMMENT ON COLUMN public.tbl_site_mngr_applc.sma_gubun IS '분류 A:허용사이트 // B:유해사이트 // F:유해사이트포워딩주소(1개)';
-
--- Permissions
-
-ALTER TABLE public.tbl_site_mngr_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_site_mngr_applc TO hamonize;
-
-
--- public.tbl_site_mngr_applc_history definition
-
--- Drop table
-
--- DROP TABLE public.tbl_site_mngr_applc_history;
-
-CREATE TABLE public.tbl_site_mngr_applc_history (
-	seq bigserial NOT NULL, -- 시리얼 번호
-	sma_seq int8 NULL, -- 관리번호
-	insert_dt timestamp NULL, -- 등록일
-	sma_gubun varchar(10) NULL, -- 유해사이트구분
-	sma_status varchar(10) NULL, -- 상태값
-	CONSTRAINT tbl_site_mngr_applc_history_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_site_mngr_applc_history IS '유해사이트 로그';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_site_mngr_applc_history.seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_site_mngr_applc_history.sma_seq IS '관리번호';
-COMMENT ON COLUMN public.tbl_site_mngr_applc_history.insert_dt IS '등록일';
-COMMENT ON COLUMN public.tbl_site_mngr_applc_history.sma_gubun IS '유해사이트구분';
-COMMENT ON COLUMN public.tbl_site_mngr_applc_history.sma_status IS '상태값';
-
--- Permissions
-
-ALTER TABLE public.tbl_site_mngr_applc_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_site_mngr_applc_history TO hamonize;
 
 
 -- public.tbl_svrlst definition
@@ -1657,47 +1145,6 @@ COMMENT ON COLUMN public.tbl_svrlst.svr_vip IS '서버 vpn ip';
 -- Permissions
 
 ALTER TABLE public.tbl_svrlst OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_svrlst TO hamonize;
-
-
--- public.tbl_tchnlgy definition
-
--- Drop table
-
--- DROP TABLE public.tbl_tchnlgy;
-
-CREATE TABLE public.tbl_tchnlgy (
-	seq serial NOT NULL, -- 인덱스
-	org_seq int8 NULL, -- 조직 인덱스
-	object_seq int8 NULL, -- 부서 인덱스
-	user_seq int8 NULL, -- 요청자 인덱스
-	title varchar(100) NULL,
-	"content" text NULL,
-	ins_date timestamp NULL DEFAULT now(),
-	upd_date timestamp NULL DEFAULT now(),
-	"type" varchar(20) NULL, -- 요청 종류
-	status varchar(5) NULL DEFAULT '접수'::character varying,
-	type_detail varchar(50) NULL, -- 원격지원여부
-	tel_num varchar(100) NULL,
-	state varchar(10) NULL, -- 상태값
-	CONSTRAINT tbl_tchnlgy_pkey PRIMARY KEY (seq)
-);
-COMMENT ON TABLE public.tbl_tchnlgy IS '기술지원';
-
--- Column comments
-
-COMMENT ON COLUMN public.tbl_tchnlgy.seq IS '인덱스';
-COMMENT ON COLUMN public.tbl_tchnlgy.org_seq IS '조직 인덱스';
-COMMENT ON COLUMN public.tbl_tchnlgy.object_seq IS '부서 인덱스';
-COMMENT ON COLUMN public.tbl_tchnlgy.user_seq IS '요청자 인덱스';
-COMMENT ON COLUMN public.tbl_tchnlgy."type" IS '요청 종류';
-COMMENT ON COLUMN public.tbl_tchnlgy.type_detail IS '원격지원여부';
-COMMENT ON COLUMN public.tbl_tchnlgy.state IS '상태값';
-
--- Permissions
-
-ALTER TABLE public.tbl_tchnlgy OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_tchnlgy TO hamonize;
 
 
 -- public.tbl_unauthroized definition
@@ -1721,7 +1168,6 @@ CREATE TABLE public.tbl_unauthroized (
 -- Permissions
 
 ALTER TABLE public.tbl_unauthroized OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_unauthroized TO hamonize;
 
 
 -- public.tbl_updt_agent_job definition
@@ -1757,7 +1203,6 @@ COMMENT ON COLUMN public.tbl_updt_agent_job.insert_dt IS '등록일';
 -- Permissions
 
 ALTER TABLE public.tbl_updt_agent_job OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_updt_agent_job TO hamonize;
 
 
 -- public.tbl_updt_applc definition
@@ -1777,7 +1222,6 @@ COMMENT ON TABLE public.tbl_updt_applc IS '업데이트 적용 테이블';
 -- Permissions
 
 ALTER TABLE public.tbl_updt_applc OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_updt_applc TO hamonize;
 
 
 -- public.tbl_updt_applc_history definition
@@ -1799,7 +1243,6 @@ COMMENT ON TABLE public.tbl_updt_applc_history IS '업데이트 정책 히스토
 -- Permissions
 
 ALTER TABLE public.tbl_updt_applc_history OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_updt_applc_history TO hamonize;
 
 
 -- public.tbl_updt_policy_action_result definition
@@ -1836,7 +1279,6 @@ COMMENT ON COLUMN public.tbl_updt_policy_action_result.debver IS '패키지 버�
 -- Permissions
 
 ALTER TABLE public.tbl_updt_policy_action_result OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_updt_policy_action_result TO hamonize;
 
 
 -- public.tbl_user definition
@@ -1888,21 +1330,15 @@ COMMENT ON COLUMN public.tbl_user.tel IS '사용자 전화번호';
 -- Permissions
 
 ALTER TABLE public.tbl_user OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_user TO hamonize;
 
------insert default data----
+-- backup data 
 
 INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,upd_date,gubun,salt) VALUES
 	 ('admin','admin','uor4XWaWKTs4935iVs+1eIIxiymAm4hYJYsSHs/CU5A=',NULL,'2021-08-10 11:33:17.030959',NULL,'A','6a70a227ea35f4d0'),
 	 ('test','test','i2c+1cHCD2hMB2klY1Apcg7aZIzHwcOwRsO4RJ8Sj38=',NULL,'2021-08-10 11:33:17.030959','2021-09-03 16:12:55.95216','A','24f9ca45fcbe2903');
-
 INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_port,svr_used,svr_vip) VALUES
-	 ('INFLUX_ORG',NULL,'localhost',NULL,NULL,NULL,0,NULL),
 	 ('CENTERURL',NULL,'localhost',NULL,NULL,'8080',0,NULL),
 	 ('COLLECTDIP',NULL,'localhost',NULL,NULL,NULL,0,NULL),
-	 ('INFLUX_URL',NULL,'localhost',NULL,NULL,'8086',0,NULL),
-	 ('GRAFANA_URL',NULL,'localhost',NULL,NULL,NULL,0,NULL),
-	 ('APTURL',NULL,'localhost',NULL,NULL,'8088',0,NULL),
-	 ('VPNIP',NULL,'localhost',NULL,NULL,NULL,0,NULL),
-	 ('INFLUX_BUCKET',NULL,'mybucket',NULL,NULL,NULL,0,NULL),
-	 ('INFLUX_TOKEN',NULL,'mytoken',NULL,NULL,NULL,0,NULL);
+	 ('APTURL',NULL,'106.254.251.74',NULL,NULL,'28081',0,NULL),
+	 ('GRAFANA_URL',NULL,'localhost',NULL,NULL,NULL,0,NULL);
+
