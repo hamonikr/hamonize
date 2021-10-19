@@ -2,6 +2,7 @@
 # Commit Message Template
 ###############################################################
 
+
 # <type> : <subject>
 # Subject 50 characters
  
