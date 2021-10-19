@@ -132,6 +132,21 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 * [Code of Conduct](https://github.com/hamonikr/hamonize/blob/master/CODE_OF_CONDUCT.md)
 * [Contributing Guideline](https://github.com/hamonikr/hamonize/blob/master/CONTRIBUTING.md)
 * [Issue Guidelines](https://github.com/hamonikr/hamonize/blob/master/ISSUE_TEMPLATE.md)
+* [Commit Message Template](https://github.com/hamonikr/hamonize/blob/dev/.gitmessage.txt) <br>
+  
+  ```
+  Commit Message 사용법. 
+    1. 아래의 방법으로  Commit Message Templeate 설정을 합니다 
+    [전역설정] git config --global commit.template <.gitmessage.txt 경로>
+    [레포마다다르게 설정] git config commit.template <.gitmessage.txt 경로>
+
+    2. 설정이 완료된 후 git commit template 사용방법은 
+    git init 
+    git add .
+    git commit  >> Commit Message Template으로 지정한 형식으로 파일이 열리며 type, body, footer에 맞게 작성하시면됩니다.
+    git push 
+  ```
+
 
 * **Contributers** ✨
   
