@@ -75,7 +75,7 @@
                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
                        	PC 사용현황 
                    </div>
-						<iframe title="Main monitoring" src="http://${svo.svr_ip}:3000/d-solo/nprv87G7z/hamonize-main2?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
+						<iframe title="Main monitoring" src="http://${svo.svr_ip}:${svo.svr_port}/d-solo/nprv87G7z/hamonize-main2?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
                 </div> <!-- end card-body-->
            </div> <!-- end card-->
        </div>

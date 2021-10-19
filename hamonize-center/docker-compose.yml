@@ -1,6 +1,7 @@
 version : '3'
 services :
     db:
+        container_name: db
         image: postgres:10.16
         environment:
             POSTGRES_USER : hamonize
@@ -77,21 +78,20 @@ services :
     grafana:
         image: grafana/grafana:latest
         ports:
-          - "3000:3000"
+          - "3300:3300"
         volumes:
           - grafana:/var/lib/grafana
           - ./grafana/plugins:/var/lib/grafana/plugins
           - ./grafana.ini:/etc/grafana/grafana.ini
-          - ./grafana/provisioning:/etc/grafana/provisioning
+          - ./grafana/provisioning:/etc/grafana/provisioning        
         links:
-            - influxdb2
+          - influxdb2
         depends_on:
             - influxdb2     
            
 volumes:
     hamonize_center.sql:
     psql-data:
-    # ldap-data:
     influxdb-storage:
     grafana:
     was-logs:
