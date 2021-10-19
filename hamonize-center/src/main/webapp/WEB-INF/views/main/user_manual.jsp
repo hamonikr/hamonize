@@ -63,19 +63,16 @@
 
 	<div class="row">
 		<div class="col-xl-3 col-lg-4">
-			<div class="card ">
-				<div class="card-body">
-					<em class="zmdi zmdi-desktop-windows float-end"></em>
-					<h4 class="text-uppercase mt-0">Hamonize 사용자</h4>
-				</div>
-				<!-- end card-body-->
-			</div>
-			<!--end card-->
 
 			<div class="card ">
 				<div class="card-body">
-					<h3 class="my-2" style='cursor: pointer;' id="hconnector">Hamonize 설치 방법 </h3>
-					<h3 class="my-2" style='cursor: pointer;' id="toolConnectorDownload">Hamonize Download</h3>
+					<h4 class="text-uppercase mt-0"><em class="zmdi zmdi-desktop-windows float-end"></em> Hamonize 사용자</h4>
+				<ul>
+					<li id="hconnector" style='cursor: pointer;'>Hamonize 설치 방법 </li>
+					<li id="toolConnectorDownload" style='cursor: pointer;'>Hamonize Download</li>
+				</ul>
+					
+					
 				</div>
 				<!-- end card-body-->
 			</div>
