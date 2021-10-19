@@ -50,8 +50,9 @@ public class MainController {
 		center.setSvr_nm("GRAFANA_URL");
 		SvrlstVo svo = svrlstMapper.getVpnSvrUsed(center);
 		logger.info("svo ;; {}",svo.getSvr_ip());
+		logger.info("port : {}", svo.getSvr_port());
+		
 		model.addAttribute("svo", svo);
-
 		return "/main/mainMap";
 
 	}
