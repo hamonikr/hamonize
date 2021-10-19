@@ -65,9 +65,10 @@
 		<div class="col-xl-3 col-lg-4">
 			<div class="card tilebox-one">
 				<div class="card-body">
-					<em class="zmdi zmdi-desktop-windows float-end"></em>
-					<h4 class="text-uppercase mt-0">중앙관리서비스</h4>
-					<h3 class="my-2" style='cursor: pointer;' id="hcentermanual">Hamonize-Center 사용법 </h3>
+					<h4 class="text-uppercase mt-0"><em class="zmdi zmdi-desktop-windows float-end"></em> 중앙관리서비스</h4>
+					<ul>
+						<li style='cursor: pointer;' id="hcentermanual">Hamonize-Center 사용법</li>
+					</ul>
 				</div>
 				<!-- end card-body-->
 			</div>
@@ -75,20 +76,13 @@
 
 			<div class="card tilebox-one">
 				<div class="card-body">
-					<em class="zmdi zmdi-devices float-end"></em>
-					<h4 class="text-uppercase mt-0">원격관리툴</h4>
-					<h3 class="my-2" style='cursor: pointer;' id="hdaminmanual">Hamonize-Admin 사용법</h3>
-				</div>
-				<!-- end card-body-->
-			</div>
-			<!--end card-->
-
-			<div class="card tilebox-one">
-				<div class="card-body">
-					<em class="zmdi zmdi-devices-off float-end"></em>
-					<h6 class="text-uppercase mt-0">원격관리툴</h6>
-					<h3 class="my-2" style='cursor: pointer;' id="toolAdminInstall"> Hamonize-Admin 설치 방법</h3>
-					<h3 class="my-2" style='cursor: pointer;' id="toolAdminDownload"> Hamonize-Admin Download</h3>
+					<h4 class="text-uppercase mt-0"><em class="zmdi zmdi-devices float-end"></em> 원격관리툴</h4>
+					<ul>
+						<li style='cursor: pointer;' id="hdaminmanual">Hamonize-Admin 사용법</li>
+						<li style='cursor: pointer;' id="toolAdminInstall"> Hamonize-Admin 설치 방법</li>
+						<li style='cursor: pointer;' id="toolAdminDownload"> Hamonize-Admin Download></li>
+						
+					</ul>
 				</div>
 				<!-- end card-body-->
 			</div>
