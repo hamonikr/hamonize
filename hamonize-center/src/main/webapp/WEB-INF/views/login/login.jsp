@@ -88,11 +88,11 @@
 			<table class="div-align">
 				<tr>
 					<td>
-						<button class="btn-admin btn btn-outline-info" onClick="location.href='/admin/admin_manual';"> 관리자 매뉴얼 바로가기</button>
+						<button class="btn-admin btn btn-outline-info" onClick="location.href='/manual/admin';"> 관리자 매뉴얼 바로가기</button>
 
 					</td>
 					<td>
-						<button class="btn-admin btn btn-outline-success" onClick="location.href='/admin/user_manual';"> 사용자 매뉴얼 바로가기</button>
+						<button class="btn-admin btn btn-outline-success" onClick="location.href='/manual/user';"> 사용자 매뉴얼 바로가기</button>
 
 					</td>
 				</tr>
