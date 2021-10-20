@@ -86,7 +86,7 @@
 			<div class="card card-h-100">
 				<div class="card-body">
 					<div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">Hamonize-Manual </div>
- 					<embed src="/img/hamonize_manual.pdf" type="application/pdf" width='100%' height='1200px' id="pdfView"/>
+ 					<embed src="/img/hamonize_install.pdf" type="application/pdf" width='100%' height='1200px' id="pdfView"/>
 				</div>
 				<!-- end card-body-->
 			</div>
@@ -109,7 +109,7 @@ ${ip}
 $(document).ready(function(){
 	
 	$("#hconnector").on("click",function(){
-		$("#pdfView").attr("src","/img/hamonize_manual.pdf");
+		$("#pdfView").attr("src","/img/hamonize_install.pdf");
 	});
 	
 
