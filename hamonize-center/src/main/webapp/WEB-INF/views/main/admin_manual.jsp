@@ -80,7 +80,7 @@
 					<ul>
 						<li style='cursor: pointer;' id="hdaminmanual">Hamonize-Admin 사용법</li>
 						<li style='cursor: pointer;' id="toolAdminInstall"> Hamonize-Admin 설치 방법</li>
-						<li style='cursor: pointer;' id="toolAdminDownload"> Hamonize-Admin Download></li>
+						<li style='cursor: pointer;' id="toolAdminDownload"> Hamonize-Admin Download</li>
 						
 					</ul>
 				</div>
@@ -95,7 +95,7 @@
 			<div class="card card-h-100">
 				<div class="card-body">
 					<div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">Hamonize-Manual </div>
- 					<embed src="/img/hamonize_manual.pdf" type="application/pdf" width='100%' height='1200px' id="pdfView"/>
+ 					<embed src="/img/hamonize_center_manual.pdf" type="application/pdf" width='100%' height='1200px' id="pdfView"/>
 				</div>
 				<!-- end card-body-->
 			</div>
@@ -118,15 +118,15 @@ ${ip}
 $(document).ready(function(){
 	
 	$("#hcentermanual").on("click",function(){
-		$("#pdfView").attr("src","/img/hamonize_manual.pdf");
+		$("#pdfView").attr("src","/img/hamonize_center_manual.pdf");
 	});
 	
 	$("#hdaminmanual").on("click",function(){
-		$("#pdfView").attr("src","/img/hamonize-admin.pdf");
+		$("#pdfView").attr("src","/img/hamonize_admin_manual.pdf");
 	});
 
 	$("#toolAdminInstall").on("click",function(){
-		$("#pdfView").attr("src","/img/hamonize-admin.pdf");
+		$("#pdfView").attr("src","/img/hamonize_admin_install.pdf");
 	});
 
 	$("#toolAdminDownload").on("click",function(){
