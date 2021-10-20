@@ -74,28 +74,28 @@ commonName_default	= ChangeMe
 # Easy-RSA DN for org support:
 [ org ]
 countryName			= Country Name (2 letter code)
-countryName_default		= US
+countryName_default		= KR
 countryName_min			= 2
 countryName_max			= 2
 
 stateOrProvinceName		= State or Province Name (full name)
-stateOrProvinceName_default	= California
+stateOrProvinceName_default	= Seoul
 
 localityName			= Locality Name (eg, city)
-localityName_default		= San Francisco
+localityName_default		= Seoul
 
 0.organizationName		= Organization Name (eg, company)
 0.organizationName_default	= Copyleft Certificate Co
 
 organizationalUnitName		= Organizational Unit Name (eg, section)
-organizationalUnitName_default	= My Organizational Unit
+organizationalUnitName_default	= exam Organizational Unit
 
 commonName			= Common Name (eg: your user, host, or server name)
 commonName_max			= 64
 commonName_default		= ChangeMe
 
 emailAddress			= Email Address
-emailAddress_default		= me@example.net
+emailAddress_default		= exam@example.com
 emailAddress_max		= 64
 
 ####################################################################
