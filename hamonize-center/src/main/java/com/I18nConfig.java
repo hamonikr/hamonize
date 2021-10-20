@@ -21,6 +21,7 @@ public class I18nConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(hamonizeInterceptor()).addPathPatterns("/**")
+				.excludePathPatterns("/manual/*").excludePathPatterns("/*")
 				.excludePathPatterns("/login/*").excludePathPatterns("/hmsvc/*")
 				.excludePathPatterns("/hmsvr/*").excludePathPatterns("/getAgent/*")
 				.excludePathPatterns("/act/*").excludePathPatterns("/backup/*");
