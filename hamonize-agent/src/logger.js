@@ -9,7 +9,7 @@ const logger = winston.createLogger({
         new winston.transports.DailyRotateFile({
             filename : '/var/log/hamonize/agentjob/agentjob.log', // log 폴더에 system.log 이름으로 저장
             zippedArchive: true, // 압축여부
-            maxFiles: '4d',
+            maxFiles: '1d',
             format: winston.format.printf(
                 info => `${new Date().toFormat('YYYY-MM-DD HH24:MI:SS')} [${info.level.toUpperCase()}] - ${info.message}`)
         }),

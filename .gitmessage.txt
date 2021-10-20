@@ -2,15 +2,17 @@
 # Commit Message Template
 ###############################################################
 
-
 # <type> : <subject>
 # Subject 50 characters
- 
+
+
 # Body Message
 # Body 72 characters(부연설명)
 
+
 # footer (이슈를 추적하기 위한 이슈번호)
 # Issue Tracker Number  ex) issue #1
+
 
 
 ###############################################################
