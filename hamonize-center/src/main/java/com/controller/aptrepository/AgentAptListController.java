@@ -6,7 +6,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
+
+import com.GlobalPropertySource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,12 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class AgentAptListController {
 
 
-	@Value("${apt.ip}")
-	private static String aptIp;
+	@Autowired
+	GlobalPropertySource gs;
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public List<String> getApt() throws IOException {
 
-		String apiURL = "http://" + aptIp + "/dists/sgb/main/binary-amd64/Packages";
+		logger.info("gs.getAptIp()  : {}",gs.getAptIp() );
+
+		String apiURL = "http://" + gs.getAptIp() + "/dists/sgb/main/binary-amd64/Packages";
 		List<String> list = new ArrayList<String>();
 		URL url = new URL(apiURL);
 

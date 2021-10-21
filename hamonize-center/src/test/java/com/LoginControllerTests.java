@@ -34,7 +34,6 @@ public class LoginControllerTests {
         .andExpect(status().isOk())
         .andExpect(content().string(equalTo("1")));
 
-
     }
-    
+           
 }

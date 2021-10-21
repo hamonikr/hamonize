@@ -35,5 +35,8 @@ public class GlobalPropertySource {
     @Value("${ldap.password}")
     private String ldapPassword;
 
+    @Value("${apt.ip}")
+    private String aptIp;
+
 }
 
