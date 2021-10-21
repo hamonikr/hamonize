@@ -21,18 +21,23 @@ services :
             - was-logs:/usr/local/tomcat/logs
             - ${HOME}/uploads:/root/uploads       
         ports:
-            - "8080:8080"
+            - "80:8080"
         environment:
             TZ : "Asia/Seoul"
         restart: always
 
     openldap:
-        image: osixia/openldap:1.5.0
+        container_name: openldap
+        image: jullee96/openldap:1.2    
+#        user: "${UID}:${GID}"     
+#        user: "1000:1000"     
         hostname: "ldap-server"
         ports:            
             - "389:389"
             - "636:636"
         environment:
+            LDAP_OPENLDAP_GID: 1000
+            LDAP_OPENLDAP_UID: 1000
             LDAP_LOG_LEVEL: "256"
             LDAP_TLS: "false"
             LDAP_DOMAIN: hamonize.com
@@ -46,9 +51,10 @@ services :
         restart: always
 
     phpldapadmin:
+        container_name: phpldapadmin
         image: osixia/phpldapadmin:latest
         ports:
-            - "80:80"
+            - "8080:80"
         environment:
             - PHPLDAPADMIN_LDAP_HOSTS=openldap
             - PHPLDAPADMIN_HTTPS="false"
@@ -59,6 +65,7 @@ services :
         restart: always
 
     influxdb2:
+        container_name: influxdb2
         image: influxdb:2.0.4
         ports:
           - "8086:8086"
@@ -76,6 +83,7 @@ services :
         restart: always
 
     grafana:
+        container_name: grafana
         image: grafana/grafana:latest
         ports:
           - "3300:3300"

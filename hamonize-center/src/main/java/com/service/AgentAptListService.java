@@ -8,21 +8,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.GlobalPropertySource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AgentAptListService {
 
-	@Value("${apt.ip}")
-	private String aptIp;
+	@Autowired
+	GlobalPropertySource gs;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public List<Map<String, Object>> getApt() throws MalformedURLException {
-		String apiURL = "http://" + aptIp.trim() + "/dists/hamonize/main/binary-amd64/Packages";
+		String apiURL = "http://" + gs.getAptIp().trim() + "/dists/hamonize/main/binary-amd64/Packages";
 		System.out.println("apt url : " + apiURL);
 
 		List<String> list = new ArrayList<String>();
