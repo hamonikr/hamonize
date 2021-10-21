@@ -6,7 +6,8 @@
   "scripts": {
     "start": "sudo node main.js",
     "clean": "rm -rf node_modules/ ./hamonize-agent",
-    "build": "pkg . "
+    "build": "pkg . ",
+    "test": "jest"
   },
   "bin": {
     "hamonize-agent": "./main.js"
@@ -57,6 +58,7 @@
     "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
+    "jest": "^27.3.1",
     "util": "^0.12.4"
   }
 }
