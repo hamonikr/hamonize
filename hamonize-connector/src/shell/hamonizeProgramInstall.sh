@@ -128,7 +128,7 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     # if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
     OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
 
-    if [ "${OSGUBUN}" = "HAMONIKR" ] && [ "${OSGUBUN}"="LINUXMINT" ] && [ "${OSGUBUN}"="UBUNTU" ]; then
+    if [ "${OSGUBUN}" = "HAMONIKR" ] || [ "${OSGUBUN}" = "LINUXMINT" ] || [ "${OSGUBUN}" = "UBUNTU" ]; then
         # JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`
         sudo apt-get install -y hamonize-user >>$LOGFILE
     elif [ "${OSGUBUN}" = "DEBIAN" ]; then
