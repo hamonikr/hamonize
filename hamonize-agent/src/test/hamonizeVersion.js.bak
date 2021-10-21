@@ -1,0 +1,14 @@
+function hamonizeVersion() {
+
+	var exec = require('child_process').exec;
+    var result = "";
+	exec('sudo sh /home/eden/works/git/hamonize/hamonize-agent/src/shell/hamonizeVersionChk.sh  ', function (err, stdout, stderr) {
+		//log.info('//=====hamonizeVersion  : ' + stdout);
+        result = stdout;
+	});
+    return result;
+
+
+}
+
+module.exports = hamonizeVersion;
