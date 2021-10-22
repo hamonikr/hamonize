@@ -1,4 +1,9 @@
 version : '3'
+#networks:
+#      default:
+#        external:
+#          name: vpn
+#
 services :
     db:
         container_name: db
@@ -16,6 +21,7 @@ services :
         restart: always
  
     web:
+        container_name: web
         build: .
         volumes:
             - was-logs:/usr/local/tomcat/logs
@@ -28,9 +34,7 @@ services :
 
     openldap:
         container_name: openldap
-        image: jullee96/openldap:1.2    
-#        user: "${UID}:${GID}"     
-#        user: "1000:1000"     
+        image: jullee96/openldap:1.3      
         hostname: "ldap-server"
         ports:            
             - "389:389"
@@ -45,8 +49,8 @@ services :
             LDAP_ADMIN_PASSWORD: admin
             LDAP_ORGANISATION: invesume
         volumes:
-            - ${HOME}/ldap/data:/var/lib/ldap
-            - /etc/ldap/slapd.d              
+            - ldap-data:/var/lib/ldap
+            - ldap-conf:/etc/ldap/slapd.d              
         domainname: "hamonize.com"
         restart: always
 
@@ -78,8 +82,7 @@ services :
           - DOCKER_INFLUXDB_INIT_ORG=myorgname
           - DOCKER_INFLUXDB_INIT_BUCKET=mybucketname
           - DOCKER_INFLUXDB_INIT_RETENTION=1w
-          - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
-        
+          - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken        
         restart: always
 
     grafana:
@@ -95,7 +98,9 @@ services :
         links:
           - influxdb2
         depends_on:
-            - influxdb2     
+            - influxdb2
+        restart: always     
+
            
 volumes:
     hamonize_center.sql:
@@ -103,3 +108,5 @@ volumes:
     influxdb-storage:
     grafana:
     was-logs:
+    ldap-data:
+    ldap-conf:
