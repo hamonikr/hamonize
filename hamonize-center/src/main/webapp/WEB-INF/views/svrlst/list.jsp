@@ -617,7 +617,7 @@
 			
 			if($("input:checkbox[id='vpn_used']").is(":checked")==true){
 				if(confirm("vpn을 사용하시겠습니까?")==true){	
-					if(viplist.length >= 5){
+					if(viplist.length >= 4){
 						vpn_used = 1;
 						saveVpnUsedVal(vpn_used,val);
 					} else{
