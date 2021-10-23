@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`

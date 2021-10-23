@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Link to the binary
 ln -sf '/opt/hamonikr-support/hamonize-support' '/usr/bin/hamonize-support'

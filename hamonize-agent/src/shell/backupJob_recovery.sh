@@ -1,4 +1,4 @@
-#!/bin/bash  
+#!/usr/bin/env bash  
 
 (
 RUID=$(who | awk 'FNR == 1 {print $1}')

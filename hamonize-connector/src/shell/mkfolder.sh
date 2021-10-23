@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #UUID 생성
 if [ ! -d /etc/hamonize ]; then
