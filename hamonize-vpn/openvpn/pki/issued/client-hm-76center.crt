@@ -1,0 +1,84 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            7c:95:87:4e:c2:a9:9b:6c:12:f7:27:78:05:b3:a2:78
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=ChangeMe
+        Validity
+            Not Before: Oct 18 08:13:44 2021 GMT
+            Not After : Jan 21 08:13:44 2024 GMT
+        Subject: CN=hm-76center
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:c9:80:bc:6b:f5:1e:2e:2a:d6:1c:ed:52:b6:0d:
+                    54:77:82:96:90:60:7a:16:26:18:07:47:e5:c4:3e:
+                    21:12:66:2d:a4:39:5f:19:14:66:1a:e6:5d:70:ca:
+                    fa:0e:ea:08:4e:09:bb:77:d9:ae:81:9e:c7:b8:74:
+                    2f:86:b6:76:21:1e:02:8d:37:6c:07:9d:be:b7:74:
+                    74:9c:5f:bc:9f:4f:c7:b4:cf:16:87:df:29:f6:db:
+                    dd:af:c0:37:8a:a9:cd:26:b7:3c:4f:f5:ca:fe:aa:
+                    f2:75:28:e6:79:81:49:e3:13:41:dc:43:48:ea:21:
+                    9f:3b:65:28:f7:43:4d:d0:35:31:f5:4c:ef:c3:6d:
+                    9f:ef:1e:61:ee:8f:9d:12:e9:2c:ca:bf:4b:01:10:
+                    71:93:84:30:fd:64:4d:69:f9:4d:15:43:a6:70:4a:
+                    50:6e:28:ba:2c:2f:fe:ab:38:87:76:8e:72:05:8b:
+                    e2:a6:c2:e7:e1:43:88:3b:97:8b:31:d6:5e:c2:25:
+                    af:c8:65:f2:72:91:54:a5:41:a1:f7:ac:75:79:57:
+                    db:ed:c5:04:4d:c0:cd:50:9e:c3:1c:16:51:86:42:
+                    98:2c:a1:a3:4e:e2:6b:55:e1:9b:c3:e1:d3:ec:18:
+                    c9:f6:88:c5:52:05:93:52:ef:df:b5:0a:5c:6a:dc:
+                    b1:85
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                A2:59:80:C2:8C:C5:81:1F:1E:10:DD:3F:D0:B6:AC:09:7C:E1:A1:4A
+            X509v3 Authority Key Identifier: 
+                keyid:89:E6:26:3E:D8:5A:84:3A:46:28:C7:73:BB:03:36:59:22:0B:69:AC
+                DirName:/CN=ChangeMe
+                serial:45:A9:61:A0:5C:85:EA:AE:5C:45:58:7F:74:61:DC:FE:DD:5E:40:CD
+
+            X509v3 Extended Key Usage: 
+                TLS Web Client Authentication
+            X509v3 Key Usage: 
+                Digital Signature
+    Signature Algorithm: sha256WithRSAEncryption
+         81:53:69:e7:ba:26:0f:0a:3a:68:12:be:db:21:0c:27:39:e6:
+         32:dc:d8:f4:a5:cc:e6:76:1c:f4:0e:b9:be:fa:9f:26:29:fd:
+         a9:b6:6f:7c:13:7e:17:b7:cb:c9:97:53:2e:f2:6d:28:c1:53:
+         e0:83:e7:0d:04:b6:17:e0:db:10:03:dc:66:a9:27:c4:a3:60:
+         4c:08:12:25:fd:dd:27:fe:e0:a8:52:fd:34:76:0a:39:f1:eb:
+         bd:68:27:f0:12:c6:4a:d5:56:16:06:ec:e6:1c:ac:a1:d1:ec:
+         14:d2:f3:c5:8e:34:e0:9b:8b:0c:e0:4f:0a:7e:7f:31:a5:07:
+         f8:b1:7a:aa:d9:d1:1f:ee:e8:1c:fa:ed:6f:be:04:53:9b:fa:
+         05:a3:b5:23:f2:e3:65:03:d0:5a:e8:c8:07:08:e2:a8:5a:93:
+         5c:fc:5a:0e:dc:d3:ac:71:68:e2:ec:d9:08:ab:a4:5d:92:61:
+         5c:83:33:e1:8d:af:ee:1e:d5:df:33:7d:59:e3:bd:5c:63:5b:
+         30:ce:85:b0:0b:fa:4c:29:33:ae:82:3a:a9:95:b0:70:1d:5f:
+         20:08:78:88:4b:b5:52:8e:2f:3c:c1:42:23:f3:23:23:a3:60:
+         0e:68:5d:b2:02:75:06:52:ad:c4:37:21:81:59:8c:38:cc:da:
+         a3:be:ab:21
+-----BEGIN CERTIFICATE-----
+MIIDUzCCAjugAwIBAgIQfJWHTsKpm2wS9yd4BbOieDANBgkqhkiG9w0BAQsFADAT
+MREwDwYDVQQDDAhDaGFuZ2VNZTAeFw0yMTEwMTgwODEzNDRaFw0yNDAxMjEwODEz
+NDRaMBYxFDASBgNVBAMMC2htLTc2Y2VudGVyMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEAyYC8a/UeLirWHO1Stg1Ud4KWkGB6FiYYB0flxD4hEmYtpDlf
+GRRmGuZdcMr6DuoITgm7d9mugZ7HuHQvhrZ2IR4CjTdsB52+t3R0nF+8n0/HtM8W
+h98p9tvdr8A3iqnNJrc8T/XK/qrydSjmeYFJ4xNB3ENI6iGfO2Uo90NN0DUx9Uzv
+w22f7x5h7o+dEuksyr9LARBxk4Qw/WRNaflNFUOmcEpQbii6LC/+qziHdo5yBYvi
+psLn4UOIO5eLMdZewiWvyGXycpFUpUGh96x1eVfb7cUETcDNUJ7DHBZRhkKYLKGj
+TuJrVeGbw+HT7BjJ9ojFUgWTUu/ftQpcatyxhQIDAQABo4GfMIGcMAkGA1UdEwQC
+MAAwHQYDVR0OBBYEFKJZgMKMxYEfHhDdP9C2rAl84aFKME4GA1UdIwRHMEWAFInm
+Jj7YWoQ6RijHc7sDNlkiC2msoRekFTATMREwDwYDVQQDDAhDaGFuZ2VNZYIURalh
+oFyF6q5cRVh/dGHc/t1eQM0wEwYDVR0lBAwwCgYIKwYBBQUHAwIwCwYDVR0PBAQD
+AgeAMA0GCSqGSIb3DQEBCwUAA4IBAQCBU2nnuiYPCjpoEr7bIQwnOeYy3Nj0pczm
+dhz0Drm++p8mKf2ptm98E34Xt8vJl1Mu8m0owVPgg+cNBLYX4NsQA9xmqSfEo2BM
+CBIl/d0n/uCoUv00dgo58eu9aCfwEsZK1VYWBuzmHKyh0ewU0vPFjjTgm4sM4E8K
+fn8xpQf4sXqq2dEf7ugc+u1vvgRTm/oFo7Uj8uNlA9Ba6MgHCOKoWpNc/FoO3NOs
+cWji7NkIq6RdkmFcgzPhja/uHtXfM31Z471cY1swzoWwC/pMKTOugjqplbBwHV8g
+CHiIS7VSji88wUIj8yMjo2AOaF2yAnUGUq3ENyGBWYw4zNqjvqsh
+-----END CERTIFICATE-----
