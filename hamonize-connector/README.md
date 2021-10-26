@@ -7,6 +7,15 @@
 
 <br>
 
+### 사용법
+
+<img width="500" src="../img/connector_main.png">
+<br>
+
+ 자세한 내용은 [사용자 매뉴얼](http://team.hamonikr.org:18090/pages/viewpage.action?pageId=18415777) 을 참고하세요
+ 
+ <br>
+
 ###  Usage
 
 #### 1. Hamonize-Center API Url 정보 수정.
