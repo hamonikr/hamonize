@@ -157,6 +157,7 @@ var linuxmintIcon = "<img src='/images/icon_lm.png' style='width:22px; height:22
 var debianIcon = "<img src='/images/icon_d.png' style='width:22px; height:22px;'>";
 var ubuntuIcon = "<img src='/images/icon_u.png' style='width:22px; height:22px;'>";
 
+// var vpn_used;
 
 //메뉴 Tree onClick
 function onClick(event, treeId, treeNode, clickFlag) {
@@ -172,7 +173,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			function(data){
 				var gbInnerHtml = "";
 				var classGroupList = data.list;
-				
+				// vpn_used = data.svo.svr_used;
+				// console.log("svr_used"+vpn_used);
+
 				if( data.list.length > 0 ){
 					
 					$.each(data.list, function(index, value) {
@@ -198,22 +201,20 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else{
 							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 						}
-						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+
+						// if(vpn_used ==1 ){
+						// 	gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+						// }else{
+						// 	gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+						// }
+						gbInnerHtml += "<td><a style='color:steelblue;' href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+
+
 						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 						gbInnerHtml += "</tr>";
 
-// 						if(value.org_seq ==1){
-// 							$('#pwd').html("경로: "+value.org_nm+"");	
-// 						} else{
-// 							$('#pwd').html("경로: "+value.alldeptname+"");
-// 						}
-
 					});	
 			}else{  
-// 				var parentName = $("#"+treeNode.parentTId+"_span").html();
-// 				$('#pwd').html("경로: "+parentName +"|" + treeNode.name);
-
-		
 				gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 			}
 			
@@ -249,6 +250,9 @@ function getPcMngrList(){
 	$('#pageGrideInPcMngrListTb').empty();
 	$('.page_num').empty();
 	
+	// vpn_used = data.svo.svr_used;	
+	// console.log("svr_used : "+ vpn_used);
+
 	if( data.list.length > 0 ){
 
 		$.each(data.list, function(index, value) {
@@ -274,7 +278,15 @@ function getPcMngrList(){
 			}else{
 				gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 			}
-			gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+			
+			// if(vpn_used ==1 ){
+			// 		gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+			// }else{
+			// gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+			// }
+
+			gbInnerHtml += "<td><a style='color:steelblue;' href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+		
 			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
 			gbInnerHtml += "</tr>";
 		
@@ -333,7 +345,7 @@ function searchView(viewName, page){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<jsp:useBean id="now" class="java.util.Date" />
 	<fmt:formatDate value="${now}" pattern="yyyy/MM/dd" var="today" />
 	<div class="hamo_container other">
@@ -364,14 +376,6 @@ function searchView(viewName, page){
         <div class="right_box">
         
         <ul class="search_area">
-          <li>
-           <%-- <label for="date_fr"></label><input type="text" name="date_fr" id="date_fr" class="input_type1" value="${today}"/>
-                <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_fr')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                 ~
-                <label for="date_to"></label><input type="text" name="date_to" id="date_to" class="input_type1" />
-                <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date_to')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a>
-                <button type="button" class="btn_type3" id="excelBtn"> 엑셀다운로드</button> --%>
-          </li>
           <li>
            <!-- 검색 -->
 	        <div class="top_search">
@@ -460,10 +464,7 @@ function searchView(viewName, page){
 						<th>IP</th>
 						<td colspan="3"><span id="detail_pc_ip"></span></td>
 					</tr>
-					<%-- <tr>
-						<th>VPN-IP</th>
-						<td colspan="3"><span id="detail_vpnip"></span></td>
-					</tr> --%>
+					<tr id="detail_vpnip"></tr>
 					<tr>
 						<th>Mac Address</th>
 						<td colspan="3"><span id="detail_macaddress"></span></td>
@@ -493,7 +494,7 @@ function searchView(viewName, page){
 	
 	<!-- 레이어 팝업용 자바스크립트 -->
 	<script type="text/javascript">
-		function detail_popup(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
+		function detail_popup(no,name,pc_os,hostname,pc_ip,pc_vpnip,macaddress,pc_disk,cpu,memory,first_date) {
 			if(pc_os == "H"){
 				pc_os = hamonikrIcon; 
 			}else if(pc_os == "W"){
@@ -510,6 +511,7 @@ function searchView(viewName, page){
 			 	pc_os = ""; 
 			}
 			
+			var innerHtml = "";
 			$("#detail_no").html(no);
 			$("#detail_pc_os").html(pc_os);
 			$("#detail_hostname").html(hostname);
@@ -520,18 +522,61 @@ function searchView(viewName, page){
 			$("#detail_cpu").html(cpu);
 			$("#detail_memory").html(memory);
 			$("#detail_first_date").html(first_date);
-			// $("#detail_vpnip").html(vpnip);
+				
+			if(vpn_used ==1 && pc_vpnip != "no vpn"){
+				innerHtml += "<th>VPN IP</th>";
+				innerHtml += "<td colspan='3'><span id='vpnip_val'></span></td>";
+				$('#detail_vpnip').append(innerHtml);
+				$("#vpnip_val").text(pc_vpnip);
+			}
+			
 			$('#popup').show();
 			$("#bg_fix").show();
 		};
 	
+		function detail_popup_novpn(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
+			console.log("detail_popup_novpn >> ");
+			
+			if(pc_os == "H"){
+				pc_os = hamonikrIcon; 
+			}else if(pc_os == "W"){
+				pc_os = windowIcon; 
+			}else if(pc_os == "L"){
+				pc_os = linuxmintIcon; 
+			}else if(pc_os == "D"){
+				pc_os = debianIcon; 
+			}else if(pc_os == "U"){
+				pc_os = ubuntuIcon; 
+			}else if(pc_os == "G"){
+				pc_os = gooroomIcon; 
+			}else{
+			 	pc_os = ""; 
+			}
+			
+			var innerHtml = "";
+			$("#detail_no").html(no);
+			$("#detail_pc_os").html(pc_os);
+			$("#detail_hostname").html(hostname);
+			$("#detail_name").html(name);
+			$("#detail_pc_ip").html(pc_ip);
+			$("#detail_macaddress").html(macaddress);
+			$("#detail_pc_disk").html(pc_disk);
+			$("#detail_cpu").html(cpu);
+			$("#detail_memory").html(memory);
+			$("#detail_first_date").html(first_date);
+			
+			
+			$('#popup').show();
+			$("#bg_fix").show();
+		};
+		
+
 		function hide_layer() {
 			$('#popup').hide();
 			$("#bg_fix").hide();
+			$("#detail_vpnip").empty();
 		};
 	</script>
-	
-	<%-- <%@ include file="../template/grid.jsp" %> --%>
 	<%@ include file="../template/footer.jsp" %>
 	
 	

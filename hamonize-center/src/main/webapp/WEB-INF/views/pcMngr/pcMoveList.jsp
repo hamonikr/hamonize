@@ -232,7 +232,7 @@ function searchView(viewName, page){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	
 	<section class="body haveGroup">
@@ -282,7 +282,7 @@ function searchView(viewName, page){
 	
 	<p id="data"></p>
 	
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 	

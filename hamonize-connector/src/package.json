@@ -28,7 +28,7 @@
   "dependencies": {
     "acron": "^1.0.5",
     "app-root-path": "^3.0.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bootbox": "^5.5.2",
     "chokidar": "^3.3.1",
     "compass": "^0.1.1",
@@ -54,13 +54,13 @@
     "fs": "0.0.1-security",
     "ip": "^1.1.5",
     "is-root": "^2.1.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "koa": "^2.11.0",
     "koa-handlebars": "^1.0.0",
     "koa-router": "^8.0.8",
     "line-reader": "^0.4.0",
     "md5": "^2.3.0",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "mkdirp": "^1.0.4",
     "moment": "^2.24.0",
     "mysql": "^2.18.1",
@@ -75,7 +75,7 @@
     "read-last-lines": "^1.7.2",
     "sudo-block": "^3.0.0",
     "sudo-prompt": "^9.1.1",
-    "systeminformation": "^5.3.2",
+    "systeminformation": "^5.6.4",
     "time-counter": "^1.0.0",
     "time-stamp": "^2.2.0",
     "tiny-timer": "^1.4.0",
@@ -92,7 +92,7 @@
     "hamonize"
   ],
   "devDependencies": {
-    "electron": "13.1.7",
+    "electron": "13.3.0",
     "electron-builder": "^22.3.2",
     "pkg": "^4.4.0"
   },

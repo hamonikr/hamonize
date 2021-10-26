@@ -34,7 +34,7 @@ public interface IGetAgentJobMapper {
 	// ad 백업본 저장
 	public int insertBackupInfo(CurlPcBackupVo cpbVo);
 	
-	public List<BlockingNxssInfoVo> nxssListInfo();
+	// public List<BlockingNxssInfoVo> nxssListInfo();
 	
 	
 //================================

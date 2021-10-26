@@ -16,8 +16,6 @@ public interface IMainMapper {
 	public List<Map<String,Object>> pcUseSidoCount();
 
     public List<Map<String,Object>> pcTotalSidoCount();
-
-	public int wCount();
 	
 	public int hCount();
 	

@@ -1,0 +1,23 @@
+apiVersion: 1
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    database: collectd
+    user: admin
+    url: http://influxdb:8086
+    isDefault: true
+    secureJsonData:
+      password: admin
+    editable: true
+
+  - name: PostgreSQL
+    type: postgres
+    url: db:5432
+    database: hamonize_center
+    user: hamonize
+    secureJsonData:
+      password: password
+    jsonData:
+      sslmode: "disable"
+    editable: true

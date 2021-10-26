@@ -270,7 +270,7 @@
 <body>
 
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 
 <form id="frm" name="frm" action="" method="post">

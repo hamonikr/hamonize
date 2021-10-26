@@ -5,10 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title>CMS Login | 관리자</title>
-	<link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
-	<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
+<link rel="stylesheet" type="text/css" href="/css/sgb/content.css">
+
+<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
 	
-	<script type="text/javascript">
+<script type="text/javascript">
 	var ip;
 	 (function(window){
 		  var head = document.getElementsByTagName('head')[0];
@@ -69,23 +71,26 @@
 	
 	</script>
 </head>
+
 <body>
-
 <div class="login_wrap">
-        <div class="hamologin">
-           <h1><img alt="login image" src="/images/login_tit.png"></h1>
-           <form id="mainform" name="mainform" action="" method="post" onsubmit="fn_signIn();return false;">
-           <input type="hidden" name="user_ip" id="user_ip" class="input_type1" />
-           <ul class="memberin">
-               <li> <label for="">아이디</label><input type="text" name="user_id" id="user_id" class="input_type1" value=""  placeholder="ID" /></li>
-               <li> <label for="">비밀번호</label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" value="" placeholder="Password" /></li>
-               <li> <button type="submit" class="btn_type2"> LOGIN </button></li>
-           </ul> 
-           </form>     
-        </div>
-    </div>
+	<div class="hamologin">
+		<h1><img alt="login image" src="/images/login_tit.png"></h1>
+		<form id="mainform" name="mainform" action="" method="post" onsubmit="fn_signIn();return false;">
+		<input type="hidden" name="user_ip" id="user_ip" class="input_type1" />
+		<ul class="memberin">
+			<li> <label for="">아이디</label><input type="text" name="user_id" id="user_id" class="input_type1" value=""  placeholder="ID" /></li>
+			<li> <label for="">비밀번호</label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" value="" placeholder="Password" /></li>
+			<li> <button type="submit" class="btn_type2"> LOGIN </button></li>
+		</ul> 
+		</form>     
+		
+	</div>
+</div>
+	
 
-	<script src="/logintemplet/vendor/tilt/tilt.jquery.min.js"></script>
+
+<script src="/logintemplet/vendor/tilt/tilt.jquery.min.js"></script>
 
 </body>
 </html>

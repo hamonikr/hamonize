@@ -15,7 +15,8 @@
 			svr_nm, 
 			svr_domain, 
 			svr_ip, 
-			  
+			svr_vip, 
+			svr_used, 
 			CASE 
 				WHEN svr_port is null  THEN 'N'
 				WHEN svr_port = ''  THEN 'N'
@@ -39,6 +40,8 @@
 			svr_used,
 			insert_dt 
 		FROM tbl_svrlst
+		WHERE svr_nm not like 'INFLUX_BUCKET' and svr_nm not like 'INFLUX_ORG' and svr_nm not like 'INFLUX_TOKEN'
+		<!-- WHERE svr_nm not like 'INFLUX_%' -->
 		order by seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
@@ -88,6 +91,14 @@
 			#{svr_vip},
 			#{svr_port}
 		where not exists(select * from upsert);
+
+	</insert>
+
+	<insert id="envInsert" parameterType="com.model.SvrlstVo">
+	update tbl_svrlst set 
+		svr_ip = #{svr_ip}
+	where
+		seq = #{seq}
 
 	</insert>
 

@@ -619,7 +619,7 @@ function searchView(viewName, page){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<jsp:useBean id="now" class="java.util.Date" />
 	<fmt:formatDate value="${now}" pattern="yyyy/MM/dd" var="today" />
 	<!-- width 100% 컨텐츠 other 추가 -->
@@ -668,7 +668,7 @@ function searchView(viewName, page){
     </div><!-- //content -->
 	
 	
-	<%-- <%@ include file="../template/grid.jsp" %> --%>
+	<%--  --%>
 	<%@ include file="../template/footer.jsp" %>
 	
 	

@@ -2,14 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.mapper.IMainMapper">
-		<select id = "wCount" resultType="int">
-		select count(*) from tbl_pc_amt_json where UPPER(pc_os) = 'W';
-		</select> 
-		
-		<select id = "hCount" resultType="int">
-		select count(*) from tbl_pc_amt_json where UPPER(pc_os) = 'H';
-		</select>
-		
 		<select id="inetLogConnect" resultType="HashMap">
 		<![CDATA[
 		SELECT

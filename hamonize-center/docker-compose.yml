@@ -1,78 +1,95 @@
 version : '3'
 services : 
     db:
+        container_name: db
         image: postgres:10.16
         environment:
             POSTGRES_USER : hamonize
             POSTGRES_PASSWORD : password
             POSTGRES_DB : hamonize_center
+            TZ : "Asia/Seoul"
+
         ports:
             - "5432:5432"
         volumes:
             - ./sql:/docker-entrypoint-initdb.d
-            - psql-data:/var/lib/postgresql/data
+            - psql-data:/var/lib/postgresql/data      
+        restart: always
 
     web:
+        container_name: web
         build: .
         volumes:
             - was-logs:/usr/local/tomcat/logs
+            - ${HOME}/uploads:/root/uploads
         ports:
             - "8080:8080"
-    
-    ldap:
-        image: osixia/openldap:latest
-        hostname: ldap.hamonize.com        
+        environment:
+            TZ : "Asia/Seoul"
+        restart: always
+ 
+    openldap:
+        container_name: openldap
+        image: osixia/openldap:1.5.0
+        hostname: "ldap-server"
         ports:            
             - "389:389"
             - "636:636"
         environment:
-            HOSTNAME: ldap.hamonize.com
-            LOG_LEVEL: 256
+            LDAP_LOG_LEVEL: "256"
+            LDAP_TLS: "false"
             LDAP_DOMAIN: hamonize.com
             LDAP_BASE_DN: dc=hamonize,dc=com
             LDAP_ADMIN_PASSWORD: admin
             LDAP_ORGANISATION: invesume
         volumes:
-            - ldap-data:/var/lib/openldap
-            - ./ldap/config:/etc/openldap/slapd.d              
-        domainname: "ldap.hamonize.com"
+            - ${HOME}/ldap/data:/var/lib/ldap
+            - /etc/ldap/slapd.d              
+        domainname: "hamonize.com"
         restart: always
 
     phpldapadmin:
+        container_name: phpldapadmin
         image: osixia/phpldapadmin:latest
         ports:
             - "80:80"
         environment:
-            - PHPLDAPADMIN_LDAP_HOSTS=ldap
+            - PHPLDAPADMIN_LDAP_HOSTS=openldap
             - PHPLDAPADMIN_HTTPS="false"
         links:
-            - ldap
+            - openldap
         depends_on:
-            - ldap
+            - openldap
+        restart: always
 
     influxdb:
+        container_name: influxdb
         image: influxdb:1.0
         ports:
-        - "8083:8083"
-        - "8086:8086"
-        - "25826:25826/udp"
+            - "8083:8083"
+            - "8086:8086"
+            - "25826:25826/udp"
         volumes:
-        - influxdb:/var/lib/influxdb
-        - ./influxdb.conf:/etc/influxdb/influxdb.conf
-        - ./types.db:/usr/share/collectd/types.db:ro
+            - influxdb:/var/lib/influxdb
+            - ./influxdb.conf:/etc/influxdb/influxdb.conf
+            - ./types.db:/usr/share/collectd/types.db:ro
+        restart: always
 
     grafana:
+        container_name: grafana
         image: grafana/grafana:latest
         ports:
-        - "3000:3000"
+            - "3000:3000"
         volumes:
-        - grafana:/var/lib/grafana
-        - ./grafana/plugins:/var/lib/grafana/plugins
-        - ./grafana.ini:/etc/grafana/grafana.ini          
+            - grafana:/var/lib/grafana
+            - ./grafana/plugins:/var/lib/grafana/plugins
+            - ./grafana.ini:/etc/grafana/grafana.ini  
+            - ./grafana/provisioning:/etc/grafana/provisioning
+        restart: always
+
 volumes:
     hamonize_center.sql:
     psql-data:
-    ldap-data:
     influxdb:
     grafana:
     was-logs:

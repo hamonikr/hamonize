@@ -5,6 +5,9 @@
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/ztree/fuzzysearch.js"></script>
+<script type="text/javascript" src="/js/ztree/jquery.ztree.exhide.js"></script>
+
 
 
 <style>
@@ -14,6 +17,17 @@ color: white;
 a:hover{
 color: #0056b3;
 text-decoration: none; 
+}
+#key{
+	width: 90%;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 3px solid black;
+	display: table;
+	margin-top: 10px;
+	margin-left: auto; 
+  	margin-right: auto;
 }
 </style>
 
@@ -63,11 +77,13 @@ text-decoration: none;
 	
 	$("#expandAllBtn").bind("click", {type:"expandAll"}, expandNode);
 	$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
+	
+	fuzzySearch('tree','#key',null,true); //initialize fuzzysearch function
 		
 	getMntrngList();
 	
-	
 });
+
 	function getMntrngList(){
 		var url ='/mntrng/pcList';
 		$.post(url,{org_seq:1},
@@ -191,7 +207,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	
 	<!-- width 100% 컨텐츠 other 추가 -->
@@ -208,10 +224,10 @@ function fnSave(){
                     <li id="expandAllBtn">전체열기 </li>
                     <li id="collapseAllBtn">전체닫기</li>
                 </ul>
-
+				<input type="search" id="key" value=""  placeholder="조직명을 입력해주세요."/>
                 <!-- 트리 리스트 -->               
                  <div class="tree_list">
-                <ul id="tree" class="ztree"></ul>
+               <ul id="tree" class="ztree"></ul>
                 </div>
             </div>
         </div>
@@ -241,7 +257,7 @@ function fnSave(){
 
     </div><!-- //content -->
 	
-	<%@ include file="../template/grid.jsp" %>
+	
 	<%@ include file="../template/footer.jsp" %>
 	
 	

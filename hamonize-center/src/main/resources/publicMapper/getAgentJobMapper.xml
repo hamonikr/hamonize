@@ -238,26 +238,6 @@
 
 
 	
-	<!-- 유해사이트 -->
-	<select id="nxssListInfo" resultType="com.model.BlockingNxssInfoVo" parameterType="hashmap">
-		SELECT 
-			 sma_seq, 
-			 sma_domain, 
-			 sma_info
-		FROM 
-			tbl_site_mngr_applc
-		<where>
-			sma_gubun='B' 
-		</where> 
-		ORDER BY sma_seq DESC
-	</select>
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

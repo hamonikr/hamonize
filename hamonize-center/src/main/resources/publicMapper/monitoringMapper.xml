@@ -96,6 +96,7 @@
 			)
 		</if>
 		</where>
+		order by a.pc_hostname asc
 		 
 	</select>
 		
