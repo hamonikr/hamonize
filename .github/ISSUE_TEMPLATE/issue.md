@@ -1,0 +1,18 @@
+---
+name: Issue
+about: Suggest an idea for this project
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+### 개요 ###
+- 내용을 적어주세요
+
+### 이슈 종류를 선택해주세요 ###
+[ ] New Feature
+[ ] Bug Fix
+
+### 내용 ###
+-  이슈 종류가 버그일 경우 어떤식으로 버그가 발생했는지 적어주세요.
