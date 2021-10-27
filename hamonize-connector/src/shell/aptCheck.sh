@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #=== hamonize apt repository check ====
 LOGFILE="/var/log/hamonize/propertiesJob/propertiesJob.log"

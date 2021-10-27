@@ -1,4 +1,4 @@
-#!/bin/bash  
+#!/usr/bin/env bash  
 
 
 UUID=`cat /etc/hamonize/uuid |head -1`

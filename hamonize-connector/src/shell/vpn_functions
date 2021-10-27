@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ ! -d /var/log/hamonize/vpnlog ]; then
         mkdir /var/log/hamonize/vpnlog >/dev/null 2>&1
         touch /var/log/hamonize/vpnlog.hm 

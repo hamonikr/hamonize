@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
 
