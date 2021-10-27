@@ -50,7 +50,7 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
 | Name                                                                                      | Description                                 |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------- |
-| [Hamonize-connector](https://github.com/hamonikr/hamonize/tree/master/hamonize-connector) | electron+shell 기반의 pc 초기 설정 프로그램 |
+| [Hamonize-connector](https://github.com/hamonikr/hamonize/tree/master/hamonize-connector) | electron+shell 기반의 PC 초기 설정 프로그램 |
 
 
 <br>
@@ -76,7 +76,7 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
 <br>
 
-📕 자세한 사용법을 알고싶으면 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339494)를 참고하세요 
+📕 자세한 사용법을 알고싶으면 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339494)를 참고하세요. 
 
 <br>
 
@@ -89,7 +89,7 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 
 ## 🔗 Usecase
 
-`하모나이즈` 솔루션은 국방부에서 사이버지식정보방에 설치되어 40만 국군장병이 PC를 사용하는데 적용되고 있는 솔루션입니다. (12,500대)
+`하모나이즈` 솔루션은 국방부의 사이버지식정보방에 설치되어 40만 국군 장병들이 PC를 사용하는데 적용되고 있는 솔루션입니다. (12,500대)
 
 <br>
 <img width="600" src="./img/hamonize_ex1.png"> <br>
@@ -124,7 +124,7 @@ git clone git@github.com:{your-own-repo}/hamonize.git
 
 ### Pull Request
 PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 없다면 commit하고 push해주세요.
-더 많은 정보를 원하시면 **Contributing** 문서들을 참고해주세요
+더 많은 정보를 원하시면 **Contributing** 문서들을 참고해주세요.
 
 <br>
 
@@ -136,7 +136,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
   
   ```
   Commit Message 사용법. 
-    1. 아래의 방법으로 Commit Message Templeate 설정을 합니다 
+    1. 아래의 방법으로 Commit Message Templeate 설정을 합니다. 
     [전역 설정] git config --global commit.template <.gitmessage.txt 경로>
     [레포마다 다르게 설정] git config commit.template <.gitmessage.txt 경로>
 
@@ -151,7 +151,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 * **Contributers** ✨
   
   
-    하모나이즈 프로젝트에 참여해주신 멋진 분들입니다 
+    하모나이즈 프로젝트에 참여해주신 멋진 분들입니다.
 
     <table>
       <tr>
