@@ -9,6 +9,7 @@ public interface IFileMapper {
     public FileVo getFile(String type);
     public FileVo getFileSeq(int seq);
     public FileVo getFilePublic();
+    public FileVo getFilePrivate();
     public FileVo getFileConfig();
     public int saveFile(FileVo vo);
     public int deleteFile(FileVo vo);
