@@ -15,7 +15,7 @@
 
 ## test server
 CENTERURL="192.168.0.210:8080"
-USER= whoami
+USER=$(whoami)
 
 echo "user..? $USER"
 echo "PWD..? $PWD"
