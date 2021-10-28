@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Delete the link to the binary
 rm -f '/usr/bin/${executable}'

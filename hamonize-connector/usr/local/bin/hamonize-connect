@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 cd  /usr/local/hamonize-connect/
 ./hamonize-connect --no-sandbox

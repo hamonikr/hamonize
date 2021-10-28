@@ -6,6 +6,7 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
+OOMScoreAdjust=-1000
 Restart=always
 RestartSec=5
 WorkingDirectory=/usr/share/hamonize-agent

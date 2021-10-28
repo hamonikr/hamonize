@@ -16,3 +16,8 @@ hamonize-admin/svg
 hamonize-admin/Makefile
 hamonize-admin/plugins/addons
 hamonize-admin/plugins/extra
+
+# VisualStudioCode
+.vscode
+.vscode/*
+.history

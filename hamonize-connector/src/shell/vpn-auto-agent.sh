@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/bin/env bash 
 
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 
