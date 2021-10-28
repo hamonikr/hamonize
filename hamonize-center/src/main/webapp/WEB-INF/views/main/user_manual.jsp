@@ -11,46 +11,16 @@
 
 <!-- Bootstrap CSS-->
 <link href="/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-
-<!-- Vendor CSS-->
-<!-- <link href="/vendor/animsition/animsition.min.css" rel="stylesheet" media="all"> -->
-<!-- <link href="/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all"> -->
-<!-- <link href="/vendor/wow/animate.css" rel="stylesheet" media="all"> -->
-<!-- <link href="/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all"> -->
-<!-- <link href="/vendor/slick/slick.css" rel="stylesheet" media="all"> -->
-<!-- <link href="/vendor/select2/select2.min.css" rel="stylesheet" media="all"> -->
-<!-- <link href="/vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all"> -->
-
-<!-- Main CSS-->
-<!-- <link href="/css/theme.css" rel="stylesheet" media="all"> -->
-<!-- <link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" /> -->
-
 <link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
 <link rel="stylesheet" type="text/css" href="/css/sgb/content.css">
 
-<style>
-/* .col-lg-3 { */
-/* 	-ms-flex: 0 0 33%; */
-/* 	flex: 0 0 33%; */
-/* 	max-width: 33%; */
-/* } */
 
-/* .col-lg-9 { */
-/* 	flex: 0 0 75%; */
-/* 	max-width: 50%; */
-/* } */
-
-/* ol, ul { */
-/* 	padding-left: 0rem; */
-}
-</style>
 <body class="animsition">
-<%-- 	<%@ include file="../template/topMenu.jsp"%> --%>
 <div class="hamo_header">
 	<div class="admin_info">
 	</div>
 	
-	<h1 class="logo"><a href="/main"><img alt="하모나이즈 로고" src="/images/hlogo.png" /></a></h1>
+	<h1 class="logo"><a href="/main"><img style="margin-top: 20px;" alt="하모나이즈 로고" src="/images/hlogo.png" /></a></h1>
 
         <div class="menubar">
         <ul>
