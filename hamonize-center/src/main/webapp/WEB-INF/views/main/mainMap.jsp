@@ -34,7 +34,7 @@
 			}
 	</style>
 <body class="animsition">
-	<%@ include file="../template/topMenu.jsp" %>
+	<%@ include file="../template/topMenu2.jsp" %>
 	
 	
                         
