@@ -36,6 +36,12 @@
 		WHERE keytype = 'public'
 	</select>
 
+	<select id="getFilePrivate" resultType="com.model.FileVo" >
+		SELECT * 
+		FROM tbl_files
+		WHERE keytype = 'private'
+	</select>
+
 	<select id="getFileConfig" resultType="com.model.FileVo" >
 		SELECT * 
 		FROM tbl_files

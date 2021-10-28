@@ -188,10 +188,19 @@ public class LDAPConnection {
 		attribute.add("device");
 		attribute.add("extensibleObject");
 		attributes.put(attribute);
-
 		attributes.put("cn", pvo.getPc_hostname());
-		attributes.put("ipHostNumber", pvo.getPc_vpnip().toString());
 		attributes.put("name", pvo.getPc_hostname());
+		
+		logger.info("vip {}", pvo.getPc_vpnip().toString());
+		logger.info("ip {}", pvo.getPc_ip().toString());
+		
+		if( pvo.getPc_vpnip().toString().equals("no vpn")){
+			attributes.put("ipHostNumber", pvo.getPc_ip().toString());
+
+		} else{
+			attributes.put("ipHostNumber", pvo.getPc_vpnip().toString());
+		}
+
 
 		dn = "cn=" + pvo.getPc_hostname() + ",ou=computers" + upperDn + ",dc=hamonize,dc=com";
 
