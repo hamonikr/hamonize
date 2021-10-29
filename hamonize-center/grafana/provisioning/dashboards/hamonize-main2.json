@@ -56,7 +56,7 @@
         "null_value": "No data",
         "pattern": "*",
         "row_col_wrapper": "_",
-        "row_name": "{{host}}",
+        "row_name": "{{uuid}}",
         "textColors": "green|orange|red",
         "textColors_overrides": "0->red|2->green|1->yellow",
         "thresholds": "50,80",
@@ -67,7 +67,7 @@
         "valueName": "current"
       },
       "default_title_for_rows": "",
-      "first_column_link": "http://ts.hamonikr.org/mntrng/pcView.do?uuid=_row_name_",
+      "first_column_link": "http://<Your Center url>/mntrng/pcView.do?uuid=_row_name_",
       "font_size": "1.2em",
       "gridPos": {
         "h": 9,
