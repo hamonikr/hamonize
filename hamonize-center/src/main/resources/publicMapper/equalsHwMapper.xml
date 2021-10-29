@@ -41,12 +41,41 @@
 	
 	<update id="pcMngrModify" parameterType="com.model.EqualsHwVo">
 		update tbl_pc_mangr
-			set pc_status = 'N'
+			set 
+				pc_status = 'N'
+				<if test="pc_hostname != null">
+					,pc_hostname = #{pc_hostname},
+				</if>
+				<if test="pc_ip != null">
+					pc_ip = #{pc_ip},
+				</if>
+				<if test="pc_cpu != null">
+					pc_cpu = #{pc_cpu},
+				</if>
+				<if test="pc_cpu_id != null">
+					pc_cpu_id = #{pc_cpu_id},
+				</if>
+				<if test="pc_macaddress != null">
+					pc_macaddress = #{pc_macaddress},
+				</if>
+				<if test="pc_memory != null">
+					pc_memory = #{pc_memory},
+				</if>
+				<if test="pc_disk != null">
+					pc_disk = #{pc_disk},
+				</if>
+				<if test="pc_disk_id != null">
+					pc_disk_id = #{pc_disk_id},
+				</if>
+				<if test="pc_hostname != null">
+					pc_sn = #{pc_hostname}
+				</if>
+				
 		where pc_uuid = #{pc_uuid}
 
 	</update>
 
-	<select id="getPCinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo" >
+	<select id="getPCinfo" parameterType="com.model.EqualsHwVo" resultType="com.model.PcMangrVo" >
 		select * 
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid} 

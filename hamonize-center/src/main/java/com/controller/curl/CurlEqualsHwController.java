@@ -73,16 +73,16 @@ public class CurlEqualsHwController {
 		for (int i = 0; i < inetvalArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) inetvalArray.get(i);
 
-			setEqualsHwVo.setPc_hostname(tempObj.get("hostname").toString());
-			setEqualsHwVo.setPc_memory(tempObj.get("memory").toString());
-			setEqualsHwVo.setPc_cpu_id(tempObj.get("cpuid").toString());
-			setEqualsHwVo.setPc_disk(tempObj.get("hddinfo").toString());
-			setEqualsHwVo.setPc_disk_id(tempObj.get("hddid").toString());
-			setEqualsHwVo.setPc_ip(tempObj.get("ipaddr").toString());
-			setEqualsHwVo.setPc_uuid(tempObj.get("uuid").toString());
-			setEqualsHwVo.setPc_user(tempObj.get("user").toString());
-			setEqualsHwVo.setPc_macaddress(tempObj.get("macaddr").toString());
-			setEqualsHwVo.setPc_cpu(tempObj.get("cpuinfo").toString());
+			setEqualsHwVo.setPc_hostname(tempObj.get("hostname").toString().trim());
+			setEqualsHwVo.setPc_memory(tempObj.get("memory").toString().trim());
+			setEqualsHwVo.setPc_cpu_id(tempObj.get("cpuid").toString().trim());
+			setEqualsHwVo.setPc_disk(tempObj.get("hddinfo").toString().trim());
+			setEqualsHwVo.setPc_disk_id(tempObj.get("hddid").toString().trim());
+			setEqualsHwVo.setPc_ip(tempObj.get("ipaddr").toString().trim());
+			setEqualsHwVo.setPc_uuid(tempObj.get("uuid").toString().trim());
+			setEqualsHwVo.setPc_user(tempObj.get("user").toString().trim());
+			setEqualsHwVo.setPc_macaddress(tempObj.get("macaddr").toString().trim());
+			setEqualsHwVo.setPc_cpu(tempObj.get("cpuinfo").toString().trim());
 
 		}
 
@@ -99,13 +99,26 @@ public class CurlEqualsHwController {
 		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(newPvo.getOrg_seq());
 
 		newPvo.setAlldeptname(allOrgNameVo.getAll_org_nm());
-		PcMangrVo oldPvo = equalsHwMapper.getPCinfo(newPvo);
+		PcMangrVo oldPvo = equalsHwMapper.getPCinfo(setEqualsHwVo);
+		oldPvo.setAlldeptname(allOrgNameVo.getAll_org_nm());
+
+		newPvo.setPc_ip(setEqualsHwVo.getPc_ip());
+		
+		logger.info("\n------------------------------------------");
+
+		logger.info("oldPvo pc hostname ------>  {}",oldPvo.getPc_hostname());
+		
+		logger.info("변경된 pc 정보------>  {}",setEqualsHwVo);
+		logger.info("변경된 pc hostname : {}",setEqualsHwVo.getPc_hostname());
+		logger.info("변경된 pc ip :  {}",setEqualsHwVo.getPc_ip());
+		logger.info("------------------------------------------\n");
+
 
 		if (retVal == 1) {
 			// pc정보 db 업데이트
 			equalsHwMapper.pcMngrModify(setEqualsHwVo);
 			// pc 정보 ldap 업데이트 hostname
-			con.updatePc(newPvo, oldPvo);
+			con.updatePc(oldPvo, newPvo);
 
 			return "Y";
 		} else {
