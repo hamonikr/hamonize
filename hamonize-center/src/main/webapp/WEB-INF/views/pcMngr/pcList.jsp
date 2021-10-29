@@ -201,9 +201,12 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else{
 							gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 						}
+						value.pc_macaddress = value.pc_macaddress.replaceAll("\""," ");
+						value.pc_macaddress	= value.pc_macaddress.toString();
 						if(vpn_used ==1 ){
 							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
 						}else{
+							
 							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
 						}
 
@@ -275,6 +278,8 @@ function getPcMngrList(){
 			}else{
 				gbInnerHtml += "<td>"+hamonikrIcon+"</td>"; 
 			}
+			
+			value.pc_macaddress = value.pc_macaddress.replaceAll("\""," ");
 			
 			if(vpn_used ==1 ){
 					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
@@ -509,6 +514,8 @@ function searchView(viewName, page){
 			}
 			
 			var innerHtml = "";
+
+
 			$("#detail_no").html(no);
 			$("#detail_pc_os").html(pc_os);
 			$("#detail_hostname").html(hostname);
@@ -557,7 +564,7 @@ function searchView(viewName, page){
 			$("#detail_hostname").html(hostname);
 			$("#detail_name").html(name);
 			$("#detail_pc_ip").html(pc_ip);
-			$("#detail_macaddress").html(macaddress);
+			$("#detail_macaddress").html(macaddress.toString());
 			$("#detail_pc_disk").html(pc_disk);
 			$("#detail_cpu").html(cpu);
 			$("#detail_memory").html(memory);

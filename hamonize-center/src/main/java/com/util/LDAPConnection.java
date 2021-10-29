@@ -401,12 +401,21 @@ public class LDAPConnection {
 		String newDn = "";
 		String upperDn = "";
 
-		ModificationItem[] mods = new ModificationItem[1];
-		Attribute mod = new BasicAttribute("name", newVo.getPc_hostname());
+		logger.info("oldVo {}", oldVo.getPc_hostname());
+		logger.info("oldVo ip {}", oldVo.getPc_ip());
 
-		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod);
+		logger.info("newVo {}", newVo.getPc_hostname());
+		logger.info("newVo ip {}", newVo.getPc_ip());
+
+		ModificationItem[] mods = new ModificationItem[2];
+		Attribute mod1 = new BasicAttribute("name", newVo.getPc_hostname());
+		Attribute mod2 = new BasicAttribute("ipHostNumber", newVo.getPc_ip());
+
+		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
+		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
 
 		String str = oldVo.getAlldeptname();
+		logger.info("oldVo getAlldeptname {}", str);
 
 		String[] p_array = str.split("\\|");
 		for (int i = p_array.length - 1; i >= 0; i--) {
