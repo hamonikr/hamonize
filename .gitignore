@@ -21,3 +21,5 @@ hamonize-admin/plugins/extra
 .vscode
 .vscode/*
 .history
+
+# CTag/tags
