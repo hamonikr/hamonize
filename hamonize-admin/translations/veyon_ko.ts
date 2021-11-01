@@ -3712,8 +3712,8 @@ Typically this is required to support terminal servers.</source>
         <translation>예를들어 모든 사용자에게 새로운 과제를 부과하는 문자 메세지를 보내려면 이기능을 사용</translation>
     </message>
     <message>
-        <source>Message from teacher</source>
-        <translation>교사의 메세지</translation>
+        <source>Message from administrator</source>
+        <translation>관리자의 메세지</translation>
     </message>
     <message>
         <source>Send a message to a user</source>

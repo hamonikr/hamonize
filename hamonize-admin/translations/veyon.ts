@@ -3687,7 +3687,7 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Message from teacher</source>
+        <source>Message from administrator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
