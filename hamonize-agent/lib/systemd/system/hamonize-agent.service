@@ -3,6 +3,7 @@ Description=hamonize-agent
 After=network.target
 StartLimitInterval=33
 StartLimitBurst=5
+Restart=always
 
 [Service]
 Type=simple
