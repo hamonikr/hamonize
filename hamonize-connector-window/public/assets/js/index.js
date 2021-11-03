@@ -158,7 +158,8 @@ ipcRenderer.on('hamonizeProgramInstallResult', (event, mkfolderResult) => {
 		$("#stepB").removeClass("br animate");
 		// $("#stepC").addClass("br animate");
 		$("#infoStepB").text("완료");
-		// hamonizeSystemBackup();
+		// hamonizeSystemBackup(); 
+		$("#procLayerBody").hide();
 		$("#EndBody").show();
 	} else {
 		console.log("false");

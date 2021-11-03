@@ -18626,9 +18626,9 @@ Copyright (c) 2015 Daniel Eden
   }
 
   .carousel .card .card-body {
-    max-width: 340px;
+    max-width: auto;
     margin: 0 auto;
-    min-height: 400px;
+    min-height: auto;
   }
 
   .navbar-collapse {
