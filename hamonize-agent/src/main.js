@@ -45,6 +45,19 @@ function hamonizeVersion() {
 
 
 }
+let networkChk = async function () {
+
+	var ping = require('ping');
+	var ip = require("ip");
+	var ipAliveStatus = false;
+	var hosts = ['google.com'];
+	let res = "";
+	for (let host of hosts) {
+		res = await ping.promise.probe(host);
+
+	}
+	return res.alive
+};
 
 function getPollTime(uuid) {
 	log.info("----getPollTime Func start----");
@@ -52,26 +65,42 @@ function getPollTime(uuid) {
 	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
 
 	var retval = 0;
-	http.get(setUrl, (res) => {
-		res.on('data', (data) => {
-			var pollingObj = JSON.parse(data);
 
-			if (pollingObj.data != 'nodata') {
-				var pollingObj = JSON.parse(data);
-				log.info("//====================================");
-				log.info("//== Polling time has changed... " + pollingObj.data);
-				log.info("//====================================");
+	networkChk().then(
+		(value) => {
+			console.log(value)
+			if (value) {
+				http.get(setUrl, (res) => {
+					res.on('data', (data) => {
+						var pollingObj = JSON.parse(data);
 
-				retval = pollingObj.data * 1000;
-				log.info("//== Polling time has result... " + retval);
-				Polling(retval);
+						if (pollingObj.data != 'nodata') {
+							var pollingObj = JSON.parse(data);
+							log.info("//====================================");
+							log.info("//== Polling time has changed... " + pollingObj.data);
+							log.info("//====================================");
 
+							retval = pollingObj.data * 1000;
+							log.info("//== Polling time has result... " + retval);
+							Polling(retval);
+
+						} else {
+							Polling(DEFAUT_POLLTIME);
+							log.info("//== Polling time doesn't changes..");
+						}
+					});
+				});
 			} else {
-				Polling(DEFAUT_POLLTIME);
-				log.info("//== Polling time doesn't changes..");
+				log.info("network close~");
+				retval = 10000;
+				Polling(retval);
 			}
-		});
-	});
+		}
+
+	);
+
+
+
 }
 
 
@@ -89,16 +118,25 @@ function Polling(time) {
 		getPollTime(uuidVal);
 		log.info("//==== polling time? ====" + time);
 
-		// func add
-		getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
-		getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
-		getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
-		getRecoveryDataCall(uuidVal); // Call 복구 정책 
-		getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
-		ipStatusCheck();
-		getBackupDataCall(uuidVal); // Call 백업 주기 정책 
-		sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-		sysInfo(); // hw 변경로그
+		networkChk().then(
+			(value) => {
+				console.log(value)
+				if (value) {
+					getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
+					getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
+					getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
+					getRecoveryDataCall(uuidVal); // Call 복구 정책 
+					getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
+					ipStatusCheck();
+					getBackupDataCall(uuidVal); // Call 백업 주기 정책 
+					sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
+					sysInfo(); // hw 변경로그
+				} else {
+					log.info("network close~");
+				}
+			}
+
+		);
 
 	});
 
@@ -609,7 +647,7 @@ function sendToCenter_unauth() {
 		}, (error, res, body) => {
 			if (error) {
 				console.error(error);
-				return
+				//return
 			}
 			console.log(`statusCode: ${res.statusCode}`);
 			console.log(body);
@@ -1227,24 +1265,24 @@ const sysInfo = async () => {
 	const usernm = await execShellCommand('users');
 
 	let md5 = require('md5');
-	
+
 	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	console.log("\n==============")
 	console.log("==============\n")
-	
-	console.log("hwinfoMD5  >>> "+hwinfoMD5)
+
+	console.log("hwinfoMD5  >>> " + hwinfoMD5)
 	let hwData = md5(hwinfoMD5);
-	console.log("hwData  >>> "+hwData)
-	
+	console.log("hwData  >>> " + hwData)
+
 	const base_hwinfo = getHwpInfo("hwinfo.hm");
-	console.log("base_hwinfo  >>> "+base_hwinfo)
+	console.log("base_hwinfo  >>> " + base_hwinfo)
 	console.log("\n==============")
 	console.log("==============\n")
-		
+
 	let isSendYn = false;
 	if (hwData.trim() == base_hwinfo.trim()) {
 		console.log("eq========" + hwData + "==" + base_hwinfo);
-		
+
 		isSendYn = false;
 	} else {
 		isSendYn = true;
