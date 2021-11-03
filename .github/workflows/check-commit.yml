@@ -1,0 +1,57 @@
+name: Check Commit Message
+
+on: 
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+  push:
+    branches:
+      - master
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Commit Type
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '\<(Feat|Fix|Design|Style|Refactor|Comment|Docs|Test|Chore|Rename|Remove)\> .+$'
+          flags: 'gm'
+          checkAllCommitMessages: 'true' # optional: this checks all commits associated with a pull request
+          accessToken: ${{ secrets.GITHUB_TOKEN }} # github access token is only required if checkAllCommitMessages is true
+          error: 'Your first line has to contain a commit type like "<Fix>".'
+      - name: Check for Issue number
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '(issue) \#([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9])+$'
+          checkAllCommitMessages: 'true' # optional: this checks all commits associated with a pull request
+          accessToken: ${{ secrets.GITHUB_TOKEN }} # github access token is only required if checkAllCommitMessages is true
+          error: 'You need at least one "issue #<issue number>" line.'
+          
+  run-if-fail:
+    if: ${{ always() && (needs.check.result=='failure') }}
+    needs: [check]
+    runs-on: ubuntu-latest
+    env: 
+      PR_NUMBER: ${{ github.event.number }}
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: ${{ env.PR_NUMBER }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '요청해 주신 PR이 [하모나이즈 프로젝트의 커밋 컨벤션](https://github.com/hamonikr/hamonize/blob/master/.gitmessage.txt)을 위반합니다. \n커밋 메시지와 PR의 제목을 컨벤션에 맞게 수정해 주세요. '
+            })
+ 
