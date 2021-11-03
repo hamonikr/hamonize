@@ -1265,23 +1265,13 @@ const sysInfo = async () => {
 	const usernm = await execShellCommand('users');
 
 	let md5 = require('md5');
-
 	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
-	console.log("\n==============")
-	console.log("==============\n")
-
-	console.log("hwinfoMD5  >>> " + hwinfoMD5)
 	let hwData = md5(hwinfoMD5);
-	console.log("hwData  >>> " + hwData)
 
 	const base_hwinfo = getHwpInfo("hwinfo.hm");
-	console.log("base_hwinfo  >>> " + base_hwinfo)
-	console.log("\n==============")
-	console.log("==============\n")
 
 	let isSendYn = false;
 	if (hwData.trim() == base_hwinfo.trim()) {
-		console.log("eq========" + hwData + "==" + base_hwinfo);
 
 		isSendYn = false;
 	} else {
@@ -1292,7 +1282,6 @@ const sysInfo = async () => {
 				log.info("//== sysInfo hw check() error  " + err.message)
 			}
 		});
-		console.log("not eq========" + hwData + "===" + base_hwinfo);
 	}
 
 
@@ -1311,7 +1300,7 @@ const sysInfo = async () => {
 					hddid: diskSerialNum,
 					ipaddr: ipinfo.address(),
 					uuid: machindid,
-					user: usernm,
+					user: usernm, 
 					macaddr: pcuuid.macs[0],
 					cpuinfo: cpuinfo
 				}]
@@ -1320,6 +1309,8 @@ const sysInfo = async () => {
 				// console.log("response.body==="+JSON.stringify(response));
 				console.log("\nbbbresponse.body===" + response.body);
 			});
+		log.info("telegraf restart");
+		await execShellCommand('service telegraf restart');
 	}
 
 
