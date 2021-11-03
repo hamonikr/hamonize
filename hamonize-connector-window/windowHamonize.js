@@ -61,6 +61,36 @@ exports.fn_mk_base_folder = function (winFolderDir) {
         });
     });
 }
+
+
+// mkdir Hamonize-usre Run Script
+exports.fn_mk_HUser_Run = function (winFolderDir) {
+    return new Promise(function (resolve, reject) {
+
+        let hUserToolData = "# Hamonize-user key & config Settings \r\n";
+        hUserToolData += ' wget ' + gopBaseUrl + '/getAgent/getpublickey -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem \r\n';
+        hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe authkeys import hamonize/public C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem 2>&1 | out-null \r\n';
+        hUserToolData += ' wget ' + gopBaseUrl + '/getAgent/getconfigfile -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
+        hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe config import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json  2>&1 | out-null \r\n';
+        hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe service restart  2>&1 | out-null \r\n';
+
+
+        let fileDir = winFolderDir + "HUserRun.ps1";
+        console.log("fileDir==============================" + fileDir);
+        fs.writeFile(fileDir, hUserToolData, (err) => {
+            if (err) {
+                return reject("N");
+            } else {
+                return resolve("Y");
+            }
+        });
+    });
+}
+
+
+
+
+
 // Hamonize Install Program  Settings
 exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
 
@@ -113,33 +143,15 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
                 programInstallFileData += '	Start-Process -FilePath "$env:systemroot\\system32\\msiexec.exe" -ArgumentList "/i `"$env:temp\\$LocalInstaller`" /qn /passive /log $log_path_file " -Wait \r\n';
                 programInstallFileData += '}else{ \r\n';
                 programInstallFileData += '	Start-Process $env:temp\\$LocalInstaller -ArgumentList  /S  \r\n';
-                // programInstallFileData += '	Start-Process $env:temp\\$LocalInstaller -ArgumentList  /S  \r\n';
                 programInstallFileData += '} \r\n';
                 programInstallFileData += 'Start-Sleep 5 \r\n';
                 programInstallFileData += '} \r\n';
 
 
-                // programInstallFile += "cd '$env:systemroot\\' \r\n";
-                // programInstallFile += "New-Item -Name programInstallFile.ps1 -Value '" + programInstallFileData + "' \r\n";
-
-
-                programInstallFileData += "\r\n";
-
-
-                programInstallFileData += "# Hamonize-Admin key & config Settings \r\n";
-                programInstallFileData += ' wget ' + gopBaseUrl + '/getAgent/getpublickey -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem \r\n';
-                programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' authkeys import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem  \r\n';
-                programInstallFileData += ' wget ' + gopBaseUrl + '/getAgent/getconfigfile -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
-                programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' config import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json  \r\n';
-                programInstallFileData += ' & \'c:program files\\hamonize\\hamonize-cli.exe\' service restart  \r\n';
-
-
-                // programInstallFileData += settingsHamonize() ;
-
                 programInstallFileData += "\r\n";
                 programInstallFileData += 'Write-Output "ENDINSTALL"';
 
-                fileDir = winFolderDir + "programInstallFile.ps1";
+                let fileDir = winFolderDir + "programInstallFile.ps1";
                 console.log("fileDir==============================" + fileDir);
                 fs.writeFile(fileDir, programInstallFileData, (err) => {
                     if (err) {
@@ -247,7 +259,7 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
 
         if (vpnusedYn == 1) {
             hamonizeWinOSLogDataPSFile += 'cd  "C:\\Program Files\\OpenVPN\\bin" \r\n';
-            hamonizeWinOSLogDataPSFile += './openvpn-gui.exe --connect hamonize-winkey \r\n';
+            hamonizeWinOSLogDataPSFile += './openvpn-gui.exe --connect winkey \r\n';
 
             hamonizeWinOSLogDataPSFile += ' \r\n';
             hamonizeWinOSLogDataPSFile += ' \r\n';
@@ -270,13 +282,14 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
 
         if (vpnusedYn == 1) {
             hamonizeWinOSLogDataPSFile += ' \r\n';
+            hamonizeWinOSLogDataPSFile += 'Start-Sleep 10 \r\n';
             hamonizeWinOSLogDataPSFile += '$ipdatajson = @" \r\n';
             hamonizeWinOSLogDataPSFile += '{ \r\n';
             hamonizeWinOSLogDataPSFile += '"events":[{ \r\n';
             hamonizeWinOSLogDataPSFile += '"datetime":"$strDate $strTime" , \r\n';
             hamonizeWinOSLogDataPSFile += '"macaddr":"macaddr", \r\n';
-            hamonizeWinOSLogDataPSFile += '"ipaddr": "$(ipconfig | where {$_ -match 'IPv4.+\s(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' } | out-null; $Matches[1])", \r\n';
-            hamonizeWinOSLogDataPSFile += '"vpnipaddr":"$(ipconfig | where {$_ -match 'IPv4.+\s(\d{1,2}\.\d{1,3}\.\d{1,3}\.\d{1,3})' } | out-null; $Matches[1])", \r\n';
+            hamonizeWinOSLogDataPSFile += '"ipaddr": "$(ipconfig | where {$_ -match "IPv4.+\\s(\\d{1,3}\.\\d{1,3}\.\\d{1,3}\.\\d{1,3})" } | out-null; $Matches[1])", \r\n';
+            hamonizeWinOSLogDataPSFile += '"vpnipaddr":"$(ipconfig | where {$_ -match "IPv4.+\\s(\\d{1,2}\.\\d{1,3}\.\\d{1,3}\.\\d{1,3})" } | out-null; $Matches[1])", \r\n';
             hamonizeWinOSLogDataPSFile += '"hostname":"$env:computername", \r\n';
             hamonizeWinOSLogDataPSFile += '"CPUID":"cpuid", \r\n';
             hamonizeWinOSLogDataPSFile += '"pcuuid":"' + winUUID + '", \r\n';
@@ -340,7 +353,7 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         StringPsData += 'New-Item -Name psscripts.ini -Value "' + hamonizeWinOSGOPScirptFile + '" \r\n';
 
         if (vpnusedYn == 1) {
-            StringPsData += "wget http://" + VpnUrl + ":3000/getClientsDownload/winovpn -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\hamonize-winkey.ovpn'" + " \r\n";
+            StringPsData += "wget http://" + VpnUrl + ":3000/getClientsDownload/winovpn -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\winkey.ovpn'" + " \r\n";
         }
 
 
@@ -375,7 +388,7 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
 
         // console.log("StringPsData===" + StringPsData);
 
-        let fileDir = winFolderDir + "gop.ps1";
+        let fileDir =  winFolderDir + "gop.ps1";
         fs.writeFile(fileDir, StringPsData, (err) => {
             if (err) {
                 return reject("N");

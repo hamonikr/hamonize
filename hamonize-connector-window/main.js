@@ -43,7 +43,7 @@ function createWindow() {
 		icon: 'icons/png/emb2.png',
 		skipTaskbar: false,
 		'width': 620,
-		'height': 340,
+		'height': 400,
 		frame: true,
 		alwaysOnTop: false,
 		resizable: true,
@@ -111,32 +111,32 @@ const createTray = () => {
 	trayIcon = new Tray(__dirname + '/icons/icon16.png');
 	//tray.setTitle('hello world');
 	const trayMenuTemplate = [{
-			label: 'Hamonikr-finder',
-			//enabled: false
-			click: function () {
-				toggleWindow();
-			}
-		},
-		{
-			label: 'Settings',
-			click: function () {
-				log.info("Clicked on settings");
-				settingWindow.show();
-				log.info("Clicked on settings222");
-			}
-		},
-		{
-			label: 'Help',
-			click: function () {
-				log.info("Clicked on Help")
-			}
-		},
-		{
-			label: 'Quit',
-			click: () => {
-				app.quit();
-			}
+		label: 'Hamonikr-finder',
+		//enabled: false
+		click: function () {
+			toggleWindow();
 		}
+	},
+	{
+		label: 'Settings',
+		click: function () {
+			log.info("Clicked on settings");
+			settingWindow.show();
+			log.info("Clicked on settings222");
+		}
+	},
+	{
+		label: 'Help',
+		click: function () {
+			log.info("Clicked on Help")
+		}
+	},
+	{
+		label: 'Quit',
+		click: () => {
+			app.quit();
+		}
+	}
 	]
 
 	let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
@@ -153,7 +153,7 @@ app.on('ready', () => {
 
 app.on('window-all-closed', function () {
 	if (process.platform !== 'darwin') {
-		mainWindow.setSize(500, 70);
+		// mainWindow.setSize(500, 70);
 		app.quit();
 	}
 });
@@ -348,7 +348,7 @@ ipcMain.on('hamonize_org_settings', (event) => {
 //== STEP 2. add Client Pc Data Save on Center============================
 //========================================================================
 ipcMain.on('pcInfoChk', (event, groupname, sabun, username) => {
-	mainWindow.setSize(620, 340);
+	mainWindow.setSize(620, 400);
 	sysInfo(event, groupname, sabun, username);
 	// console.log("CenterUrl===" + winHamonize.fn_telegrafConfFile());
 
@@ -360,7 +360,7 @@ ipcMain.on('pcInfoChk', (event, groupname, sabun, username) => {
 //========================================================================
 
 ipcMain.on('install_program_Ready', (event) => {
-	mainWindow.setSize(620, 540);
+	mainWindow.setSize(620, 400);
 
 	axios.get(baseurl + '/hmsvc/isVpnUsed', '', {
 		headers: {
@@ -368,7 +368,6 @@ ipcMain.on('install_program_Ready', (event) => {
 		}
 	}).then((res) => {
 		console.log("res.data======" + JSON.stringify(res.data));
-		console.log("===============vvvvvvvvvvvvvvvvvv=========================+" + res.data[0]["vpn_used"]);
 		winHamonize.setVpn_userd(res.data[0]["vpn_used"]);
 	}).catch((error) => {
 		console.log(error);
@@ -392,6 +391,12 @@ const makePsFile = async (event) => {
 	//	기본폴더 생성
 	let mkResult = await winHamonize.fn_mk_base_folder(winFolderDir);
 	console.log("mkResult================" + mkResult);
+
+	// H-User(Remote Tool) Run Script File
+	let fn_mk_HUser_RunResult = await winHamonize.fn_mk_HUser_Run(winFolderDir);
+	console.log("fn_mk_HUser_RunResult================" + fn_mk_HUser_RunResult);
+
+
 	// 외부 인스톨 파일 설치
 	let setInstallProgm_result = await winHamonize.fn_install_Program_settings_step(winFolderDir, winHamonize.getVpn_used());
 	console.log("setInstallProgm============+" + setInstallProgm_result);
@@ -454,6 +459,16 @@ const installHamonize = async (event) => {
 		await ps.asyncInvoke();
 		console.log("=== GOP === END]");
 
+
+		// H-User(Romote Tool)run .ps1
+		console.log("=== H-User(Romote Tool)run === START]");
+		tmpps = winFolderDir + "HUserRun.ps1";
+		ps.asyncAddCommand("powershell.exe -ExecutionPolicy Bypass -File " + tmpps);
+		await ps.asyncInvoke();
+
+
+		console.log("=== H-User(Romote Tool)run === END]");
+	
 
 		console.log("Step4. Install End ");
 
