@@ -79,7 +79,6 @@ public class PolicyUpdtController {
 			listMap = aService.getApt();
 
 
-			System.out.println("comparing....\n");
 			// APT저장소와 업데이트목록 비교후 등록 및 업데이트
 			for (int i = 0; i < listMap.size(); i++) {
 				boolean chk = false;
@@ -108,7 +107,6 @@ public class PolicyUpdtController {
 
 				// 다시 새로운 패키지 정보 비교해서 디비에 저장
 				int result = uService.updtCompareSave(params);
-				System.out.println("result====" + result);
 			}
 			pList = uService.updtList(vo);
 		} catch (Exception e) {
@@ -139,7 +137,6 @@ public class PolicyUpdtController {
 			resultSet.add(resultMap);
 		}
 		params.put("data", resultSet);
-		System.out.println("params..." + params);
 		int result = 0;
 		uService.updtDelete(params);
 		result = uService.updtSave(params);

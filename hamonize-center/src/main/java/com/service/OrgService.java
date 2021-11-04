@@ -65,7 +65,6 @@ public class OrgService {
 			orgPath = orgMapper.groupUpperCode(orgvo);
 			newOrgPath = orgMapper.groupNewUpperCode(orgvo);
 		}
-		System.out.println("orgvo p_seq > " + orgvo.getP_seq());
 
 		if (orgvo.getP_seq() == null) {// 최상위 회사의 부서일 경우
 			orgvo.setP_seq(0);
@@ -99,7 +98,7 @@ public class OrgService {
 				// ldap 서버 업데이트
 				con.updateOu(oldOrgVo, orgvo);
 			} else {
-				System.out.println("수정할 사항 없음");
+				logger.info("수정할 사항 없음");
 			}
 		}
 
@@ -116,7 +115,6 @@ public class OrgService {
 		List<OrgVo> childOrg = orgMapper.searchChildDept(orgvo);
 
 		for (int i = 0; i < childOrg.size(); i++) {
-			// System.out.println("childOrg 삭제할 하위의 seq "+ childOrg.get(i).getSeq());
 			orgMapper.deleteChildUser(childOrg.get(i));
 		}
 		orgMapper.deleteChildUser(orgvo);

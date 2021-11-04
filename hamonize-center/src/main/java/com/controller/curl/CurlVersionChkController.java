@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +31,9 @@ public class CurlVersionChkController {
 
 	@Autowired
 	private VersionChkService vcService;
-
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@RequestMapping(value = "/versionchk", method = RequestMethod.POST)
 	public String getAgentJob(HttpServletRequest request, VersionChkVo vo, PagingVo pagingVo)
 			throws Exception {
@@ -43,15 +47,13 @@ public class CurlVersionChkController {
 		try {
 			BufferedReader reader = request.getReader();
 			while ((line = reader.readLine()) != null) {
-				System.out.println("line===> " + line);
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
-		System.out.println("json===> " + json);
 
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
@@ -71,21 +73,7 @@ public class CurlVersionChkController {
 		}
 
 		List<VersionChkVo> esVo = vcService.chkVersionInfo(inputVo, pagingVo);
-		System.out.println("===============================");
-		for (VersionChkVo tempValue : esVo) {
-			System.out.println("============> " + tempValue);
-			System.out.println("============> " + tempValue.getUuid());
-			System.out.println("============> " + tempValue.getDatetime());
-			System.out.println("============> " + tempValue.getHostname());
-			System.out.println("============> " + tempValue.getPcmngr());
-			System.out.println("============> " + tempValue.getAgent());
-		}
 
-
-
-		System.out.println("//===================================");
-		System.out.println("//result data is : " + inputVo);
-		System.out.println("//===================================");
 
 		return output;
 	}

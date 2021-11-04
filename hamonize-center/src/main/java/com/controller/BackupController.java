@@ -28,7 +28,6 @@ import com.service.OrgService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-
 @Controller
 @RequestMapping("/backupRecovery")
 public class BackupController {
@@ -59,16 +58,13 @@ public class BackupController {
 
 		model.addAttribute("oList", jsonArray);
 
-
 		return "/backup/backupCycle";
 
 	}
 
-
 	@ResponseBody
 	@RequestMapping(value = "backupSave", method = RequestMethod.POST)
-	public String backupSave(HttpSession session, Model model, BackupVo vo,
-			@RequestParam Map<String, Object> params) {
+	public String backupSave(HttpSession session, Model model, BackupVo vo, @RequestParam Map<String, Object> params) {
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
 		JsonArray jsonArray = (JsonArray) jp.parse(data);
@@ -90,7 +86,6 @@ public class BackupController {
 			}
 		}
 		params.put("data", resultSet);
-		System.out.println("params..." + params);
 		bService.backupDelete(params);
 		result = bService.backupSave(params);
 
@@ -131,12 +126,10 @@ public class BackupController {
 
 	@ResponseBody
 	@RequestMapping(value = "backupRCShow", method = RequestMethod.POST)
-	public JSONArray backupRCShow(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
+	public JSONArray backupRCShow(HttpSession session, Model model, @RequestParam Map<String, Object> params) {
 		JSONArray result = new JSONArray();
 		List<Map<String, Object>> resultSet;
 
-		System.out.println("backupRCShow org_seq > " + params.get("org_seq").toString());
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		resultSet = bService.backupRCApplcView(params);
 
@@ -148,10 +141,8 @@ public class BackupController {
 				jo.put("pc_uuid", resultSet.get(i).get("pc_uuid").toString());
 				jo.put("pc_hostname", resultSet.get(i).get("pc_hostname").toString());
 				result.add(jo);
-				System.out.println(resultSet.get(i));
 			}
 		}
-		System.out.println(result);
 		JSONObject data = new JSONObject();
 		return result;
 
@@ -159,13 +150,10 @@ public class BackupController {
 
 	@ResponseBody
 	@RequestMapping(value = "backupRCList", method = RequestMethod.POST)
-	public JSONArray backupRCList(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
+	public JSONArray backupRCList(HttpSession session, Model model, @RequestParam Map<String, Object> params) {
 		JSONArray result = new JSONArray();
 		List<Map<String, Object>> resultSet;
 
-
-		System.out.println("backupRCList seq : " + params.get("seq").toString());
 		params.put("seq", Integer.parseInt(params.get("seq").toString()));
 
 		resultSet = bService.backupRecoveryList(params);
@@ -180,13 +168,8 @@ public class BackupController {
 				jo.put("br_backup_name", resultSet.get(i).get("br_backup_name").toString());
 				jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
 				result.add(jo);
-				System.out.println("backupRCList :  >>>> " + resultSet.get(i));
 			}
-		} else {
-			System.out.println("backupRCList is empty..");
 		}
-
-		System.out.println(result);
 
 		return result;
 
@@ -194,8 +177,7 @@ public class BackupController {
 
 	@ResponseBody
 	@RequestMapping(value = "backupRCSave", method = RequestMethod.POST)
-	public String backupRCSave(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
+	public String backupRCSave(HttpSession session, Model model, @RequestParam Map<String, Object> params) {
 		params.put("pc_seq", Integer.parseInt(params.get("dept_seq").toString())); // dept_seq는
 																					// pc시퀀스번호
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
@@ -218,6 +200,5 @@ public class BackupController {
 		}
 
 	}
-
 
 }

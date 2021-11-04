@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #사용안함
 SPLIT_GUBUN=`cat /etc/hamonize/security/security.hm | awk -F'=' '{print $1}'`

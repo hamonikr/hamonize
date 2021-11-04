@@ -72,8 +72,7 @@ public class PolicyFireWallController {
 
 	@ResponseBody
 	@RequestMapping(value = "/fsave", method = RequestMethod.POST)
-	public String finsert(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
+	public String finsert(HttpSession session, Model model, @RequestParam Map<String, Object> params) {
 
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
@@ -90,7 +89,6 @@ public class PolicyFireWallController {
 
 		params.put("data", resultSet);
 
-		System.out.println("params..." + params);
 		int result = 0;
 
 		fService.fireWallDelete(params);
@@ -125,8 +123,8 @@ public class PolicyFireWallController {
 
 	@ResponseBody
 	@RequestMapping(value = "fManagePopList", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopList(PolicyFireWallVo vo, PagingVo pagingVo,
-			HttpSession session, HttpServletRequest request) {
+	public Map<String, Object> dManagePopList(PolicyFireWallVo vo, PagingVo pagingVo, HttpSession session,
+			HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
 
@@ -155,8 +153,7 @@ public class PolicyFireWallController {
 
 	@ResponseBody
 	@RequestMapping(value = "/fManagePopSave", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopSave(HttpSession session, PolicyFireWallVo vo)
-			throws Exception {
+	public Map<String, Object> dManagePopSave(HttpSession session, PolicyFireWallVo vo) throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {
@@ -183,8 +180,7 @@ public class PolicyFireWallController {
 
 	@ResponseBody
 	@RequestMapping(value = "/fManagePopDelete", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyFireWallVo vo)
-			throws Exception {
+	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyFireWallVo vo) throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {

@@ -15,7 +15,6 @@ import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
 import com.paging.PagingVo;
 
-
 @Service
 public class AuditLogService {
 
@@ -26,30 +25,30 @@ public class AuditLogService {
 	public List<AuditLogVo> userLogList(AuditLogVo vo, PagingVo pagingVo) throws ParseException {
 
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
-		
+
 		paramMap.put("auditLogVo", vo);
 		paramMap.put("pagingVo", pagingVo);
 		List<AuditLogVo> list = auditLogMapper.userLogListInfo(paramMap);
-		
+
 		for (AuditLogVo el : list) {
 			logger.info("spent time  --> {}", el.getSpent_time());
-			if(el.getSpent_time() != null){
-				String[] harray = el.getSpent_time().split("\\:");	
+			if (el.getSpent_time() != null) {
+				String[] harray = el.getSpent_time().split("\\:");
 				int hours = Integer.valueOf(harray[0]);
-		
-				if(hours > 24){
-					int days = hours/24;
-					Double d_hours =((hours/24.0) - days)*24; 
-					int n_hours =(int) Math.round(d_hours);
 
-					logger.info("{}일 {}:{}:{}", days,n_hours ,harray[1],harray[2]);
-					String convert_string = days+"일 "+n_hours+":"+harray[1]+":"+harray[2] ;
+				if (hours > 24) {
+					int days = hours / 24;
+					Double d_hours = ((hours / 24.0) - days) * 24;
+					int n_hours = (int) Math.round(d_hours);
+
+					logger.info("{}일 {}:{}:{}", days, n_hours, harray[1], harray[2]);
+					String convert_string = days + "일 " + n_hours + ":" + harray[1] + ":" + harray[2];
 					el.setSpent_time(convert_string);
-					
+
 				}
-					
+
 			}
-			
+
 		}
 
 		return list;
@@ -116,7 +115,6 @@ public class AuditLogService {
 			jsonObject.put("uuid", params.get("pc_uuid"));
 			result = auditLogMapper.updtList(jsonObject);
 
-
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -137,17 +135,11 @@ public class AuditLogService {
 
 			List<String> list = auditLogMapper.programPackageList();
 
-			for (int i = 0; i < list.size(); i++) {
-				System.out.println("list : " + list.get(i).toString());
-
-			}
-
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
 			jsonObject.put("uuid", params.get("pc_uuid"));
 
 			result = auditLogMapper.programList(jsonObject);
-
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -174,7 +166,6 @@ public class AuditLogService {
 			jsonObject.put("uuid", params.get("pc_uuid"));
 
 			result = auditLogMapper.firewallList(jsonObject);
-
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -203,7 +194,6 @@ public class AuditLogService {
 
 			result = auditLogMapper.deviceList(jsonObject);
 
-
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -223,8 +213,6 @@ public class AuditLogService {
 		try {
 
 			jsonObject.put("uuid", params.get("pc_uuid"));
-			System.out.println("deviceparams...." + params);
-			System.out.println("deviceuuid=======" + params.get("pc_uuid"));
 			result = auditLogMapper.nxssList(jsonObject);
 
 		} catch (Exception e) {

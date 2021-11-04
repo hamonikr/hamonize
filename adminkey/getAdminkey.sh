@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # download admin key and config files
 # example cmd
@@ -15,7 +15,7 @@
 
 ## test server
 CENTERURL="192.168.0.210:8080"
-USER= whoami
+USER=$(whoami)
 
 echo "user..? $USER"
 echo "PWD..? $PWD"

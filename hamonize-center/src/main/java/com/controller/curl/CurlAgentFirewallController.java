@@ -28,7 +28,6 @@ public class CurlAgentFirewallController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
 	/**
 	 * 에이전트에 방화벽정책 보내는 부분
 	 * 
@@ -69,8 +68,6 @@ public class CurlAgentFirewallController {
 			if (jsonProgrmData.size() == 0) {
 				output = "nodata";
 			} else {
-				System.out.println(
-						"jsonProgrmData.get(\"NODATA\")======" + jsonProgrmData.get("nodata"));
 				if (jsonProgrmData.get("nodata") != null) {
 					output = jsonProgrmData.get("nodata").toString();
 				} else {
@@ -81,15 +78,12 @@ public class CurlAgentFirewallController {
 			output = "nodata";
 		}
 
-
 		logger.info("//===================================");
 		logger.debug("/result data is : {}", output);
 		logger.info("//===================================// ");
 
 		return output;
 	}
-
-
 
 	public JSONObject progrmPolicyData(GetAgentFirewallVo getProgrmVo) {
 
@@ -115,8 +109,7 @@ public class CurlAgentFirewallController {
 		logger.info("===============================//");
 
 		// 방화벽 정책 가져오기
-		List<GetAgentFirewallVo> progrmPolicyData =
-				getAgentFirewallMapper.getListFirewallPolicy(getProgrmVo);
+		List<GetAgentFirewallVo> progrmPolicyData = getAgentFirewallMapper.getListFirewallPolicy(getProgrmVo);
 		logger.debug("//+progrmPolicyData.size() === {}", progrmPolicyData.size());
 
 		if (progrmPolicyData.size() == 0) {
@@ -177,7 +170,6 @@ public class CurlAgentFirewallController {
 
 		return jsonObject;
 	}
-
 
 	/*
 	 * 부서 UUID로 부서 seq 가져오기

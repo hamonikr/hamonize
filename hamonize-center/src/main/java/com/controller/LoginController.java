@@ -50,10 +50,6 @@ public class LoginController implements Serializable {
 
 		String pass_wd = request.getParameter("pass_wd");
 		LoginVO salt_vo = loginService.getSalt(params);
-		// String saltt = SHA256Util.generateSalt();
-		// logger.info("gen salt --- {} ", saltt);
-		// String pass = SHA256Util.getEncrypt(pass_wd, saltt);
-		// logger.info("gen pass --- {}", pass);
 
 		params.put("pass_wd", SHA256Util.getEncrypt(pass_wd, salt_vo.getSalt()));
 

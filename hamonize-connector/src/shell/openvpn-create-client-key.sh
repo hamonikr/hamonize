@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # 
 # 2021.07.02
 # INVESUME youngeun lee

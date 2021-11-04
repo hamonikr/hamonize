@@ -346,7 +346,6 @@ public class StringUtil {
      * </pre>
      */
     public static String nullConvert(Object src) {
-        // if (src != null && src.getClass().getName().equals("java.math.BigDecimal")) {
         if (src != null && src instanceof java.math.BigDecimal) {
             return ((BigDecimal) src).toString();
         }

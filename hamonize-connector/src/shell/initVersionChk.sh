@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #=== install program version check  ====
 LOGFILE="/var/log/hamonize/propertiesJob/propertiesJob.log"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #GUI=false; terminal=false # force relaunching as if launching from GUI without a GUI interface installed, but only do this for testing
 source "$SCRIPT_DIR"/functions.sh #folder local version

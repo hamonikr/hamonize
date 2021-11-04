@@ -77,9 +77,6 @@ public class CurlAgentBackupController {
 		}
 
 
-		System.out.println("//===================================");
-		System.out.println("//result data is : " + output);
-		System.out.println("//===================================");
 
 		return output;
 	}
@@ -93,14 +90,10 @@ public class CurlAgentBackupController {
 
 		int retInsertSelectVal = getAgentBackupMapper.setInsertSelect(agentBackupVo);
 
-		System.out.println("//===============================");
-		System.out.println("//====retInsertSelectVal is : " + retInsertSelectVal);
-		System.out.println("//===============================");
 
 		// 정책 가져오기
 		List<GetAgentBackupVo> progrmBackupData =
 				getAgentBackupMapper.getListBackupPolicy(agentBackupVo);
-		System.out.println("//+progrmPolicyData.size() ===" + progrmBackupData.size());
 		if (progrmBackupData.size() == 0) {
 			jsonObject.put("nodata", "nodata");
 			return jsonObject;
@@ -110,9 +103,6 @@ public class CurlAgentBackupController {
 		JSONObject backupInfo = new JSONObject();
 		String arrAgentProgrmY = "", arrAgentProgrmN = "";
 		for (GetAgentBackupVo set : progrmBackupData) {
-			System.out.println("----> " + set.getBac_seq() + "==" + set.getOrg_seq() + "=="
-					+ set.getBac_cycle_option() + "==" + set.getBac_cycle_time() + "=="
-					+ set.getBac_gubun());
 
 			backupInfo = new JSONObject();
 			backupInfo.put("cycle_option", set.getBac_cycle_option());

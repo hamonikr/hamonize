@@ -136,7 +136,7 @@ bool TextMessageFeaturePlugin::handleFeatureMessage( VeyonWorkerInterface& worke
 	if( message.featureUid() == m_textMessageFeature.uid() )
 	{
 		QMessageBox* messageBox = new QMessageBox( static_cast<QMessageBox::Icon>( message.argument( Argument::Icon ).toInt() ),
-												   tr( "Message from teacher" ),
+												   tr( "Message from administrator" ),
 												   message.argument( Argument::Text ).toString() );
 		messageBox->show();
 

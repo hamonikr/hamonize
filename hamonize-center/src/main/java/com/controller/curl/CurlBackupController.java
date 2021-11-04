@@ -17,10 +17,8 @@ import com.model.GetAgentJobVo;
 @RequestMapping("/backup")
 public class CurlBackupController {
 
-
 	@Autowired
 	private IGetAgentJobMapper agentJobMapper;
-
 
 	@RequestMapping(value = "/setBackupJob", method = RequestMethod.POST)
 	public String setBackupJob(@RequestBody String valLoad) throws Exception {
@@ -28,7 +26,6 @@ public class CurlBackupController {
 		String output = "";
 
 		CurlPcBackupVo cbVo = new CurlPcBackupVo();
-
 
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(valLoad);
@@ -44,24 +41,16 @@ public class CurlBackupController {
 			cbVo.setBr_backup_gubun(tempObj.get("gubun").toString());
 		}
 
-
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(cbVo.getBk_uuid());
 		agentVo.setSeq(cbVo.getBr_org_seq());
 		agentVo = agentJobMapper.getAgentJobPcUUIDInBACKUP(agentVo);
 
-		System.out.println("agentVo org_seq >>> " + agentVo.getOrg_seq());
-		System.out.println("agentVo pc_seq >>> " + agentVo.getSeq());
-
 		cbVo.setBr_org_seq(agentVo.getOrg_seq());
 		cbVo.setDept_seq(agentVo.getSeq());
 		agentJobMapper.insertBackupInfo(cbVo);
 
-
 		return output;
 	}
 
-
 }
-
-
