@@ -27,7 +27,7 @@ public class AgentAptListController {
 
 			String inputLine = "";
 
-			while ((inputLine = bufferedReader.readLine()) != null) {
+			while (!(inputLine = bufferedReader.readLine()).isEmpty()) {
 
 				if (inputLine.indexOf("Package") == 0) {
 					list.add(inputLine);
