@@ -35,7 +35,6 @@ public class CurlAgentRecoveryController {
 	@RequestMapping(value = "/recov", method = RequestMethod.GET)
 	public String getRecovAgentJob(@RequestParam(value = "name", required = false) String uuid,
 			@RequestParam(value = "wget", required = false) String wget) throws Exception {
-		System.out.println("//============ recov =======================");
 
 		String output = "";
 		uuid = uuid.trim();
@@ -52,12 +51,6 @@ public class CurlAgentRecoveryController {
 		int chkProgrmPolicy = getAgentRecoveryMapper.getAgentWorkYn(agentFirewallVo);
 		int chkRecoveryLog = getAgentRecoveryMapper.getInitChk(agentFirewallVo);
 
-		System.out.println("//===================================");
-		System.out.println("//getRecovAgent work yn === chkProgrmPolicy :  " + chkProgrmPolicy);
-		System.out.println("//getRecovAgent work yn === chkRecoveryLog :  " + chkRecoveryLog);
-		System.out.println("//===================================");
-
-
 		if (chkProgrmPolicy == 0) {
 			if (chkRecoveryLog == 0) {
 				JSONObject jsonProgrmData = recoveryPolicyData(agentFirewallVo);
@@ -69,25 +62,14 @@ public class CurlAgentRecoveryController {
 			output = "nodata";
 		}
 
-		System.out.println("//===================================");
-		System.out.println("//result data is : " + output);
-		System.out.println("//===================================");
-
 		return output;
 	}
-
-
 
 	public JSONObject recoveryPolicyData(GetAgentRecoveryVo getProgrmVo) {
 
 		JSONObject jsonObject = new JSONObject();
 
-
 		int retInsertSelectVal = getAgentRecoveryMapper.setInsertSelect(getProgrmVo);
-
-		System.out.println("//===============================");
-		System.out.println("//====retInsertSelectVal is : " + retInsertSelectVal);
-		System.out.println("//===============================");
 
 		List<GetAgentRecoveryVo> outputDatga = getAgentRecoveryMapper.getAgentWorkData(getProgrmVo);
 
@@ -95,12 +77,6 @@ public class CurlAgentRecoveryController {
 			jsonObject.put("PATH", set.getBr_backup_path());
 			jsonObject.put("NAME", set.getBr_backup_name());
 		}
-
-
-		System.out.println("//===============================");
-		System.out.println("//==jsonObject  data is : " + jsonObject);
-		System.out.println("//===============================");
-
 
 		return jsonObject;
 	}

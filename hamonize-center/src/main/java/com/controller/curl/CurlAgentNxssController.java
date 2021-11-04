@@ -24,8 +24,6 @@ public class CurlAgentNxssController {
 	@Autowired
 	private IGetAgentNxssMapper getAgentNxssMapper;
 
-
-
 	@RequestMapping(value = "/nxss", method = RequestMethod.GET)
 	public String getAgentJob(@RequestParam(value = "name", required = false) String sgbUuid,
 			@RequestParam(value = "wget", required = false) String sgbWget) throws Exception {
@@ -46,8 +44,6 @@ public class CurlAgentNxssController {
 		GetAgentNxssVo chkProgrmPolicy = getAgentNxssMapper.getAgentWorkYn(agentNxssVo);
 
 		if (chkProgrmPolicy == null) {
-			System.out.println("//=== init ");
-
 			int retInsertSelectVal = getAgentNxssMapper.setInsertSelect(agentNxssVo);
 			JSONObject jsonNxssData = progrmPolicyData(agentNxssVo);
 			output = jsonNxssData.toJSONString();
@@ -63,21 +59,15 @@ public class CurlAgentNxssController {
 
 		}
 
-
-		System.out.println("//===================================");
-		System.out.println("//result data is : " + output);
-		System.out.println("//===================================");
-
 		return output;
 	}
-
-
 
 	public JSONObject progrmPolicyData(GetAgentNxssVo agentNxssVo) {
 
 		JSONObject jsonObject = new JSONObject();
 
-		String nxssList = "", fording = "", message = "";;
+		String nxssList = "", fording = "", message = "";
+		;
 		int nxssListCnt = 0;
 		List<GetAgentNxssVo> nxssData = getAgentNxssMapper.getListNxssPolicy(agentNxssVo);
 
@@ -90,20 +80,13 @@ public class CurlAgentNxssController {
 				message += bnif.getSma_info() + "\n";
 			}
 		}
-		System.out.println("nxssListCnt======================" + nxssListCnt);
 		jsonObject.put("nxssList", nxssList);
 		jsonObject.put("nxssListCnt", nxssListCnt);
 		jsonObject.put("fording", fording);
 		jsonObject.put("message", message);
-		System.out.println("//===============================");
-		System.out.println("//==nxssList  data is : " + nxssList);
-		System.out.println("//==fording  data is : " + fording);
-		System.out.println("//==message  data is : " + message);
-		System.out.println("//==jsonObject  data is : " + jsonObject);
-		System.out.println("//===============================");
+
 		return jsonObject;
 	}
-
 
 	/**
 	 * 부서 UUID로 부서 seq 가져오기

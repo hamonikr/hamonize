@@ -209,7 +209,7 @@ public class CurlController {
 			while ((line = reader.readLine()) != null) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
 			logger.error("Error reading JSON string: {}", e.getMessage(), e);
 			throw e;
@@ -449,7 +449,7 @@ public class CurlController {
 				logger.debug("line===> {}", line);
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
 			logger.error("Error reading JSON string: {}", e.toString());
 		}

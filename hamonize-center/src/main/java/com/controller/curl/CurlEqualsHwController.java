@@ -58,6 +58,7 @@ public class CurlEqualsHwController {
 			while ((line = reader.readLine()) != null) {
 				json.append(line);
 			}
+			reader.close();
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

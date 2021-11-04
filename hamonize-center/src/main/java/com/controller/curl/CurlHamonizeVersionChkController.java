@@ -16,7 +16,6 @@ import com.model.hamonizeVersionChkVo;
 @RequestMapping("/hmsvc")
 public class CurlHamonizeVersionChkController {
 
-
 	@Autowired
 	IHamonizeVersionChkMapper hamonizeVersionChkMapper;
 
@@ -34,12 +33,8 @@ public class CurlHamonizeVersionChkController {
 		JSONArray hmdArray = (JSONArray) jsonObj.get("versionchk");
 		hamonizeVersionChkVo hamonizeVersionChkVo = new hamonizeVersionChkVo();
 
-
 		for (int i = 0; i < hmdArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
-
-			System.out.println(
-					"tempObj.get(\"state\").toString()====" + tempObj.get("state").toString());
 
 			hamonizeVersionChkVo.setDebname(tempObj.get("debname").toString());
 			hamonizeVersionChkVo.setDebversion(tempObj.get("debver").toString());
@@ -57,21 +52,14 @@ public class CurlHamonizeVersionChkController {
 			hamonizeVersionChkMapper.setHamonizeAgentIfnoOnPc(hamonizeVersionChkVo);
 		} else {
 			// update
-			System.out.println("---- update ----");
 			// 이전버전이랑 다르면 업데이트
 			if (!hamonizeVersionChkVo.getDebversion().equals(chkVo.getDebversion())
 					|| !hamonizeVersionChkVo.getDebstatus().contentEquals(chkVo.getDebstatus())) {
-				System.out.println("hamonizeVersionChkVo is not equals");
 				hamonizeVersionChkMapper.updateHamonizeAgentIfnoOnPc(hamonizeVersionChkVo);
-			} else {
-				// 이전버전이랑 같음
-				System.out.println(" hamonizeVersionChkVo is quals");
 			}
 
 		}
 
 	}
-
-
 
 }

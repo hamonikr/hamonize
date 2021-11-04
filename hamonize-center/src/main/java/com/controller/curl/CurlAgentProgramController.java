@@ -93,7 +93,6 @@ public class CurlAgentProgramController {
 			getProgrmVo.setPa_seq(agentoldseqVo.getPa_seq());
 
 		} else {
-			System.out.println("getAgentOldSeq is no data");
 			getProgrmVo.setOrg_seq(getProgrmVo.getOrg_seq());
 			getProgrmVo.setPcm_uuid(getProgrmVo.getPcm_uuid());
 		}
@@ -133,7 +132,6 @@ public class CurlAgentProgramController {
 				output = "nodata";
 			} else {
 				for (int a = 0; a < progrmDataList.size(); a++) {
-					System.out.println(progrmDataList.get(a).getPcm_name());
 
 					if (progrmDataList.get(a).getPcm_name() != null) {
 						if (progrmDataList.size() - 1 == a) {

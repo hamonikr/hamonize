@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/getApt")
 public class AgentAptListController {
 
-
 	@Value("${apt.ip}")
 	private static String aptIp;
 
@@ -24,8 +23,7 @@ public class AgentAptListController {
 		List<String> list = new ArrayList<String>();
 		URL url = new URL(apiURL);
 
-		try (BufferedReader bufferedReader =
-				new BufferedReader(new InputStreamReader(url.openStream()))) {
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
 
 			String inputLine = "";
 
@@ -41,9 +39,9 @@ public class AgentAptListController {
 					list.add(inputLine);
 				}
 			}
+			bufferedReader.close();
 			return list;
 		}
-
 
 	}
 

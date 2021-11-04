@@ -16,14 +16,10 @@ public class VersionChkService {
 	@Autowired
 	private IVersionChkMapper versionChkMapper;
 
-	
 	public List<VersionChkVo> chkVersionInfo(VersionChkVo vo, PagingVo pagingVo) {
 
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
 
-		
-		System.out.println("vo==========="+ vo);
-		
 		paramMap.put("versionChkVo", vo);
 		paramMap.put("pagingVo", pagingVo);
 		List<VersionChkVo> tt = versionChkMapper.chkVersionInfo(paramMap);

@@ -79,8 +79,7 @@ public class PolicyDeviceController {
 
 	@ResponseBody
 	@RequestMapping(value = "/dsave", method = RequestMethod.POST)
-	public String dinsert(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
+	public String dinsert(HttpSession session, Model model, @RequestParam Map<String, Object> params) {
 
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
@@ -94,7 +93,6 @@ public class PolicyDeviceController {
 			resultSet.add(resultMap);
 		}
 		params.put("data", resultSet);
-		System.out.println("params..." + params);
 		int result = 0;
 
 		dService.deviceDelete(params);
@@ -110,7 +108,6 @@ public class PolicyDeviceController {
 	@ResponseBody
 	@RequestMapping(value = "dshow", method = RequestMethod.POST)
 	public JSONObject dshow(HttpSession session, Model model, PolicyDeviceVo vo) {
-		System.out.println("asd" + vo.getSm_seq());
 		JSONObject data = new JSONObject();
 		try {
 			vo = dService.deviceApplcView(vo);
@@ -130,8 +127,8 @@ public class PolicyDeviceController {
 
 	@ResponseBody
 	@RequestMapping(value = "dManagePopList", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopList(PolicyDeviceVo vo, PagingVo pagingVo,
-			HttpSession session, HttpServletRequest request) {
+	public Map<String, Object> dManagePopList(PolicyDeviceVo vo, PagingVo pagingVo, HttpSession session,
+			HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
 
@@ -143,7 +140,6 @@ public class PolicyDeviceController {
 		int cnt = policyDeviceMapper.devicePopCount(vo);
 		pagingVo.setTotalRecordSize(cnt);
 		pagingVo = PagingUtil.setPaging(pagingVo);
-
 
 		try {
 			List<PolicyDeviceVo> gbList = dService.dManagePopList(vo, pagingVo);
@@ -160,11 +156,9 @@ public class PolicyDeviceController {
 		return jsonObject;
 	}
 
-
 	@ResponseBody
 	@RequestMapping(value = "/dManagePopSave", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopSave(HttpSession session, PolicyDeviceVo vo)
-			throws Exception {
+	public Map<String, Object> dManagePopSave(HttpSession session, PolicyDeviceVo vo) throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {
@@ -191,8 +185,7 @@ public class PolicyDeviceController {
 
 	@ResponseBody
 	@RequestMapping(value = "/dManagePopDelete", method = RequestMethod.POST)
-	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyDeviceVo vo)
-			throws Exception {
+	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyDeviceVo vo) throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {
@@ -216,6 +209,5 @@ public class PolicyDeviceController {
 		}
 		return jsonObject;
 	}
-
 
 }

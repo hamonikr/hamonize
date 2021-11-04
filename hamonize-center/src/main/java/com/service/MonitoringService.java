@@ -8,6 +8,7 @@ import com.mapper.IMonitoringMapper;
 import com.model.PcDataVo;
 import com.model.PcMemoryDataVo;
 
+import org.influxdb.dto.BoundParameterQuery;
 import org.influxdb.dto.BoundParameterQuery.QueryBuilder;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
@@ -39,8 +40,7 @@ public class MonitoringService {
 			for (int i = 0; i < list.size(); i++) {
 
 				for (int y = 0; y < influxList.size(); y++) {
-					if (list.get(i).get("pc_uuid").toString().trim()
-							.equals(influxList.get(y).getHost().trim())) {
+					if (list.get(i).get("pc_uuid").toString().trim().equals(influxList.get(y).getHost().trim())) {
 						list.get(i).put("pc_status", "true");
 					}
 				}
@@ -66,30 +66,29 @@ public class MonitoringService {
 		return memoryPointList;
 	}
 
-
-
 	public List<PcMemoryDataVo> getMemory(String host) {
 
 		JSONArray jsonArray = new JSONArray();
 		Object jObj = null;
 
-		Query mem_query = QueryBuilder.newQuery(
-				"SELECT value, host , type_instance FROM memory_value where type='percent' and time > now() -20s and host='"
-						+ host + "' order by time desc limit 6")
-				.forDatabase("collectd").create();
+//		Query mem_query = QueryBuilder.newQuery(
+//				"SELECT value, host , type_instance FROM memory_value where type='percent' and time > now() -20s and host='host' order by time desc limit 6")
+//				.forDatabase("collectd").create();
+
+		String s = "SELECT value, host , type_instance FROM memory_value where type='percent' and time > now() -20s and host=$host order by time desc limit 6";
+		Query mem_query = BoundParameterQuery.QueryBuilder.newQuery(s).bind("host", host).forDatabase("collectd")
+				.create();
+
 		QueryResult results = influxDBTemplate.query(mem_query);
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 
 		QueryResult queryResult = influxDBTemplate.query(mem_query);
 		int i = 0;
 
-
-		List<PcMemoryDataVo> memoryPointList =
-				resultMapper.toPOJO(queryResult, PcMemoryDataVo.class);
+		List<PcMemoryDataVo> memoryPointList = resultMapper.toPOJO(queryResult, PcMemoryDataVo.class);
 
 		return memoryPointList;
 	}
-
 
 	public List<PcDataVo> getCpu(String host) {
 

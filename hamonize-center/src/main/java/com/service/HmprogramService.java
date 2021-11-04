@@ -13,9 +13,6 @@ import com.mapper.IHmprogramMapper;
 import com.model.HmprogramVo;
 import com.paging.PagingVo;
 
-
-
-
 @Service
 public class HmprogramService {
 
@@ -26,7 +23,7 @@ public class HmprogramService {
 
 	@Autowired
 	private IGetAgentJobMapper getAgentJobMapper;
-	
+
 	public List<HmprogramVo> soliderList(HmprogramVo vo, PagingVo pagingVo) {
 
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
@@ -42,33 +39,25 @@ public class HmprogramService {
 	@Transactional
 	public void programManagementInsert(HmprogramVo nVo) throws Exception {
 
-//		String tmpPcmSeqVal = nVo.getProgrmCheckedList().toString();
 		String tmpPcmSeqVal = "{" + nVo.getProgrmCheckedList().toString() + "}";
 		nVo.setPpa_pcm_seq(tmpPcmSeqVal);
 
-		System.out.println("tmpPcmSeqVal=======" + tmpPcmSeqVal.toString());
-
-		
 		getAgentJobMapper.getAgentJobDelete();
-		
+
 		hmprogramMapper.deleteHmProgrm(nVo);
 		hmprogramMapper.save(nVo);
 	}
 
-	
 	public String programManagementList(HmprogramVo vo) {
-		//log.info("====== vo : " + vo.toString());
-		
+
 		String programManagementListStr = null;
-		
+
 		HmprogramVo programManagementList = hmprogramMapper.selectHmProgrm(vo);
-		
-		if(null != programManagementList && null != programManagementList.getPpa_pcm_seq()) {
+
+		if (null != programManagementList && null != programManagementList.getPpa_pcm_seq()) {
 			programManagementListStr = programManagementList.getPpa_pcm_seq();
 		}
-		
-		//log.info("====== programManagementList.getPpa_pcm_seq() : " + programManagementList);
-		
+
 		return programManagementListStr;
 	}
 }

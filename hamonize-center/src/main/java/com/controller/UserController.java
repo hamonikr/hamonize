@@ -74,7 +74,6 @@ public class UserController {
 		List<UserVo> list = new ArrayList<UserVo>();
 		vo.setOrg_seq(Integer.parseInt(params.get("org_seq").toString()));
 
-		System.out.println("선택된 org_seq : " + vo.getOrg_seq());
 
 		// 페이징
 		vo.setCurrentPage(vo.getListInfoCurrentPage());

@@ -13,15 +13,12 @@ import com.mapper.IHmSecurityMapper;
 import com.model.HmSecurityVo;
 import com.paging.PagingVo;
 
-
-
-
 @Service
 public class HmSecurityService {
 
 	@Autowired
 	private IHmSecurityMapper hmSecurityMapper;
-	
+
 	@Autowired
 	private IGetAgentJobMapper getAgentJobMapper;
 
@@ -43,31 +40,27 @@ public class HmSecurityService {
 		String tmpPcmSeqVal = "{" + nVo.getProgrmCheckedList().toString() + "}";
 		nVo.setPpa_pcm_seq(tmpPcmSeqVal);
 
-		
 		getAgentJobMapper.getAgentJobDelete();
-		
+
 		hmSecurityMapper.deleteHmSecurity(nVo);
 		int tt = hmSecurityMapper.InsertHmSecurity(nVo);
-		System.out.println("tt==+"+ tt);
 	}
-	
+
 	/**
 	 * 업데이트 정책 정보 가저오기
+	 * 
 	 * @param vo
 	 * @return
 	 */
 	public String selectHmSecurity(HmSecurityVo vo) {
-		//log.info("====== vo : " + vo.toString());
 		String securityListStr = null;
-		
+
 		HmSecurityVo securityList = hmSecurityMapper.selectHmSecurity(vo);
-		
-		if(null != securityList && null != securityList.getPpa_pcm_seq()) {
+
+		if (null != securityList && null != securityList.getPpa_pcm_seq()) {
 			securityListStr = securityList.getPpa_pcm_seq();
 		}
-		
-		//log.info("====== updateManagementList.getPpa_pcm_seq() : " + securityListStr);
-		
+
 		return securityListStr;
 	}
 

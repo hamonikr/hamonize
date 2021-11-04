@@ -85,7 +85,6 @@ public class LDAPConnection {
 
 		} else { // 최상위 회사와 그다음 부서
 			if (vo.getP_seq() == 1) {
-				System.out.println("ccc : " + vo.getP_seq());
 				// 최상위 부서 바로 다음 부서
 				String subStr[] = vo.getP_org_nm().split("\\ -");
 				upperDn = "ou=" + subStr[0] + ",";
@@ -98,7 +97,6 @@ public class LDAPConnection {
 		}
 
 		String Dn = "ou=" + ouName + baseDn;
-		System.out.println("Dn > " + Dn);
 
 		String DnCom = "ou=computers," + Dn;
 		String DnUser = "ou=users," + Dn;
@@ -265,8 +263,6 @@ public class LDAPConnection {
 	}
 
 	public void deleteUser(OrgVo ovo, UserVo uvo) throws NamingException {
-		System.out.println("cn : " + uvo.getUser_name());
-		System.out.println("All_org_nm : " + ovo.getAll_org_nm());
 
 		String baseDn = ",dc=hamonize,dc=com";
 		String upperDn = "";
@@ -277,13 +273,11 @@ public class LDAPConnection {
 		String[] p_array = str.split("\\|");
 
 		for (int i = p_array.length - 1; i >= 0; i--) {
-			System.out.println("p_array " + p_array[i]);
 			upperDn += ",ou=" + p_array[i];
 		}
 
 		baseDn = upperDn + baseDn;
 		String dn = "uid=" + uvo.getUser_name() + ",ou=users" + baseDn;
-		System.out.println("dn : " + dn);
 
 		try {
 			dc.destroySubcontext(dn);
@@ -401,7 +395,6 @@ public class LDAPConnection {
 
 		String[] p_array = str.split("\\|");
 		for (int i = p_array.length - 1; i >= 0; i--) {
-			System.out.println(p_array[i]);
 			upperDn += ",ou=" + p_array[i];
 		}
 
@@ -436,7 +429,6 @@ public class LDAPConnection {
 
 		String[] p_array = str.split("\\|");
 		for (int i = p_array.length - 1; i >= 0; i--) {
-			System.out.println(p_array[i]);
 			upperDn += ",ou=" + p_array[i];
 		}
 

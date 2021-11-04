@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +27,10 @@ public class CurlUpdtPolicyController {
 	@Autowired
 	IUpdtPollicyMapper updtPollicyMapper;
 
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	
 	/**
 	 * agent에서 프로그램 업데이트한 수행결과 값을 받아오는 부분 리턴 구분값 > 프로그램 설치 : insresert, 업데이트 : updtresert, 삭제 :
 	 * delresert
@@ -42,25 +48,21 @@ public class CurlUpdtPolicyController {
 		try {
 			BufferedReader reader = request.getReader();
 			while ((line = reader.readLine()) != null) {
-				System.out.println("수행결과 line===> " + line);
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		JSONParser Parser = new JSONParser(); // 여기서 에러
 		JSONObject jsonObj = (JSONObject) Parser.parse(json.toString());
 
 
-		/**
-		 * ====================================== deb insert =======================================
-		 */
+		 //deb insert
 		JSONArray insArray = (JSONArray) jsonObj.get("insresert");
 		UpdtPolicyVo[] updtVo = new UpdtPolicyVo[insArray.size()];
 		if (insArray.size() != 0) {
-			System.out.println("agent에서 보낸 결과 updtpolicy > insresert");
 			for (int i = 0; i < insArray.size(); i++) {
 				JSONObject object = (JSONObject) insArray.get(i);
 				updtVo[i] = new UpdtPolicyVo();
@@ -132,9 +134,6 @@ public class CurlUpdtPolicyController {
 
 		UpdtPolicyVo[] updtVoSum =
 				new UpdtPolicyVo[updtArray.size() + insArray.size() + delArray.size()];
-		System.out.println("updtVoSum======" + updtVoSum.length);
-		System.out.println(
-				"=====>" + updtArray.size() + "==" + insArray.size() + "==" + delArray.size());
 		System.arraycopy(updtVo, 0, updtVoSum, 0, updtVo.length);
 		System.arraycopy(updtVo2, 0, updtVoSum, updtVo.length, updtVo2.length);
 		System.arraycopy(updtVo3, 0, updtVoSum, updtVo2.length, updtVo3.length);
