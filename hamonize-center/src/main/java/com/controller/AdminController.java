@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController { 
 
 	@Autowired
 	private AdminService adminservice;
