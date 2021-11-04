@@ -346,7 +346,7 @@ function fnSave(){
                         <tr>
                             <td>
                                 <input type="radio" name="bac_gubun" id="bac_gubun3" value="M"><label for="bac_gubun3" class="pR50 blue">매월</label>
-                                <label for="date1"></label><input type="text" name="bac_cycle_date" id="date" class="input_type1" autocomplete="off"/> 
+                                <label for="date1"></label><input type="text" name="bac_cycle_date" id="date" class="input_type1" autocomplete="off" readonly/> 
                                 <a href="#divCalendar" class="btn_cal" onclick="openCalendar(document.getElementById('date')); return false;"><img src="/images/datepicker-icon.png" style="width:37px; height:37px;" alt="달력버튼"/></a> 
                             </td>
                         </tr>
