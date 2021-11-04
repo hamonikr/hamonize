@@ -48,6 +48,20 @@
 		where pc_uuid = #{pc_uuid}
 	</update>
 
+	<!-- updatePcinfo -->
+	<update id="moveTeam" parameterType="com.model.PcMangrVo">
+		update tbl_pc_mangr
+		set 	
+				org_seq = #{org_seq}
+		where seq = #{seq}
+	</update>
+
+	<!-- updatePcinfo -->
+	<update id="deletePc" parameterType="com.model.PcMangrVo">
+		delete from tbl_pc_mangr
+		where seq = #{seq}
+	</update>
+
 	<!-- vpn-auto-connection act -->
 	<!-- <update id="pcInfoChange" parameterType="com.model.PcMangrVo" >
 		update tbl_pc_mangr
@@ -163,6 +177,12 @@
 		where pc_uuid = #{pc_uuid}
 	</select>
 
+	<select id="teamList" resultType="com.model.OrgVo">
+		select *
+		from tbl_org
+		where section = 'S'
+	</select>
+
 	<!-- PcController.mngrListInfo -->
 	<select id="pcMntrngListInfo" resultType="com.model.PcMangrVo" parameterType="com.model.PcMangrVo">
 		SELECT 
@@ -199,7 +219,7 @@
 			(select org_nm from tbl_org where seq = org_seq)as deptname,
 			(select all_org_nm from tbl_org where seq = org_seq)as alldeptname,
 			(select org_nm from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_nm,
-			(select seq from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_seq
+			org_seq
 		FROM tbl_pc_mangr
 		<where>
 			1=1

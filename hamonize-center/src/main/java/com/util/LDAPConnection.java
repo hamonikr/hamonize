@@ -438,6 +438,78 @@ public class LDAPConnection {
 	}
 
 	/**
+	 * ldap 서버에 pc 이동 업데이트
+	 * 
+	 * @param oldVo
+	 * @param newVo
+	 * @throws NamingException
+	 */
+	public void movePc(PcMangrVo vo) throws NamingException {
+		String oldDn = "";
+		String newDn = "";
+		String oldupperDn = "";
+		String newupperDn = "";
+
+		String str = vo.getAlldeptname();
+
+		String[] p_array = str.split("\\|");
+		for (int i = p_array.length - 1; i >= 0; i--) {
+			System.out.println(p_array[i]);
+			oldupperDn += ",ou=" + p_array[i];
+		}
+		str = vo.getMove_org_nm();
+		p_array = str.split("\\|");
+		for (int i = p_array.length - 1; i >= 0; i--) {
+			System.out.println(p_array[i]);
+			newupperDn += ",ou=" + p_array[i];
+		}
+
+		oldDn = "cn=" + vo.getPc_hostname() + ",ou=computers" + oldupperDn + ",dc=hamonize,dc=com";
+		newDn = "cn=" + vo.getPc_hostname() + ",ou=computers" + newupperDn + ",dc=hamonize,dc=com";
+
+		try {
+			dc.rename(oldDn, newDn);
+
+		} catch (NamingException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			dc.close();
+		}
+
+	}
+
+	/**
+	 * ldap 서버에 pc 이동 업데이트
+	 * 
+	 * @param oldVo
+	 * @param newVo
+	 * @throws NamingException
+	 */
+	public void deletePc(PcMangrVo vo) throws NamingException {
+		String oldDn = "";
+		String oldupperDn = "";
+
+		String str = vo.getAlldeptname();
+		String[] p_array = str.split("\\|");
+		for (int i = p_array.length - 1; i >= 0; i--) {
+			System.out.println(p_array[i]);
+			oldupperDn += ",ou=" + p_array[i];
+		}
+
+		oldDn = "cn=" + vo.getPc_hostname() + ",ou=computers" + oldupperDn + ",dc=hamonize,dc=com";
+
+		try {
+			dc.destroySubcontext(oldDn);
+
+		} catch (NamingException e) {
+			logger.error(e.getMessage(), e);
+		} finally{
+			dc.close();
+		}
+
+	}
+
+	/**
 	 * ldap 서버에 pc vpn ip 업데이트
 	 * 
 	 * @param pvo

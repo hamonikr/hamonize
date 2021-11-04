@@ -204,10 +204,10 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						value.pc_macaddress = value.pc_macaddress.replaceAll("\""," ");
 						value.pc_macaddress	= value.pc_macaddress.toString();
 						if(vpn_used ==1 ){
-							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 						}else{
 							
-							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"')\">"+value.pc_hostname+"</a></td>";
+							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 						}
 
 						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
@@ -282,9 +282,9 @@ function getPcMngrList(){
 			value.pc_macaddress = value.pc_macaddress.replaceAll("\""," ");
 			
 			if(vpn_used ==1 ){
-					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 			}else{
-				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
+				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 			}
 			
 			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
@@ -450,7 +450,14 @@ function searchView(viewName, page){
 
 					<tr>
 						<th>부서이름</th>
-						<td colspan="3"><span id="detail_name"></span></td>
+						<td colspan="3"><span id="detail_name"></span>
+							&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="open_move(); return false;">부서이동</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;<select name="team" id="team" style="width: 200px; display:none;">
+							</select>
+							<button type="button" name="moveteam" id="moveteam" onclick="move_team(); return false;" style="width: 100px; display:none;">확인</button>
+							<input type="hidden" id="seq" />
+							<input type="hidden" id="old_org_seq" />
+						</td>
 					</tr>
 					<tr>
 						<th>OS</th>
@@ -487,6 +494,9 @@ function searchView(viewName, page){
 					</tr>
 				</tbody>
 			</table>
+			<div style="text-align: center;">
+				<button type="button" class="btn_type1" onclick="delete_pc(); return false;">삭제</button>
+			</div>
 		</div>
 		<a href="#" onclick="hide_layer();" class="pop_close">닫기</a>
 	</div>
@@ -494,7 +504,7 @@ function searchView(viewName, page){
 	
 	<!-- 레이어 팝업용 자바스크립트 -->
 	<script type="text/javascript">
-		function detail_popup(no,name,pc_os,hostname,pc_ip,pc_vpnip,macaddress,pc_disk,cpu,memory,first_date) {
+		function detail_popup(no,name,pc_os,hostname,pc_ip,pc_vpnip,macaddress,pc_disk,cpu,memory,first_date,seq,old_org_seq) {
 			console.log("detail_popup >> ");
 		
 			if(pc_os == "H"){
@@ -526,6 +536,8 @@ function searchView(viewName, page){
 			$("#detail_cpu").html(cpu);
 			$("#detail_memory").html(memory);
 			$("#detail_first_date").html(first_date);
+			$("#seq").val(seq);
+			$("#old_org_seq").val(old_org_seq);
 			
 			console.log("vpn_used >> "+vpn_used);
 			if(vpn_used != 0 && pc_vpnip != "no vpn"){
@@ -539,7 +551,7 @@ function searchView(viewName, page){
 			$("#bg_fix").show();
 		};
 		
-		function detail_popup_novpn(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date) {
+		function detail_popup_novpn(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date,seq,old_org_seq) {
 			console.log("detail_popup_novpn >> ");
 			
 			if(pc_os == "H"){
@@ -569,6 +581,8 @@ function searchView(viewName, page){
 			$("#detail_cpu").html(cpu);
 			$("#detail_memory").html(memory);
 			$("#detail_first_date").html(first_date);
+			$("#seq").val(seq);
+			$("#old_org_seq").val(old_org_seq);
 			
 			
 			$('#popup').show();
@@ -580,6 +594,73 @@ function searchView(viewName, page){
 			$("#bg_fix").hide();
 			$("#detail_vpnip").empty();
 		};
+
+		function open_move() {
+			if($('#team').css("display") == "none"){
+				$.ajax({
+					url: '/pcMngr/teamList',
+					type: 'post',
+					success: function(data){
+						for(var x = 0; x < data.length; x++){
+							var option = document.createElement("option");
+							option.innerText = data[x].org_nm;
+							option.value = data[x].seq;
+							$('#team').append(option);
+						}
+					},
+					error: function (request, status, error){
+						alert("error!!");
+						
+					}
+				});
+				$('#team').show();
+				$('#moveteam').show();
+			}else{
+				$('#team').html("");
+				$('#team').hide();
+				$('#moveteam').hide();
+		}
+		}
+
+
+		function move_team() {
+				$.ajax({
+					url: '/pcMngr/moveTeam',
+					type: 'post',
+					data:{seq:$('#seq').val(),org_seq:$('#team option:selected').val(),old_org_seq:$('#old_org_seq').val(),pc_hostname:$("#detail_hostname").text()},
+					success: function(data){
+						if(data == 1){
+							alert("완료되었습니다.");
+							location.reload();
+						}
+					},
+					error: function (request, status, error){
+						alert("실패하였습니다.");
+						
+					}
+				});
+					$('#team').html("");
+					$('#team').hide();
+					$('#moveteam').hide();
+		}
+
+		function delete_pc(){
+			$.ajax({
+				url: '/pcMngr/deletePc',
+				type: 'post',
+				data:{seq:$('#seq').val(),old_org_seq:$('#old_org_seq').val(),pc_hostname:$("#detail_hostname").text()},
+				success: function(data){
+					if(data == 1){
+						alert("완료되었습니다.");
+						location.reload();
+					}
+				},
+				error: function (request, status, error){
+					alert("실패하였습니다.");
+					
+				}
+			});
+		}
 	</script>
 	<%@ include file="../template/footer.jsp" %>
 	

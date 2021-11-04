@@ -48,6 +48,7 @@ public class PcMangrVo {
 	private String pcname;
 	private Integer org_seq;
 	private Integer move_org_seq;
+	private Integer old_org_seq;
 	private String org_nm;
 	private String move_org_nm;
 	private String[] updateBlockList;

@@ -29,6 +29,10 @@ public interface IPcMangrMapper {
 
 	public int updatePcinfo(PcMangrVo vo);
 
+	public int moveTeam(PcMangrVo vo);
+	
+	public int deletePc(PcMangrVo vo);
+
 	public int pcInfoChange(PcMangrVo vo);
 	
 	public int pcIpchnLog(PcMangrVo vo);
@@ -54,6 +58,8 @@ public interface IPcMangrMapper {
 	public PcMangrVo pcDetailInfo(PcMangrVo vo);
 	
 	public List<PcMangrVo> pcBlockListInfo(HashMap<String, Object> map);
+	
+	public List<OrgVo> teamList();
 	
 	public int updateBlock(PcMangrVo vo);
 	
