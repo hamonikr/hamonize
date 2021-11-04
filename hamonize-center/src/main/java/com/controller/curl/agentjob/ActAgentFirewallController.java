@@ -67,7 +67,7 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();
@@ -113,7 +113,7 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();
@@ -161,7 +161,7 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();
@@ -206,7 +206,7 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();
@@ -257,7 +257,7 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();
