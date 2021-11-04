@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
+import com.mapper.IPcMangrMapper;
 import com.model.OrgVo;
+import com.model.PcMangrVo;
 import com.util.LDAPConnection;
 
 @Service
@@ -25,6 +27,8 @@ public class OrgService {
 
 	@Autowired
 	private IOrgMapper orgMapper;
+	@Autowired
+	private IPcMangrMapper pcMapper;
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public JSONArray orgList(OrgVo orgvo) throws NamingException {
@@ -102,6 +106,38 @@ public class OrgService {
 				System.out.println("수정할 사항 없음");
 			}
 		}
+
+		return result;
+
+	}
+
+	public int pcMove(PcMangrVo vo) throws NamingException {
+		int result = 0;
+		result = pcMapper.moveTeam(vo);
+
+		LDAPConnection con = new LDAPConnection();
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+		
+		OrgVo orgPath = orgMapper.getAllOrgNm(vo.getOrg_seq());
+		vo.setMove_org_nm(orgPath.getAll_org_nm());
+		orgPath = orgMapper.getAllOrgNm(vo.getOld_org_seq());
+		vo.setAlldeptname(orgPath.getAll_org_nm());
+		con.movePc(vo);
+
+		return result;
+
+	}
+
+	public int deletePc(PcMangrVo vo) throws NamingException {
+		int result = 0;
+		result = pcMapper.deletePc(vo);
+
+		LDAPConnection con = new LDAPConnection();
+		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+		
+		OrgVo orgPath = orgMapper.getAllOrgNm(vo.getOld_org_seq());
+		vo.setAlldeptname(orgPath.getAll_org_nm());
+		con.deletePc(vo);
 
 		return result;
 

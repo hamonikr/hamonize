@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -116,6 +117,44 @@ public class PcMangrController {
 		}
 
 		return jsonObject;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "teamList", method = RequestMethod.POST)
+	public List<OrgVo> teamList() {
+		List<OrgVo> teamList = pcmapper.teamList();
+		// if (result > 0) {
+		// 	int re = pcmapper.changeInsertHistory(vo);
+		// 	pcmapper.updateHistory(vo);
+		// 	if ("P".equals(vo.getPc_change())) {
+		// 		pcmapper.insertMoveInfo(vo);
+		// 	}
+		// 	if ("F".equals(vo.getSttus())) {
+		// 		pcmapper.deleteMoveInfo(vo);
+		// 	}
+		// 	return "SUCCESS";
+		// } else
+		// 	return "FAIL";
+		return teamList;
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "moveTeam", method = RequestMethod.POST)
+	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
+		int result = 0;
+		result = oService.pcMove(vo);
+		return result;
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "deletePc", method = RequestMethod.POST)
+	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
+		int result = 0;
+		result = oService.deletePc(vo);
+		return result;
+
 	}
 
 
