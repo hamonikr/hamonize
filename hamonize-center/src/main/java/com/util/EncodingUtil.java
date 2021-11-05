@@ -19,9 +19,7 @@
  * 
  * String api_key = "NCS55AC394A0094C"; String api_key2 = "admin"; String
  * api_secret = "4i2bg9MIAMmnUXXQbArBcA=="; String api_secret2 =
- * "1blW/mUv3/3+gXW7NaeAfg=="; System.out.println("api_key:" +
- * eu.encrypt(api_key)); System.out.println("api_secret:" +
- * eu.decrypt(api_secret));
+ * "1blW/mUv3/3+gXW7NaeAfg=="; 
  * 
  * System.out.println("api_key:" + eu.encrypt(api_key2));
  * System.out.println("api_secret:" + eu.decrypt(api_secret2)); } }
