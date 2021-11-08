@@ -48,7 +48,7 @@ vpnwork(){
 	UUID=`cat /etc/hamonize/uuid |head -1`
 	CPUID=`dmidecode -t 4|grep ID`
 	CPUINFO=`cat /proc/cpuinfo | grep "model name" | head -1 | cut  -d" " -f3- | sed "s/^ *//g"`
-	IPADDR=`ifconfig | awk '/inet .*broadcast/'|awk '{print $2}'`
+	IPADDR=`ifconfig | awk '/inet .*broadcast/'|awk '{print $2}'` 
 	MACADDR=`ifconfig | awk '/ether/'|awk '{print $2}'`
 	HOSTNAME=`hostname`
 	MEMORY=`awk '{ printf "%.2f", $2/1024/1024 ; exit}' /proc/meminfo`
