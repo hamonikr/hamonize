@@ -10,13 +10,9 @@ const {
 const {
 	ipcMain
 } = require('electron')
-const timestamp = require('time-stamp');
 const path = require('path');
-const lineReader = require('line-reader');
 const fs = require('fs');
-const windowStateKeeper = require('electron-window-state');
 const request = require('request');
-const open = require('open');
 const unirest = require('unirest');
 
 const si = require('systeminformation');
@@ -25,6 +21,14 @@ const sudo = require('sudo-prompt');
 const options = {
 	name: 'Hamonikr'
 };
+
+// require('events').EventEmitter.prototype._maxListeners = 100;
+const electronLocalshortcut = require('electron-localshortcut');
+
+const baseurl = "<Hamonize Center Url>";
+const osType = require('os');
+
+let mainWindow, settingWindow;
 
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
