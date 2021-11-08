@@ -13,7 +13,6 @@ echo $WORK_PATH >> $LOGFILE
 echo "$DATETIME] 1. agent install ================ [start]" >> $LOGFILE
 sudo apt-get install hamonize-agent -y > /dev/null
 echo "$DATETIME] agent install === [end]" >> $LOGFILE
-# echo "$DATETIME ]agent status `sudo systemctl status hamonize-agent`" >> $LOGFILE
 sudo systemctl stop hamonize-agent.service
 # ===================================================================================
 
