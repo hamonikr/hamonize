@@ -1,0 +1,59 @@
+name: Upload Hamonize packages
+on:
+  workflow_run:
+    workflows: ["Hamonize CI"]
+    types:
+      - completed
+jobs:          
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: build.yml
+          workflow_conclusion: success
+
+      - run: ls -R
+  
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          release_name: Hamonize ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+#           body: ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
+          
+      - name: Rename Package
+        run: |
+            mkdir assets
+            mv ./hamonize-agent/hamonize-agent*.deb ./assets/hamonize-agent_${{ steps.tag_version.outputs.new_version }}_amd64.deb
+            mv ./hamonize-connect/hamonize-connect*.deb ./assets/hamonize-connect_${{ steps.tag_version.outputs.new_version }}_amd64.deb
+            mv ./hamonize-admin-focal/hamonize-admin*.deb ./assets/hamonize-admin_${{ steps.tag_version.outputs.new_version }}_amd64.deb
+            mv ./hamonize-admin-buster/hamonize-admin*.deb ./assets/hamonize-admin_${{ steps.tag_version.outputs.new_version }}_gooroom.deb
+            mv ./hamonize-admin-bullseye/hamonize-admin*.deb ./assets/hamonize-admin_${{ steps.tag_version.outputs.new_version }}_debian11.deb
+            mv ./hamonize-admin-win/hamonize-*-win64-setup.exe ./assets/hamonize-admin_${{ steps.tag_version.outputs.new_version }}-win64-setup.exe
+            mv ./hamonize-user-focal/hamonize-user*.deb ./assets/hamonize-user_${{ steps.tag_version.outputs.new_version }}_amd64.deb
+            mv ./hamonize-user-buster/hamonize-user*.deb ./assets/hamonize-user_${{ steps.tag_version.outputs.new_version }}_gooroom.deb
+            mv ./hamonize-user-bullseye/hamonize-user*.deb ./assets/hamonize-user_${{ steps.tag_version.outputs.new_version }}_debian11.deb
+            mv ./hamonize-user-win/hamonize-*-win64-setup.exe ./assets/hamonize-user_${{ steps.tag_version.outputs.new_version }}-win64-setup.exe
+         
+      - name: Upload Release Asset
+        uses: csexton/release-asset-action@v2
+        with:
+          pattern: "assets/*"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-url: ${{ steps.create_release.outputs.upload_url }}
+          
