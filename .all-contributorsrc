@@ -57,13 +57,22 @@
       "profile": "https://github.com/gon1942",
       "contributions": [
         "code"
-        ]
-      },
+      ]
+    },
     {
       "login": "bigeden",
       "name": "Eden",
       "avatar_url": "https://avatars.githubusercontent.com/u/51899018?v=4",
       "profile": "https://github.com/bigeden",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "leemgs",
+      "name": "Geunsik Lim",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82404?v=4",
+      "profile": "https://leemgs.github.io/",
       "contributions": [
         "code"
       ]
