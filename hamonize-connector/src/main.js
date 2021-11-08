@@ -10,13 +10,9 @@ const {
 const {
 	ipcMain
 } = require('electron')
-const timestamp = require('time-stamp');
 const path = require('path');
-const lineReader = require('line-reader');
 const fs = require('fs');
-const windowStateKeeper = require('electron-window-state');
 const request = require('request');
-const open = require('open');
 const unirest = require('unirest');
 
 const si = require('systeminformation');

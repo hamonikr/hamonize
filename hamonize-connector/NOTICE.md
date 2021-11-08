@@ -1,5 +1,8 @@
 # OSS Notice | hamonize connector #
 
+
+
+
 This application is Copyright © Invesume. All rights reserved.
 
 The following sets forth attribution notices for third party software that may be contained in this application.

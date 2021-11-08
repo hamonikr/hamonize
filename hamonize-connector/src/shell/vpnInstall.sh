@@ -73,7 +73,7 @@ vpnwork(){
 	# fi
 
 
-	wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "http://192.168.0.117:3000/getClientsDownload/$CLIENT" 2>&1 )
+	wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "<Hamonize Vpn server Url>:3000/getClientsDownload/$CLIENT" 2>&1 )
   	exit_status=$?
   	wget_status=$( awk '/HTTP\//{ print $2 }' <<< $wget_key | tail -n 1 )
   	# echo $wget_status
