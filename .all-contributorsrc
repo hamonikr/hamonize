@@ -57,8 +57,8 @@
       "profile": "https://github.com/gon1942",
       "contributions": [
         "code"
-        ]
-      },
+      ]
+    },
     {
       "login": "bigeden",
       "name": "Eden",
@@ -66,6 +66,15 @@
       "profile": "https://github.com/bigeden",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "yeji980407",
+      "name": "yeji980407",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84702382?v=4",
+      "profile": "https://github.com/yeji980407",
+      "contributions": [
+        "doc"
       ]
     }
   ],
