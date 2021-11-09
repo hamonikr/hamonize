@@ -1,0 +1,166 @@
+name: Hamonize CI
+on:
+  push:
+    branches: [ master ]
+jobs:          
+  build-agent:
+    name: Build Hamonize-agent
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+          
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Install dependencies
+        run: sudo apt-get update -qq && sudo apt-get install debhelper npm
+        
+      - name: Build Hamonize-agent
+        run: cd hamonize-agent/ && sudo dpkg-buildpackage -b -us -uc -ui
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hamonize-agent
+          path: ./hamonize-agent_*.deb
+          
+  build-connect:
+    name: Build Hamonize-connect
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+          
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Install dependencies
+        run: sudo apt-get update -qq && sudo apt-get install debhelper npm
+        
+      - name: Build Hamonize-connect
+        run: cd hamonize-connector/ && sudo dpkg-buildpackage -b -us -uc -ui
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hamonize-connect
+          path: ./hamonize-connect_*.deb
+
+  build-admin:
+    name: Build Hamonize-admin
+    strategy:
+      matrix:
+        dist:
+          - focal
+          - buster
+          - bullseye
+    runs-on: ubuntu-latest
+    container: hamonikr/hamonize-admin.${{matrix.dist}}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+        
+      - name: Build Hamonize-admin
+        run: |
+          cd hamonize-admin/
+          mkdir build && cd build
+          cmake -G Ninja -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX=/usr -DWITH_LTO="OFF" ..
+          fakeroot ninja package
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hamonize-admin-${{matrix.dist}}
+          path: ./hamonize-admin/build/hamonize-admin_*.deb
+
+  build-admin-user:
+    name: Build Hamonize-admin-user
+    strategy:
+      matrix:
+        dist:
+          - focal
+          - buster
+          - bullseye
+    runs-on: ubuntu-latest
+    container: hamonikr/hamonize-admin.${{matrix.dist}}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+        
+      - name: Build Hamonize-admin-user
+        run: |
+          cd hamonize-admin/
+          mv postinst postinst_admin && mv postinst_user postinst
+          mv CMakeLists.txt CMakeLists_admin.txt && mv CMakeLists_user.txt CMakeLists.txt
+          mv cmake/CPackDefinitions.cmake cmake/CPackDefinitions_admin.cmake && mv cmake/CPackDefinitions_user.cmake cmake/CPackDefinitions.cmake
+          mkdir build && cd build
+          cmake -G Ninja -DCMAKE_BUILD_TYPE="Debug" -DCMAKE_INSTALL_PREFIX=/usr -DWITH_LTO="OFF" ..
+          fakeroot ninja package
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hamonize-user-${{matrix.dist}}
+          path: ./hamonize-admin/build/hamonize-user_*.deb
+
+  build-admin-win:
+    name: Build Hamonize-admin-win
+    runs-on: ubuntu-latest
+    container: hamonikr/hamonize-admin.win64
+    steps:
+      - name: Checkout sources
+#         uses: actions/checkout@v2
+#         with:
+#           submodules: recursive
+        run: |
+          cd /
+          git clone -b master --recursive https://github.com/hamonikr/hamonize.git
+        
+      - name: Build Hamonize-admin-win
+        run: |          
+          mkdir /tmp/build-64 && cd /tmp/build-64
+          cmake /hamonize/hamonize-admin/ -DCMAKE_TOOLCHAIN_FILE=/hamonize/hamonize-admin/cmake/modules/Win64Toolchain.cmake -DCMAKE_MODULE_PATH=/hamonize/hamonize-admin/cmake/modules/
+          make windows-binaries
+          cd hamonize-win64-*
+          makensis hamonize.nsi
+          mv hamonize-*-win64-setup.exe ../
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hamonize-admin-win
+          path: /tmp/build-64/hamonize-*-win64-setup.exe
+          
+      - name: Build Hamonize-admin-win-user
+        run: |     
+          cd /hamonize/hamonize-admin
+          mv CMakeLists.txt CMakeLists_admin.txt && mv CMakeLists_user.txt CMakeLists.txt
+          mv nsis/hamonize.nsi.in nsis/hamonize_admin.nsi.in && mv nsis/hamonize_user.nsi.in nsis/hamonize.nsi.in
+          mkdir /tmp/build-64-user && cd /tmp/build-64-user
+          cmake /hamonize/hamonize-admin/ -DCMAKE_TOOLCHAIN_FILE=/hamonize/hamonize-admin/cmake/modules/Win64Toolchain.cmake -DCMAKE_MODULE_PATH=/hamonize/hamonize-admin/cmake/modules/
+          make windows-binaries
+          cd hamonize-win64-*
+          makensis hamonize.nsi
+          mv hamonize-*-win64-setup.exe ../
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hamonize-user-win
+          path: /tmp/build-64-user/hamonize-*-win64-setup.exe
+          

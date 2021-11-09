@@ -72,6 +72,7 @@ cd hamonize-admin
 mv postinst postinst_admin && mv postinst_user postinst
 mv CMakeLists.txt CMakeLists_admin.txt && mv CMakeLists_user.txt CMakeLists.txt
 mv cmake/CPackDefinitions.cmake cmake/CPackDefinitions_admin.cmake && mv cmake/CPackDefinitions_user.cmake cmake/CPackDefinitions.cmake
+mv nsis/hamonize.nsi.in nsis/hamonize_admin.nsi.in && mv nsis/hamonize_user.nsi.in nsis/hamonize.nsi.in
 ```
 
 #### 어드민 빌드
@@ -147,7 +148,7 @@ make windows-binaries
 
 cd hamonize-win64-[version]
 
-makeinsis hamonize.nsi
+makensis hamonize.nsi
 ```
 현재 위치한 경로에 생성된 hamonize-[version]-win64-setup.exe 실행파일을 Windows에서 다운로드 받고 실행합니다. 
 

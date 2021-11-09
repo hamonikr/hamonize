@@ -48,7 +48,7 @@ vpnwork(){
 	UUID=`cat /etc/hamonize/uuid |head -1`
 	CPUID=`dmidecode -t 4|grep ID`
 	CPUINFO=`cat /proc/cpuinfo | grep "model name" | head -1 | cut  -d" " -f3- | sed "s/^ *//g"`
-	IPADDR=`ifconfig | awk '/inet .*broadcast/'|awk '{print $2}'`
+	IPADDR=`ifconfig | awk '/inet .*broadcast/'|awk '{print $2}'` 
 	MACADDR=`ifconfig | awk '/ether/'|awk '{print $2}'`
 	HOSTNAME=`hostname`
 	MEMORY=`awk '{ printf "%.2f", $2/1024/1024 ; exit}' /proc/meminfo`
@@ -73,7 +73,7 @@ vpnwork(){
 	# fi
 
 
-	wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "http://192.168.0.117:3000/getClientsDownload/$CLIENT" 2>&1 )
+	wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "http://{Hamonize Vpn server Url}:3000/getClientsDownload/$CLIENT" 2>&1 )
   	exit_status=$?
   	wget_status=$( awk '/HTTP\//{ print $2 }' <<< $wget_key | tail -n 1 )
   	# echo $wget_status
