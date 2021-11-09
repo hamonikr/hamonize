@@ -68,7 +68,7 @@ public class MainController {
 		try {
 			list = miService.pcListInfo(params);
 			for (int i = 0; i < list.size(); i++) {
-				if (!ObjectUtils.isEmpty(list.get(i).get("pc_status"))) {
+				if( list.get(i).get("pc_status").equals("true") ) {
 					on++;
 				} else {
 					off++;
