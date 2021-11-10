@@ -22,21 +22,12 @@ const options = {
 	name: 'Hamonikr'
 };
 
-// require('events').EventEmitter.prototype._maxListeners = 100;
-const electronLocalshortcut = require('electron-localshortcut');
-
-const baseurl = "<Hamonize Center Url>";
-const osType = require('os');
-
 let mainWindow, settingWindow;
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
 const baseurl = "<Hamonize Center Url>";
 const osType = require('os');
-
-let mainWindow, settingWindow;
-
 
 
 function createWindow() {

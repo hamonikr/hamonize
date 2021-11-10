@@ -5,7 +5,6 @@ b/*
 *.swp
 CMakeLists.txt.u*
 svg
-Makefile
 plugins/extra
 build/
 build-win/
@@ -16,7 +15,9 @@ hamonize-admin/svg
 hamonize-admin/Makefile
 hamonize-admin/plugins/addons
 hamonize-admin/plugins/extra
-
+node_modules
+**/node_modules/*
+hamonize-connector/src/node-modules/*
 # VisualStudioCode
 .vscode
 .vscode/*
