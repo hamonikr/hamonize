@@ -2,6 +2,7 @@ package com.controller.curl;
 
 import java.io.BufferedReader;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -46,7 +47,7 @@ public class CurlSgbPropertiesController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while (!(line = reader.readLine()).isEmpty()) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
 				json.append(line);
 			}
 			reader.close();

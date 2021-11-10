@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -67,7 +68,8 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while (!(line = reader.readLine()).isEmpty()) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();
@@ -113,7 +115,8 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while (!(line = reader.readLine()).isEmpty()) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();
@@ -161,7 +164,8 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while (!(line = reader.readLine()).isEmpty()) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
 			reader.close();

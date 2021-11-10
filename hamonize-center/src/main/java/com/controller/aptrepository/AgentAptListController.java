@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +29,7 @@ public class AgentAptListController {
 
 			String inputLine = "";
 
-			while (!(inputLine = bufferedReader.readLine()).isEmpty()) {
+			while ( !Objects.isNull(inputLine = bufferedReader.readLine()) ) {
 
 				if (inputLine.indexOf("Package") == 0) {
 					list.add(inputLine);
