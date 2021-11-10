@@ -1347,7 +1347,7 @@ INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_por
 INSERT INTO public.tbl_pc_mangr
 (seq, pc_status, pc_cpu, pc_memory, pc_disk, pc_macaddress, pc_ip, first_date, last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid, pc_change, pc_vpnip, pc_sn, pc_os)
 VALUES(1, 'N', 'Intel® Core™ i5-7500 3.4GHz 4 (4 Physical)', '8GB', 'ATA QNIX_120GB 112GB SSD (SATA)', '4c:cc:6a:f6:bf:5d', '192.168.0.152', now(), now(), 'hamonize-clientpc2', NULL, 3, '2020061600970', NULL, '7490a9f7d989432b9f0f5314ce82e956', NULL, 'no vpn', 'hamonize-clientpc2', 'H'),
-VALUES(2, 'N', 'Intel® Core™ i5-7400 3GHz 4 (4 Physical)', '8GB', 'SanDisk SanDisk_SD8SBAT128G1122 119GB SSD (SATA)', '10:7b:44:47:4d:79', '192.168.0.150', now(), now(), 'hamonize-clientpc', NULL, 2, '161853402440', NULL, 'a61e750dcf354127a388c66bd4063fde', NULL, 'no vpn', 'hamonize-clientpc', 'H');
+	  (2, 'N', 'Intel® Core™ i5-7400 3GHz 4 (4 Physical)', '8GB', 'SanDisk SanDisk_SD8SBAT128G1122 119GB SSD (SATA)', '10:7b:44:47:4d:79', '192.168.0.150', now(), now(), 'hamonize-clientpc', NULL, 2, '161853402440', NULL, 'a61e750dcf354127a388c66bd4063fde', NULL, 'no vpn', 'hamonize-clientpc', 'H');
 
 -- add device
 
