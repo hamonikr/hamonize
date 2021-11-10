@@ -58,23 +58,24 @@ issues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
 | Gooroom 2.4 | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능|
 | Window 10 | Hamonize (Connector 프로그램, 원격관리프로그램) 가능|
 
-## Hamonize 사용(설치) 방법.
-> Hamonize Server 구축 방법은 
-> Wiki의 [ Hamonize 설치 안내 페이지](https://github.com/hamonikr/hamonize/wiki/%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95%EA%B3%BC-%EB%B9%8C%EB%93%9C-%EB%B0%8F-%EC%84%A4%EC%B9%98-%EB%B0%A9%EB%B2%95#%EC%84%9C%EB%B2%84-%EA%B5%AC%EC%B6%95)를 참고하시기바랍니다.
+<br>
 
-> Hamonize Manager ( 관리자pc )
+## 📌 Hamonize 사용(설치) 방법
+> Hamonize Server 구축 방법은 
+> Wiki의 [ Hamonize 설치 안내 페이지](https://github.com/hamonikr/hamonize/wiki/%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95%EA%B3%BC-%EB%B9%8C%EB%93%9C-%EB%B0%8F-%EC%84%A4%EC%B9%98-%EB%B0%A9%EB%B2%95#%EC%84%9C%EB%B2%84-%EA%B5%AC%EC%B6%95)를 참고하시기 바랍니다.
+
+> **Hamonize Manager ( 관리자pc )**
 > + Hamonize-Center (Web Console)에 접속하여 원격관리대상 PC의 정보 및 정책관리, 원격관리를 할 수있습니다. 
-> + Hamonize-Admin (원격관리프로그램)으로 원격관리 대상 PC의 원격제어를 할 수 있습니다
-> > Hamonize-Admin(원격관리프로그램) [github release에서](https://github.com/hamonikr/hamonize/releases) OS 환경에 맞는 프로그램을 다운로드받으실 수 있습니다
-> > 
-> > Hamonize-Admin(원격관리프로그램) 환경 설정 정보는 [Wiki-환경설정](https://github.com/hamonikr/hamonize/wiki)를 참조하세요.
-> > 
+> + Hamonize-Admin (원격관리프로그램)으로 원격관리 대상 PC의 원격제어를 할 수 있습니다.
+> 1. Download : Hamonize-Admin(원격관리프로그램) [github release](https://github.com/hamonikr/hamonize/releases)에서 OS 환경에 맞는 프로그램을 다운로드 받습니다.
+> 2. Install : 다운로드 받은 경로에서 다음 명령어를 실행합니다. `sudo apt install -y hamonize-admin*.deb`
+> 3. Config : Hamonize-Admin(원격관리프로그램) 환경 설정 방법은 [해당 링크](https://github.com/hamonikr/hamonize/wiki/%EC%82%AC%EC%9A%A9-%EB%A7%A4%EB%89%B4%EC%96%BC#%ED%95%98%EB%AA%A8%EB%82%98%EC%9D%B4%EC%A6%88-%EC%96%B4%EB%93%9C%EB%AF%BC-%EC%84%A4%EC%A0%95-%EB%B0%A9%EB%B2%95)를 참조하세요.
+> 
 >   
-> Hamonize Client (원격관리대상PC)
-> 1. Download : OS 환경에 맞는 프로그램을 다운로드받는다.  [Hamonize-Connect Program Download](https://github.com/hamonikr/hamonize/releases)
-> 2. Install : `sudo dpkg -i Hamonize-Connector.deb` on the downloaded package.
+> **Hamonize Client (원격관리대상PC)**
+> 1. Download : OS 환경에 맞는 프로그램을 다운로드받습니다.  [Hamonize-Connect Program Download](https://github.com/hamonikr/hamonize/releases)
+> 2. Install : 다운로드 받은 경로에서 다음 명령어를 실행합니다. `sudo dpkg -i Hamonize-Connector.deb`
 > 3. Run : `Command or Win key > Hamonize Connector `
->  [Hamonize-Connector 설치방법](https://github.com/hamonikr/hamonize/wiki)
 
 <br>
 
