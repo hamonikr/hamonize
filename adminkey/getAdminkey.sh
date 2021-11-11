@@ -68,9 +68,9 @@ echo "ISEXIST : $ISEXIST"
 
 ## hamonize_admin_user_key 등록
 if [ "$FIND_RET_PUBLIC" != null ] && [ "$FIND_RET_PRIVATE" != null ] && [ "$FIND_RET_CONFIG" != null ]; then
-    echo "튜르"
+    echo "The public and private key exist."
     if [ "$ISEXIST" != null ]; then
-        echo "튜르튜르"
+        echo "The auth key exists. "
     
         sudo hamonize-cli authkeys import hamonize-key/public $PWD/$PUBLIC_KEY_NAME
         sudo hamonize-cli authkeys import hamonize-key/private $PWD/$PRIVATE_KEY_NAME
@@ -80,6 +80,6 @@ if [ "$FIND_RET_PUBLIC" != null ] && [ "$FIND_RET_PRIVATE" != null ] && [ "$FIND
     sudo hamonize-cli authkeys list
     
 else    
-    echo "뽈스"
+    echo "The public and private key do not exist."
 fi
 
