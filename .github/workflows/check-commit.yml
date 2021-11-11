@@ -52,8 +52,6 @@ jobs:
               issue_number: ${{ env.PR_NUMBER }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '요청해 주신 PR이 [하모나이즈 프로젝트의 커밋 컨벤션](https://github.com/hamonikr/hamonize/blob/master/.gitmessage.txt)을 위반합니다. \n
-              커밋 메시지와 PR title에 다음 Commit Type 중 하나를 포함해 주세요. \n
-              Feat Fix Design Style Refactor Comment Docs Test Chore Rename Remove'
+              body: '요청해 주신 PR이 [하모나이즈 프로젝트의 커밋 컨벤션](https://github.com/hamonikr/hamonize/blob/master/.gitmessage.txt)을 위반합니다. \n커밋 메시지와 PR title에 다음 Commit Type 중 하나를 포함해 주세요. \nFeat Fix Design Style Refactor Comment Docs Test Chore Rename Remove'
             })
  
