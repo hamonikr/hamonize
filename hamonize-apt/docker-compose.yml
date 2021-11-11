@@ -8,6 +8,7 @@ services:
       - "8088:80"
     volumes:
       - reprepro-data:/repo
+    restart: always
      
 volumes:
   reprepro-data:
