@@ -236,6 +236,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		});
 			
 	}
+
 function getPcMngrList(){
 	var url ='/pcMngr/pcMngrList.proc';
 	var pc_change = '${pc_change}';
@@ -451,7 +452,7 @@ function searchView(viewName, page){
 					<tr>
 						<th>부서이름</th>
 						<td colspan="3"><span id="detail_name"></span>
-							&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" onclick="open_move(); return false;">부서이동</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;<button -type="button" onclick="open_move(); return false;">부서이동</button>
 							&nbsp;&nbsp;&nbsp;&nbsp;<select name="team" id="team" style="width: 200px; display:none;">
 							</select>
 							<button type="button" name="moveteam" id="moveteam" onclick="move_team(); return false;" style="width: 100px; display:none;">확인</button>
@@ -624,6 +625,7 @@ function searchView(viewName, page){
 
 
 		function move_team() {
+			if(confirm("부서를 이동할 경우 기존 부서에서 내린 정책이 포함된 \n일반 백업본은 모두 삭제됩니다. \n부서를 이동하시겠습니까?")){
 				$.ajax({
 					url: '/pcMngr/moveTeam',
 					type: 'post',
@@ -639,27 +641,30 @@ function searchView(viewName, page){
 						
 					}
 				});
-					$('#team').html("");
-					$('#team').hide();
-					$('#moveteam').hide();
+		
+			}
+		
 		}
 
 		function delete_pc(){
-			$.ajax({
-				url: '/pcMngr/deletePc',
-				type: 'post',
-				data:{seq:$('#seq').val(),old_org_seq:$('#old_org_seq').val(),pc_hostname:$("#detail_hostname").text()},
-				success: function(data){
-					if(data == 1){
-						alert("완료되었습니다.");
-						location.reload();
+			if(confirm("해당 PC를 삭제하시겠습니까?")){
+					$.ajax({
+					url: '/pcMngr/deletePc',
+					type: 'post',
+					data:{seq:$('#seq').val(),old_org_seq:$('#old_org_seq').val(),pc_hostname:$("#detail_hostname").text()},
+					success: function(data){
+						if(data == 1){
+							alert("완료되었습니다.");
+							location.reload();
+						}
+					},
+					error: function (request, status, error){
+						alert("실패하였습니다.");
+						
 					}
-				},
-				error: function (request, status, error){
-					alert("실패하였습니다.");
-					
-				}
-			});
+				});
+
+			}
 		}
 	</script>
 	<%@ include file="../template/footer.jsp" %>

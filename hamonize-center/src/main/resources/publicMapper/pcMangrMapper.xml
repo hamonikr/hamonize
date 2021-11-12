@@ -62,6 +62,23 @@
 		where seq = #{seq}
 	</update>
 
+	<!-- update recove policy-->
+	<update id="updateRcovPolicyOrgseq" parameterType="com.model.RecoveryVo" >
+		update 
+			tbl_backup_recovery_mngr
+		set
+			br_org_seq = #{br_org_seq}
+		where		
+			dept_seq = #{dept_seq}
+	</update>
+
+	<delete id="deleteBackupAIfMoveOrg" parameterType="com.model.RecoveryVo">
+		delete from
+			tbl_backup_recovery_mngr
+		where
+			dept_seq = #{dept_seq} and  br_backup_gubun = 'B'
+	</delete>
+
 	<!-- vpn-auto-connection act -->
 	<!-- <update id="pcInfoChange" parameterType="com.model.PcMangrVo" >
 		update tbl_pc_mangr
