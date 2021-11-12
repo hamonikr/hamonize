@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 DIR_PATH="$(pwd)"
 DIR_NAME=${PWD##*/}
 VOL_NAME=$DIR_NAME"_reprepro-data"
