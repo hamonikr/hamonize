@@ -17,6 +17,7 @@ import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
+import com.model.RecoveryVo;
 import com.util.LDAPConnection;
 
 @Service
@@ -29,6 +30,7 @@ public class OrgService {
 	private IOrgMapper orgMapper;
 	@Autowired
 	private IPcMangrMapper pcMapper;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public JSONArray orgList(OrgVo orgvo) throws NamingException {
@@ -123,6 +125,25 @@ public class OrgService {
 		orgPath = orgMapper.getAllOrgNm(vo.getOld_org_seq());
 		vo.setAlldeptname(orgPath.getAll_org_nm());
 		con.movePc(vo);
+		
+		// 백업 파일 들도 org_seq 변경 tbl_backup_recovery_mngr
+		RecoveryVo rvo = new RecoveryVo();
+		rvo.setBr_org_seq(vo.getOrg_seq());
+		rvo.setDept_seq(vo.getSeq());
+		logger.info("pc seq : "+Integer.toString(vo.getSeq()));
+		logger.info("update org seq : "+vo.getOrg_seq());
+
+		int rcovresult = pcMapper.updateRcovPolicyOrgseq(rvo);		
+	
+		logger.info("rcovresult : "+rcovresult);
+
+		if(rcovresult >= 1){
+			logger.info("업데이트 완료");
+			// delete 이전 부서의 일반 백업본
+			pcMapper.deleteBackupAIfMoveOrg(rvo);
+		}else{
+			logger.info("업데이트 실패");
+		}
 
 		return result;
 

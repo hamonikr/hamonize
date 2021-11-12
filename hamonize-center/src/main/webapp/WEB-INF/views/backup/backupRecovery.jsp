@@ -132,6 +132,7 @@ input[type="radio"] {
 					
 					$("#rc_list").append(strHtml);
 					$("#selectPcOne").text('');
+					
 					if(agrs[0] != undefined || agrs[0] != null){
 						$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
 					}							

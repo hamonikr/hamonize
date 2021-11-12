@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.model.OrgVo;
 import com.model.PcMangrVo;
+import com.model.RecoveryVo;
 import com.model.UserVo;
 
 public interface IPcMangrMapper {
@@ -88,7 +89,9 @@ public interface IPcMangrMapper {
 
 	public OrgVo chkPcOrgNum(PcMangrVo vo);
 	
-	
+	// 부서 이동시 복구 테이블 org값 업데이트
+	public int updateRcovPolicyOrgseq(RecoveryVo vo);
 
+	public int deleteBackupAIfMoveOrg(RecoveryVo vo);
 	
 }

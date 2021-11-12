@@ -1,16 +1,16 @@
 package com.controller.curl;
 
+import com.mapper.IHamonizeVersionChkMapper;
+import com.model.hamonizeVersionChkVo;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.mapper.IHamonizeVersionChkMapper;
-import com.model.hamonizeVersionChkVo;
 
 @RestController
 @RequestMapping("/hmsvc")
@@ -26,8 +26,11 @@ public class CurlHamonizeVersionChkController {
 	 * @param valLoad
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/version", method = RequestMethod.POST)
-	public void version(@RequestBody String valLoad) throws Exception {
+	// @RequestMapping(value = "/version", method = RequestMethod.POST)
+	// public void version(@RequestBody String valLoad) throws Exception {
+
+	@PostMapping("/version")
+	public String version(@RequestBody String valLoad) throws Exception {
 
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(valLoad);
@@ -37,9 +40,7 @@ public class CurlHamonizeVersionChkController {
 
 		for (int i = 0; i < hmdArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
-
-			System.out.println(
-					"tempObj.get(\"state\").toString()====" + tempObj.get("state").toString());
+			System.out.println("tempObj.get(\"state\").toString()====" + tempObj.get("state").toString());
 
 			hamonizeVersionChkVo.setDebname(tempObj.get("debname").toString());
 			hamonizeVersionChkVo.setDebversion(tempObj.get("debver").toString());
@@ -70,8 +71,9 @@ public class CurlHamonizeVersionChkController {
 
 		}
 
+
+		return "";
+
 	}
-
-
 
 }

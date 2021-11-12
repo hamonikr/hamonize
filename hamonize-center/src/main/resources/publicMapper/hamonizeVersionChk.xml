@@ -44,7 +44,7 @@
 				<if test="debstatus != null and debstatus != '' "> , debstatus = #{debstatus}</if>
 			</set>
 		<where>
-				pcuuid= #{pcuuid}			
+			pcuuid= #{pcuuid}			
 		</where>				 	
 	</update>
 		
