@@ -1340,7 +1340,7 @@ INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_por
 	 ('CENTERURL',NULL,'localhost',NULL,NULL,'8080',0,NULL),
 	 ('COLLECTDIP',NULL,'localhost',NULL,NULL,NULL,0,NULL),
 	 ('APTURL',NULL,'106.254.251.74',NULL,NULL,'28081',0,NULL),
-	 ('GRAFANA_URL',NULL,'localhost',NULL,NULL,NULL,0,NULL);
+	 ('GRAFANA_URL',NULL,'localhost',NULL,NULL,'3000',0,NULL);
 
 --add org
 INSERT INTO public.tbl_org
@@ -1368,3 +1368,12 @@ VALUES(1, 'N', 'Intel® Core™ i5-7500 3.4GHz 4 (4 Physical)', '8GB', 'ATA QNIX
 INSERT INTO public.tbl_security_mngr
 (sm_seq, sm_name, sm_status, sm_dc, sm_port, sm_gubun, sm_device_code)
 VALUES(1, 'card-usb', NULL, 'invesume-test-usb(cardType)', NULL, 'D', '048d:1234');
+
+-- add backup
+INSERT INTO public.tbl_backup_recovery_mngr
+(br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
+VALUES(1, 3, '/timeshift/snapshots', '2021-11-15 16:58:01.000', 'B', '2021-11-15_16-58-01', 1);
+INSERT INTO public.tbl_backup_recovery_mngr
+(br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
+VALUES(2, 2, '/timeshift/snapshots', '2021-11-15 17:07:01.000', 'B', '2021-11-15_17-07-01', 2);
+
