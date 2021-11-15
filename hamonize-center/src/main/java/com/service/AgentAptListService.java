@@ -35,7 +35,7 @@ public class AgentAptListService {
 			String inputLine = "";
 
 			
-			while ( !(inputLine = bufferedReader.readLine()).isEmpty() ) {
+			while ( (inputLine = bufferedReader.readLine()) != null ) {
 				if (inputLine.indexOf("Package") == 0) {
 					list.add(inputLine);
 
