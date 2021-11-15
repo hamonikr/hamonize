@@ -34,18 +34,18 @@
 <img width="700" src="./img/Hamonize_architecture.png"> <br>
 
 
-`하모나이즈 센터`는 크게 세가지의 기능을 갖고있습니다.  <br>
-- 첫번째로 관리자가 원격지의 대상 PC들에게 백업및 복구, 프로그램 설치, 차단 등의 정책을 내리고 정책이 정상적으로 내려졌는지 수행결과를 볼 수 있습니다  
-- 두번째로 원격지 PC들의 실시간 cpu, memory 등의 사용량을 한눈에 확인하고 자원을 관리할 수 있습니다.
+`하모나이즈 센터`는 크게 세가지의 기능을 갖고 있습니다.  <br>
+- 첫번째로 관리자가 원격지의 대상 PC들에게 백업및 복구, 프로그램 설치, 차단 등의 정책을 내리고 정책이 정상적으로 내려졌는지 수행결과를 볼 수 있습니다.  
+- 두번째로 원격지 PC들의 실시간 CPU, memory 등의 사용량을 한눈에 확인하고 자원을 관리할 수 있습니다.
 - 세번째로 원격지의 PC에 원격 접속을 하여 문제가 생겼을 경우 즉각적이고 효율적으로 대응을 할 수 있습니다.
 
 `하모나이즈 에이전트`는 별도의 화면 없이 하모나이즈 센터에서 내린 정책을 수행하고 수행결과를 보내는 역할을 합니다.
 
-`하모나이즈 어드민`에서는 하모나이즈 센터에서 원격접속을 할 수 있도록 기능을 제공하고 별도로 하모나이즈 어드민 데스크탑 어플리케이션을 통해서도 연결된 원격지의 PC들의 원격제어, 세션관리,전원 관리 등의 기능을 할  수 있습니다.
+`하모나이즈 어드민`에서는 하모나이즈 센터에서 원격접속을 할 수 있도록 기능을 제공하고 별도로 하모나이즈 어드민 데스크탑 어플리케이션을 통해서도 연결된 원격지의 PC들의 원격제어, 세션관리,전원 관리 등의 기능을 할 수 있습니다.
 
 <br>
 
-📕 자세한 사용법을 알고싶으면 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339494)를 참고하세요 
+📕 자세한 사용법을 알고싶으면 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339494)를 참고하세요. 
 
 <br>
 
@@ -68,7 +68,7 @@
 > Hamonize Server 구축 방법은 
 > Wiki의 [ Hamonize 설치 안내 페이지](https://github.com/hamonikr/hamonize/wiki/%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95%EA%B3%BC-%EB%B9%8C%EB%93%9C-%EB%B0%8F-%EC%84%A4%EC%B9%98-%EB%B0%A9%EB%B2%95#%EC%84%9C%EB%B2%84-%EA%B5%AC%EC%B6%95)를 참고하시기 바랍니다.
 
-> **Hamonize Manager ( 관리자pc )**
+> **Hamonize Manager (관리자 PC)**
 > + Hamonize-Center (Web Console)에 접속하여 원격관리대상 PC의 정보 및 정책관리, 원격관리를 할 수있습니다. 
 > + Hamonize-Admin (원격관리프로그램)으로 원격관리 대상 PC의 원격제어를 할 수 있습니다.
 > 1. Download : Hamonize-Admin(원격관리프로그램) [github release](https://github.com/hamonikr/hamonize/releases)에서 OS 환경에 맞는 프로그램을 다운로드 받습니다.
@@ -76,7 +76,7 @@
 > 3. Config : Hamonize-Admin(원격관리프로그램) 환경 설정 방법은 [해당 링크](https://github.com/hamonikr/hamonize/wiki/%EC%82%AC%EC%9A%A9-%EB%A7%A4%EB%89%B4%EC%96%BC#%ED%95%98%EB%AA%A8%EB%82%98%EC%9D%B4%EC%A6%88-%EC%96%B4%EB%93%9C%EB%AF%BC-%EC%84%A4%EC%A0%95-%EB%B0%A9%EB%B2%95)를 참조하세요.
 > 
 >   
-> **Hamonize Client (원격관리대상PC)**
+> **Hamonize Client (원격 관리대상 PC)**
 > 1. Download : OS 환경에 맞는 프로그램을 다운로드받습니다.  [Hamonize-Connect Program Download](https://github.com/hamonikr/hamonize/releases)
 > 2. Install : 다운로드 받은 경로에서 다음 명령어를 실행합니다. `sudo dpkg -i Hamonize-Connector.deb`
 > 3. Run : `Command or Win key > Hamonize Connector `
@@ -227,7 +227,6 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 이 프로젝트는 아래의 거버넌스 정책에 따라서 관리되고 있습니다.
 
 * [Governance](https://github.com/hamonikr/hamonize/wiki/Governance)
-
 
 
 
