@@ -1342,6 +1342,20 @@ INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_por
 	 ('APTURL',NULL,'106.254.251.74',NULL,NULL,'28081',0,NULL),
 	 ('GRAFANA_URL',NULL,'localhost',NULL,NULL,NULL,0,NULL);
 
+--add org
+INSERT INTO public.tbl_org
+(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES(1, 0, 'Invesume', NULL, NULL, '2021-10-15', NULL, NULL, '2021-10-15', NULL, '', '', NULL, NULL, NULL, NULL, NULL, 'Invesume');
+INSERT INTO public.tbl_org
+(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES(2, 1, 'dev', 1, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|dev');
+INSERT INTO public.tbl_org
+(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES(3, 1, 'degain', 2, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|degain');
+INSERT INTO public.tbl_org
+(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES(4, 1, 'virpc', 3, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|virpc');
+
 -- add pc
 
 INSERT INTO public.tbl_pc_mangr
