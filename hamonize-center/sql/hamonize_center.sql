@@ -1368,3 +1368,8 @@ VALUES(1, 'N', 'Intel® Core™ i5-7500 3.4GHz 4 (4 Physical)', '8GB', 'ATA QNIX
 INSERT INTO public.tbl_security_mngr
 (sm_seq, sm_name, sm_status, sm_dc, sm_port, sm_gubun, sm_device_code)
 VALUES(1, 'card-usb', NULL, 'invesume-test-usb(cardType)', NULL, 'D', '048d:1234');
+
+ALTER SEQUENCE 'tbl_security_mngr_sm_seq_seq' RESTART WITH 2
+
+
+
