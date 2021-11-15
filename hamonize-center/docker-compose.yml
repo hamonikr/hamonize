@@ -30,7 +30,7 @@ services :
  
     openldap:
         container_name: openldap
-        image: osixia/openldap:1.5.0
+        image: jullee96/openldap:1.3
         hostname: "ldap-server"
         ports:            
             - "389:389"
@@ -43,8 +43,8 @@ services :
             LDAP_ADMIN_PASSWORD: admin
             LDAP_ORGANISATION: invesume
         volumes:
-            - ${HOME}/ldap/data:/var/lib/ldap
-            - /etc/ldap/slapd.d              
+            - ldap-data:/var/lib/ldap
+            - ldap-conf:/etc/ldap/slapd.d              
         domainname: "hamonize.com"
         restart: always
 
@@ -90,6 +90,8 @@ services :
 volumes:
     hamonize_center.sql:
     psql-data:
+    ldap-data:
+    ldap-conf:
     influxdb:
     grafana:
     was-logs:
