@@ -44,8 +44,10 @@ services :
             LDAP_ORGANISATION: invesume
         volumes:
             - ldap-data:/var/lib/ldap
-            - ldap-conf:/etc/ldap/slapd.d              
+            - ldap-conf:/etc/ldap/slapd.d
+            - ./ldap-script:/tmp              
         domainname: "hamonize.com"
+        command: sh /tmp/start-ldap.sh
         restart: always
 
     phpldapadmin:
