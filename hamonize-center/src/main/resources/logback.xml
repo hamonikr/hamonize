@@ -47,7 +47,7 @@
         <level value="INFO" />
     </logger>
     <logger name="java.sql">
-        <level value="TRACE" />
+        <level value="INFO" />
     </logger>
     <logger name="org.mybatis.spring">
         <level value="DEBUG" />
@@ -57,7 +57,7 @@
     </logger>
     
     
-  <root level="info">
+  <root level="DEBUG">
     <appender-ref ref="FILE"></appender-ref>
     <appender-ref ref="consoleAppender"></appender-ref>
   </root>
