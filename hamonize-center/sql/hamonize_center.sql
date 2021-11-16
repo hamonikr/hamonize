@@ -1344,23 +1344,23 @@ INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_por
 
 --add org
 INSERT INTO public.tbl_org
-(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
-VALUES(1, 0, 'Invesume', NULL, NULL, '2021-10-15', NULL, NULL, '2021-10-15', NULL, '', '', NULL, NULL, NULL, NULL, NULL, 'Invesume');
+( p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES( 0, 'Invesume', NULL, NULL, '2021-10-15', NULL, NULL, '2021-10-15', NULL, '', '', NULL, NULL, NULL, NULL, NULL, 'Invesume');
 INSERT INTO public.tbl_org
-(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
-VALUES(2, 1, 'dev', 1, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|dev');
+( p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES( 1, 'dev', 1, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|dev');
 INSERT INTO public.tbl_org
-(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
-VALUES(3, 1, 'degain', 2, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|degain');
+( p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES( 1, 'degain', 2, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|degain');
 INSERT INTO public.tbl_org
-(seq, p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
-VALUES(4, 1, 'virpc', 3, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|virpc');
+(p_seq, org_nm, org_ordr, writer_id, ins_date, writer_ip, update_writer_id, upd_date, update_writer_ip, "section", p_org_nm, sido, gugun, org_num, xpoint, ypoint, all_org_nm)
+VALUES(1, 'virpc', 3, NULL, '2021-11-10', NULL, NULL, '2021-11-10', NULL, 'S', 'Invesume ', NULL, NULL, NULL, NULL, NULL, 'Invesume|virpc');
 
 -- add pc
 INSERT INTO public.tbl_pc_mangr
-(seq, pc_status, pc_cpu, pc_memory, pc_disk, pc_macaddress, pc_ip, first_date, last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid, pc_change, pc_vpnip, pc_sn, pc_os)
-VALUES(1, 'N', 'Intel® Core™ i5-7500 3.4GHz 4 (4 Physical)', '8GB', 'ATA QNIX_120GB 112GB SSD (SATA)', '4c:cc:6a:f6:bf:5d', '192.168.0.152', now(), now(), 'hamonize-clientpc2', NULL, 3, '2020061600970', NULL, '7490a9f7d989432b9f0f5314ce82e956', NULL, 'no vpn', 'hamonize-clientpc2', 'H'),
-	  (2, 'N', 'Intel® Core™ i5-7400 3GHz 4 (4 Physical)', '8GB', 'SanDisk SanDisk_SD8SBAT128G1122 119GB SSD (SATA)', '10:7b:44:47:4d:79', '192.168.0.150', now(), now(), 'hamonize-clientpc', NULL, 2, '161853402440', NULL, 'a61e750dcf354127a388c66bd4063fde', NULL, 'no vpn', 'hamonize-clientpc', 'H');
+(pc_status, pc_cpu, pc_memory, pc_disk, pc_macaddress, pc_ip, first_date, last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid, pc_change, pc_vpnip, pc_sn, pc_os)
+VALUES('','Intel® Core™ i5-7500 3.4GHz 4 (4 Physical)', '8GB', 'ATA QNIX_120GB 112GB SSD (SATA)', '4c:cc:6a:f6:bf:5d', '192.168.0.152', now(), now(), 'hamonize-clientpc2', NULL, 3, '2020061600970', NULL, '7490a9f7d989432b9f0f5314ce82e956', NULL, 'no vpn', 'hamonize-clientpc2', 'H'),
+	  ('','Intel® Core™ i5-7400 3GHz 4 (4 Physical)', '8GB', 'SanDisk SanDisk_SD8SBAT128G1122 119GB SSD (SATA)', '10:7b:44:47:4d:79', '192.168.0.150', now(), now(), 'hamonize-clientpc', NULL, 2, '161853402440', NULL, 'a61e750dcf354127a388c66bd4063fde', NULL, 'no vpn', 'hamonize-clientpc', 'H');
 
 INSERT INTO public.tbl_pc_mangr (pc_status,pc_cpu,pc_memory,pc_disk,pc_macaddress,pc_ip,first_date,last_date,pc_hostname,pc_guid,org_seq,pc_disk_id,pc_cpu_id,pc_uuid,pc_change,pc_vpnip,pc_sn,pc_os) VALUES
 	 ('','Intel® Core™ i5-7500 3.4GHz 4 (4 Physical)','8GB','ATA QNIX_120GB 112GB SSD (SATA)','4c:cc:6a:f6:bf:5d','192.168.0.160','2021-09-10 07:15:48.924821','2021-08-20 05:07:40.178','hamonize-vpc009',NULL,4,'2020061600970',NULL,'hamonize-vpc009',NULL,'no vpn','hamonize-vpc009','H'),
@@ -1477,21 +1477,17 @@ INSERT INTO public.tbl_pc_mangr (pc_status,pc_cpu,pc_memory,pc_disk,pc_macaddres
 
 -- add device
 INSERT INTO public.tbl_security_mngr
-(sm_seq, sm_name, sm_status, sm_dc, sm_port, sm_gubun, sm_device_code)
-VALUES(1, 'card_usb', NULL, 'invesume-test-usb(cardType)', NULL, 'D', '048d:1234');
+(sm_name, sm_status, sm_dc, sm_port, sm_gubun, sm_device_code)
+VALUES('card_usb', NULL, 'invesume-test-usb(cardType)', NULL, 'D', '048d:1234');
 
 
 -- add backup
 INSERT INTO public.tbl_backup_recovery_mngr
-(br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
-VALUES(1, 3, '/timeshift/snapshots', '2021-11-15 16:58:01.000', 'B', '2021-11-15_16-58-01', 1);
+( br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
+VALUES( 3, '/timeshift/snapshots', '2021-11-15 16:58:01.000', 'B', '2021-11-15_16-58-01', 1);
 INSERT INTO public.tbl_backup_recovery_mngr
-(br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
-VALUES(2, 2, '/timeshift/snapshots', '2021-11-15 17:07:01.000', 'B', '2021-11-15_17-07-01', 2);
+( br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
+VALUES( 2, '/timeshift/snapshots', '2021-11-15 17:07:01.000', 'B', '2021-11-15_17-07-01', 2);
 
-ALTER SEQUENCE 'tbl_security_mngr_sm_seq_seq' RESTART WITH 2
-ALTER SEQUENCE 'tbl_device_applc_seq_seq' RESTART WITH 3
-ALTER SEQUENCE 'tbl_pc_mangr_seq_seq' RESTART WITH 103
-ALTER SEQUENCE 'tbl_org_seq_seq' RESTART WITH 5
 
 
