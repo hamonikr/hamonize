@@ -214,7 +214,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
   
 <hr>
 
-### Contributors 
-
 
 이 프로젝트는 [모든 기여자](https://github.com/all-contributors/all-contributors)들의 의사를 존중하고 어떤 종류의 기여라도 환영합니다!
+### Contributors 
+
