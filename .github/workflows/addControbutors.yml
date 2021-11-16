@@ -1,7 +1,7 @@
 name: Add contributors
 on:
   schedule:
-    - cron:  '0 1 * * *' # 0분 01시 일 월 요일
+    - cron:  '0 1 * * *' 
   push:
    branches:
      - master
