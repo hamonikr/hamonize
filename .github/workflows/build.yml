@@ -2,6 +2,13 @@ name: Hamonize CI
 on:
   push:
     branches: [ master ]
+    paths:
+      - '**.js'
+      - 'hamonize-agent/src/shell/*.sh'
+      - 'hamonize-connector/src/shell/*.sh'
+      - 'hamonize-admin/**'
+      - '!hamonize-admin/**.md'
+      - '!hamonize-admin/COPYING'
 jobs:          
   build-agent:
     name: Build Hamonize-agent
@@ -35,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
