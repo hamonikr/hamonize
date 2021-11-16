@@ -444,6 +444,7 @@ function fnSave(){
 		var vendor = $('#vendor_id').val();
 		var product = $('#product_id').val();
 		var regExp = /^[a-z0-9_]{4}$/;
+		var regExpName = /^[ㄱ-ㅎ가-힣a-zA-Z0-9_]*$/;
 
 		$('#sm_device_code').val($('#vendor_id').val()+":"+$('#product_id').val());
 		
@@ -451,6 +452,11 @@ function fnSave(){
 		if(name.length  <= 0){
 			alert('디바이스명을 입력해 주세요!');
 			return;
+		}else{
+			if(!regExpName.test(name)){
+				alert('디바이스 이름에는 공백을 제외한 문자, 숫자, 특수문자는 "_"만 이용가능합니다(20자 내)');
+				return;
+			}
 		}
 		
 		if(info.length  <= 0){
