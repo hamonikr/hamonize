@@ -166,7 +166,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 
 <br>
 
-## 👍 Contributing 
+### Contributors
 * [Code of Conduct](https://github.com/hamonikr/hamonize/blob/master/CODE_OF_CONDUCT.md)
 * [Contributing Guideline](https://github.com/hamonikr/hamonize/blob/master/CONTRIBUTING.md)
 * [Issue Guidelines](https://github.com/hamonikr/hamonize/blob/master/ISSUE_TEMPLATE.md)
