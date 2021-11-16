@@ -1369,6 +1369,7 @@ INSERT INTO public.tbl_security_mngr
 (sm_seq, sm_name, sm_status, sm_dc, sm_port, sm_gubun, sm_device_code)
 VALUES(1, 'card-usb', NULL, 'invesume-test-usb(cardType)', NULL, 'D', '048d:1234');
 
+<<<<<<< HEAD
 -- add backup
 INSERT INTO public.tbl_backup_recovery_mngr
 (br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
@@ -1376,4 +1377,9 @@ VALUES(1, 3, '/timeshift/snapshots', '2021-11-15 16:58:01.000', 'B', '2021-11-15
 INSERT INTO public.tbl_backup_recovery_mngr
 (br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq)
 VALUES(2, 2, '/timeshift/snapshots', '2021-11-15 17:07:01.000', 'B', '2021-11-15_17-07-01', 2);
+=======
+ALTER SEQUENCE 'tbl_security_mngr_sm_seq_seq' RESTART WITH 2
+
+
+>>>>>>> 18aa8944ef9dd2de269615c9952232fcda48e923
 
