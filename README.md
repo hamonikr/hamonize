@@ -174,114 +174,114 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
         <a href=https://github.com/jullee96>
             <img src=https://avatars.githubusercontent.com/u/66409676?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=julie lee/>
             <br />
-            <sub style="font-size:14px"><b>julie lee</b></sub>
+            <sub style="font-size:100px"><b>julie lee</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/yeji0407>
             <img src=https://avatars.githubusercontent.com/u/55476302?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=yeji0407/>
             <br />
-            <sub style="font-size:14px"><b>yeji0407</b></sub>
+            <sub style="font-size:100px"><b>yeji0407</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/gon1942>
             <img src=https://avatars.githubusercontent.com/u/31919227?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=ryan/>
             <br />
-            <sub style="font-size:14px"><b>ryan</b></sub>
+            <sub style="font-size:100px"><b>ryan</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/igothere>
             <img src=https://avatars.githubusercontent.com/u/51899018?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Eden/>
             <br />
-            <sub style="font-size:14px"><b>Eden</b></sub>
+            <sub style="font-size:100px"><b>Eden</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/chaeya>
             <img src=https://avatars.githubusercontent.com/u/405502?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Kevin Kim/>
             <br />
-            <sub style="font-size:14px"><b>Kevin Kim</b></sub>
+            <sub style="font-size:100px"><b>Kevin Kim</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/1942kg>
             <img src=https://avatars.githubusercontent.com/u/24218451?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=1942kg/>
             <br />
-            <sub style="font-size:14px"><b>1942kg</b></sub>
+            <sub style="font-size:100px"><b>1942kg</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/leemgs>
             <img src=https://avatars.githubusercontent.com/u/82404?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Geunsik Lim/>
             <br />
-            <sub style="font-size:14px"><b>Geunsik Lim</b></sub>
+            <sub style="font-size:100px"><b>Geunsik Lim</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href=https://github.com/suyun1017>
-            <img src=https://avatars.githubusercontent.com/u/93955272?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=suyun1017/>
+        <a href=https://github.com/pichecker>
+            <img src=https://avatars.githubusercontent.com/u/93516744?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=pichecker/>
             <br />
-            <sub style="font-size:14px"><b>suyun1017</b></sub>
+            <sub style="font-size:100px"><b>pichecker</b></sub>
         </a>
     </td>
 </tr>
 <tr>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href=https://github.com/pichecker>
-            <img src=https://avatars.githubusercontent.com/u/93516744?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=pichecker/>
+        <a href=https://github.com/suyun1017>
+            <img src=https://avatars.githubusercontent.com/u/93955272?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=suyun1017/>
             <br />
-            <sub style="font-size:14px"><b>pichecker</b></sub>
+            <sub style="font-size:100px"><b>suyun1017</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/leerosep>
             <img src=https://avatars.githubusercontent.com/u/93893152?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=rosep/>
             <br />
-            <sub style="font-size:14px"><b>rosep</b></sub>
+            <sub style="font-size:100px"><b>rosep</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/bdh1993>
             <img src=https://avatars.githubusercontent.com/u/58254473?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=JamesBae/>
             <br />
-            <sub style="font-size:14px"><b>JamesBae</b></sub>
+            <sub style="font-size:100px"><b>JamesBae</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/khs7516>
             <img src=https://avatars.githubusercontent.com/u/35002528?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=khs7516/>
             <br />
-            <sub style="font-size:14px"><b>khs7516</b></sub>
+            <sub style="font-size:100px"><b>khs7516</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/yeji980407>
             <img src=https://avatars.githubusercontent.com/u/84702382?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=yeji980407/>
             <br />
-            <sub style="font-size:14px"><b>yeji980407</b></sub>
+            <sub style="font-size:100px"><b>yeji980407</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/hjoon0510>
             <img src=https://avatars.githubusercontent.com/u/34376749?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Lim Hyunjoon/>
             <br />
-            <sub style="font-size:14px"><b>Lim Hyunjoon</b></sub>
+            <sub style="font-size:100px"><b>Lim Hyunjoon</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/choonsik2>
             <img src=https://avatars.githubusercontent.com/u/62954933?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=choonsik/>
             <br />
-            <sub style="font-size:14px"><b>choonsik</b></sub>
+            <sub style="font-size:100px"><b>choonsik</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/bigmoment>
             <img src=https://avatars.githubusercontent.com/u/25470869?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=saam3/>
             <br />
-            <sub style="font-size:14px"><b>saam3</b></sub>
+            <sub style="font-size:100px"><b>saam3</b></sub>
         </a>
     </td>
 </tr>
