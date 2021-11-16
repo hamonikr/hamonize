@@ -271,19 +271,19 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href=https://github.com/suyun1017>
-            <img src=https://avatars.githubusercontent.com/u/93955272?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=suyun1017/>
+        <a href=https://github.com/pichecker>
+            <img src=https://avatars.githubusercontent.com/u/93516744?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=pichecker/>
             <br />
-            <sub style="font-size:100px"><b>suyun1017</b></sub>
+            <sub style="font-size:100px"><b>pichecker</b></sub>
         </a>
     </td>
 </tr>
 <tr>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href=https://github.com/pichecker>
-            <img src=https://avatars.githubusercontent.com/u/93516744?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=pichecker/>
+        <a href=https://github.com/suyun1017>
+            <img src=https://avatars.githubusercontent.com/u/93955272?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=suyun1017/>
             <br />
-            <sub style="font-size:100px"><b>pichecker</b></sub>
+            <sub style="font-size:100px"><b>suyun1017</b></sub>
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
