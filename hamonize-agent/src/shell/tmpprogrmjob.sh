@@ -4,7 +4,10 @@ sgbUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk
 CENTERURL="http://${sgbUrl}/act/progrmAct"
 PCUUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/progrmjobPolicyAct.log"
-touch $LOGFILE
+
+if [[ ! -f "$LOGFILE" ]]; then
+        touch $LOGFILE
+fi
 
 UUID=`cat /etc/hamonize/uuid |head -1`
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
