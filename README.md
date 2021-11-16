@@ -185,7 +185,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
     git push 
   ```
 
-* **Contributers** ✨
+* ### Contributors ✨
   
   
     하모나이즈 프로젝트에 참여해주신 멋진 분들입니다 
