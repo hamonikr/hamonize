@@ -6,7 +6,7 @@ PCUUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/updp.log"
 touch $LOGFILE
 
-
+sudo systemctl stop hamonize-processmngr.service
 
 echo "################### updt deb install ###########################" >>$LOGFILE
 
@@ -267,3 +267,5 @@ fi
 
 
 echo "RETUPDT agent to hamonize center result---->  $RETUPDT" >> ${LOGFILE}
+
+sudo systemctl start hamonize-processmngr.service
