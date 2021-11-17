@@ -16,7 +16,7 @@ DIR_NAME="/tmp/backuptest";
 BKGUBUN="B"
 
  
-if [ ! -f "$FILE" ]; then
+if [ ! -f "$LOGFILE" ]; then
 	sudo touch $LOGFILE
 fi
 
