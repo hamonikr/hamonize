@@ -7,8 +7,10 @@ DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 HOSTNAME=`hostname`
 UUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/progrmjob.log"
-touch $LOGFILE
 
+if [[ ! -f "$LOGFILE" ]]; then
+        touch $LOGFILE
+fi
 
 echo "################### Progrm block ###########################"
 
