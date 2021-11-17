@@ -1,5 +1,6 @@
 [Unit]
 Description=hamonize-agent
+Documentation="https://github.com/hamonikr/hamonize/wiki"
 After=network.target
 StartLimitInterval=33
 StartLimitBurst=5
