@@ -31,4 +31,4 @@ ALLOW_JSON="{\
 echo $ALLOW_JSON >> $LOGFILE
 echo $IVSC >>$LOGFILE
 RETCURL=`curl  -X  POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$ALLOW_JSON" $IVSC`
-echo $RETCURL >> ${LOGFILE}
+echo $RETCURL >> $LOGFILE
