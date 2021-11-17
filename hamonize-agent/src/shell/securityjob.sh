@@ -57,4 +57,5 @@ done;
 IFS=$OLD_IFS
 
 sudo ufw disable
+sudo ufw status
 sudo iptables -F
