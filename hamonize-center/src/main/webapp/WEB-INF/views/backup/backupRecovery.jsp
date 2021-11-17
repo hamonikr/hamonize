@@ -11,21 +11,21 @@
 
 <style type="text/css">
 .board_view tbody td li:after {
-    content: "";
-    color: #ccc;
-    padding-left: 40px;
-    font-size: 13px;
+  content: "";
+  color: #ccc;
+  padding-left: 40px;
+  font-size: 13px;
 }
 .some-class {
   /* float: left; */
-  clear: none;
+	clear: none;
 }
 
 label {
-  float: left;
-  clear: none;
-  display: block;
-  padding: 2px 1em 0 0;
+	float: left;
+	clear: none;
+	display: block;
+	padding: 2px 1em 0 0;
 }
 
 input[type=radio],
@@ -35,18 +35,6 @@ input.radio {
   margin: 6px 7px 6px 2px;
 }
 #pc_list , #rc_list { width: 100% }
-</style>
-
-<style>
-div.radio-holder {
-  /* padding: 10px; */
-}
-input[type="radio"] {
- &:checked+label {
-  border-bottom: 2px solid #222222;
-  padding-bottom: 0px;
- }
-}
 </style>
 
 <script type="text/javascript">
@@ -103,25 +91,25 @@ input[type="radio"] {
 		  
 		
   	 //라디오 이벤트 - PC 목록 클릭시
-	 $("#pc_list").on("click", "label", function(){
-		 $(this).prev().prop( "checked", true );
-		 $("#rc_list").empty();
-		 
-		 var seq = $("input:radio[name='dept_seq']:checked").val();
-		 
-		 $.post("backupRCList.do",{seq:seq},
+	$("#pc_list").on("click", "label", function(){
+		$(this).prev().prop( "checked", true );
+
+		var seq = $("input:radio[name='dept_seq']:checked").val();
+
+		$.post("backupRCList.do",{seq:seq},
 					function(result){
+						$("#rc_list").empty();
 							var agrs = result;
 							var strHtml = "";
 					
-							for(var i = 0; i < agrs.length; i++){
+						for(var i = 0; i < agrs.length; i++){
 								strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
 								strHtml += "<span>";
 								strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq"+i+"\" value='"+agrs[i].br_seq+"'/>";
 								strHtml += "<label style='float: unset;' for=\"br_seq"+i+"\" class=\"\">";
 
-		 						if(agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
-		 						else if(agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
+							if(agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
+							else if(agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
 							
 								strHtml += "</label>";
 								strHtml += "</span>";
@@ -152,13 +140,13 @@ input[type="radio"] {
 
 });
 	var log, className = "dark", curDragNodes, autoExpandNode;
- 
+
 	function setTrigger() {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
 	}
 	
-	 function beforeClick(treeId, treeNode,clickFlag) {
+	function beforeClick(treeId, treeNode,clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		zTree.checkNode(treeNode, !treeNode.checked, true, true);
 		return true;
@@ -299,7 +287,7 @@ function fnSave(){
             <div class="right_box" >
 
                 <h3>복구관리</h3>
-                 <div class="board_view mT20">
+                <div class="board_view mT20">
                 <form name="frm" method="post" action="backupRCSave.do" class="row">
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
 								<input type="hidden" name="br_seq"  id="br_seq" value="" />
@@ -318,8 +306,8 @@ function fnSave(){
                         <tr>
                         	<td colspan='2'>
                         		<span id='selectPcOne'></span>
-                           <ul class='promlist' id="rc_list"></ul>
-                         </td>
+                          <ul class='promlist' id="rc_list"></ul>
+                        </td>
                         </tr>
                     </tbody>
                 </table>
