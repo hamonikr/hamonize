@@ -4,7 +4,10 @@ centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | 
 CENTERURL="http://${centerUrl}/hmsvc/updtpolicy"
 PCUUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/updp.log"
-touch $LOGFILE
+
+if [[ ! -f "$LOGFILE" ]]; then
+        touch $LOGFILE
+fi
 
 sudo systemctl stop hamonize-processmngr.service
 
