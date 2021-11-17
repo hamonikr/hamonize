@@ -25,3 +25,9 @@ hamonize-connector/src/node-modules/*
 
 # CTag
 /tags
+
+
+# binary files
+*.so
+*.o
+*.a
