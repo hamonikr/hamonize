@@ -1,0 +1,5 @@
+rdevicerules (1.0.0) stable; urgency=low
+
+  * Initial release. remove hamonize udev rules 
+
+ -- julie lee <bono6315@gmail.com>  Fri, 19 Nov 2021 10:27:34 +0900

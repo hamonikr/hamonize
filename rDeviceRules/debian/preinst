@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sudo cp /etc/udev/rules.d/30-usb-lockdown.rules /etc/udev/rules.d/30-usb-lockdown.rules_hm 
+
+sudo rm /etc/udev/rules.d/30-usb-lockdown.rules
+

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+## udev service restart..
+sudo systemctl restart udev.service 

@@ -1,0 +1,11 @@
+Source: rdevicerules
+Section: metapackages
+Priority: optional
+Maintainer: julie lee <bono6315@gmail.com>
+Build-Depends: debhelper (>=11~)
+Standards-Version: 4.1.4
+Homepage: https://hamonikr.org
+
+Package: rdevicerules
+Architecture: all
+Description: remove hamonize udev rules. allowing all usb device
