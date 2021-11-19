@@ -107,19 +107,19 @@
 
 | Name                                                                                | Description                         |
 | ----------------------------------------------------------------------------------- | ----------------------------------- |
-| [Hamonize-center](https://github.com/hamonikr/hamonize/tree/master/hamonize-center) | spring boot 기반의 java 웹 프로그램 |
+| [Hamonize-center](https://github.com/hamonikr/hamonize/tree/master/hamonize-center) | Spring boot 기반의 Java 웹 프로그램 |
 
 | Name                                                                              | Description                              |
 | --------------------------------------------------------------------------------- | ---------------------------------------- |
-| [Hamonize-agent](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent) | node+shell script 기반의 pc관리 프로그램 |
+| [Hamonize-agent](https://github.com/hamonikr/hamonize/tree/master/hamonize-agent) | Node와 Shell script 기반의 PC관리 프로그램 |
 
 | Name                                                                              | Description                  |
 | --------------------------------------------------------------------------------- | ---------------------------- |
-| [Hamonize-admin](https://github.com/hamonikr/hamonize/tree/master/hamonize-admin) | c++ 기반의 원격관리 프로그램 |
+| [Hamonize-admin](https://github.com/hamonikr/hamonize/tree/master/hamonize-admin) | C++ 기반의 원격관리 프로그램 |
 
 | Name                                                                                      | Description                                 |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------- |
-| [Hamonize-connector](https://github.com/hamonikr/hamonize/tree/master/hamonize-connector) | electron+shell 기반의 pc 초기 설정 프로그램 |
+| [Hamonize-connector](https://github.com/hamonikr/hamonize/tree/master/hamonize-connector) | Electron과 Shell script기반의 PC 초기 설정 프로그램 |
 
 
 <br>
