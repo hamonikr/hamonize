@@ -72,7 +72,7 @@ function getMonthAgoday(){
                         <li><a href="/gplcs/umanage">업데이트관리</a></li>
                         <li><a href="/gplcs/pmanage">프로그램관리</a></li>
                         <li><a href="/gplcs/fmanage">방화벽관리</a></li>
-                        <li><a href="/gplcs/dmanage">디바이스관리</a></li>
+                        <%-- <li><a href="/gplcs/dmanage">디바이스관리</a></li> --%>
                     </ul>
                 </li>
 
@@ -88,7 +88,7 @@ function getMonthAgoday(){
                     <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li> 
                     <li><a href="/auditLog/prcssBlockLog">프로세스 차단로그</a></li>
                     <li><a href="/auditLog/pcChangeLog">하드웨어 변경로그</a></li>
-                    <li><a href="/auditLog/unAuthLog">비인가 디바이스로그</a></li>
+                    <%-- <li><a href="/auditLog/unAuthLog">비인가 디바이스로그</a></li> --%>
                     <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a></li>
                 </ul>
                 </li>
