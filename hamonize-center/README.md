@@ -135,18 +135,17 @@ docker-compose.yml 파일은 docker로 was, db, ldap, influxdb 서버등을 도�
    
    - 실행
       ```
-        # hamonize-cener/ 위치에서
+        # hamonize-cener/ 위치에서 도커기반 인스턴스들을 실행
         docker-compose up
 
-        # 실행중인 컨테이너 확인
+        # 실행중인 컨테이너들을 조회하기
         docker-compose ps
 
-        # 서버 전체 다운
+        # 실행중인 모든 도커 인스턴스들을 종료하기
         docker-compose down  
 
-        # 볼륨까지 지울때 
+        # 도커 인스턴스들의 볼륨까지 지우기 
         docker-compose down -v 
-
       ```
 
    - volume 위치 : /var/lib/docker/volumes/
