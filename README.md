@@ -53,14 +53,14 @@
 ## 📌 Hamonize Program OS 지원
 
 
-| OS 구분                                                      | Description                         |
-| --------------------------------------------------------- | ----------------------------------- |
-| HamoniKR OS 4.0 Jin | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능|
-| Linux Mint 20.2 | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능|
-| Debian bullseye | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능|
-| Ubuntu 20.04 | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능|
-| Gooroom 2.4 | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능|
-| Window 10 | Hamonize (Connector 프로그램, 원격관리프로그램) 가능|
+| OS 구분             | Description                                                                                  |
+| ------------------- | -------------------------------------------------------------------------------------------- |
+| HamoniKR OS 4.0 Jin | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능 |
+| Linux Mint 20.2     | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능 |
+| Debian bullseye     | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능 |
+| Ubuntu 20.04        | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능 |
+| Gooroom 2.4         | Hamonize (Connector 프로그램, Agent 프로그램, 원격관리프로그램, Usb관리, 프로세스관리 ) 가능 |
+| Window 10           | Hamonize (Connector 프로그램, 원격관리프로그램) 가능                                         |
 
 <br>
 
@@ -186,8 +186,6 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
     git push 
   ```
 
-
-
 <br>
 
 ## 📜 License 
@@ -199,7 +197,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 | ----------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------- |
 | [hamonize-center](https://github.com/jullee96/hamonize/blob/master/hamonize-center/COPYING)     | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-center/NOTICE.md)    |
 | [hamonize-agent](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/COPYING)       | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-agent/NOTICE.md)     |
-| [hamonize-admin](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/COPYING)       | GPL 2.0             | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/NOTICE.md)     |
+| [hamonize-admin](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/COPYING)       | GPL 2.0            | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-admin/NOTICE.md)     |
 | [hamonize-connect](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/COPYING) | Apache License 2.0 | [NOTICE](https://github.com/jullee96/hamonize/blob/master/hamonize-connector/NOTICE.md) |
 
 
@@ -338,4 +336,14 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 </tr>
 </table>
 
+
+<br>
+
+## :arrow_forward: 영상으로 보는 하모나이즈 실행 방법
+
+### 하모나이즈 센터
+
+<a href="https://www.youtube.com/watch?v=bohd6Jjwmm4" target="_blank">
+ <img src="https://img.youtube.com/vi/bohd6Jjwmm4/0.jpg" alt="Watch the video" width="" height="" border="10" />
+</a>
 
