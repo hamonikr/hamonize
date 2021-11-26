@@ -339,9 +339,19 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 
 <br>
 
-## :arrow_forward: 영상으로 보는 하모나이즈 실행 방법
+## :arrow_forward: 영상으로 보는 하모나이즈 
 
-### 하모나이즈 센터
+### 소개영상
+
+<a href="https://www.youtube.com/watch?v=N2zPF77NNec" target="_blank">
+ <img src="https://img.youtube.com/vi/N2zPF77NNec/0.jpg" alt="Watch the video" width="" height="" border="10" />
+</a>
+
+<br><br>
+
+### 실행방법
+
+#### 하모나이즈 센터 
 
 <a href="https://www.youtube.com/watch?v=bohd6Jjwmm4" target="_blank">
  <img src="https://img.youtube.com/vi/bohd6Jjwmm4/0.jpg" alt="Watch the video" width="" height="" border="10" />
