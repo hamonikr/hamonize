@@ -395,8 +395,7 @@ xmlhttp.send();
     <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
     </script>
     <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
-    <script src="vendor/counter-up/jquery.counterup.min.js">
-    </script>
+    <%-- <script src="vendor/counter-up/jquery.counterup.min.js"></script> --%>
     <script src="vendor/circle-progress/circle-progress.min.js"></script>
     <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
     <%-- <script src="vendor/chartjs/Chart.bundle.min.js"></script> --%>
