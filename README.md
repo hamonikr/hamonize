@@ -178,7 +178,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
     1. 아래의 방법으로  Commit Message Templeate 설정을 합니다 
     [전역설정] git config --global commit.template <.gitmessage.txt 경로>
     [레포마다다르게 설정] git config commit.template <.gitmessage.txt 경로>
-
+  
     2. 설정이 완료된 후 git commit template 사용방법은 
     git init 
     git add .
@@ -351,9 +351,16 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 
 ### 실행방법
 
-#### 하모나이즈 센터 
+#### 하모나이즈 센터 및 기타 서버들
 
 <a href="https://www.youtube.com/watch?v=bohd6Jjwmm4" target="_blank">
  <img src="https://img.youtube.com/vi/bohd6Jjwmm4/0.jpg" alt="Watch the video" width="" height="" border="10" />
 </a>
+
+
+
+#### 하모나이즈 커넥터 및 하모나이즈 에이전트
+
+<a href="https://www.youtube.com/watch?v=YwDurh6wQz0" target="_blank">
+ <img src="https://img.youtube.com/vi/YwDurh6wQz0/0.jpg" alt="Watch the video" width="" height="" border="10" />
 
