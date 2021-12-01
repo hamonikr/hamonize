@@ -44,10 +44,16 @@
 			success: function(data, textStatus, jqXHR){
 				console.log(data)
 				if(data == "0"){
-					alert('잘못된 로그인 정보입니다. 다시입력하세요.');
+					alert('잘못된 로그인 정보입니다. 다시입력하세요.\n5번이상 실패시 해당계정은 잠금 처리 됩니다.');
 					$('#user_id').focus();
 				}else if(data == "2"){
 					alert('허용되지 않는 아이피입니다. 관리자에 문의하세요.');
+					location.href = "";
+				}else if(data == "3"){
+					alert('비활성화된 계정입니다. 관리자에 문의하세요.');
+					location.href = "";
+				}else if(data == "5"){
+					alert('잘못된 로그인 정보로 5회 이상 로그인 실패하여 계정이 잠겼습니다. 관리자에 문의하세요.');
 					location.href = "";
 				}else{
 					location.href = "/main";
