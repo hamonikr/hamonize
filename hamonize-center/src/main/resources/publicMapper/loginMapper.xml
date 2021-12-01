@@ -50,5 +50,15 @@
 		 WHERE SEQ         = #{loginKey}
  	</update>
 
+	 <select id="getLoginFailCount" resultType="int">
+	   SELECT LOGIN_CHECK FROM TBL_ADMIN_USER WHERE USER_ID = #{user_id}
+    </select>
+
+	<update id="updateLoginFailCount" parameterType="java.util.HashMap">
+		UPDATE TBL_ADMIN_USER
+		   SET LOGIN_CHECK = LOGIN_CHECK +1
+		 WHERE USER_ID         = #{user_id}
+ 	</update>
+
 
 </mapper>

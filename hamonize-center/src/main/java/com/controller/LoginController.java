@@ -57,8 +57,15 @@ public class LoginController implements Serializable {
 		String result = "0";
 
 		if (lvo == null || lvo.getUser_id() == null) {
+			loginService.updateLoginFailCount(params);
 			return result;
-		} else {
+		} else if(loginService.getLoginFailCount(params) > 4){
+			result = "5";
+			return result;
+		} else if("D".equals(lvo.getGubun())){
+			result = "3";
+			return result;
+		}else {
 
 			request.getSession().setAttribute("userSession", lvo);
 			lvo.setUser_ip(request.getRemoteAddr());

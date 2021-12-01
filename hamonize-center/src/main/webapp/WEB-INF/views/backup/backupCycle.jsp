@@ -353,7 +353,7 @@ function fnSave(){
                         <tr>
                             <th rowspan="3">백업시간 선택</th>
                             <td>
-								<input type="text" id="bac_cycle_time" name="bac_cycle_time" onclick="javascript:fn_timePicker(this);" class="input_type1" placeholder="시간선택" autocomplete="off" />
+								<input type="text" id="bac_cycle_time" name="bac_cycle_time" onclick="javascript:fn_timePicker(this);" class="input_type1" placeholder="시간선택 (HH:mm)" autocomplete="off" readonly/>
                             </td>
                         </tr>
                     </tbody>
