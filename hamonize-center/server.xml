@@ -33,6 +33,8 @@
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                prefix="localhost_access_log" suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+        <Valve className="org.apache.catalina.valves.ErrorReportValve" errorCode.400="ROOT/WEB-INF/classes/static/error-405.html"
+        errorCode.0="ROOT/WEB-INF/classes/static/error-405.html" showReport="false" showServerInfo="false"/>
 
       </Host>
     </Engine>

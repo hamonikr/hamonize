@@ -109,6 +109,14 @@
 		WHERE USER_ID = #{user_id}
 	</select>
 
+	<select id="adminPasswordCheck" parameterType="com.model.AdminVo" resultType="Integer">
+		SELECT
+		COUNT(USER_ID) as cnt
+		FROM TBL_ADMIN_USER
+		WHERE USER_ID = #{user_id}
+		AND PASS_WD = #{current_pass_wd}
+	</select>
+
 
 	<!-- 부서 관리자 -->
 	<select id="sgbManagerList" resultType="com.model.AdminVo">

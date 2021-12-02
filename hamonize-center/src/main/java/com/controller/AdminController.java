@@ -15,11 +15,13 @@ import com.mapper.IGetAgentPollingMapper;
 import com.model.AdminVo;
 import com.model.FileVo;
 import com.model.HmProgrmUpdtVo;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.SvrlstVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.AdminService;
+import com.service.LoginService;
 import com.service.OrgService;
 import com.service.SvrlstService;
 import com.util.Constant;
@@ -35,6 +37,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -43,6 +46,9 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminservice;
+
+	@Autowired
+	private LoginService loginService;
 
 	@Autowired
 	private OrgService oService;
@@ -212,15 +218,24 @@ public class AdminController {
 
 	@PostMapping("/modify")
 	@ResponseBody
-	public int modify(Model model, AdminVo vo) {
+	public int modify(Model model, AdminVo vo, @RequestParam Map<String, Object> params) throws Exception {
 		int result = 0;
-		if (vo.getPass_wd() != null || !vo.getPass_wd().trim().isEmpty()) {
-			String salt = SHA256Util.generateSalt();
-			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
-			vo.setSalt(salt);
+		System.out.println("params===="+params);
+		LoginVO salt_vo = loginService.getSalt(params);
+		vo.setCurrent_pass_wd(SHA256Util.getEncrypt(vo.getCurrent_pass_wd(), salt_vo.getSalt()));
+		result = adminservice.adminPasswordCheck(vo);
+		System.out.println("result==="+adminservice.adminPasswordCheck(vo));
+		if(result == 1){
+			if (vo.getPass_wd() != null || !vo.getPass_wd().trim().isEmpty()) {
+				String salt = SHA256Util.generateSalt();
+				vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
+				vo.setSalt(salt);
+			}
+	
+			result = adminservice.adminModify(vo);
+		}else{
+			result = 0;
 		}
-
-		result = adminservice.adminModify(vo);
 		return result;
 
 	}

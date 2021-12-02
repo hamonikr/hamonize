@@ -20,6 +20,8 @@ public interface IAdminMapper {
 	
 	public int adminIdCheck(AdminVo vo);
 	
+	public int adminPasswordCheck(AdminVo vo);
+	
 	
 	//사지방 관리자
 	public List<AdminVo> sgbManagerList(AdminVo vo);

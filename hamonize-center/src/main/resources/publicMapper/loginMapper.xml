@@ -60,5 +60,12 @@
 		 WHERE USER_ID         = #{user_id}
  	</update>
 
+	 <update id="updateLoginFailCountInit" parameterType="java.util.HashMap">
+		UPDATE TBL_ADMIN_USER
+		   SET LOGIN_CHECK = 0
+		 WHERE USER_ID         = #{user_id}
+ 	</update>
+
+
 
 </mapper>

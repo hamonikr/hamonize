@@ -9,6 +9,10 @@
 <link rel="stylesheet" type="text/css" href="/css/sgb/content.css">
 
 <script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+<script type="text/javascript" src="/js/rsa/rng.js"></script>
 	
 <script type="text/javascript">
 	var ip;
@@ -25,6 +29,14 @@
 		  script.src= 'https://api.ipify.org?format=jsonp&callback=getIP';
 		  head.appendChild(script);
 		})(window); 
+
+	function loginRSA(pw){
+		// rsa 암호화	
+		var rsa = new RSAKey();
+		rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
+			
+		return rsa.encrypt(pw);
+	}
 	//로그인 처리
 	function fn_signIn(){
 		if($('#user_id').val() == ''){
@@ -36,6 +48,11 @@
 			$('#pass_wd').focus();
 			return false;
 		}
+		//패스워드 암호화
+		if($('#pass_wd').val() != ''){
+			$('#pass_wd').val(loginRSA($('#pass_wd').val()));
+		}
+
 		 $.ajax({
 			url: "insession.do",
 			type:"POST",
@@ -46,14 +63,19 @@
 				if(data == "0"){
 					alert('잘못된 로그인 정보입니다. 다시입력하세요.\n5번이상 실패시 해당계정은 잠금 처리 됩니다.');
 					$('#user_id').focus();
+					$('#pass_wd').val(null);
+
 				}else if(data == "2"){
 					alert('허용되지 않는 아이피입니다. 관리자에 문의하세요.');
+					$('#pass_wd').val(null);
 					location.href = "";
 				}else if(data == "3"){
 					alert('비활성화된 계정입니다. 관리자에 문의하세요.');
+					$('#pass_wd').val(null);
 					location.href = "";
 				}else if(data == "5"){
 					alert('잘못된 로그인 정보로 5회 이상 로그인 실패하여 계정이 잠겼습니다. 관리자에 문의하세요.');
+					$('#pass_wd').val(null);
 					location.href = "";
 				}else{
 					location.href = "/main";
@@ -79,6 +101,10 @@
 </head>
 
 <body>
+	<form name="form_chk" id="form_chk" method="post">
+		<input type="hidden" id="RSAModulus" name="RSAModulus" value="${publicKeyModulus}" />
+		<input type="hidden" id="RSAExponent" name="RSAExponent" value="${publicKeyExponent}" />
+	</form>
 <div class="login_wrap">
 	<div class="hamologin">
 		<h1><img alt="login image" src="/images/login_tit.png"></h1>

@@ -140,10 +140,10 @@ CREATE TABLE public.tbl_admin_user (
 );
 COMMENT ON TABLE public.tbl_admin_user IS '관리자 정보';
 
+alter table TBL_ADMIN_USER add column login_check smallint default 0;
 -- Permissions
 
 ALTER TABLE public.tbl_admin_user OWNER TO hamonize;
-
 
 -- public.tbl_agent_job definition
 
@@ -1333,9 +1333,9 @@ ALTER TABLE public.tbl_user OWNER TO hamonize;
 
 -- backup data 
 
-INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,upd_date,gubun,salt) VALUES
-	('admin','admin','uor4XWaWKTs4935iVs+1eIIxiymAm4hYJYsSHs/CU5A=',NULL,'2021-08-10 11:33:17.030959',NULL,'A','6a70a227ea35f4d0'),
-	('test','test','i2c+1cHCD2hMB2klY1Apcg7aZIzHwcOwRsO4RJ8Sj38=',NULL,'2021-08-10 11:33:17.030959','2021-09-03 16:12:55.95216','A','24f9ca45fcbe2903');
+INSERT INTO public.tbl_admin_user (user_id,user_name,pass_wd,dept_name,ins_date,upd_date,gubun,salt,login_check) VALUES
+	('admin','admin','uor4XWaWKTs4935iVs+1eIIxiymAm4hYJYsSHs/CU5A=',NULL,'2021-08-10 11:33:17.030959',NULL,'A','6a70a227ea35f4d0',0),
+	('test','test','i2c+1cHCD2hMB2klY1Apcg7aZIzHwcOwRsO4RJ8Sj38=',NULL,'2021-08-10 11:33:17.030959','2021-09-03 16:12:55.95216','A','24f9ca45fcbe2903',0);
 INSERT INTO public.tbl_svrlst (svr_nm,svr_domain,svr_ip,svr_dc,insert_dt,svr_port,svr_used,svr_vip) VALUES
 	('CENTERURL',NULL,'localhost',NULL,NULL,'8080',0,NULL),
 	('COLLECTDIP',NULL,'localhost',NULL,NULL,NULL,0,NULL),
