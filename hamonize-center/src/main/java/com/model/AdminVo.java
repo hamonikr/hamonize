@@ -13,6 +13,7 @@ public class AdminVo extends PagingVo {
 	// 센터 관리자
 	private String user_id;
 	private String pass_wd;
+	private String current_pass_wd;
 	private String user_name;
 	private String dept_name;
 	private String gubun;

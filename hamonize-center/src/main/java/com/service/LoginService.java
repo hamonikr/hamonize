@@ -54,4 +54,8 @@ public class LoginService {
 		loginMapper.updateLoginFailCount(params);
 	}
 
+	public void updateLoginFailCountInit(Map<String, Object> params) throws Exception {
+		loginMapper.updateLoginFailCountInit(params);
+	}
+
 }

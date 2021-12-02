@@ -10,9 +10,10 @@
 	});
 	var mailFilter = /^[_a-zA-Z0-9-\.]+@[\.a-zA-Z0-9-]+\.[a-zA-Z]+$/;
 	var phoneFilter = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+	var regExpPw = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$/;
 	
 	function goSave(){
-		
+		alert(22);
 		if(vaildCheck()) return false;
 		var gubun = $("#gubun option:checked").val();
 		$('#gubun').val(gubun);
@@ -52,7 +53,7 @@
 			alert('아이디 중복 체크를 확인해 주세요.');
 			$('#idCheck').focus();
 			return true;
-		} 
+		}
 		 
 		if($(':radio[name="gubun"]:checked').length < 1)
 		{
@@ -63,14 +64,14 @@
 		
 		if($('#pass_wd').val() == '')
 		{
-			alert('비밀번호는 필수 입력 입니다.');
+			alert('새로운 비밀번호는 필수 입력 입니다.');
 			$('#pass_wd').focus();
 			return true;
 		}
 		
 		if($('#pass_wd_cfm').val() == '')
 		{
-			alert('비밀번호 확인은 필수 입력 입니다.');
+			alert('새로운 비밀번호 확인은 필수 입력 입니다.');
 			$('#pass_wd_cfm').focus();
 			return true;
 		}
@@ -133,6 +134,12 @@
 		var gubun = $("#gubun option:checked").val();
 		$('#gubun').val(gubun);
 		
+		if($('#current_pass_wd').val() == '')
+		{
+			alert('현재 비밀번호는 필수 입력 입니다.');
+			$('#current_pass_wd').focus();
+			return true;
+		}
 		
 		if($('#pass_wd').val() == '')
 		{
@@ -147,11 +154,25 @@
 			$('#pass_wd_cfm').focus();
 			return true;
 		}
+
+		if(!regExpPw.test($('#pass_wd').val()))
+		{
+			alert('비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상만 가능합니다.');
+			$('#pass_wd').focus();
+			return true;
+		}
 		
 		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
 		{
 			alert('비밀번호와 비밀번호 확인이 다릅니다.');
 			$('#pass_wd_cfm').focus();
+			return true;
+		}
+
+		if($('#pass_wd').val() == $('#current_pass_wd').val())
+		{
+			alert('현재 비밀번호는 새로운 비밀번호로 할 수 없습니다.');
+			$('#pass_wd').focus();
 			return true;
 		}
 		
@@ -185,8 +206,13 @@
 			data :  $("#frm").serialize(),
 			dataType : "json",
 			success: function(data, textStatus, jqXHR){
-			   alert('성공적으로 수정 되었습니다.');
-			   location.href = "list.do";
+				if(data == 1){
+					alert('성공적으로 수정 되었습니다.');
+					location.href = "list.do";
+				} else{
+					alert('현재 비밀번호가 틀렸습니다. 확인 후 수정 하시기 바랍니다.');
+					return false;
+				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("수정시 에러 : "+" "+ textStatus);
@@ -259,15 +285,21 @@
                                 <td><label for="user_name" class="none"></label><input type="text" name="user_name" id="user_name" value="${result.user_name}" class="input_type1 w100" /></td>
                                 
                             <tr>
+							<tr>
+								<th>* 현재 비밀번호</th>
+								<td>
+									<label for="current_pass_wd" class="none"></label><input type="password" name="current_pass_wd" id="current_pass_wd" class="input_type1" />
+								</td>
+							</tr>	
                             <tr>
-                                <th>* 비밀번호</th>
+                                <th>* 새로운 비밀번호</th>
                                 <td>
                                     <label for="pass_wd" class="none"></label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" />
-                                    <%-- ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상 --%>
+                                    ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상
                                 </td>
                             </tr>
                             <tr>
-                                <th>* 비밀번호 확인</th>
+                                <th>* 새로운 비밀번호 확인</th>
                                 <td colspan="3">
                                     <label for="pass_wd_cfm" class="none"></label><input type="password" name="pass_wd_cfm" id="pass_wd_cfm" class="input_type1" />
                                 </td>
