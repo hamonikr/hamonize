@@ -220,7 +220,7 @@
 			</div><!-- progrm mngr box end // -->
 	
 			<!--  admin key mngr box start -->
-			<div class="con_box">
+			<div class="con_box" style="display:none;">
 				<h3>어드민 관리</h3>
 				<div class="board_list mT20">
 					<table>
