@@ -66,6 +66,14 @@
 		 WHERE USER_ID         = #{user_id}
  	</update>
 
+	<update id="updateLoginStatus" parameterType="java.util.HashMap">
+		UPDATE TBL_ADMIN_USER
+		SET
+		GUBUN = 'D',
+		UPD_DATE = now()
+		WHERE USER_ID = #{user_id}
+	</update>
+
 
 
 </mapper>

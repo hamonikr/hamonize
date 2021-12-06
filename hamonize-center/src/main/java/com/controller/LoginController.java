@@ -85,11 +85,13 @@ public class LoginController implements Serializable {
 			result = "5";
 			return result;
 		} else if (lvo == null || lvo.getUser_id() == null) {
-			loginService.updateLoginFailCount(params);		
+			loginService.updateLoginFailCount(params);
+			if(loginService.getLoginFailCount(params) >= 5){
+				loginService.updateLoginStatus(params);
+			}
 			return result;
 		} else if("D".equals(lvo.getGubun())){
 			result = "3";
-			return result;
 		}else {
 
 			request.getSession().setAttribute("userSession", lvo);
@@ -98,11 +100,10 @@ public class LoginController implements Serializable {
 			loginService.insertLoginInfo(lvo);
 			loginService.updateLoginFailCountInit(params);
 			result = "1";
-			request.getSession().removeAttribute(RSAUtil.PRIVATE_KEY);
-			return result;
 
 		}
-
+		request.getSession().removeAttribute(RSAUtil.PRIVATE_KEY);
+		return result;
 	}
 
 	@RequestMapping(value = "/logout.do", method = RequestMethod.GET)
@@ -116,7 +117,6 @@ public class LoginController implements Serializable {
 		if (lvo != null) {
 			loginService.updateLoginInfo(lvo);
 		}
-
 
 		request.getSession().invalidate();
 		model.clear();
