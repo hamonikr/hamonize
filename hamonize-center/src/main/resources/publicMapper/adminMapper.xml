@@ -93,6 +93,7 @@
 		</if>
 		DEPT_NAME = #{dept_name},
 		GUBUN = #{gubun},
+		LOGIN_CHECK = 0,
 		UPD_DATE = now()
 		WHERE USER_ID = #{user_id}
 	</update>

@@ -20,6 +20,8 @@ public interface ILoginMapper {
 
 	void updateLoginFailCountInit(Map<String, Object> params) throws Exception;
 
+	void updateLoginStatus(Map<String, Object> params) throws Exception;
+
 	void updateLoginInfo(LoginVO lvo) throws Exception;
 
 	LoginVO getSSOLoginInfo(Map<String, String> params) throws Exception;
