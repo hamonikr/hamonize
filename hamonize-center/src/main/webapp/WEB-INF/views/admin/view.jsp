@@ -234,7 +234,6 @@
 	}
 	
 	function goDelete(){
-		$('#user_id').val(param);
 		
 		var msg = "삭제하시겠습니까?";
 	    if(!confirm(msg)){
