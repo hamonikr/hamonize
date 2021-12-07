@@ -566,7 +566,7 @@
 	<!-- 정책배포결과 업데이트 -->
 	<select id="pcPolicyUpdtList" resultType="map" parameterType="map">
 		SELECT
-    DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver
+    DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver , PA.state
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER( PARTITION BY TA.debname, TA.gubun ),
