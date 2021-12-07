@@ -329,6 +329,17 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						var inset_dt = data.policyUpdtResult[i].ins_date;
 						var date = new Date(inset_dt);
 						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						//성공여부 체크 카운트
+						if(data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun == "UPGRADE"){
+							if(data.policyUpdtResult[i].state == 0){
+								data.policyUpdtResult[i].count--;
+							}
+
+						}else if(data.policyUpdtResult[i].gubun == "DELETE"){
+							if(data.policyUpdtResult[i].state == 1){
+								data.policyUpdtResult[i].count--;
+							}
+						}
 						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 						shtml_r += "<tr>";
 						shtml_r += "<td>"+data.policyUpdtResult[i].debname+"</td>";
@@ -336,6 +347,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							shtml_r += "<td>-</td>";
 						else
 							shtml_r += "<td>"+data.policyUpdtResult[i].debver+"</td>";
+							
 							shtml_r += "<td>"+data.policyUpdtResult[i].gubun+"</td>";
 							shtml_r += "<td>"+data.pcList.length+"</td>";
 							shtml_r += "<td>"+data.policyUpdtResult[i].count+"</td>";
@@ -345,6 +357,18 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							//성공여부 체크 카운트
+							if(data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun == "UPGRADE"){
+								if(data.policyUpdtResult[i].state == 0){
+									data.policyUpdtResult[i].count--;
+								}
+	
+							}else if(data.policyUpdtResult[i].gubun == "DELETE"){
+								if(data.policyUpdtResult[i].state == 1){
+									data.policyUpdtResult[i].count--;
+								}
+							}
+
 							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 							shtml_r += "<tr>";
 							shtml_r += "<td>"+data.policyUpdtResult[i].debname+"</td>";
