@@ -102,6 +102,11 @@ public class CurlUpdtPolicyController {
 				updtVo2[i].setPath(object.getOrDefault("path", "").toString());
 				updtVo2[i].setGubun("UPGRADE");
 				updtVo2[i].setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
+
+				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
+				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
+				updtPollicyMapper.updtInsertProgrm(insDataVo);
+
 			}
 		}
 
