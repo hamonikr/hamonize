@@ -3,14 +3,14 @@
  
 <mapper namespace="com.mapper.IPolicyProgramMapper">
 
-<select id="programList" resultType="com.model.PolicyProgramVo">
-		SELECT 
-			 pcm_seq, 
-			 pcm_name, 
-			 pcm_status,
-			 pcm_dc
-		FROM tbl_program_mngr
-		ORDER  BY pcm_seq desc
+	<select id="programList" resultType="com.model.PolicyProgramVo">
+			SELECT 
+				pcm_seq, 
+				pcm_name, 
+				pcm_status,
+				pcm_dc
+			FROM tbl_program_mngr
+			ORDER  BY pcm_seq desc
 	</select>
 	
 	 <insert id="programSave" parameterType="java.util.HashMap">
@@ -60,4 +60,3 @@
 
 
 </mapper>
-
