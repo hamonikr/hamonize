@@ -701,8 +701,10 @@ function getProgrmDataCall(uuid) {
 				var text = fs.readFileSync(fileDir, 'utf8');
 				var arr = text.replace('{"INS":', '').replace('}','').replace('"','').replace('"','').split(',');
 				var delarr = [];
+
+				var DataObjTmp = DataObj.split(",");
 				for (i in arr){
-					if (!DataObj.includes(arr[i])){
+					if (!DataObjTmp.includes(arr[i])){
 						delarr.push(arr[i]);
 					}
 				}
