@@ -138,7 +138,8 @@ function detail(uuid){
 			$.each(data.udpt, function(index, value) {
 				var inset_dt = value.insert_dt;
 				var date = new Date(inset_dt);
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+				
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 				shtml += "<tr>";
 				shtml += "<td>"+value.debname+"</td>";
 				shtml += "<td>"+value.debver+"</td>";
@@ -180,7 +181,9 @@ function detail(uuid){
 			$.each(data.program, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+			
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
+			
 				shtml += "<tr>";
 				shtml += "<td>"+value.progrmname+"</td>";
 				if(value.status_yn == "Y")
@@ -211,8 +214,7 @@ function detail(uuid){
 			$.each(data.firewall, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
-				shtml += "<tr>";
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());				shtml += "<tr>";
 				shtml += "<td>"+value.retport+"</td>";
 				shtml += "<td>"+value.status+"</td>";
 				if(value.status_yn == "Y")
@@ -242,9 +244,8 @@ function detail(uuid){
 			$.each(data.device, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
-				shtml += "<tr>";
+				
+ 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());				shtml += "<tr>";
 				shtml += "<td>"+value.product+"("+value.vendorcode+":"+value.productcode+")</td>";
 				if(value.status_yn == "Y")
 					shtml += "<td>허용</td>";
@@ -328,7 +329,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if(data.policyUpdtResult[i].debname != data.policyUpdtResult[i+chk].debname){
 						var inset_dt = data.policyUpdtResult[i].ins_date;
 						var date = new Date(inset_dt);
-						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 						//성공여부 체크 카운트
 						if(data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun == "UPGRADE"){
 							if(data.policyUpdtResult[i].state == 0){
@@ -356,7 +357,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else if((i+1) == data.policyUpdtResult.length){
 							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
-							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 							//성공여부 체크 카운트
 							if(data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun == "UPGRADE"){
 								if(data.policyUpdtResult[i].state == 0){
@@ -409,7 +410,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if(data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i+chk].progrmname){
 						var inset_dt = data.policyProgrmResult[i].ins_date;
 						var date = new Date(inset_dt);
-						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 						var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
 						shtml_r += "<tr>";
 						shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
@@ -421,7 +422,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else if((i+1) == data.policyProgrmResult.length){
 							var inset_dt = data.policyProgrmResult[i].ins_date;
 							var date = new Date(inset_dt);
-							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
 							shtml_r += "<tr>";
 							shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
@@ -461,7 +462,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if(data.policyFirewallResult[i].retport != data.policyFirewallResult[i+chk].retport){
 						var inset_dt = data.policyFirewallResult[i].ins_date;
 						var date = new Date(inset_dt);
-						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 						var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
 						shtml_r += "<tr>";
 						shtml_r += "<td>"+data.policyFirewallResult[i].retport+"</td>";
@@ -473,7 +474,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else if((i+1) == data.policyFirewallResult.length){
 							var inset_dt = data.policyFirewallResult[i].ins_date;
 							var date = new Date(inset_dt);
-							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
 							shtml_r += "<tr>";
 							shtml_r += "<td>"+data.policyFirewallResult[i].retport+"</td>";
@@ -513,7 +514,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if(data.policyDeviceResult[i].product != data.policyDeviceResult[i+chk].product){
 						var inset_dt = data.policyDeviceResult[i].ins_date;
 						var date = new Date(inset_dt);
-						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 						shtml_r += "<tr>";
 						shtml_r += "<td>"+data.policyDeviceResult[i].product+"</td>";
@@ -525,7 +526,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else if((i+1) == data.policyDeviceResult.length){
 							var inset_dt = data.policyDeviceResult[i].ins_date;
 							var date = new Date(inset_dt);
-							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 							shtml_r += "<tr>";
 							shtml_r += "<td>"+data.policyDeviceResult[i].product+"</td>";

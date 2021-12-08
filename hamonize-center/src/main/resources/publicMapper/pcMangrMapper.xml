@@ -565,8 +565,7 @@
 
 	<!-- 정책배포결과 업데이트 -->
 	<select id="pcPolicyUpdtList" resultType="map" parameterType="map">
-		SELECT
-    DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver , PA.state
+	SELECT DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver , PA.state
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER( PARTITION BY TA.debname, TA.gubun ),
@@ -582,9 +581,6 @@
 							gubun,org_seq, insert_dt, state, pc_uuid, debver
 						FROM tbl_updt_policy_action_result
 						WHERE 
-						--org_seq not in  (8307 , 8308 )
-							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
-							--and 
 							pc_uuid in (
 								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
 								(
@@ -600,20 +596,18 @@
 										FROM search_org
 								)
 							)
-							--and gubun != 'DELETE'
 						GROUP BY debname, gubun, org_seq, insert_dt, state, pc_uuid, debver
 						order by insert_dt desc
 					) A
 					WHERE A.debname != ''
-					--ORDER BY pc_uuid DESC
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.insert_dt DESC
 		<if test="type == 'main'">
 			limit 5
 			</if>
-		--TA.debname,  TA.gubun DESC
-		) PA
+		) PA order by PA.insert_dt desc
+
 	</select>
 
 	<!-- 정책배포결과 프로그램 -->
