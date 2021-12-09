@@ -25,9 +25,9 @@
 	</delete>
 
 	<insert id="updtInsertProgrm" parameterType="com.model.UpdtPolicyVo">
-		INSERT INTO tbl_program_mngr (pcm_name, pcm_path, org_seq, insert_dt)
-		SELECT #{debname}, #{path} , (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}), now()
-		WHERE NOT EXISTS (SELECT * FROM tbl_program_mngr WHERE pcm_name= #{debname} and org_seq= (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}))        
+		INSERT INTO tbl_program_mngr (pcm_name, pcm_path, insert_dt)
+		SELECT #{debname}, #{path} , now()
+		WHERE NOT EXISTS (SELECT * FROM tbl_program_mngr WHERE pcm_name= #{debname})        
 	</insert>
 	
  	<insert id="updtPolicyActionResultInsert" parameterType="java.util.Map">   
