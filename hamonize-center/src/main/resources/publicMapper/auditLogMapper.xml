@@ -802,7 +802,7 @@
 					tb1.ins_date desc limit 1
 			)
 			<if test="debListCnt > index+1">
-				UNION ALL
+					UNION ALL
 			</if>
 		</foreach>
 	</select>
