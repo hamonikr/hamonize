@@ -109,7 +109,6 @@ public class CurlAgentProgramController {
 			jsonObject.put("nodata", "nodata");
 			return jsonObject;
 		}
-
 		getProgrmVo.setPpm_seq(progrmPolicyData.get(0).getPpm_seq());
 		getProgrmVo.setNew_pa_seq(Integer.parseInt(progrmPolicyData.get(0).getPa_seq()));
 		if (progrmPolicyData.size() == 1) {

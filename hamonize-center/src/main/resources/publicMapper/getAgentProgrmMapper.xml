@@ -97,7 +97,7 @@
 		    pa_seq, 
 		    #{org_seq} as org_seq,
 		   #{pcm_uuid}  as pcm_uuid,
-		    (select pu_name from tbl_progrm_udpt where pu_seq = arr[i]::int),
+		    (select pcm_name from tbl_program_mngr where pcm_seq = arr[i]::int),
 		    now()
 		    
 		FROM (

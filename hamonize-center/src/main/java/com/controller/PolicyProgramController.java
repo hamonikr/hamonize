@@ -99,8 +99,8 @@ public class PolicyProgramController {
 		JSONObject data = new JSONObject();
 		List<PolicyProgramVo> pList = null;
 		try {
-			vo = pService.programApplcView(vo);
 			pList = pService.programList(vo);
+			vo = pService.programApplcView(vo);
 			data.put("dataInfo", vo);
 			data.put("pList", pList);
 		} catch (Exception e) {
