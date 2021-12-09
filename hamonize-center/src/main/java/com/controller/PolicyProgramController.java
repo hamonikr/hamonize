@@ -40,14 +40,15 @@ public class PolicyProgramController {
 
 
 	@RequestMapping(value = "/pmanage", method = RequestMethod.GET)
-	public String manage(HttpSession session, Model model) {
+	public String manage(HttpSession session, Model model,PolicyProgramVo vo) {
 
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyProgramVo> pList = null;
 
 		try {
 			OrgVo orgvo = new OrgVo();
-			PolicyProgramVo vo = new PolicyProgramVo();
+			vo.setOrg_seq(1);
+			//PolicyProgramVo vo = new PolicyProgramVo();
 			jsonArray = oService.orgList(orgvo);
 			pList = pService.programList(vo);
 
@@ -96,9 +97,12 @@ public class PolicyProgramController {
 	@RequestMapping(value = "pshow", method = RequestMethod.POST)
 	public JSONObject pshow(HttpSession session, Model model, PolicyProgramVo vo) {
 		JSONObject data = new JSONObject();
+		List<PolicyProgramVo> pList = null;
 		try {
 			vo = pService.programApplcView(vo);
+			pList = pService.programList(vo);
 			data.put("dataInfo", vo);
+			data.put("pList", pList);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

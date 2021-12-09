@@ -78,6 +78,7 @@ public class CurlUpdtPolicyController {
 
 				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
 				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
+				insDataVo.setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
 				updtPollicyMapper.updtInsertProgrm(insDataVo);
 
 			}
