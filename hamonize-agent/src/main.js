@@ -292,7 +292,8 @@ function fnUpdtJob(retData) {
 	log.info("//== updt 정책정보 파일 Data is : " + outputData);
 
 	var exec = require('child_process').exec;
-	exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh ", function (err, stdout, stderr) {
+	exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
+
 		log.info('updt 정책 ::  stdout: ' + stdout);
 		log.info('updt 정책 :: stderr: ' + stderr);
 
@@ -704,8 +705,11 @@ function getProgrmDataCall(uuid) {
 
 				var DataObjTmp = DataObj.split(",");
 				for (i in arr){
-					if (!DataObjTmp.includes(arr[i])){
-						delarr.push(arr[i]);
+					console.log("DataObjTmp---------------" + DataObjTmp + "=="+ arr[i]);
+					if( arr[i] != "" ){
+						if (!DataObjTmp.includes(arr[i])){
+							delarr.push(arr[i]);
+						}
 					}
 				}
 
@@ -726,7 +730,8 @@ function getProgrmDataCall(uuid) {
 				var send_data = JSON.stringify(sendarr);
 				if (typeof send_data !== 'undefined' && send_data.length > 0){
 					var send_parsed = JSON.parse(send_data);
-
+					
+					console.log("send_data==="+send_data);
 					var unirest = require('unirest');
 					unirest.post('http://' + centerUrl + '/act/progrmAct')
 						.header({'User-Agent': 'HamoniKR OS', 'content-type': 'application/json'})
@@ -756,7 +761,6 @@ function fnProgrmJob(retData) {
 	}
 	var exec = require('child_process').exec;
 	exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
-
 		log.info('//==progrm 정책::   stdout: ' + stdout);
 		if (err !== null) {
 			log.info('//==progrm 정책::  error: ' + err);
