@@ -57,7 +57,10 @@
 	
 	$(document).ready(function(){
 		setNav('정책관리 > 프로그램관리');
-	
+
+		if($("#org_seq").val()==""){
+			$("#org_seq").val("1");
+		}
 	//트리 init
 	$.fn.zTree.init($("#tree"), setting, zNodes); 
 	
@@ -101,8 +104,22 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		if(treeNode.checked){
 		$.post("pshow.do",{org_seq:treeNode.id},
 		function(result){
-				var agrs = result;
-				var ppm_seq = agrs.dataInfo.ppm_seq;
+			var agrs = result;
+			var ppm_seq = agrs.dataInfo.ppm_seq;
+				var html = "";
+				for(var y=0; y < agrs.pList.length; y++){
+					html += "<li>";
+					html += "<span>";
+					html += "<input type=\"checkbox\" name=\"pcm_seq\" id=\""+agrs.pList[y].pcm_seq+"\" class=\"check2\" value=\""+agrs.pList[y].pcm_seq+"\">";
+					html += "<label for=\""+agrs.pList[y].pcm_seq+"\"></label>";
+					html += agrs.pList[y].pcm_name;
+					html += "</span>";
+					html += "<p class=\"card-text\"></p>";
+					html += "</li>";
+				}
+				$(".promlist").html();
+				$(".promlist").html(html);
+				console.log(agrs.pList);
 				ppm_seq = ppm_seq.split(",");
 				for(var i=0; i < ppm_seq.length; i++){
 				 $('input:checkbox[name=pcm_seq]').each(function() {
@@ -124,8 +141,21 @@ function onCheck(event, treeId, treeNode) {
 	if(treeNode.checked){
 	$.post("pshow.do",{org_seq:treeNode.id},
 	function(result){
-			var agrs = result;
-			var ppm_seq = agrs.dataInfo.ppm_seq;
+		var agrs = result;
+		var ppm_seq = agrs.dataInfo.ppm_seq;
+			var html = "";
+			for(var y=0; y < agrs.pList.length; y++){
+				html += "<li>";
+				html += "<span>";
+				html += "<input type=\"checkbox\" name=\"pcm_seq\" id=\""+agrs.pList[y].pcm_seq+"\" class=\"check2\" value=\""+agrs.pList[y].pcm_seq+"\">";
+				html += "<label for=\""+agrs.pList[y].pcm_seq+"\"></label>";
+				html += agrs.pList[y].pcm_name;
+				html += "</span>";
+				html += "<p class=\"card-text\"></p>";
+				html += "</li>";
+			}
+			$(".promlist").html();
+			$(".promlist").html(html);
 			ppm_seq = ppm_seq.split(",");
 			for(var i=0; i < ppm_seq.length; i++){
 			 $('input:checkbox[name=pcm_seq]').each(function() {
