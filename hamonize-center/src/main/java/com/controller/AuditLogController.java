@@ -340,7 +340,6 @@ public class AuditLogController {
 			HttpSession session) {
 
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
-
 		try {
 			jsonObject.put("udpt", logService.udptList(params));
 			jsonObject.put("program", logService.programList(params));

@@ -132,8 +132,7 @@ public class AuditLogService {
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 
 		try {
-
-			List<String> list = auditLogMapper.programPackageList();
+			List<String> list = auditLogMapper.programPackageList(params);
 
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
