@@ -117,6 +117,10 @@ function expandNode(e) {
 function detail(uuid){
 	$(".result_detail").remove();
 	$(".content_bapo").remove();
+	
+		$(".right_box_r").show();
+		$('.right_box_l').width( '40%' );
+	
 	 $.post("detailPolicy.proc",{pc_uuid:uuid},
 			function(data){
 			var shtml = "";
@@ -282,6 +286,13 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var cnt = 0;
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
+		if( node == null ){
+			$(".right_box_r").hide();
+			$('.right_box_l').width( '100%' );
+		}else{
+			$(".right_box_r").show();
+			$('.right_box_l').width( '40%' );
+		}
 		$("#org_seq").val(treeNode.id);
 		$.post("/mntrng/pcPolicyList",{org_seq:treeNode.id,type:'view'},
 				function(data){
