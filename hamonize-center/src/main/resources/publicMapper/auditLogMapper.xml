@@ -781,9 +781,19 @@
 	</select>
 
 	<!-- 프로그램 차단 정책 배포 -->
-	<select id="programPackageList" resultType="String">
-		SELECT pcm_name
-		FROM tbl_program_mngr
+	<select id="programPackageList" resultType="String" parameterType="hashmap">
+		select
+				pu_name as pcm_name
+			from
+				tbl_progrm_udpt
+			where
+				pu_seq in (
+				select
+					unnest(string_to_array(ppm_seq, ','))::int
+				from
+					tbl_progrm_applc
+				where
+					org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}))
 	</select>
 
 	<select id="programList" resultType="map" parameterType="hashmap">

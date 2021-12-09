@@ -40,7 +40,7 @@ public interface IAuditLogMapper {
 	
 	public List<Map<String, Object>> updtList(HashMap<String, Object> map);
 	
-	public List<String> programPackageList();
+	public List<String> programPackageList(HashMap<String, Object> params);
 	
 	public List<Map<String, Object>> programList(HashMap<String, Object> map);
 	
