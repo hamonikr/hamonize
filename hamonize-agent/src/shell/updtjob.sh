@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
+# CENTERURL="http://192.168.0.118:8080/hmsvc/updtpolicy"
 CENTERURL="http://${centerUrl}/hmsvc/updtpolicy"
 PCUUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/updp.log"
 
-if [[ ! -f "$LOGFILE" ]]; then
+if [ ! -f "$LOGFILE" ]; then
         touch $LOGFILE
 fi
 
@@ -219,6 +220,13 @@ echo "delete file total  data=========$UPDT_DEL"  >>$LOGFILE
 if [ "$UPDT_DEL" != null ]
 then
         echo " data delete ==$UPDT_DEL===" >>$LOGFILE
+
+
+# Program blocking policy
+progrmBlockData=`cat /etc/hamonize/progrm/progrm.hm | jq '.INS' | sed -e "s/\"//g" `
+echo "progrmdata is ::: `cat /etc/hamonize/progrm/progrm.hm`"
+rePrgmBlockData="";
+
 EC=0
 DELRET=""
 OLD_IFS=$IFS;
@@ -226,6 +234,7 @@ IFS=,;
 for I in $UPDT_DEL;
 do
 
+echo "delete deb name is ===> $I"
 
         echo "delete deb name is ===> $I" >>$LOGFILE
 
@@ -246,8 +255,43 @@ do
         fi
 
         EC=`expr "$EC" + 1`
+
+
+
+	# Set - Program blocking policy
+	if [ "$progrmBlockData" != null ]
+	then
+
+
+		PEC=0
+		for P in $progrmBlockData;
+		do
+
+               	        if [ "$I" != "$P" ]; then
+       	                        reProgrmBlockData=$reProgrmBlockData$P","
+                        fi
+
+		        PEC=`expr "$PEC" + 1`
+
+		done;
+	        
+
+		progrmBlockData=$reProgrmBlockData
+		reProgrmBlockData=""
+		echo "$EC result is :: $reProgrmBlockData" >> ${LOGFILE}
+		echo "$EC result is :: $progrmBlockData" >> ${LOGFILE}
+	fi
+
+
+
+
 done;
 IFS=$OLD_IFS
+
+
+
+
+
 
 echo "===delete result data is ===>$DELRET" >>$LOGFILE
 
@@ -271,4 +315,18 @@ fi
 
 echo "RETUPDT agent to hamonize center result---->  $RETUPDT" >> ${LOGFILE}
 
+
+
+# program Policy File Writing
+
+echo "-------------$progrmBlockData" >> ${LOGFILE}
+if [ ! -z $progrmBlockData ]; then
+	echo "{\"INS\":\"${progrmBlockData}\"}" > /etc/hamonize/progrm/progrm.hm
+else
+	cat /dev/null > /etc/hamonize/progrm/progrm.hm
+
+fi
+
 sudo systemctl start hamonize-processmngr.service
+
+
