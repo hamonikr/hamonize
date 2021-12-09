@@ -105,7 +105,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$.post("pshow.do",{org_seq:treeNode.id},
 		function(result){
 			var agrs = result;
-			var ppm_seq = agrs.dataInfo.ppm_seq;
+			
 				var html = "";
 				for(var y=0; y < agrs.pList.length; y++){
 					html += "<li>";
@@ -119,7 +119,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				}
 				$(".promlist").html();
 				$(".promlist").html(html);
-				console.log(agrs.pList);
+				console.log(agrs.dataInfo);
+				if(agrs.dataInfo != null){
+				var ppm_seq = agrs.dataInfo.ppm_seq;
 				ppm_seq = ppm_seq.split(",");
 				for(var i=0; i < ppm_seq.length; i++){
 				 $('input:checkbox[name=pcm_seq]').each(function() {
@@ -131,6 +133,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 				$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
 				$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
+			}
 			});
 		}	
 	}
@@ -142,7 +145,6 @@ function onCheck(event, treeId, treeNode) {
 	$.post("pshow.do",{org_seq:treeNode.id},
 	function(result){
 		var agrs = result;
-		var ppm_seq = agrs.dataInfo.ppm_seq;
 			var html = "";
 			for(var y=0; y < agrs.pList.length; y++){
 				html += "<li>";
@@ -156,6 +158,8 @@ function onCheck(event, treeId, treeNode) {
 			}
 			$(".promlist").html();
 			$(".promlist").html(html);
+			if(agrs.dataInfo != null){
+				var ppm_seq = agrs.dataInfo.ppm_seq;
 			ppm_seq = ppm_seq.split(",");
 			for(var i=0; i < ppm_seq.length; i++){
 			 $('input:checkbox[name=pcm_seq]').each(function() {
@@ -167,7 +171,7 @@ function onCheck(event, treeId, treeNode) {
 			
 			$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
 			$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-			
+		}
 		});
 	}
 

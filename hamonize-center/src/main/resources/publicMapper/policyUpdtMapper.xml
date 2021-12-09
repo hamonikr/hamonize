@@ -69,7 +69,7 @@
 		<foreach collection="data" item="item" separator=";">
 			update 
 			tbl_progrm_applc 
-			set ppm_seq = (select string_agg(A.ppm_seq,',')::text from 
+			set seq = (select nextval('tbl_progrm_applc_seq_seq'::regclass)) , ppm_seq = (select string_agg(A.ppm_seq,',')::text from 
 				(
 				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_progrm_applc where org_seq=#{item.org_seq}
 				intersect
