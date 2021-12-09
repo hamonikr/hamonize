@@ -292,7 +292,7 @@ function fnUpdtJob(retData) {
 	log.info("//== updt 정책정보 파일 Data is : " + outputData);
 
 	var exec = require('child_process').exec;
-	exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
+	exec(" sudo sh /home/lee/git/jullee/gs/hamonize/hamonize-agent/src/shell/updtjob.sh ", function (err, stdout, stderr) {
 		log.info('updt 정책 ::  stdout: ' + stdout);
 		log.info('updt 정책 :: stderr: ' + stderr);
 
@@ -756,7 +756,7 @@ function fnProgrmJob(retData) {
 	}
 	var exec = require('child_process').exec;
 	// exec('sudo sh /usr/share/hamonize-agent/shell/progrmjob.sh  ', function (err, stdout, stderr) {
-	exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
+	exec('sudo sh /home/lee/git/jullee/gs/hamonize/hamonize-agent/src/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
 		log.info('//==progrm 정책::   stdout: ' + stdout);
 		if (err !== null) {
 			log.info('//==progrm 정책::  error: ' + err);

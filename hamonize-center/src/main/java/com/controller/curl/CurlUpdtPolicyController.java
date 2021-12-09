@@ -136,6 +136,13 @@ public class CurlUpdtPolicyController {
 			Map<String, Object> mapDelete = new HashMap<String, Object>();
 			mapDelete.put("list", updtVo3);
 			updtPollicyMapper.updtDeleteProgrm(mapDelete);
+
+			// delete act_progrm_log
+			for(int j=0;j<mapDelete.size();j++){
+				logger.info( "aaaa :  {}", mapDelete.get("list"));
+			}
+			updtPollicyMapper.deleteProccessBlockProgrm(mapDelete);
+			
 		}
 
 

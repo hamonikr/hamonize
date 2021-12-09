@@ -139,7 +139,7 @@ function detail(uuid){
 				var inset_dt = value.insert_dt;
 				var date = new Date(inset_dt);
 				
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());
 				shtml += "<tr>";
 				shtml += "<td>"+value.debname+"</td>";
 				shtml += "<td>"+value.debver+"</td>";
@@ -182,7 +182,7 @@ function detail(uuid){
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
 			
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());
 			
 				shtml += "<tr>";
 				shtml += "<td>"+value.progrmname+"</td>";
@@ -214,7 +214,7 @@ function detail(uuid){
 			$.each(data.firewall, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());				shtml += "<tr>";
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				shtml += "<td>"+value.retport+"</td>";
 				shtml += "<td>"+value.status+"</td>";
 				if(value.status_yn == "Y")
@@ -245,7 +245,7 @@ function detail(uuid){
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
 				
- 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());				shtml += "<tr>";
+ 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				shtml += "<td>"+value.product+"("+value.vendorcode+":"+value.productcode+")</td>";
 				if(value.status_yn == "Y")
 					shtml += "<td>허용</td>";
