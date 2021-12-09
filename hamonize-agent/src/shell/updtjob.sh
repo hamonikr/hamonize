@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
-# CENTERURL="http://192.168.0.118:8080/hmsvc/updtpolicy"
 CENTERURL="http://${centerUrl}/hmsvc/updtpolicy"
 PCUUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/updp.log"
