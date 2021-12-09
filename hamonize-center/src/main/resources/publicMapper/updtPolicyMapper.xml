@@ -18,9 +18,9 @@
 	<delete id="deleteProccessBlockProgrm" parameterType="java.util.Map">
 		DELETE FROM tbl_act_progrm_log
 		WHERE 
-		<foreach collection="list" item="item" separator=" , ">
-			uuid = #{item.pc_uuid}
-			and progrmname = #{item.debname}
+		<foreach collection="list" item="item" separator=" or ">
+			(uuid = #{item.pc_uuid}
+			and progrmname = #{item.debname})
 		</foreach>
 	</delete>
 

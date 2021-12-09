@@ -635,9 +635,6 @@
 							,ins_date
 						FROM tbl_act_progrm_log
 						WHERE 
-						--org_seq not in  (8307 , 8308 )
-							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
-							--and 
 							uuid in (
 								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
 								(
@@ -653,19 +650,15 @@
 										FROM search_org
 								)
 							)
-							--and gubun != 'DELETE'
 						GROUP BY seq,orgseq,uuid,datetime,hostname,status_yn,status,progrmname,ins_date
 						order by ins_date desc
 					) A
-					--WHERE A.debname != ''
-					--ORDER BY pc_uuid DESC
 				)  TA
 			WHERE row_number = 1
 			ORDER BY TA.ins_date DESC
 		<if test="type == 'main'">
 			limit 5
 			</if>
-		--TA.debname,  TA.gubun DESC
 		) PA
 	</select>
 
