@@ -40,7 +40,8 @@ do
         echo "install chk is ==> $INS_INSTALL_CHK" >>$LOGFILE
 
 
-        INS_CHK_CNT=`dpkg --get-selections | grep $I | grep -v "[[:graph:]]$I\|$I[[:graph:]]" | wc -l`
+        INS_CHK_CNT=`dpkg --get-selections | grep $I | wc -l`
+        #INS_CHK_CNT=`dpkg --get-selections | grep $I | grep -v "[[:graph:]]$I\|$I[[:graph:]]" | wc -l`
         echo "install chk wc -l is ==> $INS_CHK_CNT" >>$LOGFILE
 
         INS_WHEREISPROGRM=`whereis $I`
@@ -318,14 +319,20 @@ echo "RETUPDT agent to hamonize center result---->  $RETUPDT" >> ${LOGFILE}
 
 # program Policy File Writing
 
-echo "-------------$progrmBlockData" >> ${LOGFILE}
-if [ ! -z $progrmBlockData ]; then
-	echo "{\"INS\":\"${progrmBlockData}\"}" > /etc/hamonize/progrm/progrm.hm
-else
-	cat /dev/null > /etc/hamonize/progrm/progrm.hm
+if [ "$UPDT_DEL" != null ]
+then
+
+
+	echo "-------------$progrmBlockData" >> ${LOGFILE}
+	if [ ! -z $progrmBlockData ]; then
+		echo "11111111111111" >> ${LOGFILE}
+		echo "{\"INS\":\"${progrmBlockData}\"}" > /etc/hamonize/progrm/progrm.hm
+	else
+		echo "2222222222222" >> ${LOGFILE}
+		cat /dev/null > /etc/hamonize/progrm/progrm.hm
+	
+	fi
 
 fi
-
 sudo systemctl start hamonize-processmngr.service
-
 
