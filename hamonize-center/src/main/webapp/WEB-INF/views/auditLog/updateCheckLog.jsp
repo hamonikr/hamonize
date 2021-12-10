@@ -151,7 +151,7 @@ function detail(uuid){
 				console.log('value.state : '+value.state);
 				
 				if(value.gubun == "INSTALL" || value.gubun == "UPGRADE" ){
-					if(value.state == 1){
+					if(value.state >= 1){
 						shtml += "<td>완료</td>";
 					}else{
 						shtml += "<td>미완료</td>";
