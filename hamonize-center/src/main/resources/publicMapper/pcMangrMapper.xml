@@ -655,6 +655,7 @@
 					) A
 				)  TA
 			WHERE row_number = 1
+			and TA.progrmname != chr(10)
 			ORDER BY TA.ins_date DESC
 		<if test="type == 'main'">
 			limit 5
