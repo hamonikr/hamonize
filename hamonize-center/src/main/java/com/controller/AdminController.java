@@ -92,6 +92,13 @@ public class AdminController {
 		return "/svrlst/list";
 	}
 
+	// 서버 관리자
+	@GetMapping("/info")
+	public String info(HttpSession session, Model model) {
+		
+		return "/svrlst/info";
+	}
+
 	@ResponseBody
 	@PostMapping("/serverlist.proc")
 	public Map<String, Object> serverlistProc(SvrlstVo vo, PagingVo pagingVo, HttpSession session,
