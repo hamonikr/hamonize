@@ -50,12 +50,12 @@ public class LoginController implements Serializable {
 		// Key 생성
 		// 개인키는 세션에 저장
 		request.getSession().setAttribute(RSAUtil.PRIVATE_KEY, keys.getPrivate());
+		request.getSession().setMaxInactiveInterval(-1);
 		// 클라이언트 공개키 생성을 위한 파라미터
 		Map<String, String> spec = RSAUtil.getKeySpec(keys.getPublic());
 		request.setAttribute(RSAUtil.PUBLIC_KEY_MODULUS, spec.get(RSAUtil.PUBLIC_KEY_MODULUS));
 		request.setAttribute(RSAUtil.PUBLIC_KEY_EXPONENT, spec.get(RSAUtil.PUBLIC_KEY_EXPONENT));
 		request.setAttribute(RSAUtil.PUBLIC_KEY, keys.getPublic()); // 사용X
-
 
 		return "/login/login";
 	}
