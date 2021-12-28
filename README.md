@@ -8,7 +8,7 @@
 
 
 
-**Hamonize 소프트웨어 품징 인증** <br> `오픈소스 하모나이즈를 사용하시는 분들을 위해 하모나이즈 솔루션을 믿고 사용하실 수  `<br>`있도록 소프트웨어 품질 인증 기관을 통해 일정한 수준의 품질을 갖춘 SW입니다.(GS 인증획득) `<br><br>[Hamonize official homepage](https://hamonize.github.io/)|  <img src="https://github.com/hamonikr/hamonize/blob/master/img/hamonize_gs.png?raw=true" width="200">
+**Hamonize 소프트웨어 품질 인증** <br> `오픈소스 하모나이즈를 사용하시는 분들을 위해 하모나이즈 솔루션을 믿고 사용하실 수  `<br>`있도록 소프트웨어 품질 인증 기관을 통해 일정한 수준의 품질을 갖춘 SW입니다.(GS 인증획득) `<br><br>[Hamonize official homepage](https://hamonize.github.io/)|  <img src="https://github.com/hamonikr/hamonize/blob/master/img/hamonize_gs.png?raw=true" width="200">
 |:---|:---:
 
 
