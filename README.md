@@ -1,17 +1,9 @@
 #  ![GitHub](<https://img.shields.io/github/license/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/package-json/v/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/stars/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/issues-pr/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/david/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/repo-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/languages/code-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/com/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/org/gon1942/hamonize?style=flat-square>)
 
   
-
 # ![Hamonize](./img/halogo.png)
 
 <img width="800" src="./img/hamonize.png">
-
-
-
-**Hamonize 소프트웨어 품질 인증** <br> `오픈소스 하모나이즈를 사용하시는 분들을 위해 하모나이즈 솔루션을 믿고 사용하실 수  `<br>`있도록 소프트웨어 품질 인증 기관을 통해 일정한 수준의 품질을 갖춘 SW입니다.(GS 인증획득) `<br><br>[Hamonize official homepage](https://hamonize.github.io/)|  <img src="https://github.com/hamonikr/hamonize/blob/master/img/hamonize_gs.png?raw=true" width="200">
-|:---|:---:
-
-
 
 <br>
 
@@ -39,6 +31,11 @@
 📕 자세한 사용법을 알고싶으면 [사용자 매뉴얼](http://pms.invesume.com:8090/pages/viewpage.action?pageId=73339494)를 참고하세요. 
 
 <br>
+
+## 📌 Hamonize 신뢰성
+
+하모나이즈는 외부 공인시험 인증기관을 통해 GS인증 1등급의 소프트웨어 품질인증을 받은 기술로<br>사용자가 신뢰할 수 있는 소프트웨어 품질을 제공합니다.<br><br> [Hamonize official homepage](https://hamonize.github.io/)|  <img src="https://github.com/hamonikr/hamonize/blob/master/img/hamonize_gs.png?raw=true" width="200">
+|:---|:---:
 
 
 ## 📌 Hamonize Program OS 지원
