@@ -11,7 +11,6 @@ import com.model.ResearchVo;
 import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.ResearchService;
-import com.util.CmmnExcelService;
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,55 +35,55 @@ public class ResearchController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping(value = "/excelList", method = RequestMethod.POST)
-	public CmmnExcelService excelList(ResearchVo vo, PagingVo pagingVo, HttpServletRequest request,
-			HttpServletResponse response, ModelMap model, @RequestParam Map<String, String> params)
-			throws Exception {
+	// @RequestMapping(value = "/excelList", method = RequestMethod.POST)
+	// public CmmnExcelService excelList(ResearchVo vo, PagingVo pagingVo, HttpServletRequest request,
+	// 		HttpServletResponse response, ModelMap model, @RequestParam Map<String, String> params)
+	// 		throws Exception {
 
-		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		vo.setDate_fr(vo.getDate_fr().replace("/", ""));
-		vo.setDate_to(vo.getDate_to().replace("/", ""));
-		if (vo.getOrg_seq() == null) {
-			vo.setOrg_seq(1);
-		}
+	// 	Map<String, Object> jsonObject = new HashMap<String, Object>();
+	// 	vo.setDate_fr(vo.getDate_fr().replace("/", ""));
+	// 	vo.setDate_to(vo.getDate_to().replace("/", ""));
+	// 	if (vo.getOrg_seq() == null) {
+	// 		vo.setOrg_seq(1);
+	// 	}
 
-		List<Map<String, Object>> list = new ArrayList<>();
+	// 	List<Map<String, Object>> list = new ArrayList<>();
 
-		if ("1".equals(params.get("type"))) {
-			list = rSerivce.dayUsePc(vo);
-		} else if ("2".equals(params.get("type"))) {
-			list = rSerivce.loginList(vo);
-		} else if ("3".equals(params.get("type"))) {
-			list = rSerivce.dayUseUser(vo);
-		} else if ("4".equals(params.get("type"))) {
-			list = rSerivce.distionctDayUseUser(vo);
-		} else if ("5".equals(params.get("type"))) {
-			list = rSerivce.monthUsePc(vo);
-		} else if ("6".equals(params.get("type"))) {
-			list = rSerivce.pcCountUnit(vo);
-		} else if ("7".equals(params.get("type"))) {
-			list = rSerivce.dayTotalPc(vo);
-		} else if ("8".equals(params.get("type"))) {
-			list = rSerivce.dayTotalUser(vo);
-		}
+	// 	if ("1".equals(params.get("type"))) {
+	// 		list = rSerivce.dayUsePc(vo);
+	// 	} else if ("2".equals(params.get("type"))) {
+	// 		list = rSerivce.loginList(vo);
+	// 	} else if ("3".equals(params.get("type"))) {
+	// 		list = rSerivce.dayUseUser(vo);
+	// 	} else if ("4".equals(params.get("type"))) {
+	// 		list = rSerivce.distionctDayUseUser(vo);
+	// 	} else if ("5".equals(params.get("type"))) {
+	// 		list = rSerivce.monthUsePc(vo);
+	// 	} else if ("6".equals(params.get("type"))) {
+	// 		list = rSerivce.pcCountUnit(vo);
+	// 	} else if ("7".equals(params.get("type"))) {
+	// 		list = rSerivce.dayTotalPc(vo);
+	// 	} else if ("8".equals(params.get("type"))) {
+	// 		list = rSerivce.dayTotalUser(vo);
+	// 	}
 
 
-		String[] head = new String[list.get(0).size()];
-		String[] column = new String[list.get(0).size()];
+	// 	String[] head = new String[list.get(0).size()];
+	// 	String[] column = new String[list.get(0).size()];
 
-		for (int i = 0; i < head.length; i++) {
-			head[i] = list.get(0).keySet().toArray()[i].toString();
-			column[i] = list.get(0).keySet().toArray()[i].toString();
-		}
+	// 	for (int i = 0; i < head.length; i++) {
+	// 		head[i] = list.get(0).keySet().toArray()[i].toString();
+	// 		column[i] = list.get(0).keySet().toArray()[i].toString();
+	// 	}
 
-		jsonObject.put("header", head); // Excel 상단
-		jsonObject.put("column", column); // Excel 상단
-		jsonObject.put("excelName", params.get("type")); // Excel 파일명
-		jsonObject.put("list", list); // Excel Data
+	// 	jsonObject.put("header", head); // Excel 상단
+	// 	jsonObject.put("column", column); // Excel 상단
+	// 	jsonObject.put("excelName", params.get("type")); // Excel 파일명
+	// 	jsonObject.put("list", list); // Excel Data
 
-		model.addAttribute("data", jsonObject);
-		return new CmmnExcelService();
-	}
+	// 	model.addAttribute("data", jsonObject);
+	// 	return new CmmnExcelService();
+	// }
 
 	/*
 	 * 사용자관리 페이지

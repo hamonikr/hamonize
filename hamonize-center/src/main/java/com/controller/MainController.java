@@ -36,12 +36,12 @@ public class MainController {
 		return "redirect:/login/login";
 	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	// @RequestMapping(value = "/home", method = RequestMethod.GET)
 
-	public String homePage() throws Exception {
-		return "/mntrng/pcControl";
+	// public String homePage() throws Exception {
+	// 	return "/mntrng/pcControl";
 
-	}
+	// }
 
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String mainMap(Model model) throws Exception {

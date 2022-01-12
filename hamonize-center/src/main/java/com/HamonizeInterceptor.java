@@ -6,13 +6,10 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-
-@Component
-public class HamonizeInterceptor extends HandlerInterceptorAdapter {
+public class HamonizeInterceptor implements HandlerInterceptor {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -31,13 +28,14 @@ public class HamonizeInterceptor extends HandlerInterceptorAdapter {
 			logger.error("NullPointerException : {}", e.getMessage(), e);
 		}
 
-		return super.preHandle(request, response, handler);
+		//return super.preHandle(request, response, handler);
+		return true;
 	}
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		super.postHandle(request, response, handler, modelAndView);
+		//super.postHandle(request, response, handler, modelAndView);
 	}
 
 

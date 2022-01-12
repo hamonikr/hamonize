@@ -5,12 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
-public class I18nConfig extends WebMvcConfigurerAdapter {
+public class I18nConfig implements WebMvcConfigurer {
 
 	// 인터셉터 설정 (인터셉터에서 service 사용하기 위해 분리)
 	@Bean
@@ -24,7 +24,11 @@ public class I18nConfig extends WebMvcConfigurerAdapter {
 				.excludePathPatterns("/manual/*").excludePathPatterns("/*")
 				.excludePathPatterns("/login/*").excludePathPatterns("/hmsvc/*")
 				.excludePathPatterns("/hmsvr/*").excludePathPatterns("/getAgent/*")
-				.excludePathPatterns("/act/*").excludePathPatterns("/backup/*");
+				.excludePathPatterns("/act/*").excludePathPatterns("/backup/*")
+				.excludePathPatterns("/js/**").excludePathPatterns("/css/**")
+				.excludePathPatterns("/fonts/**").excludePathPatterns("/images/**")
+				.excludePathPatterns("/img/**").excludePathPatterns("/font/**")
+				.excludePathPatterns("/vendor/**");
 
 	}
 

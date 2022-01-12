@@ -20,7 +20,7 @@ public class GlobalPropertySource {
     @Value("${spring.db1.datasource.driverClassName}")
     private String driverClassName;
 
-    @Value("${spring.db1.datasource.url}")
+    @Value("${spring.db1.datasource.jdbc-url}")
     private String url;
 
     @Value("${spring.db1.datasource.username}")
