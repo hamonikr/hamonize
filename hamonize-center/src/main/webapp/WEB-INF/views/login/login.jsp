@@ -7,24 +7,9 @@
 <title>CMS Login | 관리자</title>
 <link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
 <link rel="stylesheet" type="text/css" href="/css/sgb/content.css">
-
-<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
-	
+<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-	var ip;
-	 (function(window){
-		  var head = document.getElementsByTagName('head')[0];
-		  var script= document.createElement('script');
-		  window.getIP = function(json) {
-		    console.log("json=="+JSON.stringify(json));    
-		    console.log("json=="+json.ip); 
-		    ip = json.ip; 
-		    $("#user_ip").val(ip);
-		  };
-		  script.type= 'text/javascript';
-		  script.src= 'https://api.ipify.org?format=jsonp&callback=getIP';
-		  head.appendChild(script);
-		})(window); 
+
 	//로그인 처리
 	function fn_signIn(){
 		if($('#user_id').val() == ''){
@@ -104,7 +89,7 @@
 	
 
 
-<script src="/logintemplet/vendor/tilt/tilt.jquery.min.js"></script>
+<!-- <script src="/logintemplet/vendor/tilt/tilt.jquery.min.js"></script> -->
 
 </body>
 </html>

@@ -144,7 +144,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$('#off').empty();
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		$.post("pcList.do",{org_seq:treeNode.id},
+		$.post("pcList",{org_seq:treeNode.id},
 		function(result){
 				var agrs = result.pcList;
 				var strHtml ="";
@@ -160,7 +160,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			            }
 					 
 						if( agrs[i].pc_status == "true"){
-							strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
+							strHtml += '<li class="on"><a href="pcView?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
 						}else{
 							strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
 						}
@@ -245,7 +245,7 @@ function fnSave(){
                     <li id="off">
                     </li>
                 </ul>
-				<form name="frm" method="post" action="orgManage.do" class="row">					
+				<form name="frm" method="post" action="orgManage" class="row">					
 					<input type="hidden" name="org_seq"  id="org_seq" value="" />
 					<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 					<input type="hidden" name="section" id="section" value="" />

@@ -22,7 +22,7 @@
 	  
 	function view(param1){
 		$('#user_id').val(param1);
-		$('#frm').attr('action', '<c:url value="view.do" />');
+		$('#frm').attr('action', '<c:url value="view" />');
 		$('#frm').submit();
 	}
    
@@ -36,12 +36,12 @@
 		   }	
 		   $.ajax({
 			   type:"POST",
-			   url: "<c:url value='delete.do'/>",
+			   url: "<c:url value='delete'/>",
 			   data :  $("#frm").serialize(),
 			   dataType : "json",
 			   success: function(data, textStatus, jqXHR){
 				  alert('성공적으로 삭제 되었습니다.');
-				  location.href = "list.do";
+				  location.href = "list";
 			   },
 			   error : function(jqXHR, textStatus, errorThrown) {
 				   alert("삭제시 에러 : "+" "+ textStatus);
@@ -79,7 +79,7 @@
 		   switch(viewName){
 			   case 'classMngrList' : $("#adminListInfoCurrentPage").val(page); 
 			   console.log($("#adminListInfoCurrentPage").val())
-			   $('#frm').attr('action', '<c:url value="list.do" />');
+			   $('#frm').attr('action', '<c:url value="list" />');
 			   $('#frm').submit();
 				break;	
 		   default :
