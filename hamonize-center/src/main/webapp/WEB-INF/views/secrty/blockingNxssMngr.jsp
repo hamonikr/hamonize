@@ -4,7 +4,7 @@
 
 <body>
 <%@ include file="../template/topMenu.jsp" %>
-<%@ include file="../template/topNav.jsp" %>	
+	
 	<!-- content -->
     <div class="hamo_container">
         <div class="content_con">

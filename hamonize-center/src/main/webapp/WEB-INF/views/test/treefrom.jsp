@@ -13,7 +13,7 @@ var data = <%= request.getAttribute("gList") %>;
 </style>
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<%@ include file="./treeMenu.jsp" %>
 	
 	<%@ include file="../template/footer.jsp" %>

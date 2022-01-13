@@ -11,14 +11,14 @@
             <ul class="admin_sinfo">
 				<li><div class="dropdown">
 					<div class="admin">
-						<a href="/admin/serverlist.do"><img alt="설정" src="/images/icon_setting.png" /></a>
+						<a href="/admin/serverlist"><img alt="설정" src="/images/icon_setting.png" /></a>
 					</div>
 					<div class="dropdown_content" >
-						<a href="/admin/serverlist.do">환경 설정</a>
-						<a href="/admin/list.do">관리자 정보 목록</a>
+						<a href="/admin/serverlist">환경 설정</a>
+						<a href="/admin/list">관리자 정보 목록</a>
 					</div>
 				</div></li>
-                <li><a href="/login/logout.do"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
+                <li><a href="/login/logout"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
             </ul>
         </div>
 

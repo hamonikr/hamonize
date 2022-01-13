@@ -121,7 +121,7 @@ function mk_form_text(doc, step, defaultStep){
 
 <body> 
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<!-- content body -->
 	
 	

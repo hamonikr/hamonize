@@ -33,7 +33,7 @@
 			if (mins ==0 && secs == 0)
 			{
 				location.reload();         // 현재페이지 새로고침.
-				location.href="/login/logout.do";	
+				location.href="/login/logout";	
 				
 				return;
 			}

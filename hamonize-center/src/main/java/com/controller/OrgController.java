@@ -43,7 +43,7 @@ public class OrgController {
 	@RequestMapping(params = "!type", method = RequestMethod.POST)
 	public String orgList(HttpSession session, Model model, HttpServletRequest request) {
 		JSONArray jsonArray = new JSONArray();
-
+		logger.info("ppppppppppppppppppppp");
 		try {
 			// 저장된 조직 정보 출력
 			OrgVo orgvo = new OrgVo();
@@ -76,6 +76,8 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=show", method = RequestMethod.POST)
 	public JSONObject orgView(HttpSession session, Model model, OrgVo orgvo) {
+		logger.info("aaaaaaaaaaaaaaaaaaaa");
+		
 		orgvo = oService.orgView(orgvo);
 
 		JSONObject data = new JSONObject();

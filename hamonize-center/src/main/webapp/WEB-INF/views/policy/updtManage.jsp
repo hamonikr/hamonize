@@ -100,7 +100,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		if(treeNode.checked){
-		$.post("ushow.do",{org_seq:treeNode.id},
+		$.post("ushow",{org_seq:treeNode.id},
 		function(result){
 				var agrs = result;
 				var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -126,7 +126,7 @@ function onCheck(event, treeId, treeNode) {
 	var zTree = $.fn.zTree.getZTreeObj("tree");
 	var node = zTree.getNodeByParam('id', treeNode.pId);
 	if(treeNode.checked){
-	$.post("ushow.do",{org_seq:treeNode.id},
+	$.post("ushow",{org_seq:treeNode.id},
 	function(result){
 			var agrs = result;
 			var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -194,7 +194,7 @@ function fnSave(){
 	
 	button.disabled	= true;
 
-	$.post("usave.do", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
+	$.post("usave", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
 			 function(result){
 		if(result=="SUCCESS"){
 			alert("정상적으로  처리되었습니다.");
@@ -216,7 +216,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	<div class="hamo_container other">
 		
@@ -248,7 +248,7 @@ function fnSave(){
 	
 	         <h3>업데이트 관리 <span>업데이트 프로그램 선택</span></h3>
 	         
-						<form name="frm" method="post" action="orgManage.do" class="row">
+						<form name="frm" method="post" action="orgManage" class="row">
 	         			<input type="hidden" name="org_seq"  id="org_seq" value="" />
 								<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 								<input type="hidden" name="section" id="section" value="" />
@@ -327,7 +327,7 @@ function fnSave(){
 						
 						<div class="input_area" style="display: inline-block; width: 100%;">
 			
-							<form name="frm" method="post" action="orgManage.do" class="row">					
+							<form name="frm" method="post" action="orgManage" class="row">					
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
 								<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 								<input type="hidden" name="section" id="section" value="" />

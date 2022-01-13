@@ -13,6 +13,14 @@ public interface ILoginMapper {
 	void insertLoginInfo(LoginVO lvo) throws Exception;
 
 	int getSeqMax() throws Exception;
+	
+	int getLoginFailCount(Map<String, Object> params) throws Exception;
+
+	void updateLoginFailCount(Map<String, Object> params) throws Exception;
+
+	void updateLoginFailCountInit(Map<String, Object> params) throws Exception;
+
+	void updateLoginStatus(Map<String, Object> params) throws Exception;
 
 	void updateLoginInfo(LoginVO lvo) throws Exception;
 

@@ -1,0 +1,172 @@
+# Entry 2: ou=Invesume,dc=hamonize,dc=com
+dn: ou=Invesume,dc=hamonize,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: Invesume
+
+# Entry 3: ou=computers,ou=Invesume,dc=hamonize,dc=com
+dn: ou=computers,ou=Invesume,dc=hamonize,dc=com
+description: Invesume computers
+objectclass: top
+objectclass: organizationalUnit
+ou: computers
+
+# Entry 4: ou=degain,ou=Invesume,dc=hamonize,dc=com
+dn: ou=degain,ou=Invesume,dc=hamonize,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: degain
+
+# Entry 5: ou=computers,ou=degain,ou=Invesume,dc=hamonize,dc=com
+dn: ou=computers,ou=degain,ou=Invesume,dc=hamonize,dc=com
+description: degian computers
+objectclass: organizationalUnit
+objectclass: top
+ou: computers
+
+# Entry 6: cn=hamonize-clientpc2,ou=computers,ou=degain,ou=Invesume,dc=ha...
+dn: cn=hamonize-clientpc2,ou=computers,ou=팀1,ou=부서1_1,ou=부서1,ou=최상위,dc=hamonize,dc=com
+cn: hamonize-clientpc2
+iphostnumber: 192.168.0.152
+name: hamonize-clientpc2
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 7: ou=dev,ou=Invesume,dc=hamonize,dc=com
+dn: ou=dev,ou=Invesume,dc=hamonize,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: dev
+
+# Entry 8: ou=computers,ou=dev,ou=Invesume,dc=hamonize,dc=com
+dn: ou=computers,ou=dev,ou=Invesume,dc=hamonize,dc=com
+description: dev computers
+objectclass: organizationalUnit
+objectclass: top
+ou: computers
+
+# Entry 9: cn=hamonize-clientpc,ou=computers,ou=dev,ou=Invesume,dc=hamoni...
+dn: cn=hamonize-clientpc,ou=computers,ou=dev,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-clientpc
+iphostnumber: 192.168.0.150
+name: hamonize-clientpc
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 10: ou=virpc,ou=Invesume,dc=hamonize,dc=com
+dn: ou=virpc,ou=Invesume,dc=hamonize,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: virpc
+
+# Entry 11: ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+dn: ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+description: virPC computers
+objectclass: organizationalUnit
+objectclass: top
+ou: computers
+
+# Entry 12: cn=hamonize-vpc1,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc1,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc1
+iphostnumber: 192.168.0.160
+name: hamonize-vpc1
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 13: cn=hamonize-vpc10,ou=computers,ou=virpc,ou=Invesume,dc=hamoni...
+dn: cn=hamonize-vpc10,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc10
+iphostnumber: 192.168.0.160
+name: hamonize-vpc10
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 14: cn=hamonize-vpc2,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc2,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc2
+iphostnumber: 192.168.0.160
+name: hamonize-vpc2
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 15: cn=hamonize-vpc3,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc3,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc3
+iphostnumber: 192.168.0.160
+name: hamonize-vpc3
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 16: cn=hamonize-vpc4,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc4,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc4
+iphostnumber: 192.168.0.160
+name: hamonize-vpc4
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 17: cn=hamonize-vpc5,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc5,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc5
+iphostnumber: 192.168.0.160
+name: hamonize-vpc5
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 18: cn=hamonize-vpc6,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc6,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc6
+iphostnumber: 192.168.0.160
+name: hamonize-vpc6
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 19: cn=hamonize-vpc7,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc7,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc7
+iphostnumber: 192.168.0.160
+name: hamonize-vpc7
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 20: cn=hamonize-vpc8,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc8,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc8
+iphostnumber: 192.168.0.160
+name: hamonize-vpc8
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+
+# Entry 21: cn=hamonize-vpc9,ou=computers,ou=virpc,ou=Invesume,dc=hamoniz...
+dn: cn=hamonize-vpc9,ou=computers,ou=virpc,ou=Invesume,dc=hamonize,dc=com
+cn: hamonize-vpc9
+iphostnumber: 192.168.0.160
+name: hamonize-vpc9
+objectclass: ipHost
+objectclass: device
+objectclass: extensibleObject
+objectclass: top
+

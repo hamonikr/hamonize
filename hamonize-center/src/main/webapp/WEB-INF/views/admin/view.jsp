@@ -30,7 +30,7 @@
 			dataType : "json",
 			success: function(data, textStatus, jqXHR){
 			   alert('성공적으로 저장 되었습니다.');
-			   location.href = "list.do";
+			   location.href = "list";
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("저장시 에러 : "+" "+ textStatus);
@@ -186,7 +186,7 @@
 			dataType : "json",
 			success: function(data, textStatus, jqXHR){
 			   alert('성공적으로 수정 되었습니다.');
-			   location.href = "list.do";
+			   location.href = "list";
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("수정시 에러 : "+" "+ textStatus);
@@ -208,7 +208,7 @@
 			dataType : "json",
 			success: function(data, textStatus, jqXHR){
 			   alert('성공적으로 삭제 되었습니다.');
-			   location.href = "list.do";
+			   location.href = "list";
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("삭제시 에러 : "+" "+ textStatus);
@@ -219,7 +219,7 @@
 <body>
 
 <%@ include file="../template/topMenu.jsp" %>
-<%@ include file="../template/topNav.jsp" %>
+
 	
 
 <!-- content -->

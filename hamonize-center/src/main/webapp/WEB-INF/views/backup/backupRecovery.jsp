@@ -110,7 +110,7 @@ input[type="radio"] {
 		var seq = $("input:radio[name='dept_seq']:checked").val();
 		console.log("seq :"+seq);
 		
-		$.post("backupRCList.do",{seq:seq},
+		$.post("backupRCList",{seq:seq},
 				function(result){
 					var agrs = result;
 					var strHtml = "";
@@ -184,7 +184,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$("#rc_list").empty();
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		$.post("backupRCShow.do",{org_seq:treeNode.id},
+		$.post("backupRCShow",{org_seq:treeNode.id},
 				function(result){
 						var agrs = result;
 						var strHtml = "";
@@ -257,7 +257,7 @@ function fnSave(){
 
 	button.disabled	= true;
 
-	$.post("backupRCSave.do", {dataType:'json',dept_seq:dept_seq,
+	$.post("backupRCSave", {dataType:'json',dept_seq:dept_seq,
 		br_seq:br_seq,org_seq:org_seq}, 
 			function(result){
 				if(result=="SUCCESS"){
@@ -277,7 +277,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<div class="hamo_container other">
 
             <!-- 좌측 트리 -->
@@ -304,7 +304,7 @@ function fnSave(){
 
                 <h3>복구관리</h3>
                  <div class="board_view mT20">
-                <form name="frm" method="post" action="backupRCSave.do" class="row">
+                <form name="frm" method="post" action="backupRCSave" class="row">
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
 								<input type="hidden" name="br_seq"  id="br_seq" value="" />
 								<input type="hidden" name="dept_seq"  id="dept_seq" value="" />
