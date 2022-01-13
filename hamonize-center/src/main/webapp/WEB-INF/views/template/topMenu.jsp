@@ -49,14 +49,14 @@ function getMonthAgoday(){
             <ul class="admin_sinfo">
 				<li><div class="dropdown">
 					<div class="admin">
-						<a href="/admin/serverlist.do"><img alt="설정" src="/images/icon_setting.png" /></a>
+						<a href="/admin/serverlist"><img alt="설정" src="/images/icon_setting.png" /></a>
 					</div>
 					<div class="dropdown_content" >
-						<a href="/admin/serverlist.do">환경 설정</a>
-						<a href="/admin/list.do">관리자 정보 목록</a>
+						<a href="/admin/serverlist">환경 설정</a>
+						<a href="/admin/list">관리자 정보 목록</a>
 					</div>
 				</div></li>
-                <li><a href="/login/logout.do"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
+                <li><a href="/login/logout"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
             </ul>
         </div>
 
@@ -72,7 +72,7 @@ function getMonthAgoday(){
                         <li><a href="/gplcs/umanage">업데이트관리</a></li>
                         <li><a href="/gplcs/pmanage">프로그램관리</a></li>
                         <li><a href="/gplcs/fmanage">방화벽관리</a></li>
-                        <%-- <li><a href="/gplcs/dmanage">디바이스관리</a></li> --%>
+                        <li><a href="/gplcs/dmanage">디바이스관리</a></li>
                     </ul>
                 </li>
 
@@ -88,7 +88,7 @@ function getMonthAgoday(){
                     <li><a href="/auditLog/pcUserLog">사용자 접속로그</a></li> 
                     <li><a href="/auditLog/prcssBlockLog">프로세스 차단로그</a></li>
                     <li><a href="/auditLog/pcChangeLog">하드웨어 변경로그</a></li>
-                    <%-- <li><a href="/auditLog/unAuthLog">비인가 디바이스로그</a></li> --%>
+                    <li><a href="/auditLog/unAuthLog">비인가 디바이스로그</a></li>
                     <li><a href="/auditLog/updateCheckLog">정책 배포 결과</a></li>
                 </ul>
                 </li>

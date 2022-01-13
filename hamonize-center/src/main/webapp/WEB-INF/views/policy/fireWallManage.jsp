@@ -97,7 +97,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		if(treeNode.checked){
-		$.post("fshow.do",{org_seq:treeNode.id},
+		$.post("fshow",{org_seq:treeNode.id},
 		function(result){
 				var agrs = result;
 				var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -124,7 +124,7 @@ function onCheck(event, treeId, treeNode) {
 	var zTree = $.fn.zTree.getZTreeObj("tree");
 	var node = zTree.getNodeByParam('id', treeNode.pId);
 	if(treeNode.checked){
-	$.post("fshow.do",{org_seq:treeNode.id},
+	$.post("fshow",{org_seq:treeNode.id},
 	function(result){
 			var agrs = result;
 			var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -197,7 +197,7 @@ function fnSave(){
     	}
 	})
 
-	 $.post("fsave.do", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
+	 $.post("fsave", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
 			 function(result){
 		if(result=="SUCCESS"){
 			alert("정상적으로  처리되었습니다.");
@@ -216,7 +216,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	<div class="hamo_container other">
 	
@@ -248,7 +248,7 @@ function fnSave(){
 	         <h3 class="inblock">방화벽 관리 <span>방화벽 허용서비스 선택</span></h3>
       			<div class="right"> <button type="button" id="btnManage" class="btn_type3"> 방화벽 규칙 관리</button></div>
       					
-						<form name="frm" method="post" action="orgManage.do" class="row">
+						<form name="frm" method="post" action="orgManage" class="row">
 	         			<input type="hidden" name="org_seq" id="org_seq" value="" />
 								<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 								<input type="hidden" name="section" id="section" value="" />

@@ -11,14 +11,14 @@
 
 	function goSearch()
 	{
-		$('#frm').attr('action', '<c:url value="list.do" />');
+		$('#frm').attr('action', '<c:url value="list" />');
 		$('#frm').submit();
 	}
 
 	function view(param1)
 	{
 		$('#user_id').val(param1);
-		$('#frm').attr('action', '<c:url value="view.do" />');
+		$('#frm').attr('action', '<c:url value="view" />');
 		$('#frm').submit();
 	}
 
@@ -37,7 +37,7 @@
 			dataType : "json",
 			success: function(data, textStatus, jqXHR){
 			   alert('성공적으로 삭제 되었습니다.');
-			   location.href = "list.do";
+			   location.href = "list";
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("삭제시 에러 : "+" "+ textStatus);
@@ -48,14 +48,14 @@
 	function pageNavigation(pageNo)
 	{
 		$('#page_no').val(pageNo);
-		$('#frm').attr('action', '<c:url value="list.do" />');
+		$('#frm').attr('action', '<c:url value="list" />');
 		$('#frm').submit();
 	}
 </script>    
 <body>
 
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 
 <form id="frm" name="frm" action="" method="post">

@@ -30,7 +30,7 @@ public class LoginControllerTests {
         info.add("pass_wd", "admin");
 
         // mockMvc.perform(get("/insession").params(info).andExpect)
-        mockMvc.perform(MockMvcRequestBuilders.post("/login/insession.do").params(info))
+        mockMvc.perform(MockMvcRequestBuilders.post("/login/insession").params(info))
         .andExpect(status().isOk())
         .andExpect(content().string(equalTo("1")));
 

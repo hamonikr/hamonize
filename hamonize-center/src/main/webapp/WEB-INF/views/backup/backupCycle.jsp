@@ -153,7 +153,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		if(treeNode.checked){
 			console.log("treeNode.id=="+treeNode.id);
-		$.post("backupShow.do",{org_seq:treeNode.id},
+		$.post("backupShow",{org_seq:treeNode.id},
 		function(result){
 			    $('input[name=bac_cycle_time]').val()
 				var agrs = result;
@@ -261,7 +261,7 @@ function fnSave(){
 	
 	button.disabled	= true;
 
-	$.post("backupSave.do", {dataType:'json',bac_cycle_option:bac_cycle_option,
+	$.post("backupSave", {dataType:'json',bac_cycle_option:bac_cycle_option,
 		  bac_cycle_time:bac_cycle_time,bac_gubun:bac_gubun, data:JSON.stringify(queryArr)}, 
 			 function(result){
 		if(result=="SUCCESS"){
@@ -284,7 +284,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	<div class="hamo_container other">
 
@@ -315,7 +315,7 @@ function fnSave(){
 
             <h3>백업주기 선택</h3>              
             <div class="board_view mT20">
-            <form name="frm" method="post" action="orgManage.do" class="row">					
+            <form name="frm" method="post" action="orgManage" class="row">					
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
 								<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 								<input type="hidden" name="section" id="section" value="" />

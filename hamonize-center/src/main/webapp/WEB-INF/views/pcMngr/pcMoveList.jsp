@@ -232,7 +232,7 @@ function searchView(viewName, page){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	
 	<section class="body haveGroup">

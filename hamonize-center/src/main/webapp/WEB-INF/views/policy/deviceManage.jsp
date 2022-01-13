@@ -98,7 +98,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		if(treeNode.checked){
-		$.post("dshow.do",{org_seq:treeNode.id},
+		$.post("dshow",{org_seq:treeNode.id},
 		function(result){
 				var agrs = result;
 				var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -123,7 +123,7 @@ function onCheck(event, treeId, treeNode) {
 	var zTree = $.fn.zTree.getZTreeObj("tree");
 	var node = zTree.getNodeByParam('id', treeNode.pId);
 	if(treeNode.checked){
-	$.post("dshow.do",{org_seq:treeNode.id},
+	$.post("dshow",{org_seq:treeNode.id},
 	function(result){
 			var agrs = result;
 			var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -201,7 +201,7 @@ function fnSave(){
 
 	button.disabled	= true;
 	
-	$.post("dsave.do", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
+	$.post("dsave", {dataType:'json',ppm_seq:ppm_seq, data:JSON.stringify(queryArr)}, 
 		function(result){	
 		if(result=="SUCCESS"){
 			alert("정상적으로  처리되었습니다.");
@@ -252,7 +252,7 @@ function fnSave(){
 	         <h3 class="inblock">디바이스 관리 <span>허용 디바이스 선택</span></h3>
       			<div class="right"> <button type="button" id="btnManage" class="btn_type3"> 허용 디바이스 관리</button></div>
       					
-						<form name="frm" method="post" action="orgManage.do" class="row">
+						<form name="frm" method="post" action="orgManage" class="row">
 	         			<input type="hidden" name="org_seq" id="org_seq" value="" />
 								<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 								<input type="hidden" name="section" id="section" value="" />

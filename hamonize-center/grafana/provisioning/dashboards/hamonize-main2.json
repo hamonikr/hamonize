@@ -67,7 +67,7 @@
         "valueName": "current"
       },
       "default_title_for_rows": "",
-      "first_column_link": "http://<Your Center url>/mntrng/pcView.do?uuid=_row_name_",
+      "first_column_link": "http://<Your Center url>/mntrng/pcView?uuid=_row_name_",
       "font_size": "1.2em",
       "gridPos": {
         "h": 9,

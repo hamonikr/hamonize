@@ -99,10 +99,12 @@ text-decoration: none;
 				        	   hostnameVal = agrs[i].pc_hostname; 
 				            }
 							if( agrs[i].pc_status == "true"){
-								strHtml += '<li class="on"><a href="pcView.do?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
+								strHtml += '<li class="on"><a href="pcView?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
 							}else{
 								strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
 							}
+						console("ddd");
+						
 						}
 						$(".monitor_list").append(strHtml);
 						$("#total").append("<font class=\"total\">●</font>TOTAL - "+(parseInt(result.on)+parseInt(result.off))+"대");
@@ -207,7 +209,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	
 	<!-- width 100% 컨텐츠 other 추가 -->

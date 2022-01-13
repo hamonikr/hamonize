@@ -34,7 +34,7 @@ $( "#sp_on" ).click(function() {
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	<div class='wrap'>
     <div class='code-html' id='code-html'>
 		<div class="main_title" style="margin-top: 20px; ">

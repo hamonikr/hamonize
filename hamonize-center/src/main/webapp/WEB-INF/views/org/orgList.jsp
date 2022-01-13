@@ -42,11 +42,9 @@
 		{ id:"${data.seq}", pId:"${data.p_seq}",
 			<c:if test="${data.section ne 'S'}">
 			name:"${data.org_nm} "
-// 			icon:"/images/icon_tree1.png"
 			</c:if>
 			<c:if test="${data.section eq 'S'}">
 			name:"${data.org_nm}"
-// 			icon:"/images/icon_tree2.png"
 			</c:if>
 			,od:"${data.org_ordr}"
 			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
@@ -62,7 +60,7 @@
 	$.fn.zTree.init($("#tree"), setting, zNodes); 
 	var treeObj =  $.fn.zTree.getZTreeObj("tree");
 	var sNodes = treeObj.getSelectedNodes();
-	console.log(sNodes.length);
+	// console.log(sNodes.length);
 	if (sNodes.length > 0) {
 		var isOpen = sNodes[2].open;
 	}
@@ -203,7 +201,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		var pSpan = "#"+treeNode.parentTId+"_span";
 	
-		$.post("orgManage.do",{type:'show',seq:treeNode.id},
+		$.post("orgManage",{type:'show',seq:treeNode.id},
 		function(result){
 				var agrs = result;
 				console.log(agrs);
@@ -236,7 +234,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				$('form[name=frm] input[name=section]').val(agrs.section);
 		
 		});
-		console.log("section===="+$("#section").val())
 			
 		}
 		
@@ -353,7 +350,7 @@ function setCheck() {
 		}else{
 			if(confirm("하위부서가 있다면 하위부서도 전부 삭제됩니다 삭제하시겠습니까?")){
 				
-				 $.post("orgManage.do",{
+				 $.post("orgManage",{
 						 type: 'delt'
 						,seq:treeNode.id
 						,p_seq:treeNode.pId
@@ -408,7 +405,7 @@ function fnSave(){
 	button.disabled	= true;
 
     $.ajax({
-		url: 'orgManage.do',							// Any URL
+		url: 'orgManage',							// Any URL
 		type: 'post',
 		data: $('#frm').serialize(),                 // Serialize the form data
 		success: function (data) { 					// If 200 OK
@@ -426,7 +423,7 @@ function fnSave(){
 
 <body>
 	<%@ include file="../template/topMenu.jsp" %>
-	<%@ include file="../template/topNav.jsp" %>
+	
 	
 	
 	<!-- width 100% 컨텐츠 other 추가 -->
@@ -461,7 +458,7 @@ function fnSave(){
             <div class="right_box" >
 
                 <h3>조직정보</h3>
-                <form name="frm" id="frm" method="post" action="orgManage.do" class="row">
+                <form name="frm" id="frm" method="post" action="orgManage" class="row">
                 	<input type="hidden" name="seq" id="seq" value="" />
 					<input type="hidden" name="section" id="section" value="" />
 					<input type="hidden" name="all_org_nm" id="all_org_nm" value="" />

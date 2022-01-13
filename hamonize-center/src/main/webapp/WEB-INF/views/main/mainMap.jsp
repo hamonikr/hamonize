@@ -373,7 +373,7 @@ xmlhttp.onreadystatechange = function(){
 		console.log("fail");
 	}
 }
-xmlhttp.open("POST","pcList.do",true);
+xmlhttp.open("POST","pcList",true);
 xmlhttp.send();
 	</script>
 	

@@ -46,4 +46,20 @@ public class LoginService {
 
 	}
 
+	public int getLoginFailCount(Map<String, Object> params) throws Exception {	
+		return loginMapper.getLoginFailCount(params);
+	}
+
+	public void updateLoginFailCount(Map<String, Object> params) throws Exception {
+		loginMapper.updateLoginFailCount(params);
+	}
+
+	public void updateLoginFailCountInit(Map<String, Object> params) throws Exception {
+		loginMapper.updateLoginFailCountInit(params);
+	}
+
+	public void updateLoginStatus(Map<String, Object> params) throws Exception {
+		loginMapper.updateLoginStatus(params);
+	}
+
 }
