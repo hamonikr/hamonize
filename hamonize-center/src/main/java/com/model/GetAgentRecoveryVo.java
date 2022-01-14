@@ -10,7 +10,7 @@ import lombok.ToString;
 public class GetAgentRecoveryVo {
 
 	private int seq;
-	private int org_seq;
+	private Long org_seq;
 	private int pc_seq;
 	private int br_seq;
 	private int recv_applc_seq;

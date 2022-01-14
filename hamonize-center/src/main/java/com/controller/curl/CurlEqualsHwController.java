@@ -96,7 +96,7 @@ public class CurlEqualsHwController {
 		newPvo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid()));
 		newPvo.setPc_hostname(setEqualsHwVo.getPc_hostname());
 
-		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(newPvo.getOrg_seq());
+		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(newPvo);
 
 		newPvo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 		PcMangrVo oldPvo = equalsHwMapper.getPCinfo(setEqualsHwVo);
@@ -134,11 +134,11 @@ public class CurlEqualsHwController {
 	 * @param uuid
 	 * @return 부서seq
 	 */
-	public int pcUUID(String uuid) {
+	public Long pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		int segSeq = agentVo.getSeq();
+		Long segSeq = agentVo.getSeq();
 		return segSeq;
 	}
 

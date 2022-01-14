@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class ActAgentBackupRecoveryVo {
-	private Integer org_seq;
+	private Long org_seq;
 	private String datetime;
 	private String uuid;
 	private String hostname;

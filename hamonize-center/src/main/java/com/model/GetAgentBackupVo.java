@@ -10,7 +10,7 @@ import lombok.ToString;
 public class GetAgentBackupVo {
 
 	private int bac_seq;
-	private int org_seq;
+	private Long org_seq;
 	private String bac_cycle_option; 
 	private String bac_cycle_time; 
 	private String bac_gubun;

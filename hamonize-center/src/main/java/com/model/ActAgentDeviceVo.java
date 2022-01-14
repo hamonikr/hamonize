@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ActAgentDeviceVo {
 
-	private Integer org_seq;
+	private Long org_seq;
 	private String datetime;
 	private String uuid;
 	private String hostname;

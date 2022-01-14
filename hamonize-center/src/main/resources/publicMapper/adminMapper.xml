@@ -9,8 +9,8 @@
 		USER_NAME,
 		PASS_WD,
 		DEPT_NAME,
-		GUBUN,
-		ins_date
+		STATUS,
+		RGSTR_DATE
 		FROM TBL_ADMIN_USER
 		<where>
 			<if test="keyWord != null and keyWord != ''">
@@ -31,7 +31,7 @@
 			</if>
 			</if>
 		</where>
-		ORDER BY ins_date DESC
+		ORDER BY RGSTR_DATE DESC
 		OFFSET #{limitStart} LIMIT #{recordSize}
 	</select>
 
@@ -66,8 +66,8 @@
 		USER_NAME,
 		PASS_WD,
 		DEPT_NAME,
-		GUBUN,
-		ins_date
+		STATUS,
+		RGSTR_DATE
 		FROM TBL_ADMIN_USER
 		WHERE USER_ID = #{user_id}
 	</select>
@@ -75,9 +75,9 @@
 	<insert id="adminSave" parameterType="com.model.AdminVo">
 		INSERT
 		INTO TBL_ADMIN_USER
-		(USER_ID , USER_NAME , PASS_WD , DEPT_NAME , GUBUN ,salt , ins_date)
+		(USER_ID , USER_NAME , PASS_WD , DEPT_NAME , STATUS ,salt , RGSTR_DATE)
 		VALUES(#{user_id} , #{user_name} , #{pass_wd} ,
-		#{dept_name} , #{gubun} , #{salt}, now())
+		#{dept_name} , #{status} , #{salt}, now())
 
 	</insert>
 
@@ -92,8 +92,8 @@
 			salt = #{salt},
 		</if>
 		DEPT_NAME = #{dept_name},
-		GUBUN = #{gubun},
-		UPD_DATE = now()
+		STATUS = #{status},
+		UPDT_DATE = now()
 		WHERE USER_ID = #{user_id}
 	</update>
 

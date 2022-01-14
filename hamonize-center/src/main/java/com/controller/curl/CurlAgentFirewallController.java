@@ -49,7 +49,7 @@ public class CurlAgentFirewallController {
 		uuid = uuid.trim();
 
 		// uuid로 부서정보 가져오기
-		int segSeq = pcUUID(uuid);
+		Long segSeq = pcUUID(uuid);
 		if (segSeq == 0) {
 			return "nodata";
 		}
@@ -186,12 +186,12 @@ public class CurlAgentFirewallController {
 	 * 
 	 * @return 부서seq
 	 */
-	public int pcUUID(String uuid) {
+	public Long pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 
-		int segSeq = 0;
+		Long segSeq = 0L;
 
 		if (agentVo != null) {
 			segSeq = agentVo.getSeq();

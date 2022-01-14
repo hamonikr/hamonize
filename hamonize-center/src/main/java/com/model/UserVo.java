@@ -24,7 +24,7 @@ public class UserVo extends PagingVo{
 	private String tel;
 
 	private String discharge_dt;
-	private Integer org_seq; 
+	private Long org_seq; 
 	private String org_nm; 
 	private String P_org_nm; 
 

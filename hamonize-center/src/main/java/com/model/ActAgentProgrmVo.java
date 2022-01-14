@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ActAgentProgrmVo {
 
-	private int orgseq;
+	private Long orgseq;
 	private String datetime;
 	private String uuid;
 	private String hostname;

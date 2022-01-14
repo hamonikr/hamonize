@@ -9,8 +9,8 @@ import lombok.ToString;
 @ToString
 public class RecoveryVo {
 	private int br_seq;
-	private int br_org_seq;
-	private int dept_seq; // pc seq num
+	private Long br_org_seq;
+	private Long dept_seq; // pc seq num
 
 	private String br_backup_path;
 	private String br_backup_iso_dt;

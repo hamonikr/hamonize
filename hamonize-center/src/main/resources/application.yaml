@@ -5,24 +5,44 @@ spring:
       suffix: .jsp
     #servlet:
     #  path: .do
-  server:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
-  db1:
-    datasource:
-      tomcat:
-        validation-query: SELECT 1
-        connection-properties: useUnicode=true;characterEncoding=utf-8;autoReconnection=true
-        max-wait: 600000
-        max-active: 50
-        max-idle: 50
-        min-idle: 8
-        test-on-borrow: true
-        test-while-idle: true
-        validation-interval: 5000
-      sql-script-encoding: UTF-8
+  # server:
+  #   encoding:
+  #     charset: UTF-8
+  #     enabled: true
+  #     force: true
+  # db1:
+  #   datasource:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    #   hikari:
+    #     auto-commit: true
+    #     connection-test-query: SELECT 1
+    #     minimum-idle: 10
+    #     maximum-pool-size: 50
+    #     transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+    # jpa:
+    #   database-platform: org.hibernate.dialect.PostgreSQLDialect
+    #   properties:
+    #     hibernate:
+    #       format_sql: true
+    #       hbm2ddl.auto: update
+    #       implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    #       physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    #   open-in-view: false
+    #   show-sql: true
+        #pool-name: pool-jiniworld_demo
+      # tomcat:
+      #   validation-query: SELECT 1
+      #   connection-properties: useUnicode=true;characterEncoding=utf-8;autoReconnection=true
+      #   max-wait: 600000
+      #   max-active: 50
+      #   max-idle: 50
+      #   min-idle: 8
+      #   test-on-borrow: true
+      #   test-while-idle: true
+      #   validation-interval: 5000
+      # sql-script-encoding: UTF-8
   devtools:
     livereload:
       enabled: true

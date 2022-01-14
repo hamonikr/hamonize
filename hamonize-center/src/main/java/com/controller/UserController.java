@@ -72,7 +72,7 @@ public class UserController {
 			@RequestParam Map<String, Object> params) throws Exception {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		List<UserVo> list = new ArrayList<UserVo>();
-		vo.setOrg_seq(Integer.parseInt(params.get("org_seq").toString()));
+		vo.setOrg_seq(Long.valueOf(Integer.parseInt(params.get("org_seq").toString())));
 
 		System.out.println("선택된 org_seq : " + vo.getOrg_seq());
 

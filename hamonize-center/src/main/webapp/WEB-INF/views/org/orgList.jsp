@@ -39,7 +39,7 @@
 		};
 	var zNodes =[
 		<c:forEach items="${oList}" var="data" varStatus="status" >
-		{ id:"${data.seq}", pId:"${data.p_seq}",
+		{ id:"${data.seq}", pId:"${data.p_seq}",domain:"${data.domain}",
 			<c:if test="${data.section ne 'S'}">
 			name:"${data.org_nm} "
 			</c:if>
@@ -200,8 +200,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		var pSpan = "#"+treeNode.parentTId+"_span";
-	
-		$.post("orgManage",{type:'show',seq:treeNode.id},
+
+		$.post("orgManage",{type:'show',seq:treeNode.id,domain:treeNode.domain},
 		function(result){
 				var agrs = result;
 				console.log(agrs);
@@ -357,6 +357,7 @@ function setCheck() {
 						,org_ordr:treeNode.od
 						,org_nm:$("#org_nm").val()
 						,all_org_nm:$("#all_org_nm").val()
+						,domain:treeNode.domain
 					},
 					function(result){
 						console.log("result===="+result);
@@ -400,9 +401,8 @@ function fnSave(){
 	var all_org_nm = $("#all_org_nm").val();
 	var org_nm = all_org_nm.split("|");
 
-    $('form[name=frm]').append("<input type='hidden' name='type' value='save' />");        
-
-	button.disabled	= true;
+    $('form[name=frm]').append("<input type='hidden' name='type' value='save' />");
+				button.disabled	= true;
 
     $.ajax({
 		url: 'orgManage',							// Any URL

@@ -49,7 +49,7 @@ public class CurlAgentDeviceController {
 		pcUuid = pcUuid.trim();
 
 		// uuid로 부서정보 가져오기
-		int segSeq = pcUUID(pcUuid);
+		Long segSeq = pcUUID(pcUuid);
 		if (segSeq == 0) {
 			return "nodata";
 		}
@@ -198,11 +198,11 @@ public class CurlAgentDeviceController {
 	 * 
 	 * @return 부서seq
 	 */
-	public int pcUUID(String pcUuid) {
+	public Long pcUUID(String pcUuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(pcUuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		int segSeq = 0;
+		Long segSeq = 0L;
 		if (agentVo != null) {
 			segSeq = agentVo.getSeq();
 		}

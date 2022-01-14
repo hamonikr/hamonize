@@ -12,11 +12,12 @@
 
 	<select id="getLoginInfo" parameterType="java.util.HashMap" resultType="com.model.LoginVO">
 		SELECT 
+			DOMAIN,
 			USER_ID,
 			USER_NAME,
 			PASS_WD,
 			DEPT_NAME,
-			GUBUN
+			STATUS
 		FROM TBL_ADMIN_USER
 		WHERE USER_ID=#{user_id}
 		  AND PASS_WD=#{pass_wd}	
@@ -25,14 +26,16 @@
 	<insert id="insertLoginInfo" parameterType="com.model.LoginVO">   
 		INSERT INTO TBL_ADMIN_LOGIN_HISTORY
 		(
-		    SEQ
+				DOMAIN
+		,   SEQ
 		,   USER_ID  
-		,   CONN_IP
+		,   USER_IP
 		,   LOGIN_DATE    
 		)
 		VALUES
 		(
-		    #{loginKey}
+				#{domain}
+		,   #{loginKey}
 		,   #{user_id}   
 		,   #{user_ip}     
 		,   now()  
@@ -69,8 +72,8 @@
 	<update id="updateLoginStatus" parameterType="java.util.HashMap">
 		UPDATE TBL_ADMIN_USER
 		SET
-		GUBUN = 'D',
-		UPD_DATE = now()
+		STATUS = 'D',
+		UPDT_DATE = now()
 		WHERE USER_ID = #{user_id}
 	</update>
 

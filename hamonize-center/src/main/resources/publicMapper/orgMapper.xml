@@ -8,6 +8,7 @@
 		SELECT *
 		FROM tbl_org
 		WHERE seq = (select org_seq from public.tbl_pc_mangr where pc_uuid = #{pc_uuid} )
+		and DOMAIN = #{domain}
 	</select>
 	
 	
@@ -17,6 +18,7 @@
 		FROM tbl_org
 		<where>
 				trim(org_nm) = #{org_nm}
+				and trim(domain) = #{domain}
 		</where>
 	</select>
 	
@@ -29,15 +31,16 @@
 		    SELECT A.*
 		    FROM tbl_org A
 		    where A.seq = #{seq}
-		
+				and A.DOMAIN = #{domain}
 		    UNION ALL
 		    
 		   SELECT A.*
 		    FROM tbl_org A,  T
 		    
 		    WHERE A.seq = T.p_seq
+				and A.DOMAIN = T.domain
 		)
-		SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+		SELECT domain,seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
 		order by T.seq asc
 		
 		) TA
@@ -53,15 +56,16 @@
 		    SELECT A.*
 		    FROM tbl_org A
 		    where A.seq = #{p_seq}
-		
+				and A.DOMAIN = #{domain}
 		    UNION ALL
 		    
 		   SELECT A.*
 		    FROM tbl_org A,  T
 		    
 		    WHERE A.seq = T.p_seq
+				and A.DOMAIN = T.domain
 		)
-		SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+		SELECT domain,seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
 		order by T.seq asc
 		
 		) TA
@@ -69,36 +73,82 @@
 	</select>
 	
 	<select id="orgOldNm" resultType="com.model.OrgVo" parameterType="com.model.OrgVo">
-		SELECT ORG_NM FROM TBL_ORG WHERE SEQ = #{seq}
+		SELECT ORG_NM FROM TBL_ORG WHERE SEQ = #{seq} and DOMAIN = #{domain}
 	
 	</select>
 
 	<!-- 조직목록 -->
-	<select id="orgList" resultType="com.model.OrgVo">
-	<![CDATA[ 
-		with recursive search_org(seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
-			select a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
-			from tbl_org a 
-			where a.p_seq = 0
-			union all
-			select b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
-			from tbl_org b, search_org so 
-		where b.p_seq = so.seq and not cycle)
-		select seq,p_seq,org_nm,org_ordr,section,level,path
-		from search_org order by level,org_ordr
-    ]]>	
+	<select id="orgList" resultType="com.model.OrgVo" parameterType="java.lang.String">
+		<![CDATA[ 
+			with recursive search_org("domain",seq,
+					p_seq,
+					org_nm,
+					org_ordr,
+					section,
+					level,
+					path,
+					cycle) as (
+					select
+					a."domain" ,
+						a.seq,
+						a.p_seq,
+						a.org_nm,
+						a.org_ordr,
+						a.section,
+						0,
+						array[a.seq],
+						false
+					from
+						tbl_org a
+					where
+						a.p_seq = 0
+						and a.domain = #{domain}
+					union all
+					select
+						b."domain",
+						b.seq,
+						b.p_seq,
+						b.org_nm,
+						b.org_ordr,
+						b.section,
+						level + 1,
+						path || b.seq,
+						b.seq = any(path)
+					from
+						tbl_org b,
+						search_org so
+					where
+						b.p_seq = so.seq
+						and b."domain" = #{domain}
+						and not cycle)
+							select
+						"domain",
+						seq,
+						p_seq,
+						org_nm,
+						org_ordr,
+						section,
+						level,
+						path
+					from
+						search_org
+					order by
+						level,
+						org_ordr
+				]]>	
 	</select>
 	
 	<select id="getTeamList" resultType="com.model.OrgVo">
-		with recursive search_org(seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
-			select a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+		with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
 			from tbl_org a 
 			where a.p_seq = 0
+			and domain = #{domain}
 			union all
-			select b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
 			from tbl_org b, search_org so 
-		where b.p_seq = so.seq and not cycle)
-		select seq,p_seq,org_nm,org_ordr,section,level,path
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select domain,seq,p_seq,org_nm,org_ordr,section,level,path
 		from search_org 
 		where section = 'S'
 		order by level,org_ordr
@@ -107,14 +157,16 @@
 
 	<select id="orgChoose" resultType="com.model.OrgVo">
 	<![CDATA[ 
-		select * from tbl_org order by seq asc
+		select * from tbl_org whereorder by seq asc
     ]]>	
 	</select>
 	
 	<select id="orgView" parameterType="com.model.OrgVo" resultType="com.model.OrgVo">
 	<![CDATA[ 
 	
-		SELECT A.SEQ
+		SELECT 
+				A.DOMAIN
+			,	A.SEQ
 			, A.P_SEQ
 			, A.ORG_ORDR
 			, A.ORG_NM
@@ -128,6 +180,7 @@
 			, A.ORG_NUM
 		FROM TBL_ORG A
 		WHERE A.SEQ = #{seq}
+		AND A.DOMAIN = #{domain}
 	]]>	
 	</select>
 
@@ -139,11 +192,10 @@
 				, ORG_ORDR		= #{org_ordr}		
 				, ORG_NM		= #{org_nm}		
 				, P_ORG_NM		= #{p_org_nm}
-				, writer_id		= #{writer_id}		
-				, INS_DATE		= now()    
+				, writer_id		= #{writer_id}
 				, WRITER_IP		= #{writer_ip}		
 				, UPDATE_WRITER_ID		= #{writer_id}		
-				, UPD_DATE		= now()	
+				, UPDT_DATE		= now()	
 				, UPDATE_WRITER_IP		= #{writer_ip} 
 				, SIDO		= #{sido} 
 				, GUGUN		= #{gugun} 
@@ -161,41 +213,43 @@
 					    SELECT A.*
 					    FROM tbl_org A
 					    where A.seq = #{p_seq}
-					
+							and A.DOMAIN = #{domain}
 					    UNION ALL
 					    
 					   SELECT A.*
 					    FROM tbl_org A,  T
 					    
 					    WHERE A.seq = T.p_seq
+							and A.DOMAIN = T.domain
 					)
-					SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+					SELECT seq,domain,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
 					order by T.seq asc
 					
 					) TA )
 					
 				</if>
-				WHERE SEQ = #{seq}	 RETURNING *
+				WHERE SEQ = #{seq} and DOMAIN = #{domain}	 RETURNING *
 		)
 				
 		INSERT INTO 
 		TBL_ORG (	
-			SEQ						
+			SEQ
+			, DOMAIN				
 			, P_SEQ										   
 			, ORG_ORDR						 
 			, ORG_NM						
 			, P_ORG_NM						  
 			, writer_id						
-			, INS_DATE						
+			, RGSTR_DATE						
 			, WRITER_IP						
 			, UPDATE_WRITER_ID				
-			, UPD_DATE						
+			, UPDT_DATE						
 			, UPDATE_WRITER_IP				
 			, SECTION
 			, ALL_ORG_NM
 		)
-		SELECT (SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_ORG)
-		,#{p_seq},#{org_ordr},#{org_nm},#{p_org_nm},#{writer_id},now()
+		SELECT (SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_ORG where domain = #{domain})
+		,#{domain},#{p_seq},#{org_ordr},#{org_nm},#{p_org_nm},#{writer_id},now()
 		,#{writer_ip},#{writer_id},now(),#{writer_ip},#{section},
 		<if test="p_seq == 0">
 		  #{org_nm}
@@ -207,15 +261,16 @@
 					SELECT A.*
 					FROM tbl_org A
 					where A.seq = #{p_seq}
-				
+					and A.DOMAIN = #{domain}
 					UNION ALL
 					
 					SELECT A.*
 					FROM tbl_org A,  T
 					
 					WHERE A.seq = T.p_seq
+					and A.DOMAIN = T.domain
 				)
-				SELECT seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
+				SELECT domain,seq,p_seq,replace(replace(replace(replace(replace(replace(coalesce(org_nm,p_org_nm),'/',''),'_',''),'(',''),')',''),'+',''),' ','')as org_nm FROM T 
 				order by T.seq asc				
 			) TA )
 		</if>
@@ -229,71 +284,61 @@
 			SELECT A.*
 			FROM tbl_org A
 			where A.p_seq = #{seq}
-		
+			and A.DOMAIN = #{domain}
 			UNION ALL
 			
 			SELECT A.*
 			FROM tbl_org A, T	
 			WHERE T.seq = A.p_seq
+			and T.DOMAIN = a.domain
 		)
-		SELECT seq,p_seq,org_nm,all_org_nm FROM T 
+		SELECT domain,seq,p_seq,org_nm,all_org_nm FROM T 
 		order by T.seq asc 		
 	</select>
 
 	<!-- 하위 부서 경로 이름 가져오기 -->
-	<select id="getAllOrgNm" parameterType="Integer" resultType="com.model.OrgVo">
+	<select id="getAllOrgNm" parameterType="com.model.PcMangrVo" resultType="com.model.OrgVo">
 		select all_org_nm
 		from tbl_org
-		where seq = #{seq} 
+		where seq = #{org_seq}
+		and DOMAIN = #{domain}
 	</select>
 
 	<!-- 하위 부서 경로 이름 업데이트 -->
 	<update id="allOrgNmUpdate" parameterType="com.model.OrgVo">
 		update tbl_org
 		set all_org_nm = #{all_org_nm}
-		where seq = #{seq} 
+		where seq = #{seq}
+		and DOMAIN = #{domain}
 	</update>
 
 	<!-- 조직삭제 -->
 	<delete id="orgDelete" parameterType="com.model.OrgVo">
 		DELETE FROM TBL_ORG
-			WHERE SEQ IN
+			WHERE DOMAIN = #{domain}
+			AND SEQ IN
 			(
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 				from tbl_org a
 				where a.seq = #{seq}
+				and a.DOMAIN = #{domain}
 				union all
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
 				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and not cycle)
+				where a.p_seq = so.seq and a.DOMAIN = so.domain and not cycle)
 				select seq
 				from search_org
-			)	
+			)
 	</delete>
 	
-	<select id="getOrgLastSeq" resultType="com.model.OrgVo">
-		SELECT COALESCE(max(seq),0) AS seq FROM TBL_ORG
-	</select>
-
-	<delete id="groupSelectDelete" parameterType="com.model.GroupVo">
-		DELETE FROM 
-			tbl_org_base 
-		WHERE 
-			orgcode=#{orgcode} 
-	</delete>
-	
-	<select id="groupChk"  parameterType="com.model.GroupVo" resultType="com.model.GroupVo">
-		select 
-	        count(*) as orgUpCnt
-	    from tbl_org_base 
-	    where 
-	        orguppercode = #{orgcode} 
+	<select id="getOrgLastSeq" resultType="com.model.OrgVo" parameterType="com.model.OrgVo">
+		SELECT COALESCE(max(seq),0) AS seq FROM TBL_ORG WHERE DOMAIN = #{domain}
 	</select>
 	
-	<delete id="deleteChildUser" parameterType="com.model.OrgVo"> 
+	<!-- <delete id="deleteChildUser" parameterType="com.model.OrgVo"> 
 		delete from
 			tbl_user
 		where org_seq = #{seq}
-	</delete>
+	</delete> -->
 </mapper>

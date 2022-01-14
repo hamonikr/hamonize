@@ -137,7 +137,7 @@ public class ActAgentFirewallController {
 
 		}
 
-		int uuid = pcUUID(inputVo.getUuid());
+		Long uuid = pcUUID(inputVo.getUuid());
 		inputVo.setOrgseq(uuid);
 
 		int retVal = actAgentFirewallMapper.insertActAgentFirewall(inputVo);
@@ -283,7 +283,7 @@ public class ActAgentFirewallController {
 
 		}
 
-		int uuid = pcUUID(inputVo.getUuid());
+		Long uuid = pcUUID(inputVo.getUuid());
 		inputVo.setOrg_seq(uuid);
 
 		int retVal = getAgentRecoveryMapper.insertActAgentBackupRecovery(inputVo);
@@ -317,11 +317,11 @@ public class ActAgentFirewallController {
 	 * 
 	 * @return 부서seq
 	 */
-	public int pcUUID(String pcuuid) {
+	public Long pcUUID(String pcuuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(pcuuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		int segSeq = 0;
+		Long segSeq = (long) 0;
 		if (agentVo != null) {
 			segSeq = agentVo.getSeq();
 		}
