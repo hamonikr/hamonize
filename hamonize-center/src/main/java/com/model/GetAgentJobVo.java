@@ -11,7 +11,7 @@ public class GetAgentJobVo {
 	 
 	// == new vo val
 	private String pc_uuid;
-	private int seq;
+	private Long seq;
 	private int p_seq;
 	private String org_nm;
 	private int dept_seq;
@@ -31,7 +31,7 @@ public class GetAgentJobVo {
 	private String pcm_name;
 	
 	// == pc uuid 
-	private int org_seq;
+	private Long org_seq;
 	private String orgcode;
 	private String upper_org_code;
 	private String upper_org_name;

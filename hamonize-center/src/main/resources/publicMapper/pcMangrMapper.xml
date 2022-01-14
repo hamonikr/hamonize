@@ -104,7 +104,7 @@
 			<if test="PcMangrVo.pc_status != null ">
 				pc_status = #{pc_status},
 			</if>
-			last_date = now()
+			UPDT_DATE = now()
 		where pc_uuid = #{pc_uuid}
 	</update> -->
 
@@ -112,7 +112,7 @@
 		update tbl_pc_mangr
 		set 	
 			pc_vpnip = #{pc_vpnip},
-			last_date = now()
+			UPDT_DATE = now()
 		where pc_uuid = #{pc_uuid}
 	</update>
 
@@ -162,8 +162,8 @@
 				pc_disk_id, 
 				pc_cpu_id,
 				pc_sn,
-				first_date, 
-				last_date
+				RGSTR_DATE, 
+				UPDT_DATE
         	) 
         	SELECT 
         		#{pc_status}, 
@@ -227,8 +227,8 @@
 			pc_macaddress, 
 			pc_guid, 
 			pc_ip, 
-			first_date, 
-			last_date,
+			RGSTR_DATE, 
+			UPDT_DATE,
 			pc_hostname,
 			pc_os,
 			pc_change,
@@ -303,8 +303,8 @@
 			pc_macaddress, 
 			pc_guid, 
 			pc_ip, 
-			first_date, 
-			last_date,
+			RGSTR_DATE, 
+			UPDT_DATE,
 			pc_hostname,
 			pc_change,
 			(select org_nm from tbl_org where seq = org_seq)as deptname,
@@ -334,12 +334,12 @@
 		</if>
 			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
-		and first_date >= #{date_fr}::date 
+		and RGSTR_DATE >= #{date_fr}::date 
 		]]>
 			</if>
 			<if test="date_to != null and date_to != ''">
 				<![CDATA[
-		and first_date <= #{date_to}::date 
+		and RGSTR_DATE <= #{date_to}::date 
 		]]>
 			</if>
 			<if test="txtSearch != null and txtSearch != ''">
@@ -367,7 +367,7 @@
 			</if>
 			</if>
 		</where>
-		order by first_date asc
+		order by RGSTR_DATE asc
 	</select>
 
 
@@ -441,19 +441,19 @@
 	</selectKey>
 		INSERT INTO TBL_PC_MANGR_HISTORY
 	(seq, pc_status, pc_cpu, pc_memory, 
-	pc_disk, pc_macaddress, pc_ip, first_date, 
-	last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, 
+	pc_disk, pc_macaddress, pc_ip, RGSTR_DATE, 
+	UPDT_DATE, pc_hostname, pc_guid, org_seq, pc_disk_id, 
 	pc_cpu_id, pc_uuid, pc_change, pc_os,pc_sn)
 	SELECT seq, pc_status, pc_cpu, pc_memory, 
-	pc_disk, pc_macaddress, pc_ip, first_date, 
-	last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, 
+	pc_disk, pc_macaddress, pc_ip, RGSTR_DATE, 
+	UPDT_DATE, pc_hostname, pc_guid, org_seq, pc_disk_id, 
 	pc_cpu_id, pc_uuid, pc_change, pc_os,pc_sn FROM TBL_PC_MANGR WHERE seq = #{seq}
 	</insert>
 	<update id="updateHistory" parameterType="com.model.PcMangrVo">
 	UPDATE TBL_PC_MANGR_HISTORY
 	set move_org_nm = #{move_org_nm},
 	move_org_seq = (select seq from tbl_org where org_nm=#{move_org_nm}),
-	last_date = now()
+	UPDT_DATE = now()
 	where seq = #{seq}
 	</update>
 
@@ -473,7 +473,7 @@
 				,pc_macaddress
 				,ORG_SEQ
 				,pc_os
-				,FIRST_DATE)
+				,RGSTR_DATE)
 		<foreach collection="data" item="item" index="index">
 			SELECT #{item.pc_hostname},#{item.pc_ip},#{item.pc_macaddress},(select seq from tbl_org where org_nm = #{item.deptname}),#{item.pc_os},to_date(#{item.date},'yyyymmdd')
 			WHERE NOT EXISTS (SELECT * FROM TBL_PC_AMT_JSON WHERE pc_hostname = #{item.pc_hostname})
@@ -490,7 +490,7 @@
 				,pc_macaddress
 				,ORG_SEQ
 				,pc_os
-				,FIRST_DATE)
+				,RGSTR_DATE)
 		<foreach collection="dataWin" item="item" index="index">
 			SELECT #{item.pc_hostname},#{item.pc_ip},#{item.pc_macaddress},(select seq from tbl_org where org_nm = #{item.deptname}),#{item.pc_os},to_date(#{item.date},'yyyymmdd')
 			WHERE NOT EXISTS (SELECT * FROM TBL_PC_MANGR WHERE pc_hostname = #{item.pc_hostname})

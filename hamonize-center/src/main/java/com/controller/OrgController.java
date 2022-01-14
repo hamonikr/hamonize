@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.GlobalPropertySource;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.service.OrgService;
 import com.util.LDAPConnection;
@@ -43,10 +44,11 @@ public class OrgController {
 	@RequestMapping(params = "!type", method = RequestMethod.POST)
 	public String orgList(HttpSession session, Model model, HttpServletRequest request) {
 		JSONArray jsonArray = new JSONArray();
-		logger.info("ppppppppppppppppppppp");
 		try {
+			LoginVO lvo = (LoginVO)session.getAttribute("userSession");
 			// 저장된 조직 정보 출력
 			OrgVo orgvo = new OrgVo();
+			orgvo.setDomain(lvo.getDomain());
 			jsonArray = oService.orgList(orgvo);
 
 		} catch (Exception e) {
@@ -76,11 +78,11 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=show", method = RequestMethod.POST)
 	public JSONObject orgView(HttpSession session, Model model, OrgVo orgvo) {
-		logger.info("aaaaaaaaaaaaaaaaaaaa");
 		
 		orgvo = oService.orgView(orgvo);
 
 		JSONObject data = new JSONObject();
+		data.put("domain", orgvo.getDomain());
 		data.put("seq", orgvo.getSeq());
 		data.put("p_seq", orgvo.getP_seq());
 		data.put("org_nm", orgvo.getOrg_nm());
@@ -104,6 +106,8 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=save", method = RequestMethod.POST)
 	public int orgSave(HttpSession session, Model model, OrgVo vo) throws Exception {
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		vo.setDomain(lvo.getDomain());
 		int result = oService.orgSave(vo);
 		return result;
 

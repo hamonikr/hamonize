@@ -22,4 +22,6 @@ gitAutoPush.sh
 hamonize-agent/dpkga.sh
 hamonize-agent/usr/share/hamonize-agent/shell/agentautoupdate.sh
 hamonize-connector/dpkga.sh
-
+.history
+hamonize-agent/.history
+hamonize-agent/package-lock.json

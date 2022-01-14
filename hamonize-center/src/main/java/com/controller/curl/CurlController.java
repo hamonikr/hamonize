@@ -119,6 +119,7 @@ public class CurlController {
 			hdVo.setPc_hostname(tempObj.get("hostname").toString().replaceAll(System.getProperty("line.separator"), ""));
 			hdVo.setPc_ip(tempObj.get("ipaddr").toString());
 			hdVo.setUsername(tempObj.get("username").toString()); // 사용자 이름
+			hdVo.setDomain(tempObj.get("domain").toString());
 
 		}
 
@@ -131,7 +132,7 @@ public class CurlController {
 			int isExistPc = pcMangrMapper.inserPcInfoChk(hdVo);
 			logger.debug("isExistPc ? ===={}", isExistPc);
 
-			OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+			OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 
 			hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
@@ -323,7 +324,7 @@ public class CurlController {
 		PcMangrVo tmpPcVo = pcMangrMapper.chkPcinfo(hdVo);
 		hdVo.setOrg_seq(tmpPcVo.getOrg_seq());
 
-		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 		
 		if (retVal == 1) {			
@@ -465,7 +466,7 @@ public class CurlController {
 		for (int i = 0; i < hmdArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
 
-			hdVo.setFirst_date(tempObj.get("datetime").toString());
+			hdVo.setRgstr_date(tempObj.get("datetime").toString());
 			hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
 			hdVo.setPc_ip(tempObj.get("ipaddr").toString());
 			hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
@@ -480,7 +481,7 @@ public class CurlController {
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
 		PcMangrVo chkPcMangrVo = pcMangrMapper.chkPcinfo(hdVo);
-		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo.getOrg_seq());
+		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 
 		int retVal = 0;
@@ -528,11 +529,11 @@ public class CurlController {
 		return jsonArr.toString();
 	}
 
-	public int pcUUID(String uuid) {
+	public Long pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		int segSeq = agentVo.getSeq();
+		Long segSeq = agentVo.getSeq();
 		return segSeq;
 	}
 

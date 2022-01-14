@@ -14,9 +14,9 @@
 	function goSave(){
 		
 		if(vaildCheck()) return false;
-		var gubun = $("#gubun option:checked").val();
-		$('#gubun').val(gubun);
-		console.log($('#gubun').val());
+		var status = $("#status option:checked").val();
+		$('#status').val(status);
+		console.log($('#status').val());
 		
 		var msg = "저장하시겠습니까?";
 	    if(!confirm(msg)){
@@ -54,10 +54,10 @@
 			return true;
 		} 
 		 
-		if($(':radio[name="gubun"]:checked').length < 1)
+		if($(':radio[name="status"]:checked').length < 1)
 		{
 			alert('활성여부는 필수 입력 입니다.');
-			$('#gubun').focus();
+			$('#status').focus();
 			return true;
 		}
 		
@@ -130,8 +130,8 @@
 	} 
 
 	function goModify(){
-		var gubun = $("#gubun option:checked").val();
-		$('#gubun').val(gubun);
+		var status = $("#status option:checked").val();
+		$('#status').val(status);
 		
 		
 		if($('#pass_wd').val() == '')
@@ -181,7 +181,7 @@
 	    
 		$.ajax({
 			type:"POST",
-			url: "<c:url value='modify.do'/>",
+			url: "<c:url value='modify'/>",
 			data :  $("#frm").serialize(),
 			dataType : "json",
 			success: function(data, textStatus, jqXHR){
@@ -250,8 +250,8 @@
                             <tr>
                                 <th>* 활성여부</th>
                                 <td colspan="3">
-                                    <input type="radio" name="gubun" id="gubunA" value="A" <c:if test="${result.gubun eq 'A' }">checked</c:if> /><label for="gubunA" class="pR20">활성</label>
-                                    <input type="radio" name="gubun" id="gubunD" value="D" <c:if test="${result.gubun eq 'D' }">checked</c:if> /><label for="gubunD">비활성</label>
+                                    <input type="radio" name="status" id="statusA" value="A" <c:if test="${result.status eq 'A' }">checked</c:if> /><label for="statusA" class="pR20">활성</label>
+                                    <input type="radio" name="status" id="statusD" value="D" <c:if test="${result.status eq 'D' }">checked</c:if> /><label for="statusD">비활성</label>
                                 </td>
                             </tr>
                             <tr>

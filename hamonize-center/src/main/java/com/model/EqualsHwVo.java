@@ -22,7 +22,7 @@ public class EqualsHwVo{
 	private String pc_disk_id;
 	private String pc_cpu_id;
 	private String pc_uuid;
-	private int org_seq;
+	private Long org_seq;
 	private String insert_dt;
 	private String pc_hddinfo;
 	private String pc_hddid;

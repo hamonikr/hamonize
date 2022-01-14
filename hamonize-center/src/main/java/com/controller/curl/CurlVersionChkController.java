@@ -99,11 +99,11 @@ public class CurlVersionChkController {
 	 * 
 	 * @return 부서seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public Long sgbUUID(String sgbUuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(sgbUuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		int segSeq = 0;
+		Long segSeq = 0L;
 		if (agentVo != null) {
 			segSeq = agentVo.getSeq();
 		}

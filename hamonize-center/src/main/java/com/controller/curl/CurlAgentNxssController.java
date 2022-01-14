@@ -35,7 +35,7 @@ public class CurlAgentNxssController {
 		sgbUuid = sgbUuid.trim();
 
 		// uuid로 부서정보 가져오기
-		int segSeq = sgbUUID(sgbUuid);
+		Long segSeq = sgbUUID(sgbUuid);
 		if (segSeq == 0) {
 			return "nodata";
 		}
@@ -111,11 +111,11 @@ public class CurlAgentNxssController {
 	 * @param sgbUuid
 	 * @return 부서seq
 	 */
-	public int sgbUUID(String sgbUuid) {
+	public Long sgbUUID(String sgbUuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(sgbUuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		int segSeq = 0;
+		Long segSeq = 0L;
 		if (agentVo != null) {
 			segSeq = agentVo.getSeq();
 		}

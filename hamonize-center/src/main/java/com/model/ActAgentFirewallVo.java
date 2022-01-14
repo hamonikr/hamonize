@@ -15,6 +15,6 @@ public class ActAgentFirewallVo {
 	private String status;
 	private String status_yn;
 	private String retport;
-	private Integer orgseq;
+	private Long orgseq;
 
 }

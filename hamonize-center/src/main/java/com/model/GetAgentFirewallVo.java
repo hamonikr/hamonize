@@ -10,7 +10,7 @@ import lombok.ToString;
 public class GetAgentFirewallVo {
 
 	private int aj_seq;
-	private int org_seq;
+	private Long org_seq;
 	private String ppm_seq;
 	private String insert_dt;
 	private String progrm_nm;

@@ -14,8 +14,8 @@ import lombok.ToString;
 @PropertySource(value = "file:${user.home}/env/config.properties", ignoreResourceNotFound = true)
 public class GlobalPropertySource {
     // db
-    @Value("${spring.db1.datasource.primary.jndi-name}")
-    private String jndiName;
+    // @Value("${spring.db1.datasource.primary.jndi-name}")
+    // private String jndiName;
 
     @Value("${spring.db1.datasource.driverClassName}")
     private String driverClassName;

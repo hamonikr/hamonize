@@ -82,6 +82,7 @@ public class LoginController implements Serializable {
 		params.put("pass_wd", SHA256Util.getEncrypt(pass_wd, salt_vo.getSalt()));
 
 		LoginVO lvo = loginService.getLoginInfo(params);
+		System.out.println("lvo======"+lvo);
 		String result = "0";
 
 		if(loginService.getLoginFailCount(params) >= 5){
@@ -93,7 +94,7 @@ public class LoginController implements Serializable {
 				loginService.updateLoginStatus(params);
 			}
 			return result;
-		} else if("D".equals(lvo.getGubun())){
+		} else if("D".equals(lvo.getStatus())){
 			result = "3";
 		}else {
 
@@ -116,7 +117,7 @@ public class LoginController implements Serializable {
 		String time1 = format1.format(time);
 		LoginVO lvo = (LoginVO) request.getSession().getAttribute("userSession");
 		
-		logger.info("logout----------->{}", lvo.getUser_id(),">>> ");
+//		logger.info("logout----------->{}", lvo.getUser_id(),">>> ");
 		
 		String rtnUrl = "/login/login";
 

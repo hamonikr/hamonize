@@ -204,13 +204,13 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						value.pc_macaddress = value.pc_macaddress.replaceAll("\""," ");
 						value.pc_macaddress	= value.pc_macaddress.toString();
 						if(vpn_used ==1 ){
-							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
+							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 						}else{
 							
-							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
+							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 						}
 
-						gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
+						gbInnerHtml += "<td>"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"</td>";
 						gbInnerHtml += "</tr>";
 
 											});	
@@ -283,12 +283,12 @@ function getPcMngrList(){
 			value.pc_macaddress = value.pc_macaddress.replaceAll("\""," ");
 			
 			if(vpn_used ==1 ){
-					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
+					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 			}else{
-				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.first_date.substr(0,value.first_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
+				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.seq+"','"+value.org_seq+"')\">"+value.pc_hostname+"</a></td>";
 			}
 			
-			gbInnerHtml += "<td>"+value.first_date.substr(0,value.first_date.length-7)+"</td>";
+			gbInnerHtml += "<td>"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"</td>";
 			gbInnerHtml += "</tr>";
 		
 		});	
@@ -491,7 +491,7 @@ function searchView(viewName, page){
 					</tr>
 					<tr>
 						<th>설치일</th>
-						<td colspan="3"><span id="detail_first_date"></span></td>
+						<td colspan="3"><span id="detail_rgstr_date"></span></td>
 					</tr>
 				</tbody>
 			</table>
@@ -505,7 +505,7 @@ function searchView(viewName, page){
 	
 	<!-- 레이어 팝업용 자바스크립트 -->
 	<script type="text/javascript">
-		function detail_popup(no,name,pc_os,hostname,pc_ip,pc_vpnip,macaddress,pc_disk,cpu,memory,first_date,seq,old_org_seq) {
+		function detail_popup(no,name,pc_os,hostname,pc_ip,pc_vpnip,macaddress,pc_disk,cpu,memory,rgstr_date,seq,old_org_seq) {
 			console.log("detail_popup >> ");
 		
 			if(pc_os == "H"){
@@ -536,7 +536,7 @@ function searchView(viewName, page){
 			$("#detail_pc_disk").html(pc_disk);
 			$("#detail_cpu").html(cpu);
 			$("#detail_memory").html(memory);
-			$("#detail_first_date").html(first_date);
+			$("#detail_rgstr_date").html(rgstr_date);
 			$("#seq").val(seq);
 			$("#old_org_seq").val(old_org_seq);
 			
@@ -552,7 +552,7 @@ function searchView(viewName, page){
 			$("#bg_fix").show();
 		};
 		
-		function detail_popup_novpn(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,first_date,seq,old_org_seq) {
+		function detail_popup_novpn(no,name,pc_os,hostname,pc_ip,macaddress,pc_disk,cpu,memory,rgstr_date,seq,old_org_seq) {
 			console.log("detail_popup_novpn >> ");
 			
 			if(pc_os == "H"){
@@ -581,7 +581,7 @@ function searchView(viewName, page){
 			$("#detail_pc_disk").html(pc_disk);
 			$("#detail_cpu").html(cpu);
 			$("#detail_memory").html(memory);
-			$("#detail_first_date").html(first_date);
+			$("#detail_rgstr_date").html(rgstr_date);
 			$("#seq").val(seq);
 			$("#old_org_seq").val(old_org_seq);
 			

@@ -9,15 +9,7 @@ import com.influxdb.client.QueryApi;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 import com.mapper.IMonitoringMapper;
-import com.model.PcDataVo;
-import com.model.PcMemoryDataVo;
-
-import org.influxdb.dto.BoundParameterQuery.QueryBuilder;
 import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
-import org.influxdb.impl.InfluxDBResultMapper;
-import org.json.simple.JSONArray;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,47 +104,47 @@ public class MonitoringService {
 	}
 
 
-	public List<PcMemoryDataVo> getMemory(String host) {
+	// public List<PcMemoryDataVo> getMemory(String host) {
 
-		JSONArray jsonArray = new JSONArray();
-		Object jObj = null;
+	// 	JSONArray jsonArray = new JSONArray();
+	// 	Object jObj = null;
 
-		Query mem_query = QueryBuilder.newQuery(
-				"SELECT value, host , type_instance FROM memory_value where type='percent' and time > now() -20s and host='"
-						+ host + "' order by time desc limit 6")
-				.forDatabase("collectd").create();
-		QueryResult results = influxDBTemplate.query(mem_query);
-		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
+	// 	Query mem_query = QueryBuilder.newQuery(
+	// 			"SELECT value, host , type_instance FROM memory_value where type='percent' and time > now() -20s and host='"
+	// 					+ host + "' order by time desc limit 6")
+	// 			.forDatabase("collectd").create();
+	// 	QueryResult results = influxDBTemplate.query(mem_query);
+	// 	InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 
-		QueryResult queryResult = influxDBTemplate.query(mem_query);
-		int i = 0;
-
-
-		List<PcMemoryDataVo> memoryPointList =
-				resultMapper.toPOJO(queryResult, PcMemoryDataVo.class);
-
-		return memoryPointList;
-	}
+	// 	QueryResult queryResult = influxDBTemplate.query(mem_query);
+	// 	int i = 0;
 
 
-	public List<PcDataVo> getCpu(String host) {
+	// 	List<PcMemoryDataVo> memoryPointList =
+	// 			resultMapper.toPOJO(queryResult, PcMemoryDataVo.class);
 
-		JSONArray jsonArray = new JSONArray();
-		Object jObj = null;
+	// 	return memoryPointList;
+	// }
 
-		Query cpu_query = QueryBuilder.newQuery(
-				"SELECT ROUND(mean(value)) as value FROM cpu_value WHERE type_instance = 'user' AND type = 'percent' and time > now() -20s and host='"
-						+ host + "'" + "order by time desc")
-				.forDatabase("collectd").create();
-		QueryResult results = influxDBTemplate.query(cpu_query);
-		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 
-		QueryResult queryResult = influxDBTemplate.query(cpu_query);
-		int i = 0;
+	// public List<PcDataVo> getCpu(String host) {
 
-		List<PcDataVo> cpuPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
+	// 	JSONArray jsonArray = new JSONArray();
+	// 	Object jObj = null;
 
-		return cpuPointList;
-	}
+	// 	Query cpu_query = QueryBuilder.newQuery(
+	// 			"SELECT ROUND(mean(value)) as value FROM cpu_value WHERE type_instance = 'user' AND type = 'percent' and time > now() -20s and host='"
+	// 					+ host + "'" + "order by time desc")
+	// 			.forDatabase("collectd").create();
+	// 	QueryResult results = influxDBTemplate.query(cpu_query);
+	// 	InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
+
+	// 	QueryResult queryResult = influxDBTemplate.query(cpu_query);
+	// 	int i = 0;
+
+	// 	List<PcDataVo> cpuPointList = resultMapper.toPOJO(queryResult, PcDataVo.class);
+
+	// 	return cpuPointList;
+	// }
 
 }

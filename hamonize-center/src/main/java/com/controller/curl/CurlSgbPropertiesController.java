@@ -99,11 +99,11 @@ public class CurlSgbPropertiesController {
 
 
 
-	public int deptUUID(String uuid) {
+	public Long deptUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
-		int segSeq = agentVo.getSeq();
+		Long segSeq = agentVo.getSeq();
 		return segSeq;
 	}
 

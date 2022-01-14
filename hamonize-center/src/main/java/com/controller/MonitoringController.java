@@ -8,21 +8,17 @@ import java.util.Map;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
 import com.model.OrgVo;
-import com.model.PcDataVo;
 import com.model.PcMangrVo;
-import com.model.PcMemoryDataVo;
 import com.model.SvrlstVo;
 import com.service.MonitoringService;
 import com.service.OrgService;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -174,34 +170,6 @@ public class MonitoringController {
 		model.addAttribute("gvo", gvo);
 
 		return "/mntrng/mntmgView";
-	}
-
-	@ResponseBody
-	@PostMapping("/memoryUsage")
-	public JSONArray memoryUsage(Model model, @RequestParam Map<String, Object> params) {
-		List<PcMemoryDataVo> list = mService.getMemory(params.get("uuid").toString());
-		JSONObject mem;
-		JSONArray ja = new JSONArray();
-		for (int i = 0; i < list.size(); i++) {
-			mem = new JSONObject();
-			mem.put("memory", list.get(i).getValue());
-			ja.add(mem);
-		}
-		return ja;
-	}
-
-	@ResponseBody
-	@PostMapping("/cpuUsage")
-	public JSONArray cpuUsage(Model model, @RequestParam Map<String, Object> params) {
-		List<PcDataVo> list = mService.getCpu(params.get("uuid").toString());
-		JSONObject cpu;
-		JSONArray ja = new JSONArray();
-		for (int i = 0; i < list.size(); i++) {
-			cpu = new JSONObject();
-			cpu.put("cpu", list.get(i).getValue());
-			ja.add(cpu);
-		}
-		return ja;
 	}
 
 }
