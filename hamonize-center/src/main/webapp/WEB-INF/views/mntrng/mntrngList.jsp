@@ -103,7 +103,6 @@ text-decoration: none;
 							}else{
 								strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
 							}
-						console("ddd");
 						
 						}
 						$(".monitor_list").append(strHtml);

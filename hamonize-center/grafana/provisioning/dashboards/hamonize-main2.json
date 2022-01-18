@@ -108,7 +108,7 @@
           "measurement": "cpu_value",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\")\n  |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")\n  |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"cpu\")\n  |> yield(name: \"mean\")",
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu\")\n  |> filter(fn: (r) => r[\"_field\"] == \"usage_user\")\n  |> filter(fn: (r) => r[\"cpu\"] == \"cpu-total\")\n  |> filter(fn: (r) => r[\"domain\"] == \"${domain}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"cpu\")\n  |> yield(name: \"mean\")",
           "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
@@ -142,17 +142,17 @@
         },
         {
           "hide": false,
-          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"disk\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"path\"] == \"/\" or r[\"path\"] == \"\\\\C:\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"disk\")\n  |> yield(name: \"mean\")",
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"disk\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"path\"] == \"/\" or r[\"path\"] == \"\\\\C:\")\n  |> filter(fn: (r) => r[\"domain\"] == \"${domain}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"disk\")\n  |> yield(name: \"mean\")",
           "refId": "B"
         },
         {
           "hide": false,
-          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"memory\")\n  |> yield(name: \"mean\")",
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"domain\"] == \"${domain}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"memory\")\n  |> yield(name: \"mean\")",
           "refId": "C"
         },
         {
           "hide": false,
-          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"swap\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"swap\")\n  |> yield(name: \"mean\")",
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"swap\")\n  |> filter(fn: (r) => r[\"_field\"] == \"used_percent\")\n  |> filter(fn: (r) => r[\"domain\"] == \"${domain}\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> range(start: -1m)\n  |> set(key: \"_field\", value: \"swap\")\n  |> yield(name: \"mean\")",
           "refId": "D"
         }
       ],
@@ -164,7 +164,35 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "55c45afcbc124379958570dbc129e38a",
+          "value": "55c45afcbc124379958570dbc129e38a"
+        },
+        "datasource": null,
+        "definition": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(bucket: v.bucket, tag: \"domain\")",
+        "description": "uuid",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "domain",
+        "multi": false,
+        "name": "domain",
+        "options": [],
+        "query": "import \"influxdata/influxdb/schema\"\n\nschema.tagValues(bucket: v.bucket, tag: \"domain\")",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
     "from": "now-6h",

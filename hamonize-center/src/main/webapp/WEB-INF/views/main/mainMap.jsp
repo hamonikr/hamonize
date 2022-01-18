@@ -74,7 +74,7 @@
                    <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
                        	PC 사용현황 
                    </div>
-						<iframe title="Main monitoring" src="http://${svo.svr_ip}:${svo.svr_port}/d-solo/nprv87G7z/hamonize-main2?orgId=1&refresh=10s&panelId=2" width="100%" height="350" frameborder="0" ></iframe>
+						<iframe title="Main monitoring" src="http://${svo.svr_ip}:${svo.svr_port}/d-solo/nprv87G7z/hamonize-main2?orgId=1&refresh=10s&panelId=2&var-domain=${userSession.domain}" width="100%" height="350" frameborder="0" ></iframe>
                 </div> <!-- end card-body-->
            </div> <!-- end card-->
        </div>
@@ -391,8 +391,7 @@ xmlhttp.send();
     <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
     </script>
     <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
-    <script src="vendor/counter-up/jquery.counterup.min.js">
-    </script>
+    <!-- <script src="vendor/counter-up/jquery.counterup.min.js"></script> -->
     <script src="vendor/circle-progress/circle-progress.min.js"></script>
     <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="vendor/select2/select2.min.js">

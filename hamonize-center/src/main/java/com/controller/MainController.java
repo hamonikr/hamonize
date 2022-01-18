@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
+import com.model.LoginVO;
 import com.model.SvrlstVo;
 import com.mapper.ISvrlstMapper;
 
@@ -44,8 +47,8 @@ public class MainController {
 	// }
 
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String mainMap(Model model) throws Exception {
-		
+	public String mainMap(Model model,HttpSession session) throws Exception {
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
 		SvrlstVo center = new SvrlstVo();
 		center.setSvr_nm("GRAFANA_URL");
 		SvrlstVo svo = svrlstMapper.getVpnSvrUsed(center);
@@ -53,6 +56,7 @@ public class MainController {
 		logger.info("port : {}", svo.getSvr_port());
 		
 		model.addAttribute("svo", svo);
+		model.addAttribute("userSession", lvo);
 		return "/main/mainMap";
 
 	}
@@ -60,10 +64,12 @@ public class MainController {
 
 	@ResponseBody
 	@RequestMapping(value = "/pcList", method = RequestMethod.POST)
-	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params) {
+	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params,HttpSession session) {
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("org_seq", 1);
+		params.put("domain", lvo.getDomain());
 		int on = 0;
 		int off = 0;
 		try {

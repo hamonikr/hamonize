@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.mapper.IPolicyFireWallMapper;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PolicyFireWallVo;
 import com.paging.PagingUtil;
@@ -53,7 +54,6 @@ public class PolicyFireWallController {
 
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyFireWallVo> pList = null;
-
 		try {
 			OrgVo orgvo = new OrgVo();
 			PolicyFireWallVo vo = new PolicyFireWallVo();

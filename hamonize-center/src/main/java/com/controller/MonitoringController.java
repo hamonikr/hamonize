@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.SvrlstVo;
@@ -44,7 +47,7 @@ public class MonitoringController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@GetMapping("/pcControlList")
-	public String pcControlPage(Model model, @RequestParam Map<String, Object> params) {
+	public String pcControlPage(Model model, @RequestParam Map<String, Object> params,HttpSession session) {
 		JSONArray jsonArray = new JSONArray();
 		try {
 			OrgVo orgvo = new OrgVo();
@@ -66,10 +69,12 @@ public class MonitoringController {
 	 */
 	@ResponseBody
 	@PostMapping("/pcList")
-	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params) {
+	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params, HttpSession session) {
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
+		params.put("domain", lvo.getDomain());
 		int on = 0;
 		int off = 0;
 		try {
