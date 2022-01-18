@@ -3,6 +3,7 @@ package com.service;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,13 +12,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.RecoveryVo;
+import com.util.AuthUtil;
 import com.util.LDAPConnection;
 
 @Service
@@ -36,7 +41,7 @@ public class OrgService {
 	public JSONArray orgList(OrgVo orgvo) throws NamingException {
 		List<OrgVo> orglist = null;
 		JSONArray jsonArray = new JSONArray();
-
+		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
 		orglist = orgMapper.orgList(orgvo);
 
 		for (int i = 0; i < orglist.size(); i++) {

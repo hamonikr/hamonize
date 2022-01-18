@@ -77,7 +77,8 @@
 			a.seq,
 			a.pc_hostname,
 			a.pc_uuid,
-			a.pc_status
+			a.pc_status,
+			a.domain
 		FROM tbl_pc_mangr a 
 		<where>
 			<!-- a.pc_os = 'H' -->
@@ -95,6 +96,7 @@
 		    from search_org
 			)
 		</if>
+		and domain = #{domain}
 		</where>
 		 
 	</select>

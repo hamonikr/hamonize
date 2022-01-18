@@ -45,10 +45,8 @@ public class OrgController {
 	public String orgList(HttpSession session, Model model, HttpServletRequest request) {
 		JSONArray jsonArray = new JSONArray();
 		try {
-			LoginVO lvo = (LoginVO)session.getAttribute("userSession");
 			// 저장된 조직 정보 출력
 			OrgVo orgvo = new OrgVo();
-			orgvo.setDomain(lvo.getDomain());
 			jsonArray = oService.orgList(orgvo);
 
 		} catch (Exception e) {
