@@ -71,7 +71,7 @@ public class OrgService {
 
 		OrgVo newAllOrgName = new OrgVo();
 		String newAllOrgNm = "";
-
+System.out.println("aaaaaaaaa==========="+orgvo.toString());
 		if (orgvo.getSeq() != null) {
 			oldOrgVo = orgMapper.orgOldNm(orgvo);
 			orgPath = orgMapper.groupUpperCode(orgvo);
