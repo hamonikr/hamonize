@@ -17,6 +17,7 @@ import com.GlobalPropertySource;
 import com.model.LoginVO;
 import com.model.OrgVo;
 import com.service.OrgService;
+import com.util.AuthUtil;
 import com.util.LDAPConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class OrgController {
 		}
 
 		model.addAttribute("oList", jsonArray);
-
+		model.addAttribute("domain", AuthUtil.getLoginSessionInfo().getDomain());
 		return "/org/orgList";
 	}
 
