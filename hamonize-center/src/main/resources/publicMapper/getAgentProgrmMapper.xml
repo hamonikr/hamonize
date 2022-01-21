@@ -97,7 +97,7 @@
 		    pa_seq, 
 		    #{org_seq} as org_seq,
 		   #{pcm_uuid}  as pcm_uuid,
-		    (select pcm_name from tbl_program_mngr where pcm_seq = arr[i]::int),
+		    (select pcm_name from tbl_policy_progrm_block_list where pcm_seq = arr[i]::int),
 		    now()
 		    
 		FROM (
@@ -119,7 +119,7 @@
 	
 	<select id="getListProgrm" parameterType="com.model.GetAgentProgrmVo" resultType="com.model.GetAgentProgrmVo">
 		SELECT 
-	        (select pcm_name from tbl_program_mngr where pcm_seq::char = arr[i]) as progrm_nm
+	        (select pcm_name from tbl_policy_progrm_block_list where pcm_seq::char = arr[i]) as progrm_nm
 	    FROM (
 	      SELECT generate_series(1, array_upper(arr, 1)) AS i, arr
 	      FROM (

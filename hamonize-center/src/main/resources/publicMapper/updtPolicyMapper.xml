@@ -6,7 +6,7 @@
 
 
 	<delete id="updtDeleteProgrm" parameterType="java.util.Map">
-		DELETE FROM tbl_program_mngr
+		DELETE FROM tbl_policy_progrm_block_list
 		WHERE pcm_name in
 	            (
 		 <foreach collection="list" item="item" separator=" , ">
@@ -16,9 +16,9 @@
 	</delete>
 	
 	<insert id="updtInsertProgrm" parameterType="com.model.UpdtPolicyVo">
-		INSERT INTO tbl_program_mngr (pcm_name, pcm_path, insert_dt)
+		INSERT INTO tbl_policy_progrm_block_list (pcm_name, pcm_path, rgstr_date)
 		SELECT #{debname}, #{path} , now()
-		WHERE NOT EXISTS (SELECT * FROM tbl_program_mngr WHERE pcm_name= #{debname} )        
+		WHERE NOT EXISTS (SELECT * FROM tbl_policy_progrm_block_list WHERE pcm_name= #{debname} )        
 	</insert>
 	
  	<insert id="updtPolicyActionResultInsert" parameterType="java.util.Map">   

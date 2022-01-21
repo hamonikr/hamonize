@@ -3,13 +3,13 @@
  
 <mapper namespace="com.mapper.IPolicyProgramMapper">
 
-<select id="programList" resultType="com.model.PolicyProgramVo">
+<select id="programList" resultType="com.model.PolicyProgrmVo">
 		SELECT 
 			 pcm_seq, 
 			 pcm_name, 
 			 pcm_status,
 			 pcm_dc
-		FROM tbl_program_mngr
+		FROM tbl_policy_progrm_block_list
 		ORDER  BY pcm_seq desc
 	</select>
 	
@@ -36,7 +36,7 @@
 	)
 	</delete>
 	
-	<select id="programApplcView" resultType="com.model.PolicyProgramVo" parameterType="com.model.PolicyProgramVo" >
+	<select id="programApplcView" resultType="com.model.PolicyProgrmVo" parameterType="com.model.PolicyProgrmVo" >
  			SELECT ORG_SEQ,PPM_SEQ 
  			FROM 
  			TBL_PROGRM_APPLC 

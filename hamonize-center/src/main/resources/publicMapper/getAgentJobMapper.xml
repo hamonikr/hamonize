@@ -186,7 +186,7 @@
 			ta.pcm_seq, 
 			ta.pcm_name, 
 			tb.pstatus as pcm_status
-		from tbl_program_mngr ta left outer join 
+		from tbl_policy_progrm_block_list ta left outer join 
 		(
 			select  pcm_seq, pname , pstatus 
 			from  tbl_progrm_agentjbo 
@@ -228,7 +228,7 @@
 		INSERT INTO
     	tbl_progrm_agentjbo (pcm_seq, pname, pstatus, org_seq)  
 		select pcm_seq, pcm_name, 'Y', #{org_seq} 
-			from tbl_program_mngr
+			from tbl_policy_progrm_block_list
 			where pcm_seq in ( 
 				<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
 			        ${orgpcmseq[index]}

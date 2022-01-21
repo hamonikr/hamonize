@@ -11,7 +11,7 @@
 			 pu_name,
 			 pu_status,
 			 pu_dc
-		FROM tbl_progrm_udpt
+		FROM tbl_policy_package_list
 		ORDER  BY pu_seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		
@@ -21,7 +21,7 @@
 	<select id="countHmProgrmUpdt" parameterType="com.model.HmProgrmUpdtVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		FROM tbl_progrm_udpt
+		FROM tbl_policy_package_list
 	</select>
 	
 	
@@ -70,7 +70,7 @@
 	
 	<select id="selectHmUpdateAgentJob" parameterType="com.model.HmProgrmUpdtVo" resultType="com.model.HmProgrmUpdtVo">
 		select STRING_AGG( pu_name || '-' || pu_status, ',' ) AS pcm_name 
-		from tbl_progrm_udpt
+		from tbl_policy_package_list
 		where pu_seq in ( 
 		<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
 	        ${orgpcmseq[index]}

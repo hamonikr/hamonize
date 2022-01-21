@@ -27,7 +27,7 @@
 		    pa_seq, 
 		    #{org_seq} as org_seq,
 		    #{pcm_uuid}  as pcm_uuid,
-		    (select sm_name from tbl_security_mngr where sm_gubun = 'P' and sm_seq = arr[i]::int),
+		    (select sm_name from tbl_policy_firewall_list where sm_seq = arr[i]::int),
 		    now()
 		    
 		FROM (
@@ -93,7 +93,7 @@
 		    TA.insert_dt,
 		    TB.fa_seq as old_pa_seq,
 		    TB.pcm_uuid as old_pcm_uuid,
-		    (select sm_port from tbl_security_mngr where sm_seq = TA.sm_seq) AS sm_port    
+		    (select sm_port from tbl_policy_firewall_list where sm_seq = TA.sm_seq) AS sm_port    
 		FROM tbl_frwl_agent_job TA LEFT OUTER JOIN 
 		(
 		    SELECT * 
@@ -127,7 +127,7 @@
 		    TA.insert_dt,
 		    TB.fa_seq as old_pa_seq,
 		    TB.pcm_uuid as old_pcm_uuid,
-		    (select sm_port from tbl_security_mngr where sm_seq = TA.sm_seq) AS sm_port    
+		    (select sm_port from tbl_policy_firewall_list where sm_seq = TA.sm_seq) AS sm_port    
 		FROM tbl_frwl_agent_job TA LEFT OUTER JOIN 
 		(
 		    SELECT * 
@@ -155,7 +155,7 @@
 		    TA.insert_dt,
 		    TB.fa_seq as old_pa_seq,
 		    TB.pcm_uuid as old_pcm_uuid,
-		    (select sm_port from tbl_security_mngr where sm_seq = TA.sm_seq) AS sm_port
+		    (select sm_port from tbl_policy_firewall_list where sm_seq = TA.sm_seq) AS sm_port
 		FROM tbl_frwl_agent_job TA LEFT OUTER JOIN 
 		(
 		    SELECT * 
@@ -178,7 +178,7 @@
 	
 	<select id="getListProgrm" parameterType="com.model.GetAgentFirewallVo" resultType="com.model.GetAgentFirewallVo">
 		SELECT 
-	        (select pcm_name from tbl_program_mngr where pcm_seq::char = arr[i]) as progrm_nm
+	        (select pcm_name from tbl_policy_progrm_block_list where pcm_seq::char = arr[i]) as progrm_nm
 	    FROM (
 	      SELECT generate_series(1, array_upper(arr, 1)) AS i, arr
 	      FROM (

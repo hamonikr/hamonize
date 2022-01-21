@@ -12,7 +12,7 @@
 			 pcm_name, 
 			 pcm_status,
 			 pcm_dc
-		FROM tbl_program_mngr
+		FROM tbl_policy_progrm_block_list
 		ORDER  BY pcm_seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		
@@ -22,7 +22,7 @@
 	<select id="countHmPcProgramListInfo" parameterType="com.model.HmprogramVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		FROM tbl_program_mngr
+		FROM tbl_policy_progrm_block_list
 	
 	</select>
 	
@@ -76,7 +76,7 @@
 	
 	<select id="selectHmProgrmAgentJob" parameterType="com.model.HmprogramVo" resultType="com.model.HmprogramVo">
 		select STRING_AGG( pcm_name, ',' )   AS pcm_name
-		from tbl_program_mngr
+		from tbl_policy_progrm_block_list
 		where pcm_seq in ( 
 		<foreach collection="orgpcmseq" item="item" separator="," open="" close="" index="index" > 
 	        ${orgpcmseq[index]}

@@ -4,8 +4,8 @@
 <mapper namespace="com.mapper.IPolicyFireWallMapper">
 
 <select id="fireWallList" resultType="com.model.PolicyFireWallVo">
-		SELECT sm_seq, sm_name, sm_status, sm_dc, sm_port, sm_gubun 
-		FROM tbl_security_mngr;
+		SELECT sm_seq, sm_name, sm_status, sm_dc, sm_port
+		FROM tbl_policy_firewall_list;
 	</select>
 	
 	<insert id="fireWallSave" parameterType="java.util.HashMap">
@@ -42,14 +42,13 @@
 		select 
     		TA.*,
     		TB.ppm_seq
-		from tbl_security_mngr TA 
+		from tbl_policy_firewall_list TA 
 			left outer join 
 			(
 			    select
 			     DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(ppm_seq),',') , ',')::int[]) ppm_seq
 			    from tbl_frwl_applc
 			) TB on TA.sm_seq = TB.ppm_seq
-			where  TA.sm_gubun ='P'
 			order by TA.sm_seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		
@@ -59,46 +58,45 @@
 		select 
 		    TA.sm_seq,
 		    TB.ppm_seq
-		from tbl_security_mngr TA 
+		from tbl_policy_firewall_list TA 
 			left outer join 
 			(
 			    select
 			     DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(ppm_seq),',') , ',')::int[]) ppm_seq
 			    from tbl_frwl_applc
 			) TB on TA.sm_seq = TB.ppm_seq
-			where  TA.sm_gubun ='P'
 	</select>
 	<insert id="fireWallPopSave" parameterType="com.model.PolicyFireWallVo">
         INSERT
-        	INTO TBL_SECURITY_MNGR (
+        	INTO tbl_policy_firewall_list (
+						DOMAIN,
         		SM_NAME, 
         		SM_DC,
-        		SM_PORT,
-        		SM_GUBUN
+        		SM_PORT
         		 ) 
        		VALUES (
+						 #{domain},
        			#{sm_name}, 
         		#{sm_dc},
-        		#{sm_port},
-        		'P'
+        		#{sm_port}
        		)
 	</insert>
 	
 
 	<delete id="fireWallPopDelete" parameterType="com.model.PolicyFireWallVo">
 		DELETE 
-			FROM tbl_security_mngr
+			FROM tbl_policy_firewall_list
 		WHERE 
 			sm_seq 
 		IN 
 			<foreach collection="deleteList" item="item" separator="," index="index" open="(" close=")">
 				'${deleteList[index]}'::bigint
 			</foreach>
-			and sm_gubun='P'
+			where domain = #{domain}
 	</delete>
 
 	<select id="fireWallPopCount" parameterType="com.model.PolicyFireWallVo" resultType="Integer">
-		SELECT count(*) FROM tbl_security_mngr where sm_gubun = 'P';
+		SELECT count(*) FROM tbl_policy_firewall_list where domain = #{domain}
 	</select>
 
 </mapper>

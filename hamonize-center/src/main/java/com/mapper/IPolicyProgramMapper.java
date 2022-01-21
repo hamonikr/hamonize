@@ -3,16 +3,16 @@ package com.mapper;
 import java.util.List;
 import java.util.Map;
 
-import com.model.PolicyProgramVo;
+import com.model.PolicyProgrmVo;
 
 public interface IPolicyProgramMapper {
 	
-	public List<PolicyProgramVo> programList(PolicyProgramVo vo);
+	public List<PolicyProgrmVo> programList(PolicyProgrmVo vo);
 	
 	public int programSave(Map<String, Object> params);
 	
 	public int programDelete(Map<String, Object> params);
 	
-	public PolicyProgramVo programApplcView(PolicyProgramVo vo);
+	public PolicyProgrmVo programApplcView(PolicyProgrmVo vo);
 
 }

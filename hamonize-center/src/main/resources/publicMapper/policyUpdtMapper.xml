@@ -11,7 +11,7 @@
 			 pu_dc,
 			 deb_new_version,
 			 deb_now_version
-		FROM tbl_progrm_udpt
+		FROM tbl_policy_package_list
 		WHERE
 			1=1 
 			-- and status = 'N' 
@@ -23,13 +23,13 @@
 		SELECT 
 			deb_new_version,
 			pu_name
-		FROM tbl_progrm_udpt
+		FROM tbl_policy_package_list
 		--WHERE base_deb_yn = 'N'
 	</select>
 	
 	<insert id="updtCompareSave" parameterType="java.util.HashMap">
 						
-			INSERT INTO TBL_PROGRM_UDPT 
+			INSERT INTO tbl_policy_package_list 
 				( PU_NAME									   
 				, PU_STATUS
 				, STATUS
@@ -43,7 +43,7 @@
 
 	<!-- <insert id="updtCompareSave" parameterType="java.util.HashMap">
 						
-			INSERT INTO TBL_PROGRM_UDPT 
+			INSERT INTO tbl_policy_package_list 
 				( PU_NAME									   
 				, PU_STATUS
 				, STATUS
@@ -57,9 +57,9 @@
 	</insert> -->
 	
 	<update id="updtCompareUpdate" parameterType="java.util.HashMap">
-	UPDATE TBL_PROGRM_UDPT 
+	UPDATE tbl_policy_package_list 
 		SET 
-	DEB_NOW_VERSION = (SELECT DEB_NEW_VERSION FROM TBL_PROGRM_UDPT WHERE PU_NAME = #{package})
+	DEB_NOW_VERSION = (SELECT DEB_NEW_VERSION FROM tbl_policy_package_list WHERE PU_NAME = #{package})
 	,DEB_NEW_VERSION = #{version}
 	,PU_STATUS = 'U'
 	WHERE PU_NAME = #{package}

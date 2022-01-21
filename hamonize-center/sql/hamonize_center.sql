@@ -1224,13 +1224,13 @@ ALTER TABLE public.tbl_prcss_block_log OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_prcss_block_log TO hamonize;
 
 
--- public.tbl_program_mngr definition
+-- public.tbl_policy_progrm_block_list definition
 
 -- Drop table
 
--- DROP TABLE public.tbl_program_mngr;
+-- DROP TABLE public.tbl_policy_progrm_block_list;
 
-CREATE TABLE public.tbl_program_mngr (
+CREATE TABLE public.tbl_policy_progrm_block_list (
 	pcm_seq bigserial NOT NULL, -- 시리얼번호
 	pcm_name varchar(500) NULL, -- 프로그램명
 	pcm_status varchar(10) NULL,
@@ -1238,19 +1238,19 @@ CREATE TABLE public.tbl_program_mngr (
 	pcm_path varchar(100) NULL,
 	insert_dt timestamp NULL -- 등록일
 );
-COMMENT ON TABLE public.tbl_program_mngr IS 'pc 프로그램 리스트 관리';
+COMMENT ON TABLE public.tbl_policy_progrm_block_list IS 'pc 프로그램 리스트 관리';
 
 -- Column comments
 
-COMMENT ON COLUMN public.tbl_program_mngr.pcm_seq IS '시리얼번호';
-COMMENT ON COLUMN public.tbl_program_mngr.pcm_name IS '프로그램명';
-COMMENT ON COLUMN public.tbl_program_mngr.pcm_dc IS '프로그램설명';
-COMMENT ON COLUMN public.tbl_program_mngr.insert_dt IS '등록일';
+COMMENT ON COLUMN public.tbl_policy_progrm_block_list.pcm_seq IS '시리얼번호';
+COMMENT ON COLUMN public.tbl_policy_progrm_block_list.pcm_name IS '프로그램명';
+COMMENT ON COLUMN public.tbl_policy_progrm_block_list.pcm_dc IS '프로그램설명';
+COMMENT ON COLUMN public.tbl_policy_progrm_block_list.insert_dt IS '등록일';
 
 -- Permissions
 
-ALTER TABLE public.tbl_program_mngr OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_program_mngr TO hamonize;
+ALTER TABLE public.tbl_policy_progrm_block_list OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_policy_progrm_block_list TO hamonize;
 
 
 -- public.tbl_progrm_agent_job definition
@@ -1329,13 +1329,13 @@ ALTER TABLE public.tbl_progrm_applc_history OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_progrm_applc_history TO hamonize;
 
 
--- public.tbl_progrm_udpt definition
+-- public.tbl_policy_package_list definition
 
 -- Drop table
 
--- DROP TABLE public.tbl_progrm_udpt;
+-- DROP TABLE public.tbl_policy_package_list;
 
-CREATE TABLE public.tbl_progrm_udpt (
+CREATE TABLE public.tbl_policy_package_list (
 	pu_seq bigserial NOT NULL, -- 시리얼 번호
 	pu_name varchar(100) NULL, -- 프로그램명
 	pu_status varchar(10) NULL, -- 작업 상태값 (I-insert,U-update)
@@ -1346,27 +1346,27 @@ CREATE TABLE public.tbl_progrm_udpt (
 	deb_now_version varchar(100) NULL, -- 패키지 현재버전
 	base_deb_yn varchar(10) NULL, -- 설치파일유무
 	polling_tm int8 NOT NULL DEFAULT 0, -- 프로그램 폴링타임/하모나이즈 프로그램만
-	CONSTRAINT tbl_progrm_udpt_pkey PRIMARY KEY (pu_seq)
+	CONSTRAINT tbl_policy_package_list_pkey PRIMARY KEY (pu_seq)
 );
-COMMENT ON TABLE public.tbl_progrm_udpt IS '프로그램 / OS 업데이트 목록';
+COMMENT ON TABLE public.tbl_policy_package_list IS '프로그램 / OS 업데이트 목록';
 
 -- Column comments
 
-COMMENT ON COLUMN public.tbl_progrm_udpt.pu_seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_progrm_udpt.pu_name IS '프로그램명';
-COMMENT ON COLUMN public.tbl_progrm_udpt.pu_status IS '작업 상태값 (I-insert,U-update)';
-COMMENT ON COLUMN public.tbl_progrm_udpt.pu_dc IS '설명';
-COMMENT ON COLUMN public.tbl_progrm_udpt.status IS '업데이트 실행 여부';
-COMMENT ON COLUMN public.tbl_progrm_udpt.deb_apply_name IS '패키지명';
-COMMENT ON COLUMN public.tbl_progrm_udpt.deb_new_version IS '패키지 신규버전';
-COMMENT ON COLUMN public.tbl_progrm_udpt.deb_now_version IS '패키지 현재버전';
-COMMENT ON COLUMN public.tbl_progrm_udpt.base_deb_yn IS '설치파일유무';
-COMMENT ON COLUMN public.tbl_progrm_udpt.polling_tm IS '프로그램 폴링타임/하모나이즈 프로그램만';
+COMMENT ON COLUMN public.tbl_policy_package_list.pu_seq IS '시리얼 번호';
+COMMENT ON COLUMN public.tbl_policy_package_list.pu_name IS '프로그램명';
+COMMENT ON COLUMN public.tbl_policy_package_list.pu_status IS '작업 상태값 (I-insert,U-update)';
+COMMENT ON COLUMN public.tbl_policy_package_list.pu_dc IS '설명';
+COMMENT ON COLUMN public.tbl_policy_package_list.status IS '업데이트 실행 여부';
+COMMENT ON COLUMN public.tbl_policy_package_list.deb_apply_name IS '패키지명';
+COMMENT ON COLUMN public.tbl_policy_package_list.deb_new_version IS '패키지 신규버전';
+COMMENT ON COLUMN public.tbl_policy_package_list.deb_now_version IS '패키지 현재버전';
+COMMENT ON COLUMN public.tbl_policy_package_list.base_deb_yn IS '설치파일유무';
+COMMENT ON COLUMN public.tbl_policy_package_list.polling_tm IS '프로그램 폴링타임/하모나이즈 프로그램만';
 
 -- Permissions
 
-ALTER TABLE public.tbl_progrm_udpt OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_progrm_udpt TO hamonize;
+ALTER TABLE public.tbl_policy_package_list OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_policy_package_list TO hamonize;
 
 
 -- public.tbl_recovery_agent_job definition

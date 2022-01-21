@@ -110,13 +110,13 @@
 	</update>
 
 	<select id="getProgrmList" resultType="com.model.HmProgrmUpdtVo">
-		SELECT * FROM TBL_PROGRM_UDPT
+		SELECT * FROM tbl_policy_package_list
 		WHERE pu_name like 'hamonize%';
 	</select>
 
 	<update id="updatePollingTime" parameterType="com.model.HmProgrmUpdtVo">
 		update
-			TBL_PROGRM_UDPT
+			tbl_policy_package_list
 		set 
 			polling_tm = #{polling_tm}
 		where 

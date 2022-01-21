@@ -758,7 +758,7 @@
 
 	<!-- 업데이트 정책 배포 -->
 	<select id="udptPackageList" resultType="String">
-		SELECT PU_NAME FROM TBL_PROGRM_UDPT
+		SELECT PU_NAME FROM tbl_policy_package_list
 	</select>
 
 	<select id="updtList" resultType="map" parameterType="hashmap">
@@ -767,7 +767,7 @@
 					*
 				from
 					tbl_updt_policy_action_result tb1
-					,tbl_progrm_udpt tb2
+					,tbl_policy_package_list tb2
 					where
 					tb1.debname = tb2.pu_name
 					and tb1.pc_uuid = #{uuid}
@@ -783,7 +783,7 @@
 	<!-- 프로그램 차단 정책 배포 -->
 	<select id="programPackageList" resultType="String">
 		SELECT pcm_name
-		FROM tbl_program_mngr
+		FROM tbl_policy_progrm_block_list
 	</select>
 
 	<select id="programList" resultType="map" parameterType="hashmap">
@@ -792,7 +792,7 @@
 						    *
 						  from
 						    tbl_act_progrm_log tb1
-						    ,tbl_program_mngr tb2
+						    ,tbl_policy_progrm_block_list tb2
 						  where
 						    tb1.progrmname = tb2.pcm_name
 						    and tb1.uuid = #{uuid}
@@ -808,7 +808,7 @@
 	<!-- 방화벽 허용 정책 배포 -->
 	<select id="firewallPackageList" resultType="String">
 				SELECT sm_port
-					FROM tbl_security_mngr where sm_gubun='P'
+					FROM tbl_policy_firewall_list
 			 </select>
 	<select id="firewallList" resultType="map" parameterType="hashmap">
 		<foreach collection="debList" item="item" index="index">
@@ -816,7 +816,7 @@
 						    *
 						  from
 						    tbl_act_firewall_log tb1
-						    ,tbl_security_mngr tb2
+						    ,tbl_policy_firewall_list tb2
 						  where
 						    tb1.retport = tb2.sm_port
 						    and tb1.uuid = #{uuid}
