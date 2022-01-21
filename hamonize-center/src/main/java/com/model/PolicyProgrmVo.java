@@ -20,8 +20,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name="tbl_policy_device_list")
-public class PolicyDeviceVo {
+@Table(name="tbl_policy_progrm_block_list")
+public class PolicyProgrmVo {
 
 	//정책확정Insert
 	@Transient
@@ -39,33 +39,28 @@ public class PolicyDeviceVo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Comment("시리얼 번호")
-	private Long sm_seq;
+	private Long pcm_seq;
 	
 	@Size(max=300)
-	@Comment("디바이스명")
-	private String sm_name;
+	@Comment("프로그램명")
+	private String pcm_name;
 	
 	@Size(max=10)
-	@Comment("디바이스상태")
-	private String sm_status;
+	@Comment("프로그램 상태")
+	private String pcm_status;
 	
 	@Size(max=500)
-	@Comment("디바이스설명")
-	private String sm_dc;
+	@Comment("프로그램설명")
+	private String pcm_dc;
 	
-	@Size(max=20)
-	@Comment("벤더코드/제품코드")
-	private String sm_device_code;
-
+	@Size(max=200)
+	@Comment("프로그램 경로")
+	private String pcm_path;
+	
 	@Comment("등록일")
 	private Timestamp rgstr_date;
 	@Comment("수정일")
 	private Timestamp updt_date;
-	
-	@Transient
-	private int mngeListInfoCurrentPage;
-	@Transient
-	private String[] deleteList;
 	
 	
 }

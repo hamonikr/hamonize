@@ -9,8 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 
 import com.id.OrgId;
+
+import org.hibernate.annotations.Comment;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +29,11 @@ public class OrgVo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Comment("조직 시리얼넘버")
 	private Long seq;
 
 	@Id
+	@Size(max=50)
 	private String domain;
 
 	private Integer p_seq;

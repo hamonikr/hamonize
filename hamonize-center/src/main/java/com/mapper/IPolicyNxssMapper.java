@@ -2,10 +2,10 @@ package com.mapper;
 
 import java.util.List;
 
-import com.model.PolicyProgramVo;
+import com.model.PolicyProgrmVo;
 
 public interface IPolicyNxssMapper {
 	
-	public List<PolicyProgramVo> programList(PolicyProgramVo vo);
+	public List<PolicyProgrmVo> programList(PolicyProgrmVo vo);
 
 }

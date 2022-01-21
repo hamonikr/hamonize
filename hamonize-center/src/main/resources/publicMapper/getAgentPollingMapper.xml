@@ -16,7 +16,7 @@
 	</insert>
 
 	<select id="getPollingTime" parameterType="com.model.GetAgentPollingVo" resultType="com.model.GetAgentPollingVo">
-		SELECT polling_tm FROM TBL_PROGRM_UDPT
+		SELECT polling_tm FROM tbl_policy_package_list
 		WHERE pu_name = #{pu_name};
 	</select>
 	

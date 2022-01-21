@@ -41,41 +41,4 @@ public class AdminService {
 		return adminMapper.adminIdCheck(vo);
 	}
 	
-	//사지방 관리자
-	public List<AdminVo> sgbManagerList(AdminVo vo){
-		return adminMapper.sgbManagerList(vo);	
-	}
-	
-	public int sgbManagercountListInfo(AdminVo vo) {
-		return adminMapper.sgbManagercountListInfo(vo);
-	}
-	
-	public AdminVo sgbManagerView(AdminVo vo) {
-		return adminMapper.sgbManagerView(vo);	
-	}
-	
-	public int sgbManagerSave(AdminVo vo) {
-		int result = adminMapper.sgbManagerSave(vo);
-		if(result > 0) {
-		int[] org_seq = new int[vo.getArr_org_seq().split(",").length];
-		for(int i=0;i < vo.getArr_org_seq().split(",").length;i++) {
-			org_seq[i] = Integer.parseInt(vo.getArr_org_seq().split(",")[i]);
-			vo.setOrg_seq(org_seq);
-		}
-		adminMapper.sgbManagerOrgSeq(vo);
-		}
-		return result;
-	}
-	
-	public int sgbManagerModify(AdminVo vo) {
-		return adminMapper.sgbManagerModify(vo);
-	}
-	
-	public int sgbManagerDelete(AdminVo vo) {
-		return adminMapper.sgbManagerDelete(vo);
-	}
-	
-	public int sgbManagerIdCheck(AdminVo vo) {
-		return adminMapper.sgbManagerIdCheck(vo);
-	}
 }

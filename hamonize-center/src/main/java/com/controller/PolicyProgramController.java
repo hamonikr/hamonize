@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.model.OrgVo;
-import com.model.PolicyProgramVo;
+import com.model.PolicyProgrmVo;
 import com.service.OrgService;
 import com.service.PolicyProgramService;
 
@@ -43,11 +43,11 @@ public class PolicyProgramController {
 	public String manage(HttpSession session, Model model) {
 
 		JSONArray jsonArray = new JSONArray();
-		List<PolicyProgramVo> pList = null;
+		List<PolicyProgrmVo> pList = null;
 
 		try {
 			OrgVo orgvo = new OrgVo();
-			PolicyProgramVo vo = new PolicyProgramVo();
+			PolicyProgrmVo vo = new PolicyProgrmVo();
 			jsonArray = oService.orgList(orgvo);
 			pList = pService.programList(vo);
 
@@ -94,7 +94,7 @@ public class PolicyProgramController {
 
 	@ResponseBody
 	@RequestMapping(value = "pshow", method = RequestMethod.POST)
-	public JSONObject pshow(HttpSession session, Model model, PolicyProgramVo vo) {
+	public JSONObject pshow(HttpSession session, Model model, PolicyProgrmVo vo) {
 		JSONObject data = new JSONObject();
 		try {
 			vo = pService.programApplcView(vo);

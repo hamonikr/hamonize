@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -43,24 +42,6 @@ public class AdminVo extends PagingVo {
 
 	@Transient
 	private int adminListInfoCurrentPage;
-
-	// 사지방 관리자
-	@Transient
-	private String arr_org_seq;
-	@Transient
-	private String rank;
-	@Transient
-	private String tel_num;
-	@Transient
-	private String phone_num;
-	@Transient
-	private String manager_yn;
-	@Transient
-	private int ListInfoCurrentPage;
-	@Transient
-	private int[] org_seq;
-	@Transient
-	private String org_nm;
 
 	// 검색
 	@Transient

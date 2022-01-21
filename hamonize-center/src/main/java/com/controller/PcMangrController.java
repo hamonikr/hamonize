@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
-
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.SvrlstVo;
@@ -29,6 +29,7 @@ import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.PcMangrService;
+import com.util.AuthUtil;
 import com.util.Constant;
 
 @Controller
@@ -89,7 +90,8 @@ public class PcMangrController {
 			HttpServletRequest request) {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		// 페이징
 		pagingVo.setCurrentPage(vo.getPcListInfoCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);

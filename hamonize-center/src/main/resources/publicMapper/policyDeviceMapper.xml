@@ -5,8 +5,9 @@
 
 <select id="deviceList" resultType="com.model.PolicyDeviceVo">
 		SELECT 
-			sm_seq, sm_name, sm_status, sm_dc, sm_port, sm_gubun, sm_device_code
-		FROM tbl_security_mngr;
+			sm_seq, sm_name, sm_status, sm_dc, sm_device_code
+		FROM tbl_policy_device_list
+		where domain = #{domain}
 	</select>
 	
 	<insert id="deviceSave" parameterType="java.util.HashMap">
@@ -43,14 +44,13 @@
 		select 
     		TA.*,
     		TB.ppm_seq
-		from tbl_security_mngr TA 
+		from tbl_policy_device_list TA 
 			left outer join 
 			(
 			    select
 			     DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(ppm_seq),',') , ',')::int[]) ppm_seq
 			    from tbl_device_applc
 			) TB on TA.sm_seq = TB.ppm_seq
-			where  TA.sm_gubun ='D'
 		order by sm_seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		
@@ -62,16 +62,16 @@
 	
 	<insert id="devicePopSave" parameterType="com.model.PolicyDeviceVo">
         INSERT
-        	INTO TBL_SECURITY_MNGR (
+        	INTO tbl_policy_device_list (
+						DOMAIN,
         		SM_NAME, 
         		SM_DC,
-        		SM_GUBUN,
         		SM_DEVICE_CODE
         		 ) 
        		VALUES (
+						#{domain},
        			#{sm_name}, 
         		#{sm_dc},
-        		'D',
         		#{sm_device_code}
        		)
 	</insert>
@@ -79,18 +79,18 @@
 
 	<delete id="devicePopDelete" parameterType="com.model.PolicyDeviceVo">
 		DELETE 
-			FROM tbl_security_mngr
+			FROM tbl_policy_device_list
 		WHERE 
 			sm_seq 
 		IN 
 			<foreach collection="deleteList" item="item" separator="," index="index" open="(" close=")">
 				'${deleteList[index]}'::bigint
 			</foreach>
-			and sm_gubun='D'
+			where domain = #{domain}
 	</delete>
 	
 	<select id="devicePopCount" resultType="Integer" parameterType="com.model.PolicyDeviceVo">
-		SELECT count(*) FROM tbl_security_mngr where sm_gubun = 'D';
+		SELECT count(*) FROM tbl_policy_device_list where domain = #{domain}
 	</select>
 
 </mapper>

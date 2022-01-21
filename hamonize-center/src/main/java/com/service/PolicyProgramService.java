@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mapper.IOrgMapper;
 import com.mapper.IPolicyProgramMapper;
-import com.model.PolicyProgramVo;
+import com.model.PolicyProgrmVo;
 
 @Service
 public class PolicyProgramService {
@@ -20,9 +20,9 @@ public class PolicyProgramService {
 	@Autowired
 	IOrgMapper orgmapper;
 	
-	public List<PolicyProgramVo> programList(PolicyProgramVo vo) {
+	public List<PolicyProgrmVo> programList(PolicyProgrmVo vo) {
 		
-		List<PolicyProgramVo> list = iProgramMapper.programList(vo);
+		List<PolicyProgrmVo> list = iProgramMapper.programList(vo);
 		
 		return list;
 		
@@ -37,7 +37,7 @@ public class PolicyProgramService {
 		
 	}
 	
-	public PolicyProgramVo programApplcView(PolicyProgramVo vo){
+	public PolicyProgrmVo programApplcView(PolicyProgrmVo vo){
 		return iProgramMapper.programApplcView(vo);
 		
 	}

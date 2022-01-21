@@ -27,7 +27,7 @@
 		    pa_seq, 
 		    #{org_seq} as org_seq,
 		    #{pcm_uuid}  as pcm_uuid,
-		    (select sm_name from tbl_security_mngr where sm_gubun = 'D' and sm_seq = arr[i]::int),
+		    (select sm_name from tbl_policy_device_list where sm_seq = arr[i]::int),
 		    now()
 		    
 		FROM (
@@ -90,7 +90,7 @@
 		    TA.insert_dt,
 		    TB.dvc_seq as old_pa_seq,
 		    TB.pcm_uuid as old_pcm_uuid,
-    		( select sm_device_code from tbl_security_mngr where sm_seq = TA.sm_seq) as device_code
+    		( select sm_device_code from tbl_policy_device_list where sm_seq = TA.sm_seq) as device_code
 		FROM tbl_device_agent_job TA LEFT OUTER JOIN 
 		(
 		    SELECT * 
@@ -126,7 +126,7 @@
 		    TA.insert_dt,
 		    TB.dvc_seq as old_pa_seq,
 		    TB.pcm_uuid as old_pcm_uuid,
-    		( select sm_device_code from tbl_security_mngr where sm_seq = TA.sm_seq) as device_code
+    		( select sm_device_code from tbl_policy_device_list where sm_seq = TA.sm_seq) as device_code
 		FROM tbl_device_agent_job TA LEFT OUTER JOIN 
 		(
 		    SELECT * 
@@ -154,7 +154,7 @@
 		    TA.insert_dt,
 		    TB.dvc_seq as old_pa_seq,
 		    TB.pcm_uuid as old_pcm_uuid,
-    		( select sm_device_code from tbl_security_mngr where sm_seq = TA.sm_seq) as device_code
+    		( select sm_device_code from tbl_policy_device_list where sm_seq = TA.sm_seq) as device_code
 		FROM tbl_device_agent_job TA LEFT OUTER JOIN 
 		(
 		    SELECT * 
@@ -178,7 +178,7 @@
 	
 	<select id="getListProgrm" parameterType="com.model.GetAgentDeviceVo" resultType="com.model.GetAgentDeviceVo">
 		SELECT 
-	        (select pcm_name from tbl_program_mngr where pcm_seq::char = arr[i]) as progrm_nm
+	        (select pcm_name from tbl_policy_progrm_block_list where pcm_seq::char = arr[i]) as progrm_nm
 	    FROM (
 	      SELECT generate_series(1, array_upper(arr, 1)) AS i, arr
 	      FROM (
