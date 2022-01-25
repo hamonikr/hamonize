@@ -40,5 +40,13 @@ public class AdminService {
 	public int adminIdCheck(AdminVo vo) {
 		return adminMapper.adminIdCheck(vo);
 	}
+
+	public int adminPasswordCheck(AdminVo vo) {
+		return adminMapper.adminPasswordCheck(vo);
+	}
+	//사지방 관리자
+	public List<AdminVo> sgbManagerList(AdminVo vo){
+		return adminMapper.sgbManagerList(vo);	
+	}
 	
 }

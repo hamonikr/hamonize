@@ -40,12 +40,13 @@ public class CurlUnAuthorizedController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 

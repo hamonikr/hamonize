@@ -117,6 +117,10 @@ function expandNode(e) {
 function detail(uuid){
 	$(".result_detail").remove();
 	$(".content_bapo").remove();
+	
+		$(".right_box_r").show();
+		$('.right_box_l').width( '40%' );
+	
 	 $.post("detailPolicy.proc",{pc_uuid:uuid},
 			function(data){
 			var shtml = "";
@@ -138,7 +142,8 @@ function detail(uuid){
 			$.each(data.udpt, function(index, value) {
 				var inset_dt = value.insert_dt;
 				var date = new Date(inset_dt);
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+				
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());
 				shtml += "<tr>";
 				shtml += "<td>"+value.debname+"</td>";
 				shtml += "<td>"+value.debver+"</td>";
@@ -146,7 +151,7 @@ function detail(uuid){
 				console.log('value.state : '+value.state);
 				
 				if(value.gubun == "INSTALL" || value.gubun == "UPGRADE" ){
-					if(value.state == 1){
+					if(value.state >= 1){
 						shtml += "<td>완료</td>";
 					}else{
 						shtml += "<td>미완료</td>";
@@ -180,7 +185,9 @@ function detail(uuid){
 			$.each(data.program, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+			
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());
+			
 				shtml += "<tr>";
 				shtml += "<td>"+value.progrmname+"</td>";
 				if(value.status_yn == "Y")
@@ -211,7 +218,7 @@ function detail(uuid){
 			$.each(data.firewall, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				shtml += "<tr>";
 				shtml += "<td>"+value.retport+"</td>";
 				shtml += "<td>"+value.status+"</td>";
@@ -242,8 +249,8 @@ function detail(uuid){
 			$.each(data.device, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
-
-				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+				
+ 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				shtml += "<tr>";
 				shtml += "<td>"+value.product+"("+value.vendorcode+":"+value.productcode+")</td>";
 				if(value.status_yn == "Y")
@@ -281,6 +288,13 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		var cnt = 0;
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
+		if( node == null ){
+			$(".right_box_r").hide();
+			$('.right_box_l').width( '100%' );
+		}else{
+			$(".right_box_r").show();
+			$('.right_box_l').width( '40%' );
+		}
 		$("#org_seq").val(treeNode.id);
 		$.post("/mntrng/pcPolicyList",{org_seq:treeNode.id,type:'view'},
 				function(data){
@@ -328,7 +342,18 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if(data.policyUpdtResult[i].debname != data.policyUpdtResult[i+chk].debname){
 						var inset_dt = data.policyUpdtResult[i].ins_date;
 						var date = new Date(inset_dt);
-						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
+						//성공여부 체크 카운트
+						if(data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun == "UPGRADE"){
+							if(data.policyUpdtResult[i].state == 0){
+								data.policyUpdtResult[i].count--;
+							}
+
+						}else if(data.policyUpdtResult[i].gubun == "DELETE"){
+							if(data.policyUpdtResult[i].state == 1){
+								data.policyUpdtResult[i].count--;
+							}
+						}
 						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 						shtml_r += "<tr>";
 						shtml_r += "<td>"+data.policyUpdtResult[i].debname+"</td>";
@@ -344,7 +369,19 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else if((i+1) == data.policyUpdtResult.length){
 							var inset_dt = data.policyUpdtResult[i].ins_date;
 							var date = new Date(inset_dt);
-							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
+							//성공여부 체크 카운트
+							if(data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun == "UPGRADE"){
+								if(data.policyUpdtResult[i].state == 0){
+									data.policyUpdtResult[i].count--;
+								}
+	
+							}else if(data.policyUpdtResult[i].gubun == "DELETE"){
+								if(data.policyUpdtResult[i].state == 1){
+									data.policyUpdtResult[i].count--;
+								}
+							}
+
 							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 							shtml_r += "<tr>";
 							shtml_r += "<td>"+data.policyUpdtResult[i].debname+"</td>";
@@ -385,7 +422,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if(data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i+chk].progrmname){
 						var inset_dt = data.policyProgrmResult[i].ins_date;
 						var date = new Date(inset_dt);
-						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 						var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
 						shtml_r += "<tr>";
 						shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
@@ -397,7 +434,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else if((i+1) == data.policyProgrmResult.length){
 							var inset_dt = data.policyProgrmResult[i].ins_date;
 							var date = new Date(inset_dt);
-							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
 							shtml_r += "<tr>";
 							shtml_r += "<td>"+data.policyProgrmResult[i].progrmname+"</td>";
@@ -489,7 +526,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if(data.policyDeviceResult[i].product != data.policyDeviceResult[i+chk].product){
 						var inset_dt = data.policyDeviceResult[i].ins_date;
 						var date = new Date(inset_dt);
-						date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+						date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 						shtml_r += "<tr>";
 						shtml_r += "<td>"+data.policyDeviceResult[i].product+"</td>";
@@ -501,7 +538,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						}else if((i+1) == data.policyDeviceResult.length){
 							var inset_dt = data.policyDeviceResult[i].ins_date;
 							var date = new Date(inset_dt);
-							date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString());
+							date =  date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString())+":"+addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 							shtml_r += "<tr>";
 							shtml_r += "<td>"+data.policyDeviceResult[i].product+"</td>";
