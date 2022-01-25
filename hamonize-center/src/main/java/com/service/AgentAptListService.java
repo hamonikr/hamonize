@@ -56,7 +56,7 @@ public class AgentAptListService {
 					co++;
 				}
 			}
-
+			bufferedReader.close();
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

@@ -96,9 +96,12 @@ public class PolicyProgramController {
 	@RequestMapping(value = "pshow", method = RequestMethod.POST)
 	public JSONObject pshow(HttpSession session, Model model, PolicyProgrmVo vo) {
 		JSONObject data = new JSONObject();
+		List<PolicyProgramVo> pList = null;
 		try {
+			pList = pService.programList(vo);
 			vo = pService.programApplcView(vo);
 			data.put("dataInfo", vo);
+			data.put("pList", pList);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

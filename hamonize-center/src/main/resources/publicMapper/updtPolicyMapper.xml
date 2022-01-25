@@ -15,6 +15,15 @@
 	             )
 	</delete>
 	
+	<delete id="deleteProccessBlockProgrm" parameterType="java.util.Map">
+		DELETE FROM tbl_act_progrm_log
+		WHERE 
+		<foreach collection="list" item="item" separator=" or ">
+			(uuid = #{item.pc_uuid}
+			and progrmname = #{item.debname})
+		</foreach>
+	</delete>
+
 	<insert id="updtInsertProgrm" parameterType="com.model.UpdtPolicyVo">
 		INSERT INTO tbl_policy_progrm_block_list (pcm_name, pcm_path, rgstr_date)
 		SELECT #{debname}, #{path} , now()

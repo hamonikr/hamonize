@@ -48,10 +48,10 @@ public class CurlSgbPropertiesController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

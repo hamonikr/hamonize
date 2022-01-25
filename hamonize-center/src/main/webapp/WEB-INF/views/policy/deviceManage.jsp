@@ -465,12 +465,12 @@ function fnSave(){
 		
 
 		if(!regExp.test(vendor)){
-			alert('vendorId는 4자리로된 영문,숫자로 이루어진 코드입니다. 다시 확인해주세요!');
+			alert('vendorId는 4자리로된 영문 소문자, 숫자로 이루어진 코드입니다. 다시 확인해주세요!');
 			return false;
 		}
 
 		if(!regExp.test(product)){
-			alert('productId는 4자리로된 영문,숫자로 이루어진 코드입니다. 다시 확인해주세요!');
+			alert('productId는 4자리로된 영문 소문자, 숫자로 이루어진 코드입니다. 다시 확인해주세요!');
 			return false;
 		}
 
