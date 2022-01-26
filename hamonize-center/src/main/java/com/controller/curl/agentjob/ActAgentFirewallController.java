@@ -63,9 +63,11 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
+			reader.close();
 
 		} catch (Exception e) {
 			System.out.println("Error reading JSON string: " + e.toString());
@@ -110,12 +112,13 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		System.out.println("json===> " + json);
@@ -160,12 +163,13 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		JSONParser jsonParser = new JSONParser();
@@ -206,12 +210,12 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		JSONParser Parser = new JSONParser();
@@ -260,9 +264,9 @@ public class ActAgentFirewallController {
 			while ((line = reader.readLine()) != null) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		System.out.println("json===> " + json);
@@ -299,7 +303,7 @@ public class ActAgentFirewallController {
 					int delPolicyVal = getAgentRecoveryMapper.deleteActPolicy(inputVo);
 					getAgentRecoveryMapper.updateDataActAgentBackupRecovery(inputVo);
 				} catch (Exception e) {
-					System.out.println("e===============" + e.getMessage());
+					logger.info("e===============" + e.getMessage());
 				}
 
 			}

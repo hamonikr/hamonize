@@ -41,13 +41,13 @@ public class CurlUpdtPolicyController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
-				System.out.println("수행결과 line===> " + line);
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		JSONParser Parser = new JSONParser(); // 여기서 에러
@@ -74,6 +74,7 @@ public class CurlUpdtPolicyController {
 
 				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
 				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
+				insDataVo.setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
 				updtPollicyMapper.updtInsertProgrm(insDataVo);
 
 			}
@@ -98,6 +99,11 @@ public class CurlUpdtPolicyController {
 				updtVo2[i].setPath(object.getOrDefault("path", "").toString());
 				updtVo2[i].setGubun("UPGRADE");
 				updtVo2[i].setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
+
+				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
+				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
+				updtPollicyMapper.updtInsertProgrm(insDataVo);
+
 			}
 		}
 
@@ -126,6 +132,13 @@ public class CurlUpdtPolicyController {
 			Map<String, Object> mapDelete = new HashMap<String, Object>();
 			mapDelete.put("list", updtVo3);
 			updtPollicyMapper.updtDeleteProgrm(mapDelete);
+
+			// delete act_progrm_log
+			for(int j=0;j<mapDelete.size();j++){
+				logger.info( "aaaa :  {}", mapDelete.get("list"));
+			}
+			updtPollicyMapper.deleteProccessBlockProgrm(mapDelete);
+			
 		}
 
 
