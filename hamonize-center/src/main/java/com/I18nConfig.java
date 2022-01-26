@@ -28,7 +28,7 @@ public class I18nConfig implements WebMvcConfigurer {
 				.excludePathPatterns("/js/**").excludePathPatterns("/css/**")
 				.excludePathPatterns("/fonts/**").excludePathPatterns("/images/**")
 				.excludePathPatterns("/img/**").excludePathPatterns("/font/**")
-				.excludePathPatterns("/vendor/**");
+				.excludePathPatterns("/vendor/**").excludePathPatterns("/test/**");
 
 	}
 
