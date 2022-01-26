@@ -26,6 +26,7 @@ import com.model.OrgVo;
 import com.model.PolicyUpdtVo;
 import com.service.AgentAptListService;
 import com.service.OrgService;
+import com.service.PolicyProgramService;
 import com.service.PolicyUpdtService;
 
 @Controller
@@ -143,6 +144,9 @@ public class PolicyUpdtController {
 		int result = 0;
 		uService.updtDelete(params);
 		result = uService.updtSave(params);
+		
+		//차단정책 초기화
+		uService.updatePolicyProgrm(params);
 
 		if (result >= 1)
 			return "SUCCESS";

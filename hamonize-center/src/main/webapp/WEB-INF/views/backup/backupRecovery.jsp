@@ -202,8 +202,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 							
 								strHtml += "";							
 								strHtml += "<div class=\"radio-holder\">";
-								strHtml += "<label for='dept_seq"+i+"'>"+"<input id='dept_seq"+i+"' name='dept_seq' type='radio' value='"+agrs[i].seq+"'>";
-								strHtml += agrs[i].pc_hostname+ "</label>";
+								strHtml += "<input id='dept_seq"+i+"' name='dept_seq' type='radio' value='"+agrs[i].seq+"'>";
+								strHtml += "<label for='dept_seq"+i+"'>"+agrs[i].pc_hostname+ "</label>";
 								strHtml += "</div>";
 							  
 							}

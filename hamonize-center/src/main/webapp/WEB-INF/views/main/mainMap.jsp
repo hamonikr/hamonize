@@ -11,13 +11,10 @@
 <link href="/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
 
 
-<!-- Main CSS-->
-<link href="https://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
-
-<link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
-<link rel="stylesheet" type="text/css" href="/css/sgb/content.css">
- 
-     
+    <!-- Main CSS-->
+	<link href="css/theme.css" rel="stylesheet" media="all">
+    <link href="http://coderthemes.com/hyper/saas/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style" />
+    
 	<style>
         .col-lg-3 {
             -ms-flex: 0 0 33%;

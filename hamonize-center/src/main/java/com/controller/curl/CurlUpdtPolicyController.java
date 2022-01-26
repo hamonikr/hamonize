@@ -3,12 +3,15 @@ package com.controller.curl;
 import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +28,10 @@ public class CurlUpdtPolicyController {
 	@Autowired
 	IUpdtPollicyMapper updtPollicyMapper;
 
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	
 	/**
 	 * agent에서 프로그램 업데이트한 수행결과 값을 받아오는 부분 리턴 구분값 > 프로그램 설치 : insresert, 업데이트 : updtresert, 삭제 :
 	 * delresert
@@ -41,13 +48,13 @@ public class CurlUpdtPolicyController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
-				System.out.println("수행결과 line===> " + line);
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		JSONParser Parser = new JSONParser(); // 여기서 에러
@@ -74,6 +81,7 @@ public class CurlUpdtPolicyController {
 
 				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
 				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
+				insDataVo.setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
 				updtPollicyMapper.updtInsertProgrm(insDataVo);
 
 			}
@@ -98,6 +106,11 @@ public class CurlUpdtPolicyController {
 				updtVo2[i].setPath(object.getOrDefault("path", "").toString());
 				updtVo2[i].setGubun("UPGRADE");
 				updtVo2[i].setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
+
+				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
+				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
+				updtPollicyMapper.updtInsertProgrm(insDataVo);
+
 			}
 		}
 
@@ -126,6 +139,13 @@ public class CurlUpdtPolicyController {
 			Map<String, Object> mapDelete = new HashMap<String, Object>();
 			mapDelete.put("list", updtVo3);
 			updtPollicyMapper.updtDeleteProgrm(mapDelete);
+
+			// delete act_progrm_log
+			for(int j=0;j<mapDelete.size();j++){
+				logger.info( "aaaa :  {}", mapDelete.get("list"));
+			}
+			updtPollicyMapper.deleteProccessBlockProgrm(mapDelete);
+			
 		}
 
 

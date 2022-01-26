@@ -1,5 +1,8 @@
 package com.controller;
 
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,14 +18,17 @@ import com.mapper.IGetAgentPollingMapper;
 import com.model.AdminVo;
 import com.model.FileVo;
 import com.model.HmProgrmUpdtVo;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.SvrlstVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.AdminService;
+import com.service.LoginService;
 import com.service.OrgService;
 import com.service.SvrlstService;
 import com.util.Constant;
+import com.util.RSAUtil;
 import com.util.SHA256Util;
 
 import org.json.simple.JSONArray;
@@ -35,6 +41,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -43,6 +50,9 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminservice;
+
+	@Autowired
+	private LoginService loginService;
 
 	@Autowired
 	private OrgService oService;
@@ -80,6 +90,13 @@ public class AdminController {
 
 
 		return "/svrlst/list";
+	}
+
+	// 서버 관리자
+	@GetMapping("/info")
+	public String info(HttpSession session, Model model) {
+		
+		return "/svrlst/info";
 	}
 
 	@ResponseBody
@@ -186,9 +203,22 @@ public class AdminController {
 	}
 
 	@PostMapping("/view")
-	public String view(Model model, AdminVo vo) {
+	public String view(Model model, AdminVo vo, HttpServletRequest request) throws NoSuchAlgorithmException {
 
 		if (vo.getUser_id() != null) {
+
+			// 세션에 남아있을지도 몰라서 생성 전에 제거
+			request.getSession().removeAttribute(RSAUtil.PRIVATE_KEY);
+			KeyPair keys = RSAUtil.genKey();
+			// Key 생성
+			// 개인키는 세션에 저장
+			request.getSession().setAttribute(RSAUtil.PRIVATE_KEY, keys.getPrivate());
+			// 클라이언트 공개키 생성을 위한 파라미터
+			Map<String, String> spec = RSAUtil.getKeySpec(keys.getPublic());
+			request.setAttribute(RSAUtil.PUBLIC_KEY_MODULUS, spec.get(RSAUtil.PUBLIC_KEY_MODULUS));
+			request.setAttribute(RSAUtil.PUBLIC_KEY_EXPONENT, spec.get(RSAUtil.PUBLIC_KEY_EXPONENT));
+			request.setAttribute(RSAUtil.PUBLIC_KEY, keys.getPublic()); // 사용X
+			
 			AdminVo avo = adminservice.adminView(vo);
 			model.addAttribute("result", avo);
 		}
@@ -212,15 +242,34 @@ public class AdminController {
 
 	@PostMapping("/modify")
 	@ResponseBody
-	public int modify(Model model, AdminVo vo) {
+	public int modify(Model model, AdminVo vo, @RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception {
 		int result = 0;
-		if (vo.getPass_wd() != null || !vo.getPass_wd().trim().isEmpty()) {
-			String salt = SHA256Util.generateSalt();
-			vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
-			vo.setSalt(salt);
-		}
+		LoginVO salt_vo = loginService.getSalt(params);
 
-		result = adminservice.adminModify(vo);
+		PrivateKey pk = (PrivateKey)request.getSession().getAttribute(RSAUtil.PRIVATE_KEY);
+		
+		// 생성한 개인키가 없으면 잘못된 요청으로 처리
+		if(pk == null) { 
+			logger.error("=======================Private Key is Null"); 
+			throw new Exception(); 
+		}
+		vo.setCurrent_pass_wd(RSAUtil.decryptRSA(vo.getCurrent_pass_wd(), pk));
+		
+		vo.setCurrent_pass_wd(SHA256Util.getEncrypt(vo.getCurrent_pass_wd(), salt_vo.getSalt()));
+		result = adminservice.adminPasswordCheck(vo);
+		
+		if(result == 1){
+			if (vo.getPass_wd() != null || !vo.getPass_wd().trim().isEmpty()) {
+				vo.setPass_wd(RSAUtil.decryptRSA(vo.getPass_wd(), pk));
+				String salt = SHA256Util.generateSalt();
+				vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), salt));
+				vo.setSalt(salt);
+			}
+			result = adminservice.adminModify(vo);
+		}else{
+			result = 0;
+		}
+		request.getSession().removeAttribute(RSAUtil.PRIVATE_KEY);
 		return result;
 
 	}

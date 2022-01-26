@@ -3,14 +3,32 @@
  
 <mapper namespace="com.mapper.IPolicyProgramMapper">
 
-<select id="programList" resultType="com.model.PolicyProgramVo">
-		SELECT 
-			 pcm_seq, 
-			 pcm_name, 
-			 pcm_status,
-			 pcm_dc
-		FROM tbl_program_mngr
-		ORDER  BY pcm_seq desc
+	<!-- <select id="programList" resultType="com.model.PolicyProgramVo">
+			SELECT 
+				pcm_seq, 
+				pcm_name, 
+				pcm_status,
+				pcm_dc
+			FROM tbl_program_mngr
+			where org_seq = #{org_seq}
+			ORDER  BY pcm_seq desc
+	</select> -->
+
+	<select id="programList" resultType="com.model.PolicyProgramVo" parameterType="com.model.PolicyProgramVo">
+			select
+				pu_seq as pcm_seq,
+				pu_name as pcm_name
+			from
+				tbl_progrm_udpt
+			where
+				pu_seq in (
+				select
+					unnest(string_to_array(ppm_seq, ','))::int
+				from
+					tbl_updt_applc
+				where
+					org_seq = #{org_seq})
+			ORDER  BY pcm_seq desc
 	</select>
 	
 	 <insert id="programSave" parameterType="java.util.HashMap">

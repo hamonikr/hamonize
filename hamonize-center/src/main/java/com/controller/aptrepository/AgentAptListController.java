@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.GlobalPropertySource;
 
@@ -39,7 +40,7 @@ public class AgentAptListController {
 
 			String inputLine = "";
 
-			while ((inputLine = bufferedReader.readLine()) != null) {
+			while ( !Objects.isNull(inputLine = bufferedReader.readLine()) ) {
 
 				if (inputLine.indexOf("Package") == 0) {
 					list.add(inputLine);
@@ -51,6 +52,7 @@ public class AgentAptListController {
 					list.add(inputLine);
 				}
 			}
+			bufferedReader.close();
 			return list;
 		}
 

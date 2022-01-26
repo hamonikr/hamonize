@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
 <%@ include file="../template/topMenu.jsp" %>
-<%@ include file="../template/topNav.jsp" %>
+
 
 <link rel="stylesheet" type="text/css" href="/css/sgb/common.css">
 <link rel="stylesheet" type="text/css" href="/css/sgb/content.css">

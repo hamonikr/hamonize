@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
-
+<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+<script type="text/javascript" src="/js/rsa/rng.js"></script>
  <script type="text/javascript">
  $(function() {	
 
@@ -10,6 +13,7 @@
 	});
 	var mailFilter = /^[_a-zA-Z0-9-\.]+@[\.a-zA-Z0-9-]+\.[a-zA-Z]+$/;
 	var phoneFilter = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+	var regExpPw = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$/;
 	
 	function goSave(){
 		
@@ -63,14 +67,14 @@
 		
 		if($('#pass_wd').val() == '')
 		{
-			alert('비밀번호는 필수 입력 입니다.');
+			alert('새로운 비밀번호는 필수 입력 입니다.');
 			$('#pass_wd').focus();
 			return true;
 		}
 		
 		if($('#pass_wd_cfm').val() == '')
 		{
-			alert('비밀번호 확인은 필수 입력 입니다.');
+			alert('새로운 비밀번호 확인은 필수 입력 입니다.');
 			$('#pass_wd_cfm').focus();
 			return true;
 		}
@@ -133,36 +137,54 @@
 		var gubun = $("#gubun option:checked").val();
 		$('#gubun').val(gubun);
 		
+		if($('#current_pass_wd').val() == '')
+		{
+			alert('현재 비밀번호는 필수 입력 입니다.');
+			$('#current_pass_wd').focus();
+			return false;
+		}
 		
 		if($('#pass_wd').val() == '')
 		{
 			alert('비밀번호는 필수 입력 입니다. 다시 입력해주시기 바랍니다.');
 			$('#pass_wd').focus();
-			return true;
+			return false;
 		}
 		
 		if($('#pass_wd_cfm').val() == '')
 		{
 			alert('비밀번호 확인은 필수 입력 입니다. 다시 입력해주시기 바랍니다.');
 			$('#pass_wd_cfm').focus();
-			return true;
+			return false;
+		}
+
+		if(!regExpPw.test($('#pass_wd').val()))
+		{
+			alert('비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상만 가능합니다.');
+			$('#pass_wd').focus();
+			return false;
 		}
 		
 		if($('#pass_wd').val() != $('#pass_wd_cfm').val())
 		{
 			alert('비밀번호와 비밀번호 확인이 다릅니다.');
 			$('#pass_wd_cfm').focus();
-			return true;
+			return false;
 		}
-		
-		console.log("passwd==="+$('#pass_wd').val())
+
+		if($('#pass_wd').val() == $('#current_pass_wd').val())
+		{
+			alert('현재 비밀번호는 새로운 비밀번호로 할 수 없습니다.');
+			$('#pass_wd').focus();
+			return false;
+		}
 		
 		if($('#pass_wd').val() == '')
 		{
 			alert('변경할 비밀번호를 입력하세요.');
 			$('#pass_wd').val('');
 			$('#pass_wd').focus();
-			return true;
+			return false;
 			
 		}
 		
@@ -171,13 +193,23 @@
 			alert('변경할 비밀번호를 확인하세요.');
 			$('#pass_wd_cfm').val('');
 			$('#pass_wd_cfm').focus();
-			return true;
+			return false;
 		}
 		
 		var msg = "${result.user_name}(${result.user_id})님 정보를 수정하시겠습니까?";
 	    if(!confirm(msg)){
 	    	return false;
 	    }
+
+		//현재 패스워드 암호화
+		if($('#current_pass_wd').val() != ''){
+			$('#current_pass_wd').val(changeRSA($('#current_pass_wd').val()));
+		}
+		//새로운 패스워드 암호화
+		if($('#pass_wd').val() != ''){
+			$('#pass_wd').val(changeRSA($('#pass_wd').val()));
+			$('#pass_wd_cfm').val(changeRSA($('#pass_wd_cfm').val()));
+		}
 	    
 		$.ajax({
 			type:"POST",
@@ -185,11 +217,18 @@
 			data :  $("#frm").serialize(),
 			dataType : "json",
 			success: function(data, textStatus, jqXHR){
-			   alert('성공적으로 수정 되었습니다.');
-			   location.href = "list.do";
+				if(data == 1){
+					alert('성공적으로 수정 되었습니다.');
+					location.href = "list.do";
+				} else{
+					alert('현재 비밀번호가 틀렸습니다. 확인 후 수정 하시기 바랍니다.');
+					location.reload();
+					return false;
+				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("수정시 에러 : "+" "+ textStatus);
+				location.reload();
 			}
 		});	
 	}
@@ -215,6 +254,15 @@
 			}
 		});	
 	}
+
+
+	function changeRSA(pw){
+		// rsa 암호화	
+		var rsa = new RSAKey();
+		rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
+			
+		return rsa.encrypt(pw);
+	}
 </script>    
 <body>
 
@@ -227,6 +275,10 @@
         <div class="content_con">
             <div class="con_box">
               <h2>관리자 정보 수정</h2>
+			  <form name="form_chk" id="form_chk" method="post">
+				<input type="hidden" id="RSAModulus" name="RSAModulus" value="${publicKeyModulus}" />
+				<input type="hidden" id="RSAExponent" name="RSAExponent" value="${publicKeyExponent}" />
+			</form>
 
 				<form id="frm" name="frm" action="" method="post">
 				<input type="hidden" id="id_check" name="id_check" />
@@ -259,15 +311,21 @@
                                 <td><label for="user_name" class="none"></label><input type="text" name="user_name" id="user_name" value="${result.user_name}" class="input_type1 w100" /></td>
                                 
                             <tr>
+							<tr>
+								<th>* 현재 비밀번호</th>
+								<td>
+									<label for="current_pass_wd" class="none"></label><input type="password" name="current_pass_wd" id="current_pass_wd" class="input_type1" />
+								</td>
+							</tr>	
                             <tr>
-                                <th>* 비밀번호</th>
+                                <th>* 새로운 비밀번호</th>
                                 <td>
                                     <label for="pass_wd" class="none"></label><input type="password" name="pass_wd" id="pass_wd" class="input_type1" />
-                                    <%-- ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상 --%>
+                                    ※ 비밀번호는 영문, 숫자, 특수문자 조합 8자리 이상
                                 </td>
                             </tr>
                             <tr>
-                                <th>* 비밀번호 확인</th>
+                                <th>* 새로운 비밀번호 확인</th>
                                 <td colspan="3">
                                     <label for="pass_wd_cfm" class="none"></label><input type="password" name="pass_wd_cfm" id="pass_wd_cfm" class="input_type1" />
                                 </td>

@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,6 +59,8 @@ public class ActAgentFirewallController {
 	@Autowired
 	private IActAgentLogInOutMapper actAgentLogInOutMapper;
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@RequestMapping(value = "/loginout", method = RequestMethod.POST)
 	public void login(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
@@ -63,12 +68,14 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
+			reader.close();
 
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		System.out.println("json===> " + json);
@@ -110,12 +117,13 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		System.out.println("json===> " + json);
@@ -160,12 +168,13 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		JSONParser jsonParser = new JSONParser();
@@ -206,12 +215,12 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		JSONParser Parser = new JSONParser();
@@ -257,12 +266,12 @@ public class ActAgentFirewallController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 		System.out.println("json===> " + json);
@@ -299,7 +308,7 @@ public class ActAgentFirewallController {
 					int delPolicyVal = getAgentRecoveryMapper.deleteActPolicy(inputVo);
 					getAgentRecoveryMapper.updateDataActAgentBackupRecovery(inputVo);
 				} catch (Exception e) {
-					System.out.println("e===============" + e.getMessage());
+					logger.info("e===============" + e.getMessage());
 				}
 
 			}

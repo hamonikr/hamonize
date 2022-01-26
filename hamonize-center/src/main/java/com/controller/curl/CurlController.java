@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-
 import com.GlobalPropertySource;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IHmprogramMapper;
@@ -207,10 +207,11 @@ public class CurlController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+//			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
 			logger.error("Error reading JSON string: {}", e.getMessage(), e);
 			throw e;
@@ -448,11 +449,11 @@ public class CurlController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
 				logger.debug("line===> {}", line);
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
 			logger.error("Error reading JSON string: {}", e.toString());
 		}

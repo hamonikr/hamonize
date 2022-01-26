@@ -12,4 +12,6 @@ public interface IUpdtPollicyMapper {
 
 	public int updtDeleteProgrm(Map<String, Object> map);
 
+	public int deleteProccessBlockProgrm(Map<String, Object> map);
+
 }

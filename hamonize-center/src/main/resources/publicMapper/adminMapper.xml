@@ -93,6 +93,7 @@
 		</if>
 		DEPT_NAME = #{dept_name},
 		GUBUN = #{gubun},
+		LOGIN_CHECK = 0,
 		UPD_DATE = now()
 		WHERE USER_ID = #{user_id}
 	</update>
@@ -107,6 +108,14 @@
 		COUNT(USER_ID)
 		FROM TBL_ADMIN_USER
 		WHERE USER_ID = #{user_id}
+	</select>
+
+	<select id="adminPasswordCheck" parameterType="com.model.AdminVo" resultType="Integer">
+		SELECT
+		COUNT(USER_ID) as cnt
+		FROM TBL_ADMIN_USER
+		WHERE USER_ID = #{user_id}
+		AND PASS_WD = #{current_pass_wd}
 	</select>
 
 
