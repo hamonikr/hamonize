@@ -15,20 +15,6 @@
 <script type="text/javascript" src="/js/rsa/rng.js"></script>
 	
 <script type="text/javascript">
-	var ip;
-	 (function(window){
-		  var head = document.getElementsByTagName('head')[0];
-		  var script= document.createElement('script');
-		  window.getIP = function(json) {
-		    console.log("json=="+JSON.stringify(json));    
-		    console.log("json=="+json.ip); 
-		    ip = json.ip; 
-		    $("#user_ip").val(ip);
-		  };
-		  script.type= 'text/javascript';
-		  script.src= 'https://api.ipify.org?format=jsonp&callback=getIP';
-		  head.appendChild(script);
-		})(window); 
 
 	function loginRSA(pw){
 		// rsa 암호화	
@@ -106,11 +92,9 @@
 		<input type="hidden" id="RSAModulus" name="RSAModulus" value="${publicKeyModulus}" />
 		<input type="hidden" id="RSAExponent" name="RSAExponent" value="${publicKeyExponent}" />
 	</form>
-
 	<div class="login_wrap">
 		<div class="hamologin">
 			<h1><img alt="login image" src="/images/login_tit.png"></h1>
-
 			<form id="mainform" name="mainform" action="" method="post" onsubmit="fn_signIn();return false;">
 				<input type="hidden" name="user_ip" id="user_ip" class="input_type1" />
 				<ul class="memberin">

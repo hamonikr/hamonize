@@ -54,7 +54,7 @@ function getMonthAgoday(){
 					<div class="dropdown_content" >
 						<a href="/admin/serverlist">환경 설정</a>
 						<a href="/admin/list">관리자 정보 목록</a>
-                        <a href="/admin/info.do">Hamonize 정보</a>
+                        <a href="/admin/info">Hamonize 정보</a>
 					</div>
 				</div></li>
                 <li><a href="/login/logout"><img src="/images/icon_logout.png" alt="로그아웃" /></a></li>
