@@ -9,7 +9,6 @@ import java.util.Objects;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-
 import com.GlobalPropertySource;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IHmprogramMapper;
