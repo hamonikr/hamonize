@@ -5,7 +5,7 @@
 
 <select id="fireWallList" resultType="com.model.PolicyFireWallVo">
 		SELECT sm_seq, sm_name, sm_status, sm_dc, sm_port
-		FROM tbl_policy_firewall_list;
+		FROM tbl_policy_firewall_list where domain = #{domain}
 	</select>
 	
 	<insert id="fireWallSave" parameterType="java.util.HashMap">
@@ -42,13 +42,14 @@
 		select 
     		TA.*,
     		TB.ppm_seq
-		from tbl_policy_firewall_list TA 
+		from tbl_policy_firewall_list TA
 			left outer join 
 			(
 			    select
 			     DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(ppm_seq),',') , ',')::int[]) ppm_seq
 			    from tbl_frwl_applc
 			) TB on TA.sm_seq = TB.ppm_seq
+			where TA.domain = #{mngeVo.domain}
 			order by TA.sm_seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		

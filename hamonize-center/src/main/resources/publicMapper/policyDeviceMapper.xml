@@ -51,6 +51,7 @@
 			     DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(ppm_seq),',') , ',')::int[]) ppm_seq
 			    from tbl_device_applc
 			) TB on TA.sm_seq = TB.ppm_seq
+			where TA.domain = #{mngeVo.domain}
 		order by sm_seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 		

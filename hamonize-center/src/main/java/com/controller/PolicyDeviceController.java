@@ -23,12 +23,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.mapper.IPolicyDeviceMapper;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PolicyDeviceVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.PolicyDeviceService;
+import com.util.AuthUtil;
 import com.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,10 +62,11 @@ public class PolicyDeviceController {
 
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyDeviceVo> pList = null;
-
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		try {
 			OrgVo orgvo = new OrgVo();
 			PolicyDeviceVo vo = new PolicyDeviceVo();
+			vo.setDomain(lvo.getDomain());
 			jsonArray = oService.orgList(orgvo);
 			pList = dService.deviceList(vo);
 
@@ -134,7 +137,8 @@ public class PolicyDeviceController {
 			HttpSession session, HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
-
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		// 페이징
 		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.LayerPopupPaging, pagingVo); // recordSize,
@@ -166,7 +170,8 @@ public class PolicyDeviceController {
 	public Map<String, Object> dManagePopSave(HttpSession session, PolicyDeviceVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		try {
 			dService.devicePopSave(vo);
 
