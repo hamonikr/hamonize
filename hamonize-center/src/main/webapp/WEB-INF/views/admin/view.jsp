@@ -310,7 +310,12 @@
                                 <th>* 성명</th>
                                 <td><label for="user_name" class="none"></label><input type="text" name="user_name" id="user_name" value="${result.user_name}" class="input_type1 w100" /></td>
                                 
-                            <tr>
+														<tr>
+																<th>* 현재 비밀번호</th>
+																<td>
+																	<label for="current_pass_wd" class="none"></label><input type="password" name="current_pass_wd" id="current_pass_wd" class="input_type1" />
+																</td>
+														</tr>	
                             <tr>
                                 <th>* 새로운 비밀번호</th>
                                 <td>

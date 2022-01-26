@@ -32,6 +32,7 @@ import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.PolicyFireWallService;
+import com.util.AuthUtil;
 import com.util.Constant;
 
 @Controller
@@ -54,9 +55,11 @@ public class PolicyFireWallController {
 
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyFireWallVo> pList = null;
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		try {
 			OrgVo orgvo = new OrgVo();
 			PolicyFireWallVo vo = new PolicyFireWallVo();
+			vo.setDomain(lvo.getDomain());
 			jsonArray = oService.orgList(orgvo);
 			pList = fService.firewallList(vo);
 
@@ -129,7 +132,8 @@ public class PolicyFireWallController {
 			HttpSession session, HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
-
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		// 페이징
 		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.LayerPopupPaging, pagingVo);
@@ -158,7 +162,8 @@ public class PolicyFireWallController {
 	public Map<String, Object> dManagePopSave(HttpSession session, PolicyFireWallVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		try {
 			fService.fireWallPopSave(vo);
 

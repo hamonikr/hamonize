@@ -259,7 +259,6 @@ function fnSave(){
 			         <!-- update list -->
 			         <ul class="promlist">
 	        				<c:forEach items="${pList}" var="data" varStatus="status" >
-      							<c:if test="${data.sm_gubun eq 'D'}">
 				             <li>
 				                 <span>
 				                 	<input type="checkbox" name="sm_seq" id="${data.sm_seq}" class="check2" value="<c:out value="${data.sm_seq}" />">
@@ -269,7 +268,6 @@ function fnSave(){
 				                 
 												<p class="card-text"><c:out value="${data.sm_dc}" /></p>
 				             </li>
-			             </c:if>
 	          			</c:forEach>
 			         </ul>
 			         			

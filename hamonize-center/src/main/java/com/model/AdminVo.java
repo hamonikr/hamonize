@@ -29,6 +29,8 @@ public class AdminVo extends PagingVo {
 	private String user_id;
 	@Size(max=300)
 	private String pass_wd;
+	@Transient
+	private String current_pass_wd;
 	@Size(max=50)
 	private String user_name;
 	@Size(max=50)

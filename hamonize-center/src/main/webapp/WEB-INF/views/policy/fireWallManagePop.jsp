@@ -165,7 +165,7 @@ $(document).ready(function() {
 		if(info.length  <= 0){
 			$.alert({
 			    title: 'Alert!',
-			    content:  '디바이스설명을 입력해 주세요!',
+			    content:  '방화벽정보를 입력해 주세요!',
 			    buttons: {
 			        확인: function(){
 			        }

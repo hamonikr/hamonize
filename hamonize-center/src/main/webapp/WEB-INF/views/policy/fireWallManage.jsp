@@ -256,7 +256,6 @@ function fnSave(){
 			         <!-- update list -->
 			         <ul class="promlist">
 	        				<c:forEach items="${pList}" var="data" varStatus="status" >
-      							<c:if test="${data.sm_gubun eq 'P'}">
 				             <li>
 				                 <span>
 				                 	<input type="checkbox" name="sm_seq" id="${data.sm_seq}" class="check2" value="<c:out value="${data.sm_seq}" />">
@@ -266,7 +265,6 @@ function fnSave(){
 				                 
 									<p class="card-text"><c:out value="${data.sm_dc}" /> - <c:out value="${data.sm_port}" /></p>
 				             </li>
-			             </c:if>
 	          			</c:forEach>
 	          			<c:if test="${empty pList}">
 	          			등록된 방화벽 서비스가 없습니다.
