@@ -7,6 +7,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.mapper.IPolicyUpdtMapper;
+import com.model.OrgVo;
+import com.model.PolicyUpdtVo;
+import com.service.AgentAptListService;
+import com.service.OrgService;
+import com.service.PolicyUpdtService;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -18,16 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.mapper.IPolicyUpdtMapper;
-import com.model.OrgVo;
-import com.model.PolicyUpdtVo;
-import com.service.AgentAptListService;
-import com.service.OrgService;
-import com.service.PolicyProgrmService;
-import com.service.PolicyUpdtService;
 
 @Controller
 @RequestMapping("/gplcs")
