@@ -9,6 +9,6 @@ public interface IEqualsHwMapper {
 
 	public int pcMngrModify(EqualsHwVo vo);
 
-	public PcMangrVo getPCinfo (EqualsHwVo pvo);
+	public PcMangrVo getPCinfo (PcMangrVo pvo);
 
 }

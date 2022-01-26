@@ -3,12 +3,15 @@ package com.controller.curl;
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +28,9 @@ public class CurlUnAuthorizedController {
 	@Autowired
 	IUnauthorizedMapper iUnauthorizedMapper;
 
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	/**
 	 * 비인가 디바이스의 접속 로그 에이전트에서 비인가디바이스 접속 로그 전송
 	 * 
@@ -40,12 +46,13 @@ public class CurlUnAuthorizedController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
+//			while (!(line = reader.readLine()).isEmpty()) {
 				json.append(line);
 			}
-
+			reader.close();
 		} catch (Exception e) {
-			System.out.println("Error reading JSON string: " + e.toString());
+			logger.info("Error reading JSON string: " + e.toString());
 		}
 
 

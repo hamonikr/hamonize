@@ -1,6 +1,8 @@
 package com.controller.curl;
 
 import java.io.BufferedReader;
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
@@ -55,9 +57,10 @@ public class CurlEqualsHwController {
 
 		try {
 			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null) {
+			while ( !Objects.isNull(line = reader.readLine()) ) {
 				json.append(line);
 			}
+			reader.close();
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

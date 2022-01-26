@@ -75,7 +75,7 @@
 
 	</update>
 
-	<select id="getPCinfo" parameterType="com.model.EqualsHwVo" resultType="com.model.PcMangrVo" >
+	<select id="getPCinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo" >
 		select * 
 		from tbl_pc_mangr
 		where pc_uuid = #{pc_uuid} 

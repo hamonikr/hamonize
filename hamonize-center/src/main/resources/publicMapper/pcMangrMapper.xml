@@ -236,7 +236,7 @@
 			(select org_nm from tbl_org where seq = org_seq)as deptname,
 			(select all_org_nm from tbl_org where seq = org_seq)as alldeptname,
 			(select org_nm from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_nm,
-			org_seq
+			(select seq from tbl_org where seq = #{pcMangrVo.org_seq} ) as org_seq
 		FROM tbl_pc_mangr
 		<where>
 			1=1
@@ -619,8 +619,7 @@
 
 	<!-- 정책배포결과 업데이트 -->
 	<select id="pcPolicyUpdtList" resultType="map" parameterType="map">
-		SELECT
-    DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver
+	SELECT DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver , PA.state
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER( PARTITION BY TA.debname, TA.gubun ),
@@ -666,8 +665,8 @@
 		<if test="type == 'main'">
 			limit 5
 			</if>
-		--TA.debname,  TA.gubun DESC
-		) PA
+		) PA order by PA.insert_dt desc
+
 	</select>
 
 	<!-- 정책배포결과 프로그램 -->
@@ -721,6 +720,7 @@
 					--ORDER BY pc_uuid DESC
 				)  TA
 			WHERE row_number = 1
+			and TA.progrmname != chr(10)
 			ORDER BY TA.ins_date DESC
 		<if test="type == 'main'">
 			limit 5

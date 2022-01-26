@@ -39,7 +39,7 @@ public class AgentAptListController {
 
 			String inputLine = "";
 
-			while ((inputLine = bufferedReader.readLine()) != null) {
+			while ( !Objects.isNull(inputLine = bufferedReader.readLine()) ) {
 
 				if (inputLine.indexOf("Package") == 0) {
 					list.add(inputLine);
@@ -51,6 +51,7 @@ public class AgentAptListController {
 					list.add(inputLine);
 				}
 			}
+			bufferedReader.close();
 			return list;
 		}
 
