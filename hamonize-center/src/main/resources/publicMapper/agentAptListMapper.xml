@@ -28,8 +28,8 @@
 			USER_NAME,
 			PASS_WD,
 			DEPT_NAME,
-			GUBUN,
-			INSERT_DT
+			STATUS,
+			RGSTR_DATE
 		FROM TBL_ADMIN_USER
 	    WHERE USER_ID = #{user_id}
     </select>
