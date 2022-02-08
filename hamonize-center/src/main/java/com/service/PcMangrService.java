@@ -45,18 +45,7 @@ public class PcMangrService {
 	public int updateUnBlock(PcMangrVo vo) {
 		return pcMangrMapper.updateUnblock(vo);
 	}
-	
-	/*
-	 * public List<PcMangrVo> pcMangrMoveList(PcMangrVo vo, PagingVo pagingVo) {
-	 * 
-	 * HashMap<String, Object> paramMap = new HashMap<String, Object>();
-	 * 
-	 * paramMap.put("pcMangrVo", vo); paramMap.put("pagingVo", pagingVo);
-	 * System.out.println("2222222222222222==="+paramMap.get("pcMangrVo").toString()
-	 * ); List<PcMangrVo> tt = pcMangrMapper.pcMoveInfo(paramMap);
-	 * 
-	 * return tt; }
-	 */
+
 	
 
 }

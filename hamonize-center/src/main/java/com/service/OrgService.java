@@ -50,7 +50,8 @@ public class OrgService {
 	public JSONArray orgList(OrgVo orgvo) throws NamingException {
 		List<OrgVo> orglist = null;
 		JSONArray jsonArray = new JSONArray();
-		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
+		orgvo.setDomain("invesume");
+//		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
 		orglist = orgMapper.orgList(orgvo);
 
 		for (int i = 0; i < orglist.size(); i++) {
@@ -80,13 +81,12 @@ public class OrgService {
 
 		OrgVo newAllOrgName = new OrgVo();
 		String newAllOrgNm = "";
-System.out.println("aaaaaaaaa==========="+orgvo.toString());
+
 		if (orgvo.getSeq() != null) {
 			oldOrgVo = orgMapper.orgOldNm(orgvo);
 			orgPath = orgMapper.groupUpperCode(orgvo);
 			newOrgPath = orgMapper.groupNewUpperCode(orgvo);
 		}
-		System.out.println("orgvo p_seq > " + orgvo.getP_seq());
 
 		if (orgvo.getP_seq() == null) {// 최상위 회사의 부서일 경우
 			orgvo.setP_seq(0);
@@ -204,7 +204,7 @@ System.out.println("aaaaaaaaa==========="+orgvo.toString());
 				// ldap 서버 업데이트
 				con.updateOu(oldOrgVo, orgvo);
 			} else {
-				System.out.println("수정할 사항 없음");
+				logger.info("수정할 사항 없음");
 			}
 		}
 
@@ -222,7 +222,7 @@ System.out.println("aaaaaaaaa==========="+orgvo.toString());
 		OrgVo orgPath = orgMapper.getAllOrgNm(vo);
 		Long org_seq = vo.getOrg_seq();
 		vo.setMove_org_nm(orgPath.getAll_org_nm());
-		vo.setOrg_seq(vo.getOld_org_seq());
+//		vo.setOrg_seq(vo.getOld_org_seq());
 		orgPath = orgMapper.getAllOrgNm(vo);
 		vo.setOrg_seq(org_seq);
 		vo.setAlldeptname(orgPath.getAll_org_nm());
@@ -257,7 +257,7 @@ System.out.println("aaaaaaaaa==========="+orgvo.toString());
 
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-		vo.setOrg_seq(vo.getOld_org_seq());
+//		vo.setOrg_seq(vo.getOld_org_seq());
 		OrgVo orgPath = orgMapper.getAllOrgNm(vo);
 		vo.setAlldeptname(orgPath.getAll_org_nm());
 		con.deletePc(vo);
@@ -272,14 +272,6 @@ System.out.println("aaaaaaaaa==========="+orgvo.toString());
 		con.deleteOu(orgvo);
 
 		int result = 0;
-		//List<OrgVo> childOrg = orgMapper.searchChildDept(orgvo);
-
-		// for (int i = 0; i < childOrg.size(); i++) {
-		// 	// System.out.println("childOrg 삭제할 하위의 seq "+ childOrg.get(i).getSeq());
-		// 	orgMapper.deleteChildUser(childOrg.get(i));
-		// }
-		// orgMapper.deleteChildUser(orgvo);
-
 		result = orgMapper.orgDelete(orgvo);
 
 		return result;

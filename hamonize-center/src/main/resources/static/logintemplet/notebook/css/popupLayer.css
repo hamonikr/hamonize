@@ -1,0 +1,65 @@
+.pop_close {
+    position: absolute;
+    right: 6px;
+    top: 7px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-indent: -9999px;
+    background: url(/images/btn_close.png) no-repeat;
+    background-size: 30px;
+}
+
+#bg_fix {
+    display: block;
+    position: fixed;
+    z-index: 9997;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background: #000;
+    opacity: 0.6;
+    filter: opacity(60);
+}
+
+.popa {
+    width: 900px;
+    margin-left: -450px;
+}
+
+#popupLayer {
+    position: absolute;
+    left: 50%;
+    top: 160px;
+    z-index: 9998;
+    background: #fff;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+#layer_area {
+    width: 1200px;
+    height: 700px;
+    background-color: #fff;
+    display: none;
+    z-index: 1;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 5px;
+    display: inline-block;
+    cursor: pointer;
+}

@@ -77,7 +77,7 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=show", method = RequestMethod.POST)
 	public JSONObject orgView(HttpSession session, Model model, OrgVo orgvo) {
-		
+		System.out.println("aaaaaaaaaaaaaaaaaa");
 		orgvo = oService.orgView(orgvo);
 
 		JSONObject data = new JSONObject();
@@ -107,7 +107,9 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=save", method = RequestMethod.POST)
 	public int orgSave(HttpSession session, Model model, OrgVo vo) throws Exception {
+		System.out.println("lvo==========##########################");
 		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		System.out.println("lvo==========="+ lvo);
 		vo.setDomain(lvo.getDomain());
 		int result = oService.orgSave(vo);
 		return result;

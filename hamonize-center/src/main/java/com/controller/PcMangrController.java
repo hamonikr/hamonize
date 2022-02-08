@@ -145,6 +145,8 @@ public class PcMangrController {
 	@RequestMapping(value = "moveTeam", method = RequestMethod.POST)
 	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
 		int result = 0;
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		result = oService.pcMove(vo);
 		return result;
 
@@ -154,6 +156,9 @@ public class PcMangrController {
 	@RequestMapping(value = "deletePc", method = RequestMethod.POST)
 	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
 		int result = 0;
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
+		result = oService.pcMove(vo);
 		result = oService.deletePc(vo);
 		return result;
 

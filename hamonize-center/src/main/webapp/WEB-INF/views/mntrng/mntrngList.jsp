@@ -1,277 +1,240 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../template/head.jsp" %>
-<link rel="stylesheet" type="text/css" href="/css/ztree/zTreeStyle.css" />
-<script type="text/javascript" src="/js/ztree/jquery.ztree.core.js"></script>
-<script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
-<script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
-<script type="text/javascript" src="/js/common.js"></script>
-<script type="text/javascript" src="/js/ztree/fuzzysearch.js"></script>
+<%@ include file="../template/left.jsp" %>
+
+
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exhide.js"></script>
+<script>
 
+// $.fn.zTree.getZTreeObj("tree").getNodes()[0].checked = true;
 
-
-<style>
-a{
-color: white;
-}
-a:hover{
-color: #0056b3;
-text-decoration: none; 
-}
-#key{
-	width: 90%;
-	border-top: none;
-	border-left: none;
-	border-right: none;
-	border-bottom: 3px solid black;
-	display: table;
-	margin-top: 10px;
-	margin-left: auto; 
-  	margin-right: auto;
-}
-</style>
-
-<script type="text/javascript">
-	var textCutLength = 20;
-	var setting = {
-			view: {
-				selectedMulti: false
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			edit: {
-				enable: true,
-				showRemoveBtn: false,
-				showRenameBtn: false
-			},
-			callback: {
-				beforeClick: beforeClick,
-				onClick: onClick
-			}
-		};
-	var zNodes =[
-		<c:forEach items="${oList}" var="data" varStatus="status" >
-		{ id:"${data.seq}", pId:"${data.p_seq}",
-			<c:if test="${data.section ne 'S'}">
-			name:"${data.org_nm}",
-			icon:"/images/icon_tree1.png"
-				</c:if>
-			<c:if test="${data.section eq 'S'}">
-			name:"${data.org_nm}",
-			icon:"/images/icon_tree2.png"
-				</c:if>
-			,od:"${data.org_ordr}"
-			<c:if test="${data.level eq '0' or data.level eq '1' or data.level eq '2'}">
-			,open:true
-			</c:if>},
-		</c:forEach>				
-	];
-	
-	$(document).ready(function(){
-		setNav('모니터링');
-	//트리 init
-	$.fn.zTree.init($("#tree"), setting, zNodes); 
-	
-	$("#expandAllBtn").bind("click", {type:"expandAll"}, expandNode);
-	$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
-	
-	fuzzySearch('tree','#key',null,true); //initialize fuzzysearch function
-		
-	getMntrngList();
-	
+$(document).ready(function(){
+	$("#btnSave").click(fnSave);
 });
-
-	function getMntrngList(){
-		var url ='/mntrng/pcList';
-		$.post(url,{org_seq:1},
-				function(result){
-						var agrs = result.pcList;
-						var strHtml ="";
-						for(var i =0; i< agrs.length;i++){
-							var uuid = agrs[i].pc_uuid;
-							var hostnameVal = '';
-							if( agrs[i].pc_hostname.length >= textCutLength ){
-				                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
-				           }else{
-				        	   hostnameVal = agrs[i].pc_hostname; 
-				            }
-							if( agrs[i].pc_status == "true"){
-								strHtml += '<li class="on"><a href="pcView?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
-							}else{
-								strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
-							}
-						
-						}
-						$(".monitor_list").append(strHtml);
-						$("#total").append("<font class=\"total\">●</font>TOTAL - "+(parseInt(result.on)+parseInt(result.off))+"대");
-						$("#on").append("<font class=\"on\">●</font>ON - "+result.on+"대");
-						$("#off").append("<font class=\"off\">○</font>OFF - "+result.off+"대");
-				});
-		
-	}
- 
- var log, className = "dark", curDragNodes, autoExpandNode;
-	function setTrigger() {
-		var zTree = $.fn.zTree.getZTreeObj("tree");
-		zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
-	}
-	function beforeClick(treeId, treeNode, clickFlag) {
-		className = (className === "dark" ? "":"dark");
-		return (treeNode.click != false);
-	}
-
-//메뉴펼침, 닫힘
-function expandNode(e) {
-	var zTree = $.fn.zTree.getZTreeObj("tree"),
-	type = e.data.type,
-	nodes = zTree.getSelectedNodes();
-	if (type == "expandAll") {
-		zTree.expandAll(true);
-	} else if (type == "collapseAll") {
-		zTree.expandAll(false);
-	} 
+function beforeClick(treeId, treeNode, clickFlag) {
+	className = (className === "dark" ? "":"dark");
+	return (treeNode.click != false);
 }
-
-
+function onCheck(event, treeId, treeNode) {
+}
 
 //메뉴 Tree onClick
 function onClick(event, treeId, treeNode, clickFlag) {
-		$('.monitor_list').empty();
-		$('#total').empty();
-		$('#on').empty();
-		$('#off').empty();
-		var zTree = $.fn.zTree.getZTreeObj("tree");
-		var node = zTree.getNodeByParam('id', treeNode.pId);
-		$.post("pcList",{org_seq:treeNode.id},
-		function(result){
-				var agrs = result.pcList;
-				var strHtml ="";
-				
-				if(agrs.length > 0){
-					for(var i =0; i< agrs.length;i++){
-						var uuid = agrs[i].pc_uuid;
-						var hostnameVal = '';
-						if( agrs[i].pc_hostname.length >= textCutLength ){
-			                hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
-			           }else{
-			        	   hostnameVal = agrs[i].pc_hostname; 
-			            }
-					 
-						if( agrs[i].pc_status == "true"){
-							strHtml += '<li class="on"><a href="pcView?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
-						}else{
-							strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
-						}
-					}
-				}else{
-					strHtml += "<div class=\"mr-sm-3\">등록된 pc가 없습니다</div>";
-				}
-				$(".monitor_list").append(strHtml);
-				$("#total").append("<font class=\"total\">●</font>TOTAL - "+(parseInt(result.on)+parseInt(result.off))+"대");
-				$("#on").append("<font class=\"on\">●</font>ON - "+result.on+"대");
-				$("#off").append("<font class=\"off\">○</font>OFF - "+result.off+"대");
 
-		});
+
+	$('.monitor_list').empty();
+	$('#total').empty();
+	$('#on').empty();
+	$('#off').empty();
+	var zTree = $.fn.zTree.getZTreeObj("tree");
+	var node = zTree.getNodeByParam('id', treeNode.pId);
+	$.post("/mntrng/pcList",{org_seq:treeNode.id},
+	function(result){
+			var agrs = result.pcList;
+			var strHtml ="";
 			
-	}
-		
-function setCheck() {
-	var zTree = $.fn.zTree.getZTreeObj("tree"),
-	py = $("#py").attr("checked")? "p":"",
-	sy = $("#sy").attr("checked")? "s":"",
-	pn = $("#pn").attr("checked")? "p":"",
-	sn = $("#sn").attr("checked")? "s":"",
-	type = { "Y":py + sy, "N":pn + sn};
-	zTree.setting.check.chkboxType = type;
-	showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
-}
- 
+			if(agrs.length > 0){
+				for(var i =0; i< agrs.length;i++){
+					var uuid = agrs[i].pc_uuid;
+					var hostnameVal = '';
+					if( agrs[i].pc_hostname.length >= textCutLength ){
+						hostnameVal = agrs[i].pc_hostname.substr(0,textCutLength)+'...'; 
+				   }else{
+					   hostnameVal = agrs[i].pc_hostname; 
+					}
+				 
+					if( agrs[i].pc_status == "true"){
+						// strHtml += '<li class="on"><a href="pcView?uuid='+uuid+'" data-toggle="tooltip" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</a></li>'
+						strHtml += '<div class="col-sm-2 col-md-3 padder-v b-r b-light lt">';
+						strHtml += '<span class="fa-stack fa-2x pull-left m-r-sm"> <i class="fa fa-circle fa-stack-2x text-warning"></i> </span>';
+						strHtml += '<a class="clear" href="/mntrng/pcView?uuid=' + uuid +'">';
+						strHtml += '<span class="h3 block m-t-xs"><strong id="bugs">'+hostnameVal+'</strong></span>';
+						strHtml += '<small class="text-muted text-uc">description</small>';
+						strHtml += '</a>';
+						strHtml += '</div>';
+					}else{
+						// strHtml += '<li><div data-toggle="tooltip" data-placement="top" title="'+agrs[i].pc_hostname+'">'+hostnameVal+'</div></li>'	
 
-//등록 처리결과(공통명 : 프로그램명Json )
-function fnSave(){
-	
-	if($("#org_nm").val()==""){
-		alert("부대명을 입력해주세요.");
-		return false;
-	}
-	
-    $('form[name=frm]').append("<input type='hidden' name='type' value='save' />");        
-    $('form[name=frm]').submit();
-    alert("정상적으로 저장되었습니다.");
-    return false;
-}
-//]]>
-</script>
+						strHtml += '<div class="col-sm-2 col-md-3 padder-v b-r b-light lt">';
+						strHtml += '<span class="fa-stack fa-2x pull-left m-r-sm"> <i class="fa fa-circle fa-stack-2x text-dark"></i> </span>';
+						strHtml += '<a class="clear" href="/mntrng/pcView?uuid=' + uuid +'">';
+						strHtml += '<span class="h3 block m-t-xs"><strong id="bugs">'+hostnameVal+'</strong></span>';
+						strHtml += '<small class="text-muted text-uc">description</small>';
+						strHtml += '</a>';
+						strHtml += '</div>';
+					}
+				}
+			}else{
+				strHtml += "<div class=\"mr-sm-3\">등록된 pc가 없습니다</div>";
+			}
+			$(".monitor_list").append(strHtml);
+			$("#total").append("<font class=\"total\">●</font>TOTAL - "+(parseInt(result.on)+parseInt(result.off))+"대");
+			$("#on").append("<font class=\"on\">●</font>ON - "+result.on+"대");
+			$("#off").append("<font class=\"off\">○</font>OFF - "+result.off+"대");
 
-<body>
-	<%@ include file="../template/topMenu.jsp" %>
-	
-	
-	
-	<!-- width 100% 컨텐츠 other 추가 -->
-    <div class="hamo_container other">
-
-        <!-- 좌측 트리 -->
-        <div class="con_left">
-            <div class="left_box">
-                <ul class="location">
-                </ul>
-                <h2 class="tree_head">모니터링</h2>
-
-                <ul class="view_action">
-                    <li id="expandAllBtn">전체열기 </li>
-                    <li id="collapseAllBtn">전체닫기</li>
-                </ul>
-				<input type="search" id="key" value=""  placeholder="조직명을 입력해주세요."/>
-                <!-- 트리 리스트 -->               
-                 <div class="tree_list">
-               <ul id="tree" class="ztree"></ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- 우측 리스트 -->
-        <div class="con_right">
-            <div class="right_box">
-
-                <h3>PC 리스트</h3>
-                <ul class="veiwcheck">
-                	  <li id="total">
-                		</li>
-                    <li id="on">
-                    </li>
-                    <li id="off">
-                    </li>
-                </ul>
-				<form name="frm" method="post" action="orgManage" class="row">					
-					<input type="hidden" name="org_seq"  id="org_seq" value="" />
-					<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
-					<input type="hidden" name="section" id="section" value="" />
-					<ul class="monitor_list"></ul>
-				</form>
-            </div>
-        </div>
-
-
-    </div><!-- //content -->
-	
-	
-	<%@ include file="../template/footer.jsp" %>
-	
-	
-</body>
-<script>
-
-$(function(){
-	$('[data-toggle="tooltip"]').tooltip({
-	html: true,
-	trigger: 'hover focus'
 	});
-});
+
+}
+
+
+</script>
+<section class="scrollable">
+	<section class="hbox stretch">
+		<!-- body left Start  -->
+		<%@ include file="../template/orgTree.jsp" %>
+		<!-- body left End  -->
+
+
+		<!-- body right -->
+		<aside class="bg-white">
+			<section class="vbox">
+				<section class="scrollable">
+					<div class="wrapper">
+
+
+						<section class="panel panel-default">
+
+							<div class="col-sm-12">
+
+
+								<section class="panel panel-default">
+
+									<header class="panel-heading bg-light">
+										<ul class="nav nav-tabs pull-right">
+											<li><a href="#" id="total">total</a></li>
+											<li><a href="#" id="on">●</a></li>
+											<li><a href="#" id="off">○</a></li>
+										</ul>
+										<span class="hidden-sm">조직정보</span>
+									</header>
+
+									<div class="panel-body">
+										<!-- <form role="form"> -->
+										<form name="frm" method="post" action="orgManage" class="row">
+											<input type="hidden" name="org_seq" id="org_seq" value="" />
+											<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
+											<input type="hidden" name="section" id="section" value="" />
+											<!-- <div class="monitor_list"></div> -->
+
+											<div class="row m-l-none m-r-none bg-light lter monitor_list">
+												
+											</div>
+
+										</form>
+
+
+									</div>
+								</section>
+								<!-- </form> -->
+
+							</div>
+
+						</section>
+						
+					</div>
+				</section>
+			</section>
+		</aside>
+
+
+	</section>
+</section>
+
+
+
+<script>
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip({
+			html: true,
+			trigger: 'hover focus'
+		});
+	});
 </script>
 
 
-</html>
+
+<script type="text/javascript">
+	var textCutLength = 20;
+
+	$(document).ready(function () {
+
+		$("#expandAllBtn").bind("click", {
+			type: "expandAll"
+		}, expandNode);
+		$("#collapseAllBtn").bind("click", {
+			type: "collapseAll"
+		}, expandNode);
+
+		fuzzySearch('tree', '#key', null, true); //initialize fuzzysearch function
+
+		getMntrngList();
+
+	});
+
+	function getMntrngList() {
+
+		var url = '/mntrng/pcList';
+		$.post(url, {
+				org_seq: 1
+			},
+			function (result) {
+				var agrs = result.pcList;
+				var mntrngStrHtml = "";
+
+				for (var i = 0; i < agrs.length; i++) {
+					var uuid = agrs[i].pc_uuid,
+						hostnameVal = '';
+
+					if (agrs[i].pc_hostname.length >= textCutLength) {
+						hostnameVal = agrs[i].pc_hostname.substr(0, textCutLength) + '...';
+					} else {
+						hostnameVal = agrs[i].pc_hostname;
+					}
+					if (agrs[i].pc_status == "true") {
+						// mntrngStrHtml += '<li class="on"><a href="pcView?uuid=' + uuid +'" data-toggle="tooltip" title="' +agrs[i].pc_hostname + '">' + hostnameVal + '</a></li>'
+
+						mntrngStrHtml += '<div class="col-sm-2 col-md-3 padder-v b-r b-light lt">';
+						mntrngStrHtml += '<span class="fa-stack fa-2x pull-left m-r-sm"> <i class="fa fa-circle fa-stack-2x text-warning"></i> </span>';
+						mntrngStrHtml += '<a class="clear" href="/mntrng/pcView?uuid=' + uuid +'">';
+						mntrngStrHtml += '<span class="h3 block m-t-xs"><strong id="bugs">'+hostnameVal+'</strong></span>';
+						mntrngStrHtml += '<small class="text-muted text-uc">description</small>';
+						mntrngStrHtml += '</a>';
+						mntrngStrHtml += '</div>';
+
+					} else {
+						// mntrngStrHtml += '<li><div data-toggle="tooltip" data-placement="top" title="' + agrs[i].pc_hostname + '">' + hostnameVal + '</div></li>'
+
+						mntrngStrHtml += '<div class="col-sm-2 col-md-3 padder-v b-r b-light lt">';
+						mntrngStrHtml += '<span class="fa-stack fa-2x pull-left m-r-sm"> <i class="fa fa-circle fa-stack-2x text-dark"></i> </span>';
+						mntrngStrHtml += '<span class="h3 block m-t-xs"><strong id="bugs">'+hostnameVal+'</strong></span>';
+						mntrngStrHtml += '<small class="text-muted text-uc">description</small>';
+						mntrngStrHtml += '</div>';
+
+					}
+
+
+					
+
+
+				}
+				console.log(mntrngStrHtml);
+				$(".monitor_list").append(mntrngStrHtml);
+				$("#total").append("<font class=\"total\"></font>- " + (parseInt(result.on) + parseInt(result.off)) +
+					"대");
+				$("#on").append("<font class=\"on\"></font>- " + result.on + "대");
+				$("#off").append("<font class=\"off\"></font> - " + result.off + "대");
+			});
+
+	}
+
+	var log, className = "dark",
+		curDragNodes, autoExpandNode;
+
+
+
+
+	//]]>
+</script>
+
+
+<%@ include file="../template/footer.jsp" %>
