@@ -249,6 +249,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 				$('form[name=frm] input[name=gugun]').val(agrs.gugun);
 				$('form[name=frm] input[name=all_org_nm]').val(agrs.all_org_nm);
 				$('form[name=frm] input[name=section]').val(agrs.section);
+				$('form[name=frm] input[name=inventory_id]').val(agrs.inventory_id);
+				$('form[name=frm] input[name=group_id]').val(agrs.group_id);
 		
 		});
 			
@@ -305,7 +307,8 @@ function setCheck() {
 				console.log(treeNode.name);
 				console.log(treeNode.id);
 				console.log($("#seq").val());
-				console.log();
+				console.log($("#inventoty_id").val());
+				console.log($("#group_id").val());
 			
 		} else {
 			alert("부서를 선택해 주세요.");
@@ -479,6 +482,8 @@ function fnSave(){
                 	<input type="hidden" name="seq" id="seq" value="" />
 					<input type="hidden" name="section" id="section" value="" />
 					<input type="hidden" name="all_org_nm" id="all_org_nm" value="" />
+					<input type="hidden" name="inventory_id" id="inventory_id" value="" />
+					<input type="hidden" name="group_id" id="group_id" value="" />
                 <div class="board_view mT20" id="org_info">
                     <table>
                         <colgroup>

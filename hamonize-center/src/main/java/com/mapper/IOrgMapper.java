@@ -41,8 +41,12 @@ public interface IOrgMapper {
 	public OrgVo getAllOrgNm(PcMangrVo pvo);
 
 	// 하위 부서/팀에 소속된 유저 삭제
-    public int deleteChildUser(OrgVo orgVo);
+  public int deleteChildUser(OrgVo orgVo);
 
 	public List<OrgVo> getTeamList();
+
+	public int addAwxId(OrgVo gvo);
+	
+	public int addDownAwxId(OrgVo gvo);
 
 }

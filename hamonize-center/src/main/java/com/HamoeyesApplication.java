@@ -16,6 +16,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootApplication
 public class HamoeyesApplication {
@@ -67,6 +68,15 @@ public class HamoeyesApplication {
 		registrationBean.setOrder(1);
 		registrationBean.addUrlPatterns("/mntrng/*","/org/*","/pcMngr/*","/auditLog/*","/admin/*");
 		return registrationBean;
+	}
+
+	@Bean
+	public WebClient webClient()
+	{
+		return WebClient.builder()
+		.defaultHeaders(header -> header.setBasicAuth("admin","password"))
+		.baseUrl("http://192.168.0.15")
+		.build();
 	}
 
 }
