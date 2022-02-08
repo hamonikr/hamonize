@@ -46,6 +46,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 		$('form[name=frm] input[name=gugun]').val(agrs.gugun);
 		$('form[name=frm] input[name=all_org_nm]').val(agrs.all_org_nm);
 		$('form[name=frm] input[name=section]').val(agrs.section);
+		$('form[name=frm] input[name=inventory_id]').val(agrs.inventory_id);
+		$('form[name=frm] input[name=group_id]').val(agrs.group_id);
 	
 	});
 
@@ -72,7 +74,6 @@ $(document).ready(function () {
 				<section class="scrollable">
 					<div class="wrapper"> 
 
-
 						<section class="panel">
 
 							<div class="col-sm-12">
@@ -86,6 +87,8 @@ $(document).ready(function () {
 													<input type="hidden" name="seq" id="seq" value="" />
 													<input type="hidden" name="section" id="section" value="" />
 													<input type="hidden" name="all_org_nm" id="all_org_nm" value="" />
+													<input type="hidden" name="inventory_id" id="inventory_id" value="" />
+													<input type="hidden" name="group_id" id="group_id" value="" />
 												<div class="form-group">
 													<label>상위부서</label>
 													<input type="text" class="form-control" name="p_org_nm" id="p_org_nm"  placeholder="Enter email">

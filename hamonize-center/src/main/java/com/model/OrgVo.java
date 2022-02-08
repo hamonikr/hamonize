@@ -51,6 +51,8 @@ public class OrgVo {
 	private String section;
 	private Timestamp rgstr_date;
 	private Timestamp updt_date;
+	private Long inventory_id;
+	private Long group_id;
 	@Transient
 	private String orgname;
 	@Transient
