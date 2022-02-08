@@ -41,7 +41,8 @@ public class OrgService {
 	public JSONArray orgList(OrgVo orgvo) throws NamingException {
 		List<OrgVo> orglist = null;
 		JSONArray jsonArray = new JSONArray();
-		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
+		orgvo.setDomain("invesume");
+//		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
 		orglist = orgMapper.orgList(orgvo);
 
 		for (int i = 0; i < orglist.size(); i++) {

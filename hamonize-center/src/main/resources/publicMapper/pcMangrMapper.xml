@@ -220,75 +220,74 @@
 
 	<!-- PcController.mngrListInfo -->
 	<select id="pcListInfo" resultType="com.model.PcMangrVo" parameterType="hashmap">
-		SELECT 
-			domain,
-			seq, 
-			pc_status, 
-			pc_cpu, 
-			pc_memory, 
-			pc_disk, 
-			pc_macaddress, 
-			pc_guid, 
-			pc_ip, 
-			RGSTR_DATE, 
-			UPDT_DATE,
-			pc_hostname,
-			pc_os,
-			pc_change,
-			pc_vpnip,
-			(select org_nm from tbl_org a where a.seq = org_seq and a.domain = #{pcMangrVo.domain})as deptname,
-			(select all_org_nm from tbl_org a where a.seq = org_seq and a.domain = #{pcMangrVo.domain})as alldeptname,
-			(select org_nm from tbl_org a where a.seq = #{pcMangrVo.org_seq} and a.domain = #{pcMangrVo.domain}) as org_nm,
-			org_seq
-		FROM tbl_pc_mangr
+		
+		select 
+		ta.domain,
+			tb.seq, 
+			tb.pc_status, 
+			tb.pc_cpu, 
+			tb.pc_memory, 
+			tb.pc_disk, 
+			tb.pc_macaddress, 
+			tb.pc_guid, 
+			tb.pc_ip, 
+			tb.RGSTR_DATE, 
+			tb.UPDT_DATE,
+			tb.pc_hostname,
+			tb.pc_os,
+			tb.pc_change,
+			tb.pc_vpnip,
+			ta.org_nm as deptname,
+			ta.all_org_nm as alldeptname,
+			ta.org_nm,
+			tb.org_seq
+		from tbl_org ta , tbl_pc_mangr  tb
 		<where>
-			1=1
-			and domain = #{pcMangrVo.domain}
+			ta.domain  = #{pcMangrVo.domain}
+			and ta."domain"  = tb."domain" 
+			and ta.seq= tb.org_seq
 			<if test="pcMangrVo.org_seq != null and pcMangrVo.org_seq != ''">
-		and org_seq in (
-				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-				from tbl_org a
-				where a.seq = #{pcMangrVo.org_seq}
-				and a.domain = #{pcMangrVo.domain}
-				union all
-				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and a.domain = so.domain and not cycle)
-				select seq
-				from search_org
+				and org_seq in (
+					with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+					select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+					from tbl_org a
+					where a.seq = #{pcMangrVo.org_seq}
+					and a.domain = #{pcMangrVo.domain}
+					union all
+					select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+					from tbl_org a, search_org so 
+					where a.p_seq = so.seq and a.domain = so.domain and not cycle)
+					select seq
+					from search_org
 				)
-		</if>
-			<if test="pcMangrVo.pc_change != null and pcMangrVo.pc_change != ''">
-		and pc_change != 'C' and pc_change != ''
-		</if>
+			</if>
+		
 			<if test="pcMangrVo.txtSearch != null and pcMangrVo.txtSearch != ''">
-				<if test="pcMangrVo.keyWord == 1 ">
-				and (select sido from tbl_org where seq = org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
-			</if>
 				<if test="pcMangrVo.keyWord == 2 ">
-				and (select org_nm from tbl_org where seq = org_seq) = #{pcMangrVo.txtSearch}
-			</if>
+					and LOWER(ta.org_nm) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%'
+				</if>
 				<if test="pcMangrVo.keyWord == 3 ">
-				and pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
-			</if>
+					and tb.pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
+				</if>
 				<if test="pcMangrVo.keyWord == 4 ">
-				and pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
-			</if>
+					and tb.pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
+				</if>
 				<if test="pcMangrVo.keyWord == 5 ">
-				and LOWER(pc_hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%'
-			</if>
+					and pc_LOWER(tb.hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%'
+				</if>
 				<if test="pcMangrVo.keyWord == 0 ">
-				and ((select sido from tbl_org where seq = org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
-				or (select org_nm from tbl_org where seq = org_seq) like '%' || #{pcMangrVo.txtSearch} || '%'
-				or pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
-				or pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
-				or LOWER(pc_hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%')
+					and (
+						LOWER(ta.org_nm) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%'
+						or tb.pc_ip like '%' || #{pcMangrVo.txtSearch} || '%'
+						or tb.pc_macaddress like '%' || #{pcMangrVo.txtSearch} || '%'
+						or LOWER(tb.pc_hostname) like '%' || LOWER(#{pcMangrVo.txtSearch}) || '%'
+					)
+				</if>
 			</if>
-			</if>
-
 		</where>
-		order by seq desc
+		
+		
+		order by ta.seq desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
 
@@ -377,53 +376,49 @@
 
 
 	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">
-		SELECT 
-			count(*)  as tbl_cnt
-		FROM tbl_pc_mangr
+		select count(*) as tbl_cnt  
+		from tbl_org ta , tbl_pc_mangr  tb
 		<where>
-			1=1
-			and domain = #{domain}
+			ta.domain  = #{domain}
+			and ta."domain"  = tb."domain" 
+			and ta.seq= tb.org_seq
 			<if test="org_seq != null and org_seq != ''">
-		and org_seq in (
-				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-				from tbl_org a
-				where a.seq = #{org_seq}
-				and a.domain = #{domain}
-				union all
-				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and a.domain = so.domain and not cycle)
-				select seq
-				from search_org
+				and org_seq in (
+					with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+					select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+					from tbl_org a
+					where a.seq = #{org_seq}
+					and a.domain = #{domain}
+					union all
+					select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+					from tbl_org a, search_org so 
+					where a.p_seq = so.seq and a.domain = so.domain and not cycle)
+					select seq
+					from search_org
 				)
-		</if>
-			<if test="pc_change != null and pc_change != ''">
-		and pc_change != 'C' and pc_change != ''
-		</if>
+			</if>
+		
 			<if test="txtSearch != null and txtSearch != ''">
-				<if test="keyWord == 1 ">
-				and (select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
-			</if>
 				<if test="keyWord == 2 ">
-				and (select org_nm from tbl_org where seq = org_seq) = #{txtSearch}
-			</if>
+					and org_nm like '%' || #{txtSearch} || '%'
+				</if>
 				<if test="keyWord == 3 ">
-				and pc_ip like '%' || #{txtSearch} || '%'
-			</if>
+					and pc_ip like '%' || #{txtSearch} || '%'
+				</if>
 				<if test="keyWord == 4 ">
-				and pc_macaddress like '%' || #{txtSearch} || '%'
-			</if>
+					and pc_macaddress like '%' || #{txtSearch} || '%'
+				</if>
 				<if test="keyWord == 5 ">
-				and pc_hostname like '%' || #{txtSearch} || '%'
-			</if>
+					and pc_hostname like '%' || #{txtSearch} || '%'
+				</if>
 				<if test="keyWord == 0 ">
-				and ((select sido from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
-				or (select org_nm from tbl_org where seq = org_seq) like '%' || #{txtSearch} || '%'
-				or pc_ip like '%' || #{txtSearch} || '%'
-				or pc_macaddress like '%' || #{txtSearch} || '%'
-				or pc_hostname like '%' || #{txtSearch} || '%')
-			</if>
+					and (
+						org_nm like '%' || #{txtSearch} || '%'
+						or pc_ip like '%' || #{txtSearch} || '%'
+						or pc_macaddress like '%' || #{txtSearch} || '%'
+						or pc_hostname like '%' || #{txtSearch} || '%'
+					)
+				</if>
 			</if>
 		</where>
 	</select>

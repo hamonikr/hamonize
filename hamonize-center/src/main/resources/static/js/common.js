@@ -120,32 +120,32 @@ var getError = function(xhr, status, err){
 function getPaging(startPage,endPage,totalPageSize,currentPage,viewName){
 	var pagingHtml = '';
 	
-	//pagingHtml+='<div class="page_num">';
-	pagingHtml+='<div class="inner">';
-	pagingHtml+='<a href="javascript:prevPage('+viewName+','+currentPage+');"><img src="/images/icon_prev.gif" alt="앞으로"  width="6px"/></a>';
+	// pagingHtml+='<div class="inner">';
+	// pagingHtml+='<a href="javascript:prevPage('+viewName+','+currentPage+');"><img src="/images/icon_prev.gif" alt="앞으로"  width="6px"/></a>';
+	// for(startPage; startPage <= endPage; startPage++ ){
+	// 	if(startPage == currentPage){
+	// 		pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');" class="current">'+startPage+'</a>';
+	// 	} else {
+	// 		pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');">'+startPage+'</a>';
+	// 	}
+	// }
+	// pagingHtml += '<a href="javascript:nextPage('+viewName+','+currentPage+','+totalPageSize+');"><img src="/images/icon_next.gif" alt="다음"  width="6px" /></a>';
+	// pagingHtml += '</div>';    
+
+	pagingHtml += '<div class="dataTables_paginate paging_full_numbers" >';
+	pagingHtml += '<a href="javascript:prevPage('+viewName+','+currentPage+');" class="previous paginate_button paginate_button_disabled">Previous</a>';
+	pagingHtml += '<span>';
+	
 	for(startPage; startPage <= endPage; startPage++ ){
 		if(startPage == currentPage){
-			pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');" class="current">'+startPage+'</a>';
+			pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');" class="paginate_active">'+startPage+'</a>';
 		} else {
 			pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');">'+startPage+'</a>';
 		}
 	}
-	pagingHtml += '<a href="javascript:nextPage('+viewName+','+currentPage+','+totalPageSize+');"><img src="/images/icon_next.gif" alt="다음"  width="6px" /></a>';
-	pagingHtml += '</div>';    
-	//pagingHtml += '</div>';
-	
-	
-	/*pagingHtml += '<ul class="pagination">';
-	pagingHtml += '<li class="paginate_button page-item previous disabled" ><a style="height:20px;" href="javascript:prevPage('+viewName+','+currentPage+');"><i class="fa fa-chevron-left page-link"></i></a></li>';
-	for(startPage; startPage <= endPage; startPage++ ){
-		if(startPage == currentPage){
-			pagingHtml += '<li class="paginate_button page-item active"><a href="javascript:searchView('+viewName+','+startPage+');" class="page-link">'+startPage+'</a></li>';
-		} else {
-			pagingHtml += '<li class="paginate_button page-item "><a href="javascript:searchView('+viewName+','+startPage+');" class="page-link">'+startPage+'</a></li>';
-		}
-	}
-	pagingHtml += '<li class="paginate_button page-item next disabled"><a style="height:20px;" href="javascript:nextPage('+viewName+','+currentPage+','+totalPageSize+');"><i class="fa fa-chevron-right page-link"></i></a></li>';
-	pagingHtml += '</ul>';*/
+	pagingHtml += '</span>';
+	pagingHtml += '<a href="javascript:nextPage('+viewName+','+currentPage+','+totalPageSize+');" class="next paginate_button">Next</a>';
+	pagingHtml += '</div>';
 
 	return pagingHtml;
 }

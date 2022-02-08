@@ -91,7 +91,9 @@ public class PcMangrController {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		System.out.println("lvo.getDomain()===="+lvo.getDomain());
 		vo.setDomain(lvo.getDomain());
+		System.out.println("===========++?? "+ vo);
 		// 페이징
 		pagingVo.setCurrentPage(vo.getPcListInfoCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);

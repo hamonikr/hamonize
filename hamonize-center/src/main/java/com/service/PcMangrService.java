@@ -19,7 +19,7 @@ public class PcMangrService {
 	public List<PcMangrVo> pcMangrList(PcMangrVo vo, PagingVo pagingVo) {
 
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
-
+System.out.println("===========vo===========++"+ vo);
 		paramMap.put("pcMangrVo", vo);
 		paramMap.put("pagingVo", pagingVo);
 		List<PcMangrVo> tt = pcMangrMapper.pcListInfo(paramMap);
