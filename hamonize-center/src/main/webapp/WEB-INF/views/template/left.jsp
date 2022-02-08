@@ -174,10 +174,6 @@
                                     <i class="fa fa-thumb-tack"></i>
                                     <span>알림</span>
                                 </a>
-
-                                
-
-
                             </li>
                             <li>
                                 <a href="javascript:;" data-toggle="dropdown" data-target="#settingsLayer">

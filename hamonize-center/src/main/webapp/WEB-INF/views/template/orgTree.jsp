@@ -39,7 +39,7 @@
 						<button class="btn btn-default" id="btnDelOrg" name="btnDelOrg"><i class="fa fa-trash-o"></i> 삭제</button>
 					</div>
 				</div>
-				<input type="text" name="pagegubun" id="pagegubun" value="">
+				<input type="hidden" name="pagegubun" id="pagegubun" value="">
 			</div>
 		</section>
 	</section>
@@ -58,28 +58,34 @@
 					enable: true
 				}
 			},
-			edit: {
-				drag: {
-					autoExpandTrigger: true,
-					prev: dropPrev,
-					inner: dropInner,
-					next: dropNext
-				}, 
-				enable: true,
-				showRemoveBtn: false,
-				showRenameBtn: false
+			check: {
+				enable: false,
+				chkboxType: { "Y" : "s", "N" : "ps" }
 			},
+			// edit: {
+			// 	drag: {
+			// 		autoExpandTrigger: true,
+			// 		prev: dropPrev,
+			// 		inner: dropInner,
+			// 		next: dropNext
+			// 	}, 
+			// 	enable: true,
+			// 	showRemoveBtn: false,
+			// 	showRenameBtn: false
+			// },
 			callback: {
-				beforeDrag: beforeDrag,
-				beforeDrop: beforeDrop,
-				beforeDragOpen: beforeDragOpen,
-				onDrag: onDrag,
-				onDrop: onDrop,
-				onExpand: onExpand,
+				// beforeDrag: beforeDrag,
+				// beforeDrop: beforeDrop,
+				// beforeDragOpen: beforeDragOpen,
+				// onDrag: onDrag,
+				// onDrop: onDrop,
+				// onExpand: onExpand,
 				beforeClick: beforeClick,
+				onCheck: onCheck, // checkbox click Event
 				onClick: onClick
 			}
 		};
+		
 	var zNodes =[
 		<c:forEach items="${oList}" var="data" varStatus="status" >
 		{ id:"${data.seq}", pId:"${data.p_seq}",domain:"${data.domain}",
@@ -97,46 +103,39 @@
 		</c:forEach>				
 	];
 	
-	console.log(zNodes)
 	$(document).ready(function(){
-// 		setNav('조직관리');
-	//트리 init
-	$.fn.zTree.init($("#tree"), setting, zNodes); 
-	var treeObj =  $.fn.zTree.getZTreeObj("tree");
-	var sNodes = treeObj.getSelectedNodes();
-	// console.log(sNodes.length);
-	if (sNodes.length > 0) {
-		var isOpen = sNodes[2].open;
-	}
-	//최상위부서가 없을시 도메인명으로 자동등록
-	if (treeObj.getNodes().length < 1) {
-		if(confirm("최상위 부서가 등록되지 않았습니다. 등록하시겠습니까?")){
-				$.ajax({
-				url: '/org/orgManage',							// Any URL
-				type: 'post',
-				data: {type:'save',org_nm:'${domain}',all_org_nm:'',p_org_nm:'',section:''},                 // Serialize the form data
-				success: function (data) { 					// If 200 OK
-					location.reload();
-				},
-				error: function (xhr, text, error) {              // If 40x or 50x; errors
-					alert("최상위 부서가 등록되지 않았습니다. QnA에 문의 주기시 바랍니다.");
-					return false;
-				}
-			});
+
+		//트리 init
+		$.fn.zTree.init($("#tree"), setting, zNodes); 
+		var treeObj =  $.fn.zTree.getZTreeObj("tree");
+		var sNodes = treeObj.getSelectedNodes();
+		if (sNodes.length > 0) {
+			var isOpen = sNodes[2].open;
 		}
-	}
-	
-	$("#expandAllBtn").bind("click", {type:"expandAll"}, expandNode);
-	$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
-	$("#btnAddOrg").bind("click", {isParent:false}, addOrgcht);
-	$("#btnAddOrg_s").bind("click", {isParent:false}, addOrgcht_s);
-	$("#btnDelOrg").bind("click", removeOrgcht);
 		
-	//등록버튼
-	$("#btnSave").click(fnSave);
-	
-	//순서 변경저장
-    //$("#btnChange").click(fnChange);	
+		if (treeObj.getNodes().length < 1) {
+			if(confirm("최상위 부서가 등록되지 않았습니다. 등록하시겠습니까?")){
+					$.ajax({
+					url: '/org/orgManage',							// Any URL
+					type: 'post',
+					data: {type:'save',org_nm:'${domain}',all_org_nm:'',p_org_nm:'',section:''},                 // Serialize the form data
+					success: function (data) { 					// If 200 OK
+						location.reload();
+					},
+					error: function (xhr, text, error) {              // If 40x or 50x; errors
+						alert("최상위 부서가 등록되지 않았습니다. QnA에 문의 주기시 바랍니다.");
+						return false;
+					}
+				});
+			}
+		}
+		
+		$("#expandAllBtn").bind("click", {type:"expandAll"}, expandNode);
+		$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
+		$("#btnAddOrg").bind("click", {isParent:false}, addOrgcht);
+		$("#btnAddOrg_s").bind("click", {isParent:false}, addOrgcht_s);
+		$("#btnDelOrg").bind("click", removeOrgcht);
+		
 	
 });
  $(document).on("click", ':button',  function() {
@@ -239,10 +238,7 @@
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
 	}
-	function beforeClick(treeId, treeNode, clickFlag) {
-		className = (className === "dark" ? "":"dark");
-		return (treeNode.click != false);
-	}
+	
 //메뉴펼침, 닫힘
 function expandNode(e) {
 	var zTree = $.fn.zTree.getZTreeObj("tree"),
@@ -451,10 +447,10 @@ function fnSave(){
 		case '/mntrng/pcControlList' :  $("#navInfo").text('Home / 모니터링');  $("#orgTreeBtnLayer").hide(); $("#pagegubun").val('mntrng'); break;
 		
 		case '/org/orgManage' :  $("#navInfo").text('Home / 조직관리' ); $("#pagegubun").val('org'); break;
-		case '/pcMngr/pcMngrList' :  $("#navInfo").text('Home / PC관리' ); $("#pagegubun").val('mntrnglist');  break;
+		case '/pcMngr/pcMngrList' :  $("#navInfo").text('Home / PC관리' );  $("#orgTreeBtnLayer").hide();  $("#pagegubun").val('mntrnglist');  break;
 
-		case '/gplcs/umanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 설치 관리' ); break;
-		case '/gplcs/pmanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 차단 관리' ); break;
+		case '/gplcs/umanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 설치 관리' ); $("#orgTreeBtnLayer").hide();   setting.check.enable=true; break;
+		case '/gplcs/pmanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 차단 관리' ); $("#orgTreeBtnLayer").hide();   setting.check.enable=true;  break;
 		case '/gplcs/fmanage' :  $("#navInfo").text('Home / 정책관리 / 방화벽관리' ); break;
 		case '/gplcs/dmanage' :  $("#navInfo").text('Home / 정책관리 / 디바이스관리' ); break;
 		case '/auditLog/updateCheckLog' :  $("#navInfo").text('Home / 정책관리 / 정책배포결과' ); break;

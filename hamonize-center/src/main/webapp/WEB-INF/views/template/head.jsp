@@ -11,7 +11,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Notebook | Web Application</title>
+  <title>Hamonize | Web Application</title>
   <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   
@@ -36,6 +36,7 @@
 <script type="text/javascript" src="/js/ztree/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exedit.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/js/ztree/fuzzysearch.js"></script>
 
 
 <script type="text/javascript" src="/js/common.js"></script>

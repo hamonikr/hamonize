@@ -3,10 +3,20 @@
 <%@ include file="../template/left.jsp" %>
 
 
-<script type="text/javascript" src="/js/ztree/fuzzysearch.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exhide.js"></script>
 <script>
 
+// $.fn.zTree.getZTreeObj("tree").getNodes()[0].checked = true;
+
+$(document).ready(function(){
+	$("#btnSave").click(fnSave);
+});
+function beforeClick(treeId, treeNode, clickFlag) {
+	className = (className === "dark" ? "":"dark");
+	return (treeNode.click != false);
+}
+function onCheck(event, treeId, treeNode) {
+}
 
 //메뉴 Tree onClick
 function onClick(event, treeId, treeNode, clickFlag) {

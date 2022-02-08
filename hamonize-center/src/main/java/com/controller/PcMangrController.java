@@ -91,9 +91,7 @@ public class PcMangrController {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		LoginVO lvo = AuthUtil.getLoginSessionInfo();
-		System.out.println("lvo.getDomain()===="+lvo.getDomain());
 		vo.setDomain(lvo.getDomain());
-		System.out.println("===========++?? "+ vo);
 		// 페이징
 		pagingVo.setCurrentPage(vo.getPcListInfoCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
@@ -147,6 +145,8 @@ public class PcMangrController {
 	@RequestMapping(value = "moveTeam", method = RequestMethod.POST)
 	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
 		int result = 0;
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		result = oService.pcMove(vo);
 		return result;
 
@@ -156,6 +156,9 @@ public class PcMangrController {
 	@RequestMapping(value = "deletePc", method = RequestMethod.POST)
 	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
 		int result = 0;
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
+		result = oService.pcMove(vo);
 		result = oService.deletePc(vo);
 		return result;
 

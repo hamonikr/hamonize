@@ -4,7 +4,12 @@
 
 
 <script>
-
+function beforeClick(treeId, treeNode, clickFlag) {
+	className = (className === "dark" ? "":"dark");
+	return (treeNode.click != false);
+}
+function onCheck(event, treeId, treeNode) {
+}
 //메뉴 Tree onClick
 function onClick(event, treeId, treeNode, clickFlag) {
 
@@ -45,6 +50,11 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	});
 
 }
+
+$(document).ready(function () {
+	//등록버튼
+	$("#btnSave").click(fnSave);
+});
 
 
 </script>
