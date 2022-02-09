@@ -9,8 +9,8 @@ Restart=always
 Type=simple
 Restart=always
 RestartSec=5
-WorkingDirectory=/usr/share/hamonize-agent
-ExecStart=/usr/share/hamonize-agent/hamonize-agent
+WorkingDirectory=/usr/share/hamonize-agent 
+ExecStart=/usr/share/hamonize-agent/hamonize-agent --start
 
 # make sure log directory exists and owned by syslog
 PermissionsStartOnly=true

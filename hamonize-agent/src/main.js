@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const path = require("path");
 const request = require('request');
 const fetch = require('node-fetch');
@@ -18,6 +20,7 @@ FnMkdir();
 var centerUrl = getCenterInfo();
 var DEFAUT_POLLTIME = 10000; //10s
 
+
 function myFunc(arg) {
 
 	sysInfo();
@@ -32,9 +35,7 @@ function myFunc(arg) {
 
 	}
 }
-
-
-setTimeout(myFunc, 6000, 'funky');
+// setTimeout(myFunc, 6000, 'funky');
 
 function hamonizeVersion() {
 
@@ -45,8 +46,13 @@ function hamonizeVersion() {
 
 
 }
-let networkChk = async function () {
 
+//========================================================================
+//== Agent Polling Time Settings =========================================
+//========================================================================
+
+/** Network Check  */
+let networkChk = async function () {
 	var ping = require('ping');
 	var ip = require("ip");
 	var ipAliveStatus = false;
@@ -59,55 +65,47 @@ let networkChk = async function () {
 	return res.alive
 };
 
+
+
 function getPollTime(uuid) {
 	log.info("----getPollTime Func start----");
 
 	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
-
 	var retval = 0;
+	Polling(1000);
+	// networkChk().then(
+	// 	(value) => {
+	// 		console.log("network-------value----------" + value);
+	// 		if (value) {
+	// 			http.get(setUrl, (res) => {
+	// 				res.on('data', (data) => {
+	// 					var pollingObj = JSON.parse(data);
 
-	networkChk().then(
-		(value) => {
-			console.log(value)
-			if (value) {
-				http.get(setUrl, (res) => {
-					res.on('data', (data) => {
-						var pollingObj = JSON.parse(data);
+	// 					if (pollingObj.data != 'nodata') {
+	// 						var pollingObj = JSON.parse(data);
+	// 						log.info("//====================================");
+	// 						log.info("//== Polling time has changed... " + pollingObj.data);
+	// 						log.info("//====================================");
 
-						if (pollingObj.data != 'nodata') {
-							var pollingObj = JSON.parse(data);
-							log.info("//====================================");
-							log.info("//== Polling time has changed... " + pollingObj.data);
-							log.info("//====================================");
+	// 						retval = pollingObj.data * 1000;
+	// 						log.info("//== Polling time has result... " + retval);
+	// 						Polling(retval);
 
-							retval = pollingObj.data * 1000;
-							log.info("//== Polling time has result... " + retval);
-							Polling(retval);
+	// 					} else {
+	// 						Polling(DEFAUT_POLLTIME);
+	// 						log.info("//== Polling time doesn't changes..");
+	// 					}
+	// 				});
+	// 			});
+	// 		} else {
+	// 			log.info("network close~");
+	// 			retval = 10000;
+	// 			Polling(retval);
+	// 		}
+	// 	}
 
-						} else {
-							Polling(DEFAUT_POLLTIME);
-							log.info("//== Polling time doesn't changes..");
-						}
-					});
-				});
-			} else {
-				log.info("network close~");
-				retval = 10000;
-				Polling(retval);
-			}
-		}
-
-	);
-
-
-
+	// );
 }
-
-
-
-
-console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
-getPollTime(uuidVal);
 
 
 function Polling(time) {
@@ -122,15 +120,15 @@ function Polling(time) {
 			(value) => {
 				console.log(value)
 				if (value) {
-					getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
-					getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
-					getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
-					getRecoveryDataCall(uuidVal); // Call 복구 정책 
-					getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
+					// getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
+					// getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
+					// getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
+					// getRecoveryDataCall(uuidVal); // Call 복구 정책 
+					// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
 					ipStatusCheck();
-					getBackupDataCall(uuidVal); // Call 백업 주기 정책 
-					sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-					sysInfo(); // hw 변경로그
+					// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
+					// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
+					// sysInfo(); // hw 변경로그
 				} else {
 					log.info("network close~");
 				}
@@ -144,6 +142,9 @@ function Polling(time) {
 	poller.poll(time);
 
 }
+
+// console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
+// getPollTime(uuidVal);
 
 
 
@@ -1300,7 +1301,7 @@ const sysInfo = async () => {
 					hddid: diskSerialNum,
 					ipaddr: ipinfo.address(),
 					uuid: machindid,
-					user: usernm, 
+					user: usernm,
 					macaddr: pcuuid.macs[0],
 					cpuinfo: cpuinfo
 				}]
@@ -1317,31 +1318,40 @@ const sysInfo = async () => {
 }
 
 
-// const loginInfoAction = async () => {
-// 	log.info("=========login=======================");
-// 	var moment = require('moment');
-// 	require('moment-timezone');
-// 	moment.tz.setDefault("Asia/Seoul");
-// 	var date = moment().format('YYYY-MM-DD HH:mm:ss');
 
-// 	const machineIdSync = require('node-machine-id').machineIdSync;
-// 	let machindid = machineIdSync({
-// 		original: true
-// 	});
 
-// 	var unirest = require('unirest');
-// 	unirest.post('http://' + centerUrl + '/act/loginout')
-// 		.header('content-type', 'application/json')
-// 		.send({
-// 			events: [{
-// 				datetime: date,
-// 				uuid: machindid,
-// 				// user: usernm,
-// 				gubun: 'LOGIN'
-// 			}]
-// 		})
-// 		.end(function (response) {
-// 			// console.log("response.body==="+JSON.stringify(response));
-// 			console.log("\loginInfoAction      .body===" + response.body);
-// 		});
-// }
+// ======================
+const { Command } = require('commander');
+// const exec = require('child_process').exec;
+
+const program = new Command();
+
+program
+    // .option('-n, --name <name>', 'file name')
+    .option('-n, --name <name>', 'file name')
+    .option('--test')
+	.option('--start')
+    .parse();
+
+console.log(program.opts().test);
+console.log(program.opts().name);
+console.log(program.opts().start);
+
+if(program.opts().hamonizeInstall){
+    console.log("aaaaaaaaaaaaaa");
+}
+
+if(program.opts().test){
+    console.log("test option aaaaaaaaaaaaaaa");
+}
+
+if(program.opts().start){
+	console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
+	getPollTime(uuidVal);
+    console.log("send option bbbbbbbbbbbbbbbbbb");
+
+}
+
+
+
+// ==========================

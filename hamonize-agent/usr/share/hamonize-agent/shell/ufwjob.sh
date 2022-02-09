@@ -38,7 +38,7 @@ then
 		sudo ufw allow $I 
 
 		#policy port check & send to center
-		CHK_PORT=`ufw status 2>/dev/null  | grep $I | tail -1 | grep ALLOW | awk '{ print $1 }'`
+		CHK_PORT=`ufw status 2>/dev/null  | grep -w $I | tail -1 | grep ALLOW | awk '{ print $1 }'`
 		echo $CHK_PORT >>$LOGFILE
 		
 		sleep 1
@@ -97,7 +97,7 @@ then
 		sudo ufw deny $I
 
 		#policy port check & send to center
-                CHK_PORT=`ufw status 2>/dev/null  | grep $I | tail -1 | grep DENY | awk '{ print $1 }'`
+                CHK_PORT=`ufw status 2>/dev/null  | grep -w $I | tail -1 | grep DENY | awk '{ print $1 }'`
                 echo $CHK_PORT >>$LOGFILE
 
                 sleep 1

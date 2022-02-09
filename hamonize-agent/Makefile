@@ -7,7 +7,7 @@ build_node_app:
 	npm run clean && \
 	npm install && \
 	npm run build && \
-	cp -v ./hamonize-agent ../usr/share/hamonize-agent/ && \
+	cp -v ./dist/hamonize-agent ../usr/share/hamonize-agent/ && \
 	cp -r ./shell ../usr/share/hamonize-agent/
 
 clean:
