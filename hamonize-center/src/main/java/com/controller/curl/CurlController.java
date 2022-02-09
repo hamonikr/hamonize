@@ -23,6 +23,7 @@ import com.model.PcMangrVo;
 import com.model.PcPackageVo;
 import com.model.SvrlstVo;
 import com.model.UserVo;
+import com.service.RestApiService;
 import com.service.UserService;
 import com.util.LDAPConnection;
 
@@ -33,6 +34,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +42,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Mono;
 
 /**
  * connector에서 센터로 데이터를 보내는 컨트롤러
@@ -73,6 +79,9 @@ public class CurlController {
 	@Autowired
 	private UserService userSerivce;
 
+	@Autowired
+	private RestApiService restApiService;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final String EVENTS = "events";
@@ -90,6 +99,8 @@ public class CurlController {
 	@PostMapping("/setPcInfo")
 	public Boolean setpcinfo(@RequestBody String retData, HttpServletRequest request) throws Exception {
 		LDAPConnection con = new LDAPConnection();
+
+System.out.println("retData===="+retData.toString());
 
 		int retVal = 0;
 		JSONParser jsonParser = new JSONParser();
@@ -130,9 +141,6 @@ public class CurlController {
 			hdVo.setOrg_seq(orgNumChkVo.getSeq());
 			logger.debug("org_seq : {}", hdVo.getOrg_seq());
 
-			int isExistPc = pcMangrMapper.inserPcInfoChk(hdVo);
-			logger.debug("isExistPc ? ===={}", isExistPc);
-
 			OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 
 			hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
@@ -159,11 +167,12 @@ public class CurlController {
 			logger.debug("hdvo ==== > {}", hdVo.toString());
 
 			retVal = pcMangrMapper.inserPcInfo(hdVo);
-			int chkPc = pcMangrMapper.pchk(hdVo);
-			isAddPcInfo = true;
-
-			UserVo sabunChkVo = new UserVo();
-			con.addPC(hdVo, sabunChkVo);
+			if(retVal == 1)
+			{
+				isAddPcInfo = true;
+				con.addPC(hdVo);
+				restApiService.addHost(hdVo, orgNumChkVo);
+			}
 
 		} else {
 			logger.debug("존재하지 않는 부서입니다.");

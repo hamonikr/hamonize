@@ -3,33 +3,30 @@ package com.service;
 import java.util.List;
 
 import javax.naming.NamingException;
-import javax.servlet.http.HttpSession;
+
+import com.GlobalPropertySource;
+import com.mapper.IOrgMapper;
+import com.mapper.IPcMangrMapper;
+import com.model.OrgVo;
+import com.model.PcMangrVo;
+import com.model.RecoveryVo;
+import com.util.AuthUtil;
+import com.util.LDAPConnection;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
-
-import com.GlobalPropertySource;
-import com.mapper.IOrgMapper;
-import com.mapper.IPcMangrMapper;
-import com.model.LoginVO;
-import com.model.OrgVo;
-import com.model.PcMangrVo;
-import com.model.RecoveryVo;
-import com.util.AuthUtil;
-import com.util.LDAPConnection;
 
 @Service
 @Transactional(rollbackFor = NamingException.class)
@@ -43,15 +40,15 @@ public class OrgService {
 	private IPcMangrMapper pcMapper;
 
 	@Autowired
-	WebClient webClient;
+	RestApiService restApiService;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public JSONArray orgList(OrgVo orgvo) throws NamingException {
 		List<OrgVo> orglist = null;
 		JSONArray jsonArray = new JSONArray();
-		orgvo.setDomain("invesume");
-//		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
+//		orgvo.setDomain("invesume");
+		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
 		orglist = orgMapper.orgList(orgvo);
 
 		for (int i = 0; i < orglist.size(); i++) {
@@ -89,7 +86,7 @@ public class OrgService {
 		}
 
 		if (orgvo.getP_seq() == null) {// 최상위 회사의 부서일 경우
-			orgvo.setP_seq(0);
+			orgvo.setP_seq(0L);
 
 		}
 		int result = orgMapper.orgSave(orgvo);
@@ -104,87 +101,10 @@ public class OrgService {
 				// ansible awx 저장
 				if(orgvo.getP_seq() == 0)
 				{
-				String request = "{\"name\": \""+orgvo.getOrg_nm()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"organization\": 1}";
-        Mono<String> response = webClient.post()
-        .uri(UriBuilder -> UriBuilder
-        .path("/api/v2/inventories/")
-        .build())
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BodyInserters.fromValue(request))
-        //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
-        //.bodyValue(request)
-        //.accept(MediaType.APPLICATION_JSON)
-        //.retrieve()
-        //.bodyToMono(String.class); 
-        String objects = response.block();
-				JSONParser jsonParser = new JSONParser();
-				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-				orgvo.setInventory_id((Long) jsonObj.get("id"));
-				request = "{\"name\": \""+orgvo.getOrg_nm()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
-				response = webClient.post()
-        .uri(UriBuilder -> UriBuilder
-        .path("/api/v2/groups/")
-        .build())
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BodyInserters.fromValue(request))
-        //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
-			jsonObj = (JSONObject) jsonParser.parse(response.block());
-			orgvo.setGroup_id((Long) jsonObj.get("id"));
-			orgMapper.addAwxId(orgvo);
-				System.out.println("objects======"+jsonObj.get("id"));
-				System.out.println("objects======"+jsonObj);
-			}else{
-				String request = "{\"name\": \""+orgvo.getOrg_nm()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
-        Mono<String> response = webClient.post()
-        .uri(UriBuilder -> UriBuilder
-        .path("/api/v2/groups/").path("{id}/").path("children/")
-        .build(orgvo.getGroup_id()))
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BodyInserters.fromValue(request))
-        //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
-        //.bodyValue(request)
-        //.accept(MediaType.APPLICATION_JSON)
-        //.retrieve()
-        //.bodyToMono(String.class); 
-
-        String objects = response.block();
-				JSONParser jsonParser = new JSONParser();
-				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-				System.out.println("aaaaaaaaaa====="+orgvo.getSeq());
-				orgvo.setGroup_id((Long) jsonObj.get("id"));
-				orgMapper.addAwxId(orgvo);
-				System.out.println("objects======"+objects);
-			}
+					restApiService.addRootOrg(orgvo);
+				}else{
+					restApiService.addDownOrg(orgvo);
+				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -276,6 +196,5 @@ public class OrgService {
 
 		return result;
 	}
-
 
 }

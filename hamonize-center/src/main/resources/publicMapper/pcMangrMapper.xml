@@ -120,6 +120,7 @@
 		select *
 		from tbl_org 
 		where trim(org_nm) = #{deptname}
+		and domain = #{domain}
 	</select>
 
 	<select id="chkPcinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
@@ -143,48 +144,46 @@
 	</select>
 
 	<!-- pc 정보 저장 -->
-	<insert id="inserPcInfo" parameterType="com.model.PcMangrVo">
+	<insert id="inserPcInfo" parameterType="com.model.PcMangrVo" useGeneratedKeys="true" keyProperty="seq" keyColumn="seq">
         INSERT 
-        	INTO tbl_pc_mangr
-        	(
-						domain,
-				pc_status, 
-				pc_cpu, 
-				pc_memory, 
-				pc_disk, 
-				pc_macaddress, 
-				pc_ip, 
-				pc_vpnip, 
-				pc_hostname, 
-				pc_guid, 
-				pc_uuid,
-				pc_os,
-				org_seq, 
-				pc_disk_id, 
-				pc_cpu_id,
-				pc_sn,
-				RGSTR_DATE, 
-				UPDT_DATE
-        	) 
-        	SELECT 
+        INTO TBL_PC_MANGR
+        (
+					seq,
+					domain,
+					pc_status, 
+					pc_cpu, 
+					pc_memory, 
+					pc_disk, 
+					pc_macaddress, 
+					pc_ip, 
+					pc_vpnip, 
+					pc_hostname,
+					pc_uuid,
+					pc_os,
+					org_seq, 
+					pc_disk_id, 
+					pc_cpu_id,
+					RGSTR_DATE, 
+					UPDT_DATE
+        ) 
+        SELECT 
+					(SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_PC_MANGR where domain = #{domain}),
 					#{domain},
-        		#{pc_status}, 
-				#{pc_cpu},
-				#{pc_memory}, 
-				#{pc_disk},
-				#{pc_macaddress}, 
-				#{pc_ip},
-				#{pc_vpnip},
-				#{pc_hostname}  ,
-				#{pc_guid}, 
-				#{pc_uuid},
-				#{pc_os},
-				(select seq from tbl_org where trim(org_nm) = #{deptname}),
-				#{pc_disk_id}, 
-				#{pc_cpu_id},
-				#{pc_hostname},
-		        now(),
-				now() 
+					#{pc_status}, 
+					#{pc_cpu},
+					#{pc_memory}, 
+					#{pc_disk},
+					#{pc_macaddress}, 
+					#{pc_ip},
+					#{pc_vpnip},
+					#{pc_hostname},
+					#{pc_uuid},
+					#{pc_os},
+					#{org_seq},
+					#{pc_disk_id}, 
+					#{pc_cpu_id},
+					now(),
+					now() 
 				WHERE NOT EXISTS (SELECT * FROM tbl_pc_mangr WHERE pc_uuid = #{pc_uuid})
 
 	</insert>
@@ -836,5 +835,11 @@
 		) PA
 	</select>
 
+<update id="addHostId" parameterType="com.model.PcMangrVo">
+	UPDATE TBL_PC_MANGR
+	SET HOST_ID = #{host_id}
+	where seq = #{seq}
+	and domain = #{domain}
+	</update>
 
 </mapper>

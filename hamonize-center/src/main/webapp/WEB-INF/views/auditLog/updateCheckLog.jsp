@@ -567,7 +567,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	}
 	
 function getList(){
-	var url ='/mntrng/pcList.do';
+	var url ='/mntrng/pcList';
 	
 	var keyWord = $("select[name=keyWord]").val();
 

@@ -169,7 +169,7 @@ public class LDAPConnection {
 	 * @param uvo
 	 * @throws NamingException
 	 */
-	public void addPC(PcMangrVo pvo, UserVo uvo) throws NamingException {
+	public void addPC(PcMangrVo pvo) throws NamingException {
 		Attributes attributes = new BasicAttributes();
 		Attribute attribute = new BasicAttribute("objectClass", "ipHost");
 		String dn = "";
