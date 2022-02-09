@@ -126,13 +126,13 @@ public class Test {
       .baseUrl("http://192.168.0.212").build();
       
       try {
-        String request = "{\"name\": \"invesume\",\"description\": \"invesume hostlist\",\"variables\": \"{'hosts': ['192.168.0.225'], 'vars': {'ansible_user': 'hamonikr','ansible_pass': '0745'}}\"}";
+        String request = "{\"name\": \"192.168.0.225\",\"description\": \"192.168.0.225\",\"inventory\": 13}";
         //"\thosts:\n"+
         //"\t\t192.168.0.225}\"";
         System.out.println("request====="+request);
         Mono<String> response = wc.post().uri(UriBuilder -> UriBuilder
-        .path("/api/v2/inventories/").path("{id}").path("/hosts/")
-        .build(3))
+        .path("/api/v2/groups/").path("{id}/").path("hosts/")
+        .build(11))
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(request))
         .exchange().flatMap(clientResponse -> {
