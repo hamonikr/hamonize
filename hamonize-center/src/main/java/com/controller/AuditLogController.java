@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.influxdb.query.FluxRecord;
 import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.AuditLogService;
 import com.service.OrgService;
+import com.util.AuthUtil;
 import com.service.MonitoringService;
 
 @Controller
@@ -297,7 +299,9 @@ public class AuditLogController {
 	public String updateCheckLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
+			LoginVO lvo = AuthUtil.getLoginSessionInfo();
 			OrgVo orgvo = new OrgVo();
+			orgvo.setDomain(lvo.getDomain());
 			jsonArray = oService.orgList(orgvo);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

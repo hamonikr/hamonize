@@ -199,7 +199,8 @@ public class PolicyDeviceController {
 	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyDeviceVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		try {
 			dService.devicePopDelete(vo);
 

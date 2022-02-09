@@ -162,7 +162,7 @@
 								data-title="ajax to load the data." data-original-title="" title=""></i>
 						</header>
 						<div class="table-responsive">
-							<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
+							<div class="dataTables_wrapper" role="grid">
 								<div class="row">
 
 									<div class="col-sm-12">

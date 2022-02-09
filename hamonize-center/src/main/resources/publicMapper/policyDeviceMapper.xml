@@ -81,13 +81,13 @@
 	<delete id="devicePopDelete" parameterType="com.model.PolicyDeviceVo">
 		DELETE 
 			FROM tbl_policy_device_list
-		WHERE 
-			sm_seq 
-		IN 
+		WHERE
+			domain = #{domain} 
+			and sm_seq	IN 
 			<foreach collection="deleteList" item="item" separator="," index="index" open="(" close=")">
 				'${deleteList[index]}'::bigint
 			</foreach>
-			where domain = #{domain}
+			
 	</delete>
 	
 	<select id="devicePopCount" resultType="Integer" parameterType="com.model.PolicyDeviceVo">

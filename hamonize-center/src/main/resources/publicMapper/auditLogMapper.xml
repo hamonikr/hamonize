@@ -846,7 +846,7 @@
 				WHERE org_seq in (
 					select org_seq 
 					from tbl_pc_mangr tpm 
-					where uuid = #{uuid}
+					where pc_uuid = #{uuid}
 				)
 
 			 </select>

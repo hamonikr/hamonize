@@ -87,13 +87,13 @@
 	<delete id="fireWallPopDelete" parameterType="com.model.PolicyFireWallVo">
 		DELETE 
 			FROM tbl_policy_firewall_list
-		WHERE 
-			sm_seq 
-		IN 
+		WHERE
+			domain = #{domain} 
+			and sm_seq IN 
 			<foreach collection="deleteList" item="item" separator="," index="index" open="(" close=")">
 				'${deleteList[index]}'::bigint
 			</foreach>
-			where domain = #{domain}
+			
 	</delete>
 
 	<select id="fireWallPopCount" parameterType="com.model.PolicyFireWallVo" resultType="Integer">

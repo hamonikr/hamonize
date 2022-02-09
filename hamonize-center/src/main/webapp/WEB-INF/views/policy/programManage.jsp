@@ -12,7 +12,13 @@
 		//등록버튼
 		$("#btnSave").click(fnSavePmanage);
 
+
 	});
+
+	// 	var treeObj = $.fn.zTree.getZTreeObj("tree");
+	// treeObj.checkAllNodes(true);
+
+
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
 		$('input:checkbox[name=pcm_seq]').prop("checked", false);
@@ -28,8 +34,9 @@
 					var html = "";
 					for (var y = 0; y < agrs.pList.length; y++) {
 						html += '<div class="form-check">';
-						html += '<input class="form-check-input" type="checkbox" name="pcm_seq" id="'+agrs.pList[y].pcm_seq +'" value="'+agrs.pList[y].pcm_seq +'" />';
-						html += '<label class="form-check-label" for="'+agrs.pList[y].pcm_seq +'">';
+						html += '<input class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y]
+							.pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '" />';
+						html += '<label class="form-check-label" for="' + agrs.pList[y].pcm_seq + '">';
 						html += agrs.pList[y].pcm_name;
 						html += '</labe>';
 					}
@@ -53,11 +60,15 @@
 				});
 		}
 	}
-	function beforeClick(treeId, treeNode,clickFlag) {
+
+
+	function beforeClick(treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		zTree.checkNode(treeNode, !treeNode.checked, true, true);
+
 		return true;
 	}
+
 	function onCheck(event, treeId, treeNode) {
 		$('input:checkbox[name=pcm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
@@ -72,8 +83,9 @@
 					for (var y = 0; y < agrs.pList.length; y++) {
 
 						html += '<div class="form-check">';
-						html += '<input class="form-check-input" type="checkbox" name="pcm_seq" id="'+agrs.pList[y].pcm_seq +'" value="'+agrs.pList[y].pcm_seq +'" />';
-						html += '<label class="form-check-label" for="'+agrs.pList[y].pcm_seq +'">';
+						html += '<input class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y]
+							.pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '" />';
+						html += '<label class="form-check-label" for="' + agrs.pList[y].pcm_seq + '">';
 						html += agrs.pList[y].pcm_name;
 						html += '</labe>';
 
@@ -113,47 +125,57 @@
 		<!-- body right -->
 		<aside class="bg-white">
 			<section class="vbox">
-				<section class="scrollable">
-					<div class="wrapper">
+				<section class="scrollable padder">
+
+					<section class="panel panel-default">
+						<header class="panel-heading">
+							# 프로그램 차단 관리
+							<i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom"
+								data-title="ajax to load the data." data-original-title="" title=""></i>
+						</header>
+						<div class="wrapper">
 
 
-						<section class="panel panel-default">
+							<section class="panel panel-default">
 
-							<form name="frm" method="post" action="orgManage" class="row">
-								<input type="hidden" name="org_seq" id="org_seq" value="" />
-								<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
-								<input type="hidden" name="section" id="section" value="" />
+								<form name="frm" method="post" action="orgManage" class="row">
+									<input type="hidden" name="org_seq" id="org_seq" value="" />
+									<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
+									<input type="hidden" name="section" id="section" value="" />
 
-								<!-- update list -->
-								<ul class="promlist">
-									<c:forEach items="${pList}" var="data" varStatus="status">
-										<li>
-										
-
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="pcm_seq" id="${data.pcm_seq}" value="<c:out value=" ${data.pcm_seq}" />" id="${data.pcm_seq}">
-												<label class="form-check-label" for="${data.pcm_seq}">
-													<c:out value="${data.pcm_name}" />
-												</label>
-											</div>
-
-											<p class="card-text">
-												<c:out value="${data.pcm_dc}" />
-											</p>
-										</li>
-									</c:forEach>
-								</ul>
-								<!-- //update list -->
-								<div class="right mT20">
-									<button type="reset" class="btn_type2" id="btnInit"> 초기화</button>
-									<button type="button" class="btn_type2" id="btnSave"> 저장</button>
-								</div>
-							</form>
+									<!-- update list -->
+									<ul class="promlist">
+										<c:forEach items="${pList}" var="data" varStatus="status">
+											<li>
 
 
-						</section>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox" name="pcm_seq"
+														id="${data.pcm_seq}" value="<c:out value=" ${data.pcm_seq}" />"
+													id="${data.pcm_seq}">
+													<label class="form-check-label" for="${data.pcm_seq}">
+														<c:out value="${data.pcm_name}" />
+													</label>
+												</div>
 
-					</div>
+												<p class="card-text">
+													<c:out value="${data.pcm_dc}" />
+												</p>
+											</li>
+										</c:forEach>
+									</ul>
+									
+									
+								</form>
+
+
+							</section>
+							<div class="right mT20">
+								<button type="reset" class="btn_type2" id="btnInit"> 초기화</button>
+								<button type="button" class="btn_type2" id="btnSave"> 저장</button>
+							</div>
+						</div>
+					</section>
 				</section>
 			</section>
 		</aside>
@@ -163,8 +185,6 @@
 </section>
 
 <script>
-
-
 	//등록 처리결과(공통명 : 프로그램명Json )
 	function fnSavePmanage() {
 		var button = document.getElementById('btnSave');
@@ -194,6 +214,8 @@
 				}
 			})
 
+			console.log("queryArr===" + queryArr);
+
 			button.disabled = true;
 
 			$.post("/gplcs/psave", {
@@ -216,8 +238,6 @@
 			return false;
 		}
 	}
-
-
 </script>
 
 <%@ include file="../template/footer.jsp" %>

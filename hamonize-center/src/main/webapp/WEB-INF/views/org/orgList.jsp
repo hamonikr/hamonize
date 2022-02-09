@@ -19,7 +19,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	$.post("/org/orgManage",{type:'show',seq:treeNode.id,domain:treeNode.domain},
 	function(result){
 		var agrs = result;
-		console.log(agrs);
+
 		if(agrs.section == "S"){
 			
 			$("#trOrg_num").remove();

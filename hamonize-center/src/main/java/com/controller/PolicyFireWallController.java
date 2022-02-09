@@ -191,7 +191,10 @@ public class PolicyFireWallController {
 	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyFireWallVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
+		
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
+		
 		try {
 			fService.fireWallPopDelete(vo);
 

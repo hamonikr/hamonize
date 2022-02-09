@@ -15,6 +15,7 @@ import com.model.PcMangrVo;
 import com.model.SvrlstVo;
 import com.service.MonitoringService;
 import com.service.OrgService;
+import com.util.AuthUtil;
 
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
@@ -114,8 +115,13 @@ public class MonitoringController {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 
+		
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		
+		
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		params.put("type", params.get("type").toString());
+		params.put("domain", lvo.getDomain());
 
 		int on = 0;
 		int off = 0;

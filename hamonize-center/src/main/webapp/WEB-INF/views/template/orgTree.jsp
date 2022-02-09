@@ -62,17 +62,6 @@
 				enable: false,
 				chkboxType: { "Y" : "s", "N" : "ps" }
 			},
-			// edit: {
-			// 	drag: {
-			// 		autoExpandTrigger: true,
-			// 		prev: dropPrev,
-			// 		inner: dropInner,
-			// 		next: dropNext
-			// 	}, 
-			// 	enable: true,
-			// 	showRemoveBtn: false,
-			// 	showRenameBtn: false
-			// },
 			callback: {
 				// beforeDrag: beforeDrag,
 				// beforeDrop: beforeDrop,
@@ -103,6 +92,7 @@
 		</c:forEach>				
 	];
 	
+
 	$(document).ready(function(){
 
 		//트리 init
@@ -129,15 +119,30 @@
 				});
 			}
 		}
-		
+
+
 		$("#expandAllBtn").bind("click", {type:"expandAll"}, expandNode);
 		$("#collapseAllBtn").bind("click", {type:"collapseAll"}, expandNode);
 		$("#btnAddOrg").bind("click", {isParent:false}, addOrgcht);
 		$("#btnAddOrg_s").bind("click", {isParent:false}, addOrgcht_s);
 		$("#btnDelOrg").bind("click", removeOrgcht);
 		
-	
-});
+
+		// all check
+		// var treeObj = $.fn.zTree.getZTreeObj("tree");
+		// treeObj.checkAllNodes(false);
+
+		// test 
+		// var aa = treeObj.getNodes()[0];
+		// treeObj.selectNode(aa);
+
+		// setting.callback.onClick(null, treeObj.setting.treeId, aa, true);
+		// console.log( treeObj.setting.treeId);
+		// console.log(aa);
+}); 
+
+
+
  $(document).on("click", ':button',  function() {
 	
 	var buttonName = this.name; 
@@ -151,8 +156,6 @@
 	if(buttonName.indexOf("btnDelChrg") != -1) {
 		var idx = $(this).index("button[name='"+buttonName+"'");
 		var jobSeq = $("input[name=jobSeq]:eq("+idx+")").val()
-		console.log(idx);
-		console.log(jobSeq);
 		removeRowChrgjob(idx,jobSeq); //담당업무 삭제
 	}
 }); 
@@ -451,9 +454,9 @@ function fnSave(){
 
 		case '/gplcs/umanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 설치 관리' ); $("#orgTreeBtnLayer").hide();   setting.check.enable=true; break;
 		case '/gplcs/pmanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 차단 관리' ); $("#orgTreeBtnLayer").hide();   setting.check.enable=true;  break;
-		case '/gplcs/fmanage' :  $("#navInfo").text('Home / 정책관리 / 방화벽관리' ); break;
-		case '/gplcs/dmanage' :  $("#navInfo").text('Home / 정책관리 / 디바이스관리' ); break;
-		case '/auditLog/updateCheckLog' :  $("#navInfo").text('Home / 정책관리 / 정책배포결과' ); break;
+		case '/gplcs/fmanage' :  $("#navInfo").text('Home / 정책관리 / 방화벽관리' ); $("#orgTreeBtnLayer").hide(); setting.check.enable=true;  break;
+		case '/gplcs/dmanage' :  $("#navInfo").text('Home / 정책관리 / 디바이스관리' ); $("#orgTreeBtnLayer").hide(); setting.check.enable=true; break;
+		case '/auditLog/updateCheckLog' :  $("#navInfo").text('Home / 정책관리 / 정책배포결과' ); $("#orgTreeBtnLayer").hide();  break;
 		case '/backupRecovery/backupC' :  $("#navInfo").text('Home / 백업관리 / 백업주기설정' ); break;
 		case '/backupRecovery/backupR' :  $("#navInfo").text('Home / 백업관리 / 복구관리' ); break;
 		case '/auditLog/pcUserLog' :  $("#navInfo").text('Home / 로그감사/ 사용자접속로그' ); break;
