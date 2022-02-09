@@ -29,10 +29,12 @@ const options = {
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
-const baseurl = "<Hamonize Center Url>";
+const baseurl = "http://192.168.0.203:8080";
+// const baseurl = "<Hamonize Center Url>";
 const osType = require('os');
 
 let mainWindow, settingWindow;
+
 
 
 
@@ -85,14 +87,10 @@ function createWindow() {
 
 app.on('ready', () => {
 	setTimeout(createWindow, 500);
-	// createWindow();
-
-
 });
 
 app.on('window-all-closed', function () {
 	if (process.platform !== 'darwin') {
-
 		app.quit();
 	}
 });
@@ -123,19 +121,19 @@ ipcMain.on('install_program_version_chkeck', (event) => {
 	console.log(`STEP 1. install_program_version_chkeck`);
 	install_program_version_chkeckAsync(event);
 
-	// var isRoot = (process.getuid && process.getuid() === 0)
-	// console.log("isRoot======111=======" + isRoot);
+	var isRoot = (process.getuid && process.getuid() === 0)
+	console.log("isRoot======111=======" + isRoot);
 
 	// // if (!isRoot) {
 	// // }
-	// var env = process.env;
-	// var home = env.HOME;
-	// var user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME;
-	// if (process.platform === 'linux') {
-	// 	home || (process.getuid() === 0 ? '/root' : (user ? '/home/' + user : null));
-	// }
+	var env = process.env;
+	var home = env.HOME;
+	var user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME;
+	if (process.platform === 'linux') {
+		home || (process.getuid() === 0 ? '/root' : (user ? '/home/' + user : null));
+	}
 
-	// console.log("home==" + home);
+	console.log("home==" + home);
 
 });
 
@@ -152,15 +150,10 @@ const install_program_version_chkeckAsync = async (event) => {
 			let setServerInfoResult = await setServerInfo();
 			console.log("setServerInfoResult============" + setServerInfoResult);
 
-			// pcInfoUpdate(); // vpn 연결후 pc 정보 업데이트
 			if (setServerInfoResult == 'Y') {
-				console.log("########### install  program version check ###################");
-				// event.sender.send('install_program_ReadyProcResult', 'Y');
-
 				// apt repository chk & add ....
 				let aptRepositoryChkResult = await aptRepositoryChkProc();
 				console.log("aptRepositoryChkResult=============================>" + aptRepositoryChkResult);
-
 
 				// #step 2. 설치 프로그램 버전 체크
 				let installProgramVersionResult = await install_program_version_chkeckProc();
@@ -172,21 +165,14 @@ const install_program_version_chkeckAsync = async (event) => {
 				} else { // 설치 프로그램 최신버전
 					event.sender.send('install_program_version_chkeckResult', 'Y');
 				}
-
-
 			} else {
 				// fail get Agent Server Info 
 				event.sender.send('install_program_ReadyProcResult', 'N004');
-				// event.sender.send('install_program_ReadyProcResult', 'N003');
 			}
-
-
-
 		} else {
-			// fail make folder 
+			// fail create folder 
 			event.sender.send('install_program_version_chkeckResult', 'N001');
 		}
-
 
 	} catch (err) {
 		console.log("install_program_version_chkeckProc---" + err);
@@ -197,56 +183,45 @@ const install_program_version_chkeckAsync = async (event) => {
 
 
 //========================================================================
-//== STEP 2. install_program_Ready  ======================================
+//== STEP 2. hamonize vpn install   ======================================
 //========================================================================
-
-ipcMain.on('install_program_Ready', (event) => {
+ipcMain.on('hamonizeVpnInstall', (event) => {
 	mainWindow.setSize(620, 540);
 	var vpn_used;
-	// todo : check vpn cli or gui 셋팅
-		unirest.get(baseurl + '/hmsvc/isVpnUsed')
+	unirest.get(baseurl + '/hmsvc/isVpnUsed')
 		.header('content-type', 'application/json')
 		.end(function (response) {
 			var json = response.body;
-			console.log("vpn_used return json data===" + json);					
+			console.log("get vpn_used info ===" + json);
 			var obj = eval('(' + json + ')');
-			
+
 			console.log(obj[0]["vpn_used"]);
 			vpn_used = obj[0]["vpn_used"];
 
-			if(vpn_used == 1){
+			if (vpn_used == 1) {
 				console.log("vpn install..");
-				install_program_ReadyAsync(event);
-			}else if(vpn_used == 0){
+				hamonizeVpnInstall_Action(event);
+			} else if (vpn_used == 0) {
 				console.log("vpn bypass..");
-				event.sender.send('install_program_ReadyProcResult', 'Y');
+				event.sender.send('hamonizeVpnInstall_Result', 'Y');
 			}
 		});
-
-	});
-
-
-const install_program_ReadyAsync = async (event) => {
+});
+const hamonizeVpnInstall_Action = async (event) => {
 	try {
-
-		// #step . vpn create & conn
+		// vpn install 
 		await vpnCreate();
-
+		// vpn install check 
 		let vpnCreateResult = await vpnCreateChk();
-		console.log("vpnCreateResult========================++" + vpnCreateResult);
-
 		if (vpnCreateResult == 'Y') {
 			// vpn 연결후 pc 정보 업데이트
-			pcInfoUpdate(); 
-			event.sender.send('install_program_ReadyProcResult', 'Y');
-
+			pcInfoUpdate();
+			event.sender.send('hamonizeVpnInstall_Result', 'Y');
 		} else {
-			// fail vpn create 
-			event.sender.send('install_program_ReadyProcResult', 'N002');
+			event.sender.send('hamonizeVpnInstall_Result', 'N002');
 		}
-
 	} catch (err) {
-		console.log("install_program_ReadyAsync---" + err);
+		console.log("hamonizeVpnInstall_Action Error---" + err);
 		return Object.assign(err);
 	}
 }
@@ -258,21 +233,18 @@ const install_program_ReadyAsync = async (event) => {
 //========================================================================
 
 ipcMain.on('hamonizeProgramInstall', (event) => {
-	hamonizeProgramInstallAsync(event);
+	hamonizeProgramInstall_Action(event);
 });
-
-
-const hamonizeProgramInstallAsync = async (event) => {
+const hamonizeProgramInstall_Action = async (event) => {
 	try {
-		let mkfolderResult = await hamonizeProgramInstallProc();
-		console.log("hamonizeProgramInstallProc==" + mkfolderResult);
-		event.sender.send('hamonizeProgramInstallResult', mkfolderResult);
+		let hamonizeProgramInstallProcResult = await hamonizeProgramInstallProc();
+		console.log("hamonizeProgramInstall_Result==" + hamonizeProgramInstallProcResult);
+		event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
 	} catch (err) {
-		console.log("hamonizeProgramInstallProc---" + err);
+		console.log("hamonizeProgramInstall_Action Error---" + err);
 		return Object.assign(err);
 	}
 }
-
 function hamonizeProgramInstallProc() {
 	return new Promise(function (resolve, reject) {
 
@@ -282,11 +254,11 @@ function hamonizeProgramInstallProc() {
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
-					console.log("error is " + error);
+					console.log("hamonizeProgramInstallProc Error is " + error);
 					return resolve("N");
 				} else {
-					console.log('stdout: ' + stdout);
-					console.log('stderr: ' + stderr);
+					// console.log('stdout: ' + stdout);
+					// console.log('stderr: ' + stderr);
 					resolve("Y");
 				}
 			}
@@ -299,23 +271,23 @@ function hamonizeProgramInstallProc() {
 //========================================================================
 
 ipcMain.on('hamonizeSystemBackup', (event) => {
-	hamonizeSystemBackupAsync(event);
+	hamonizeSystemBackup_Action(event);
 });
 
 
-const hamonizeSystemBackupAsync = async (event) => {
+const hamonizeSystemBackup_Action = async (event) => {
 	try {
 		console.log("hamonizeSystemBackup============START");
-		let backupResult = await hamonizeSystemBackupAsyncProc();
-		console.log("hamonizeSystemBackupAsyncProc==" + backupResult);
-		event.sender.send('hamonizeSystemBackupResult', backupResult);
+		let hamonizeSystemBackupProcResult = await hamonizeSystemBackupProc();
+		console.log("hamonizeSystemBackup_Proc==" + hamonizeSystemBackupProcResult);
+		event.sender.send('hamonizeSystemBackup_Result', hamonizeSystemBackupProcResult);
 	} catch (err) {
-		console.log("hamonizeSystemBackupAsync---" + err);
+		console.log("hamonizeSystemBackup_Action Error---" + err);
 		return Object.assign(err);
 	}
 }
 
-function hamonizeSystemBackupAsyncProc() {
+function hamonizeSystemBackupProc() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====__dirname===" + __dirname);
@@ -324,11 +296,11 @@ function hamonizeSystemBackupAsyncProc() {
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
-					console.log("error is " + error);
+					console.log("hamonizeSystemBackupProc error is " + error);
 					return resolve("N");
 				} else {
-					console.log('stdout: ' + stdout);
-					console.log('stderr: ' + stderr);
+					// console.log('stdout: ' + stdout);
+					// console.log('stderr: ' + stderr);
 					resolve("Y");
 				}
 			}
@@ -349,7 +321,7 @@ function setServerInfo() {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====get Agent Server Info");
-		var getAgentInfo = "/bin/bash " + __dirname + "/shell/setServerInfo.sh " +baseurl;
+		var getAgentInfo = "/bin/bash " + __dirname + "/shell/setServerInfo.sh " + baseurl;
 
 		sudo.exec(getAgentInfo, options,
 			function (error, stdout, stderr) {
@@ -441,7 +413,7 @@ function vpnCreateChk() {
 				} else {
 					console.log('stderr vpn, chk,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,: ' + stderr);
 					console.log('stdout vpn, chk,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,: ' + stdout + "--" + stdout.indexOf('SUCCESS'));
-				
+
 					resolve('Y');
 				}
 			}
@@ -625,16 +597,7 @@ const sysInfo = async (event, groupname, sabun, username) => {
 		original: true
 	});
 
-	let vpnipaddr = '';
-	let vpnInfoData = ''; // vpnchk();
-
-	if (vpnInfoData.length == 0) {
-		vpnipaddr = 'no vpn';
-	} else {
-		vpnipaddr = vpnInfoData;
-	}
-
-
+	let vpnipaddr = 'no vpn';
 	var md5 = require('md5');
 	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	let hwData = md5(hwinfoMD5);
@@ -647,18 +610,18 @@ const sysInfo = async (event, groupname, sabun, username) => {
 	});
 
 
-	console.log("machindid == " + machindid);
-	console.log("cpuinfo == " + cpuinfo);
-	console.log("diskSerialNum == " + diskSerialNum);
-	console.log("diskInfo == " + diskInfo);
-	console.log("macs == " + macs[0]);
-	console.log("ipinfo.address() == " + ipinfo.address());
-	console.log("vpnipaddr == " + vpnipaddr);
-	console.log("pcHostname == " + pcHostname);
-	console.log("osinfo == " + osinfo);
-	console.log("raminfo == " + raminfo);
-	console.log("groupname == " + groupname);
-	console.log("username == " + username);
+	// console.log("machindid == " + machindid);
+	// console.log("cpuinfo == " + cpuinfo);
+	// console.log("diskSerialNum == " + diskSerialNum);
+	// console.log("diskInfo == " + diskInfo);
+	// console.log("macs == " + macs[0]);
+	// console.log("ipinfo.address() == " + ipinfo.address());
+	// console.log("vpnipaddr == " + vpnipaddr);
+	// console.log("pcHostname == " + pcHostname);
+	// console.log("osinfo == " + osinfo);
+	// console.log("raminfo == " + raminfo);
+	// console.log("groupname == " + groupname);
+	// console.log("username == " + username);
 
 
 	console.log("등록 버튼 클릭시 center url >> " + baseurl + '/hmsvc/setPcInfo');
@@ -688,11 +651,11 @@ const sysInfo = async (event, groupname, sabun, username) => {
 
 }
 
-
+// vpn 연결후 pc 정보 업데이트
 function pcInfoUpdate() {
 	let vpnipaddr = '';
 	let vpnInfoData = vpnchk();
-	console.log("vpnInfoData===="+vpnInfoData);
+	console.log("vpnInfoData====" + vpnInfoData);
 	if (vpnInfoData.length == 0) {
 		vpnipaddr = 'no vpn';
 	} else {
@@ -718,6 +681,8 @@ function pcInfoUpdate() {
 		});
 }
 
+
+// ====================================== 기능 점검 대상 ===========================================================================
 function vpnchk() {
 	var os = require('os');
 	var ifaces = os.networkInterfaces();
@@ -737,7 +702,7 @@ function vpnchk() {
 				console.log("this interface has only one ipv4 adress is :" + ifname, iface.address);
 				if (ifname == 'tun0') {
 					retVal = iface.address;
-					console.log("tmpIfname : "+retVal);
+					console.log("tmpIfname : " + retVal);
 				}
 			}
 			++alias;

@@ -1,6 +1,6 @@
 // const moment = require('moment');
-const {	ipcRenderer} = require('electron');
-const {	BrowserWindow} = require('electron')
+const { ipcRenderer } = require('electron');
+const { BrowserWindow } = require('electron')
 const path = require('path');
 const unirest = require('unirest');
 
@@ -8,7 +8,7 @@ $modal = $(".modal");
 
 // # step 1. install file version check  ====================================
 // 폴더 생성 및 프로그램 설치 진행에 필요한 jq, curl 등 설치
-install_program_version_chkeck();
+// install_program_version_chkeck();
 
 function install_program_version_chkeck() {
 	$modal.show();
@@ -22,11 +22,11 @@ function install_program_version_chkeck() {
 ipcRenderer.on('getOrgDataResult', (event, orgData) => {
 	var option = "";
 	$('#groupName').empty();
-	$.each(orgData,function(key,value) {
-		console.log('key:'+key+', seq:'+value.seq+',orgnm:'+value.orgnm);
-		
-		option += "<option>"+value.orgnm+"</option>";
-		
+	$.each(orgData, function (key, value) {
+		console.log('key:' + key + ', seq:' + value.seq + ',orgnm:' + value.orgnm);
+
+		option += "<option>" + value.orgnm + "</option>";
+
 	});
 	$('#groupName').append(option);
 });
@@ -47,14 +47,6 @@ ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 	} else if (isChkVal == 'N001') {
 		//fail make folder 
 		fn_alert("프로그램 버전 확인중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. \n Error Code :: [N001]");
-		return false;
-	} else if (isChkVal == 'N002') {
-		//fail vpn create 
-		fn_alert("프로그램 버전 확인중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. \n Error Code :: [N002]");
-		return false;
-	} else if (isChkVal == 'N003') {
-		// fail get Agent Server Info 
-		fn_alert("프로그램 버전 확인중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. \n Error Code :: [N003]");
 		return false;
 	} else if (isChkVal == 'N004') {
 		// fail get Agent Server Info 
@@ -89,11 +81,11 @@ ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 var doubleSubmitFlag = false;
 const pcChkBtn = document.getElementById('pcChkBtn');
 pcChkBtn.addEventListener('click', function (event) {
-	if(!doubleSubmitFlag){
+	if (!doubleSubmitFlag) {
 
 		let groupname = $("#groupName option:selected").val(); //$("#groupName").val(); //부서번호
 
-		if( typeof groupname == "undefined"){
+		if (typeof groupname == "undefined") {
 			doubleSubmitFlag = false;
 			return false
 		}
@@ -102,13 +94,13 @@ pcChkBtn.addEventListener('click', function (event) {
 
 		ipcRenderer.send('pcInfoChk', groupname, sabun, username);
 		doubleSubmitFlag = true;
-	}else{
+	} else {
 		doubleSubmitFlag = true;
 		return false;
 	}
 
 });
- 
+
 function nextStap() {
 
 	$modal.hide();
@@ -123,7 +115,7 @@ function nextStap() {
 
 	initLayer
 
-	install_program_Ready();
+	hamonizeVpnInstall();
 };
 
 ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
@@ -149,57 +141,36 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 
 
 
-// # step 3. program Ready start] make folder & base tool install ====================================/
-// 
-function install_program_Ready() {
+// # step 3. program Ready ] vpn install  ====================================/
+function hamonizeVpnInstall() {
 	$("#stepA").addClass("br animate");
-	ipcRenderer.send('install_program_Ready');
+	ipcRenderer.send('hamonizeVpnInstall');
 }
-
-ipcRenderer.on('install_program_ReadyProcResult', (event, mkfolderResult) => {
-	console.log("install_program_ReadyProcResult===" + mkfolderResult);
-
-	if (mkfolderResult == 'Y') {
-		console.log("true");
-
-		// 초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.
-		// ipcRenderer.send('install_program_upgrade');
-		console.log("초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.");
-
+ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
+	console.log("hamonizeVpnInstall_Result===" + result);
+	if (result == 'Y') {
 		$("#stepA").removeClass("br animate");
 		$("#stepB").addClass("br animate");
 		$("#infoStepA").text("완료");
 		hamonizeProgramInstall();
-
-
-
-	} else if (isChkVal == 'N002') {
+	} else if (result == 'N002') {
 		//fail vpn create 
-		fn_alert("프로그램 버전 확인중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N002]");
-
-	} else if (isChkVal == 'N003') {
-		// fail get Agent Server Info 
-		fn_alert("프로그램 버전 확인중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N003]");
+		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N002]");
 	} else {
-		console.log("false");
-		fn_alert("프로그램 설치 환경 셋팅에 실패했습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.Error Code :: [N4001]");
+		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.Error Code :: [N4001]");
 	}
-
 });
 
 
 
 
-
 // ======== step 4. PC 관리 프로그램 설치... =========================================/
-// #  collectd client install =====================================/
-//
 function hamonizeProgramInstall() {
 	ipcRenderer.send('hamonizeProgramInstall');
 }
 
-ipcRenderer.on('hamonizeProgramInstallResult', (event, mkfolderResult) => {
-	console.log("hamonizeProgramInstallResult===" + mkfolderResult);
+ipcRenderer.on('hamonizeProgramInstall_Result', (event, mkfolderResult) => {
+	console.log("hamonizeProgramInstall_Result===" + mkfolderResult);
 
 	if (mkfolderResult == 'Y') {
 		console.log("pc 관리 프로그램 설치 및 셋팅 완료");
@@ -209,7 +180,7 @@ ipcRenderer.on('hamonizeProgramInstallResult', (event, mkfolderResult) => {
 		hamonizeSystemBackup();
 	} else {
 		console.log("false");
-		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다.");
+		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005]");
 	}
 
 });
@@ -221,8 +192,8 @@ function hamonizeSystemBackup() {
 	ipcRenderer.send('hamonizeSystemBackup');
 }
 
-ipcRenderer.on('hamonizeSystemBackupResult', (event, backupResult) => {
-	console.log("hamonizeSystemBackupResult===" + backupResult);
+ipcRenderer.on('hamonizeSystemBackup_Result', (event, backupResult) => {
+	console.log("hamonizeSystemBackup_Result===" + backupResult);
 
 	if (backupResult == 'Y') {
 		console.log("true");
