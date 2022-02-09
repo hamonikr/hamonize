@@ -178,6 +178,8 @@
 			, A.SIDO
 			, A.GUGUN
 			, A.ORG_NUM
+			, INVENTORY_ID
+			, GROUP_ID
 		FROM TBL_ORG A
 		WHERE A.SEQ = #{seq}
 		AND A.DOMAIN = #{domain}
@@ -185,7 +187,7 @@
 	</select>
 
 	<!-- 조직등록 -->
-	<update id="orgSave" parameterType="com.model.OrgVo">
+	<update id="orgSave" parameterType="com.model.OrgVo" useGeneratedKeys="true" keyProperty="seq" keyColumn="seq">
 		WITH upsert AS (
 			UPDATE TBL_ORG  SET
 				P_SEQ			= #{p_seq}				 
@@ -336,9 +338,11 @@
 		SELECT COALESCE(max(seq),0) AS seq FROM TBL_ORG WHERE DOMAIN = #{domain}
 	</select>
 	
-	<!-- <delete id="deleteChildUser" parameterType="com.model.OrgVo"> 
-		delete from
-			tbl_user
-		where org_seq = #{seq}
-	</delete> -->
+	<update id="addAwxId" parameterType="com.model.OrgVo"> 
+		UPDATE TBL_ORG SET INVENTORY_ID = #{inventory_id}, GROUP_ID = #{group_id} WHERE domain = #{domain} and seq = #{seq}
+	</update>
+
+	<update id="addDownAwxId" parameterType="com.model.OrgVo"> 
+		UPDATE TBL_ORG SET GROUP_ID = #{group_id} WHERE domain = #{domain} and seq = #{seq}
+	</update>
 </mapper>

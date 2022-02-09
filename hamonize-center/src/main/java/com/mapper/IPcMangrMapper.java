@@ -93,5 +93,7 @@ public interface IPcMangrMapper {
 	public int updateRcovPolicyOrgseq(RecoveryVo vo);
 
 	public int deleteBackupAIfMoveOrg(RecoveryVo vo);
+
+	public int addHostId(PcMangrVo vo);
 	
 }

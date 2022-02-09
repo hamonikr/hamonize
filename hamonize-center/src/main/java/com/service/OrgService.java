@@ -3,27 +3,30 @@ package com.service;
 import java.util.List;
 
 import javax.naming.NamingException;
-import javax.servlet.http.HttpSession;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
-import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.RecoveryVo;
 import com.util.AuthUtil;
 import com.util.LDAPConnection;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import reactor.core.publisher.Mono;
 
 @Service
 @Transactional(rollbackFor = NamingException.class)
@@ -36,14 +39,16 @@ public class OrgService {
 	@Autowired
 	private IPcMangrMapper pcMapper;
 
+	@Autowired
+	RestApiService restApiService;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public JSONArray orgList(OrgVo orgvo) throws NamingException {
 		List<OrgVo> orglist = null;
 		JSONArray jsonArray = new JSONArray();
-		System.out.println("a=========+++"+ orgvo.getDomain());
+
 		orgvo.setDomain(AuthUtil.getLoginSessionInfo().getDomain());
-		System.out.println("===============++"+ AuthUtil.getLoginSessionInfo().getDomain());
 		orglist = orgMapper.orgList(orgvo);
 
 		for (int i = 0; i < orglist.size(); i++) {
@@ -81,7 +86,7 @@ public class OrgService {
 		}
 
 		if (orgvo.getP_seq() == null) {// 최상위 회사의 부서일 경우
-			orgvo.setP_seq(0);
+			orgvo.setP_seq(0L);
 
 		}
 		int result = orgMapper.orgSave(orgvo);
@@ -93,6 +98,13 @@ public class OrgService {
 			try {
 				// ldap 저장
 				con.addOu(orgvo);
+				// ansible awx 저장
+				if(orgvo.getP_seq() == 0)
+				{
+					restApiService.addRootOrg(orgvo);
+				}else{
+					restApiService.addDownOrg(orgvo);
+				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -184,6 +196,5 @@ public class OrgService {
 
 		return result;
 	}
-
 
 }

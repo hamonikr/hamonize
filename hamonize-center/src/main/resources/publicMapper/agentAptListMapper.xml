@@ -9,10 +9,10 @@
 			USER_NAME,
 			PASS_WD,
 			DEPT_NAME,
-			GUBUN,
-			INSERT_DT
+			STATUS,
+			RGSTR_DATE
 		FROM TBL_ADMIN_USER	
-		ORDER BY INSERT_DT DESC
+		ORDER BY RGSTR_DATE DESC
 		OFFSET #{limitStart} LIMIT #{recordSize}
 </select>
 

@@ -92,6 +92,8 @@ public class OrgController {
 		data.put("section", orgvo.getSection());
 		data.put("org_num", orgvo.getOrg_num());
 		data.put("org_ordr", orgvo.getOrg_ordr());
+		data.put("inventory_id", orgvo.getInventory_id());
+		data.put("group_id", orgvo.getGroup_id());
 
 		return data;
 
