@@ -51,29 +51,19 @@
 	}
 </style>
 <script>
-	function selectPcRecovery(_val){
-		console.log("========+++++>" + _val);
-		// var radioId = $('input[name="COLOR"]:checked').val();
-        // var rasioNm = $("label[for='"+radioId+"']").text(); // 라벨값을 불러온다.
-        // alert(rasioNm);
-
-
-	}
 	$(document).ready(function () {
-
 		//등록버튼
 		$("#btnSave").click(fnSaveRecoovery);
 		$("#recoveryPclist").show();
-		$("#recoveryPclist").append('복구할 PC를 선택해 주세요.');
-
-		
+		$("#recoveryPclist").append('복구할 PC의 조직을 선택해 주세요.');
 	});
+
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
 		$("#recoveryMsg").empty();
 		$("#recoveryPclist").empty();
 		$("#recoveryPcBackuplist").empty();
-		
+
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 
@@ -84,46 +74,29 @@
 				var agrs = result;
 				var strHtml = "";
 				var tmp = "";
-				// strHtml = " <div class=\"some-class\">";
 
 				if (agrs.length == 0) {
 					strHtml += "등록된 조직의 컴퓨터 정보가 없습니다.";
 					$("#selectPcOne").text('');
 				} else {
-
+					$("#org_seq").val(treeNode.id);
 					for (var i = 0; i < agrs.length; i++) {
 						console.log(agrs[i]);
 						if (i == 0) {
 							tmp = "checked";
 						}
-
-						// strHtml += "";
-						// strHtml += "<div class=\"radio-holder\">";
-						// strHtml += "<input id='dept_seq" + i + "' name='dept_seq' type='radio' value='" + agrs[i].seq +"'>";
-						// strHtml += "<label for='dept_seq" + i + "'>" + agrs[i].pc_hostname + "</label>";
-						// strHtml += "</div>";
-
 						strHtml += '<div class="radio col-sm-2" >';
 						strHtml += '<label class="radio-custom">';
-						strHtml += '<input type="radio" name="dept_seq" value="' + agrs[i].seq + '" onClick="selectPcRecovery('+agrs[i].seq+')">';
+						strHtml += '<input type="radio" name="dept_seq" value="' + agrs[i].seq +'" onClick="selectPcRecovery()">';
 						strHtml += agrs[i].pc_hostname;
 						strHtml += '</label>';
 						strHtml += '</div>';
-
-
-
-
 					}
-
-
-
-					// $("#selectPcOne").text("복구할 PC를 선택해주세요.");
 					$("#recoveryMsg").append('* 복구할 PC를 선택해주세요.');
 				}
 				strHtml += "</div>";
 				$("#recoveryPclist").show();
 				$("#recoveryPclist").append(strHtml);
-
 			});
 	}
 
@@ -153,17 +126,22 @@
 						</header>
 
 						<div class="panel-body">
-							<form class="form-horizontal" method="get">
+							<form class="form-horizontal" method="post" action="backupRCSave">
+								<input type="hidden" name="org_seq"  id="org_seq" value="" />
+								<input type="hidden" name="br_seq"  id="br_seq" value="" />
+								<input type="hidden" name="dept_seq"  id="dept_seq" value="" />
 
 								<div class="form-group">
 									<label class="col-sm-2 control-label">PC 목록(HostName)</label>
 									<div class="col-sm-10" id="pclistLayer">
 
 										<!-- pc list -->
-										<div class="col-sm-10 boxborder" style="display:none;" id="recoveryPclist"></div>
+										<div class="col-sm-10 boxborder" style="display:none;" id="recoveryPclist">
+										</div>
 
 										<!-- pc backup list -->
-										<div class="col-sm-10 boxborder" style="display:none;" id="recoveryPcBackuplist"></div>
+										<div class="col-sm-10 boxborder" style="display:none;"
+											id="recoveryPcBackuplist"></div>
 
 										<div class="col-sm-10">
 											<span class="help-block m-b-none" id="recoveryMsg"> </span>
@@ -194,9 +172,7 @@
 	function fnSaveRecoovery() {
 
 		var button = document.getElementById('btnSave');
-
 		var dept_seq = $('input[name="dept_seq"]:checked').val();
-
 		var br_seq = $('input[name="br_seq"]:checked').val();
 		var org_seq = $("#org_seq").val();
 
@@ -239,95 +215,63 @@
 		return false;
 	}
 
-	
-	$(document).ready(function () {
+	function selectPcRecovery() {
 
-	// 	$("#pclistLayer").on("click", "label", function(){
-	// 	// $check = $(this).prev();
-	// 	// if($check.prop('checked'))
-	// 	// $check.prop( "checked", false );
-	// 	// else 
-	// 	// $check.prop( "checked", true );
-	// 	console.log("recoveryPclist");
-		 
-	// 	//console.log($check.prop("checked"));
-	// });
+		$("#recoveryPcBackuplist").empty();
+		console.log("recoveryPclist");
 
-	
-		
-		/*
-		//라디오 이벤트 - PC 목록 클릭시
-		$("#recoveryPclist").on("click", function () {
-				// $(this).prev().prop("checked", true);
-				$("#recoveryPcBackuplist").empty();
-				console.log("recoveryPclist");
-				// console.log("event : "+event.data[0]);
 
-				var seq = $("input:radio[name='dept_seq']:checked").val();
-				console.log("seq :" + seq); 
 
-				$.post("backupRCList", {
-						seq: seq
-					},
-					function (result) {
-						var agrs = result; 
-						var strHtml = "";
+		var seq = $("input:radio[name='dept_seq']:checked").val();
+		// var rasioNm = $("label[for='"+seq+"']").text(); 
+		// console.log("seq :" + seq + "=="+ rasioNm); 
 
-						for (var i = 0; i < agrs.length; i++) {
-							strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
-							strHtml += "<span>";
-							strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq" + i + "\" value='" + agrs[i]
-								.br_seq + "'/>";
-							strHtml += "<label style='float: unset;' for=\"br_seq" + i + "\" class=\"\">";
+		$.post("backupRCList", {
+				seq: seq
+			},
+			function (result) {
+				var agrs = result;
+				var strHtml = "";
 
-							$.post("backupRCList", {
-									seq: seq
-								}, 
-								function (result) {
-									var agrs = result;
-									var strHtml = "";
-									for (var i = 0; i < agrs.length; i++) {
-										strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
-										strHtml += "<span>";
-										strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq" + i + "\" value='" + agrs[i].br_seq + "'/>";
-										strHtml += "<label style='float: unset;' for=\"br_seq" + i + "\" class=\"\">";
+				if (agrs.length == 0) {
+					$("#recoveryMsg").empty();
+					$("#recoveryMsg").append('* 등록된 PC의 백업파일이 없습니다.');
+				} else {
+					for (var i = 0; i < agrs.length; i++) {
+						strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
+						strHtml += "<span>";
+						strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq" + i + "\" value='" + agrs[i]
+							.br_seq + "'/>";
+						strHtml += "<label style='float: unset;' for=\"br_seq" + i + "\" class=\"\">";
 
-										if (agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
-										else if (agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
 
-										strHtml += "</label>";
-										strHtml += "</span>";
-										strHtml += "<div style='padding: 10px 10px 10px 22px; font-size: 18px;'> 백업일자 : " + agrs[i].br_backup_name + "</div>";
-										strHtml += "</li>";
+						if (agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
+						else if (agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
 
-									}
+						strHtml += "</label>";
+						strHtml += "</span>";
+						strHtml += "<div style='padding: 10px 10px 10px 22px; font-size: 18px;'> 백업일자 : " + agrs[i]
+							.br_backup_name + "</div>";
+						strHtml += "</li>";
 
-									$("#recoveryPcBackuplist").append(strHtml);
-									$("#selectPcOne").text('');
-									if (agrs[0] != undefined || agrs[0] != null) {
-										$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
-									}
-
-									if (agrs.length == 0) {
-										$("#selectPcOne").text('등록된 정보가 없습니다.');
-
-									}
-
-								});
-						}
 					}
-				);
+					
+
+					console.log(agrs[0]);
+					if (agrs[0] != undefined || agrs[0] != null) {
+						$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
+					}
 
 
-			// //라디오 이벤트 - 백업목록 클릭시
-			// $("#recoveryPcBackuplist").on("click", "label", function () {
-			// 	console.log("recoveryPcBackuplist");
-			// 	$(this).children('input').prop('checked', true);
-			// });
+					$("#recoveryPcBackuplist").show();
+					$("#recoveryPcBackuplist").append(strHtml);
+					
 
-		});
-		*/
-});
+				}
+			});
+
+
+	}
 </script>
 
 <%@ include file="../template/footer.jsp" %>

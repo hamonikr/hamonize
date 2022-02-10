@@ -97,6 +97,18 @@
                                         </ul>
                                     </li>
                                     <li>
+                                        <a href="/backupRecovery/backupR">
+                                            <i class="fa fa-file-text icon">
+                                                <b class="bg-primary"></b>
+                                            </i>
+                                            <span class="pull-right">
+                                                <i class="fa fa-angle-down text"></i>
+                                                <i class="fa fa-angle-up text-active"></i>
+                                            </span>
+                                            <span>복구관리</span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
                                         <a href="/backupRecovery/backupC">
                                             <i class="fa fa-file-text icon">
                                                 <b class="bg-primary"></b>
@@ -121,7 +133,7 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                    </li>
+                                    </li> -->
                                     <li>
                                         <a href="/auditLog/pcUserLog">
                                             <i class="fa fa-file-text icon">
