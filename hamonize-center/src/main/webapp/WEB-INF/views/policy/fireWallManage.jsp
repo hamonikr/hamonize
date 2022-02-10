@@ -290,6 +290,30 @@
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			var queryArr = [];
 
+			queryArr.push({"org_seq": parseInt($('form[name=frm] input[name=org_seq]').val())});
+			$.ajax({
+				url : '/org/orgManage',
+				type: 'POST',
+				async:false,
+				data:{type:'searchChildDept',seq:$('form[name=frm] input[name=org_seq]').val()},
+				success : function(res) {
+					if(res.length > 0){
+						console.log(res.length);
+						$.each(res,function(i,v){
+							console.log("v===" + v.seq);
+							var data = {
+								"org_seq": v.seq
+									}
+								console.log("data===" + data);
+								queryArr.push(data);
+						});
+					}
+				},
+				error:function(request,status,error){
+					console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				}
+			});
+
 			// $.each(zTree.transformToArray(zTree.getNodes()) && nodes, function (i, v) {
 			// 	if (i >= 0) {
 			// 		if (v.children != null)
@@ -302,15 +326,12 @@
 			// 	}
 			// })
 
-			
-			queryArr.push($('form[name=frm] input[name=org_seq]').val());
-
 
 			console.log("queryArr========+++" + queryArr);
-			// if( queryArr.length  == 0 ){
-			// 	alert("정책을 적용할 조직을 선택해주세요.");
-			// 	return false;
-			// }
+			 if( queryArr.length  == 0 ){
+			 	alert("정책을 적용할 조직을 선택해주세요.");
+			 	return false;
+			 }
 
 			$.post("/gplcs/fsave", {
 					dataType: 'json',

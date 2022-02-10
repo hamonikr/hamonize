@@ -60,6 +60,8 @@ public class OrgService {
 			data.put("org_ordr", orglist.get(i).getOrg_ordr());
 			data.put("section", orglist.get(i).getSection());
 			data.put("level", orglist.get(i).getLevel());
+			data.put("inventory_id", orglist.get(i).getInventory_id());
+			data.put("group_id", orglist.get(i).getGroup_id());
 			jsonArray.add(i, data);
 		}
 		return jsonArray;
@@ -93,27 +95,37 @@ public class OrgService {
 
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-
-		if (result == 1) { // 신규저장
-			try {
-				// ldap 저장
-				con.addOu(orgvo);
+		int snf = 0;
+		if (result == 1)
+		{ // 신규저장
+			try
+			{
 				// ansible awx 저장
 				if(orgvo.getP_seq() == 0)
 				{
-					restApiService.addRootOrg(orgvo);
-				}else{
-					restApiService.addDownOrg(orgvo);
+					snf = restApiService.addRootOrg(orgvo);
+				}else
+				{
+					snf = restApiService.addDownOrg(orgvo);
 				}
-			} catch (Exception e) {
+				if(snf == 1)
+				{
+					// ldap 저장
+					con.addOu(orgvo);
+				}
+			} catch (Exception e)
+			{
 				logger.error(e.getMessage(), e);
 			}
 
-		} else if (result == 0) {
-			if (oldOrgVo.getOrg_nm() != null) { // 수정
+		} else if (result == 0)
+		{
+			if (oldOrgVo.getOrg_nm() != null)
+			{ // 수정
 				List<OrgVo> list = orgMapper.searchChildDept(orgvo);
 
-				for (int i = 0; i < list.size(); i++) {
+				for (int i = 0; i < list.size(); i++)
+				{
 					newAllOrgNm = list.get(i).getAll_org_nm().replaceFirst(oldOrgVo.getOrg_nm(),
 							orgvo.getOrg_nm());
 					newAllOrgName.setAll_org_nm(newAllOrgNm);
@@ -123,7 +135,8 @@ public class OrgService {
 
 				// ldap 서버 업데이트
 				con.updateOu(oldOrgVo, orgvo);
-			} else {
+			} else
+			{
 				logger.info("수정할 사항 없음");
 			}
 		}
@@ -196,5 +209,9 @@ public class OrgService {
 
 		return result;
 	}
-
+public List<OrgVo> searchChildDept(OrgVo orgvo)
+{
+	List<OrgVo> list = orgMapper.searchChildDept(orgvo);
+	return list;
+}
 }

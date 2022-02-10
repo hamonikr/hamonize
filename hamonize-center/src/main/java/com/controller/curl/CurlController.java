@@ -170,8 +170,9 @@ System.out.println("retData===="+retData.toString());
 			if(retVal == 1)
 			{
 				isAddPcInfo = true;
+				int result = restApiService.addHost(hdVo, orgNumChkVo);
+				if(result == 1)
 				con.addPC(hdVo);
-				restApiService.addHost(hdVo, orgNumChkVo);
 			}
 
 		} else {

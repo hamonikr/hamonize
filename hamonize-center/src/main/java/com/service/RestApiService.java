@@ -1,5 +1,7 @@
 package com.service;
 
+import java.util.Map;
+
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
 import com.model.OrgVo;
@@ -56,7 +58,7 @@ public class RestApiService {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
 				orgvo.setInventory_id((Long) jsonObj.get("id"));
-				request = "{\"name\": \""+orgvo.getOrg_nm()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
+				request = "{\"name\": \""+orgvo.getSeq()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
 				response = webClient.post()
         .uri(UriBuilder -> UriBuilder
         .path("/api/v2/groups/")
@@ -82,7 +84,7 @@ public class RestApiService {
 
 	public int addDownOrg(OrgVo orgvo) throws ParseException
 	{
-		String request = "{\"name\": \""+orgvo.getOrg_nm()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
+		String request = "{\"name\": \""+orgvo.getSeq()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
         Mono<String> response = webClient.post()
         .uri(UriBuilder -> UriBuilder
         .path("/api/v2/groups/").path("{id}/").path("children/")
@@ -116,8 +118,6 @@ public class RestApiService {
   public int addHost(PcMangrVo hdVo, OrgVo orgNumChkVo) throws ParseException
   {
     String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_vpnip()+"\",\"inventory\": "+orgNumChkVo.getInventory_id()+"}";
-    //"\thosts:\n"+
-    //"\t\t192.168.0.225}\"";
     System.out.println("request====="+request);
     Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
     .path("/api/v2/groups/").path("{id}/").path("hosts/")
@@ -143,6 +143,37 @@ public class RestApiService {
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
     hdVo.setHost_id((Long) jsonObj.get("id"));
     int result = pcMangrMapper.addHostId(hdVo);
+  return result;
+}
+
+public int makePolicyPackage(Map<String, Object> params) throws ParseException
+  {
+    String request = "{\"credential\": \"hamonize\",\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")+"}";
+    System.out.println("request====="+request);
+    Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
+    .path("/api/v2/ad_hoc_commands/")
+    .build())
+    .contentType(MediaType.APPLICATION_JSON)
+    .body(BodyInserters.fromValue(request))
+    .exchange().flatMap(clientResponse -> {
+      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+          clientResponse.body((clientHttpResponse, context) -> {
+              return clientHttpResponse.getBody();
+          });
+          return clientResponse.bodyToMono(String.class);
+      }
+      else
+          return clientResponse.bodyToMono(String.class);
+  });
+    //.accept(MediaType.APPLICATION_JSON)
+    //.retrieve()
+    //.bodyToMono(String.class); 
+
+    String objects = response.block();
+    JSONParser jsonParser = new JSONParser();
+    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+    //hdVo.setHost_id((Long) jsonObj.get("id"));
+    int result = 0;
   return result;
 }
   

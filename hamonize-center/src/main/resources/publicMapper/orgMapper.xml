@@ -80,13 +80,17 @@
 	<!-- 조직목록 -->
 	<select id="orgList" resultType="com.model.OrgVo" parameterType="java.lang.String">
 		<![CDATA[ 
-			with recursive search_org("domain",seq,
+			with recursive search_org(
+					"domain",
+					seq,
 					p_seq,
 					org_nm,
 					org_ordr,
 					section,
 					level,
 					path,
+					inventory_id,
+					group_id,
 					cycle) as (
 					select
 					a."domain" ,
@@ -97,6 +101,8 @@
 						a.section,
 						0,
 						array[a.seq],
+						a.inventory_id,
+						a.group_id,
 						false
 					from
 						tbl_org a
@@ -113,6 +119,8 @@
 						b.section,
 						level + 1,
 						path || b.seq,
+						b.inventory_id,
+						b.group_id,
 						b.seq = any(path)
 					from
 						tbl_org b,
@@ -129,7 +137,9 @@
 						org_ordr,
 						section,
 						level,
-						path
+						path,
+						inventory_id,
+						group_id
 					from
 						search_org
 					order by

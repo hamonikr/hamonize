@@ -18,6 +18,7 @@ import com.service.PolicyUpdtService;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,8 +126,10 @@ public class PolicyUpdtController {
 	@ResponseBody
 	@RequestMapping(value = "/usave", method = RequestMethod.POST)
 	public String usave(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
-
+			@RequestParam Map<String, Object> params) throws ParseException {
+logger.info("1111======"+params.get("inventory_id").toString());
+logger.info("1111======"+(String) params.get("group_id"));
+logger.info("1111======"+(String) params.get("org_seq"));
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
 		JsonArray jsonArray = (JsonArray) jp.parse(data);
@@ -146,7 +149,8 @@ public class PolicyUpdtController {
 		
 		//차단정책 초기화
 		uService.updatePolicyProgrm(params);
-
+		//ansible 정책전달
+		uService.makePolicyPackage(params);
 		if (result >= 1)
 			return "SUCCESS";
 		else

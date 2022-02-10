@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.util.List;
+
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -126,6 +128,20 @@ public class OrgController {
 		int result = 0;
 		result = oService.orgDelete(vo);
 		return result;
+
+	}
+
+	/*
+	 * 하위 조직 불러오기
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(params = "type=searchChildDept", method = RequestMethod.POST)
+	public List<OrgVo> searchChildDept(HttpSession session, Model model, OrgVo vo) throws Exception {
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
+		List<OrgVo> list = oService.searchChildDept(vo);
+		return list;
 
 	}
 }

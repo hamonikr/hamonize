@@ -39,7 +39,7 @@ public class Test {
 
       WebClient wc = WebClient.builder()
       .defaultHeaders(header -> header.setBasicAuth("admin","password"))
-      .baseUrl("http://192.168.0.212").build();
+      .baseUrl("http://192.168.0.220").build();
       
       try {
         System.out.println("11111111111111111111111111111111");
@@ -80,7 +80,7 @@ public class Test {
 
       WebClient wc = WebClient.builder()
       .defaultHeaders(header -> header.setBasicAuth("admin","password"))
-      .baseUrl("http://192.168.0.212")
+      .baseUrl("http://192.168.0.220")
       .build();
       
       try {
@@ -123,7 +123,7 @@ public class Test {
 
       WebClient wc = WebClient.builder()
       .defaultHeaders(header -> header.setBasicAuth("admin","password"))
-      .baseUrl("http://192.168.0.212").build();
+      .baseUrl("http://192.168.0.220").build();
       
       try {
         String request = "{\"name\": \"192.168.0.225\",\"description\": \"192.168.0.225\",\"inventory\": 13}";
@@ -151,6 +151,46 @@ public class Test {
 
         String objects = response.block();
         return objects.toString();
+      } catch (Exception e) {
+        //TODO: handle exception
+      }
+      return null;
+  
+    }
+
+    @RequestMapping(value="test4")
+    public String makePolicy(){
+
+      WebClient wc = WebClient.builder()
+      .defaultHeaders(header -> header.setBasicAuth("admin","password"))
+      .baseUrl("http://192.168.0.220").build();
+      
+      try {
+          String request = "{\"credential\": 3,\"limit\": \"1\",\"inventory\": 15,\"module_name\": \"shell\",\"module_args\": \"echo 'wqrqwrqwrqwrqwrqwr' > /etc/hamonize/updt/aaaaa.hm\",\"become_enabled\": \"True\",\"verbosity\": 3}";
+          System.out.println("request====="+request);
+          Mono<String> response = wc.post().uri(UriBuilder -> UriBuilder
+          .path("/api/v2/ad_hoc_commands/")
+          .build())
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(BodyInserters.fromValue(request))
+          .exchange().flatMap(clientResponse -> {
+            if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+                clientResponse.body((clientHttpResponse, context) -> {
+                    return clientHttpResponse.getBody();
+                });
+                return clientResponse.bodyToMono(String.class);
+            }
+            else
+                return clientResponse.bodyToMono(String.class);
+        });
+          //.accept(MediaType.APPLICATION_JSON)
+          //.retrieve()
+          //.bodyToMono(String.class); 
+
+  String objects = response.block();
+  return objects.toString();
+  //JSONParser jsonParser = new JSONParser();
+  //JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
       } catch (Exception e) {
         //TODO: handle exception
       }
