@@ -77,7 +77,8 @@
 		
 	var zNodes =[
 		<c:forEach items="${oList}" var="data" varStatus="status" >
-		{ id:"${data.seq}", pId:"${data.p_seq}",domain:"${data.domain}",
+		{ id:"${data.seq}", pId:"${data.p_seq}", domain:"${data.domain}",
+		inventoryId:"${data.inventory_id}", groupId:"${data.group_id}",
 			<c:if test="${data.section ne 'S'}">
 			name:"${data.org_nm} "
 			</c:if>
