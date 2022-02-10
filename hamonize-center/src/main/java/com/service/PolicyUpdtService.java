@@ -72,7 +72,7 @@ public class PolicyUpdtService {
 	public int makePolicyPackage(Map<String, Object> params) throws ParseException{
 		String output = "";
 		// uuid로 부서정보 가져오기
-		Long segSeq = (Long) params.get("org_seq");
+		Long segSeq = (long) Integer.parseInt(params.get("org_seq").toString());
 		if (segSeq == 0) {
 			output = "nodata";
 		}
@@ -104,7 +104,7 @@ public class PolicyUpdtService {
 			output = "nodata";
 		}
 
-
+		params.put("output", output);
 		logger.info("//===================================");
 		logger.debug("//getAgent result data is : {}", output);
 		logger.info("//===================================");
