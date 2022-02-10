@@ -45,7 +45,7 @@
 		   count(*) AS cnt
 		FROM tbl_updt_agent_job TA JOIN tbl_updt_applc TB ON TA.updt_ap_seq = TB.seq  
 		WHERE TA.org_seq = #{org_seq}
-			AND pcm_uuid = #{pcm_uuid} 
+		--AND pcm_uuid = #{pcm_uuid} 
 	</select>
 	
 	<select id="getAgentOldSeq" parameterType="com.model.GetAgentUpdtVo" resultType="com.model.GetAgentUpdtVo">

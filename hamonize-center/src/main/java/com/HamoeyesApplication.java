@@ -75,7 +75,7 @@ public class HamoeyesApplication {
 	{
 		return WebClient.builder()
 		.defaultHeaders(header -> header.setBasicAuth("admin","password"))
-		.baseUrl("http://192.168.0.212")
+		.baseUrl("http://192.168.0.220")
 		.build();
 	}
 

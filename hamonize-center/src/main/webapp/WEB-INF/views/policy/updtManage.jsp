@@ -16,7 +16,7 @@
 		$('input:checkbox[name=pu_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		
+		console.log(treeNode);
 		// if (treeNode.checked) {
 			$.post("/gplcs/ushow", {
 					org_seq: treeNode.id
@@ -34,6 +34,9 @@
 					}
 					$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
 					$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
+
+					$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+					$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 
 
 				});
@@ -101,6 +104,8 @@
 									<input type="hidden" name="org_seq" id="org_seq" value="" />
 									<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 									<input type="hidden" name="section" id="section" value="" />
+									<input type="hidden" name="inventory_id" id="inventory_id" value="" />
+									<input type="hidden" name="group_id" id="group_id" value="" />
 
 									<!-- update list -->
 									<ul class="promlist">
@@ -155,7 +160,6 @@
 	//등록 처리결과(공통명 : 프로그램명Json )
 	function fnSaveUpdt() {
 		var button = document.getElementById('btnSave');
-
 		if (confirm("하위부서 및 부서가 있다면 하위부서 및 부서에도 전부 적용됩니다 적용하시겠습니까?")) {
 			var ppm_seq = "";
 			$('input:checkbox[name=pu_seq]').each(function (i) {
@@ -168,6 +172,31 @@
 			var nodes = zTree.getCheckedNodes(true);
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			var queryArr = [];
+
+			queryArr.push({"org_seq": parseInt($('form[name=frm] input[name=org_seq]').val())});
+			$.ajax({
+				url : '/org/orgManage',
+				type: 'POST',
+				async:false,
+				data:{type:'searchChildDept',seq:$('form[name=frm] input[name=org_seq]').val()},
+				success : function(res) {
+					if(res.length > 0){
+						console.log(res.length);
+						$.each(res,function(i,v){
+							console.log("v===" + v.seq);
+							var data = {
+								"org_seq": v.seq
+									}
+								console.log("data===" + data);
+								queryArr.push(data);
+						});
+						console.log("sss=== "+JSON.stringify(queryArr));
+					}
+				},
+				error:function(request,status,error){
+					console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				}
+			});
 
 
 			// $.each(zTree.transformToArray(zTree.getNodes()) && nodes, function (i, v) {
@@ -185,7 +214,6 @@
 			// 	}
 			// });
 
-			queryArr.push($('form[name=frm] input[name=org_seq]').val());
 			if (queryArr.length == 0) {
 				alert("정책을 적용할 조직을 선택해주세요.");
 				return false;
@@ -196,7 +224,10 @@
 			$.post("/gplcs/usave", {
 					dataType: 'json',
 					ppm_seq: ppm_seq,
-					data: JSON.stringify(queryArr)
+					data: JSON.stringify(queryArr),
+					inventory_id: $('form[name=frm] input[name=inventory_id]').val(),
+					group_id: $('form[name=frm] input[name=group_id]').val(),
+					org_seq: $('form[name=frm] input[name=org_seq]').val()
 				},
 				function (result) {
 					if (result == "SUCCESS") {
