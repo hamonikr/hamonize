@@ -165,7 +165,12 @@ public class UserService {
 	}
 
 	public List<OrgVo> getOrgList(OrgVo vo) {
-		return orgMapper.getTeamList();
+		return orgMapper.getTeamList(vo);
+	};
+	
+
+	public OrgVo getOrgAuth(OrgVo vo) {
+		return orgMapper.getOrgAuth(vo);
 	};
 
 }

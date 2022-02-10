@@ -153,7 +153,15 @@
 		where section = 'S'
 		order by level,org_ordr
 	</select>
-		
+	
+	
+	<select id="getOrgAuth" resultType="com.model.OrgVo">
+		select * 
+		from tbl_admin_user 
+		<where>
+			authkey = #{authkey}
+		</where> 
+	</select>	
 
 	<select id="orgChoose" resultType="com.model.OrgVo">
 	<![CDATA[ 

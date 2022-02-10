@@ -519,12 +519,19 @@ System.out.println("retData===="+retData.toString());
 	}
 
 	@GetMapping(value = "/getOrgData")
-	public String getOrgData(HttpServletRequest request) throws Exception {
+	public String getOrgData(@RequestBody String retData) throws Exception {
 
-		logger.debug("baseInfo===={}", request.getParameter("aseInfo"));
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObj = (JSONObject) jsonParser.parse(retData.toString());
+		JSONArray hmdArray = (JSONArray) jsonObj.get(EVENTS);
+		
+		OrgVo orgvo = new OrgVo();
+		for (int i = 0; i < hmdArray.size(); i++) {
+			JSONObject tempObj = (JSONObject) hmdArray.get(i);
+			orgvo.setDomain( tempObj.get("domain").toString());
+		}
 
-		OrgVo vo = new OrgVo();
-		List<OrgVo> orgList = userSerivce.getOrgList(vo);
+		List<OrgVo> orgList = userSerivce.getOrgList(orgvo);
 		JSONArray jsonArr = new JSONArray();
 
 		for (OrgVo set : orgList) {
@@ -536,9 +543,31 @@ System.out.println("retData===="+retData.toString());
 			jsonArr.add(jsonObject);
 		}
 
-		logger.debug("//==getOrgData jsonObject  data is : {}", jsonArr);
 		return jsonArr.toString();
 	}
+	
+	@GetMapping(value = "/getOrgAuth")
+	public String getOrgAuth(@RequestBody String retData) throws Exception {
+
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObj = (JSONObject) jsonParser.parse(retData.toString());
+		JSONArray hmdArray = (JSONArray) jsonObj.get(EVENTS);
+		
+		OrgVo orgvo = new OrgVo();
+		for (int i = 0; i < hmdArray.size(); i++) {
+			JSONObject tempObj = (JSONObject) hmdArray.get(i);
+			orgvo.setAuthkey( tempObj.get("authkey").toString());
+		}
+
+		OrgVo retOrgVoData = userSerivce.getOrgAuth(orgvo);
+		if( retOrgVoData == null ) {
+			return "N";
+		}else {
+			return retOrgVoData.getDomain();
+		}
+		
+	}
+	
 
 	public Long pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();

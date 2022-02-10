@@ -105,5 +105,10 @@ public class OrgVo {
 	
 	@Transient
 	private String level;
+	
+	@Size(max=30)
+	@Comment("authkey")
+	private String authkey;
+
 
 }
