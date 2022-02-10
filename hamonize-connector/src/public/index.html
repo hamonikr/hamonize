@@ -2,7 +2,7 @@
 <html lang="ko" class="no-js">
 
 <head>
-    <title>PC관리프로그램 </title>
+    <title>Hamonize] PC 관리 프로그램 </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -130,33 +130,26 @@
                             <div class="card-body">
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="initLayerBody">
-
-                                        <div class="col-md-3">
+                                        
+                                        <div class="col-md-3" id="authkeylayer">
                                             <div class="form-group">
-                                                <label class="bmd-label-floating">부서이름</label>
-                                                <!-- <input type="text" id="groupName" name="groupName" class="form-control"> -->
-                                                <select name="groupName" id="groupName"
-                                                    style="display: block;"></select>
+                                                <label class="bmd-label-floating">Hamonize 인증 : </label>
+                                                <input type="text" id="authkey" name="authkey" class="form-control" >        
                                             </div>
+                                            <button type="button" id="pcChkAuthBtn" class="btn btn-primary pull-right">등록</button>
                                         </div>
 
-                                        <!-- <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">사번</label> -->
-                                        <input type="hidden" id="sabun" name="sabun" class="form-control">
-                                        <!-- </div>
-                                            </div> -->
+                                        <div class="col-md-3" id="orglayer" style="display: none;">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">조직명</label>
+                                                <select name="groupName" id="groupName" style="display: block;"></select>
+                                            </div>
+                                            <button type="button" id="pcChkBtn" class="btn btn-primary pull-right">등록</button>
+                                        </div>
 
-
-                                        <!-- <div class="col-md-3"> -->
-                                        <!-- <div class="form-group"> -->
-                                        <!-- <label class="bmd-label-floating">이름</label> -->
-                                        <input type="hidden" id="username" name="username" class="form-control">
-                                        <!-- </div> -->
-                                        <!-- </div> -->
-                                        <button type="button" id="pcChkBtn"
-                                            class="btn btn-primary pull-right">등록</button>
                                     </div>
+                                    <input type="hidden" id="sabun" name="sabun" class="form-control">
+                                    <input type="hidden" id="username" name="username" class="form-control">
 
                                     <div class="tab-pane " id="procLayerBody">
                                         <table class="table">

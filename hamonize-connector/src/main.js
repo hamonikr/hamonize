@@ -29,7 +29,7 @@ const options = {
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
-const baseurl = "http://192.168.0.203:8080";
+const baseurl = "http://192.168.0.118:8081";
 // const baseurl = "<Hamonize Center Url>";
 const osType = require('os');
 
@@ -38,7 +38,7 @@ let mainWindow, settingWindow;
 
 
 
-function createWindow() {
+function createWindow() { 
 
 	mainWindow = new BrowserWindow({
 		icon: 'icons/png/emb2.png',
@@ -756,15 +756,32 @@ function aptRepositoryChkProc() {
 
 
 // 조직정보 
-ipcMain.on('getOrgData', (event) => {
+ipcMain.on('getOrgData', (event, domain) => {
 	unirest.get(baseurl + '/hmsvc/getOrgData')
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
-				baseInfo: "baseInfo"
+				domain: domain
 			}]
 		})
 		.end(function (response) {
 			event.sender.send('getOrgDataResult', response.body);
 		});
 });
+
+// 인증
+ipcMain.on('getOrgAuth', (event, authkeyVal) => {
+
+	unirest.get(baseurl + '/hmsvc/getOrgAuth')
+	.header('content-type', 'application/json')
+	.send({
+		events: [{
+			authkey: authkeyVal
+		}]
+	})
+	.end(function (response) {
+		event.sender.send('getAuthResult', response.body);
+	});
+	
+});
+

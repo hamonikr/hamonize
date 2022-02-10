@@ -8,7 +8,8 @@ $modal = $(".modal");
 
 // # step 1. install file version check  ====================================
 // 폴더 생성 및 프로그램 설치 진행에 필요한 jq, curl 등 설치
-// install_program_version_chkeck();
+install_program_version_chkeck();
+
 
 function install_program_version_chkeck() {
 	$modal.show();
@@ -18,16 +19,36 @@ function install_program_version_chkeck() {
 	ipcRenderer.send('install_program_version_chkeck');
 }
 
+// 인증결과 
+ipcRenderer.on('getAuthResult', (event, authResult) => {
+	// 조직정보
+	if( authResult == 'N'){
+		fn_alert("Hamonize 인증키 오류입니다. 다시 확인하신후 입력해 주시기바랍니다.");
+	}else{
+		$(".layerpop__container").text("인증이 완료되었습니다. 조직정보를 불러오는 중입니다.  잠시만 기다려주세요.!!");
+		ipcRenderer.send('getOrgData', authResult);
+	}
+});
+
 // 조직정보 
 ipcRenderer.on('getOrgDataResult', (event, orgData) => {
 	var option = "";
+	$("#orglayer").show();
+	$("#authkeylayer").hide();
 	$('#groupName').empty();
+
+	var chkCnt = 0;
 	$.each(orgData, function (key, value) {
-		console.log('key:' + key + ', seq:' + value.seq + ',orgnm:' + value.orgnm);
-
 		option += "<option>" + value.orgnm + "</option>";
-
+		chkCnt++;
 	});
+	if( chkCnt == 0 ){
+		$("#orglayer").hide();
+		$("#authkeylayer").show();
+		fn_alert("등록된 조직정보가 없습니다. 조직을 등록후 사용해주세요.");
+	// }else{
+	// 	$(".layerpop__container").text("pc가 포함된 조지을 선택하신 후 등록버튼을 클릭해주세요.!!");
+	}
 	$('#groupName').append(option);
 });
 
@@ -35,14 +56,17 @@ ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 
 	console.log("install_program_version_chkeckResult===" + isChkVal);
 	// isChkVal = 'Y';
-
+  
 	if (isChkVal == 'Y') {
 		// 초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.
 		console.log("초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.");
 		// document.getElementById("groupName").focus();
 		$modal.hide();
 		$("#loadingInfoText").text("");
-		ipcRenderer.send('getOrgData');
+		// 인증
+		// ipcRenderer.send('getOrgAuth');
+		
+		
 
 	} else if (isChkVal == 'N001') {
 		//fail make folder 
@@ -75,10 +99,29 @@ ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 });
 
 
+// # step 2. autheky chekc ===================================
+var doubleSubmitFlag = false;
+const pcChkAuthBtn = document.getElementById('pcChkAuthBtn');
+pcChkAuthBtn.addEventListener('click', function (event) {
+	if (!doubleSubmitFlag) {
+
+		let authkey_val = $("#authkey").val(); //$("#groupName").val(); //부서번호
+
+		if (authkey_val.length == 0 ) {
+			doubleSubmitFlag = false;
+			return false
+		}
+
+		ipcRenderer.send('getOrgAuth', authkey_val);
+		
+	} else {
+		doubleSubmitFlag = true;
+		return false;
+	}
+
+});
 
 // # step 2. 부서번호 체크 ====================================
-// 
-var doubleSubmitFlag = false;
 const pcChkBtn = document.getElementById('pcChkBtn');
 pcChkBtn.addEventListener('click', function (event) {
 	if (!doubleSubmitFlag) {
