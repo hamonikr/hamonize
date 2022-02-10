@@ -160,7 +160,7 @@
 		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
 		select domain,seq,p_seq,org_nm,org_ordr,section,level,path
 		from search_org 
-		where section = 'S'
+		where 1=1
 		order by level,org_ordr
 	</select>
 	
