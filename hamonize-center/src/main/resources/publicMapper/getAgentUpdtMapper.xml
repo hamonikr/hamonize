@@ -45,14 +45,14 @@
 		   count(*) AS cnt
 		FROM tbl_updt_agent_job TA JOIN tbl_updt_applc TB ON TA.updt_ap_seq = TB.seq  
 		WHERE TA.org_seq = #{org_seq}
-		--AND pcm_uuid = #{pcm_uuid} 
+		<!-- AND pcm_uuid = #{pcm_uuid}  -->
 	</select>
 	
 	<select id="getAgentOldSeq" parameterType="com.model.GetAgentUpdtVo" resultType="com.model.GetAgentUpdtVo">
 		select * 
 		from tbl_updt_agent_job
 		where org_seq = #{org_seq} 
-		and pcm_uuid = #{pcm_uuid} 
+		<!-- and pcm_uuid = #{pcm_uuid}  -->
 		order by RGSTR_DATE desc limit 1
 	</select>
 	
