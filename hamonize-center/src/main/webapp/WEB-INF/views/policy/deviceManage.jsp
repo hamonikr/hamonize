@@ -48,7 +48,7 @@
 		$('input:checkbox[name=sm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		if (treeNode.checked) {
+		// if (treeNode.checked) {
 			$.post("/gplcs/dshow", {
 					org_seq: treeNode.id
 				},
@@ -68,37 +68,10 @@
 					$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
 					$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 				});
-		}
+		// }
 	}
 
 	function onCheck(event, treeId, treeNode) {
-		$('input:checkbox[name=sm_seq]').prop("checked", false);
-		var zTree = $.fn.zTree.getZTreeObj("tree");
-		var node = zTree.getNodeByParam('id', treeNode.pId);
-		if (treeNode.checked) {
-			$.post("/gplcs/dshow", {
-					org_seq: treeNode.id
-				},
-				function (result) {
-					var agrs = result;
-					var ppm_seq = agrs.dataInfo.ppm_seq;
-					ppm_seq = ppm_seq.split(",");
-					for (var i = 0; i < ppm_seq.length; i++) {
-						$('input:checkbox[name=sm_seq]').each(function () {
-							if ($(this).val() == ppm_seq[i]) {
-								$(this).prop("checked", true);
-							}
-						});
-					}
-
-
-					$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-					$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-
-
-				});
-		}
-
 	}
 
 	function beforeClick(treeId, treeNode, clickFlag) {
@@ -293,18 +266,20 @@
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			var queryArr = [];
 
-			$.each(zTree.transformToArray(zTree.getNodes()) && nodes, function (i, v) {
-				if (i >= 0) {
-					if (v.children != null)
-						nodeLength[v.level] = 0;
-					nodeLength[eval(v.level - 1)]++;
-					var data = {
-						"org_seq": v.id
-					}
+			// $.each(zTree.transformToArray(zTree.getNodes()) && nodes, function (i, v) {
+			// 	if (i >= 0) {
+			// 		if (v.children != null)
+			// 			nodeLength[v.level] = 0;
+			// 		nodeLength[eval(v.level - 1)]++;
+			// 		var data = {
+			// 			"org_seq": v.id
+			// 		}
 
-					queryArr.push(data);
-				}
-			})
+			// 		queryArr.push(data);
+			// 	}
+			// })
+			queryArr.push($('form[name=frm] input[name=org_seq]').val());
+			
 
 			button.disabled = true;
 

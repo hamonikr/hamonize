@@ -61,18 +61,58 @@
 				type: 'view'
 			},
 			function (data) {
-				console.log("d==========+++" + data);
 				var shtml = "";
 				var shtml_r = "";
 
 				var textCutLength = 20;
-				console.log("data.pcList.length============" + data.pcList.length);
+
+				$(".programResultTr").empty();
+				$(".programResultTbody").empty();
+				var programResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
+				programResultTrHtml += '<th data-property="countrycode" class="sortable">버전</th>';
+				programResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
+				programResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
+				programResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
+				programResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
+				$(".programResultTr").append(programResultTrHtml);
+				
+
+				$(".programBlockResultTr").empty();
+				$(".programBlockResultTbody").empty();
+				var programBlockResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
+				programBlockResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
+				programBlockResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
+				programBlockResultTrHtml += '<th data-property="geonameId" class="sortable">완료</th>';
+				programBlockResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
+				$(".programBlockResultTr").append(programBlockResultTrHtml);
+
+				
+				$(".firewallResultTr").empty();
+				$(".firewallResultTbody").empty();
+				var firewallResultTrHtml = '<th data-property="toponymName" class="sortable">포트번호</th>';
+				firewallResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
+				firewallResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
+				firewallResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
+				firewallResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
+				$(".firewallResultTr").append(firewallResultTrHtml);
+
+
+				$(".deviceResultTr").empty();
+				$(".deviceResultTbody").empty();
+				var deviceResultTrHtml = '<th data-property="toponymName" class="sortable">포트번호</th>';
+				deviceResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
+				deviceResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
+				deviceResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
+				deviceResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
+				$(".deviceResultTr").append(deviceResultTrHtml);
+				
 				if (data.pcList.length > 0) {
 
 
 
 // ========================================= aa
 					// 선택한 조직의 pc 목록
+					shtml += '<ul class="monitor_list">';
 					$.each(data.pcList, function (index, value) {
 						var hostnameVal = '';
 						if (value.pc_hostname.length >= textCutLength) {
@@ -91,20 +131,16 @@
 							hostnameVal + "</a></li>";
 
 					});
+
+// <ul class="monitor_list"><li>
+// <a style="color:#555;" href="#" data-toggle="tooltip" title="hamonize-clientpc2" onclick="detail('7490a9f7d989432b9f0f5314ce82e956')">hamonize-clientpc2</a></li><li class="on"><a href="#" data-toggle="tooltip" title="hamonize-clientpc" onclick="detail('3571bd5fea17439e80e1f2d05b3bd2ad')">hamonize-clientpc</a></li></ul>
+
 					$(".right_box_l").append(shtml);
 
 
 					// 프로그램 설치 결과 전체 =======================================================
 
-					$(".programResultTr").empty();
-					$(".programResultTbody").empty();
-					var programResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
-					programResultTrHtml += '<th data-property="countrycode" class="sortable">버전</th>';
-					programResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
-					programResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
-					programResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
-					programResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
-					$(".programResultTr").append(programResultTrHtml);
+					
 
 					var progrmResultHtml = "";
 					for (var i = 0; i < data.policyUpdtResult.length; i++) {
@@ -179,14 +215,6 @@
 
 
 					//프로그램 차단 배포 결과 ==============================================================================================
-					$(".programBlockResultTr").empty();
-					$(".programBlockResultTbody").empty();
-					var programBlockResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
-					programBlockResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
-					programBlockResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
-					programBlockResultTrHtml += '<th data-property="geonameId" class="sortable">완료</th>';
-					programBlockResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
-					$(".programBlockResultTr").append(programBlockResultTrHtml);
 
 
 					console.log("data.policyProgrmResult.length========+++"+ data.policyProgrmResult.length);
@@ -231,14 +259,6 @@
 					$(".programBlockResultTbody").append(programBlockResult);
 
 					//방화벽 차단 배포 결과 // ========================================================================
-					$(".firewallResultTr").empty();
-					$(".firewallResultTbody").empty();
-					var firewallResultTrHtml = '<th data-property="toponymName" class="sortable">포트번호</th>';
-					firewallResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
-					firewallResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
-					firewallResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
-					firewallResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
-					$(".firewallResultTr").append(firewallResultTrHtml);
 					
 
 					var firewallResult = '';
@@ -279,14 +299,6 @@
 					$(".firewallResultTbody").append(firewallResult);
 
 					//디바이스 차단 배포 결과 ================================================
-					$(".deviceResultTr").empty();
-					$(".deviceResultTbody").empty();
-					var deviceResultTrHtml = '<th data-property="toponymName" class="sortable">포트번호</th>';
-					deviceResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
-					deviceResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
-					deviceResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
-					deviceResultTrHtml += '<th data-property="geonameId" class="sortable">미완료</th>';
-					$(".deviceResultTr").append(deviceResultTrHtml);
 
 					var deviceResult = '';					
 					for (var i = 0; i < data.policyDeviceResult.length; i++) {
@@ -343,14 +355,45 @@
 		<%@ include file="../template/orgTree.jsp" %>
 		<!-- body left End  -->
 
-
+<style>
+.monitor_list li {
+    width: 201.7px;
+    display: inline-block;
+    border-radius: 10px;
+    color: #555;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    line-height: 22px;
+    /* height: 100px; */
+    vertical-align: middle;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+    background-color: #fff;
+    text-align: center;
+    margin: 10px;
+    vertical-align: middle;
+    padding: 10px;
+}
+.monitor_list li.on {
+    background-color: #7759c3;
+    color: #fff;
+    border: 1px solid #7759c3;
+    box-shadow: 0 3px 2px 0 rgb(0 0 0 / 10%);
+}
+</style>
 		<!-- body right -->
 		<aside class="col-lg-4 b-l">
 			<section class="vbox">
 				<section class="scrollable">
 					<div class="wrapper">
 						<section class="panel panel-default">
-							<div class="right_box_l"> </div>
+							
+							<div class="right_box_l"> 
+
+
+							
+
+								
+							</div>
 						</section>
 					</div>
 				</section>
@@ -432,10 +475,8 @@
 
 <script>
 	function getList() {
-		var url = '/mntrng/pcList.do';
-
+		var url = '/mntrng/pcList';
 		var keyWord = $("select[name=keyWord]").val();
-
 		var vData = "org_seq=2";
 		callAjax('POST', url, vData, iNetLogGetSuccess, getError, 'json');
 	}

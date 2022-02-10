@@ -36,7 +36,7 @@
 	<select id="backupRCApplcView" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
  			SELECT 
 			 	seq, pc_status, pc_cpu, pc_memory, pc_disk, pc_macaddress, 
- 				pc_ip, first_date, last_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid 
+ 				pc_ip, rgstr_date, updt_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid 
  			FROM tbl_pc_mangr
  			WHERE org_seq = #{org_seq}
 	</select>

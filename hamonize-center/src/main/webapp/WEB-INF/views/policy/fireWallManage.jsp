@@ -46,7 +46,7 @@
 		$('input:checkbox[name=sm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		if (treeNode.checked) {
+		// if (treeNode.checked) {
 			$.post("/gplcs/fshow", {
 					org_seq: treeNode.id
 				},
@@ -68,7 +68,7 @@
 					$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 
 				});
-		}
+		// }
 	}
 
 	function onCheck(event, treeId, treeNode) {
@@ -290,17 +290,20 @@
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			var queryArr = [];
 
-			$.each(zTree.transformToArray(zTree.getNodes()) && nodes, function (i, v) {
-				if (i >= 0) {
-					if (v.children != null)
-						nodeLength[v.level] = 0;
-					nodeLength[eval(v.level - 1)]++;
-					var data = {
-						"org_seq": v.id
-					}
-					queryArr.push(data);
-				}
-			})
+			// $.each(zTree.transformToArray(zTree.getNodes()) && nodes, function (i, v) {
+			// 	if (i >= 0) {
+			// 		if (v.children != null)
+			// 			nodeLength[v.level] = 0;
+			// 		nodeLength[eval(v.level - 1)]++;
+			// 		var data = {
+			// 			"org_seq": v.id
+			// 		}
+			// 		queryArr.push(data);
+			// 	}
+			// })
+
+			
+			queryArr.push($('form[name=frm] input[name=org_seq]').val());
 
 
 			console.log("queryArr========+++" + queryArr);
