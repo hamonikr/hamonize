@@ -17,9 +17,14 @@
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		console.log(treeNode);
+			$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+			$('form[name=frm] input[name=domain]').val(treeNode.domain);
+			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 		// if (treeNode.checked) {
 			$.post("/gplcs/ushow", {
-					org_seq: treeNode.id
+					org_seq: treeNode.id,
+					domain: treeNode.domain
 				},
 				function (result) {
 					var agrs = result;
@@ -36,15 +41,10 @@
 								}
 							});
 						}
-						$('form[name=frm] input[name=org_seq]').val(obj.org_seq);
-						$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
+						//$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 						
-					}else{
-						$('form[name=frm] input[name=org_seq]').val(treeNode.id);
 					}
-
-					$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
-					$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 
 
 				});
@@ -114,6 +114,7 @@
 									<input type="hidden" name="section" id="section" value="" />
 									<input type="hidden" name="inventory_id" id="inventory_id" value="" />
 									<input type="hidden" name="group_id" id="group_id" value="" />
+									<input type="hidden" name="domain" id="domain" value="" />
 
 									<!-- update list -->
 									<ul class="promlist">
@@ -235,7 +236,8 @@
 					data: JSON.stringify(queryArr),
 					inventory_id: $('form[name=frm] input[name=inventory_id]').val(),
 					group_id: $('form[name=frm] input[name=group_id]').val(),
-					org_seq: $('form[name=frm] input[name=org_seq]').val()
+					org_seq: $('form[name=frm] input[name=org_seq]').val(),
+					domain: $('form[name=frm] input[name=domain]').val()
 				},
 				function (result) {
 					if (result == "SUCCESS") {

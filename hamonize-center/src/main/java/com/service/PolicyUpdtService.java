@@ -71,15 +71,16 @@ public class PolicyUpdtService {
 
 	public int makePolicyPackage(Map<String, Object> params) throws ParseException{
 		String output = "";
-		// uuid로 부서정보 가져오기
 		Long segSeq = (long) Integer.parseInt(params.get("org_seq").toString());
 		if (segSeq == 0) {
 			output = "nodata";
 		}
+		// org_seq로 PC UUID가져오기
+		//String uuid = 
 
 		GetAgentUpdtVo agentFirewallVo = new GetAgentUpdtVo();
 		agentFirewallVo.setOrg_seq(segSeq);
-		//agentFirewallVo.setPcm_uuid(uuid);
+		agentFirewallVo.setPcm_uuid("66cfc890ca6a4972afe9552f9cb18046");
 
 		int chkProgrmPolicy = getAgentUpdtMapper.getAgentWorkYn(agentFirewallVo);
 		logger.info("//===================================");
@@ -103,7 +104,7 @@ public class PolicyUpdtService {
 		} else {
 			output = "nodata";
 		}
-
+		output = output.replace("\"", "\\\"");
 		params.put("output", output);
 		logger.info("//===================================");
 		logger.debug("//getAgent result data is : {}", output);
@@ -230,5 +231,24 @@ public class PolicyUpdtService {
 
 		return jsonObject;
 	}
+
+	/*
+	 * 부서 UUID로 부서 seq 가져오기
+	 * 
+	 * @param uuid
+	 * 
+	 * @return 부서seq
+	 */
+	// public String pcUUID(String uuid) {
+	// 	GetAgentJobVo agentVo = new GetAgentJobVo();
+	// 	agentVo.setPc_uuid(uuid);
+	// 	agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
+
+	// 	Long segSeq = 0L;
+	// 	if (agentVo != null) {
+	// 		segSeq = agentVo.getSeq();
+	// 	}
+	// 	return segSeq;
+	// }
 	
 }
