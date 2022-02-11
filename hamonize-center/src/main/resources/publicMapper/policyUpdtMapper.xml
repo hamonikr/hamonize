@@ -103,7 +103,7 @@
 		select seq
 		from search_org 
 		where 1=1
-		order by level,org_ordr) )tua
+		order by level,org_ordr) and domain = #{domain} )tua
 	</select>
 	
 	<!-- <update id="programSave" parameterType="HashMap">
