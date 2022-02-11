@@ -173,13 +173,15 @@ System.out.println("retData===="+retData.toString());
 				int result = restApiService.addHost(hdVo, orgNumChkVo);
 				if(result == 1)
 				con.addPC(hdVo);
+			}else {
+				isAddPcInfo = true;
 			}
 
 		} else {
 			logger.debug("존재하지 않는 부서입니다.");
 		}
 
-		logger.debug("hamonize Connector setPcInfo result :: {}", isAddPcInfo);
+		logger.info("hamonize Connector setPcInfo result :: {}", isAddPcInfo);
 		return isAddPcInfo;
 	}
 

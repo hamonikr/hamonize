@@ -3,6 +3,9 @@
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 
 CENTER_BASE_URL="$1"
+DOMAININFO="$2"
+
+
 
 DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
 LOGFILE="/var/log/hamonize/propertiesJob/propertiesJob.log"
@@ -108,7 +111,8 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     [[inputs.swap]]
     [[inputs.system]]
     [global_tags]
-    uuid = "'${PCUUID}'"
+    uuid = "'${PCUUID}'" 
+    domain = "'${DOMAININFO}'"
     ' >>/etc/telegraf/telegraf.conf
 
     sudo service telegraf restart

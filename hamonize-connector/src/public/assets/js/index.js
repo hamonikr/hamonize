@@ -26,6 +26,7 @@ ipcRenderer.on('getAuthResult', (event, authResult) => {
 		fn_alert("Hamonize 인증키 오류입니다. 다시 확인하신후 입력해 주시기바랍니다.");
 	}else{
 		$(".layerpop__container").text("인증이 완료되었습니다. 조직정보를 불러오는 중입니다.  잠시만 기다려주세요.!!");
+		$("#domain").val(authResult);
 		ipcRenderer.send('getOrgData', authResult);
 	}
 });
@@ -135,7 +136,7 @@ pcChkBtn.addEventListener('click', function (event) {
 		let sabun = "sabun"; //$("#sabun").val(); //사번
 		let username = "username"; //$("#username").val(); // 사용자 이름
 
-		ipcRenderer.send('pcInfoChk', groupname, sabun, username);
+		ipcRenderer.send('pcInfoChk', groupname, sabun, username, $("#domain").val());
 		doubleSubmitFlag = true;
 	} else {
 		doubleSubmitFlag = true;
@@ -209,7 +210,8 @@ ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
 
 // ======== step 4. PC 관리 프로그램 설치... =========================================/
 function hamonizeProgramInstall() {
-	ipcRenderer.send('hamonizeProgramInstall');
+	
+	ipcRenderer.send('hamonizeProgramInstall', $("#domain").val());
 }
 
 ipcRenderer.on('hamonizeProgramInstall_Result', (event, mkfolderResult) => {

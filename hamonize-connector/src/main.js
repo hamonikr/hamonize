@@ -232,12 +232,12 @@ const hamonizeVpnInstall_Action = async (event) => {
 //== STEP 3. program install   ===========================================
 //========================================================================
 
-ipcMain.on('hamonizeProgramInstall', (event) => {
-	hamonizeProgramInstall_Action(event);
+ipcMain.on('hamonizeProgramInstall', (event, domain) => {
+	hamonizeProgramInstall_Action(event, domain);
 });
-const hamonizeProgramInstall_Action = async (event) => {
+const hamonizeProgramInstall_Action = async (event, domain) => {
 	try {
-		let hamonizeProgramInstallProcResult = await hamonizeProgramInstallProc();
+		let hamonizeProgramInstallProcResult = await hamonizeProgramInstallProc(domain);
 		console.log("hamonizeProgramInstall_Result==" + hamonizeProgramInstallProcResult);
 		event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
 	} catch (err) {
@@ -245,12 +245,12 @@ const hamonizeProgramInstall_Action = async (event) => {
 		return Object.assign(err);
 	}
 }
-function hamonizeProgramInstallProc() {
+function hamonizeProgramInstallProc(domain) {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====hamonizeProgramInstallProc==");
-		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl;
-
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl +" " + domain;
+		console.log("aptRepositoryChkJobShell===========++"+aptRepositoryChkJobShell);
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
@@ -508,9 +508,9 @@ function install_program_upgradeProc() {
 //================= pc info ==================================
 
 // == pc 정보 체크===
-ipcMain.on('pcInfoChk', (event, groupname, sabun, username) => {
+ipcMain.on('pcInfoChk', (event, groupname, sabun, username, domain) => {
 	mainWindow.setSize(620, 340);
-	sysInfo(event, groupname, sabun, username);
+	sysInfo(event, groupname, sabun, username, domain);
 
 });
 
@@ -561,7 +561,7 @@ function getPublicIp() {
 }
 
 let pcHostNameVal = "";
-const sysInfo = async (event, groupname, sabun, username) => {
+const sysInfo = async (event, groupname, sabun, username, domain) => {
 	let retData = {}
 	const pcHostname = await execShellCommand('hostname');
 	pcHostNameVal = pcHostname;
@@ -641,11 +641,13 @@ const sysInfo = async (event, groupname, sabun, username) => {
 				memory: raminfo.trim(),
 				deptname: groupname.trim(),
 				sabun: sabun.trim(),
-				username: username.trim()
+				username: username.trim(),
+				domain: domain.trim()
 
 			}]
 		})
 		.end(function (response) {
+			console.log("response.body===========++"+response.body);
 			event.sender.send('pcInfoChkProc', response.body);
 		});
 
