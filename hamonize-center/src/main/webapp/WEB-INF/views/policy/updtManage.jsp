@@ -23,17 +23,25 @@
 				},
 				function (result) {
 					var agrs = result;
-					var ppm_seq = agrs.dataInfo.ppm_seq;
-					ppm_seq = ppm_seq.split(",");
-					for (var i = 0; i < ppm_seq.length; i++) {
-						$('input:checkbox[name=pu_seq]').each(function () {
-							if ($(this).val() == ppm_seq[i]) {
-								$(this).prop("checked", true);
-							}
-						});
+					var jsonData = JSON.stringify(agrs.dataInfo);
+					var obj = JSON.parse(jsonData);
+
+					if(obj !=  null){
+						var ppm_seq = obj.ppm_seq; //agrs.dataInfo.ppm_seq;
+						ppm_seq = ppm_seq.split(",");
+						for (var i = 0; i < ppm_seq.length; i++) {
+							$('input:checkbox[name=pu_seq]').each(function () {
+								if ($(this).val() == ppm_seq[i]) {
+									$(this).prop("checked", true);
+								}
+							});
+						}
+						$('form[name=frm] input[name=org_seq]').val(obj.org_seq);
+						$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
+						
+					}else{
+						$('form[name=frm] input[name=org_seq]').val(treeNode.id);
 					}
-					$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-					$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 
 					$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
 					$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
@@ -117,7 +125,7 @@
 
 													<div class="form-check">
 														<input class="form-check-input" type="checkbox" name="pu_seq"
-															id="${data.pu_seq}" value='<c:out value=" ${data.pu_seq}"/>'
+															id="${data.pu_seq}" value='<c:out value="${data.pu_seq}"/>'
 															id="${data.pu_seq}">
 														<label class="form-check-label" for="${data.pu_seq}">
 															<c:out value="${data.pu_name}" />
