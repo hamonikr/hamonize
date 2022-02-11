@@ -5,12 +5,12 @@
 
 <select id="updtList" resultType="com.model.PolicyUpdtVo">
 		SELECT 
-			 pu_seq, 
-			 pu_name, 
-			 pu_status,
-			 pu_dc,
-			 deb_new_version,
-			 deb_now_version
+			pu_seq, 
+			pu_name, 
+			pu_status,
+			pu_dc,
+			deb_new_version,
+			deb_now_version
 		FROM tbl_policy_package_list
 		WHERE
 			1=1 
@@ -27,8 +27,7 @@
 		--WHERE base_deb_yn = 'N'
 	</select>
 	
-	<insert id="updtCompareSave" parameterType="java.util.HashMap">
-						
+	<insert id="updtCompareSave" parameterType="java.util.HashMap">	
 			INSERT INTO tbl_policy_package_list 
 				( PU_NAME									   
 				, PU_STATUS
@@ -36,79 +35,75 @@
 				, DEB_APPLY_NAME
 				, DEB_NEW_VERSION
 				, BASE_DEB_YN) VALUES
-					<foreach collection="data" item="item" separator=",">
-	           			(#{item.package},'I','N',#{item.package},#{item.version}, 'Y')
-	        		</foreach>	
+				<foreach collection="data" item="item" separator=",">
+					(#{item.package},'I','N',#{item.package},#{item.version}, 'Y')
+				</foreach>	
 	</insert>
-
-	<!-- <insert id="updtCompareSave" parameterType="java.util.HashMap">
-						
-			INSERT INTO tbl_policy_package_list 
-				( PU_NAME									   
-				, PU_STATUS
-				, STATUS
-				, DEB_APPLY_NAME
-				, PU_DC
-				, DEB_NEW_VERSION
-				, BASE_DEB_YN) VALUES
-					<foreach collection="data" item="item" separator=",">
-	           			(#{item.package},'I','N',#{item.package},#{item.description},#{item.version}, 'Y')
-	        		</foreach>	
-	</insert> -->
 	
 	<update id="updtCompareUpdate" parameterType="java.util.HashMap">
-	UPDATE tbl_policy_package_list 
-		SET 
-	DEB_NOW_VERSION = (SELECT DEB_NEW_VERSION FROM tbl_policy_package_list WHERE PU_NAME = #{package})
-	,DEB_NEW_VERSION = #{version}
-	,PU_STATUS = 'U'
-	WHERE PU_NAME = #{package}
+		UPDATE tbl_policy_package_list 
+			SET 
+		DEB_NOW_VERSION = (SELECT DEB_NEW_VERSION FROM tbl_policy_package_list WHERE PU_NAME = #{package})
+		,DEB_NEW_VERSION = #{version}
+		,PU_STATUS = 'U'
+		WHERE PU_NAME = #{package}
 	</update>
 
 	<update id="updatePolicyProgrm" parameterType="java.util.HashMap">
 		<foreach collection="data" item="item" separator=";">
 			update 
 			tbl_progrm_applc 
-			set seq = (select nextval('tbl_progrm_applc_seq_seq'::regclass)) , ppm_seq = (select string_agg(A.ppm_seq,',')::text from 
+			set ppm_seq = (select string_agg(A.ppm_seq,',')::text from 
 				(
 				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_progrm_applc where org_seq=#{item.org_seq}
 				intersect
 				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_updt_applc where org_seq=#{item.org_seq}
-				) A) where org_seq = #{item.org_seq}
+				) A) where org_seq = #{item.org_seq} and domain = #{domain}
 		</foreach>
 	</update>
 	
-	 <insert id="updtSave" parameterType="java.util.HashMap">
-			
-			
+	<insert id="updtSave" parameterType="java.util.HashMap">
 		WITH rows AS (
 			INSERT INTO TBL_UPDT_APPLC 
 				( ORG_SEQ									   
-				, PPM_SEQ) VALUES
+				, PPM_SEQ
+				, DOMAIN) VALUES
 				<if test="ppm_seq != null">
 					<foreach collection="data" item="item" separator=",">
-	           			(#{item.org_seq},#{ppm_seq})
-	        		</foreach>
-        		</if>
-        RETURNING seq, org_seq, ppm_seq
+						(#{item.org_seq},#{ppm_seq},#{domain})
+					</foreach>
+        </if>
+        RETURNING seq, org_seq, ppm_seq, domain
 		)   
-		INSERT INTO tbl_updt_applc_history (updt_seq, org_seq, ppm_seq, insert_dt  ) SELECT seq, org_seq, ppm_seq, now() FROM rows 			
-        		
+		INSERT INTO tbl_updt_applc_history (updt_seq, org_seq, ppm_seq, domain, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq,domain, now() FROM rows 			
 	</insert>
 	
 	<delete id="updtDelete" parameterType="java.util.HashMap">
-	DELETE FROM TBL_UPDT_APPLC WHERE ORG_SEQ IN (
-	<foreach collection="data" item="item" separator=",">
-            #{item.org_seq}
-        		</foreach>
-	)
+		DELETE FROM TBL_UPDT_APPLC WHERE ORG_SEQ IN (
+			<foreach collection="data" item="item" separator=",">
+							#{item.org_seq}
+				</foreach>
+		) AND domain = #{domain}
 	</delete>
 	
 	<select id="updtApplcView" resultType="com.model.PolicyUpdtVo" parameterType="com.model.PolicyUpdtVo" >
- 			SELECT ORG_SEQ,PPM_SEQ 
- 			FROM 
- 			TBL_UPDT_APPLC 
- 			WHERE ORG_SEQ = #{org_seq}
+		SELECT array_to_string(array_agg(tua.ppm_seq),',')as ppm_seq FROM
+			(SELECT distinct unnest(string_to_array(ppm_seq, ',')) ppm_seq
+			FROM 
+			TBL_UPDT_APPLC 
+			WHERE ORG_SEQ in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.seq = #{org_seq}
+			and a.domain = #{domain}
+			union all
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select seq
+		from search_org 
+		where 1=1
+		order by level,org_ordr) )tua
 	</select>
 	
 	<!-- <update id="programSave" parameterType="HashMap">

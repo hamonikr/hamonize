@@ -127,11 +127,9 @@ public class PolicyUpdtController {
 	@RequestMapping(value = "/usave", method = RequestMethod.POST)
 	public String usave(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
-logger.info("1111======"+params.get("inventory_id").toString());
-logger.info("1111======"+(String) params.get("group_id"));
-logger.info("1111======"+(String) params.get("org_seq"));
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
+		logger.info("data======"+(String) params.get("data"));
 		JsonArray jsonArray = (JsonArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
@@ -162,6 +160,7 @@ logger.info("1111======"+(String) params.get("org_seq"));
 	@RequestMapping(value = "ushow", method = RequestMethod.POST)
 	public JSONObject ushow(HttpSession session, Model model, PolicyUpdtVo vo) {
 		JSONObject data = new JSONObject();
+		System.out.println("vo====="+vo.toString());
 		try {
 			vo = uService.updtApplcView(vo);
 			data.put("dataInfo", vo);
