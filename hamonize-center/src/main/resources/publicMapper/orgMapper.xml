@@ -167,9 +167,9 @@
 	
 	<select id="getOrgAuth" resultType="com.model.OrgVo">
 		select * 
-		from tbl_admin_user 
+		from tbl_tenant_config 
 		<where>
-			authkey = #{authkey}
+			tenant_authkey = #{authkey}
 		</where> 
 	</select>	
 

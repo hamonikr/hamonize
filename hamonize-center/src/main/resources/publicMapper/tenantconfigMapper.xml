@@ -17,6 +17,8 @@
 		    domain
 		    , tenant_hadmin_config
 		    , tenant_authkey
+		    , tenant_hadmin_private_key
+		    , tenant_hadmin_public_key 
 		    , rgstr_date
 		    , updt_date
 		  )
@@ -24,6 +26,8 @@
 		  #{domain}
 		  , #{tenant_hadmin_config}
 		  , #{tenant_authkey}
+		  , #{tenant_hadmin_public_key}
+		  , #{tenant_hadmin_private_key}
 		  , now()
 		  , now()
 		);

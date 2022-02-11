@@ -84,7 +84,7 @@ public class PolicyUpdtService {
 
 		int chkProgrmPolicy = getAgentUpdtMapper.getAgentWorkYn(agentFirewallVo);
 		logger.info("//===================================");
-		logger.debug("//getAgent work yn === {}", chkProgrmPolicy);
+		logger.info("//getAgent work yn === {}", chkProgrmPolicy);
 		logger.info("//===================================");
 
 
@@ -107,7 +107,7 @@ public class PolicyUpdtService {
 		output = output.replace("\"", "\\\"");
 		params.put("output", output);
 		logger.info("//===================================");
-		logger.debug("//getAgent result data is : {}", output);
+		logger.info("//getAgent result data is : {}", output);
 		logger.info("//===================================");
 
 		int result = restApiService.makePolicyPackage(params);
@@ -122,14 +122,14 @@ public class PolicyUpdtService {
 	public JSONObject progrmPolicyData(GetAgentUpdtVo getProgrmVo) {
 
 		GetAgentUpdtVo rDataVo = new GetAgentUpdtVo();
-		//logger.debug("//====get Vo param is : {}", getProgrmVo.toString());
+		//logger.info("//====get Vo param is : {}", getProgrmVo.toString());
 
 		JSONObject jsonObject = new JSONObject();
 
 		GetAgentUpdtVo agentoldseqVo = getAgentUpdtMapper.getAgentOldSeq(getProgrmVo);
 
 		if (agentoldseqVo != null) {
-			logger.debug("//====getAgentOldSeq is : {}", getProgrmVo.toString());
+			logger.info("//====getAgentOldSeq is : {}", getProgrmVo.toString());
 			rDataVo.setOrg_seq(agentoldseqVo.getOrg_seq());
 			rDataVo.setPcm_uuid(agentoldseqVo.getPcm_uuid());
 			rDataVo.setUpdt_ap_seq(agentoldseqVo.getUpdt_ap_seq());
@@ -140,18 +140,18 @@ public class PolicyUpdtService {
 			rDataVo.setPcm_uuid(getProgrmVo.getPcm_uuid());
 		}
 
-		logger.debug("//====rDataVorDataVorDataVoget Vo param is : {}", rDataVo.toString());
+		logger.info("//====rDataVorDataVorDataVoget Vo param is : {}", rDataVo.toString());
 
 		// 에이전트가 작업 수행결과를 업데이트 하는 일 > rDataVo
 		int retInsertSelectVal = getAgentUpdtMapper.setInsertSelect(rDataVo);
 
 		logger.info("//===============================");
-		logger.debug("//====retInsertSelectVal is : {}", retInsertSelectVal);
+		logger.info("//====retInsertSelectVal is : {}", retInsertSelectVal);
 		logger.info("//===============================");
 
 		// 디비에서 정책 가져오기 - 업그레이드시에 버전 정보를 가져오기
 		List<GetAgentUpdtVo> progrmPolicyData = getAgentUpdtMapper.getListUpdtsPolicy(rDataVo);
-		logger.debug("//+progrmPolicyData.size() ==={}", progrmPolicyData.size());
+		logger.info("//+progrmPolicyData.size() ==={}", progrmPolicyData.size());
 		if (progrmPolicyData.size() == 0) {
 			jsonObject.put("nodata", "nodata");
 			return jsonObject;
@@ -180,7 +180,7 @@ public class PolicyUpdtService {
 			int arrUpdtInsertCnt = 0;
 			int arrUpdtUpgradeCnt = 0;
 			for (int i = 0; i < outputDatga.size(); i++) {
-				//logger.debug("1========={}", outputDatga.get(i).getGubun());
+				//logger.info("1========={}", outputDatga.get(i).getGubun());
 
 				if ("INSERT".contentEquals(outputDatga.get(i).getGubun())) {
 					arrUpdtInsert += outputDatga.get(i).getPcm_name() + ",";
@@ -199,7 +199,7 @@ public class PolicyUpdtService {
 				}
 
 				if ("DEL".contentEquals(outputDatga.get(i).getGubun())) {
-					//logger.debug("outputDatga >> {}", outputDatga.get(i).toString());
+					//logger.info("outputDatga >> {}", outputDatga.get(i).toString());
 
 					arrAgentProgrmN += outputDatga.get(i).getPcm_name() + ",";
 				}

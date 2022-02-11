@@ -23,6 +23,8 @@ public class TenantconfigVo {
 	private String domain;
 	private Integer tenant_file_seq;
 	private String tenant_hadmin_config;
+	private String tenant_hadmin_public_key;
+	private String tenant_hadmin_private_key;
 	private Integer tenant_polling_time;
 	private String tenant_authkey;	
 	private Timestamp rgstr_date;
