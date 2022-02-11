@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.ITenantconfigMapper">
+	
+	
+	<select id="getOrgName" resultType="com.model.TenantconfigVo">
+		SELECT *
+		FROM tbl_tenant_config
+		
+	</select>
+	
+	
+	<update id="tenantInfoSave" parameterType="com.model.TenantconfigVo">
+		INSERT INTO tbl_tenant_config
+		(
+		    domain
+		    , tenant_hadmin_config
+		    , tenant_authkey
+		    , rgstr_date
+		    , updt_date
+		  )
+		VALUES(
+		  #{domain}
+		  , #{tenant_hadmin_config}
+		  , #{tenant_authkey}
+		  , now()
+		  , now()
+		);
+	</update>
+
+<!-- 	
+WHERE seq = (select org_seq from public.tbl_pc_mangr where pc_uuid = #{pc_uuid} )
+		and DOMAIN = #{domain}
+
+<update id="orgSave" parameterType="com.model.OrgVo" useGeneratedKeys="true" keyProperty="seq" keyColumn="seq">
+	</update>
+
+
+	<update id="addDownAwxId" parameterType="com.model.OrgVo"> 
+		UPDATE TBL_ORG SET GROUP_ID = #{group_id} WHERE domain = #{domain} and seq = #{seq}
+	</update> -->
+</mapper>

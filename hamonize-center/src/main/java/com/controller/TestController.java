@@ -1,6 +1,8 @@
 package com.controller;
 
 
+import java.util.Random;
+
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -86,4 +88,10 @@ public class TestController {
 		return "/test";
 
 	}
+	
+//	public static void main(String[] args)  {
+//		java.util.Random generator = new java.util.Random();
+//        generator.setSeed(System.currentTimeMillis());
+//        System.out.println(generator.nextInt(1000000) % 1000000);
+//    }
 }

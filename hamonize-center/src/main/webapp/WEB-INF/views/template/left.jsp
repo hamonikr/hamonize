@@ -14,7 +14,7 @@
                     <header class="header bg-primary lter text-center clearfix">
                         <div class="btn-group">
                             <div class="btn-group hidden-nav-xs">
-                                <a href="#" class="" data-toggle="fullscreen"><img
+                                <a href="/" class="" data-toggle="fullscreen"><img
                                         src="http://ts.hamonikr.org/images/hlogo.png" class="m-r-sm" width="90%"></a>
                             </div>
                         </div>

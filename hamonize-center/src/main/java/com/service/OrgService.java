@@ -7,9 +7,11 @@ import javax.naming.NamingException;
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
+import com.mapper.ITenantconfigMapper;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.RecoveryVo;
+import com.model.TenantconfigVo;
 import com.util.AuthUtil;
 import com.util.LDAPConnection;
 
@@ -38,6 +40,8 @@ public class OrgService {
 	private IOrgMapper orgMapper;
 	@Autowired
 	private IPcMangrMapper pcMapper;
+	@Autowired
+	private ITenantconfigMapper tenantconfigMapper;
 
 	@Autowired
 	RestApiService restApiService;
@@ -112,6 +116,17 @@ public class OrgService {
 				{
 					// ldap 저장
 					con.addOu(orgvo);
+					
+					//	테넌트별 설정값 저장 ( 테넌트 키, 하모나이즈어드민 설정 파일)
+					TenantconfigVo tenantVo = new TenantconfigVo();
+					tenantVo.setDomain( orgvo.getDomain());
+					
+					java.util.Random generator = new java.util.Random();
+			       generator.setSeed(System.currentTimeMillis());
+			       int authkeyTmp = generator.nextInt(1000000) % 1000000; 
+			       tenantVo.setTenant_authkey( Integer.toString(authkeyTmp) );
+			        
+					tenantconfigMapper.tenantInfoSave(tenantVo);
 				}
 			} catch (Exception e)
 			{
