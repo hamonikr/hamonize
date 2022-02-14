@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class PolicyFireWallController {
 	@ResponseBody
 	@RequestMapping(value = "/fsave", method = RequestMethod.POST)
 	public String finsert(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
+			@RequestParam Map<String, Object> params) throws ParseException {
 
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
@@ -98,7 +99,8 @@ public class PolicyFireWallController {
 
 		fService.fireWallDelete(params);
 		result = fService.fireWallSave(params);
-
+		//ansible 정책전달
+		fService.makePolicyPackage(params);
 		if (result >= 1)
 			return "SUCCESS";
 		else

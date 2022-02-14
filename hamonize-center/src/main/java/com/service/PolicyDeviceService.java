@@ -1,9 +1,12 @@
 package com.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,8 @@ import com.paging.PagingVo;
 @Service
 public class PolicyDeviceService {
 	
-	
+	@Autowired
+	RestApiService restApiService;
 	
 	@Autowired
 	IPolicyDeviceMapper iDeviceMapper;
@@ -68,6 +72,38 @@ public class PolicyDeviceService {
 	
 	public void devicePopDelete(PolicyDeviceVo vo) throws Exception{
 		iDeviceMapper.devicePopDelete(vo);
+	}
+
+	public int makePolicyPackage(Map<String, Object> params) throws ParseException{
+		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
+		
+		String[] listA = params.get("ppm_name").toString().split(",");
+		String[] listB = params.get("former_ppm_name").toString().split(",");
+
+		ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
+		ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
+
+		former_ppm_name.removeAll(ppm_name);
+
+		String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
+		// String output = "";
+		// JSONObject updtPolicy = new JSONObject();
+		// updtPolicy.put("INSERT", String.join(",",ppm_name));
+		// if(!former_ppm_name.isEmpty())
+		// {
+		// 	updtPolicy.put("DEL", String.join(",",former_ppm_name));
+		// }
+		// output = updtPolicy.toJSONString();
+		// output = output.replaceAll("\"", "\\\\\\\"");
+		params.put("output", output);
+		params.put("policyFilePath","/etc/hamonize/security/device.hm");
+
+		int result = restApiService.makePolicy(params);
+		System.out.println("resuklt======="+result);
+	
+
+		return result;
+
 	}
 
 }

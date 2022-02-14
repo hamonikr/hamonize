@@ -15,13 +15,14 @@
 			INSERT INTO 
 				TBL_DEVICE_APPLC 
 					( ORG_SEQ									   
-					, PPM_SEQ) VALUES
+					, PPM_SEQ
+					, DOMAIN) VALUES
 					<foreach collection="data" item="item" separator=",">
-	            (#{item.org_seq},#{ppm_seq})
+	            (#{item.org_seq},#{ppm_seq},#{domain})
 	        		</foreach>
-        RETURNING seq, org_seq, ppm_seq
+        RETURNING seq, org_seq, ppm_seq, domain
 		)   
-		INSERT INTO tbl_device_applc_history (dvc_seq, org_seq, ppm_seq,  insert_dt  ) SELECT seq, org_seq, ppm_seq, now() FROM rows 	
+		INSERT INTO tbl_device_applc_history (dvc_seq, org_seq, ppm_seq, domain, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq, domain, now() FROM rows 	
 		
 	</insert>
 	
@@ -30,14 +31,27 @@
 		<foreach collection="data" item="item" separator=",">
 	            #{item.org_seq}
 	    </foreach>
-		)
+		) AND DOMAIN = #{domain}
 	</delete>
 	
 	<select id="deviceApplcView" resultType="com.model.PolicyDeviceVo" parameterType="com.model.PolicyDeviceVo" >
-		SELECT 
-			ORG_SEQ,PPM_SEQ 
-		FROM  TBL_DEVICE_APPLC 
-		WHERE ORG_SEQ = #{org_seq}
+		SELECT array_to_string(array_agg(tua.ppm_seq),',')as ppm_seq FROM
+			(SELECT distinct unnest(string_to_array(ppm_seq, ',')) ppm_seq
+			FROM 
+			TBL_DEVICE_APPLC 
+			WHERE ORG_SEQ in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.seq = #{org_seq}
+			and a.domain = #{domain}
+			union all
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select seq
+		from search_org 
+		where 1=1
+		order by level,org_ordr) and domain = #{domain} )tua
 	</select>
 	
 	<select id="dManagePopList" resultType="com.model.PolicyDeviceVo" parameterType="java.util.HashMap">

@@ -23,7 +23,7 @@ import lombok.ToString;
 public class ApplcDeviceHistory {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Comment("시리얼넘버")
 	private Long seq;
 

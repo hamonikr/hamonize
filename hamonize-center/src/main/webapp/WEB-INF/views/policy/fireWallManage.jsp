@@ -43,61 +43,49 @@
 	});
 
 	function onClick(event, treeId, treeNode, clickFlag) {
+		$('form[name=frm] input[name=former_ppm_name]').val("");
 		$('input:checkbox[name=sm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
+		let former_ppm_names = [];
+			$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+			$('form[name=frm] input[name=domain]').val(treeNode.domain);
+			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 		// if (treeNode.checked) {
+			$.ajaxSetup({ async:false });
 			$.post("/gplcs/fshow", {
-					org_seq: treeNode.id
+					org_seq: treeNode.id,
+					domain: treeNode.domain
 				},
 				function (result) {
 					var agrs = result;
-					var ppm_seq = agrs.dataInfo.ppm_seq;
-					ppm_seq = ppm_seq.split(",");
-					for (var i = 0; i < ppm_seq.length; i++) {
-						$('input:checkbox[name=sm_seq]').each(function () {
-							if ($(this).val() == ppm_seq[i]) {
-								$(this).prop("checked", true);
-							}
+					var jsonData = JSON.stringify(agrs.dataInfo);
+					var obj = JSON.parse(jsonData);
+
+					if(obj !=  null){
+						var ppm_seq = agrs.dataInfo.ppm_seq;
+						ppm_seq = ppm_seq.split(",");
+						for (var i = 0; i < ppm_seq.length; i++) {
+							$('input:checkbox[name=sm_seq]').each(function () {
+								if ($(this).val() == ppm_seq[i]) {
+									$(this).prop("checked", true);
+									former_ppm_names.push($(this).data("port"));
+								}
 
 
-						});
+							});
+						}
+						$('form[name=frm] input[name=former_ppm_name]').val(former_ppm_names);
+						//$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
+						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					}
-
-					$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-					$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-
 				});
 		// }
 	}
 
 	function onCheck(event, treeId, treeNode) {
-		$('input:checkbox[name=sm_seq]').prop("checked", false);
-		var zTree = $.fn.zTree.getZTreeObj("tree");
-		var node = zTree.getNodeByParam('id', treeNode.pId);
-		if (treeNode.checked) {
-			$.post("/gplcs/fshow", {
-					org_seq: treeNode.id
-				},
-				function (result) {
-					var agrs = result;
-					var ppm_seq = agrs.dataInfo.ppm_seq;
-					ppm_seq = ppm_seq.split(",");
-					for (var i = 0; i < ppm_seq.length; i++) {
-						$('input:checkbox[name=sm_seq]').each(function () {
-							if ($(this).val() == ppm_seq[i]) {
-								$(this).prop("checked", true);
-							}
-
-
-						});
-					}
-
-					$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-					$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-
-				});
-		}
+		
 	}
 
 	function beforeClick(treeId, treeNode, clickFlag) {
@@ -227,6 +215,11 @@
 									<input type="hidden" name="org_seq" id="org_seq" value="" />
 									<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 									<input type="hidden" name="section" id="section" value="" />
+									<input type="hidden" name="inventory_id" id="inventory_id" value="" />
+									<input type="hidden" name="group_id" id="group_id" value="" />
+									<input type="hidden" name="domain" id="domain" value="" />
+									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
+									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
 									<!-- update list -->
 									<ul class="promlist">
@@ -234,7 +227,8 @@
 											<li>
 
 												<div class="form-check">
-													<input class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value=" ${data.sm_seq}" />" id="${data.sm_seq}">
+													<input class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}"
+													value="<c:out value=' ${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
 													<label class="form-check-label" for="${data.sm_seq}">
 														<c:out value="${data.sm_name}" />
 													</label>
@@ -274,13 +268,16 @@
 		if (confirm("하위부서 및 부서가 있다면 하위부서 및 부서에도 전부 적용됩니다 적용하시겠습니까?")) {
 
 			var ppm_seq = "";
+			let ppm_names = [];
 			$('input:checkbox[name=sm_seq]').each(function (i) {
 				if ($(this).is(':checked'))
 					ppm_seq += ($(this).val()) + ",";
+					ppm_names.push($(this).data("port"));
 			});
 
 
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
+			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
 			if (ppm_seq == "") {
 				ppm_seq = 0;
 			}
@@ -336,7 +333,13 @@
 			$.post("/gplcs/fsave", {
 					dataType: 'json',
 					ppm_seq: ppm_seq,
-					data: JSON.stringify(queryArr)
+					data: JSON.stringify(queryArr),
+					inventory_id: $('form[name=frm] input[name=inventory_id]').val(),
+					group_id: $('form[name=frm] input[name=group_id]').val(),
+					org_seq: $('form[name=frm] input[name=org_seq]').val(),
+					domain: $('form[name=frm] input[name=domain]').val(),
+					former_ppm_name: $('form[name=frm] input[name=former_ppm_name]').val(),
+					ppm_name: $('form[name=frm] input[name=ppm_name]').val()
 				},
 				function (result) {
 					if (result == "SUCCESS") {

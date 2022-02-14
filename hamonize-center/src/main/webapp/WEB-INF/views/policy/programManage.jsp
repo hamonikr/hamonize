@@ -21,43 +21,59 @@
 
 	//메뉴 Tree onClick 
 	function onClick(event, treeId, treeNode, clickFlag) {
-
+		$('form[name=frm] input[name=former_ppm_name]').val("");
 		$('input:checkbox[name=pcm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
+		let former_ppm_name = [];
+			$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+			$('form[name=frm] input[name=domain]').val(treeNode.domain);
+			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 
 		// if (treeNode.checked) {
+			$.ajaxSetup({ async:false });
 			$.post("/gplcs/pshow", {
-					org_seq: treeNode.id
+					org_seq: treeNode.id,
+					domain: treeNode.domain
 				},
 				function (result) {
 					var agrs = result;
-
+					var jsonData = JSON.stringify(agrs.dataInfo);
+					var obj = JSON.parse(jsonData);
 					var html = "";
-					for (var y = 0; y < agrs.pList.length; y++) {
-						html += '<div class="form-check">';
-						html += '<input class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y]
-							.pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '" />';
-						html += '<label class="form-check-label" for="' + agrs.pList[y].pcm_seq + '">';
-						html += agrs.pList[y].pcm_name;
-						html += '</labe>';
+					if(agrs.pList.length > 0){
+						for (var y = 0; y < agrs.pList.length; y++) {
+							html += '<li>';
+							html += '<div class="form-check">';
+							html += '<input class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y]
+								.pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '"data-package="'+agrs.pList[y].pcm_name+'" />';
+							html += '<label class="form-check-label" for="' + agrs.pList[y].pcm_seq + '">';
+							html += agrs.pList[y].pcm_name;
+							html += '</label>';
+							html += '</li>';
+						}
+					}else{
+						html += '<li>';
+						html += '설치된 패키지가 없습니다.';
+						html += '</li>';
 					}
 					$(".promlist").html();
 					$(".promlist").html(html);
-					console.log(agrs.dataInfo);
-					if (agrs.dataInfo != null) {
+					if(obj !=  null){
 						var ppm_seq = agrs.dataInfo.ppm_seq;
 						ppm_seq = ppm_seq.split(",");
 						for (var i = 0; i < ppm_seq.length; i++) {
 							$('input:checkbox[name=pcm_seq]').each(function () {
 								if ($(this).val() == ppm_seq[i]) {
 									$(this).prop("checked", true);
+									former_ppm_name.push($(this).data("package"));
 								}
 							});
 						}
-
-						$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-						$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
+						$('form[name=frm] input[name=former_ppm_name]').val(former_ppm_name);
+						//$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
+						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					}
 				});
 		// }
@@ -105,17 +121,21 @@
 									<input type="hidden" name="org_seq" id="org_seq" value="" />
 									<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 									<input type="hidden" name="section" id="section" value="" />
+									<input type="hidden" name="inventory_id" id="inventory_id" value="" />
+									<input type="hidden" name="group_id" id="group_id" value="" />
+									<input type="hidden" name="domain" id="domain" value="" />
+									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
+									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
 									<!-- update list -->
 									<ul class="promlist">
-										<c:forEach items="${pList}" var="data" varStatus="status">
+										<!-- <c:forEach items="${pList}" var="data" varStatus="status">
 											<li>
 
 
 												<div class="form-check">
 													<input class="form-check-input" type="checkbox" name="pcm_seq"
-														id="${data.pcm_seq}" value="<c:out value=" ${data.pcm_seq}" />"
-													id="${data.pcm_seq}">
+														id="${data.pcm_seq}" value="<c:out value='${data.pcm_seq}'/>">
 													<label class="form-check-label" for="${data.pcm_seq}">
 														<c:out value="${data.pcm_name}" />
 													</label>
@@ -125,7 +145,7 @@
 													<c:out value="${data.pcm_dc}" />
 												</p>
 											</li>
-										</c:forEach>
+										</c:forEach> -->
 									</ul>
 									
 									
@@ -154,12 +174,14 @@
 
 		if (confirm("하위부서가 있다면 하위부서들에도 전부 적용됩니다 적용하시겠습니까?")) {
 			var ppm_seq = "";
+			let ppm_names = [];
 			$('input:checkbox[name=pcm_seq]').each(function (i) {
 				if ($(this).is(':checked'))
 					ppm_seq += ($(this).val()) + ",";
+					ppm_names.push($(this).data("package"));
 			});
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
-
+			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
 			var zTree = $.fn.zTree.getZTreeObj("tree");
 			var nodes = zTree.getCheckedNodes(true);
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -212,7 +234,13 @@
 			$.post("/gplcs/psave", {
 					dataType: 'json',
 					ppm_seq: ppm_seq,
-					data: JSON.stringify(queryArr)
+					data: JSON.stringify(queryArr),
+					inventory_id: $('form[name=frm] input[name=inventory_id]').val(),
+					group_id: $('form[name=frm] input[name=group_id]').val(),
+					org_seq: $('form[name=frm] input[name=org_seq]').val(),
+					domain: $('form[name=frm] input[name=domain]').val(),
+					former_ppm_name: $('form[name=frm] input[name=former_ppm_name]').val(),
+					ppm_name: $('form[name=frm] input[name=ppm_name]').val()
 				},
 				function (result) {
 					if (result == "SUCCESS") {
