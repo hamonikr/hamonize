@@ -38,7 +38,7 @@
 <script type="text/javascript" src="/js/ztree/jquery.ztree.excheck.js"></script>
 <script type="text/javascript" src="/js/ztree/fuzzysearch.js"></script>
 
-
+<script type="text/javascript" src="/js/calendar.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
 </head>
 

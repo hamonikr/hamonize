@@ -465,11 +465,11 @@ function fnSave(){
 		case '/auditLog/updateCheckLog' :  $("#navInfo").text('Home / 정책관리 / 정책배포결과' ); $("#orgTreeBtnLayer").hide();  break;
 		case '/backupRecovery/backupC' :  $("#navInfo").text('Home / 백업관리 / 백업주기설정' ); break;
 		case '/backupRecovery/backupR' :  $("#navInfo").text('Home / 백업관리 / 복구관리' ); $("#orgTreeBtnLayer").hide(); break;
-		case '/auditLog/pcUserLog' :  $("#navInfo").text('Home / 로그감사/ 사용자접속로그' ); break;
 		
-		case '/auditLog/prcssBlockLog' :  $("#navInfo").text('Home / 로그감사 / 프로그램차단로그' ); break;
-		case '/auditLog/pcChangeLog' :  $("#navInfo").text('Home / 로그감사 / 하드웨어변경로그' ); break;
-		case '/auditLog/unAuthLog' :  $("#navInfo").text('Home / 로그감사 / 디바이스로그' ); break;
+		case '/auditLog/pcUserLog' :  $("#navInfo").text('Home / 로그감사/ 사용자접속로그' );  $("#orgTreeBtnLayer").hide(); break;
+		case '/auditLog/prcssBlockLog' :  $("#navInfo").text('Home / 로그감사 / 프로그램차단로그' ); $("#orgTreeBtnLayer").hide(); break;
+		case '/auditLog/pcChangeLog' :  $("#navInfo").text('Home / 로그감사 / 하드웨어변경로그' ); $("#orgTreeBtnLayer").hide(); break;
+		case '/auditLog/unAuthLog' :  $("#navInfo").text('Home / 로그감사 / 디바이스로그' ); $("#orgTreeBtnLayer").hide(); break;
 	}
 </script>
 

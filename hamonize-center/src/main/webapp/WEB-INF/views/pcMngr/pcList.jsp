@@ -473,10 +473,6 @@
 
 	function delete_pc() {
 
-		console.log("1 ==="+ $('#seq').val());
-		console.log("1 ==="+ $('#old_org_seq').val());
-		console.log("1 ==="+ $("#detail_hostname").text());
-
 
 		if (confirm("해당 PC를 삭제하시겠습니까?")) {
 			$.ajax({

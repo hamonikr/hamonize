@@ -11,6 +11,7 @@ public class AuditLogVo {
 	
 	private Integer org_seq;
 
+	private String domain;
 	// search ====
 	private String txtSearch;	
 	private String keyWord;
