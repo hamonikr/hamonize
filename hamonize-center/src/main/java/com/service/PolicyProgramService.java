@@ -57,7 +57,8 @@ public class PolicyProgramService {
 		ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
 
 		former_ppm_name.removeAll(ppm_name);
-
+System.out.println("ppm_name===="+ppm_name);
+System.out.println("former_ppm_name===="+former_ppm_name);
 		String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
 		// String output = "";
 		// JSONObject updtPolicy = new JSONObject();
