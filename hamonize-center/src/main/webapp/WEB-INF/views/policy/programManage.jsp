@@ -176,9 +176,10 @@
 			var ppm_seq = "";
 			let ppm_names = [];
 			$('input:checkbox[name=pcm_seq]').each(function (i) {
-				if ($(this).is(':checked'))
+				if ($(this).is(':checked')){
 					ppm_seq += ($(this).val()) + ",";
 					ppm_names.push($(this).data("package"));
+				}
 			});
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
 			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
