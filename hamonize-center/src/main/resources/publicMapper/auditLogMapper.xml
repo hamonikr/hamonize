@@ -30,20 +30,20 @@
 
 	<select id="userLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT  
-			a.seq, 
-			to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
-			to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS') as logout_dt, 
-			EXTRACT(EPOCH FROM age(a.logout_dt, a.login_dt)) * interval '1 sec' as spent_time,
-			(select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname,
-			a.uuid as pc_uuid,
-			b.org_seq,
-			(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm,
-			last_value (a.seq) over(partition by a.uuid order by a.seq ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_seq
+ 	      a.seq, 
+		  to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
+		  to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS') as logout_dt,
+		  EXTRACT(EPOCH FROM age(a.logout_dt, a.login_dt)) * interval '1 sec' as spent_time,
+		  (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname,
+		  a.uuid as pc_uuid,
+		  b.org_seq,
+		  ( select org_nm from tbl_org  where seq = b.org_seq and domain=#{auditLogVo.domain})as org_nm,
+  		  last_value (a.seq) over(partition by a.uuid order by a.seq ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_seq
 		FROM tbl_loginout a left outer join tbl_pc_mangr b on a.uuid = b.pc_uuid
 		<where>
-			1=1
+			b.domain = #{auditLogVo.domain}
 			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
-			and b.org_seq in (
+				and b.org_seq in (
 					with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 						select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 						from tbl_org a
@@ -77,26 +77,28 @@
 	</select>
 
 	<select id="countUserLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
-		SELECT 
-			count(*)  as tbl_cnt
-		FROM tbl_loginout a 
- 		left outer join tbl_pc_mangr b
- 		on a.uuid = b.pc_uuid
+		
+ 		SELECT 
+		   count(*) as tbl_cnt
+		FROM
+		  tbl_loginout a
+		left outer join tbl_pc_mangr b on  a.uuid = b.pc_uuid
+
 		<where>
-			1=1
+			b.domain = #{domain}
 			<if test="org_seq != null and org_seq != ''">
 				and b.org_seq in (
-						with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-							select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-							from tbl_org a
-							where a.seq = #{org_seq}
-							union all
-							select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-							from tbl_org a, search_org so 
-							where a.p_seq = so.seq and not cycle)
-							select seq
-							from search_org
-						)
+					with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+						select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+						from tbl_org a
+						where a.seq = #{org_seq}
+						union all
+						select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+						from tbl_org a, search_org so 
+						where a.p_seq = so.seq and not cycle)
+						select seq
+						from search_org
+					)
 			</if>
 			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
@@ -422,20 +424,22 @@
 
 	<select id="pcChangeLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
 		SELECT
-			pc_cpu, 
-			pc_memory, 
-			pc_disk, 
-			pc_macaddress, 
-			pc_ip, 
-			pc_hostname, 
-			pc_disk_id, 
-			pc_cpu_id, 
-			pc_uuid, 
-			to_char(insert_dt,'YYYY-MM-DD HH24:MI:SS') as insert_dt
-			from tbl_pc_change_info
+			ta.pc_cpu, 
+			ta.pc_memory, 
+			ta.pc_disk, 
+			ta.pc_macaddress, 
+			ta.pc_ip, 
+			ta.pc_hostname, 
+			ta.pc_disk_id, 
+			ta.pc_cpu_id, 
+			ta.pc_uuid, 
+			to_char(ta.insert_dt,'YYYY-MM-DD HH24:MI:SS') as insert_dt
+			FROM tbl_pc_change_info ta
+			left outer join tbl_org  tb on ta.org_seq  = tb.seq
 		<where>
+			tb.domain = #{auditLogVo.domain}
 			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
-		org_seq in (
+			and ta.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 				from tbl_org a
@@ -450,21 +454,21 @@
 		</if>
 			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
 				<![CDATA[
-			and insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+			and ta.insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
 			]]>
 			</if>
 			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
 				<![CDATA[
-			and insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+			and ta.insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
 			]]>
 			</if>
 			<if test="auditLogVo.txtSearch != ''">
 				<if test="auditLogVo.keyWord == 1">
-			and pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
+			and ta.pc_hostname like '%' || #{auditLogVo.txtSearch} || '%'
 			</if>
 			</if>
 		</where>
-		order by insert_dt desc
+		order by ta.insert_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
 
@@ -472,36 +476,38 @@
 	<select id="countPcChangeLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		FROM tbl_pc_change_info
+		FROM tbl_pc_change_info ta
+		left outer join tbl_org  tb on ta.org_seq  = tb.seq
 		<where>
+			tb.domain = #{domain}
 			<if test="org_seq != null and org_seq != ''">
-			org_seq in (
+			and ta.org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-    from tbl_org a
-    where a.seq = #{org_seq}
-    union all
-    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-    from tbl_org a, search_org so 
-    where a.p_seq = so.seq and not cycle)
-    select seq
-    from search_org
+				    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				    from tbl_org a
+				    where a.seq = #{org_seq}
+				    union all
+				    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				    from tbl_org a, search_org so 
+				    where a.p_seq = so.seq and not cycle)
+				    select seq
+				    from search_org
 				)
 		</if>
 			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
-			and insert_dt >= #{date_fr}::TIMESTAMP
-			]]>
+				and ta.insert_dt >= #{date_fr}::TIMESTAMP
+				]]>
 			</if>
 			<if test="date_to != null and date_to != ''">
 				<![CDATA[
-			and insert_dt <= #{date_to}::TIMESTAMP
-			]]>
+				and ta.insert_dt <= #{date_to}::TIMESTAMP
+				]]>
 			</if>
 			<if test="txtSearch != ''">
 				<if test="keyWord == 1">
-			and pc_hostname like '%' || #{txtSearch} || '%'
-			</if>
+				and ta.pc_hostname like '%' || #{txtSearch} || '%'
+				</if>
 			</if>
 		</where>
 	</select>
@@ -616,92 +622,98 @@
 	</select>
 
 	<select id="prcssBlockLogListInfo" resultType="com.model.AuditLogVo" parameterType="hashmap">
-		SELECT
-		HOSTNAME,
-		(select org_nm from tbl_org where seq = org_seq)as ORG_NM,
-		PRCSSNAME,
-		ipaddress,
-		(select pc_ip from tbl_pc_mangr where pc_uuid = uuid)as pc_ip,
-		INSERT_DT,
-		ORG_SEQ
-		FROM TBL_PRCSS_BLOCK_LOG
+		select 
+		  ta.HOSTNAME,
+		    tb.org_nm,
+		    ta.PRCSSNAME,
+		    ta.ipaddress,
+		    (select pc_ip from tbl_pc_mangr where ta.uuid = uuid)as pc_ip,
+		    ta.INSERT_DT,
+		    ta.ORG_SEQ
+		from TBL_PRCSS_BLOCK_LOG ta 
+		left outer join tbl_org tb on ta.org_seq  = tb.seq 
 		<where>
 			1=1
+			and tb.domain = #{auditLogVo.domain}
 			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
-		and org_seq in (
+			and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-		select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-		from tbl_org a
-		where a.seq = #{auditLogVo.org_seq}
-		union all
-		select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-		from tbl_org a, search_org so 
-		where a.p_seq = so.seq and not cycle)
-		select seq
-		from search_org
-				)
-		</if>
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{auditLogVo.org_seq}
+				union all
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				from tbl_org a, search_org so 
+				where a.p_seq = so.seq and not cycle)
+				select seq
+				from search_org
+						)
+			</if>
 			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
 				<![CDATA[
-			and insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
-			]]>
+				and ta.insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+				]]>
 			</if>
 			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
 				<![CDATA[
-			and insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
-			]]>
+				and ta.insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+				]]>
 			</if>
 			<if test="auditLogVo.txtSearch != ''">
 				<if test="auditLogVo.keyWord == 1">
-			and HOSTNAME like '%' || #{auditLogVo.txtSearch} || '%'
-			</if>
+				and ta.HOSTNAME like '%' || #{auditLogVo.txtSearch} || '%'
+				</if>
 				<if test="auditLogVo.keyWord == 2">
-			and PRCSSNAME like '%' || #{auditLogVo.txtSearch} || '%'
-			</if>
+				and ta.PRCSSNAME like '%' || #{auditLogVo.txtSearch} || '%'
+				</if>
 			</if>
 		</where>
-		order by insert_dt desc
+		order by ta.insert_dt desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
 
 
 	<select id="countPrcssBlockLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
-		SELECT 
-			count(*)  as tbl_cnt
-		FROM TBL_PRCSS_BLOCK_LOG
+		
+		select count(*)  as tbl_cnt
+		from TBL_PRCSS_BLOCK_LOG ta 
+		left outer join tbl_org tb on ta.org_seq  = tb.seq  
+		
+
 		<where>
-			1=1
+			tb.domain = #{domain}
 			<if test="org_seq != null and org_seq != ''">
-		and org_seq in (
+			and org_seq in (
 				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-		select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-		from tbl_org a
-		where a.seq = #{org_seq}
-		union all
-		select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-		from tbl_org a, search_org so 
-		where a.p_seq = so.seq and not cycle)
-		select seq
-		from search_org
-		)
-		</if>
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{org_seq}
+				union all
+				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				from tbl_org a, search_org so 
+				where a.p_seq = so.seq and not cycle)
+				select seq
+				from search_org
+						)
+			</if>
+			
 			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
-			and insert_dt >= #{date_fr}::TIMESTAMP
-			]]>
+				and ta.insert_dt >= #{date_fr}::TIMESTAMP
+				]]>
 			</if>
 			<if test="date_to != null and date_to != ''">
 				<![CDATA[
-			and insert_dt <= #{date_to}::TIMESTAMP
-			]]>
+				and ta.insert_dt <= #{date_to}::TIMESTAMP
+				]]>
 			</if>
 			<if test="txtSearch != ''">
 				<if test="keyWord == 1">
-			and HOSTNAME like '%' || #{txtSearch} || '%'
-			</if>
+				and ta.HOSTNAME like '%' || #{txtSearch} || '%'
+				</if>
 				<if test="keyWord == 2">
-			and PRCSSNAME like '%' || #{txtSearch} || '%'
-			</if>
+				and ta.PRCSSNAME like '%' || #{txtSearch} || '%'
+				</if>
 			</if>
 		</where>
 	</select>

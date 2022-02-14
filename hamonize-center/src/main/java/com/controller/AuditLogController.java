@@ -83,6 +83,11 @@ public class AuditLogController {
 		if (!"".equals(vo.getDate_to()))
 			vo.setDate_to(vo.getDate_to().replaceAll("/", "") + " 23:59:59");
 
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		vo.setDomain(lvo.getDomain());
+		
+		
+		
 		// 페이징
 		pagingVo.setCurrentPage(vo.getCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
@@ -151,6 +156,10 @@ public class AuditLogController {
 		if (!"".equals(vo.getDate_to()))
 			vo.setDate_to(vo.getDate_to().replaceAll("/", "") + " 23:59:59");
 
+
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		vo.setDomain(lvo.getDomain());
+		
 		// 페이징
 		pagingVo.setCurrentPage(vo.getCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
@@ -259,7 +268,7 @@ public class AuditLogController {
 			HttpSession session, HttpServletRequest request) {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
+	
 		if (!"".equals(vo.getDate_fr()))
 			vo.setDate_fr(vo.getDate_fr().replaceAll("/", "") + " 00:00:00");
 		if (!"".equals(vo.getDate_to()))
@@ -269,6 +278,9 @@ public class AuditLogController {
 		pagingVo.setCurrentPage(vo.getCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
 
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		vo.setDomain(lvo.getDomain());
+		
 		int cnt = Integer.parseInt(logMapper.countPrcssBlockLogListInfo(vo) + "");
 		pagingVo.setTotalRecordSize(cnt);
 		pagingVo = PagingUtil.setPaging(pagingVo);
