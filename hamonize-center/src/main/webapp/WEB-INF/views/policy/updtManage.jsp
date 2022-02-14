@@ -12,7 +12,7 @@
 	});
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
-		$('form[name=frm] input[name=former_ppm_seq]').val("");
+		$('form[name=frm] input[name=former_ppm_name]').val("");
 		$('input:checkbox[name=pu_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
@@ -40,7 +40,7 @@
 							$('input:checkbox[name=pu_seq]').each(function () {
 								if ($(this).val() == ppm_seq[i]) {
 									$(this).prop("checked", true);
-									queryArr.push(ppm_seq[i]);
+									queryArr.push($(this).data("package"));
 								}
 							});
 						}
@@ -51,10 +51,10 @@
 
 
 				});
-				$('form[name=frm] input[name=former_ppm_seq]').val(queryArr);
+				$('form[name=frm] input[name=former_ppm_name]').val(queryArr);
 				var input = document.querySelectorAll('.form-check-input');                                     
 				console.log(input[1].dataset);                                     
-				console.log("bbbb==="+$('form[name=frm] input[name=former_ppm_seq]').val());
+				console.log("bbbb==="+$('form[name=frm] input[name=former_ppm_name]').val());
 		// }
 	}
 
@@ -122,7 +122,8 @@
 									<input type="hidden" name="inventory_id" id="inventory_id" value="" />
 									<input type="hidden" name="group_id" id="group_id" value="" />
 									<input type="hidden" name="domain" id="domain" value="" />
-									<input type="hidden" name="former_ppm_seq" id="former_ppm_seq" value="" />
+									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
+									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
 									<!-- update list -->
 									<ul class="promlist">
@@ -134,7 +135,7 @@
 
 													<div class="form-check">
 														<input class="form-check-input" data-package="<c:out value='${data.pu_name}' />" type="checkbox" name="pu_seq"
-															id="${data.pu_seq}" value='<c:out value="${data.pu_seq}"/>'>
+															id="${data.pu_seq}" value="<c:out value='${data.pu_seq}'/>">
 														<label class="form-check-label" for="${data.pu_seq}">
 															<c:out value="${data.pu_name}" />
 														</label>
@@ -176,14 +177,17 @@
 	//등록 처리결과(공통명 : 프로그램명Json )
 	function fnSaveUpdt() {
 		var button = document.getElementById('btnSave');
+		let ppm_names = [];
 		if (confirm("하위부서 및 부서가 있다면 하위부서 및 부서에도 전부 적용됩니다 적용하시겠습니까?")) {
 			var ppm_seq = "";
 			$('input:checkbox[name=pu_seq]').each(function (i) {
-				if ($(this).is(':checked'))
+				if ($(this).is(':checked')){
 					ppm_seq += ($(this).val()) + ",";
+					ppm_names.push($(this).data("package"));
+				}
 			});
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
-
+			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
 			var zTree = $.fn.zTree.getZTreeObj("tree");
 			var nodes = zTree.getCheckedNodes(true);
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -243,7 +247,8 @@
 					group_id: $('form[name=frm] input[name=group_id]').val(),
 					org_seq: $('form[name=frm] input[name=org_seq]').val(),
 					domain: $('form[name=frm] input[name=domain]').val(),
-					former_ppm_seq: $('form[name=frm] input[name=former_ppm_seq]').val()
+					former_ppm_name: $('form[name=frm] input[name=former_ppm_name]').val(),
+					ppm_name: $('form[name=frm] input[name=ppm_name]').val()
 				},
 				function (result) {
 					if (result == "SUCCESS") {

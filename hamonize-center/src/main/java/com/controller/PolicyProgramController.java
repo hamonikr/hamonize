@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class PolicyProgramController {
 	@ResponseBody
 	@RequestMapping(value = "/psave", method = RequestMethod.POST)
 	public String pinsert(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
+			@RequestParam Map<String, Object> params) throws ParseException {
 
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
@@ -84,7 +85,8 @@ public class PolicyProgramController {
 		int result = 0;
 		pService.programDelete(params);
 		result = pService.programSave(params);
-
+		//ansible 정책전달
+		pService.makePolicyPackage(params);
 		if (result >= 1)
 			return "SUCCESS";
 		else

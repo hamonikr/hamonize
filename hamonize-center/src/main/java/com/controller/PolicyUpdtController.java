@@ -129,8 +129,8 @@ public class PolicyUpdtController {
 			@RequestParam Map<String, Object> params) throws ParseException {
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
-		logger.info("data======"+(String) params.get("ppm_seq"));
-		logger.info("data======"+(String) params.get("former_ppm_seq"));
+		logger.info("data======"+(String) params.get("ppm_name"));
+		logger.info("data======"+(String) params.get("former_ppm_name"));
 		JsonArray jsonArray = (JsonArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
