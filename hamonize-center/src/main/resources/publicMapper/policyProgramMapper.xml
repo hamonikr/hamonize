@@ -51,7 +51,7 @@
 	<foreach collection="data" item="item" separator=",">
             #{item.org_seq}
         		</foreach>
-	)
+	) AND domain = #{domain}
 	</delete>
 	
 	<select id="programApplcView" resultType="com.model.PolicyProgrmVo" parameterType="com.model.PolicyProgrmVo" >
