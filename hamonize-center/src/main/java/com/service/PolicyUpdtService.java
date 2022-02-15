@@ -71,7 +71,7 @@ public class PolicyUpdtService {
 		return iUpdtMapper.updtCompareUpdate(params);
 	}
 
-	public int makePolicyPackage(Map<String, Object> params) throws ParseException{
+	public int applyPackagePolicy(Map<String, Object> params) throws ParseException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		
 		String[] listA = params.get("ppm_name").toString().split(",");
@@ -82,16 +82,16 @@ public class PolicyUpdtService {
 
 		former_ppm_name.removeAll(ppm_name);
 
-		String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
-		// String output = "";
-		// JSONObject updtPolicy = new JSONObject();
-		// updtPolicy.put("INSERT", String.join(",",ppm_name));
-		// if(!former_ppm_name.isEmpty())
-		// {
-		// 	updtPolicy.put("DEL", String.join(",",former_ppm_name));
-		// }
-		// output = updtPolicy.toJSONString();
-		// output = output.replaceAll("\"", "\\\\\\\"");
+		//String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
+		String output = "";
+		JSONObject updtPolicy = new JSONObject();
+		updtPolicy.put("INS", String.join(",",ppm_name));
+		if(!former_ppm_name.isEmpty())
+		{
+			updtPolicy.put("DEL", String.join(",",former_ppm_name));
+		}
+		output = updtPolicy.toJSONString();
+		output = output.replaceAll("\"", "\\\\\\\"");
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 

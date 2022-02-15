@@ -86,7 +86,7 @@ public class PolicyProgramController {
 		pService.programDelete(params);
 		result = pService.programSave(params);
 		//ansible 정책전달
-		pService.makePolicyPackage(params);
+		pService.applyProgramPolicy(params);
 		if (result >= 1)
 			return "SUCCESS";
 		else

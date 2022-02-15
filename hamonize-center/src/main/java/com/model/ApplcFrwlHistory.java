@@ -30,7 +30,7 @@ public class ApplcFrwlHistory {
 	@Size(max=50)
 	private String domain;
 
-	private Integer org_seq;
+	private Long org_seq;
 	
 	@Size(max=150)
 	private String ppm_seq;

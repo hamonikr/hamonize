@@ -26,7 +26,7 @@ public class AgentJobUpdt {
 	private String domain;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Comment("시리얼넘버")
 	private Long seq;
 
@@ -34,7 +34,7 @@ public class AgentJobUpdt {
 	private Integer pu_seq;
 
 	@Comment("부서번호")
-	private Integer org_seq;
+	private Long org_seq;
 
 	@Comment("업데이트 관리번호")
 	private Integer updt_ap_seq;

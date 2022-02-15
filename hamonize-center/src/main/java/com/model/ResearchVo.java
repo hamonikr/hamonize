@@ -19,7 +19,7 @@ public class ResearchVo extends PagingVo{
 	private String kind;
 	private String rank;
 	private String discharge_dt;
-	private Integer org_seq; 
+	private Long org_seq; 
 	private String narasarang_no; 
 	private String org_nm; 
 	private String P_org_nm; 
