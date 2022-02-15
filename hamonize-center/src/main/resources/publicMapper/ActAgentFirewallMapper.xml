@@ -7,25 +7,26 @@
         INSERT 
         	INTO tbl_act_firewall_log
         	(
-				uuid, 
-		        hostname,
-				status,		        
-				status_yn,		        
-		        datetime,
-				retport,
-				orgseq,
-		        ins_date
+					pc_uuid, 
+					pc_hostname,
+					status,		        
+					status_yn,		        
+					datetime,
+					retport,
+					org_seq,
+					rgstr_date
         	) 
-        	VALUES( 
-        		#{uuid}, 
-				#{hostname},
-				#{status}, 
-				#{status_yn}, 
-				#{datetime},
-				#{retport}, 
-				#{orgseq}, 
-				now()
-			) 
+        	VALUES
+					( 
+					#{uuid}, 
+					#{hostname},
+					#{status}, 
+					#{status_yn}, 
+					#{datetime},
+					#{retport}, 
+					#{orgseq}, 
+					now()
+					) 
 
 	</insert>
 	

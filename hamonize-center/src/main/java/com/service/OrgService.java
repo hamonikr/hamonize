@@ -93,7 +93,6 @@ public class OrgService {
 
 		if (orgvo.getP_seq() == null) {// 최상위 회사의 부서일 경우
 			orgvo.setP_seq(0L);
-
 		}
 		int result = orgMapper.orgSave(orgvo);
 

@@ -137,12 +137,12 @@ public class ActAgentFirewallController {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
 
 			inputVo.setDatetime(tempObj.get("datetime").toString());
-			inputVo.setUuid(tempObj.get("uuid").toString().trim());
-			inputVo.setHostname(tempObj.get("hostname").toString());
+			inputVo.setPc_uuid(tempObj.get("uuid").toString().trim());
+			inputVo.setPc_hostname(tempObj.get("hostname").toString());
 			inputVo.setStatus(tempObj.get("status").toString());
 			inputVo.setStatus_yn(tempObj.get("status_yn").toString());
 			inputVo.setRetport(tempObj.get("retport").toString());
-			inputVo.setOrgseq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
+			inputVo.setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
 
 		}
 
@@ -232,13 +232,13 @@ public class ActAgentFirewallController {
 			for (int i = 0; i < insArray.size(); i++) {
 				JSONObject tempObj = (JSONObject) insArray.get(i);
 				inputVo[i] = new ActAgentProgrmVo();
-				inputVo[i].setUuid(tempObj.get("uuid").toString().trim());
-				inputVo[i].setHostname(tempObj.get("hostname").toString());
+				inputVo[i].setPc_uuid(tempObj.get("uuid").toString().trim());
+				inputVo[i].setPc_hostname(tempObj.get("hostname").toString());
 				inputVo[i].setStatus(tempObj.get("status").toString());
 				inputVo[i].setStatus_yn(tempObj.get("status_yn").toString());
 				inputVo[i].setProgrmname(tempObj.get("progrmname").toString());
 				inputVo[i].setDatetime(tempObj.get("datetime").toString());
-				inputVo[i].setOrgseq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
+				inputVo[i].setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
 			}
 		}
 
