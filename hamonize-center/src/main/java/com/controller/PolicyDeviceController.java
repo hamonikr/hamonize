@@ -104,7 +104,7 @@ public class PolicyDeviceController {
 		dService.deviceDelete(params);
 		result = dService.deviceSave(params);
 		//ansible 정책전달
-		dService.makePolicyPackage(params);
+		dService.applyDevicePolicy(params);
 
 		if (result >= 1)
 			return "SUCCESS";

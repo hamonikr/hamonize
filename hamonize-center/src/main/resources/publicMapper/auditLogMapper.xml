@@ -867,9 +867,9 @@
 		<foreach collection="debList" item="item" index="index">
 			(select t.*
 							from(
-							select row_number () over (order by ins_date desc) as row,*
+							select row_number () over (order by rgstr_date desc) as row,*
 							from tbl_act_device_log
-							where uuid =  #{uuid} and product = #{item}
+							where pc_uuid =  #{uuid} and product = #{item}
 							) t
 							limit 1
 						)

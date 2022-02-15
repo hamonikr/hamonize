@@ -12,7 +12,7 @@ import lombok.ToString;
 public class BackupVo {
 	//공통
 	private Integer bac_seq;
-	private Integer org_seq;
+	private Long org_seq;
 	
 	//백업주기 관리
 	private String bac_cycle_option;

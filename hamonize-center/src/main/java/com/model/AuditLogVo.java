@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class AuditLogVo {
 	
-	private Integer org_seq;
+	private Long org_seq;
 
 	private String domain;
 	// search ====
