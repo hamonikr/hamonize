@@ -142,11 +142,10 @@ public class ActAgentFirewallController {
 			inputVo.setStatus(tempObj.get("status").toString());
 			inputVo.setStatus_yn(tempObj.get("status_yn").toString());
 			inputVo.setRetport(tempObj.get("retport").toString());
+			inputVo.setOrgseq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
 
 		}
 
-		Long uuid = pcUUID(inputVo.getUuid(), "domain"); // ===================================
-		inputVo.setOrgseq(uuid);
 
 		int retVal = actAgentFirewallMapper.insertActAgentFirewall(inputVo);
 		System.out.println("retVal ==== " + retVal);

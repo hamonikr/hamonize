@@ -222,20 +222,6 @@ function getFirewallDataCall(uuid) {
 	});
 }
 
-function fnFirewallJob(retData) {
-
-	log.info("==== fnFirewallJob ====");
-
-	var exec = require('child_process').exec;
-	exec('sudo sh /usr/share/hamonize-agent/shell/ufwjob.sh  ', function (err, stdout, stderr) {
-		log.info('//=====backup cycle all day of week stdout: ' + stdout);
-		log.info('//=====backup cycle all day of week stderr: ' + stderr);
-
-		if (err !== null) {
-			log.info('//== backup_gubun week error: ' + err);
-		}
-	});
-}
 
 //========================================================================
 //== Recovery Job=============================================================
@@ -1240,6 +1226,8 @@ function getFileData(_gubun) {
 		filePath = "/etc/hamonize/security/device.hm";
 	}else if(_gubun == 'progrmblock' ){
 		filePath = "/etc/hamonize/progrm/progrm.hm";
+	}else if(_gubun == 'ufw' ){
+		filePath = "/etc/hamonize/firewall/firewallInfo.hm";
 	}
 
 	log.info("//==get File path " + filePath);
@@ -1396,6 +1384,26 @@ function fnProgrmJob() {
 
 }
 
+
+// 방화벽 ====================================================================================================
+
+function fnFirewallJob() {
+
+	log.info("==== fnFirewallJob ====");
+	var ufwDataObj = getFileData('ufw');
+	console.log("ufwDataObj==================+++"+ ufwDataObj);
+	var exec = require('child_process').exec;
+	exec('sudo sh ./shell/ufwjob.sh  ' + tenantVal, function (err, stdout, stderr) {
+	// exec('sudo sh /usr/share/hamonize-agent/shell/ufwjob.sh  ', function (err, stdout, stderr) {
+		log.info('//=====backup cycle all day of week stdout: ' + stdout);
+		log.info('//=====backup cycle all day of week stderr: ' + stderr);
+
+		if (err !== null) {
+			log.info('//== backup_gubun week error: ' + err);
+		}
+	});
+}
+
 // ===================================================================================================
 const { Command } = require('commander');
 // const exec = require('child_process').exec;
@@ -1407,11 +1415,13 @@ program
 	.option('--updt')
 	.option('--progrmblock')
 	.option('--devicepolicy')
+	.option('--ufw')
 	.option('--start')
 	.parse();
 
 console.log(`updt====> ${program.opts().updt}`);
 console.log(`progrmblock ---> ${program.opts().progrmblock}`);
+console.log(`ufw === > ${program.opts().ufw}`);
 console.log(`start === > ${program.opts().start}`);
 console.log(program.opts().name);
 
@@ -1420,8 +1430,16 @@ if (program.opts().hamonizeInstall) {
 }
 
 
+// ufw cli 
+// ===> ansible -> agnet (0)
+if (program.opts().ufw) {
+	console.log("ufw()");
+	fnFirewallJob();
+}
+
+
 // program block cli 
-// ===> ansible -> agnet (x)
+// ===> ansible -> agnet (0)
 if (program.opts().progrmblock) {
 	console.log("progrmblock option fnUpdtAgentAction()");
 	fnProgrmJob();

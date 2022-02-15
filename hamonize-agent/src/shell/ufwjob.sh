@@ -1,14 +1,12 @@
 #!/bin/sh
 
 DIR="$(dirname $(readlink -f $0))"
-echo  $DIR
-
 LOGFILE="/var/log/hamonize/agentjob/ufwjob.log"
 sudo touch $LOGFILE
 
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 IVSC="http://${CENTERURL}/act/firewallAct"
-
+TENANT=$1
 
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 echo "==============================[$DATETIME]=========================" >> $LOGFILE
@@ -43,7 +41,7 @@ then
 		
 		sleep 1
 
-		if [ "$CHK_PORT" -eq "$I" ]
+		if [ "${CHK_PORT}" -eq "${I}" ]
 		then
 			echo "check allow port result is Y : " >> $LOGFILE
 			RETPORT="Y"
@@ -63,7 +61,9 @@ then
 			\"hostname\": \"$HOSTNAME\",\
 			\"status\": \"allow\",\
 			\"status_yn\": \"$RETPORT\",\
+			\"domain\": \"$TENANT\",\
                         \"retport\": \"$I\"\
+                        
 			} ]\
 		}"
 		echo $ALLOW_JSON >> $LOGFILE
@@ -122,6 +122,7 @@ then
                         \"hostname\": \"$HOSTNAME\",\
                         \"status\": \"deny\",\
                         \"status_yn\": \"$RETPORT\",\
+                        \"domain\": \"$TENANT\",\
                         \"retport\": \"$I\"\
                         } ]\
                 }"
