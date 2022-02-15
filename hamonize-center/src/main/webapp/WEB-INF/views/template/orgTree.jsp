@@ -102,7 +102,7 @@
 		var sNodes = treeObj.getSelectedNodes();
 		//treeObj.checkNode(zNodes, zNodes.checked, true, true);
 		//beforeClick($("#tree"),zNodes[0]);
-		//onClick(null,$("#tree"),zNodes[0]);
+		onClick(null,$("#tree"),zNodes[0]);
 		//onCheck(null,$("#tree"),zNodes[0]);
 		//console.log(zNodes[0]);
 		if (sNodes.length > 0) {
