@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+
 const path = require("path");
 const request = require('request');
 const fetch = require('node-fetch');
@@ -13,9 +14,10 @@ var filePath = "/etc/hamonize/agent/";
 var fileName = "agentJob.txt";
 var schedule = require('node-schedule');
 var uuidVal = getUUID();
+var tenantVal = getTenant();
 var readline = require('readline');
 
-FnMkdir();
+
 
 var centerUrl = getCenterInfo();
 var DEFAUT_POLLTIME = 10000; //10s
@@ -72,13 +74,14 @@ function getPollTime(uuid) {
 
 	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
 	var retval = 0;
+
 	Polling(1000);
 	// networkChk().then(
 	// 	(value) => {
-	// 		console.log("network-------value----------" + value);
 	// 		if (value) {
 	// 			http.get(setUrl, (res) => {
 	// 				res.on('data', (data) => {
+	// 					console.log("data===============++"+data);
 	// 					var pollingObj = JSON.parse(data);
 
 	// 					if (pollingObj.data != 'nodata') {
@@ -103,7 +106,6 @@ function getPollTime(uuid) {
 	// 			Polling(retval);
 	// 		}
 	// 	}
-
 	// );
 }
 
@@ -144,7 +146,7 @@ function Polling(time) {
 }
 
 // console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
-// getPollTime(uuidVal);
+//getPollTime(uuidVal);
 
 
 
@@ -345,20 +347,6 @@ function fnUpdtJob(retData) {
 }
 
 
-function updtFileData() {
-	var output = "";
-	var stats = fs.statSync("/etc/hamonize/updt/updtInfo.hm");
-	log.info("//==updtFileData stats is " + stats.isFile());
-
-
-	if (stats.isFile()) {
-		var text = fs.readFileSync('/etc/hamonize/updt/updtInfo.hm', 'utf8');
-		log.info("//==updtInfo file dat : " + text);
-		output = text;
-	}
-	return output;
-}
-
 
 //========================================================================
 //== Nxss Job=============================================================
@@ -539,94 +527,6 @@ function getDeviceDataCall(uuid) {
 }
 
 
-
-
-async function fnDeviceJob(retData) {
-
-	var deviceDataObj = JSON.parse(retData);
-	var os = new os_func();
-	os.execCommand("sudo /usr/local/bin/center-lockdown").then(res => {
-		log.info("//== device 정책 :: centor-lockdown load --- > success\n");
-		console.log("res==" + res);
-		fnDeviceJob_result(deviceDataObj, 'Y');
-	}).catch(err => {
-		log.info("//==device 정책 :: centor-lockdown load --- > fail\n");
-		console.log("err===" + err);
-		// fnDeviceJob_result(deviceDataObj, 'N')
-	})
-
-}
-
-
-// 비인가 디바이스 정책 배포 결과 전송
-function fnDeviceJob_result(deviceDataObj, statusyn) {
-	var deviceInsData = "";
-	var returnDataIns = "";
-	var returnDataDel = "";
-	var setDeviceJsonReturnData = "";
-
-
-	for (var a in deviceDataObj) {
-		if (typeof deviceDataObj.INS != 'undefined') {
-			returnDataIns = fn_setDeviceJsonReturnData(deviceDataObj.INS, 'Y');
-		}
-		if (typeof deviceDataObj.DEL != 'undefined') {
-			returnDataDel = fn_setDeviceJsonReturnData(deviceDataObj.DEL, 'N');
-		}
-	}
-
-
-	if (returnDataIns.length == 0 && returnDataDel.length != 0) {
-		setDeviceJsonReturnData = returnDataDel;
-	} else if (returnDataIns.length != 0 && returnDataDel.length == 0) {
-		setDeviceJsonReturnData = returnDataIns;
-	} else if (returnDataIns.length != 0 && returnDataDel.length != 0) {
-		setDeviceJsonReturnData = returnDataIns.concat(returnDataDel);
-	}
-
-
-
-	request.post('http://' + centerUrl + '/act/deviceAct', {
-		json: {
-			events: setDeviceJsonReturnData
-		}
-	}, (error, res, body) => {
-		if (error) {
-			console.error("error===" + error);
-			return
-		}
-		console.log("//==device 정책 배포 결과 전송 :: " + res.statusCode);
-	})
-}
-
-
-function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
-	var os = require("os");
-	var hostname = os.hostname();
-	var arrSetData = new Array();
-	var arrDeviceInsData = deviceInsData.split(",");
-
-	for (var a in arrDeviceInsData) {
-		if (arrDeviceInsData[a] != '') {
-			var product = arrDeviceInsData[a].split(",")[0].split("-")[0];
-			var vendorCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[0];
-			var prodcutCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[1];
-			var setData = new Object();
-
-			setData.hostname = hostname;
-			setData.uuidVal = uuidVal.trim();
-			setData.product = product;
-			setData.productCode = prodcutCode;
-			setData.vendorCode = vendorCode;
-			setData.statusyn = statusyn;
-
-			arrSetData.push(setData);
-		}
-
-	}
-
-	return arrSetData;
-}
 
 function sendToCenter_unauth() {
 
@@ -977,6 +877,12 @@ function getUUID() {
 	return text;
 }
 
+function getTenant() {
+	var text = fs.readFileSync('/etc/hamonize/hamonize_tanent', 'utf8');
+	log.info("//== pc uuid is : " + text);
+	return text;
+}
+
 function getHwpInfo(filename) {
 	var text = fs.readFileSync('/etc/hamonize/hwinfo/' + filename, 'utf8');
 	log.info("//== pc hw ifon is : " + text);
@@ -1022,7 +928,6 @@ function FnHwInfoMkdir() {
 
 function FnProgrmMkdir() {
 
-	log.info("FnProgrmMkdir----");
 	try {
 		fs.lstatSync("/etc/hamonize/progrm").isDirectory();
 	} catch (e) {
@@ -1320,36 +1225,236 @@ const sysInfo = async () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ======================================
+//	cloud version job 
+//
 // ======================
+
+
+
+// Common] get File Data
+function getFileData(_gubun) {
+	var output = '';
+	var stats = '';
+	var filePath = '';
+
+	if(_gubun == 'updt' ){
+		filePath = "/etc/hamonize/updt/updtInfo.hm";
+	}else if(_gubun == 'programblock' ){
+		filePath = "/etc/hamonize/security/device.hm";
+	}else if(_gubun == 'devicepolicy' ){
+		filePath = "/etc/hamonize/security/device.hm";
+	}
+	log.info("//==get File path " + filePath);
+	
+	
+	stats = fs.statSync(filePath);
+	if (stats.isFile()) {
+		var text = fs.readFileSync(filePath, 'utf8');
+		log.info("//== file data : " + text);
+		output = text;
+	}
+	return output;
+}
+
+
+// function :: device job =============
+async function fnDeviceJob() {
+	var deviceDataObj = getFileData('devicepolicy');
+	console.log("deviceDataObj============++"+deviceDataObj);
+	
+	// real
+	var os = new os_func();
+	
+	os.execCommand("sudo /usr/local/bin/center-lockdown").then(res => {
+		log.info("//== device 정책 :: centor-lockdown load --- > success\n");
+		console.log("res==" + res);
+		fnDeviceJob_result(deviceDataObj, 'Y');
+	}).catch(err => {
+		log.info("//==device 정책 :: centor-lockdown load --- > fail\n");
+		console.log("err===" + err);
+		// fnDeviceJob_result(deviceDataObj, 'N')
+	})
+
+}
+
+
+// function :: update policy =============
+function fnUpdtAgentAction() {
+
+	//정책정보 파일로 저장
+	outputData = getFileData('updt');
+	log.info("//== updt 정책정보 파일 Data is : " + outputData);
+
+	const exec = require('child_process').exec;
+	
+	// dev
+	exec(" sudo sh ./shell/updtjob.sh", function (err, stdout, stderr) {
+	
+	//real
+	// exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
+		log.info('updt 정책 ::  stdout: ' + stdout);
+		log.info('updt 정책 :: stderr: ' + stderr);
+
+		if (err !== null) {
+			log.info(' updt 정책 ::  error: ' + err);
+		}
+	});
+
+}
+
+// ===================================================================================================
 const { Command } = require('commander');
 // const exec = require('child_process').exec;
 
 const program = new Command();
 
 program
-    // .option('-n, --name <name>', 'file name')
-    .option('-n, --name <name>', 'file name')
-    .option('--test')
+	.option('-n, --name <name>', 'file name')
+	.option('--updt')
+	.option('--programblock')
+	.option('--devicepolicy')
 	.option('--start')
-    .parse();
+	.parse();
 
-console.log(program.opts().test);
+console.log(`updt====> ${program.opts().updt}`);
+console.log(`programblockp ---> ${program.opts().programblock}`);
+console.log(`start === > ${program.opts().start}`);
 console.log(program.opts().name);
-console.log(program.opts().start);
 
-if(program.opts().hamonizeInstall){
-    console.log("aaaaaaaaaaaaaa");
+if (program.opts().hamonizeInstall) {
+	console.log("aaaaaaaaaaaaaa");
 }
 
-if(program.opts().test){
-    console.log("test option aaaaaaaaaaaaaaa");
+
+// program block cli 
+// ===> ansible -> agnet (x)
+if (program.opts().programblock) {
+	console.log("programblock option fnUpdtAgentAction()");
 }
 
-if(program.opts().start){
+// device policy cli 
+// ===> ansible -> agnet (0)
+if (program.opts().devicepolicy) {
+	console.log("device policy cli ");
+	fnDeviceJob();
+}
+// updt cli 
+// ===> ansible -> agent (0)
+if (program.opts().updt) {
+	console.log("updt option fnUpdtAgentAction()");
+	fnUpdtAgentAction();
+}
+
+// agent start cli 
+if (program.opts().start) {
+	FnMkdir();
 	console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
 	getPollTime(uuidVal);
-    console.log("send option bbbbbbbbbbbbbbbbbb");
+	console.log("send option bbbbbbbbbbbbbbbbbb");
 
+}
+
+// getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
+// getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
+// getRecoveryDataCall(uuidVal); // Call 복구 정책 
+// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
+// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
+// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
+// sysInfo(); // hw 변경로그
+
+
+
+
+
+// 비인가 디바이스 정책 배포 결과 전송
+function fnDeviceJob_result(deviceData, statusyn) {
+	var deviceInsData = "";
+	var returnDataIns = "";
+	var returnDataDel = "";
+	var setDeviceJsonReturnData = "";
+console.log("=========================deviceData==========+++"+ deviceData);
+	
+	var deviceDataObj = JSON.parse(deviceData);
+
+	for (var a in deviceDataObj) {
+		console.log("deviceDataObj.INS=============+"+deviceDataObj.INS);
+		if (typeof deviceDataObj.INS != 'undefined') {
+
+			returnDataIns = fn_setDeviceJsonReturnData(deviceDataObj.INS, 'Y');
+		}
+		if (typeof deviceDataObj.DEL != 'undefined') {
+			returnDataDel = fn_setDeviceJsonReturnData(deviceDataObj.DEL, 'N');
+		}
+	}
+
+
+	if (returnDataIns.length == 0 && returnDataDel.length != 0) {
+		setDeviceJsonReturnData = returnDataDel;
+	} else if (returnDataIns.length != 0 && returnDataDel.length == 0) {
+		setDeviceJsonReturnData = returnDataIns;
+	} else if (returnDataIns.length != 0 && returnDataDel.length != 0) {
+		setDeviceJsonReturnData = returnDataIns.concat(returnDataDel);
+	}
+
+
+console.log("wwwwwwwww====================================+"+ JSON.stringify(setDeviceJsonReturnData));
+	request.post('http://' + centerUrl + '/act/deviceAct', {
+		json: {
+			events: setDeviceJsonReturnData
+		}
+	}, (error, res, body) => {
+		if (error) {
+			console.error("error===" + error);
+			return
+		}
+		console.log("//==device 정책 배포 결과 전송 :: " + res.statusCode);
+	})
+}
+
+
+function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
+	console.log("deviceInsData==============="+ deviceInsData);
+	var os = require("os");
+	var hostname = os.hostname();
+	var arrSetData = new Array();
+	var arrDeviceInsData = deviceInsData.split(",");
+
+	for (var a in arrDeviceInsData) {
+		if (arrDeviceInsData[a] != '') {
+			var product = arrDeviceInsData[a].split(",")[0].split("-")[0];
+			var vendorCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[0];
+			var prodcutCode = arrDeviceInsData[a].split(",")[0].split("-")[1].split(":")[1];
+			var setData = new Object();
+
+			setData.hostname = hostname;
+			setData.uuidVal = uuidVal.trim();
+			setData.product = product;
+			setData.productCode = prodcutCode;
+			setData.vendorCode = vendorCode;
+			setData.statusyn = statusyn;
+			setData.domain = tenantVal;
+
+			arrSetData.push(setData);
+		}
+
+	}
+
+	return arrSetData;
 }
 
 

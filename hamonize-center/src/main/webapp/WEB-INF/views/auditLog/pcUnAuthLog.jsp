@@ -6,7 +6,7 @@
 
 <script>
 	$(document).ready(function () {
-		getList();
+		// getList();
 
 		//등록버튼
 		$("#excelBtn").on("click", function () {

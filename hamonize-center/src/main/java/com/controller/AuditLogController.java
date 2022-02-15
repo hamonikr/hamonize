@@ -86,6 +86,7 @@ public class AuditLogController {
 		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
 		vo.setDomain(lvo.getDomain());
 		
+		System.out.println("aaaaaaaaaaaaa");
 		
 		
 		// 페이징

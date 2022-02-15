@@ -6,23 +6,20 @@
 
 <script>
 	$(document).ready(function () {
-		getList();
-		$("#excelBtn").on("click", function () {
-			location.href = "pcUserLogExcel?org_seq=" + $("#org_seq").val() + "&date_fr=" + $("#date_fr")
-				.val() + "&date_to=" + $("#date_to").val() + "&txtSearch=" + $("#txtSearch").val() +
-				"&keyWord=" + $("#keyWord").val();
-		});
-		$("#txtSearch").keydown(function (key) {
-			if (key.keyCode == 13) {
-				key.preventDefault();
-				getList();
-			}
-		});
+		// getPcloginoutList();
+		
+		// $("#txtSearch").keydown(function (key) {
+		// 	if (key.keyCode == 13) {
+		// 		key.preventDefault();
+		// 		getPcloginoutList();
+		// 	}
+		// });
 	});
 
 
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
+		
 		$(".page_num").empty();
 		$('#pageGrideInListTb').empty();
 		$("#pagginationInList").empty();
@@ -163,7 +160,7 @@
 													<label for="txtSearch"></label><input type="text" name="txtSearch"
 														id="txtSearch" class="form-control" />
 													<button type="button" class="fom-control"
-														onclick="javascript:getList();"> 검색</button>
+														onclick="javascript:getPcloginoutList();"> 검색</button>
 												</div>
 											</form>
 										</div>
@@ -202,7 +199,8 @@
 
 
 <script>
-	function getList() {
+	function getPcloginoutList() {
+		
 		var url = '/auditLog/userLogList.proc';
 		var keyWord = $("select[name=keyWord]").val();
 		if ($("#date_fr").val() == "") {
@@ -212,7 +210,7 @@
 		var vData = 'currentPage=' + $("#currentPage").val() + "&keyWord=" + keyWord + "&txtSearch=" + $("#txtSearch")
 			.val() + "&org_seq=" + $("#org_seq").val() + "&date_fr=" + $("#date_fr").val() + "&date_to=" + $("#date_to")
 			.val();
-		callAjax('POST', url, vData, userLogGetSuccess, getError, 'json');
+		// callAjax('POST', url, vData, userLogGetSuccess, getError, 'json');
 	}
 	var userLogGetSuccess = function (data, status, xhr, groupId) {
 		var gbInnerHtml = "";

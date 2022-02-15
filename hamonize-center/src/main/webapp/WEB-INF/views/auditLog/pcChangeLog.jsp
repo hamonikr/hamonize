@@ -6,7 +6,7 @@
 
 <script>
 	$(document).ready(function () {
-		getList();
+		// getList();
 		$("#excelBtn").on("click", function () {
 			location.href = "pcUserLogExcel?org_seq=" + $("#org_seq").val();
 			location.href = "iNetLogExcel?org_seq=" + $("#org_seq").val() + "&date_fr=" + $("#date_fr")
