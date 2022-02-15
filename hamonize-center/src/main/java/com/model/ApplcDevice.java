@@ -28,7 +28,7 @@ public class ApplcDevice {
 	@Size(max=50)
 	private String domain;
 
-	private Integer org_seq;
+	private Long org_seq;
 	@Size(max=500)
 	private String ppm_seq;
 

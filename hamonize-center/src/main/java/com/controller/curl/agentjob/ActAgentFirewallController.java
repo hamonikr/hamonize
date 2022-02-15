@@ -185,9 +185,9 @@ public class ActAgentFirewallController {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
 			ActAgentDeviceVo tmpVo = new ActAgentDeviceVo();
 
-			tmpVo.setUuid(tempObj.get("uuidVal").toString().trim());
-			tmpVo.setHostname(tempObj.get("hostname").toString());
-			tmpVo.setStatus_yn(tempObj.get("statusyn").toString());
+			tmpVo.setPc_uuid(tempObj.get("uuidVal").toString().trim());
+			tmpVo.setPc_hostname(tempObj.get("hostname").toString());
+			tmpVo.setStatus(tempObj.get("statusyn").toString());
 			tmpVo.setProduct(tempObj.get("product").toString());
 			tmpVo.setVendorCode(tempObj.get("vendorCode").toString());
 			tmpVo.setProductCode(tempObj.get("productCode").toString());

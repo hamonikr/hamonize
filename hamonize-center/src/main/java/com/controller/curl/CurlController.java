@@ -1,6 +1,7 @@
 package com.controller.curl;
 
 import java.io.BufferedReader;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -480,7 +481,7 @@ System.out.println("retData===="+retData.toString());
 		for (int i = 0; i < hmdArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
 
-			hdVo.setRgstr_date(tempObj.get("datetime").toString());
+			hdVo.setRgstr_date(Timestamp.valueOf(tempObj.get("datetime").toString()));
 			hdVo.setPc_macaddress(tempObj.get("macaddr").toString());
 			hdVo.setPc_ip(tempObj.get("ipaddr").toString());
 			hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());

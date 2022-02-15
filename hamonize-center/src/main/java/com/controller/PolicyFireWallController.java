@@ -100,7 +100,7 @@ public class PolicyFireWallController {
 		fService.fireWallDelete(params);
 		result = fService.fireWallSave(params);
 		//ansible 정책전달
-		fService.makePolicyPackage(params);
+		fService.applyFirewallPolicy(params);
 		if (result >= 1)
 			return "SUCCESS";
 		else

@@ -27,7 +27,7 @@ public class PolicyProgrmVo {
 	@Transient
 	private Integer seq;
 	@Transient
-	private Integer org_seq;
+	private Long org_seq;
 	@Transient
 	private String ppm_seq;
 	

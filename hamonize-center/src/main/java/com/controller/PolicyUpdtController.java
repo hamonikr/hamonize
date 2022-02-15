@@ -149,7 +149,7 @@ public class PolicyUpdtController {
 		//차단정책 초기화
 		uService.updatePolicyProgrm(params);
 		//ansible 정책전달
-		uService.makePolicyPackage(params);
+		uService.applyPackagePolicy(params);
 		if (result >= 1)
 			return "SUCCESS";
 		else

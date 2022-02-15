@@ -307,25 +307,25 @@
 							chk = 0;
 						}
 						if (data.policyDeviceResult[i].product != data.policyDeviceResult[i + chk].product) {
-							var inset_dt = data.policyDeviceResult[i].ins_date;
+							var inset_dt = data.policyDeviceResult[i].rgstr_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero( date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 							deviceResult += "<tr>";
 							deviceResult += "<td>" + data.policyDeviceResult[i].product + "</td>";
-							deviceResult += "<td>" + data.policyDeviceResult[i].status_yn + "</td>";
+							deviceResult += "<td>" + data.policyDeviceResult[i].status + "</td>";
 							deviceResult += "<td>" + data.pcList.length + "</td>";
 							deviceResult += "<td>" + data.policyDeviceResult[i].count + "</td>";
 							deviceResult += "<td>" + noinstall + "</td>";
 							deviceResult += "</tr>";
 						} else if ((i + 1) == data.policyDeviceResult.length) {
-							var inset_dt = data.policyDeviceResult[i].ins_date;
+							var inset_dt = data.policyDeviceResult[i].rgstr_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 							deviceResult += "<tr>";
 							deviceResult += "<td>" + data.policyDeviceResult[i].product + "</td>";
-							deviceResult += "<td>" + data.policyDeviceResult[i].status_yn + "</td>";
+							deviceResult += "<td>" + data.policyDeviceResult[i].status + "</td>";
 							deviceResult += "<td>" + data.pcList.length + "</td>";
 							deviceResult += "<td>" + data.policyDeviceResult[i].count + "</td>";
 							deviceResult += "<td>" + noinstall + "</td>";
@@ -649,7 +649,7 @@ function detail(uuid){
 			console.log(data.device);
 			var deviceResult = '';
 			$.each(data.device, function(index, value) {
-				var inset_dt = value.ins_date;
+				var inset_dt = value.rgstr_date;
 				var date = new Date(inset_dt);
 				
  				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";

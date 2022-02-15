@@ -1,6 +1,8 @@
 package com.model;
 
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -136,10 +138,10 @@ public class PcMangrVo {
 	private String org_dept_room_name;
 	
 	@Comment("등록일")
-	private String rgstr_date;
+	private Timestamp rgstr_date;
 	
 	@Comment("수정일")
-	private String updt_date;
+	private Timestamp updt_date;
 	
 	@Transient
 	private String deptname;

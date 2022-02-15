@@ -787,28 +787,28 @@
 	<!-- 정책배포결과 디바이스 -->
 	<select id="pcPolicyDeviceList" resultType="map" parameterType="map">
 		SELECT
-    DISTINCT PA.count, PA.product||'('||PA.vendorcode||':'||PA.productcode||')' as product, (CASE WHEN PA.status_yn = 'Y'  THEN '허용' ELSE '차단' END ) as status_yn, PA.ins_date
+    DISTINCT PA.count, PA.product||'('||PA.vendorcode||':'||PA.productcode||')' as product, (CASE WHEN PA.status = 'Y'  THEN '허용' ELSE '차단' END ) as status, PA.rgstr_date
 		FROM (
 			SELECT
-				ROW_NUMBER() OVER( PARTITION BY TA.product, TA.status_yn ),
-				COUNT(TA.product) over(partition by TA.product, TA.status_yn),
+				ROW_NUMBER() OVER( PARTITION BY TA.product, TA.status ),
+				COUNT(TA.product) over(partition by TA.product, TA.status),
 				TA.*
 				FROM (
 					SELECT
-						ROW_NUMBER() OVER( PARTITION BY A.product, A.uuid ORDER BY A.ins_date DESC),
-						A.product, A.ins_date, A.status_yn,A.vendorcode,A.productcode
+						ROW_NUMBER() OVER( PARTITION BY A.product, A.pc_uuid ORDER BY A.rgstr_date DESC),
+						A.product, A.rgstr_date, A.status,A.vendorcode,A.productcode
 					FROM (
 						SELECT
 							DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(product),',') , ',')) product
-							,uuid
-							,hostname
-							,status_yn
-							,ins_date
+							,pc_uuid
+							,pc_hostname
+							,status
+							,rgstr_date
 							,vendorcode
 							,productcode
 						FROM tbl_act_device_log
 						WHERE 
-							uuid in (
+							pc_uuid in (
 								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
 								(
 									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
@@ -823,12 +823,12 @@
 										FROM search_org
 								)
 							)
-						GROUP BY seq,uuid,hostname,status_yn,product,ins_date,vendorcode,productcode
-						order by ins_date desc
+						GROUP BY seq,pc_uuid,pc_hostname,status,product,rgstr_date,vendorcode,productcode
+						order by rgstr_date desc
 					) A
 				)  TA
 			WHERE row_number = 1
-			ORDER BY TA.ins_date DESC
+			ORDER BY TA.rgstr_date DESC
 		<if test="type == 'main'">
 			limit 5
 			</if>

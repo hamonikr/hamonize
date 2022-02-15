@@ -26,7 +26,7 @@ public class AgentJobProgrm {
 	private String domain;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Comment("시리얼넘버")
 	private Long seq;
 
@@ -34,7 +34,7 @@ public class AgentJobProgrm {
 	private Integer pcm_seq;
 
 	@Comment("부서번호")
-	private Integer org_seq;
+	private Long org_seq;
 
 	@Comment("작업번호")
 	private Integer pa_seq;
