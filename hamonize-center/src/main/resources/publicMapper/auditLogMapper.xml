@@ -817,10 +817,10 @@
 						    ,tbl_policy_progrm_block_list tb2
 						  where
 						    tb1.progrmname = tb2.pcm_name
-						    and tb1.uuid = #{uuid}
+						    and tb1.pc_uuid = #{uuid}
 						    and upper(tb1.progrmname) =  upper(#{item}) 
 						  order by
-						    tb1.ins_date desc limit 1)
+						    tb1.rgstr_date desc limit 1)
 			<if test="debListCnt > index+1">
 				            	UNION ALL
 				            </if>
@@ -841,10 +841,10 @@
 						    ,tbl_policy_firewall_list tb2
 						  where
 						    tb1.retport = tb2.sm_port
-						    and tb1.uuid = #{uuid}
+						    and tb1.pc_uuid = #{uuid}
 						    and tb1.retport =  #{item} 
 						  order by
-						    tb1.ins_date desc limit 1)
+						    tb1.rgstr_date desc limit 1)
 			<if test="debListCnt > index+1">
 				            	UNION ALL
 				            </if>

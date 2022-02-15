@@ -179,7 +179,7 @@
 							progrmResultHtml += "</tr>";
 
 						} else if ((i + 1) == data.policyUpdtResult.length) {
-							var inset_dt = data.policyUpdtResult[i].ins_date;
+							var inset_dt = data.policyUpdtResult[i].rgstr_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
 							//성공여부 체크 카운트
@@ -225,7 +225,7 @@
 							chk = 0;
 						}
 						if (data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i + chk].progrmname) {
-							var inset_dt = data.policyProgrmResult[i].ins_date;
+							var inset_dt = data.policyProgrmResult[i].rgstr_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
@@ -237,7 +237,7 @@
 							programBlockResult += "<td>" + noinstall + "</td>";
 							programBlockResult += "</tr>";
 						} else if ((i + 1) == data.policyProgrmResult.length) {
-							var inset_dt = data.policyProgrmResult[i].ins_date;
+							var inset_dt = data.policyProgrmResult[i].rgstr_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
 							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
@@ -268,7 +268,7 @@
 							chk = 0;
 						}
 						if (data.policyFirewallResult[i].retport != data.policyFirewallResult[i + chk].retport) {
-							var inset_dt = data.policyFirewallResult[i].ins_date;
+							var inset_dt = data.policyFirewallResult[i].rgstr_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString());
 							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
@@ -280,7 +280,7 @@
 							firewallResult += "<td>" + noinstall + "</td>";
 							firewallResult += "</tr>";
 						} else if ((i + 1) == data.policyFirewallResult.length) {
-							var inset_dt = data.policyFirewallResult[i].ins_date;
+							var inset_dt = data.policyFirewallResult[i].rgstr_date;
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString());
 							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
@@ -591,7 +591,7 @@ function detail(uuid){
 			var programBlockResult = '';
 			console.log("data.program==============+"+data.program);
 			$.each(data.program, function(index, value) {
-				var inset_dt = value.ins_date;
+				var inset_dt = value.rgstr_date;
 				var date = new Date(inset_dt);
 			
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());
@@ -620,7 +620,7 @@ function detail(uuid){
 			
 			var firewallResult = '';
 			$.each(data.firewall, function(index, value) {
-				var inset_dt = value.ins_date;
+				var inset_dt = value.rgstr_date;
 				var date = new Date(inset_dt);
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				firewallResult += "<tr>";

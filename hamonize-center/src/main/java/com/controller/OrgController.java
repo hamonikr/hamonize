@@ -79,7 +79,7 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=show", method = RequestMethod.POST)
 	public JSONObject orgView(HttpSession session, Model model, OrgVo orgvo) {
-		System.out.println("aaaaaaaaaaaaaaaaaa");
+
 		orgvo = oService.orgView(orgvo);
 
 		JSONObject data = new JSONObject();
