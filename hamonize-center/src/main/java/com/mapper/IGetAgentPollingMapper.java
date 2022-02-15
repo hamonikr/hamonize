@@ -5,7 +5,6 @@ import com.model.HmProgrmUpdtVo;
 
 public interface IGetAgentPollingMapper {
 
-	public int getAgentWorkYn(GetAgentPollingVo vo);
 
 	public GetAgentPollingVo getPollingTime(GetAgentPollingVo vo);
 

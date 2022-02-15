@@ -36,41 +36,23 @@ public class CurlAgentPollingController {
 
 		// 출력 변수
 		logger.info("uuid === {}", uuid);
-		logger.info("name === {}", name);
 		
 		uuid = uuid.trim();
-		name = name.trim();
 
 		GetAgentPollingVo vo = new GetAgentPollingVo();
 		vo.setUuid(uuid);
 		vo.setPu_name(name);
 		
-		int chkProgrmPolicy = getAgentPollingMapper.getAgentWorkYn(vo);
+
 		GetAgentPollingVo output = getAgentPollingMapper.getPollingTime(vo);
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-
-		logger.info("//===================================");
-		logger.info("//work yn === {}", chkProgrmPolicy);
-		logger.info("//===================================// ");
-
-		if (chkProgrmPolicy == 0) {
-			if( output.getPolling_tm() == 0 ){
-				jsonObject.put("data", "nodata");
-			}else{
-				logger.info("getPolling_tm : {}",output.getPolling_tm());
-				if( output.getPolling_tm().SIZE !=0){
-					jsonObject.put("data", output.getPolling_tm());
-
-				}else{
-					jsonObject.put("data", "nodata");
-				}
-			}
-			
-		}else{
-			jsonObject.put("data", "nodata");
-
+		
+		System.out.println("==="+ output);
+		if( output != null ) {
+			jsonObject.put("data", output.getPolling_tm());
+		}else {
+			jsonObject.put("data", "3600");
 		}
-
 
 		logger.info("//===================================");
 		logger.info("/result data is : {}", jsonObject);
