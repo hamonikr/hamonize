@@ -14,7 +14,7 @@ var filePath = "/etc/hamonize/agent/";
 var fileName = "agentJob.txt";
 var schedule = require('node-schedule');
 var uuidVal = getUUID();
-var tenantVal = getTenant();
+var tenantVal = getTenant().trim();
 var readline = require('readline');
 
 
@@ -694,26 +694,6 @@ function getProgrmDataCall(uuid) {
 	});
 }
 
-function fnProgrmJob(retData) {
-
-	if (retData != '') {
-		var progrmDataObj = JSON.parse(retData);
-		log.info("//==progrm 정책:: progrmDataObj Data is : " + JSON.stringify(progrmDataObj));
-		log.info("//==progrm 정책:: progrmDataObj.INS Data is : " + JSON.stringify(progrmDataObj.INS));
-		log.info("//==progrm 정책:: progrmDataObj.DEL Data is : " + JSON.stringify(progrmDataObj.DEL));
-	}
-	var exec = require('child_process').exec;
-	// exec('sudo sh /usr/share/hamonize-agent/shell/progrmjob.sh  ', function (err, stdout, stderr) {
-	exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
-		log.info('//==progrm 정책::   stdout: ' + stdout);
-		if (err !== null) {
-			log.info('//==progrm 정책::  error: ' + err);
-		}
-	});
-
-
-}
-
 
 //========================================================================
 //== Backup Job=============================================================
@@ -1258,7 +1238,10 @@ function getFileData(_gubun) {
 		filePath = "/etc/hamonize/security/device.hm";
 	}else if(_gubun == 'devicepolicy' ){
 		filePath = "/etc/hamonize/security/device.hm";
+	}else if(_gubun == 'progrmblock' ){
+		filePath = "/etc/hamonize/progrm/progrm.hm";
 	}
+
 	log.info("//==get File path " + filePath);
 	
 	
@@ -1272,14 +1255,11 @@ function getFileData(_gubun) {
 }
 
 
-// function :: device job =============
+// function :: device job ===================================================================================================
 async function fnDeviceJob() {
 	var deviceDataObj = getFileData('devicepolicy');
 	console.log("deviceDataObj============++"+deviceDataObj);
-	
-	// real
 	var os = new os_func();
-	
 	os.execCommand("sudo /usr/local/bin/center-lockdown").then(res => {
 		log.info("//== device 정책 :: centor-lockdown load --- > success\n");
 		console.log("res==" + res);
@@ -1293,93 +1273,6 @@ async function fnDeviceJob() {
 }
 
 
-// function :: update policy =============
-function fnUpdtAgentAction() {
-
-	//정책정보 파일로 저장
-	outputData = getFileData('updt');
-	log.info("//== updt 정책정보 파일 Data is : " + outputData);
-
-	const exec = require('child_process').exec;
-	
-	// dev
-	exec(" sudo sh ./shell/updtjob.sh", function (err, stdout, stderr) {
-	
-	//real
-	// exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
-		log.info('updt 정책 ::  stdout: ' + stdout);
-		log.info('updt 정책 :: stderr: ' + stderr);
-
-		if (err !== null) {
-			log.info(' updt 정책 ::  error: ' + err);
-		}
-	});
-
-}
-
-// ===================================================================================================
-const { Command } = require('commander');
-// const exec = require('child_process').exec;
-
-const program = new Command();
-
-program
-	.option('-n, --name <name>', 'file name')
-	.option('--updt')
-	.option('--programblock')
-	.option('--devicepolicy')
-	.option('--start')
-	.parse();
-
-console.log(`updt====> ${program.opts().updt}`);
-console.log(`programblockp ---> ${program.opts().programblock}`);
-console.log(`start === > ${program.opts().start}`);
-console.log(program.opts().name);
-
-if (program.opts().hamonizeInstall) {
-	console.log("aaaaaaaaaaaaaa");
-}
-
-
-// program block cli 
-// ===> ansible -> agnet (x)
-if (program.opts().programblock) {
-	console.log("programblock option fnUpdtAgentAction()");
-}
-
-// device policy cli 
-// ===> ansible -> agnet (0)
-if (program.opts().devicepolicy) {
-	console.log("device policy cli ");
-	fnDeviceJob();
-}
-// updt cli 
-// ===> ansible -> agent (0)
-if (program.opts().updt) {
-	console.log("updt option fnUpdtAgentAction()");
-	fnUpdtAgentAction();
-}
-
-// agent start cli 
-if (program.opts().start) {
-	FnMkdir();
-	console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
-	getPollTime(uuidVal);
-	console.log("send option bbbbbbbbbbbbbbbbbb");
-
-}
-
-// getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
-// getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
-// getRecoveryDataCall(uuidVal); // Call 복구 정책 
-// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
-// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
-// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-// sysInfo(); // hw 변경로그
-
-
-
-
 
 // 비인가 디바이스 정책 배포 결과 전송
 function fnDeviceJob_result(deviceData, statusyn) {
@@ -1387,7 +1280,6 @@ function fnDeviceJob_result(deviceData, statusyn) {
 	var returnDataIns = "";
 	var returnDataDel = "";
 	var setDeviceJsonReturnData = "";
-console.log("=========================deviceData==========+++"+ deviceData);
 	
 	var deviceDataObj = JSON.parse(deviceData);
 
@@ -1412,7 +1304,6 @@ console.log("=========================deviceData==========+++"+ deviceData);
 	}
 
 
-console.log("wwwwwwwww====================================+"+ JSON.stringify(setDeviceJsonReturnData));
 	request.post('http://' + centerUrl + '/act/deviceAct', {
 		json: {
 			events: setDeviceJsonReturnData
@@ -1428,7 +1319,6 @@ console.log("wwwwwwwww====================================+"+ JSON.stringify(set
 
 
 function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
-	console.log("deviceInsData==============="+ deviceInsData);
 	var os = require("os");
 	var hostname = os.hostname();
 	var arrSetData = new Array();
@@ -1447,7 +1337,7 @@ function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
 			setData.productCode = prodcutCode;
 			setData.vendorCode = vendorCode;
 			setData.statusyn = statusyn;
-			setData.domain = tenantVal;
+			setData.domain = tenantVal.trim();
 
 			arrSetData.push(setData);
 		}
@@ -1456,6 +1346,118 @@ function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
 
 	return arrSetData;
 }
+
+// function :: update policy ===================================================================================================
+function fnUpdtAgentAction() {
+
+	
+	outputData = getFileData('updt');
+	log.info("//== updt 정책정보 파일 Data is : " + outputData);
+
+	const exec = require('child_process').exec;
+	
+	// dev
+	exec(" sudo sh ./shell/updtjob.sh", function (err, stdout, stderr) {
+	
+	//real
+	// exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
+		log.info('updt 정책 ::  stdout: ' + stdout);
+		log.info('updt 정책 :: stderr: ' + stderr);
+
+		if (err !== null) {
+			log.info(' updt 정책 ::  error: ' + err);
+		}
+	});
+
+}
+
+
+// 프로그램 차단 ===================================================================================================
+
+function fnProgrmJob() {
+
+	var progrmblockDataObj = getFileData('progrmblock');
+	console.log("file data ---- " + progrmblockDataObj);
+	if (progrmblockDataObj != '') {
+		var progrmDataObj = JSON.parse(progrmblockDataObj);
+		log.info("//==progrm 정책:: progrmDataObj Data is : " + JSON.stringify(progrmDataObj));
+		log.info("//==progrm 정책:: progrmDataObj.INS Data is : " + JSON.stringify(progrmDataObj.INS));
+		log.info("//==progrm 정책:: progrmDataObj.DEL Data is : " + JSON.stringify(progrmDataObj.DEL));
+	}
+	var exec = require('child_process').exec;
+	exec('sudo sh ./shell/tmpprogrmjob.sh  ' + tenantVal, function (err, stdout, stderr) {
+	// exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
+		log.info('//==progrm 정책::   stdout: ' + stdout);
+		if (err !== null) {
+			log.info('//==progrm 정책::  error: ' + err);
+		}
+	});
+
+
+}
+
+// ===================================================================================================
+const { Command } = require('commander');
+// const exec = require('child_process').exec;
+
+const program = new Command();
+
+program
+	.option('-n, --name <name>', 'file name')
+	.option('--updt')
+	.option('--progrmblock')
+	.option('--devicepolicy')
+	.option('--start')
+	.parse();
+
+console.log(`updt====> ${program.opts().updt}`);
+console.log(`progrmblock ---> ${program.opts().progrmblock}`);
+console.log(`start === > ${program.opts().start}`);
+console.log(program.opts().name);
+
+if (program.opts().hamonizeInstall) {
+	console.log("aaaaaaaaaaaaaa");
+}
+
+
+// program block cli 
+// ===> ansible -> agnet (x)
+if (program.opts().progrmblock) {
+	console.log("progrmblock option fnUpdtAgentAction()");
+	fnProgrmJob();
+}
+
+// device policy cli 
+// ===> ansible -> agnet (0)
+if (program.opts().devicepolicy) {
+	console.log("device policy cli ");
+	fnDeviceJob();
+}
+// updt cli 
+// ===> ansible -> agent (0)
+if (program.opts().updt) {
+	console.log("updt option fnUpdtAgentAction()");
+	fnUpdtAgentAction();
+}
+
+// agent start cli 
+if (program.opts().start) {
+	FnMkdir();
+	console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
+	getPollTime(uuidVal);
+	console.log("send option bbbbbbbbbbbbbbbbbb");
+
+}
+
+// getRecoveryDataCall(uuidVal); // Call 복구 정책 
+// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
+// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
+// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
+// sysInfo(); // hw 변경로그
+
+
+
+
 
 
 

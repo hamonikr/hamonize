@@ -17,6 +17,7 @@
 		    FROM public.tbl_pc_mangr
 		    where pc_uuid =  #{pc_uuid}
 		)
+		and domain = #{domain}
 				
 	</select>
 	

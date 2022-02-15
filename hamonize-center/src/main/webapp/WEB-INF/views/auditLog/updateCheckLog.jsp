@@ -546,6 +546,7 @@ function detail(uuid){
 			$(".programResultTr").append(programResultTr);
 			
 			var programResult = '';
+			console.log("data.udpt============+"+data.udpt);
 			$.each(data.udpt, function(index, value) {
 				var inset_dt = value.insert_dt;
 				var date = new Date(inset_dt);
@@ -588,6 +589,7 @@ function detail(uuid){
 			$(".programBlockResultTr").append(programBlockResultTrHtml);
 
 			var programBlockResult = '';
+			console.log("data.program==============+"+data.program);
 			$.each(data.program, function(index, value) {
 				var inset_dt = value.ins_date;
 				var date = new Date(inset_dt);
@@ -603,7 +605,7 @@ function detail(uuid){
 					programBlockResult += "<td>"+date+"</td>";
 					programBlockResult += "</tr>";
 			});	
-			$(".programResultTbody").append(programBlockResult);
+			$(".programBlockResultTbody").append(programBlockResult);
 
 			
 			// 방화벽 정책 배포 결과] ===============================================================

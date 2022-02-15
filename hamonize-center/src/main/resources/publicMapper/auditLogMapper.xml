@@ -818,7 +818,7 @@
 						  where
 						    tb1.progrmname = tb2.pcm_name
 						    and tb1.uuid = #{uuid}
-						    and tb1.progrmname =  #{item} 
+						    and upper(tb1.progrmname) =  upper(#{item}) 
 						  order by
 						    tb1.ins_date desc limit 1)
 			<if test="debListCnt > index+1">

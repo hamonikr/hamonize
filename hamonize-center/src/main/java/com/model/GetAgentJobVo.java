@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class GetAgentJobVo {
 	 
+	
+	private String domain;
 	// == new vo val
 	private String pc_uuid;
 	private Long seq;

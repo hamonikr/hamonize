@@ -145,7 +145,7 @@ public class ActAgentFirewallController {
 
 		}
 
-		Long uuid = pcUUID(inputVo.getUuid());
+		Long uuid = pcUUID(inputVo.getUuid(), "domain"); // ===================================
 		inputVo.setOrgseq(uuid);
 
 		int retVal = actAgentFirewallMapper.insertActAgentFirewall(inputVo);
@@ -192,7 +192,7 @@ public class ActAgentFirewallController {
 			tmpVo.setProduct(tempObj.get("product").toString());
 			tmpVo.setVendorCode(tempObj.get("vendorCode").toString());
 			tmpVo.setProductCode(tempObj.get("productCode").toString());
-			tmpVo.setOrg_seq(pcUUID(tempObj.get("uuidVal").toString().trim()));
+			tmpVo.setOrg_seq(pcUUID(tempObj.get("uuidVal").toString().trim(), tempObj.get("domain").toString().trim()));
 			inputVoList.add(tmpVo);
 		}
 
@@ -239,7 +239,7 @@ public class ActAgentFirewallController {
 				inputVo[i].setStatus_yn(tempObj.get("status_yn").toString());
 				inputVo[i].setProgrmname(tempObj.get("progrmname").toString());
 				inputVo[i].setDatetime(tempObj.get("datetime").toString());
-				inputVo[i].setOrgseq(pcUUID(tempObj.get("uuid").toString().trim()));
+				inputVo[i].setOrgseq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
 			}
 		}
 
@@ -292,7 +292,7 @@ public class ActAgentFirewallController {
 
 		}
 
-		Long uuid = pcUUID(inputVo.getUuid());
+		Long uuid = pcUUID(inputVo.getUuid(), "domain");// ===================================
 		inputVo.setOrg_seq(uuid);
 
 		int retVal = getAgentRecoveryMapper.insertActAgentBackupRecovery(inputVo);
@@ -326,9 +326,10 @@ public class ActAgentFirewallController {
 	 * 
 	 * @return 부서seq
 	 */
-	public Long pcUUID(String pcuuid) {
+	public Long pcUUID(String pcuuid, String domain) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(pcuuid);
+		agentVo.setDomain(domain);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		Long segSeq = (long) 0;
 		if (agentVo != null) {
