@@ -264,20 +264,6 @@ function getRecoveryDataCall(uuid) {
 	});
 }
 
-function fnRecovJob(retData) {
-
-	log.info("==== fnRecovJob ====");
-
-	var exec = require('child_process').exec;
-	exec('sudo sh /usr/share/hamonize-agent/shell/backupJob_recovery.sh  ', function (err, stdout, stderr) {
-		log.info('//=====backup cycle all day of week stdout: ' + stdout);
-		log.info('//=====backup cycle all day of week stderr: ' + stderr);
-
-		if (err !== null) {
-			log.info('//== backup_gubun week error: ' + err);
-		}
-	});
-}
 
 //========================================================================
 //== Updt Job=============================================================
@@ -837,18 +823,22 @@ function getCenterInfo() {
 }
 
 
+// 컴퓨터 UUID
 function getUUID() {
 	var text = fs.readFileSync('/etc/hamonize/uuid', 'utf8');
 	log.info("//== pc uuid is : " + text);
 	return text;
 }
 
+
+// 테넌트 고유값
 function getTenant() {
 	var text = fs.readFileSync('/etc/hamonize/hamonize_tanent', 'utf8');
 	log.info("//== pc uuid is : " + text);
 	return text;
 }
 
+// hw 변경로그 체크 파일
 function getHwpInfo(filename) {
 	var text = fs.readFileSync('/etc/hamonize/hwinfo/' + filename, 'utf8');
 	log.info("//== pc hw ifon is : " + text);
@@ -1132,16 +1122,53 @@ const sysInfo = async () => {
 	});
 
 
+
+
+
+
+
+
+	const { networkInterfaces } = require('os');
+
+const nets = networkInterfaces();
+const results = Object.create(null); // Or just '{}', an empty object
+
+for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+        if (!net.internal) {
+			// if (net.family === 'IPv4' && !net.internal) {
+            if (!results[name]) {
+                results[name] = [];
+            }
+            results[name].push(net.address);
+        }
+		
+    }
+}
+
+console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
+
+
+
+
+
+
+
+
 	const pcHostname = await execShellCommand('hostname');
 	const cpuid = await execShellCommand('dmidecode -t 4|grep ID');
 	const usernm = await execShellCommand('users');
 
 	let md5 = require('md5');
-	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	let hwinfoMD5 = pcHostname + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	// let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	let hwData = md5(hwinfoMD5);
 
 	const base_hwinfo = getHwpInfo("hwinfo.hm");
 
+	console.log("hwData.trim()====="+hwData.trim());
+	console.log("base_hwinfo.trim()=========++"+ base_hwinfo.trim());
 	let isSendYn = false;
 	if (hwData.trim() == base_hwinfo.trim()) {
 
@@ -1156,7 +1183,7 @@ const sysInfo = async () => {
 		});
 	}
 
-
+	console.log("isSendYn=========++"+isSendYn);
 	if (isSendYn) {
 
 		var unirest = require('unirest');
@@ -1170,11 +1197,12 @@ const sysInfo = async () => {
 					cpuid: cpuid,
 					hddinfo: diskInfo,
 					hddid: diskSerialNum,
-					ipaddr: ipinfo.address(),
+					// ipaddr: ipinfo.address(),
 					uuid: machindid,
 					user: usernm,
 					macaddr: pcuuid.macs[0],
-					cpuinfo: cpuinfo
+					cpuinfo: cpuinfo,
+					domain: tenantVal
 				}]
 			})
 			.end(function (response) {
@@ -1182,7 +1210,7 @@ const sysInfo = async () => {
 				console.log("\nbbbresponse.body===" + response.body);
 			});
 		log.info("telegraf restart");
-		await execShellCommand('service telegraf restart');
+		// await execShellCommand('service telegraf restart');
 	}
 
 
@@ -1205,10 +1233,9 @@ const sysInfo = async () => {
 
 
 
-// ======================================
+// #----------------------------------------------------------------------------##----------------------------------------------------------------------------#
 //	cloud version job 
-//
-// ======================
+// #----------------------------------------------------------------------------##----------------------------------------------------------------------------#
 
 
 
@@ -1242,8 +1269,9 @@ function getFileData(_gubun) {
 	return output;
 }
 
-
-// function :: device job ===================================================================================================
+// #----------------------------------------------------------------------------#
+//  device job	 																
+// #----------------------------------------------------------------------------#
 async function fnDeviceJob() {
 	var deviceDataObj = getFileData('devicepolicy');
 	console.log("deviceDataObj============++"+deviceDataObj);
@@ -1262,7 +1290,7 @@ async function fnDeviceJob() {
 
 
 
-// 비인가 디바이스 정책 배포 결과 전송
+// 비인가 디바이스 정책 배포 결과 전송 
 function fnDeviceJob_result(deviceData, statusyn) {
 	var deviceInsData = "";
 	var returnDataIns = "";
@@ -1335,7 +1363,9 @@ function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
 	return arrSetData;
 }
 
-// function :: update policy ===================================================================================================
+// #----------------------------------------------------------------------------#
+//  update policy 
+// #----------------------------------------------------------------------------#
 function fnUpdtAgentAction() {
 
 	
@@ -1360,7 +1390,9 @@ function fnUpdtAgentAction() {
 }
 
 
-// 프로그램 차단 ===================================================================================================
+// #----------------------------------------------------------------------------#
+// 프로그램 차단 
+// #----------------------------------------------------------------------------#
 
 function fnProgrmJob() {
 
@@ -1384,8 +1416,9 @@ function fnProgrmJob() {
 
 }
 
-
-// 방화벽 ====================================================================================================
+// #----------------------------------------------------------------------------#
+// 방화벽 
+// #----------------------------------------------------------------------------#
 
 function fnFirewallJob() {
 
@@ -1404,10 +1437,28 @@ function fnFirewallJob() {
 	});
 }
 
-// ===================================================================================================
-const { Command } = require('commander');
-// const exec = require('child_process').exec;
 
+
+// #----------------------------------------------------------------------------#
+// 복구정책 
+// #----------------------------------------------------------------------------#
+function fnRecovJob() {
+
+	log.info("==== fnRecovJob ====");
+	var exec = require('child_process').exec;
+	exec('sudo sh /usr/share/hamonize-agent/shell/backupJob_recovery.sh  ', function (err, stdout, stderr) {
+		log.info('//=====backup cycle all day of week stdout: ' + stdout);
+		log.info('//=====backup cycle all day of week stderr: ' + stderr);
+
+		if (err !== null) {
+			log.info('//== backup_gubun week error: ' + err);
+		}
+	});
+}
+
+
+// #----------------------------------------------------------------------------##----------------------------------------------------------------------------#
+const { Command } = require('commander');
 const program = new Command();
 
 program
@@ -1416,18 +1467,43 @@ program
 	.option('--progrmblock')
 	.option('--devicepolicy')
 	.option('--ufw')
+	.option('--recovery')
+	.option('--unauthlog')
+	.option('--hwcheck')
 	.option('--start')
 	.parse();
 
 console.log(`updt====> ${program.opts().updt}`);
 console.log(`progrmblock ---> ${program.opts().progrmblock}`);
 console.log(`ufw === > ${program.opts().ufw}`);
+console.log(`hwcheck === > ${program.opts().hwcheck}`);
 console.log(`start === > ${program.opts().start}`);
 console.log(program.opts().name);
 
 if (program.opts().hamonizeInstall) {
 	console.log("aaaaaaaaaaaaaa");
 }
+
+
+// 비인가디바이스  - hamonize-process 패키지에서 비인가 로그파일의 내용 유무를 판별하여 hamonize-agent --unauthlog를 실행한다.
+if (program.opts().unauthlog) {
+	console.log("unauthlog()");
+	sendToCenter_unauth();
+}
+
+
+// hwcheck cli 
+if (program.opts().hwcheck) {
+	console.log("hwcheck()");
+	sysInfo();
+}
+
+// recovery cli 
+if (program.opts().recovery) {
+	console.log("recovery()");
+	fnRecovJob();
+}
+
 
 
 // ufw cli 
@@ -1467,11 +1543,8 @@ if (program.opts().start) {
 
 }
 
-// getRecoveryDataCall(uuidVal); // Call 복구 정책 
-// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
 // getBackupDataCall(uuidVal); // Call 백업 주기 정책 
-// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-// sysInfo(); // hw 변경로그
+
 
 
 

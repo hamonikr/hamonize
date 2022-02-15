@@ -73,6 +73,7 @@ public class CurlEqualsHwController {
 		logger.debug(" envents ====> {}", jsonObj.get("events"));
 
 		EqualsHwVo setEqualsHwVo = new EqualsHwVo();
+		String pcOrgDomain = "";
 		for (int i = 0; i < inetvalArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) inetvalArray.get(i);
 
@@ -86,18 +87,21 @@ public class CurlEqualsHwController {
 			setEqualsHwVo.setPc_user(tempObj.get("user").toString().trim());
 			setEqualsHwVo.setPc_macaddress(tempObj.get("macaddr").toString().trim());
 			setEqualsHwVo.setPc_cpu(tempObj.get("cpuinfo").toString().trim());
+			pcOrgDomain =tempObj.get("domain").toString().trim();
+			setEqualsHwVo.setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), pcOrgDomain));
 
 		}
 
-		setEqualsHwVo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid()));
+		
 		int retVal = equalsHwMapper.pcHWInfoInsert(setEqualsHwVo);
 
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		PcMangrVo newPvo = new PcMangrVo();
 
-		newPvo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid()));
+		newPvo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid(), pcOrgDomain));
 		newPvo.setPc_hostname(setEqualsHwVo.getPc_hostname());
+		newPvo.setDomain(pcOrgDomain);
 
 		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(newPvo);
 
@@ -115,14 +119,21 @@ public class CurlEqualsHwController {
 		logger.info("변경된 pc hostname : {}",setEqualsHwVo.getPc_hostname());
 		logger.info("변경된 pc ip :  {}",setEqualsHwVo.getPc_ip());
 		logger.info("------------------------------------------\n");
+		
+		
+		System.out.println("eq11==="+ oldPvo.getPc_ip() + "=="+ newPvo.getPc_ip());
+		System.out.println("eq2222==="+ oldPvo.getPc_vpnip() + "=="+ newPvo.getPc_vpnip());
 
-
+//		System.out.println("3==="+oldPvo.getPc_ip().equals(newPvo.getPc_ip()));
+//		System.out.println("4==="+ oldPvo.getVpn_ip().equals(newPvo.getVpn_ip()));
+	
 		if (retVal == 1) {
 			// pc정보 db 업데이트
 			equalsHwMapper.pcMngrModify(setEqualsHwVo);
+			if( !oldPvo.getPc_ip().equals(newPvo.getPc_ip())  &&  ((oldPvo.getPc_vpnip() != null && newPvo.getPc_vpnip() != null) && !oldPvo.getPc_vpnip().equals(newPvo.getPc_vpnip())) ) {
 			// pc 정보 ldap 업데이트 hostname
-			con.updatePc(oldPvo, newPvo);
-
+				con.updatePc(oldPvo, newPvo);
+			}
 			return "Y";
 		} else {
 			return "N";
@@ -137,9 +148,10 @@ public class CurlEqualsHwController {
 	 * @param uuid
 	 * @return 부서seq
 	 */
-	public Long pcUUID(String uuid) {
+	public Long pcUUID(String uuid, String domain) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
+		agentVo.setDomain(domain);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		Long segSeq = agentVo.getSeq();
 		return segSeq;

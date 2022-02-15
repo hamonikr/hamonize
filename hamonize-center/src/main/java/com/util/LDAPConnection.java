@@ -410,9 +410,11 @@ public class LDAPConnection {
 		ModificationItem[] mods = new ModificationItem[2];
 		Attribute mod1 = new BasicAttribute("name", newVo.getPc_hostname());
 		Attribute mod2 = new BasicAttribute("ipHostNumber", newVo.getPc_ip());
+		Attribute mod3 = new BasicAttribute("ipHostNumber", newVo.getPc_vpnip());
 
 		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
+		mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
 
 		String str = oldVo.getAlldeptname();
 		logger.info("oldVo getAlldeptname {}", str);

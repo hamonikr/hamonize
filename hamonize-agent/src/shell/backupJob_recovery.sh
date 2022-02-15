@@ -14,7 +14,6 @@ HOSTNAME=`hostname`
 BKDIR="/timeshift/snapshots"
 centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
 
-# BK_RECOV_CENTERURL="http://192.168.0.116:8080/act/stBackupRecoveryJob"
 BK_RECOV_CENTERURL="http://${centerUrl}/act/stBackupRecoveryJob"
 
 LOGFILE="/var/log/hamonize/agentjob/agentjob_backup_recovery.log"

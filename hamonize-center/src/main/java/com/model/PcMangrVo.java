@@ -69,7 +69,7 @@ public class PcMangrVo {
 	@Size(max=30)
 	@Comment("ip정보")
 	private String pc_ip;
-	
+		
 	@Size(max=30)
 	@Comment("vpn_ip정보")
 	private String pc_vpnip;
