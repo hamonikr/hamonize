@@ -621,25 +621,22 @@
 	<!-- 정책배포결과 업데이트 -->
 	<select id="pcPolicyUpdtList" resultType="map" parameterType="map">
 		SELECT
-    DISTINCT PA.count, PA.debname, PA.gubun , PA.insert_dt , PA.debver , PA.state
+    DISTINCT PA.count, PA.debname, PA.kind , PA.rgstr_date , PA.debver , PA.status
 		FROM (
 			SELECT
-				ROW_NUMBER() OVER( PARTITION BY TA.debname, TA.gubun ),
-				COUNT(TA.debname) over(partition by TA.debname, TA.gubun),
+				ROW_NUMBER() OVER( PARTITION BY TA.debname, TA.kind ),
+				COUNT(TA.debname) over(partition by TA.debname, TA.kind),
 				TA.*
 				FROM (
 					SELECT
-						ROW_NUMBER() OVER( PARTITION BY A.debname, A.pc_uuid ORDER BY A.insert_dt DESC),
-						A.debname, A.gubun, A.insert_dt, A.state, A.pc_uuid, A.debver
+						ROW_NUMBER() OVER( PARTITION BY A.debname, A.pc_uuid ORDER BY A.rgstr_date DESC),
+						A.debname, A.kind, A.rgstr_date, A.status, A.pc_uuid, A.debver
 					FROM (
 						SELECT
 							DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(debname),',') , ',')) debname,
-							gubun,org_seq, insert_dt, state, pc_uuid, debver
-						FROM tbl_updt_policy_action_result
+							kind,org_seq, rgstr_date, status, pc_uuid, debver
+						FROM tbl_act_updt_log
 						WHERE 
-						--org_seq not in  (8307 , 8308 )
-							-- and pc_uuid in ('32130f9b812b41bbade60271c5aa0375' )
-							--and 
 							pc_uuid in (
 								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
 								(
@@ -655,26 +652,24 @@
 										FROM search_org
 								)
 							)
-							--and gubun != 'DELETE'
-						GROUP BY debname, gubun, org_seq, insert_dt, state, pc_uuid, debver
-						order by insert_dt desc
+						GROUP BY debname, kind, org_seq, rgstr_date, status, pc_uuid, debver
+						order by rgstr_date desc
 					) A
 					WHERE A.debname != ''
-					--ORDER BY pc_uuid DESC
 				)  TA
 			WHERE row_number = 1
-			ORDER BY TA.insert_dt DESC
+			ORDER BY TA.rgstr_date DESC
 		<if test="type == 'main'">
 			limit 5
 			</if>
-		) PA order by PA.insert_dt desc
+		) PA order by PA.rgstr_date desc
 
 	</select>
 
 	<!-- 정책배포결과 프로그램 -->
 	<select id="pcPolicyProgrmList" resultType="map" parameterType="map">
 		SELECT
-    DISTINCT PA.count, PA.progrmname, PA.status , (CASE WHEN PA.status_yn = 'N'  THEN '허용' ELSE '차단' END ) as status_yn , PA.rgstr_date
+    DISTINCT PA.count, PA.progrmname, PA.status , (CASE WHEN PA.kind = 'N'  THEN '허용' ELSE '차단' END ) as kind , PA.rgstr_date
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER( PARTITION BY TA.progrmname, TA.status ),
@@ -683,7 +678,7 @@
 				FROM (
 					SELECT
 						ROW_NUMBER() OVER( PARTITION BY A.progrmname, A.pc_uuid ORDER BY A.rgstr_date DESC),
-						A.progrmname, A.rgstr_date, A.status, A.status_yn
+						A.progrmname, A.rgstr_date, A.status, A.kind
 					FROM (
 						SELECT
 							DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(progrmname),',') , ',')) progrmname
@@ -691,7 +686,7 @@
 							,pc_uuid
 							,datetime
 							,pc_hostname
-							,status_yn
+							,kind
 							,status
 							,rgstr_date
 						FROM tbl_act_progrm_log
@@ -711,7 +706,7 @@
 										FROM search_org
 								)
 							)
-						GROUP BY seq,org_seq,pc_uuid,datetime,pc_hostname,status_yn,status,progrmname,rgstr_date
+						GROUP BY seq,org_seq,pc_uuid,datetime,pc_hostname,kind,status,progrmname,rgstr_date
 						order by rgstr_date desc
 					) A
 				)  TA
@@ -728,7 +723,7 @@
 	<!-- 정책배포결과 방화벽 -->
 	<select id="pcPolicyFirewallList" resultType="map" parameterType="map">
 		SELECT
-    DISTINCT PA.count, PA.retport, (CASE WHEN PA.status = 'allow'  THEN '허용' ELSE '차단' END ) as status , (CASE WHEN PA.status_yn = 'Y'  THEN '완료' ELSE '미완료' END ) as status_yn, PA.rgstr_date
+    DISTINCT PA.count, PA.retport, (CASE WHEN PA.status = 'allow'  THEN '허용' ELSE '차단' END ) as status , (CASE WHEN PA.kind = 'Y'  THEN '완료' ELSE '미완료' END ) as kind, PA.rgstr_date
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER( PARTITION BY TA.retport, TA.status ),
@@ -737,7 +732,7 @@
 				FROM (
 					SELECT
 						ROW_NUMBER() OVER( PARTITION BY A.retport, A.pc_uuid ORDER BY A.rgstr_date DESC),
-						A.retport, A.rgstr_date, A.status, A.status_yn
+						A.retport, A.rgstr_date, A.status, A.kind
 					FROM (
 						SELECT
 							DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(retport),',') , ',')) retport
@@ -745,7 +740,7 @@
 							,pc_uuid
 							,datetime
 							,pc_hostname
-							,status_yn
+							,kind
 							,status
 							,rgstr_date
 						FROM tbl_act_firewall_log
@@ -765,7 +760,7 @@
 										FROM search_org
 								)
 							)
-						GROUP BY seq,org_seq,pc_uuid,datetime,pc_hostname,status_yn,status,retport,rgstr_date
+						GROUP BY seq,org_seq,pc_uuid,datetime,pc_hostname,kind,status,retport,rgstr_date
 						order by rgstr_date desc
 					) A
 					

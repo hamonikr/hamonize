@@ -1802,13 +1802,13 @@ ALTER TABLE public.tbl_updt_applc_history OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_updt_applc_history TO hamonize;
 
 
--- public.tbl_updt_policy_action_result definition
+-- public.tbl_act_updt_log definition
 
 -- Drop table
 
--- DROP TABLE public.tbl_updt_policy_action_result;
+-- DROP TABLE public.tbl_act_updt_log;
 
-CREATE TABLE public.tbl_updt_policy_action_result (
+CREATE TABLE public.tbl_act_updt_log (
 	seq bigserial NOT NULL, -- 시리얼 번호
 	debname varchar(100) NULL, -- 패키지명
 	state varchar(10) NULL, -- 상태값
@@ -1818,25 +1818,25 @@ CREATE TABLE public.tbl_updt_policy_action_result (
 	org_seq int8 NULL, -- 부서번호
 	insert_dt timestamptz NULL,
 	debver varchar(100) NULL, -- 패키지 버전
-	CONSTRAINT tbl_updt_policy_action_result_pkey PRIMARY KEY (seq)
+	CONSTRAINT tbl_act_updt_log_pkey PRIMARY KEY (seq)
 );
-COMMENT ON TABLE public.tbl_updt_policy_action_result IS '업데이트 정책 적용 결과';
+COMMENT ON TABLE public.tbl_act_updt_log IS '업데이트 정책 적용 결과';
 
 -- Column comments
 
-COMMENT ON COLUMN public.tbl_updt_policy_action_result.seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_updt_policy_action_result.debname IS '패키지명';
-COMMENT ON COLUMN public.tbl_updt_policy_action_result.state IS '상태값';
-COMMENT ON COLUMN public.tbl_updt_policy_action_result."path" IS '경로';
-COMMENT ON COLUMN public.tbl_updt_policy_action_result.gubun IS '작업구분';
-COMMENT ON COLUMN public.tbl_updt_policy_action_result.pc_uuid IS 'PC관리번호';
-COMMENT ON COLUMN public.tbl_updt_policy_action_result.org_seq IS '부서번호';
-COMMENT ON COLUMN public.tbl_updt_policy_action_result.debver IS '패키지 버전';
+COMMENT ON COLUMN public.tbl_act_updt_log.seq IS '시리얼 번호';
+COMMENT ON COLUMN public.tbl_act_updt_log.debname IS '패키지명';
+COMMENT ON COLUMN public.tbl_act_updt_log.state IS '상태값';
+COMMENT ON COLUMN public.tbl_act_updt_log."path" IS '경로';
+COMMENT ON COLUMN public.tbl_act_updt_log.gubun IS '작업구분';
+COMMENT ON COLUMN public.tbl_act_updt_log.pc_uuid IS 'PC관리번호';
+COMMENT ON COLUMN public.tbl_act_updt_log.org_seq IS '부서번호';
+COMMENT ON COLUMN public.tbl_act_updt_log.debver IS '패키지 버전';
 
 -- Permissions
 
-ALTER TABLE public.tbl_updt_policy_action_result OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_updt_policy_action_result TO hamonize;
+ALTER TABLE public.tbl_act_updt_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_act_updt_log TO hamonize;
 
 
 -- public.tbl_user definition

@@ -32,15 +32,15 @@
 	
  	<insert id="updtPolicyActionResultInsert" parameterType="java.util.Map">   
 		INSERT INTO 
-			tbl_updt_policy_action_result (
+			tbl_act_updt_log (
 			   debname,
 			   debver,
-			   state, 
+			   status, 
 			   path, 
-			   gubun, 
+			   kind, 
 			   pc_uuid, 
 			   org_seq,
-			   insert_dt 
+			   rgstr_date 
 			)
 			VALUES
 			<foreach collection="list" item="item" separator=" , ">

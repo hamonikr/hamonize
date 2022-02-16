@@ -239,6 +239,7 @@ public int makePolicy(Map<String, Object> params) throws ParseException
     //.bodyToMono(String.class); 
 
     String objects = response.block();
+    System.out.println("objects====="+objects);
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
     //hdVo.setHost_id((Long) jsonObj.get("id"));
