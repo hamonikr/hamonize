@@ -107,6 +107,7 @@ public class OrgService {
 				if(orgvo.getP_seq() == 0)
 				{
 					snf = restApiService.addRootOrg(orgvo);
+					tenantInsert(orgvo);
 				}else
 				{
 					snf = restApiService.addDownOrg(orgvo);
@@ -116,7 +117,6 @@ public class OrgService {
 					// ldap 저장
 					con.addOu(orgvo);
 					
-					tenantInsert(orgvo);
 
 				}
 			} catch (Exception e)
