@@ -78,8 +78,12 @@ public class PolicyFireWallService {
 	public int applyFirewallPolicy(Map<String, Object> params) throws ParseException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		
-		String[] listA = params.get("ppm_name").toString().split(",");
-		String[] listB = params.get("former_ppm_name").toString().split(",");
+		String[] listA = {};
+		String[] listB = {};
+		if(params.get("ppm_name").toString() != "")
+		listA = params.get("ppm_name").toString().split(",");
+		if(params.get("former_ppm_name").toString() != "")
+		listB = params.get("former_ppm_name").toString().split(",");
 
 		ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
 		ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
