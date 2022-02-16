@@ -191,6 +191,7 @@ public class LDAPConnection {
 		attributes.put("cn", pvo.getPc_hostname());
 		attributes.put("name", pvo.getPc_hostname());
 		
+		
 		logger.info("vip {}", pvo.getPc_vpnip().toString());
 		logger.info("ip {}", pvo.getPc_ip().toString());
 		
@@ -410,11 +411,9 @@ public class LDAPConnection {
 		ModificationItem[] mods = new ModificationItem[2];
 		Attribute mod1 = new BasicAttribute("name", newVo.getPc_hostname());
 		Attribute mod2 = new BasicAttribute("ipHostNumber", newVo.getPc_ip());
-		Attribute mod3 = new BasicAttribute("ipHostNumber", newVo.getPc_vpnip());
 
 		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
-		mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
 
 		String str = oldVo.getAlldeptname();
 		logger.info("oldVo getAlldeptname {}", str);
@@ -537,6 +536,53 @@ public class LDAPConnection {
 		try {
 
 			dc.modifyAttributes(dn, mods);
+
+		} catch (NamingException e) {
+			logger.error(e.getMessage(), e);
+		}
+
+	}
+
+	
+
+	public void updateComputer(PcMangrVo oldVo, PcMangrVo newVo) {
+		
+		String oldDn = "";
+		String newDn = "";
+		String upperDn = "";
+
+		logger.info("oldVo {}", oldVo.getPc_hostname());
+		logger.info("oldVo ip {}", oldVo.getPc_ip());
+		logger.info("oldVo vpnip {}", oldVo.getPc_vpnip());
+
+		logger.info("newVo {}", newVo.getPc_hostname());
+		logger.info("newVo ip {}", newVo.getPc_ip());
+		logger.info("newVo vpnip {}", newVo.getPc_vpnip());
+
+		ModificationItem[] mods = new ModificationItem[3];
+		Attribute mod1 = new BasicAttribute("name", newVo.getPc_hostname());
+		Attribute mod2 = new BasicAttribute("ipHostNumber", newVo.getPc_ip());
+		Attribute mod3 = new BasicAttribute("ipNetworkNumber", newVo.getPc_vpnip());
+
+		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
+		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
+		mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
+
+		String str = oldVo.getAlldeptname();
+		logger.info("oldVo getAlldeptname {}", str);
+
+		String[] p_array = str.split("\\|");
+		for (int i = p_array.length - 1; i >= 0; i--) {
+			System.out.println(p_array[i]);
+			upperDn += ",ou=" + p_array[i];
+		}
+
+		oldDn = "cn=" + oldVo.getPc_hostname() + ",ou=computers" + upperDn + ",dc=hamonize,dc=com";
+		newDn = "cn=" + newVo.getPc_hostname() + ",ou=computers" + upperDn + ",dc=hamonize,dc=com";
+
+		try {
+			dc.modifyAttributes(oldDn, mods);
+			dc.rename(oldDn, newDn);
 
 		} catch (NamingException e) {
 			logger.error(e.getMessage(), e);

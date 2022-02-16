@@ -87,6 +87,7 @@ public class CurlEqualsHwController {
 			setEqualsHwVo.setPc_user(tempObj.get("user").toString().trim());
 			setEqualsHwVo.setPc_macaddress(tempObj.get("macaddr").toString().trim());
 			setEqualsHwVo.setPc_cpu(tempObj.get("cpuinfo").toString().trim());
+			setEqualsHwVo.setPc_vpnip(tempObj.get("vpnip").toString().trim());
 			pcOrgDomain =tempObj.get("domain").toString().trim();
 			setEqualsHwVo.setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), pcOrgDomain));
 
@@ -102,6 +103,7 @@ public class CurlEqualsHwController {
 		newPvo.setOrg_seq(pcUUID(setEqualsHwVo.getPc_uuid(), pcOrgDomain));
 		newPvo.setPc_hostname(setEqualsHwVo.getPc_hostname());
 		newPvo.setDomain(pcOrgDomain);
+		newPvo.setPc_vpnip(setEqualsHwVo.getPc_vpnip());
 
 		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(newPvo);
 
@@ -118,6 +120,7 @@ public class CurlEqualsHwController {
 		logger.info("변경된 pc 정보------>  {}",setEqualsHwVo);
 		logger.info("변경된 pc hostname : {}",setEqualsHwVo.getPc_hostname());
 		logger.info("변경된 pc ip :  {}",setEqualsHwVo.getPc_ip());
+		logger.info("변경된 pc vpnip :  {}",setEqualsHwVo.getPc_vpnip());
 		logger.info("------------------------------------------\n");
 		
 		
@@ -130,10 +133,10 @@ public class CurlEqualsHwController {
 		if (retVal == 1) {
 			// pc정보 db 업데이트
 			equalsHwMapper.pcMngrModify(setEqualsHwVo);
-			if( !oldPvo.getPc_ip().equals(newPvo.getPc_ip())  &&  ((oldPvo.getPc_vpnip() != null && newPvo.getPc_vpnip() != null) && !oldPvo.getPc_vpnip().equals(newPvo.getPc_vpnip())) ) {
+//			if( !oldPvo.getPc_ip().equals(newPvo.getPc_ip())  &&  ((oldPvo.getPc_vpnip() != null && newPvo.getPc_vpnip() != null) && !oldPvo.getPc_vpnip().equals(newPvo.getPc_vpnip())) ) {
 			// pc 정보 ldap 업데이트 hostname
-				con.updatePc(oldPvo, newPvo);
-			}
+				con.updateComputer(oldPvo, newPvo);
+//			}
 			return "Y";
 		} else {
 			return "N";

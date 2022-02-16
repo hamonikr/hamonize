@@ -128,9 +128,13 @@ function Polling(time) {
 					// getRecoveryDataCall(uuidVal); // Call 복구 정책 
 					// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
 					console.log("agent --start ============================= ");
-					ipStatusCheck();
 					// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
 					// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
+					
+					
+					// ipStatusCheck();
+
+
 					// sysInfo(); // hw 변경로그
 				} else {
 					log.info("network close~");
@@ -1125,35 +1129,30 @@ const sysInfo = async () => {
 
 
 
-
-
-
-
 	const { networkInterfaces } = require('os');
 
-const nets = networkInterfaces();
-const results = Object.create(null); // Or just '{}', an empty object
+	const nets = networkInterfaces();
+	const results = Object.create(null); // Or just '{}', an empty object
 
-for (const name of Object.keys(nets)) {
-    for (const net of nets[name]) {
-        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-        if (!net.internal) {
-			// if (net.family === 'IPv4' && !net.internal) {
-            if (!results[name]) {
-                results[name] = [];
-            }
-            results[name].push(net.address);
-        }
-		
-    }
-}
+	for (const name of Object.keys(nets)) {
+		for (const net of nets[name]) {
+			// Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+			if (!net.internal) {
+				// if (net.family === 'IPv4' && !net.internal) {
+				if (!results[name]) {
+					results[name] = [];
+				}
+				results[name].push(net.address);
+			}
 
-console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
+		}
+	}
 
-
-
-
-
+	let vpnInfo = '';
+	if (typeof results['tun0'] != 'undefined') {
+		console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
+		vpnInfo = results['tun0'][0];
+	}
 
 
 
@@ -1162,14 +1161,14 @@ console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:
 	const usernm = await execShellCommand('users');
 
 	let md5 = require('md5');
-	let hwinfoMD5 = pcHostname + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
-	// let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	// let hwinfoMD5 = pcHostname + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	let hwData = md5(hwinfoMD5);
 
 	const base_hwinfo = getHwpInfo("hwinfo.hm");
 
-	console.log("hwData.trim()====="+hwData.trim());
-	console.log("base_hwinfo.trim()=========++"+ base_hwinfo.trim());
+	console.log("hwData.trim()=====" + hwData.trim());
+	console.log("base_hwinfo.trim()=========++" + base_hwinfo.trim());
 	let isSendYn = false;
 	if (hwData.trim() == base_hwinfo.trim()) {
 
@@ -1184,7 +1183,7 @@ console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:
 		});
 	}
 
-	console.log("isSendYn=========++"+isSendYn);
+	console.log("isSendYn=========++" + isSendYn);
 	if (isSendYn) {
 
 		var unirest = require('unirest');
@@ -1198,7 +1197,8 @@ console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:
 					cpuid: cpuid,
 					hddinfo: diskInfo,
 					hddid: diskSerialNum,
-					// ipaddr: ipinfo.address(),
+					ipaddr: ipinfo.address(),
+					vpnip: vpnInfo,
 					uuid: machindid,
 					user: usernm,
 					macaddr: pcuuid.macs[0],
@@ -1246,21 +1246,21 @@ function getFileData(_gubun) {
 	var stats = '';
 	var filePath = '';
 
-	if(_gubun == 'updt' ){
+	if (_gubun == 'updt') {
 		filePath = "/etc/hamonize/updt/updtInfo.hm";
-	}else if(_gubun == 'programblock' ){
+	} else if (_gubun == 'programblock') {
 		filePath = "/etc/hamonize/security/device.hm";
-	}else if(_gubun == 'devicepolicy' ){
+	} else if (_gubun == 'devicepolicy') {
 		filePath = "/etc/hamonize/security/device.hm";
-	}else if(_gubun == 'progrmblock' ){
+	} else if (_gubun == 'progrmblock') {
 		filePath = "/etc/hamonize/progrm/progrm.hm";
-	}else if(_gubun == 'ufw' ){
+	} else if (_gubun == 'ufw') {
 		filePath = "/etc/hamonize/firewall/firewallInfo.hm";
 	}
 
 	log.info("//==get File path " + filePath);
-	
-	
+
+
 	stats = fs.statSync(filePath);
 	if (stats.isFile()) {
 		var text = fs.readFileSync(filePath, 'utf8');
@@ -1275,7 +1275,7 @@ function getFileData(_gubun) {
 // #----------------------------------------------------------------------------#
 async function fnDeviceJob() {
 	var deviceDataObj = getFileData('devicepolicy');
-	console.log("deviceDataObj============++"+deviceDataObj);
+	console.log("deviceDataObj============++" + deviceDataObj);
 	var os = new os_func();
 	os.execCommand("sudo /usr/local/bin/center-lockdown").then(res => {
 		log.info("//== device 정책 :: centor-lockdown load --- > success\n");
@@ -1297,11 +1297,11 @@ function fnDeviceJob_result(deviceData, statusyn) {
 	var returnDataIns = "";
 	var returnDataDel = "";
 	var setDeviceJsonReturnData = "";
-	
+
 	var deviceDataObj = JSON.parse(deviceData);
 
 	for (var a in deviceDataObj) {
-		console.log("deviceDataObj.INS=============+"+deviceDataObj.INS);
+		console.log("deviceDataObj.INS=============+" + deviceDataObj.INS);
 		if (typeof deviceDataObj.INS != 'undefined') {
 
 			returnDataIns = fn_setDeviceJsonReturnData(deviceDataObj.INS, 'Y');
@@ -1369,15 +1369,15 @@ function fn_setDeviceJsonReturnData(deviceInsData, statusyn) {
 // #----------------------------------------------------------------------------#
 function fnUpdtAgentAction() {
 
-	
+
 	outputData = getFileData('updt');
 	log.info("//== updt 정책정보 파일 Data is : " + outputData);
 
 	const exec = require('child_process').exec;
-	
+
 	// dev
 	// exec(" sudo sh ./shell/updtjob.sh", function (err, stdout, stderr) {
-	
+
 	//real
 	exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
 		log.info('updt 정책 ::  stdout: ' + stdout);
@@ -1425,7 +1425,7 @@ function fnFirewallJob() {
 
 	log.info("==== fnFirewallJob ====");
 	var ufwDataObj = getFileData('ufw');
-	console.log("ufwDataObj==================+++"+ ufwDataObj);
+	console.log("ufwDataObj==================+++" + ufwDataObj);
 	var exec = require('child_process').exec;
 	// exec('sudo sh ./shell/ufwjob.sh  ' + tenantVal, function (err, stdout, stderr) {
 	exec('sudo sh /usr/share/hamonize-agent/shell/ufwjob.sh  ', function (err, stdout, stderr) {
@@ -1539,17 +1539,30 @@ if (program.opts().updt) {
 if (program.opts().start) {
 	FnMkdir();
 	console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
+	sysInfo();
 	getPollTime(uuidVal);
 	console.log("send option bbbbbbbbbbbbbbbbbb");
 
 }
 
-// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
+// getBackupDataCall(uuidVal); // Call 백업 주기 정책 -- 클라우드버전에서는 제외 ( 차후 도입 예정 )
 
 
+// ansible -> agent (정책파일및 Agent실행 ) &&  ansible -> center (결과전송)#############################
+// hamonize-agent --progrmblock] 	프로그램 차단 정책 실행 후 결과 전송
+// hamonize-agent --devicepolicy]	비인가 디바이스 정책 실행 후 결과 전송
+// hamonize-agent --ufw]			방화벽 정책 실행 후 결과 전송
+// hamonize-agent --recovery]		복구 정책 실행 후 결과 전송
+
+// service -> agent ######################################
+// hamonize-agent --unauthlog]	비인가 디바이스 로그 전송	hamonize-process service -> agent
+// 프로그램 차단 실행 결과		hamonize-process service -> agent
+// hamonize-agent --updt]			프로그램 설치 및 삭제 정책 실행 후  결과 전송,		hamonize-agent-mngr service -> hamonize-agent --updt 
 
 
-
+// agent ####################################################
+// hamonize-agent --hwcheck]		하드웨어 변경로그 (hw 및 ip 변경 체크 )
+// To-do ::: 필수 프로그램 체크.????
 
 
 
