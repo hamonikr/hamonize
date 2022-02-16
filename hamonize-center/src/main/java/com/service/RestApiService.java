@@ -115,6 +115,39 @@ public class RestApiService {
 				return result;
 	}
 
+  public int updateOrg(OrgVo orgvo) throws ParseException
+	{
+		String request = "{\"name\": \""+orgvo.getSeq()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
+        Mono<String> response = webClient.put()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/v2/groups/").path("{id}/")
+        .build(orgvo.getGroup_id()))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(request))
+        //에러 확인
+        .exchange().flatMap(clientResponse -> {
+          if (clientResponse.statusCode().is5xxServerError()) {
+              clientResponse.body((clientHttpResponse, context) -> {
+                  return clientHttpResponse.getBody();
+              });
+              return clientResponse.bodyToMono(String.class);
+          }
+          else
+              return clientResponse.bodyToMono(String.class);
+      });
+        //.bodyValue(request)
+        //.accept(MediaType.APPLICATION_JSON)
+        //.retrieve()
+        //.bodyToMono(String.class); 
+
+        String objects = response.block();
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+				orgvo.setGroup_id((Long) jsonObj.get("id"));
+				int result = orgMapper.addAwxId(orgvo);
+				return result;
+	}
+
   public int addHost(PcMangrVo hdVo, OrgVo orgNumChkVo) throws ParseException
   {
     String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_vpnip()+"\",\"inventory\": "+orgNumChkVo.getInventory_id()+"}";
