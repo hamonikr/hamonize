@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Comment;
@@ -21,8 +20,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name="tbl_act_firewall_log")
-public class ActAgentFirewallVo {
+@Table(name="tbl_act_updt_log")
+public class ActAgentUpdtVo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,34 +29,35 @@ public class ActAgentFirewallVo {
 	private Long seq;
 
 	@Comment("부서번호")
-	@Column(nullable = false)
 	private Long org_seq;
 	
 	@Size(max=100)
-	private String datetime;
+	@Comment("패키지명")
+	private String debname;
+
+	@Size(max=100)
+	@Comment("패키지버전")
+	private String debver;
+
+	@Size(max=100)
+	@Comment("경로")
+	private String path;
+
+	@Size(max=10)
+	@Comment("정책구분")
+	private String kind;
 	
 	@Size(max=100)
 	@Comment("PC고유번호")
-	@Column(nullable = false)
 	private String pc_uuid;
 	
 	@Size(max=100)
 	@Comment("PC호스트명")
-	@Column(nullable = false)
 	private String pc_hostname;
 	
 	@Size(max=10)
 	@Comment("정책적용여부")
-	private String kind;
-	
-	@Size(max=10)
-	@Comment("정책적용성공여부")
 	private String status;
-	
-	@Size(max=100)
-	@Comment("port")
-	@NotNull
-	private String retport;
 
 	@Comment("등록일")
 	private Timestamp rgstr_date;

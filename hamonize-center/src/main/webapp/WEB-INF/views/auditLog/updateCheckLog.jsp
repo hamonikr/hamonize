@@ -154,13 +154,13 @@
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
 
 							//성공여부 체크 카운트
-							if (data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun == "UPGRADE") {
-								if (data.policyUpdtResult[i].state == 0) {
+							if (data.policyUpdtResult[i].kind == "INSTALL" || data.policyUpdtResult[i].kind == "UPGRADE") {
+								if (data.policyUpdtResult[i].status == 0) {
 									data.policyUpdtResult[i].count--;
 								}
 
-							} else if (data.policyUpdtResult[i].gubun == "DELETE") {
-								if (data.policyUpdtResult[i].state == 1) {
+							} else if (data.policyUpdtResult[i].kind == "DELETE") {
+								if (data.policyUpdtResult[i].status == 1) {
 									data.policyUpdtResult[i].count--;
 								}
 							}
@@ -172,7 +172,7 @@
 							else
 								progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
 
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].gubun + "</td>";
+							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
 							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].count + "</td>";
 							progrmResultHtml += "<td>" + noinstall + "</td>";
@@ -183,14 +183,14 @@
 							var date = new Date(inset_dt);
 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
 							//성공여부 체크 카운트
-							if (data.policyUpdtResult[i].gubun == "INSTALL" || data.policyUpdtResult[i].gubun ==
+							if (data.policyUpdtResult[i].kind == "INSTALL" || data.policyUpdtResult[i].kind ==
 								"UPGRADE") {
-								if (data.policyUpdtResult[i].state == 0) {
+								if (data.policyUpdtResult[i].status == 0) {
 									data.policyUpdtResult[i].count--;
 								}
 
-							} else if (data.policyUpdtResult[i].gubun == "DELETE") {
-								if (data.policyUpdtResult[i].state == 1) {
+							} else if (data.policyUpdtResult[i].kind == "DELETE") {
+								if (data.policyUpdtResult[i].status == 1) {
 									data.policyUpdtResult[i].count--;
 								}
 							}
@@ -199,7 +199,7 @@
 							progrmResultHtml += "<tr>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].gubun + "</td>";
+							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
 							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].count + "</td>";
 							progrmResultHtml += "<td>" + noinstall + "</td>";
@@ -274,7 +274,7 @@
 							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
 							firewallResult += "<tr>";
 							firewallResult += "<td>" + data.policyFirewallResult[i].retport + "</td>";
-							firewallResult += "<td>" + data.policyFirewallResult[i].status + "</td>";
+							firewallResult += "<td>" + data.policyFirewallResult[i].kind + "</td>";
 							firewallResult += "<td>" + data.pcList.length + "</td>";
 							firewallResult += "<td>" + data.policyFirewallResult[i].count + "</td>";
 							firewallResult += "<td>" + noinstall + "</td>";
@@ -286,7 +286,7 @@
 							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
 							firewallResult += "<tr>";
 							firewallResult += "<td>" + data.policyFirewallResult[i].retport + "</td>";
-							firewallResult += "<td>" + data.policyFirewallResult[i].status + "</td>";
+							firewallResult += "<td>" + data.policyFirewallResult[i].kind + "</td>";
 							firewallResult += "<td>" + data.pcList.length + "</td>";
 							firewallResult += "<td>" + data.policyFirewallResult[i].count + "</td>";
 							firewallResult += "<td>" + noinstall + "</td>";
@@ -548,24 +548,24 @@ function detail(uuid){
 			var programResult = '';
 			console.log("data.udpt============+"+data.udpt);
 			$.each(data.udpt, function(index, value) {
-				var inset_dt = value.insert_dt;
+				var inset_dt = value.rgstr_date;
 				var date = new Date(inset_dt);
 				
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());
 				programResult += "<tr>";
 				programResult += "<td>"+value.debname+"</td>";
 				programResult += "<td>"+value.debver+"</td>";
-				programResult += "<td>"+value.gubun+"</td>";
+				programResult += "<td>"+value.kind+"</td>";
 				
 				
-				if(value.gubun == "INSTALL" || value.gubun == "UPGRADE" ){
-					if(value.state >= 1){
+				if(value.kind == "INSTALL" || value.kind == "UPGRADE" ){
+					if(value.status >= 1){
 						programResult += "<td>완료</td>";
 					}else{
 						programResult += "<td>미완료</td>";
 					}
-				}else if(value.gubun == "DELETE"){
-					if(value.state == 0){
+				}else if(value.kind == "DELETE"){
+					if(value.status == 0){
 						programResult += "<td>완료</td>";
 					}else{
 						programResult += "<td>미완료</td>";
@@ -598,7 +598,7 @@ function detail(uuid){
 			
 				programBlockResult += "<tr>";
 				programBlockResult += "<td>"+value.progrmname+"</td>";
-				if(value.status_yn == "Y")
+				if(value.status == "Y")
 					programBlockResult += "<td>차단</td>";
 				else
 					programBlockResult += "<td>허용</td>";
@@ -625,8 +625,8 @@ function detail(uuid){
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				firewallResult += "<tr>";
 				firewallResult += "<td>"+value.retport+"</td>";
-				firewallResult += "<td>"+value.status+"</td>";
-				if(value.status_yn == "Y")
+				firewallResult += "<td>"+value.kind+"</td>";
+				if(value.status == "Y")
 					firewallResult += "<td>완료</td>";
 				else
 					firewallResult += "<td>미완료</td>";
@@ -655,7 +655,7 @@ function detail(uuid){
  				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				deviceResult += "<tr>";
 				deviceResult += "<td>"+value.product+"("+value.vendorcode+":"+value.productcode+")</td>";
-				if(value.status_yn == "Y")
+				if(value.status == "Y")
 					deviceResult += "<td>허용</td>";
 				else
 					deviceResult += "<td>차단</td>";
