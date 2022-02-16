@@ -73,25 +73,33 @@ public class PolicyUpdtService {
 
 	public int applyPackagePolicy(Map<String, Object> params) throws ParseException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
-		
-		String[] listA = params.get("ppm_name").toString().split(",");
-		String[] listB = params.get("former_ppm_name").toString().split(",");
+		String[] listA = {};
+		String[] listB = {};
+		if(params.get("ppm_name").toString() != "")
+		listA = params.get("ppm_name").toString().split(",");
+		if(params.get("former_ppm_name").toString() != "")
+		listB = params.get("former_ppm_name").toString().split(",");
 
 		ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
 		ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
-
+		//former_ppm_name 차집합 ppm_name
 		former_ppm_name.removeAll(ppm_name);
-
+		
 		//String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
 		String output = "";
 		JSONObject updtPolicy = new JSONObject();
-		updtPolicy.put("INS", String.join(",",ppm_name));
+		
+		if(!ppm_name.isEmpty())
+		{
+			updtPolicy.put("INS", String.join(",",ppm_name));
+		}
 		if(!former_ppm_name.isEmpty())
 		{
 			updtPolicy.put("DEL", String.join(",",former_ppm_name));
 		}
 		output = updtPolicy.toJSONString();
 		output = output.replaceAll("\"", "\\\\\\\"");
+		System.out.println("output======"+output);
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 

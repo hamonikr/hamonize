@@ -76,7 +76,7 @@ public class OrgService {
 		return orgMapper.orgView(orgvo);
 	}
 
-	public int orgSave(OrgVo orgvo) throws NamingException {
+	public int orgSave(OrgVo orgvo) throws NamingException, ParseException {
 		// 수정전 이름 불러오기
 		OrgVo oldOrgVo = new OrgVo();
 		OrgVo orgPath = new OrgVo();
@@ -138,7 +138,7 @@ public class OrgService {
 					newAllOrgName.setSeq(list.get(i).getSeq());
 					orgMapper.allOrgNmUpdate(newAllOrgName);
 				}
-
+				restApiService.updateOrg(orgvo);
 				// ldap 서버 업데이트
 				con.updateOu(oldOrgVo, orgvo);
 			} else
@@ -205,13 +205,15 @@ public class OrgService {
 
 	}
 
-	public int orgDelete(OrgVo orgvo) throws NamingException {
+	public int orgDelete(OrgVo orgvo) throws NamingException, ParseException {
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-		con.deleteOu(orgvo);
+		
 
 		int result = 0;
 		result = orgMapper.orgDelete(orgvo);
+		restApiService.deleteOrg(orgvo);
+		//con.deleteOu(orgvo);
 
 		return result;
 	}

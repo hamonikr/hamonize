@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 
 import reactor.core.publisher.Mono;
 
@@ -115,10 +116,10 @@ public class RestApiService {
 				return result;
 	}
 
-  public int updateOrg(OrgVo orgvo) throws ParseException
+  public void updateOrg(OrgVo orgvo) throws ParseException
 	{
 		String request = "{\"name\": \""+orgvo.getSeq()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
-        Mono<String> response = webClient.put()
+        Mono<String> response = webClient.patch()
         .uri(UriBuilder -> UriBuilder
         .path("/api/v2/groups/").path("{id}/")
         .build(orgvo.getGroup_id()))
@@ -143,9 +144,42 @@ public class RestApiService {
         String objects = response.block();
 				JSONParser jsonParser = new JSONParser();
 				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-				orgvo.setGroup_id((Long) jsonObj.get("id"));
-				int result = orgMapper.addAwxId(orgvo);
-				return result;
+				//orgvo.setGroup_id((Long) jsonObj.get("id"));
+				//int result = orgMapper.addAwxId(orgvo);
+				//return result;
+	}
+
+  public void deleteOrg(OrgVo orgvo) throws ParseException
+	{
+		String request = "{\"name\": \""+orgvo.getSeq()+"\",\"description\": \""+orgvo.getOrg_nm()+"\",\"inventory\": \""+orgvo.getInventory_id()+"\"}";
+        Mono<String> response = webClient.delete()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/v2/groups/").path("{id}/")
+        .build(orgvo.getGroup_id()))
+        //.contentType(MediaType.APPLICATION_JSON)
+        //.body(BodyInserters.fromValue(request))
+        //에러 확인
+        .exchange().flatMap(clientResponse -> {
+          if (clientResponse.statusCode().is5xxServerError()) {
+              clientResponse.body((clientHttpResponse, context) -> {
+                  return clientHttpResponse.getBody();
+              });
+              return clientResponse.bodyToMono(String.class);
+          }
+          else
+              return clientResponse.bodyToMono(String.class);
+      });
+        //.bodyValue(request)
+        //.accept(MediaType.APPLICATION_JSON)
+        //.retrieve()
+        //.bodyToMono(String.class); 
+
+        String objects = response.block();
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+				//orgvo.setGroup_id((Long) jsonObj.get("id"));
+				//int result = orgMapper.addAwxId(orgvo);
+				//return result;
 	}
 
   public int addHost(PcMangrVo hdVo, OrgVo orgNumChkVo) throws ParseException
@@ -182,7 +216,7 @@ public class RestApiService {
 public int makePolicy(Map<String, Object> params) throws ParseException
   {
     String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")
-    +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+    +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | hamonize-agent --updt && exit\",\"become_enabled\": \"True\",\"verbosity\": 0}";
     System.out.println("request====="+request);
     Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
     .path("/api/v2/ad_hoc_commands/")

@@ -171,13 +171,15 @@ $(document).ready(function () {
 			if(confirm("하위조직이 있다면 하위조직도 전부 삭제됩니다 삭제하시겠습니까?")){
 				
 				 $.post("/org/orgManage",{
-						 type: 'delt'
-						,seq:treeNode.id
-						,p_seq:treeNode.pId
-						,org_ordr:treeNode.od
-						,org_nm:$("#org_nm").val()
-						,all_org_nm:$("#all_org_nm").val()
-						,domain:treeNode.domain
+						type: 'delt',
+						seq:treeNode.id,
+						p_seq:treeNode.pId,
+						org_ordr:treeNode.od,
+						org_nm:$("#org_nm").val(),
+						all_org_nm:$("#all_org_nm").val(),
+						domain:treeNode.domain,
+						inventory_id:treeNode.inventoryId,
+						group_id:treeNode.groupId
 					},
 					function(result){
 						console.log("result===="+result);

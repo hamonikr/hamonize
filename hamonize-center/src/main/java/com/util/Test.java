@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -197,4 +198,45 @@ public class Test {
       return null;
   
     }
+
+    @RequestMapping(value="test5")
+    public String deleteorg(){
+
+      WebClient wc = WebClient.builder()
+      .defaultHeaders(header -> header.setBasicAuth("admin","password"))
+      .baseUrl("http://192.168.0.220").build();
+      
+      try {
+          String request = "{\"name\": 3,\"inventory\": 20}";
+          System.out.println("request====="+request);
+          Mono<String> response = wc.delete().uri(UriBuilder -> UriBuilder
+          .path("/api/v2/groups/").path("{id}/")
+          .build(46))
+          //.contentType(MediaType.APPLICATION_JSON)
+          //.body(BodyInserters.fromValue(request))
+          .exchange().flatMap(clientResponse -> {
+            if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+                clientResponse.body((clientHttpResponse, context) -> {
+                    return clientHttpResponse.getBody();
+                });
+                return clientResponse.bodyToMono(String.class);
+            }
+            else
+                return clientResponse.bodyToMono(String.class);
+        });
+          //.accept(MediaType.APPLICATION_JSON)
+          //.retrieve()
+          //.bodyToMono(String.class); 
+
+  String objects = response.block();
+  return objects.toString();
+  //JSONParser jsonParser = new JSONParser();
+  //JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+      } catch (Exception e) {
+        //TODO: handle exception
+      }
+      return null;
+  
+    }
+
   }
