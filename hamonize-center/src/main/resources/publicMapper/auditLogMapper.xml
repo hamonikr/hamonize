@@ -780,13 +780,13 @@
 			(	select
 					*
 				from
-					tbl_updt_policy_action_result tb1
+					tbl_act_updt_log tb1
 					,tbl_policy_package_list tb2
 					where
 					tb1.debname = tb2.pu_name
 					and tb1.pc_uuid = #{uuid}
 					and tb1.debname = #{item}  
-				order by tb1.insert_dt desc limit 1
+				order by tb1.rgstr_date desc limit 1
 			)
 			<if test="debListCnt > index+1">
 				UNION ALL

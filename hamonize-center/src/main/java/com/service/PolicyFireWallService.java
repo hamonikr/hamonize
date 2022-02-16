@@ -93,7 +93,10 @@ public class PolicyFireWallService {
 		//String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
 		String output = "";
 		JSONObject updtPolicy = new JSONObject();
-		updtPolicy.put("INS", String.join(",",ppm_name));
+		if(!ppm_name.isEmpty())
+		{
+			updtPolicy.put("INS", String.join(",",ppm_name));
+		}
 		if(!former_ppm_name.isEmpty())
 		{
 			updtPolicy.put("DEL", String.join(",",former_ppm_name));

@@ -11,8 +11,8 @@
 					pc_uuid,
 					datetime,
 					pc_hostname,		        
-					status_yn,		        
 					status,		        
+					kind,		        
 					progrmname,
 					rgstr_date
 				) 

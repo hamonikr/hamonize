@@ -44,11 +44,11 @@ public class ActAgentProgrmVo {
 	
 	@Size(max=10)
 	@Comment("정책적용여부")
-	private String status;
+	private String kind;
 	
 	@Size(max=10)
 	@Comment("정책적용성공여부")
-	private String status_yn;
+	private String status;
 	
 	@Size(max=200)
 	@Comment("프로그램명")
