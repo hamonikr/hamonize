@@ -139,8 +139,8 @@ public class ActAgentFirewallController {
 			inputVo.setDatetime(tempObj.get("datetime").toString());
 			inputVo.setPc_uuid(tempObj.get("uuid").toString().trim());
 			inputVo.setPc_hostname(tempObj.get("hostname").toString());
-			inputVo.setStatus(tempObj.get("status").toString());
-			inputVo.setStatus_yn(tempObj.get("status_yn").toString());
+			inputVo.setStatus(tempObj.get("status_yn").toString());
+			inputVo.setKind(tempObj.get("status").toString());
 			inputVo.setRetport(tempObj.get("retport").toString());
 			inputVo.setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
 
@@ -234,8 +234,8 @@ public class ActAgentFirewallController {
 				inputVo[i] = new ActAgentProgrmVo();
 				inputVo[i].setPc_uuid(tempObj.get("uuid").toString().trim());
 				inputVo[i].setPc_hostname(tempObj.get("hostname").toString());
-				inputVo[i].setStatus(tempObj.get("status").toString());
-				inputVo[i].setStatus_yn(tempObj.get("status_yn").toString());
+				inputVo[i].setStatus(tempObj.get("status_yn").toString());
+				inputVo[i].setKind(tempObj.get("status").toString());
 				inputVo[i].setProgrmname(tempObj.get("progrmname").toString());
 				inputVo[i].setDatetime(tempObj.get("datetime").toString());
 				inputVo[i].setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
