@@ -246,7 +246,8 @@ System.out.println("retData===="+retData.toString());
 			prcssList.put("insert_dt", tempObj.get("datetime").toString());
 			prcssList.put("prcssname", tempObj.get("name").toString());
 			prcssList.put("uuid", tempObj.get("uuid").toString());
-			prcssList.put("org_seq", pcUUID(tempObj.get("uuid").toString()));
+//			prcssList.put("org_seq", pcUUID(tempObj.get("uuid").toString()));
+			prcssList.put("org_seq", pcUUID_Domain(tempObj.get("uuid").toString(), tempObj.get("domain").toString()));
 			pcInfo.setPc_uuid(tempObj.get("uuid").toString());
 			pcInfo = pcMangrMapper.pcDetailInfo(pcInfo);
 			prcssList.put("hostname", pcInfo.getPc_hostname());
@@ -576,6 +577,15 @@ System.out.println("retData===="+retData.toString());
 	public Long pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);
+		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
+		Long segSeq = agentVo.getSeq();
+		return segSeq;
+	}
+	
+	public Long pcUUID_Domain(String uuid, String domain) {
+		GetAgentJobVo agentVo = new GetAgentJobVo();
+		agentVo.setPc_uuid(uuid);
+		agentVo.setDomain(domain);
 		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
 		Long segSeq = agentVo.getSeq();
 		return segSeq;
