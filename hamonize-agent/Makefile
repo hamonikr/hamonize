@@ -13,3 +13,4 @@ build_node_app:
 
 clean:
 	rm -fv usr/share/hamonize-agent/hamonize-agent 
+	rm -fv bin/*
