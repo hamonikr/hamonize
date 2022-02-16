@@ -102,6 +102,7 @@ public class PolicyDeviceService {
 		output = output.replaceAll("\"", "\\\\\\\"");
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/security/device.hm");
+		params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
 
 		int result = restApiService.makePolicy(params);
 		System.out.println("resuklt======="+result);

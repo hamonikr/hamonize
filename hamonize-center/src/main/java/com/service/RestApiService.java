@@ -175,8 +175,9 @@ public class RestApiService {
         //.bodyToMono(String.class); 
 
         String objects = response.block();
-				JSONParser jsonParser = new JSONParser();
-				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+        //System.out.println("oject==========="+objects.toString());
+				//JSONParser jsonParser = new JSONParser();
+				//JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
 				//orgvo.setGroup_id((Long) jsonObj.get("id"));
 				//int result = orgMapper.addAwxId(orgvo);
 				//return result;
@@ -216,7 +217,7 @@ public class RestApiService {
 public int makePolicy(Map<String, Object> params) throws ParseException
   {
     String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")
-    +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | hamonize-agent --updt && exit\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+    +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | touch "+params.get("policyRunFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0,\"forks\": 10}";
     System.out.println("request====="+request);
     Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
     .path("/api/v2/ad_hoc_commands/")

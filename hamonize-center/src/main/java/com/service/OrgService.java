@@ -213,7 +213,7 @@ public class OrgService {
 		int result = 0;
 		result = orgMapper.orgDelete(orgvo);
 		restApiService.deleteOrg(orgvo);
-		//con.deleteOu(orgvo);
+		con.deleteOu(orgvo);
 
 		return result;
 	}
