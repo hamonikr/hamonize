@@ -102,6 +102,7 @@ public class PolicyUpdtService {
 		System.out.println("output======"+output);
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
+		params.put("policyRunFilePath","/etc/hamonize/runupdt");
 
 		int result = restApiService.makePolicy(params);
 		System.out.println("resuklt======="+result);

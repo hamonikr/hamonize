@@ -159,15 +159,17 @@ $(document).ready(function () {
 		
 		//조직 삭제 
  function removeOrgcht(e) {
-	 	var all_org_nm = $("#all_org_nm").val();
 		var zTree = $.fn.zTree.getZTreeObj("tree"),
 		nodes = zTree.getSelectedNodes(),
 		treeNode = nodes[0];
-		
+
 		if (nodes.length == 0) {
 			alert("조직을 선택해 주세요");
-			return;
-		}else{
+			return false;
+		} else if(treeNode.id == 1) {
+			alert("최상위조직은 삭제할 수 없습니다.");
+			return false;
+		} else{
 			if(confirm("하위조직이 있다면 하위조직도 전부 삭제됩니다 삭제하시겠습니까?")){
 				
 				 $.post("/org/orgManage",{

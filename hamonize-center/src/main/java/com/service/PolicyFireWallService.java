@@ -102,6 +102,7 @@ public class PolicyFireWallService {
 		output = output.replaceAll("\"", "\\\\\\\"");
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
+		params.put("policyRunFilePath","/etc/hamonize/runufw");
 
 		int result = restApiService.makePolicy(params);
 		System.out.println("resuklt======="+result);

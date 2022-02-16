@@ -75,6 +75,7 @@ public class PolicyProgramService {
 		output = output.replaceAll("\"", "\\\\\\\"");
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
+		params.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
 
 		int result = restApiService.makePolicy(params);
 		System.out.println("resuklt======="+result);
