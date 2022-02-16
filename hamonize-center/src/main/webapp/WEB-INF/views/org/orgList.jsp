@@ -60,7 +60,7 @@ $(document).ready(function () {
 	$.ajaxSetup({ async:false });
 
 	//$("#btnAddOrg").unbind("click");
-	$("#btnAddOrg").off("click").on("click", {isParent:false}, addOrgcht);
+	$("#btnAddOrg").on("click", {isParent:false}, addOrgcht);
 	$("#btnAddOrg_s").bind("click", {isParent:false}, addOrgcht_s);
 	$("#btnDelOrg").bind("click", removeOrgcht);
 	

@@ -79,7 +79,7 @@
 								"')\">" + value.pc_hostname + "</a></td>";
 						}
 
-						gbInnerHtml += "<td>" + value.rgstr_date.substr(0, value.rgstr_date.length - 7) +
+						gbInnerHtml += "<td>" + timestampTodate(value.rgstr_date) +
 							"</td>";
 						gbInnerHtml += "</tr>";
 
@@ -297,8 +297,7 @@
 						value.pc_memory + "','" + value.rgstr_date.substr(0, value.rgstr_date.length - 7) +
 						"','" + value.seq + "','" + value.org_seq + "')\">" + value.pc_hostname + "</a></td>";
 				}
-
-				gbInnerHtml += "<td>" + value.rgstr_date.substr(0, value.rgstr_date.length - 7) + "</td>";
+				gbInnerHtml += "<td>" + timestampTodate(value.rgstr_date) + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});

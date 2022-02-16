@@ -100,15 +100,6 @@
 		$.fn.zTree.init($("#tree"), setting, zNodes); 
 		var treeObj =  $.fn.zTree.getZTreeObj("tree");
 		var sNodes = treeObj.getSelectedNodes();
-		//treeObj.checkNode(zNodes, zNodes.checked, true, true);
-		//beforeClick($("#tree"),zNodes[0]);
-		onClick(null,$("#tree"),zNodes[0]);
-		//onCheck(null,$("#tree"),zNodes[0]);
-		//console.log(zNodes[0]);
-		if (sNodes.length > 0) {
-			var isOpen = sNodes[2].open;
-		}
-		
 		if (treeObj.getNodes().length < 1) {
 			if(confirm("최상위 부서가 등록되지 않았습니다. 등록하시겠습니까?")){
 					$.ajax({
@@ -124,6 +115,14 @@
 					}
 				});
 			}
+		}
+		//treeObj.checkNode(zNodes, zNodes.checked, true, true);
+		//beforeClick($("#tree"),zNodes[0]);
+		onClick(null,$("#tree"),zNodes[0]);
+		//onCheck(null,$("#tree"),zNodes[0]);
+		//console.log(zNodes[0]);
+		if (sNodes.length > 0) {
+			var isOpen = sNodes[2].open;
 		}
 
 

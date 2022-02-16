@@ -8,9 +8,6 @@
 
 // $.fn.zTree.getZTreeObj("tree").getNodes()[0].checked = true;
 
-$(document).ready(function(){
-	$("#btnSave").click(fnSave);
-});
 function beforeClick(treeId, treeNode, clickFlag) {
 	className = (className === "dark" ? "":"dark");
 	return (treeNode.click != false);

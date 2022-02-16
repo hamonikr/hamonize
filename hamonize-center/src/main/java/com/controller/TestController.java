@@ -89,9 +89,9 @@ public class TestController {
 
 	}
 	
-	public static void main(String[] args)  {
-		test();
-    }
+	// public static void main(String[] args)  {
+	// 	test();
+  //   }
 	
 	
 	public static void test() {
