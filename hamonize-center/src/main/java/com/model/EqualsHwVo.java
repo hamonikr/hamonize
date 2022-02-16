@@ -27,6 +27,7 @@ public class EqualsHwVo{
 	private String pc_hddinfo;
 	private String pc_hddid;
 	private String pc_user;
+	private String pc_vpnip;
 	
 	
 }
