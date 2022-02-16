@@ -127,6 +127,7 @@ function Polling(time) {
 					// getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
 					// getRecoveryDataCall(uuidVal); // Call 복구 정책 
 					// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
+					console.log("agent --start ============================= ");
 					ipStatusCheck();
 					// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
 					// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
@@ -1375,10 +1376,10 @@ function fnUpdtAgentAction() {
 	const exec = require('child_process').exec;
 	
 	// dev
-	exec(" sudo sh ./shell/updtjob.sh", function (err, stdout, stderr) {
+	// exec(" sudo sh ./shell/updtjob.sh", function (err, stdout, stderr) {
 	
 	//real
-	// exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
+	exec(" sudo sh /usr/share/hamonize-agent/shell/updtjob.sh", function (err, stdout, stderr) {
 		log.info('updt 정책 ::  stdout: ' + stdout);
 		log.info('updt 정책 :: stderr: ' + stderr);
 
@@ -1405,8 +1406,8 @@ function fnProgrmJob() {
 		log.info("//==progrm 정책:: progrmDataObj.DEL Data is : " + JSON.stringify(progrmDataObj.DEL));
 	}
 	var exec = require('child_process').exec;
-	exec('sudo sh ./shell/tmpprogrmjob.sh  ' + tenantVal, function (err, stdout, stderr) {
-	// exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
+	// exec('sudo sh ./shell/tmpprogrmjob.sh  ' + tenantVal, function (err, stdout, stderr) {
+	exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
 		log.info('//==progrm 정책::   stdout: ' + stdout);
 		if (err !== null) {
 			log.info('//==progrm 정책::  error: ' + err);
@@ -1426,8 +1427,8 @@ function fnFirewallJob() {
 	var ufwDataObj = getFileData('ufw');
 	console.log("ufwDataObj==================+++"+ ufwDataObj);
 	var exec = require('child_process').exec;
-	exec('sudo sh ./shell/ufwjob.sh  ' + tenantVal, function (err, stdout, stderr) {
-	// exec('sudo sh /usr/share/hamonize-agent/shell/ufwjob.sh  ', function (err, stdout, stderr) {
+	// exec('sudo sh ./shell/ufwjob.sh  ' + tenantVal, function (err, stdout, stderr) {
+	exec('sudo sh /usr/share/hamonize-agent/shell/ufwjob.sh  ', function (err, stdout, stderr) {
 		log.info('//=====backup cycle all day of week stdout: ' + stdout);
 		log.info('//=====backup cycle all day of week stderr: ' + stderr);
 

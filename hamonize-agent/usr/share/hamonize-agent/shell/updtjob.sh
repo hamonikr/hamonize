@@ -10,7 +10,7 @@ sudo systemctl stop hamonize-processmngr.service
 
 echo "################### updt deb install ###########################" >>$LOGFILE
 
-UPDT_INS=`cat /etc/hamonize/updt/updtInfo.hm | jq '.INSERT' | sed -e "s/\"//g" ` 
+UPDT_INS=`cat /etc/hamonize/updt/updtInfo.hm | jq '.INS' | sed -e "s/\"//g" ` 
 echo "install file total  data=========$UPDT_INS"  >>$LOGFILE
 
 if [ "$UPDT_INS" != null ] 
