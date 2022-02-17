@@ -77,6 +77,30 @@
 		)   
 		INSERT INTO tbl_updt_applc_history (updt_seq, org_seq, ppm_seq, domain, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq,domain, now() FROM rows 			
 	</insert>
+
+	<select id="updtResult" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	INSERT INTO TBL_ACT_UPDT_LOG 
+				( DEB_NAME,									   
+				  KIND,
+					ORG_SEQ,
+					PC_HOSTNAME,
+					PC_UUID,
+					RGSTR_DATE,
+					STATUS) 
+					VALUES
+				<if test="ppm_seq != null">
+					<foreach collection="data" item="item" separator=",">
+						(#{item.org_seq},#{ppm_seq},#{domain})
+					</foreach>
+        </if>
+	SELECT pc_hostname,pc_uuid FROM TBL_PC_MANGR
+	WHERE ORG_SEQ IN (
+	<foreach collection="data" item="item" separator=",">
+						#{item.org_seq}
+					</foreach>
+					)
+					AND DOMAIN = #{domain}
+					</select>
 	
 	<delete id="updtDelete" parameterType="java.util.HashMap">
 		DELETE FROM TBL_UPDT_APPLC WHERE ORG_SEQ IN (

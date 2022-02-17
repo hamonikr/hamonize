@@ -17,6 +17,8 @@ public interface IPolicyUpdtMapper {
 	
 	public List<Map<String, Object>> updtComapreList();
 	
+	public List<Map<String, Object>> updtResult(Map<String, Object> params);
+	
 	public int updtCompareSave(Map<String, Object> params);
 	
 	public int updtCompareUpdate(Map<String, Object> params);

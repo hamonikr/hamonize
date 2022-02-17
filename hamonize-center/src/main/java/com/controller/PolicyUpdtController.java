@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mapper.IPolicyUpdtMapper;
 import com.model.OrgVo;
@@ -15,6 +16,7 @@ import com.model.PolicyUpdtVo;
 import com.service.AgentAptListService;
 import com.service.OrgService;
 import com.service.PolicyUpdtService;
+import com.service.RestApiService;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -125,12 +127,10 @@ public class PolicyUpdtController {
 
 	@ResponseBody
 	@RequestMapping(value = "/usave", method = RequestMethod.POST)
-	public String usave(HttpSession session, Model model,
+	public JSONObject usave(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
 		JsonParser jp = new JsonParser();
 		String data = params.get("data").toString();
-		logger.info("data======"+(String) params.get("ppm_name"));
-		logger.info("data======"+(String) params.get("former_ppm_name"));
 		JsonArray jsonArray = (JsonArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
@@ -149,17 +149,21 @@ public class PolicyUpdtController {
 		//차단정책 초기화
 		uService.updatePolicyProgrm(params);
 		//ansible 정책전달
-		uService.applyPackagePolicy(params);
-		if (result >= 1)
-			return "SUCCESS";
-		else
-			return "FAIL";
-
+		int id = uService.applyPackagePolicy(params);
+		JSONObject jsonObj = new JSONObject();
+		
+		if (result >= 1){
+			jsonObj.put("STATUS", "SUCCESS");
+			jsonObj.put("ID", id);
+		} else{
+			jsonObj.put("STATUS", "FAIL");
+		}
+		return jsonObj;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "ushow", method = RequestMethod.POST)
-	public JSONObject ushow(HttpSession session, Model model, PolicyUpdtVo vo) {
+	public JSONObject checkAnsibleJobFinish(HttpSession session, Model model, PolicyUpdtVo vo) {
 		JSONObject data = new JSONObject();
 		System.out.println("vo====="+vo.toString());
 		try {
@@ -169,6 +173,16 @@ public class PolicyUpdtController {
 			logger.error(e.getMessage(), e);
 		}
 
+		return data;
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "checkAnsibleJobFinish", method = RequestMethod.POST)
+	public JSONObject checkAnsibleJobFinish(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
+		JSONObject data = new JSONObject();
+		RestApiService restApiService = new RestApiService();
+		data = restApiService.checkPolicyJobResult((int) params.get("id"));
 		return data;
 
 	}
