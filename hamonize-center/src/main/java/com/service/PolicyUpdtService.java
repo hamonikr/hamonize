@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.google.gson.JsonObject;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IGetAgentUpdtMapper;
 import com.mapper.IOrgMapper;
@@ -71,6 +72,21 @@ public class PolicyUpdtService {
 		return iUpdtMapper.updtCompareUpdate(params);
 	}
 
+	// public List<Map<String, Object>> updtResult(Map<String, Object> params) throws ParseException{
+	// 	System.out.println("params==============="+params.toString());
+	// 	JSONParser qq = new JSONParser();
+	// 	int insCount = 0;
+	// 	int delCount = 0;
+	// 	JSONObject aa = (JSONObject) qq.parse(params.get("packageList").toString());
+	// 	if(aa.get("INS").toString() != ""){
+	// 	insCount = aa.get("INS").toString().split(",").length;
+	// 	}
+	// 	if(aa.get("DEL").toString() != ""){
+	// 	delCount = aa.get("DEL").toString().split(",").length;
+	// 	}
+	// 	return iUpdtMapper.updtResult(params);
+	// }
+
 	public int applyPackagePolicy(Map<String, Object> params) throws ParseException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		String[] listA = {};
@@ -105,8 +121,13 @@ public class PolicyUpdtService {
 		params.put("policyRunFilePath","/etc/hamonize/runupdt");
 
 		int result = restApiService.makePolicy(params);
-		System.out.println("resuklt======="+result);
-	
+		// updtPolicy.clear();
+		// updtPolicy.put("INS", String.join(",",ppm_name));
+		// updtPolicy.put("DEL", String.join(",",former_ppm_name));
+		// output = updtPolicy.toJSONString();
+		// params.put("packageList", output);
+		// updtResult(params);
+		//System.out.println(updtResult(params));
 
 		return result;
 
