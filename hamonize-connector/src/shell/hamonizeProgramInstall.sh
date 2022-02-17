@@ -123,53 +123,90 @@ sleep 2
 #== hamonize-user  =================================================
 if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  hamonize-user install ============== [start]" >>$LOGFILE
-
+    
+    TENANT=$(cat /etc/hamonize/hamonize_tanent)
+    
+    TENANT_CONFIG=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=config\&domain=$TENANT`
+    echo -e ${TENANT_CONFIG}  |jq   > /etc/hamonize/hamonize.json
+    
+    TENANT_PRIKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=prikey\&domain=$TENANT`
+    
+    echo -e "-----BEGIN PRIVATE KEY-----\n" ${TENANT_PRIKEY} "\n-----END PRIVATE KEY-----"   > /etc/hamonize/keys/private/hamonize_private_key.pem
+    
+    TENANT_PUBKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=pubkey\&domain=$TENANT`
+    echo -e "-----BEGIN PUBLIC KEY-----\n" ${TENANT_PUBKEY}  "\n-----END PUBLIC KEY-----"  > /etc/hamonize/keys/public/hamonize_public_key.pem
+    
     # Check hamonize-user.deb file in hamonize apt repository
     # CHK_HAMONIZE_REMOTE=$(apt list 2>/dev/null | grep hamonize-user | wc -l)
     # echo "chk Hamonize apt repository ====${CHK_HAMONIZE_REMOTE}" >>$LOGFILE
-
+    
     #  Case  OpenOS  (Download by Git repository )
     # if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
+    
     OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
-
     if [ "${OSGUBUN}" = "HAMONIKR" ] || [ "${OSGUBUN}" = "LINUXMINT" ] || [ "${OSGUBUN}" = "UBUNTU" ]; then
-        # JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`
-        sudo apt-get install -y hamonize-user >>$LOGFILE
+        JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`
+        JSONDATA=${JSONDATA#\"}
+        JSONDATA=${JSONDATA%\"}
+        wget -P /tmp ${JSONDATA} >>$LOGFILE
+        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        # sudo apt-get install -y hamonize-user >>$LOGFILE
     elif [ "${OSGUBUN}" = "DEBIAN" ]; then
         JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url')
-        echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
-        wget -P /tmp "${JSONDATA}" >>$LOGFILE
-        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        JSONDATA=${JSONDATA#\"}
+        JSONDATA=${JSONDATA%\"}
+        wget -P /tmp ${JSONDATA#\"} >>$LOGFILE
+        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
     elif [ "${OSGUBUN}" = "GOOROOM" ]; then
         JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url')
-        echo "openos lsb-release type download url is ::: ${JSONDATA}" >>$LOGFILE
-        wget -P /tmp "${JSONDATA}" >>$LOGFILE
-        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
-    fi
-
+        JSONDATA=${JSONDATA#\"}
+        JSONDATA=${JSONDATA%\"}
+        wget -P /tmp ${JSONDATA#\"} >>$LOGFILE
+        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+    
     # Download APT Repository
-    # else
-    #     sudo apt-get install -y hamonize-user >>$LOGFILE
-    # fi
-
+    else
+        sudo apt-get install -y hamonize-user >>$LOGFILE
+    fi
+    
     echo "$DATETIME ] 8.  hamonize-user install ============== [end]" >>$LOGFILE
     sleep 1
+    
+    # echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
+    # hamonize-user&admin Keys Check -----------------------------#    
+    HAMONIZE_AUTH_KEY_COUNT=$( hamonize-cli authkeys list | wc -l)
+    if [ $( ls /etc/hamonize/keys | wc -l) > 1 ]; then
+        echo "#### hamonize-user & admin keys exist ####"
+        for i in $(hamonize-cli authkeys list); do
+            echo "delete keys ===>"$i
+            hamonize-cli authkeys delete $i
+        done
+    fi
+    
+    
+    # # admin settings ------------------------------------------------------------------------------------#
+    # hamonize-cli authkeys import hamonize-key/public /etc/hamonize/keys/public/hamonize_public_key.pem
+    # hamonize-cli authkeys import hamonize-key/private /etc/hamonize/keys/private/hamonize_private_key.pem
 
-    echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
-    # public key down
-    wget -O /etc/hamonize/hamonize_public_key.pem $CENTER_BASE_URL/getAgent/getpublickey --content-disposition
-    sudo hamonize-cli authkeys import hamonize/public /etc/hamonize/hamonize_public_key.pem
+    # HOME_USER=$1
+    # hamonize-cli authkeys setaccessgroup hamonize-key/public $HOME_USER
+    # hamonize-cli authkeys setaccessgroup hamonize-key/private $HOME_USER
+    # hamonize-cli config import /etc/hamonize/hamonize.json
+    
+    # hamonize-cli service restart
 
-    # config file down
-    wget -O /etc/hamonize/hamonize.json $CENTER_BASE_URL/getAgent/getconfigfile --content-disposition
-    sudo hamonize-cli config import /etc/hamonize/hamonize.json
 
-    sudo hamonize-cli service restart
+    # user settings (일반사용자는 public key만 필요함) ------------------------------------------------#
+    hamonize-cli authkeys import hamonize-key/public /etc/hamonize/keys/public/hamonize_public_key.pem
 
-fi
+    HOME_USER=$1
+    hamonize-cli authkeys setaccessgroup hamonize-key/public $HOME_USER
+    hamonize-cli config import /etc/hamonize/hamonize.json
+    
+    hamonize-cli service restart
 
-sleep 2
 
+    sleep 2
 ##==== 서버 정보 저장(domain,ip etc)===================================
 ##==== crontab reboot으로 부팅시마다 서버 정보를 파일로 저장한다.==============
 IPADDR_SPLIT=($(echo $CENTER_BASE_URL | tr "/" "\n"))

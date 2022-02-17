@@ -18,11 +18,13 @@ import com.mapper.IOrgMapper;
 import com.mapper.IPackageInfoMapper;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
+import com.mapper.ITenantconfigMapper;
 import com.model.GetAgentJobVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PcPackageVo;
 import com.model.SvrlstVo;
+import com.model.TenantconfigVo;
 import com.model.UserVo;
 import com.service.RestApiService;
 import com.service.UserService;
@@ -79,6 +81,10 @@ public class CurlController {
 
 	@Autowired
 	private UserService userSerivce;
+	
+	@Autowired
+	private ITenantconfigMapper tenantconfigMapper;
+
 
 	@Autowired
 	private RestApiService restApiService;
@@ -571,6 +577,59 @@ System.out.println("retData===="+retData.toString());
 			return retOrgVoData.getDomain();
 		}
 		
+	}
+	
+	
+	@GetMapping(value = "/getTenantRemoteConfig")
+//	public JSONObject getTenantRemoteConfig( TenantconfigVo tenantVo) throws Exception {
+	public String getTenantRemoteConfig( TenantconfigVo tenantVo, HttpServletRequest request) throws Exception {
+//		public String getTenantRemoteConfig(@RequestBody String retData) throws Exception {
+
+		
+		
+		
+//		JSONParser jsonParser = new JSONParser();
+//		JSONObject jsonObj = (JSONObject) jsonParser.parse(retData.toString());
+//		JSONArray hmdArray = (JSONArray) jsonObj.get(EVENTS);
+		
+//		for (int i = 0; i < hmdArray.size(); i++) {
+//			JSONObject tempObj = (JSONObject) hmdArray.get(i);
+//			tenantVo.setDomain(tempObj.get("domain").toString() );
+//		}
+
+		System.out.println("get param === "+ tenantVo);
+		tenantVo = tenantconfigMapper.getTenantRemoteConfig(tenantVo);
+		
+//		JSONObject jsonObject = new JSONObject();
+//		if( tenantVo == null ) {
+//			jsonObject.put("status", 		"N");
+//		}else {
+//			jsonObject.put("status", 		"Y");
+//			jsonObject.put("domain", 		tenantVo.getDomain() );
+//			jsonObject.put("tConfig", 		tenantVo.getTenant_hadmin_config() );
+////			jsonObject.put("tPublicKey",	tenantVo.getTenant_hadmin_public_key() );
+////			jsonObject.put("tPrivateKey", 	tenantVo.getTenant_hadmin_private_key());
+//
+//			System.out.println( "====jsonObject==="+ jsonObject);
+//
+//		}
+		
+		String output = "";
+		String gubun = request.getParameter("gubun");
+		if( gubun.equals("config")){
+			output = tenantVo.getTenant_hadmin_config(); 
+			System.out.println("config===================================++" + output);
+		}else if( gubun.equals("prikey")){
+			output = tenantVo.getTenant_hadmin_private_key(); 
+			System.out.println("prikey===================================++"+ output);
+		}else if( gubun.equals("pubkey")){
+			 output = tenantVo.getTenant_hadmin_public_key(); 
+			 System.out.println("pubkey===================================++" + output);
+		}
+		
+		return output;
+		
+//		return jsonObject.toString();
 	}
 	
 

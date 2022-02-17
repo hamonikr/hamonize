@@ -4,9 +4,12 @@
 <mapper namespace="com.mapper.ITenantconfigMapper">
 	
 	
-	<select id="getOrgName" resultType="com.model.TenantconfigVo">
+	<select id="getTenantRemoteConfig" resultType="com.model.TenantconfigVo">
 		SELECT *
 		FROM tbl_tenant_config
+		<where>
+			domain = #{domain}
+		</where>
 		
 	</select>
 	

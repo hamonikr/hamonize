@@ -107,13 +107,13 @@ public class OrgService {
 				if(orgvo.getP_seq() == 0)
 				{
 					snf = restApiService.addRootOrg(orgvo);
-					tenantInsert(orgvo);
 				}else
 				{
 					snf = restApiService.addDownOrg(orgvo);
 				}
 				if(snf == 1)
 				{
+					tenantInsert(orgvo);
 					// ldap 저장
 					con.addOu(orgvo);
 					
@@ -227,30 +227,30 @@ public class OrgService {
 	public void tenantInsert(OrgVo orgvo ) {
 		
 
-		String hadminConfigData = " {\n" + 
-				"    \"AccessControl\": {\n" + 
-				"        \"DomainGroupsEnabled\": \"true\",\n" + 
-				"        \"UserGroupsBackend\": \"6f0a491e-c1c6-4338-8244-f823b0bf8670\"\n" + 
-				"    },\n" + 
-				"    \"AuthKeys\": {\n" + 
-				"        \"PrivateKeyBaseDir\": \"%GLOBALAPPDATA%/keys/private\",\n" + 
-				"        \"PublicKeyBaseDir\": \"%GLOBALAPPDATA%/keys/public\"\n" + 
-				"    },\n" + 
-				"    \"Authentication\": {\n" + 
-				"        \"EnabledPlugins\": [\n" + 
-				"            \"63611f7c-b457-42c7-832e-67d0f9281085\",\n" + 
-				"            \"0c69b301-81b4-42d6-8fae-128cdd113314\"\n" + 
-				"        ],\n" + 
-				"        \"Method\": \"1\"\n" + 
-				"    },\n" + 
-				"    \"BuiltinDirectory\": {\n" + 
-				"        \"NetworkObjects\": {\n" + 
-				"            \"JsonStoreArray\": [\n" + 
-				"            ]\n" + 
-				"        }\n" + 
-				"    },\n" + 
-				"    \"Core\": {\n" + 
-				"        \"ApplicationVersion\": \"5\",\n" + 
+		String hadminConfigData = " {" + 
+				"    \"AccessControl\": {" + 
+				"        \"DomainGroupsEnabled\": \"true\"," + 
+				"        \"UserGroupsBackend\": \"6f0a491e-c1c6-4338-8244-f823b0bf8670\"" + 
+				"    }," + 
+				"    \"AuthKeys\": {" + 
+				"        \"PrivateKeyBaseDir\": \"%GLOBALAPPDATA%/keys/private\"," + 
+				"        \"PublicKeyBaseDir\": \"%GLOBALAPPDATA%/keys/public\"" + 
+				"    }," + 
+				"    \"Authentication\": {" + 
+				"        \"EnabledPlugins\": [" + 
+				"            \"63611f7c-b457-42c7-832e-67d0f9281085\"," + 
+				"            \"0c69b301-81b4-42d6-8fae-128cdd113314\"" + 
+				"        ]," + 
+				"        \"Method\": \"1\"" + 
+				"    }," + 
+				"    \"BuiltinDirectory\": {" + 
+				"        \"NetworkObjects\": {" + 
+				"            \"JsonStoreArray\": [" + 
+				"            ]" + 
+				"        }" + 
+				"    }," + 
+				"    \"Core\": {" + 
+				"        \"ApplicationVersion\": \"5\"," + 
 				"        \"InstallationID\": \"44f5fa39-0112-4fa9-9d8d-cf80096d932d\",\n" + 
 				"        \"PluginVersions\": {\n" + 
 				"            \"JsonStoreObject\": {\n" + 
@@ -343,74 +343,74 @@ public class OrgService {
 				"    }\n" + 
 				"}\n" + 
 				"";
-		String privateKey = "-----BEGIN PUBLIC KEY-----\r\n" + 
-				"MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtKOz0H8bhVqs6efzDju3\r\n" + 
-				"exPWmx7thfWur5Hhz7bF2UN2Ltlh+DW9CkpX428ASw2NHo+S5fDBR9NTG2pDzGjl\r\n" + 
-				"pRRL+ylgPlgpt3SCEkMvwiXOoboCr5RVcxm8jgDSZppul7R1iZNA/1XnTAr3xLEb\r\n" + 
-				"b06Cwsp7DvvWWu/44NZapS2f5u3EGh+a7VcU4+DSWazJtrutVHqTqCqyoVVRcHXW\r\n" + 
-				"onjLd/rh9YZLqHNyONmwCLC3N/UBBKhk1is0qxqSChJqESvcUTXFmIra/KON8XLi\r\n" + 
-				"Mq3GpUfln4luTFl9b+c8O7v+85aiFr3NHZrxfHQo2RIqD4dF9N6MlSokb2DDz28J\r\n" + 
-				"6wuH8KSNrkjQCeUHeZiMhi64k0Skszt7xYa0PxHrogKQSjwxo6xk254P/txRwLL3\r\n" + 
-				"LlYMKg18QZECgOtxx3bOjUhgbOmePp94jOX9FEbobY7a/4e2ksYhezfQbRQznvN1\r\n" + 
-				"XQ8ogb0TIFlquRHYSfIA3m9N5Wv0v6KmrTHuja4VdMEcK7sTHkxFuUKsPd1EJ+Rc\r\n" + 
-				"A4dxjxpsbg/YjwkyuBcjNuPxNmmfUZb3sK6BU4iOl3AQT+kzEP/s0DdUiS8raVK2\r\n" + 
-				"nwo6vFzdltCmrDM3iKYKGg2tlpE5arfR6XQP7/Nv0abzLKAk5px/hh0Ace1dSnsb\r\n" + 
-				"L2HKH/FVfXmvaTA52UbIVbcCAwEAAQ==\r\n" + 
-				"-----END PUBLIC KEY-----";
+		String privateKey = "" + 
+				"MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtKOz0H8bhVqs6efzDju3	\n" + 
+				"exPWmx7thfWur5Hhz7bF2UN2Ltlh+DW9CkpX428ASw2NHo+S5fDBR9NTG2pDzGjl \n" +
+				"pRRL+ylgPlgpt3SCEkMvwiXOoboCr5RVcxm8jgDSZppul7R1iZNA/1XnTAr3xLEb	\n" + 
+				"b06Cwsp7DvvWWu/44NZapS2f5u3EGh+a7VcU4+DSWazJtrutVHqTqCqyoVVRcHXW	\n" + 
+				"onjLd/rh9YZLqHNyONmwCLC3N/UBBKhk1is0qxqSChJqESvcUTXFmIra/KON8XLi	\n" + 
+				"Mq3GpUfln4luTFl9b+c8O7v+85aiFr3NHZrxfHQo2RIqD4dF9N6MlSokb2DDz28J	\n" + 
+				"6wuH8KSNrkjQCeUHeZiMhi64k0Skszt7xYa0PxHrogKQSjwxo6xk254P/txRwLL3	\n" + 
+				"LlYMKg18QZECgOtxx3bOjUhgbOmePp94jOX9FEbobY7a/4e2ksYhezfQbRQznvN1	\n" + 
+				"XQ8ogb0TIFlquRHYSfIA3m9N5Wv0v6KmrTHuja4VdMEcK7sTHkxFuUKsPd1EJ+Rc	\n" + 
+				"A4dxjxpsbg/YjwkyuBcjNuPxNmmfUZb3sK6BU4iOl3AQT+kzEP/s0DdUiS8raVK2	\n" + 
+				"nwo6vFzdltCmrDM3iKYKGg2tlpE5arfR6XQP7/Nv0abzLKAk5px/hh0Ace1dSnsb	\n" + 
+				"L2HKH/FVfXmvaTA52UbIVbcCAwEAAQ==	\n" + 
+				"";
 		
 		
-		String publicKey = "-----BEGIN PRIVATE KEY-----\r\n" + 
-				"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\r\n" + 
-				"T+9HoP+4UGbXyFlSq/GI9Mrptekb\r\n" + 
-				"-----END PRIVATE KEY-----";
+		String publicKey = "" + 
+				"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" + 
+				"T+9HoP+4UGbXyFlSq/GI9Mrptekb" + 
+				"";
 		
 		TenantconfigVo tenantVo = new TenantconfigVo();
 		

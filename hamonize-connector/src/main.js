@@ -278,7 +278,8 @@ ipcMain.on('hamonizeSystemBackup', (event) => {
 const hamonizeSystemBackup_Action = async (event) => {
 	try {
 		console.log("hamonizeSystemBackup============START");
-		let hamonizeSystemBackupProcResult = await hamonizeSystemBackupProc();
+		let userId = await execShellCommand("cat /etc/passwd | grep 1000 | awk -F':' '{print $1}' " );
+		let hamonizeSystemBackupProcResult = await hamonizeSystemBackupProc(userId);
 		console.log("hamonizeSystemBackup_Proc==" + hamonizeSystemBackupProcResult);
 		event.sender.send('hamonizeSystemBackup_Result', hamonizeSystemBackupProcResult);
 	} catch (err) {
@@ -287,11 +288,12 @@ const hamonizeSystemBackup_Action = async (event) => {
 	}
 }
 
-function hamonizeSystemBackupProc() {
+function hamonizeSystemBackupProc(userId) {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====__dirname===" + __dirname);
-		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeBackup.sh";
+		//==========================================================사용자 정보 ==============
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeBackup.sh " + userId;
 
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
