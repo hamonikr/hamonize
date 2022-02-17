@@ -14,13 +14,51 @@ HOSTNAME=`hostname`
 cat  /dev/null > $Log_backup 
 
 echo "DEVICE === > $DEVICE"
-echo "CENTERURL==========>$CENTERURL" >>$Log_backup
 
-# rescue 폴더 백업 제외 설정
-# sed -i "s/exclude\" \: \[/exclude\" \: \[\n    \"\/rescue\/**\",/g" /etc/timeshift.json
-# sed -i "s/exclude\" \: \[/exclude\" \: \[\n    /g" /etc/timeshift.json
+# create file timeshift.json
+# timeshift --check # result : /etc/timeshift/timeshift.json
 
-echo `cat /etc/timeshift.json` >>$Log_backup
+# get timeshift uuid
+
+
+# timeshift --check
+FILEPATH=""
+if [ -f "/etc/timeshift/timeshift.json" ]; then
+    echo "case 1 --- file exist"
+    mv /etc/timeshift.timeshift.json  /etc/timeshift/timeshift.json_back
+elif [ -f "/etc/timeshift.json" ]; then
+    echo "case 2---file exist "
+    mv /etc/timeshift.json  /etc/timeshift.json_back
+else
+    echo "file not exist"
+fi
+
+TIMESHIFT_UUID=`timeshift --list | grep UUID | awk -F ':' '{print $2}' | sed 's/ //g'`
+echo $TIMESHIFT_UUID >>$Log_backup
+
+
+if [ -f "/etc/timeshift/timeshift.json" ]; then
+    FILEPATH="/etc/timeshift/timeshift.json"
+elif [ -f "/etc/timeshift.json" ]; then
+    FILEPATH="/etc/timeshift.json"
+fi
+
+
+echo $FILEPATH >>$Log_backup
+
+# # setting 1. timeshift backup_device_uuid
+sed -i "s/backup_device_uuid\" \: \"\"/backup_device_uuid\" \: \"${TIMESHIFT_UUID}\"/g" $FILEPATH
+
+# # # setting 2.
+sed -i "s/\"true\"/\"false\"/g" $FILEPATH
+sed -i "s/do_first_run\" \: \"true\"/do_first_run\" \: \"first\"/g" $FILEPATH
+
+
+# # # backup directory  설정
+sed -i "s/exclude\" \: \[/exclude\" \: \[\n \"+ \/home\/ryan2\/**\" /g" $FILEPATH
+sed -i "s/exclude\" \: \[/exclude\" \: \[\n \"+ \/root\/**\", /g" $FILEPATH
+
+echo `cat $FILEPATH` >>$Log_backup
 
 (
 
@@ -67,3 +105,13 @@ echo "start==device========$DEVICE" >>$Log_backup
         echo 100
         sleep 2
 } 
+
+
+echo "backup End Timeshift Config File restore==== " >> $Log_backup
+if [ -f "/etc/timeshift/timeshift.json" ]; then
+    rm -fr /etc/timeshift/timeshift.json
+    mv /etc/timeshift/timeshift.json_back  /etc/timeshift/timeshift.json
+elif [ -f "/etc/timeshift.json" ]; then
+    rm -fr /etc/timeshift.json
+    mv /etc/timeshift.json_back  /etc/timeshift.json
+fi
