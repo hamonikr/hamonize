@@ -17,49 +17,48 @@
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		var queryArr = [];
-		console.log(treeNode);
-			$('form[name=frm] input[name=org_seq]').val(treeNode.id);
-			$('form[name=frm] input[name=domain]').val(treeNode.domain);
-			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
-			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
-		// if (treeNode.checked) {
-			$.ajaxSetup({ async:false });
-			$.post("/gplcs/ushow", {
-					org_seq: treeNode.id,
-					domain: treeNode.domain
-				},
-				function (result) {
-					var agrs = result;
-					var jsonData = JSON.stringify(agrs.dataInfo);
-					var obj = JSON.parse(jsonData);
+		
+		$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+		$('form[name=frm] input[name=domain]').val(treeNode.domain);
+		$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+		$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
+		$.ajaxSetup({ async:false });
+		$.post("/gplcs/ushow", {
+				org_seq: treeNode.id,
+				domain: treeNode.domain
+			},
+			function (result) {
+				var agrs = result;
+				var jsonData = JSON.stringify(agrs.dataInfo);
+				var obj = JSON.parse(jsonData);
 
-					if(obj !=  null){
-						var ppm_seq = obj.ppm_seq; //agrs.dataInfo.ppm_seq;
-						ppm_seq = ppm_seq.split(",");
-						for (var i = 0; i < ppm_seq.length; i++) {
-							$('input:checkbox[name=pu_seq]').each(function () {
-								if ($(this).val() == ppm_seq[i]) {
-									$(this).prop("checked", true);
-									queryArr.push($(this).data("package"));
-								}
-							});
-						}
-						console.log("aaaa==="+queryArr);
-						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-						
+				if(obj !=  null){
+					var ppm_seq = obj.ppm_seq; //agrs.dataInfo.ppm_seq;
+					ppm_seq = ppm_seq.split(",");
+					for (var i = 0; i < ppm_seq.length; i++) {
+						$('input:checkbox[name=pu_seq]').each(function () {
+							if ($(this).val() == ppm_seq[i]) {
+								$(this).prop("checked", true);
+
+								$("#btn"+ppm_seq[i]).addClass("active");
+								// $(this).removeClass("class_name");
+							
+								queryArr.push($(this).data("package"));
+							}
+						});
 					}
+					console.log("aaaa==="+queryArr);
+					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
+					
+				}
 
 
-				});
-				$('form[name=frm] input[name=former_ppm_name]').val(queryArr);
-				var input = document.querySelectorAll('.form-check-input');                                     
-				console.log(input[1].dataset);                                     
-				console.log("bbbb==="+$('form[name=frm] input[name=former_ppm_name]').val());
-		// }
+			});
+		$('form[name=frm] input[name=former_ppm_name]').val(queryArr);
+		var input = document.querySelectorAll('.form-check-input');                                     
 	}
 
 	function beforeClick(treeId, treeNode, clickFlag) {
-
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		zTree.checkNode(treeNode, !treeNode.checked, true, true);
 		return true;
@@ -67,28 +66,6 @@
 
 	// 	checkbox click event
 	function onCheck(event, treeId, treeNode) {
-		// $('input:checkbox[name=pu_seq]').prop("checked", false);
-		// var zTree = $.fn.zTree.getZTreeObj("tree");
-		// var node = zTree.getNodeByParam('id', treeNode.pId);
-		// if (treeNode.checked) {
-		// 	$.post("/gplcs/ushow", {
-		// 			org_seq: treeNode.id
-		// 		},
-		// 		function (result) {
-		// 			var agrs = result;
-		// 			var ppm_seq = agrs.dataInfo.ppm_seq;
-		// 			ppm_seq = ppm_seq.split(",");
-		// 			for (var i = 0; i < ppm_seq.length; i++) {
-		// 				$('input:checkbox[name=pu_seq]').each(function () {
-		// 					if ($(this).val() == ppm_seq[i]) {
-		// 						$(this).prop("checked", true);
-		// 					}
-		// 				});
-		// 			}
-		// 			$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-		// 			$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
-		// 		});
-		// }
 	}
 </script>
 
@@ -125,14 +102,45 @@
 									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
 									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
+
+									<c:forEach items="${pList}" var="data" varStatus="status">
+										<c:if test="${data.pu_name.indexOf('hamonize')!=0}">
+											<div class="panel-body col-lg-3">
+												<blockquote>
+													<div class="form-check">
+														<input  width=0 height=0 style="visibility:hidden" class="form-check-input" data-package="<c:out value='${data.pu_name}' />" type="checkbox" name="pu_seq" id="${data.pu_seq}" value="<c:out value='${data.pu_seq}'/>">
+														<label class="form-check-label" for="${data.pu_seq}">
+															<p><c:out value="${data.pu_name}" /></p>
+														</label>
+													</div>
+													<small>
+														<c:if test="${data.deb_now_version ne data.deb_new_version and data.deb_now_version ne null}">
+															업데이트가 필요합니다. 최신버전은 <c:out value="${data.deb_new_version}" /> 입니다.
+														</c:if>
+														<c:if test="${data.deb_now_version eq null}">
+															신규 프로그램
+														</c:if>
+														<a href="#" data-toggle="class" class="btn btn-default btn-xs"  onClick="updtClickCellbox('${data.pu_seq}')" id="btn${data.pu_seq}">
+															<i class="fa fa-square-o text-muted text"></i>
+															<i  class="fa fa-check-square-o text-danger text-active">선택</i> 
+															
+														</a>
+													</small>
+												</blockquote>
+											</div>
+										</c:if>
+									</c:forEach>
+
+								
+									
+
+
 									<!-- update list -->
-									<ul class="promlist">
+									<!-- <ul class="promlist">
 										<c:forEach items="${pList}" var="data" varStatus="status">
 
 											<c:if test="${data.pu_name.indexOf('hamonize')!=0}">
 												<li>
-
-
 													<div class="form-check">
 														<input class="form-check-input" data-package="<c:out value='${data.pu_name}' />" type="checkbox" name="pu_seq"
 															id="${data.pu_seq}" value="<c:out value='${data.pu_seq}'/>">
@@ -140,12 +148,9 @@
 															<c:out value="${data.pu_name}" />
 														</label>
 													</div>
-
-
-													<c:if
-														test="${data.deb_now_version ne data.deb_new_version and data.deb_now_version ne null}">
+													<c:if test="${data.deb_now_version ne data.deb_new_version and data.deb_now_version ne null}">
 														<p>업데이트가 필요합니다. 최신버전은
-															<c:out value="${data.deb_new_version}" /> 입니다.</p>
+														<c:out value="${data.deb_new_version}" /> 입니다.</p>
 													</c:if>
 													<c:if test="${data.deb_now_version eq null}">
 														<p>신규 프로그램</p>
@@ -153,7 +158,7 @@
 												</li>
 											</c:if>
 										</c:forEach>
-									</ul>
+									</ul> -->
 
 								</form>
 
@@ -264,6 +269,16 @@
 
 			return false;
 		}
+	}
+
+	function updtClickCellbox(_val){
+
+		if( $("input:checkbox[id='"+_val+"']").is(":checked") == true ){
+			$("input:checkbox[id='"+_val+"']").prop("checked", false);
+		}else{
+			$("input:checkbox[id='"+_val+"']").prop("checked", true);
+		}
+		
 	}
 </script>
 
