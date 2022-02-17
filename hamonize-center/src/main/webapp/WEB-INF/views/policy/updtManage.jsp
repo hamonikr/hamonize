@@ -256,10 +256,12 @@
 					ppm_name: $('form[name=frm] input[name=ppm_name]').val()
 				},
 				function (result) {
-					if (result == "SUCCESS") {
+					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로  처리되었습니다.");
+						$('form[name=frm] input[name=job_id]').val(result.ID);
+						//alert($('form[name=frm] input[name=job_id]').val());
 						button.disabled = false;
-						location.reload();
+						//location.reload();
 					} else {
 						alert("실패하였습니다.");
 						button.disabled = false;
