@@ -11,30 +11,6 @@
 		//checkAnsibleJobStatus(job_id);
 	});
 
-	function checkAnsibleJobStatus(job_id){
-		const target = document.getElementById('btnSave');
-		$.ajax({
-			url : '/gplcs/checkAnsibleJobFinish',
-			type: 'POST',
-			async:false,
-			data:{job_id:job_id},
-			success : function(res) {
-				if(res.status == "running"){
-					console.log("작업중입니다.");
-  				target.disabled = true;
-				}else if(res.status == "successful"){
-					console.log("작업성공.");
-					target.disabled = false;
-				}else if(res.status == "failed"){
-					console.log("실패한작업이 있습니다.");
-					target.disabled = false;
-				}
-			},
-			error:function(request,status,error){
-				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-			}
-		});
-	}
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
 		$('form[name=frm] input[name=former_ppm_name]').val("");
