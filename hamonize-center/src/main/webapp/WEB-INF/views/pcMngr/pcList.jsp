@@ -226,7 +226,7 @@
 			}
 		});
 
-		getPcMngrList();
+		// getPcMngrList();
 
 		$("#excelBtn").on("click", function () {
 			location.href = "pcMngrListExcel?org_seq=" + $("#org_seq").val() + "&date_fr=" + $("#date_fr")

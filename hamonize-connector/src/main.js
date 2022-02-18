@@ -38,7 +38,7 @@ let mainWindow, settingWindow;
 
 
 
-function createWindow() { 
+function createWindow() {
 
 	mainWindow = new BrowserWindow({
 		icon: 'icons/png/emb2.png',
@@ -249,8 +249,8 @@ function hamonizeProgramInstallProc(domain) {
 	return new Promise(function (resolve, reject) {
 
 		console.log("====hamonizeProgramInstallProc==");
-		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl +" " + domain;
-		console.log("aptRepositoryChkJobShell===========++"+aptRepositoryChkJobShell);
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl + " " + domain;
+		console.log("aptRepositoryChkJobShell===========++" + aptRepositoryChkJobShell);
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
@@ -278,7 +278,7 @@ ipcMain.on('hamonizeSystemBackup', (event) => {
 const hamonizeSystemBackup_Action = async (event) => {
 	try {
 		console.log("hamonizeSystemBackup============START");
-		let userId = await execShellCommand("cat /etc/passwd | grep 1000 | awk -F':' '{print $1}' " );
+		let userId = await execShellCommand("cat /etc/passwd | grep 1000 | awk -F':' '{print $1}' ");
 		let hamonizeSystemBackupProcResult = await hamonizeSystemBackupProc(userId);
 		console.log("hamonizeSystemBackup_Proc==" + hamonizeSystemBackupProcResult);
 		event.sender.send('hamonizeSystemBackup_Result', hamonizeSystemBackupProcResult);
@@ -611,21 +611,6 @@ const sysInfo = async (event, groupname, sabun, username, domain) => {
 		}
 	});
 
-
-	// console.log("machindid == " + machindid);
-	// console.log("cpuinfo == " + cpuinfo);
-	// console.log("diskSerialNum == " + diskSerialNum);
-	// console.log("diskInfo == " + diskInfo);
-	// console.log("macs == " + macs[0]);
-	// console.log("ipinfo.address() == " + ipinfo.address());
-	// console.log("vpnipaddr == " + vpnipaddr);
-	// console.log("pcHostname == " + pcHostname);
-	// console.log("osinfo == " + osinfo);
-	// console.log("raminfo == " + raminfo);
-	// console.log("groupname == " + groupname);
-	// console.log("username == " + username);
-
-
 	console.log("등록 버튼 클릭시 center url >> " + baseurl + '/hmsvc/setPcInfo');
 	unirest.post(baseurl + '/hmsvc/setPcInfo')
 		.header('content-type', 'application/json')
@@ -649,7 +634,7 @@ const sysInfo = async (event, groupname, sabun, username, domain) => {
 			}]
 		})
 		.end(function (response) {
-			console.log("response.body===========++"+response.body);
+			console.log("response.body===========++" + response.body);
 			event.sender.send('pcInfoChkProc', response.body);
 		});
 
@@ -686,7 +671,7 @@ function pcInfoUpdate() {
 }
 
 
-// ====================================== 기능 점검 대상 ===========================================================================
+// ====================================== 기능 점검 대상 ======================================================================#
 function vpnchk() {
 	var os = require('os');
 	var ifaces = os.networkInterfaces();
@@ -714,7 +699,7 @@ function vpnchk() {
 	});
 	return retVal;
 
-}
+} // =======================================================================================================================#
 
 
 //========================================================================
@@ -777,15 +762,22 @@ ipcMain.on('getOrgData', (event, domain) => {
 ipcMain.on('getOrgAuth', (event, authkeyVal) => {
 
 	unirest.get(baseurl + '/hmsvc/getOrgAuth')
-	.header('content-type', 'application/json')
-	.send({
-		events: [{
-			authkey: authkeyVal
-		}]
-	})
-	.end(function (response) {
-		event.sender.send('getAuthResult', response.body);
-	});
-	
+		.header('content-type', 'application/json')
+		.send({
+			events: [{
+				authkey: authkeyVal
+			}]
+		})
+		.end(function (response) {
+			// file write 
+			let fileDir = "/etc/hamonize/hamonize_tanent";
+			fs.writeFile(fileDir, response.body, (err) => {
+				if (err) {
+					// log.info("//== sysInfo hw check create file error  "+ err.message)
+				}
+			});
+			event.sender.send('getAuthResult', response.body);
+		});
+
 });
 
