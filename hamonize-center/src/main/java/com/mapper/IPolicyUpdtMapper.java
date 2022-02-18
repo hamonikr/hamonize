@@ -15,6 +15,8 @@ public interface IPolicyUpdtMapper {
 	
 	public PolicyUpdtVo updtApplcView(PolicyUpdtVo vo);
 	
+	public int getUpdtHistoryLastJob(PolicyUpdtVo vo);
+	
 	public List<Map<String, Object>> updtComapreList();
 	
 	public List<Map<String, Object>> updtResult(Map<String, Object> params);

@@ -97,7 +97,7 @@ public class Test {
         //.path("/api/v2/ad_hoc_command_events/").path("{id}/").path("events/")
         //.queryParam("--user", "admin:password")
         //.queryParam("password", "password")
-        .build(317))
+        .build(281))
         .exchange().flatMap(clientResponse -> {
           if (clientResponse.statusCode().is5xxServerError()) {
               clientResponse.body((clientHttpResponse, context) -> {

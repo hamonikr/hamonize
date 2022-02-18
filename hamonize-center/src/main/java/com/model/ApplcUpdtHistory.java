@@ -41,4 +41,6 @@ public class ApplcUpdtHistory {
 	
 	private Timestamp updt_date;
 
+	private Long job_id;
+
 }
