@@ -19,8 +19,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name="tbl_device_applc_history")
-public class ApplcDeviceHistory {
+@Table(name="tbl_restore_applc_history")
+public class ApplcRestoreHistory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,17 +30,25 @@ public class ApplcDeviceHistory {
 	@Size(max=50)
 	private String domain;
 
+	@Comment("조직번호")
 	private Long org_seq;
-	
-	@Size(max=150)
-	private String ppm_seq;
 
-	private Integer dvc_seq;
+	@Comment("복원번호")
+	private Long recv_applc_seq;
 
+	@Comment("pc번호")
+	private Long pc_seq;
+
+	@Comment("백업이미지번호")
+	private Long br_seq;
+
+	@Comment("복원일")
 	private Timestamp rgstr_date;
 	
+	@Comment("수정일")
 	private Timestamp updt_date;
-
+	
+	@Comment("Ansible JobId")
 	private Long job_id;
 
 }

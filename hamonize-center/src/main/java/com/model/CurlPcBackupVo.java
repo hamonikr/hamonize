@@ -15,7 +15,7 @@ public class CurlPcBackupVo {
 	private Long br_org_seq;
 	private String br_backup_path;	// 백업 이미지 경로 및 iso 파일 이름
 	private String br_backup_iso_dt;	// 백업실행일시
-	private String br_backup_gubun; 	// 백업구분 A:초기백업본
+	private String br_backup_status; 	// 백업구분 A:초기백업본
 	
 	// pc get json ====
 	private String bk_datetime;
@@ -23,6 +23,6 @@ public class CurlPcBackupVo {
 	private String bk_name;
 	private String bk_dir; 
 	private String bk_hostname;
-	private Long dept_seq;
+	private Long pc_seq;
 
 }

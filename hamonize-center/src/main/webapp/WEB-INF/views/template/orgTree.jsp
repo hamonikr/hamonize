@@ -318,8 +318,8 @@ function setCheck() {
 		case '/gplcs/fmanage' :  $("#navInfo").text('Home / 정책관리 / 방화벽관리' ); $("#orgTreeBtnLayer").hide(); setting.check.enable=false;  break;
 		case '/gplcs/dmanage' :  $("#navInfo").text('Home / 정책관리 / 디바이스관리' ); $("#orgTreeBtnLayer").hide(); setting.check.enable=false; break;
 		case '/auditLog/updateCheckLog' :  $("#navInfo").text('Home / 정책관리 / 정책배포결과' ); $("#orgTreeBtnLayer").hide();  break;
-		case '/backupRecovery/backupC' :  $("#navInfo").text('Home / 백업관리 / 백업주기설정' ); break;
-		case '/backupRecovery/backupR' :  $("#navInfo").text('Home / 백업관리 / 복구관리' ); $("#orgTreeBtnLayer").hide(); break;
+		case '/backupRestore/backupC' :  $("#navInfo").text('Home / 백업관리 / 백업주기설정' ); break;
+		case '/backupRestore/backupR' :  $("#navInfo").text('Home / 백업관리 / 복구관리' ); $("#orgTreeBtnLayer").hide(); break;
 		
 		case '/auditLog/pcUserLog' :  $("#navInfo").text('Home / 로그감사/ 사용자접속로그' );  $("#orgTreeBtnLayer").hide(); break;
 		case '/auditLog/prcssBlockLog' :  $("#navInfo").text('Home / 로그감사 / 프로그램차단로그' ); $("#orgTreeBtnLayer").hide(); break;

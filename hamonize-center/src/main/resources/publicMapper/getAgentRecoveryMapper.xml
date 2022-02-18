@@ -81,7 +81,7 @@
 	
 		select 
 		    count(*) as cnt 
-		from tbl_recovery_applc TA left outer join tbl_recovery_applc_history TB on TA.seq = TB.recv_applc_seq
+		from TBL_RESTORE_APPLC TA left outer join TBL_RESTORE_APPLC_HISTORY TB on TA.seq = TB.recv_applc_seq
 		where TA.org_seq = #{org_seq}
 		    and TA.seq = ( select seq from tbl_pc_mangr where pc_uuid = #{pc_uuid} )
 			
@@ -93,9 +93,9 @@
 		    tbl_recovery_agent_job ( recv_applc_seq, org_seq, pc_seq, br_seq, status, insert_dt, br_backup_gubun, br_backup_path, br_backup_name, pc_uuid  )
 		SELECT 
 		    TA.seq, TA.org_seq, TA.pc_seq , TA.br_seq, TA.status, TA.ins_date,
-		    TB.br_backup_gubun, TB.br_backup_path, TB.br_backup_name, 	#{pc_uuid} as uuid
+		    TB.br_backup_status, TB.br_backup_path, TB.br_backup_name, 	#{pc_uuid} as uuid
 		    
-		FROM public.tbl_recovery_log TA LEFT OUTER JOIN tbl_backup_recovery_mngr TB ON TA.br_seq = TB.br_seq
+		FROM public.tbl_recovery_log TA LEFT OUTER JOIN tbl_policy_backup_restore_list TB ON TA.br_seq = TB.br_seq
 		WHERE TA.org_seq = #{org_seq}
 		    AND TA.pc_seq = ( select seq from tbl_pc_mangr where pc_uuid = #{pc_uuid} )
 		ORDER BY TA.ins_date DESC
