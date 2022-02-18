@@ -29,6 +29,9 @@ public class ApplcUpdt {
 	private String domain;
 
 	private Long org_seq;
+
+	private Long job_id;
+	
 	@Size(max=150)
 	private String ppm_seq;
 

@@ -17,8 +17,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name="tbl_device_applc")
-public class ApplcDevice {
+@Table(name="tbl_restore_applc")
+public class ApplcRestore {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

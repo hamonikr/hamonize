@@ -68,13 +68,14 @@
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 
 		$.post("backupRCShow", {
-				org_seq: treeNode.id
+				org_seq: treeNode.id,
+				domain: treeNode.domain
 			},
 			function (result) {
 				var agrs = result;
 				var strHtml = "";
 				var tmp = "";
-
+console.log("sss===="+agrs);
 				if (agrs.length == 0) {
 					strHtml += "등록된 조직의 컴퓨터 정보가 없습니다.";
 					$("#selectPcOne").text('');
@@ -227,7 +228,8 @@
 		// console.log("seq :" + seq + "=="+ rasioNm); 
 
 		$.post("backupRCList", {
-				seq: seq
+				seq: seq,
+				domain: domain
 			},
 			function (result) {
 				var agrs = result;

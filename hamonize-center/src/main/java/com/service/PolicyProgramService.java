@@ -48,7 +48,7 @@ public class PolicyProgramService {
 		
 	}
 
-	public int applyProgramPolicy(Map<String, Object> params) throws ParseException{
+	public JSONObject applyProgramPolicy(Map<String, Object> params) throws ParseException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		
 		String[] listA = {};
@@ -80,7 +80,7 @@ public class PolicyProgramService {
 		params.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
 
-		int result = restApiService.makePolicy(params);
+		JSONObject result = restApiService.makePolicy(params);
 		System.out.println("resuklt======="+result);
 	
 

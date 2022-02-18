@@ -218,7 +218,7 @@ public class RestApiService {
   return result;
 }
 
-public int makePolicy(Map<String, Object> params) throws ParseException
+public JSONObject makePolicy(Map<String, Object> params) throws ParseException
   {
     String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")
     +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | touch "+params.get("policyRunFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0,\"forks\": 10}";
@@ -250,12 +250,12 @@ public int makePolicy(Map<String, Object> params) throws ParseException
     
     int result = Integer.parseInt(jsonObj.get("id").toString());
     //JSONObject jsonResultObj = new JSONObject();
-    try {
-      Thread.sleep(3000);
-    } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    // try {
+    //   Thread.sleep(3000);
+    // } catch (InterruptedException e) {
+    //   // TODO Auto-generated catch block
+    //   e.printStackTrace();
+    // }
     JSONObject jsonResultObj = checkPolicyJobResult(result);
     System.out.println("jsonResultObj====="+jsonResultObj.get("status"));
   //   Thread subTread2 = new Thread() {
@@ -275,7 +275,7 @@ public int makePolicy(Map<String, Object> params) throws ParseException
   //   // TODO Auto-generated catch block
   //   e.printStackTrace();
   // }
-  return result;
+  return jsonResultObj;
 }
 
 public JSONObject checkPolicyJobResult(int id) throws ParseException{

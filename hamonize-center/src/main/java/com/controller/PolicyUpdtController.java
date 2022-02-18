@@ -47,6 +47,9 @@ public class PolicyUpdtController {
 	@Autowired
 	private AgentAptListService aService;
 
+	@Autowired
+	RestApiService restApiService;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
@@ -143,18 +146,20 @@ public class PolicyUpdtController {
 		params.put("data", resultSet);
 		System.out.println("params..." + params);
 		int result = 0;
+		//ansible 정책전달
+		JSONObject jobResult = uService.applyPackagePolicy(params);
+		
+		params.put("job_id", jobResult.get("id"));
 		uService.updtDelete(params);
 		result = uService.updtSave(params);
-		
 		//차단정책 초기화
 		uService.updatePolicyProgrm(params);
-		//ansible 정책전달
-		int id = uService.applyPackagePolicy(params);
 		JSONObject jsonObj = new JSONObject();
 		
 		if (result >= 1){
 			jsonObj.put("STATUS", "SUCCESS");
-			jsonObj.put("ID", id);
+			jsonObj.put("ID", jobResult.get("id"));
+			jsonObj.put("JOBSTATUS", jobResult.get("status"));
 		} else{
 			jsonObj.put("STATUS", "FAIL");
 		}
@@ -163,10 +168,11 @@ public class PolicyUpdtController {
 
 	@ResponseBody
 	@RequestMapping(value = "ushow", method = RequestMethod.POST)
-	public JSONObject checkAnsibleJobFinish(HttpSession session, Model model, PolicyUpdtVo vo) {
+	public JSONObject ushow(HttpSession session, Model model, PolicyUpdtVo vo) {
 		JSONObject data = new JSONObject();
 		System.out.println("vo====="+vo.toString());
 		try {
+			data.put("job_id", uService.getUpdtHistoryLastJob(vo));
 			vo = uService.updtApplcView(vo);
 			data.put("dataInfo", vo);
 		} catch (Exception e) {
@@ -181,8 +187,9 @@ public class PolicyUpdtController {
 	@RequestMapping(value = "checkAnsibleJobFinish", method = RequestMethod.POST)
 	public JSONObject checkAnsibleJobFinish(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
 		JSONObject data = new JSONObject();
-		RestApiService restApiService = new RestApiService();
-		data = restApiService.checkPolicyJobResult((int) params.get("id"));
+		System.out.println("2222222222222222222===="+params.get("job_id").toString());
+		data = restApiService.checkPolicyJobResult(Integer.parseInt(params.get("job_id").toString()));
+		System.out.println("checkAnsibleJobFinish======"+data);
 		return data;
 
 	}

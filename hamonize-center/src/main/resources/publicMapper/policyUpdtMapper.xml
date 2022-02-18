@@ -65,17 +65,18 @@
 	<insert id="updtSave" parameterType="java.util.HashMap">
 		WITH rows AS (
 			INSERT INTO TBL_UPDT_APPLC 
-				( ORG_SEQ									   
-				, PPM_SEQ
-				, DOMAIN) VALUES
+				(ORG_SEQ,									   
+				PPM_SEQ,
+				DOMAIN,
+				JOB_ID) VALUES
 				<if test="ppm_seq != null">
 					<foreach collection="data" item="item" separator=",">
-						(#{item.org_seq},#{ppm_seq},#{domain})
+						(#{item.org_seq},#{ppm_seq},#{domain},#{job_id})
 					</foreach>
         </if>
-        RETURNING seq, org_seq, ppm_seq, domain
+        RETURNING seq, org_seq, ppm_seq, domain, job_id
 		)   
-		INSERT INTO tbl_updt_applc_history (updt_seq, org_seq, ppm_seq, domain, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq,domain, now() FROM rows 			
+		INSERT INTO tbl_updt_applc_history (updt_seq, org_seq, ppm_seq, domain, job_id, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq, domain, job_id, now() FROM rows 			
 	</insert>
 
 	<select id="updtResult" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -128,6 +129,11 @@
 		from search_org 
 		where 1=1
 		order by level,org_ordr) and domain = #{domain} )tua
+	</select>
+
+	<select id="getUpdtHistoryLastJob" parameterType="com.model.PolicyUpdtVo" resultType="int">
+	SELECT JOB_ID FROM tbl_updt_applc_history WHERE DOMAIN = #{domain} AND ORG_SEQ = #{org_seq}
+	ORDER BY SEQ DESC LIMIT 1
 	</select>
 	
 	<!-- <update id="programSave" parameterType="HashMap">

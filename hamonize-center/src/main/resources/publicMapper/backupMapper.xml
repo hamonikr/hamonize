@@ -38,7 +38,19 @@
 			 	seq, pc_status, pc_cpu, pc_memory, pc_disk, pc_macaddress, 
  				pc_ip, rgstr_date, updt_date, pc_hostname, pc_guid, org_seq, pc_disk_id, pc_cpu_id, pc_uuid 
  			FROM tbl_pc_mangr
- 			WHERE org_seq = #{org_seq}
+ 			WHERE org_seq in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.seq = #{org_seq}
+			and a.domain = #{domain}
+			union all
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select seq
+		from search_org 
+		where 1=1
+		order by level,org_ordr) AND domain = #{domain} order by seq asc
 	</select>
 	
 	<select id="backupRecoveryList" resultType="java.util.HashMap" parameterType="java.util.HashMap" >

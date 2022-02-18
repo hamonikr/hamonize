@@ -8,8 +8,33 @@
 	$(document).ready(function () {
 		//등록버튼
 		$("#btnSave").click(fnSaveUpdt);
-
+		//checkAnsibleJobStatus(job_id);
 	});
+
+	function checkAnsibleJobStatus(job_id){
+		const target = document.getElementById('btnSave');
+		$.ajax({
+			url : '/gplcs/checkAnsibleJobFinish',
+			type: 'POST',
+			async:false,
+			data:{job_id:job_id},
+			success : function(res) {
+				if(res.status == "running"){
+					console.log("작업중입니다.");
+  				target.disabled = true;
+				}else if(res.status == "successful"){
+					console.log("작업성공.");
+					target.disabled = false;
+				}else if(res.status == "failed"){
+					console.log("실패한작업이 있습니다.");
+					target.disabled = false;
+				}
+			},
+			error:function(request,status,error){
+				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			}
+		});
+	}
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
 		$('form[name=frm] input[name=former_ppm_name]').val("");
@@ -47,6 +72,7 @@
 							}
 						});
 					}
+					checkAnsibleJobStatus(agrs.job_id);
 					console.log("aaaa==="+queryArr);
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					
@@ -54,8 +80,7 @@
 
 
 			});
-		$('form[name=frm] input[name=former_ppm_name]').val(queryArr);
-		var input = document.querySelectorAll('.form-check-input');                                     
+		$('form[name=frm] input[name=former_ppm_name]').val(queryArr);                               
 	}
 
 	function beforeClick(treeId, treeNode, clickFlag) {
@@ -257,10 +282,11 @@
 				},
 				function (result) {
 					if (result.STATUS == "SUCCESS") {
-						alert("정상적으로  처리되었습니다.");
-						$('form[name=frm] input[name=job_id]').val(result.ID);
+						alert("정상적으로 처리되었습니다.");
+						checkAnsibleJobStatus(result.ID);
+						//$('form[name=frm] input[name=job_id]').val(result.ID);
 						//alert($('form[name=frm] input[name=job_id]').val());
-						button.disabled = false;
+						//button.disabled = false;
 						//location.reload();
 					} else {
 						alert("실패하였습니다.");

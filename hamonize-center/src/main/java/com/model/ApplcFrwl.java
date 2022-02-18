@@ -29,6 +29,9 @@ public class ApplcFrwl {
 	private String domain;
 
 	private Long org_seq;
+
+	private Long job_id;
+	
 	@Size(max=500)
 	private String ppm_seq;
 

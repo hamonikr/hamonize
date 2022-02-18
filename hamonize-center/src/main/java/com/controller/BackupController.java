@@ -117,7 +117,6 @@ public class BackupController {
 
 		try {
 			OrgVo orgvo = new OrgVo();
-			PolicyFireWallVo vo = new PolicyFireWallVo();
 			jsonArray = oService.orgList(orgvo);
 
 		} catch (Exception e) {
@@ -138,6 +137,7 @@ public class BackupController {
 
 		System.out.println("backupRCShow org_seq > " + params.get("org_seq").toString());
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
+		params.put("domain", params.get("domain").toString());
 		resultSet = bService.backupRCApplcView(params);
 
 		if (!resultSet.isEmpty()) {
@@ -196,8 +196,7 @@ public class BackupController {
 	@RequestMapping(value = "backupRCSave", method = RequestMethod.POST)
 	public String backupRCSave(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) {
-		params.put("pc_seq", Integer.parseInt(params.get("dept_seq").toString())); // dept_seq는
-																					// pc시퀀스번호
+		params.put("pc_seq", Integer.parseInt(params.get("dept_seq").toString()));
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		params.put("br_seq", Integer.parseInt(params.get("br_seq").toString()));
 

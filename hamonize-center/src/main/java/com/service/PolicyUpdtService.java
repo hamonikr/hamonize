@@ -47,6 +47,10 @@ public class PolicyUpdtService {
 		return list;
 		
 	}
+
+	public int getUpdtHistoryLastJob(PolicyUpdtVo vo) {
+		return iUpdtMapper.getUpdtHistoryLastJob(vo);
+	}
 	
 	public int updtSave(Map<String, Object> params) {
 		return iUpdtMapper.updtSave(params);
@@ -87,7 +91,7 @@ public class PolicyUpdtService {
 	// 	return iUpdtMapper.updtResult(params);
 	// }
 
-	public int applyPackagePolicy(Map<String, Object> params) throws ParseException{
+	public JSONObject applyPackagePolicy(Map<String, Object> params) throws ParseException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		String[] listA = {};
 		String[] listB = {};
@@ -120,7 +124,8 @@ public class PolicyUpdtService {
 		params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runupdt");
 
-		int result = restApiService.makePolicy(params);
+		JSONObject result = restApiService.makePolicy(params);
+		System.out.println("ResultID====="+result);
 		// updtPolicy.clear();
 		// updtPolicy.put("INS", String.join(",",ppm_name));
 		// updtPolicy.put("DEL", String.join(",",former_ppm_name));
