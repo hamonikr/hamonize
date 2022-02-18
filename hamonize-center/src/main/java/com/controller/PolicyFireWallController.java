@@ -76,7 +76,7 @@ public class PolicyFireWallController {
 
 	@ResponseBody
 	@RequestMapping(value = "/fsave", method = RequestMethod.POST)
-	public String finsert(HttpSession session, Model model,
+	public JSONObject finsert(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
 
 		JsonParser jp = new JsonParser();
@@ -97,14 +97,21 @@ public class PolicyFireWallController {
 		System.out.println("params..." + params);
 		int result = 0;
 
+		//ansible 정책전달
+		JSONObject jobResult = fService.applyFirewallPolicy(params);
+		params.put("job_id", jobResult.get("id"));
 		fService.fireWallDelete(params);
 		result = fService.fireWallSave(params);
-		//ansible 정책전달
-		fService.applyFirewallPolicy(params);
-		if (result >= 1)
-			return "SUCCESS";
-		else
-			return "FAIL";
+		
+		JSONObject jsonObj = new JSONObject();
+		if (result >= 1){
+			jsonObj.put("STATUS", "SUCCESS");
+			jsonObj.put("ID", jobResult.get("id"));
+			jsonObj.put("JOBSTATUS", jobResult.get("status"));
+		} else{
+			jsonObj.put("STATUS", "FAIL");
+		}
+		return jsonObj;
 
 	}
 
@@ -113,6 +120,7 @@ public class PolicyFireWallController {
 	public JSONObject fshow(HttpSession session, Model model, PolicyFireWallVo vo) {
 		JSONObject data = new JSONObject();
 		try {
+			data.put("job_id", fService.getFrwlHistoryLastJob(vo));
 			vo = fService.fireWallApplcView(vo);
 			data.put("dataInfo", vo);
 		} catch (Exception e) {

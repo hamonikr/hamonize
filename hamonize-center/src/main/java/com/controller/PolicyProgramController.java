@@ -65,7 +65,7 @@ public class PolicyProgramController {
 
 	@ResponseBody
 	@RequestMapping(value = "/psave", method = RequestMethod.POST)
-	public String pinsert(HttpSession session, Model model,
+	public JSONObject pinsert(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
 
 		JsonParser jp = new JsonParser();
@@ -81,17 +81,21 @@ public class PolicyProgramController {
 		}
 
 		params.put("data", resultSet);
-
+		//ansible 정책전달
+		JSONObject jobResult = pService.applyProgramPolicy(params);
+		params.put("job_id", jobResult.get("id"));
 		int result = 0;
 		pService.programDelete(params);
 		result = pService.programSave(params);
-		//ansible 정책전달
-		pService.applyProgramPolicy(params);
-		if (result >= 1)
-			return "SUCCESS";
-		else
-			return "FAIL";
-
+		JSONObject jsonObj = new JSONObject();
+		if (result >= 1){
+			jsonObj.put("STATUS", "SUCCESS");
+			jsonObj.put("ID", jobResult.get("id"));
+			jsonObj.put("JOBSTATUS", jobResult.get("status"));
+		} else{
+			jsonObj.put("STATUS", "FAIL");
+		}
+		return jsonObj;
 	}
 
 	@ResponseBody
@@ -100,6 +104,7 @@ public class PolicyProgramController {
 		JSONObject data = new JSONObject();
 		List<PolicyProgrmVo> pList = null;
 		try {
+			data.put("job_id", pService.getProgrmHistoryLastJob(vo));
 			pList = pService.programList(vo);
 			vo = pService.programApplcView(vo);
 			data.put("dataInfo", vo);

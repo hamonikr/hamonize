@@ -115,4 +115,8 @@ public class PolicyFireWallService {
 
 	}
 
+	public int getFrwlHistoryLastJob(PolicyFireWallVo vo) {
+		return ifireWallMapper.getFrwlHistoryLastJob(vo);
+	}
+
 }

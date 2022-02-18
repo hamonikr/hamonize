@@ -9,8 +9,8 @@
         	(
 					pc_uuid, 
 					pc_hostname,
+					kind,		        
 					status,		        
-					status_yn,		        
 					datetime,
 					retport,
 					org_seq,
@@ -18,13 +18,13 @@
         	) 
         	VALUES
 					( 
-					#{uuid}, 
-					#{hostname},
+					#{pc_uuid}, 
+					#{pc_hostname},
+					#{kind}, 
 					#{status}, 
-					#{status_yn}, 
 					#{datetime},
 					#{retport}, 
-					#{orgseq}, 
+					#{org_seq}, 
 					now()
 					) 
 

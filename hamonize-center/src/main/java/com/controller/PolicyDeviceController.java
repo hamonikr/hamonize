@@ -83,7 +83,7 @@ public class PolicyDeviceController {
 
 	@ResponseBody
 	@RequestMapping(value = "/dsave", method = RequestMethod.POST)
-	public String dinsert(HttpSession session, Model model,
+	public JSONObject dinsert(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
 
 		JsonParser jp = new JsonParser();
@@ -101,15 +101,21 @@ public class PolicyDeviceController {
 		System.out.println("params..." + params);
 		int result = 0;
 
+		//ansible 정책전달
+		JSONObject jobResult = dService.applyDevicePolicy(params);
+		params.put("job_id", jobResult.get("id"));
 		dService.deviceDelete(params);
 		result = dService.deviceSave(params);
-		//ansible 정책전달
-		dService.applyDevicePolicy(params);
 
-		if (result >= 1)
-			return "SUCCESS";
-		else
-			return "FAIL";
+		JSONObject jsonObj = new JSONObject();
+		if (result >= 1){
+			jsonObj.put("STATUS", "SUCCESS");
+			jsonObj.put("ID", jobResult.get("id"));
+			jsonObj.put("JOBSTATUS", jobResult.get("status"));
+		} else{
+			jsonObj.put("STATUS", "FAIL");
+		}
+		return jsonObj;
 
 	}
 
@@ -119,6 +125,7 @@ public class PolicyDeviceController {
 		System.out.println("asd" + vo.getSm_seq());
 		JSONObject data = new JSONObject();
 		try {
+			data.put("job_id", dService.getDeviceHistoryLastJob(vo));
 			vo = dService.deviceApplcView(vo);
 			data.put("dataInfo", vo);
 		} catch (Exception e) {

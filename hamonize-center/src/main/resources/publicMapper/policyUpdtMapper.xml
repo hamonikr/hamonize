@@ -130,11 +130,6 @@
 		where 1=1
 		order by level,org_ordr) and domain = #{domain} )tua
 	</select>
-
-	<select id="getUpdtHistoryLastJob" parameterType="com.model.PolicyUpdtVo" resultType="int">
-	SELECT JOB_ID FROM tbl_updt_applc_history WHERE DOMAIN = #{domain} AND ORG_SEQ = #{org_seq}
-	ORDER BY SEQ DESC LIMIT 1
-	</select>
 	
 	<!-- <update id="programSave" parameterType="HashMap">
 		WITH upsert AS (UPDATE TBL_PROGRM_APPLC SET
@@ -150,6 +145,9 @@
 				SELECT (SELECT COALESCE(max(seq),0)+1 AS seq FROM TBL_PROGRM_APPLC)
 				,#{org_seq},#{ppm_seq} WHERE NOT EXISTS (SELECT * FROM upsert)
 	</update> -->
-
+<select id="getUpdtHistoryLastJob" parameterType="com.model.PolicyUpdtVo" resultType="int">
+		SELECT JOB_ID FROM tbl_updt_applc_history WHERE DOMAIN = #{domain}
+		ORDER BY SEQ DESC LIMIT 1
+	</select>
 
 </mapper>

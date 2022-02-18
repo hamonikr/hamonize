@@ -25,5 +25,7 @@ public interface IPolicyDeviceMapper {
 	
 	public int devicePopCount(PolicyDeviceVo vo);
 
+	public int getDeviceHistoryLastJob(PolicyDeviceVo vo);
+
 
 }

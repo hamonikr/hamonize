@@ -14,15 +14,16 @@
 		WITH rows AS (
 			INSERT INTO 
 				TBL_DEVICE_APPLC 
-					( ORG_SEQ									   
-					, PPM_SEQ
-					, DOMAIN) VALUES
+					(ORG_SEQ,								   
+					PPM_SEQ,
+					DOMAIN,
+					JOB_ID) VALUES
 					<foreach collection="data" item="item" separator=",">
-	            (#{item.org_seq},#{ppm_seq},#{domain})
+	            (#{item.org_seq},#{ppm_seq},#{domain},#{job_id})
 	        		</foreach>
-        RETURNING seq, org_seq, ppm_seq, domain
+        RETURNING seq, org_seq, ppm_seq, domain, job_id
 		)   
-		INSERT INTO tbl_device_applc_history (dvc_seq, org_seq, ppm_seq, domain, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq, domain, now() FROM rows 	
+		INSERT INTO tbl_device_applc_history (dvc_seq, org_seq, ppm_seq, domain, job_id, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq, domain, job_id, now() FROM rows 	
 		
 	</insert>
 	
@@ -106,6 +107,11 @@
 	
 	<select id="devicePopCount" resultType="Integer" parameterType="com.model.PolicyDeviceVo">
 		SELECT count(*) FROM tbl_policy_device_list where domain = #{domain}
+	</select>
+
+	<select id="getDeviceHistoryLastJob" parameterType="com.model.PolicyDeviceVo" resultType="int">
+		SELECT JOB_ID FROM tbl_device_applc_history WHERE DOMAIN = #{domain}
+		ORDER BY SEQ DESC LIMIT 1
 	</select>
 
 </mapper>

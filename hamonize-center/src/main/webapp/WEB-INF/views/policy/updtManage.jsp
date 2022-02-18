@@ -48,12 +48,11 @@
 							}
 						});
 					}
-					checkAnsibleJobStatus(agrs.job_id);
 					console.log("aaaa==="+queryArr);
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					
 				}
-
+				checkAnsibleJobStatus(agrs.job_id);
 
 			});
 		$('form[name=frm] input[name=former_ppm_name]').val(queryArr);                               
@@ -266,7 +265,7 @@
 						//location.reload();
 					} else {
 						alert("실패하였습니다.");
-						button.disabled = false;
+						//button.disabled = false;
 					}
 
 				});
