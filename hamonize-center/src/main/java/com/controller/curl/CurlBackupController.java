@@ -41,7 +41,7 @@ public class CurlBackupController {
 			cbVo.setBk_uuid(tempObj.get("uuid").toString());
 			cbVo.setBr_backup_iso_dt(tempObj.get("datetime").toString());
 			cbVo.setBk_hostname(tempObj.get("hostname").toString());
-			cbVo.setBr_backup_gubun(tempObj.get("gubun").toString());
+			cbVo.setBr_backup_status(tempObj.get("gubun").toString());
 		}
 
 
@@ -54,7 +54,7 @@ public class CurlBackupController {
 		System.out.println("agentVo pc_seq >>> " + agentVo.getSeq());
 
 		cbVo.setBr_org_seq(agentVo.getOrg_seq());
-		cbVo.setDept_seq(agentVo.getSeq());
+		cbVo.setPc_seq(agentVo.getSeq());
 		agentJobMapper.insertBackupInfo(cbVo);
 
 

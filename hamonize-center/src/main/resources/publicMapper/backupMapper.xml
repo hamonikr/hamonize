@@ -54,37 +54,47 @@
 	</select>
 	
 	<select id="backupRecoveryList" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
- 			SELECT br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_gubun, br_backup_name, dept_seq 
- 				FROM tbl_backup_recovery_mngr
- 			WHERE dept_seq = #{seq}
+ 			SELECT br_seq, br_org_seq, br_backup_path, br_backup_iso_dt, br_backup_status, br_backup_name, pc_seq 
+ 				FROM tbl_policy_backup_restore_list
+ 			WHERE pc_seq = #{seq}
 	</select>
 
 	<insert id="backupRecoverySave" parameterType="java.util.HashMap">
-	INSERT INTO TBL_RECOVERY_APPLC 
-				(
-					pc_seq
-					,ORG_SEQ
-					,BR_SEQ
-				) VALUES
-            	(
-					#{pc_seq},
-					#{org_seq},
-					#{br_seq}
-				)
+	WITH rows AS (
+		INSERT INTO TBL_RESTORE_APPLC 
+					( 
+						DOMAIN,
+						PC_SEQ,
+						ORG_SEQ,
+						BR_SEQ,
+						JOB_ID
+					) 
+					VALUES
+					(
+						#{domain},
+						#{pc_seq},
+						(select org_seq from tbl_pc_mangr where domain = #{domain} and seq = #{pc_seq}),
+						#{br_seq},
+						#{job_id}
+					)
+					RETURNING seq, br_seq, org_seq, pc_seq, domain, job_id
+	)
+	INSERT INTO tbl_restore_applc_history (recv_applc_seq, br_seq, org_seq, pc_seq, domain, job_id, rgstr_date  )
+		SELECT seq, br_seq, org_seq, pc_seq, domain, job_id, now() FROM rows
 	</insert>
 	
 	<insert id="backupRecoveryLogSave" parameterType="java.util.HashMap">
 	INSERT INTO TBL_RECOVERY_LOG 
 				( ORG_SEQ
 				, BR_SEQ
-				, pc_seq
+				, PC_SEQ
 				, STATUS
 				) VALUES
             (#{org_seq},#{br_seq},#{pc_seq},'N')
 	</insert>
 	
 	<delete id="backupRecoveryDelete" parameterType="java.util.HashMap">
-	DELETE FROM TBL_RECOVERY_APPLC 
+		DELETE FROM TBL_RESTORE_APPLC 
 		WHERE pc_seq = #{pc_seq}
 	</delete>
 

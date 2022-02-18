@@ -36,21 +36,21 @@
 	
 	<insert id="insertBackupInfo" parameterType="com.model.CurlPcBackupVo">
 		INSERT INTO
-			tbl_backup_recovery_mngr
+			tbl_policy_backup_restore_list
 				(
 					br_org_seq, 
 					br_backup_path, 
 					br_backup_iso_dt, 
-					br_backup_gubun,
-					dept_seq,
+					br_backup_status,
+					pc_seq,
 					br_backup_name
 				)
 			VALUES ( 
 				#{br_org_seq} ,
 				#{br_backup_path} , 
 				to_timestamp(#{br_backup_iso_dt}, 'YYYY-MM-DD HH24:MI:SS') ,
-				#{br_backup_gubun} ,
-				#{dept_seq}, 
+				#{br_backup_status} ,
+				#{pc_seq}, 
 				#{bk_name} 
 			)
 				

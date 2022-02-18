@@ -28,11 +28,16 @@ public class ApplcRestore {
 	@Size(max=50)
 	private String domain;
 
+	@Comment("pc번호")
+	private Long pc_seq;
+	
+	@Comment("조직번호")
 	private Long org_seq;
-
+	
+	@Comment("Ansible JobId")
 	private Long job_id;
 	
-	@Size(max=500)
-	private String ppm_seq;
+	@Comment("백업이미지번호")
+	private Long br_seq;
 
 }

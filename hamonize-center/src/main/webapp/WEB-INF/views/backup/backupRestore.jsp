@@ -66,7 +66,11 @@
 
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-
+		console.log("treeNode.id====="+treeNode.id);
+		$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+		$('form[name=frm] input[name=domain]').val(treeNode.domain);
+		$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+		$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 		$.post("backupRCShow", {
 				org_seq: treeNode.id,
 				domain: treeNode.domain
@@ -75,7 +79,7 @@
 				var agrs = result;
 				var strHtml = "";
 				var tmp = "";
-console.log("sss===="+agrs);
+
 				if (agrs.length == 0) {
 					strHtml += "등록된 조직의 컴퓨터 정보가 없습니다.";
 					$("#selectPcOne").text('');
@@ -88,7 +92,7 @@ console.log("sss===="+agrs);
 						}
 						strHtml += '<div class="radio col-sm-2" >';
 						strHtml += '<label class="radio-custom">';
-						strHtml += '<input type="radio" name="dept_seq" value="' + agrs[i].seq +'" onClick="selectPcRecovery()">';
+						strHtml += '<input type="radio" name="pc_seq" value="' + agrs[i].seq +'" onClick="selectPcRecovery()">';
 						strHtml += agrs[i].pc_hostname;
 						strHtml += '</label>';
 						strHtml += '</div>';
@@ -98,6 +102,7 @@ console.log("sss===="+agrs);
 				strHtml += "</div>";
 				$("#recoveryPclist").show();
 				$("#recoveryPclist").append(strHtml);
+				console.log("org_seq==="+$('form[name=frm] input[name=org_seq]').val());
 			});
 	}
 
@@ -127,10 +132,12 @@ console.log("sss===="+agrs);
 						</header>
 
 						<div class="panel-body">
-							<form class="form-horizontal" method="post" action="backupRCSave">
+							<form class="form-horizontal" name="frm" method="post" action="backupRCSave">
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
 								<input type="hidden" name="br_seq"  id="br_seq" value="" />
-								<input type="hidden" name="dept_seq"  id="dept_seq" value="" />
+								<input type="hidden" name="inventory_id" id="inventory_id" value="" />
+								<input type="hidden" name="group_id" id="group_id" value="" />
+								<input type="hidden" name="domain" id="domain" value="" />
 
 								<div class="form-group">
 									<label class="col-sm-2 control-label">PC 목록(HostName)</label>
@@ -173,15 +180,13 @@ console.log("sss===="+agrs);
 	function fnSaveRecoovery() {
 
 		var button = document.getElementById('btnSave');
-		var dept_seq = $('input[name="dept_seq"]:checked').val();
-		var br_seq = $('input[name="br_seq"]:checked').val();
-		var org_seq = $("#org_seq").val();
+		const pc_seq = $('form[name=frm] input[name="pc_seq"]:checked').val();
+		const br_seq = $('form[name=frm] input[name="br_seq"]:checked').val();
+		const org_seq = $('form[name=frm] input[name=org_seq]').val();
+		const br_backup_name = $('form[name=frm] input[name="br_seq"]:checked').data("name");
+		const br_backup_path = $('form[name=frm] input[name="br_seq"]:checked').data("path");
 
-		console.log("dept_seq====" + $('input[name="dept_seq"]:checked').val());
-		console.log("br_seq====" + $('input[name="br_seq"]:checked').val());
-		console.log("org_seq====" + $("#org_seq").val());
-
-		if (dept_seq == null) {
+		if (pc_seq == null) {
 			alert("pc를 선택해주세요.");
 			return false;
 		}
@@ -190,7 +195,7 @@ console.log("sss===="+agrs);
 			return false;
 		}
 
-		$('form[name=frm] input[name=dept_seq]').val(dept_seq);
+		$('form[name=frm] input[name=pc_seq]').val(pc_seq);
 		$('form[name=frm] input[name=br_seq]').val(br_seq);
 		$('form[name=frm] input[name=org_seq]').val(org_seq);
 
@@ -198,19 +203,26 @@ console.log("sss===="+agrs);
 
 		$.post("backupRCSave", {
 				dataType: 'json',
-				dept_seq: dept_seq,
+				pc_seq: pc_seq,
 				br_seq: br_seq,
-				org_seq: org_seq
+				org_seq: org_seq,
+				br_backup_name: br_backup_name,
+				br_backup_path: br_backup_path,
+				inventory_id: $('form[name=frm] input[name=inventory_id]').val(),
+				group_id: $('form[name=frm] input[name=group_id]').val(),
+				domain: $('form[name=frm] input[name=domain]').val(),
 			},
 			function (result) {
-				if (result == "SUCCESS") {
-
+				if (result.STATUS == "SUCCESS") {
 					alert("정상적으로 처리되었습니다.");
-					button.disabled = false;
-
-					location.reload();
+					checkAnsibleJobStatus(result.ID);
+					//$('form[name=frm] input[name=job_id]').val(result.ID);
+					//alert($('form[name=frm] input[name=job_id]').val());
+					//button.disabled = false;
+					//location.reload();
 				} else {
 					alert("실패하였습니다.");
+					//button.disabled = false;
 				}
 			});
 		return false;
@@ -223,13 +235,13 @@ console.log("sss===="+agrs);
 
 
 
-		var seq = $("input:radio[name='dept_seq']:checked").val();
+		var seq = $("input:radio[name='pc_seq']:checked").val();
 		// var rasioNm = $("label[for='"+seq+"']").text(); 
 		// console.log("seq :" + seq + "=="+ rasioNm); 
 
 		$.post("backupRCList", {
 				seq: seq,
-				domain: domain
+				domain: $('form[name=frm] input[name=domain]').val()
 			},
 			function (result) {
 				var agrs = result;
@@ -242,13 +254,13 @@ console.log("sss===="+agrs);
 					for (var i = 0; i < agrs.length; i++) {
 						strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
 						strHtml += "<span>";
-						strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq" + i + "\" value='" + agrs[i]
-							.br_seq + "'/>";
+						strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq" + i + "\" value='" + agrs[i].br_seq + 
+						"' data-name='"+agrs[i].br_backup_name+"' data-path='"+agrs[i].br_backup_path+"'/>";
 						strHtml += "<label style='float: unset;' for=\"br_seq" + i + "\" class=\"\">";
 
 
-						if (agrs[i].br_backup_gubun == 'A') strHtml += "초기백업본 ";
-						else if (agrs[i].br_backup_gubun == 'B') strHtml += "일반백업본 ";
+						if (agrs[i].br_backup_status == 'A') strHtml += "초기백업본 ";
+						else if (agrs[i].br_backup_status == 'B') strHtml += "일반백업본 ";
 
 						strHtml += "</label>";
 						strHtml += "</span>";
@@ -259,7 +271,6 @@ console.log("sss===="+agrs);
 					}
 					
 
-					console.log(agrs[0]);
 					if (agrs[0] != undefined || agrs[0] != null) {
 						$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
 					}

@@ -63,20 +63,20 @@
 	</update>
 
 	<!-- update recove policy-->
-	<update id="updateRcovPolicyOrgseq" parameterType="com.model.RecoveryVo" >
+	<update id="updateRcovPolicyOrgseq" parameterType="com.model.PolicyRestoreVo" >
 		update 
-			tbl_backup_recovery_mngr
+			tbl_policy_backup_restore_list
 		set
 			br_org_seq = #{br_org_seq}
 		where		
-			dept_seq = #{dept_seq}
+			pc_seq = #{pc_seq}
 	</update>
 
-	<delete id="deleteBackupAIfMoveOrg" parameterType="com.model.RecoveryVo">
+	<delete id="deleteBackupAIfMoveOrg" parameterType="com.model.PolicyRestoreVo">
 		delete from
-			tbl_backup_recovery_mngr
+			tbl_policy_backup_restore_list
 		where
-			dept_seq = #{dept_seq} and  br_backup_gubun = 'B'
+			pc_seq = #{pc_seq} and  br_backup_status = 'B'
 	</delete>
 
 	<!-- vpn-auto-connection act -->

@@ -97,7 +97,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <a href="/backupRecovery/backupR">
+                                        <a href="/backupRestore/backupR">
                                             <i class="fa fa-file-text icon">
                                                 <b class="bg-primary"></b>
                                             </i>

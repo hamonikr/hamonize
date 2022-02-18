@@ -248,7 +248,8 @@ public JSONObject makePolicy(Map<String, Object> params) throws ParseException
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
     //System.out.println("jsonObj.get======"+jsonObj.get("id").toString());
     
-    int result = Integer.parseInt(jsonObj.get("id").toString());
+    Integer result = Integer.parseInt(jsonObj.get("id").toString());
+    System.out.println("result=================="+result);
     //JSONObject jsonResultObj = new JSONObject();
     // try {
     //   Thread.sleep(3000);
@@ -256,8 +257,11 @@ public JSONObject makePolicy(Map<String, Object> params) throws ParseException
     //   // TODO Auto-generated catch block
     //   e.printStackTrace();
     // }
-    JSONObject jsonResultObj = checkPolicyJobResult(result);
-    System.out.println("jsonResultObj====="+jsonResultObj.get("status"));
+    JSONObject jsonResultObj = new JSONObject();
+    if(result != null){
+      jsonResultObj = checkPolicyJobResult(result);
+      System.out.println("jsonResultObj====="+jsonResultObj.get("status"));
+    }
   //   Thread subTread2 = new Thread() {
   //     public void run() {
   //       try {

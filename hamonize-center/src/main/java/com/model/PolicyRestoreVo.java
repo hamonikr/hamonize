@@ -40,15 +40,13 @@ public class PolicyRestoreVo {
 	@Comment("프로그램명")
 	private String br_backup_path;
 
-	@Size(max=10)
-	@Comment("백업일시")
-	private String br_backup_iso_dt;
+	private Timestamp br_backup_iso_dt;
 
-	@Size(max=500)
+	@Size(max=10)
 	@Comment("백업구분(A:초기백업본, B: 일반백업본)")
 	private String br_backup_status;
 
-	@Size(max=10)
+	@Size(max=100)
 	@Comment("백업명")
 	private String br_backup_name;
 

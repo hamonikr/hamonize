@@ -78,10 +78,10 @@
                 </ul>
             </li>
 
-            <li><a href="/backupRecovery/backupC">백업관리</a>
+            <li><a href="/backupRestore/backupC">백업관리</a>
                 <ul class="last">
-                    <li><a href="/backupRecovery/backupC">백업주기 설정</a></li>
-                    <li><a href="/backupRecovery/backupR">복구관리</a></li>
+                    <li><a href="/backupRestore/backupC">백업주기 설정</a></li>
+                    <li><a href="/backupRestore/backupR">복구관리</a></li>
                 </ul>
             </li>
 

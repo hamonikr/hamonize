@@ -7,8 +7,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.model.BackupVo;
+import com.model.OrgVo;
+import com.service.BackupService;
+import com.service.OrgService;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -18,20 +28,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.model.BackupVo;
-import com.model.OrgVo;
-import com.model.PolicyFireWallVo;
-import com.service.BackupService;
-import com.service.OrgService;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
 
 @Controller
-@RequestMapping("/backupRecovery")
-public class BackupController {
+@RequestMapping("/backupRestore")
+public class PolicyBackupRestoreController {
 
 	@Autowired
 	private OrgService oService;
@@ -124,7 +124,7 @@ public class BackupController {
 		}
 		model.addAttribute("oList", jsonArray);
 
-		return "/backup/backupRecovery";
+		return "/backup/backupRestore";
 
 	}
 
@@ -176,9 +176,10 @@ public class BackupController {
 				jo.put("br_seq", resultSet.get(i).get("br_seq").toString());
 				jo.put("br_org_seq", resultSet.get(i).get("br_org_seq").toString());
 				jo.put("br_backup_iso_dt", resultSet.get(i).get("br_backup_iso_dt").toString());
-				jo.put("br_backup_gubun", resultSet.get(i).get("br_backup_gubun").toString());
+				jo.put("br_backup_status", resultSet.get(i).get("br_backup_status").toString());
 				jo.put("br_backup_name", resultSet.get(i).get("br_backup_name").toString());
-				jo.put("dept_seq", resultSet.get(i).get("dept_seq").toString());
+				jo.put("br_backup_path", resultSet.get(i).get("br_backup_path").toString());
+				jo.put("pc_seq", resultSet.get(i).get("pc_seq").toString());
 				result.add(jo);
 				System.out.println("backupRCList :  >>>> " + resultSet.get(i));
 			}
@@ -194,27 +195,31 @@ public class BackupController {
 
 	@ResponseBody
 	@RequestMapping(value = "backupRCSave", method = RequestMethod.POST)
-	public String backupRCSave(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) {
-		params.put("pc_seq", Integer.parseInt(params.get("dept_seq").toString()));
+	public JSONObject backupRCSave(HttpSession session, Model model,
+			@RequestParam Map<String, Object> params) throws ParseException {
+		params.put("pc_seq", Integer.parseInt(params.get("pc_seq").toString()));
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		params.put("br_seq", Integer.parseInt(params.get("br_seq").toString()));
 
+		//ansible 정책전달
+		JSONObject jobResult = bService.applyRestorePolicy(params);
+		params.put("job_id", jobResult.get("id"));
 		int result = 0;
 		// 로그저장
-		bService.backupRecoveryLogSave(params);
+		//bService.backupRecoveryLogSave(params);
 		// 복구삭제
 		bService.backupRecoveryDelete(params);
 		// 복구등록
 		result = bService.backupRecoverySave(params);
-
-		if (result > 0) {
-			model.addAttribute("messege", "성공하였습니다..");
-			return "SUCCESS";
-		} else {
-			model.addAttribute("messege", "실패하였습니다.");
-			return "FAIL";
+		JSONObject jsonObj = new JSONObject();
+		if (result >= 1){
+			jsonObj.put("STATUS", "SUCCESS");
+			jsonObj.put("ID", jobResult.get("id"));
+			jsonObj.put("JOBSTATUS", jobResult.get("status"));
+		} else{
+			jsonObj.put("STATUS", "FAIL");
 		}
+		return jsonObj;
 
 	}
 

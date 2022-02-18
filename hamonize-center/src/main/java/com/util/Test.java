@@ -356,7 +356,7 @@ public class Test {
       .baseUrl("http://192.168.0.220").build();
       
       try {
-          String request = "{\"credential\": 3,\"limit\": \"1\",\"inventory\": 15,\"module_name\": \"shell\",\"module_args\": \"echo '{\\\"INSERT\\\":\\\"hancomoffice-hwpviewer,github-desktop,fsearch-trunk\\\",\\\"DEL\\\":\\\"stacer,htop,skypeforlinux\\\"}' > /etc/hamonize/updt/2aaaaa.hm\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+          String request = "{\"credential\": 3,\"limit\": \"1\",\"inventory\": 21,\"module_name\": \"shell\",\"module_args\": \"echo '{\\\"PATH\\\":\\\"/timeshift/snapshots\\\",\\\"NAME\\\":\\\"2021-12-10_12-30-01\\\"}' > /etc/hamonize/recovery/2aaaaa.hm\",\"become_enabled\": \"True\",\"verbosity\": 0}";
           System.out.println("request====="+request);
           Mono<String> response = wc.post().uri(UriBuilder -> UriBuilder
           .path("/api/v2/ad_hoc_commands/")
