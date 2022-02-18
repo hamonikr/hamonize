@@ -88,4 +88,9 @@
 		WHERE pc_seq = #{pc_seq}
 	</delete>
 
+	<select id="getRestoreHistoryLastJob" parameterType="com.model.PolicyRestoreVo" resultType="int">
+		SELECT JOB_ID FROM tbl_restore_applc_history WHERE DOMAIN = #{domain}
+		ORDER BY SEQ DESC LIMIT 1
+	</select>
+
 </mapper>

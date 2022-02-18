@@ -115,4 +115,8 @@ public class PolicyDeviceService {
 
 	}
 
+	public int getDeviceHistoryLastJob(PolicyDeviceVo vo) {
+		return iDeviceMapper.getDeviceHistoryLastJob(vo);
+	}
+
 }

@@ -87,5 +87,9 @@ public class PolicyProgramService {
 		return result;
 
 	}
+
+	public int getProgrmHistoryLastJob(PolicyProgrmVo vo) {
+		return iProgramMapper.getProgrmHistoryLastJob(vo);
+	}
 	
 }

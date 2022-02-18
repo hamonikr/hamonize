@@ -258,6 +258,7 @@ function expandNode(e) {
 //ansible작업상태확인
 function checkAnsibleJobStatus(job_id){
 	const target = document.getElementById('btnSave');
+	console.log("job_id===="+job_id);
 	$.ajax({
 		url : '/gplcs/checkAnsibleJobStatus',
 		type: 'POST',

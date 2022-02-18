@@ -75,6 +75,7 @@
 						//$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
 						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					}
+					checkAnsibleJobStatus(agrs.job_id);
 				});
 		// }
 	}
@@ -244,13 +245,16 @@
 					ppm_name: $('form[name=frm] input[name=ppm_name]').val()
 				},
 				function (result) {
-					if (result == "SUCCESS") {
-						alert("정상적으로  처리되었습니다.");
-						button.disabled = false;
-						location.reload();
+					if (result.STATUS == "SUCCESS") {
+						alert("정상적으로 처리되었습니다.");
+						checkAnsibleJobStatus(result.ID);
+						//$('form[name=frm] input[name=job_id]').val(result.ID);
+						//alert($('form[name=frm] input[name=job_id]').val());
+						//button.disabled = false;
+						//location.reload();
 					} else {
 						alert("실패하였습니다.");
-						button.disabled = false;
+						//button.disabled = false;
 					}
 
 				});

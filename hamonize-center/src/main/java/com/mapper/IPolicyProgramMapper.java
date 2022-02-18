@@ -15,4 +15,6 @@ public interface IPolicyProgramMapper {
 	
 	public PolicyProgrmVo programApplcView(PolicyProgrmVo vo);
 
+	public int getProgrmHistoryLastJob(PolicyProgrmVo vo);
+
 }

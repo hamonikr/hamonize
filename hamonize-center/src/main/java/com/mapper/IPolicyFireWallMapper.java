@@ -26,4 +26,6 @@ public interface IPolicyFireWallMapper {
 	
 	public int fireWallPopCount(PolicyFireWallVo vo);
 
+	public int getFrwlHistoryLastJob(PolicyFireWallVo vo);
+
 }
