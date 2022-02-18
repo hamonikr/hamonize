@@ -164,7 +164,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 		fuzzySearch('tree', '#key', null, true); //initialize fuzzysearch function
 
-		getMntrngList();
+		//getMntrngList();
 
 	});
 
