@@ -183,15 +183,4 @@ public class PolicyUpdtController {
 
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "checkAnsibleJobFinish", method = RequestMethod.POST)
-	public JSONObject checkAnsibleJobFinish(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
-		JSONObject data = new JSONObject();
-		System.out.println("2222222222222222222===="+params.get("job_id").toString());
-		data = restApiService.checkPolicyJobResult(Integer.parseInt(params.get("job_id").toString()));
-		System.out.println("checkAnsibleJobFinish======"+data);
-		return data;
-
-	}
-
 }
