@@ -37,12 +37,7 @@
  			SELECT array_to_string(array_agg(tua.ppm_seq),',')as ppm_seq FROM
 			(SELECT distinct unnest(string_to_array(ppm_seq, ',')) ppm_seq
 			FROM 
-			TBL_FRWL_APPLC 
-			WHERE ORG_SEQ in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
-			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
-			from tbl_org a 
-			where a.seq = #{org_seq}
-			and a.domain = #{domain}
+			TBL_FRWL_APPLC JOB_ID
 			union all
 			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
 			from tbl_org b, search_org so 
@@ -116,8 +111,7 @@
 	</select>
 
 	<select id="getFrwlHistoryLastJob" parameterType="com.model.PolicyFireWallVo" resultType="int">
-		SELECT JOB_ID FROM tbl_frwl_applc_history WHERE DOMAIN = #{domain}
-		ORDER BY SEQ DESC LIMIT 1
+		SELECT COALESCE(max(JOB_ID),0) as job_id FROM tbl_frwl_applc_history WHERE DOMAIN = #{domain}
 	</select>
 
 </mapper>
