@@ -146,8 +146,8 @@
 				,#{org_seq},#{ppm_seq} WHERE NOT EXISTS (SELECT * FROM upsert)
 	</update> -->
 <select id="getUpdtHistoryLastJob" parameterType="com.model.PolicyUpdtVo" resultType="int">
-		SELECT JOB_ID FROM tbl_updt_applc_history WHERE DOMAIN = #{domain}
-		ORDER BY SEQ DESC LIMIT 1
+		SELECT COALESCE(max(JOB_ID),0) as job_id FROM tbl_updt_applc_history WHERE DOMAIN = #{domain}
+		LIMIT 1
 	</select>
 
 </mapper>
