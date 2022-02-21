@@ -13,18 +13,35 @@ LOGFILE="/var/log/hamonize/propertiesJob/propertiesJob.log"
 WORK_PATH=$(dirname $(realpath $0))
 echo $WORK_PATH >>$LOGFILE
 
-# Agent ]
+# Agent ] <-------------------------------------------------------------------- test 
 echo "$DATETIME] 1. agent install ================ [start]" >>$LOGFILE
-sudo apt-get install hamonize-agent -y >/dev/null
+# sudo apt-get install hamonize-agent -y >/dev/null
+
+sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-agent_1.1.1_amd64.deb >>$LOGFILE
+
 echo "$DATETIME] agent install === [end]" >>$LOGFILE
 sudo systemctl stop hamonize-agent.service
 # ===================================================================================
 
 sleep 2
-#==== process-mngr ================================
-#
+#==== agnet-process]  <-------------------------------------------------------------------- test 
+echo "$DATETIME] 3. hamonize-agentmngr install ============ [start]" >>$LOGFILE
+# sudo apt-get install hamonize-agentmngr -y > /dev/null
+
+ sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-agent-mngr-1.0.3_amd64.deb >>$LOGFILE
+
+echo "$DATETIME] hamonize-agentmngr install === [END]" >>$LOGFILE
+echo "$DATETIME ] $(sudo service hamonize-agentmngr status)" >>$LOGFILE
+sudo systemctl stop hamonize-agentmngr
+
+sleep 2
+
+
+#==== process-mngr  <-------------------------------------------------------------------- test 
 echo "$DATETIME] 3. process-mngr install ============ [start]" >>$LOGFILE
-sudo dpkg -i $WORK_PATH/hamonize-process-mngr-1.0.3_amd64.deb >>$LOGFILE
+# sudo dpkg -i $WORK_PATH/hamonize-process-mngr-1.0.3_amd64.deb >>$LOGFILE
+
+sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-process-mngr-1.0.3_amd64.deb >>$LOGFILE
 
 echo "$DATETIME] process-mngr install === [END]" >>$LOGFILE
 echo "$DATETIME ] $(sudo service hamonize-process-mngr status)" >>$LOGFILE
@@ -124,16 +141,16 @@ sleep 2
 if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  hamonize-user install ============== [start]" >>$LOGFILE
     
-    TENANT=$(cat /etc/hamonize/hamonize_tanent)
+    # TENANT=$(cat /etc/hamonize/hamonize_tanent)
     
-    TENANT_CONFIG=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=config\&domain=$TENANT`
+    TENANT_CONFIG=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=config\&domain=$DOMAININFO`
     echo -e ${TENANT_CONFIG}  |jq   > /etc/hamonize/hamonize.json
     
-    TENANT_PRIKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=prikey\&domain=$TENANT`
+    TENANT_PRIKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=prikey\&domain=$DOMAININFO`
     
     echo -e "-----BEGIN PRIVATE KEY-----\n" ${TENANT_PRIKEY} "\n-----END PRIVATE KEY-----"   > /etc/hamonize/keys/private/hamonize_private_key.pem
     
-    TENANT_PUBKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=pubkey\&domain=$TENANT`
+    TENANT_PUBKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=pubkey\&domain=$DOMAININFO`
     echo -e "-----BEGIN PUBLIC KEY-----\n" ${TENANT_PUBKEY}  "\n-----END PUBLIC KEY-----"  > /etc/hamonize/keys/public/hamonize_public_key.pem
     
     # Check hamonize-user.deb file in hamonize apt repository
@@ -149,20 +166,20 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
         JSONDATA=${JSONDATA#\"}
         JSONDATA=${JSONDATA%\"}
         wget -P /tmp ${JSONDATA} >>$LOGFILE
-        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
         # sudo apt-get install -y hamonize-user >>$LOGFILE
     elif [ "${OSGUBUN}" = "DEBIAN" ]; then
         JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url')
         JSONDATA=${JSONDATA#\"}
         JSONDATA=${JSONDATA%\"}
         wget -P /tmp ${JSONDATA#\"} >>$LOGFILE
-        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
     elif [ "${OSGUBUN}" = "GOOROOM" ]; then
         JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url')
         JSONDATA=${JSONDATA#\"}
         JSONDATA=${JSONDATA%\"}
         wget -P /tmp ${JSONDATA#\"} >>$LOGFILE
-        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
     
     # Download APT Repository
     else
@@ -204,7 +221,7 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     hamonize-cli config import /etc/hamonize/hamonize.json
     
     hamonize-cli service restart
-
+fi
 
     sleep 2
 ##==== 서버 정보 저장(domain,ip etc)===================================

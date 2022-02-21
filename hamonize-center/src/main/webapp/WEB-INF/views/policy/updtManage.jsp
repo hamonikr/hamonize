@@ -45,6 +45,9 @@
 								// $(this).removeClass("class_name");
 							
 								queryArr.push($(this).data("package"));
+								$("#btn" + ppm_seq[i]).addClass("active");
+								$(this).closest('blockquote').addClass('boder-line_on');
+								$(this).closest('blockquote').removeClass('boder-line_off');
 							}
 						});
 					}
@@ -259,7 +262,10 @@
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
 						checkAnsibleJobStatus(result.ID);
-						location.reload();
+						//$('form[name=frm] input[name=job_id]').val(result.ID);
+						//alert($('form[name=frm] input[name=job_id]').val());
+						//button.disabled = false;
+						//location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;
@@ -275,8 +281,12 @@
 
 		if( $("input:checkbox[id='"+_val+"']").is(":checked") == true ){
 			$("input:checkbox[id='"+_val+"']").prop("checked", false);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
 		}else{
 			$("input:checkbox[id='"+_val+"']").prop("checked", true);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
 		}
 		
 	}

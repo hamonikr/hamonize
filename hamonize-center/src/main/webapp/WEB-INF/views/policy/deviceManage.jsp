@@ -23,20 +23,20 @@
 		});
 
 
-		$('.insertBtn').on('click', function(){
+		$('.insertBtn').on('click', function () {
 			var ipt = $('.mdl-data-table__cell--non-numeric .form-control');
 			var form = $('#addForm');
-			if(form.css('display') == 'none') {
+			if (form.css('display') == 'none') {
 				form.css('display', 'flex');
 				ipt.css('opacity', '1');
-			}else{
+			} else {
 				form.css('display', 'none');
 				ipt.css('opacity', '0');
 				fromReset();
 			}
 		});
-		
-		
+
+
 		getList();
 
 
@@ -50,29 +50,34 @@
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		let former_ppm_names = [];
-			$('form[name=frm] input[name=org_seq]').val(treeNode.id);
-			$('form[name=frm] input[name=domain]').val(treeNode.domain);
-			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
-			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
+		$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+		$('form[name=frm] input[name=domain]').val(treeNode.domain);
+		$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+		$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 		// if (treeNode.checked) {
-			$.ajaxSetup({ async:false });
-			$.post("/gplcs/dshow", {
-					org_seq: treeNode.id,
-					domain: treeNode.domain
-				},
-				function (result) {
-					var agrs = result;
-					var jsonData = JSON.stringify(agrs.dataInfo);
-					var obj = JSON.parse(jsonData);
+		$.ajaxSetup({
+			async: false
+		});
+		$.post("/gplcs/dshow", {
+				org_seq: treeNode.id,
+				domain: treeNode.domain
+			},
+			function (result) {
+				var agrs = result;
+				var jsonData = JSON.stringify(agrs.dataInfo);
+				var obj = JSON.parse(jsonData);
 
-					if(obj !=  null){
+				if (obj != null) {
 					var ppm_seq = agrs.dataInfo.ppm_seq;
 					ppm_seq = ppm_seq.split(",");
 					for (var i = 0; i < ppm_seq.length; i++) {
 						$('input:checkbox[name=sm_seq]').each(function () {
 							if ($(this).val() == ppm_seq[i]) {
 								$(this).prop("checked", true);
-								former_ppm_names.push($(this).data("device")+"-"+$(this).data("devicecode"));
+								former_ppm_names.push($(this).data("device") + "-" + $(this).data("devicecode"));
+								$("#btn" + ppm_seq[i].trim()).addClass("active");
+								$(this).closest('blockquote').addClass('boder-line_on');
+								$(this).closest('blockquote').removeClass('boder-line_off');
 							}
 						});
 					}
@@ -82,12 +87,11 @@
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 				}
 				checkAnsibleJobStatus(agrs.job_id);
-				});
+			});
 		// }
 	}
 
-	function onCheck(event, treeId, treeNode) {
-	}
+	function onCheck(event, treeId, treeNode) {}
 
 	function beforeClick(treeId, treeNode, clickFlag) {
 		var zTree = $.fn.zTree.getZTreeObj("tree");
@@ -137,31 +141,46 @@
 
 												<div class="panel-body animated fadeInRight">
 
-													<form id="addForm" class="form-inline col-md-12 row" action="" style="display:none;">
+													<form id="addForm" class="form-inline col-md-12 row" action=""
+														style="display:none;">
 														<input id="sma_gubun" name="sma_gubun" type="hidden" value="Y">
-														<input id="sm_device_code" name="sm_device_code" type="hidden" value="">
+														<input id="sm_device_code" name="sm_device_code" type="hidden"
+															value="">
 														<div class="well m-t">
 															<div class="col-xs-12">
 																<div class="form-group pull-in clearfix">
 																	<div class="col-sm-4">
 																		<label>* 디바이스 이름</label>
-																		<input id="sm_name" name="sm_name" type="text" class="form-control parsley-validated" maxlength="20" placeholder="디바이스 이름" />
+																		<input id="sm_name" name="sm_name" type="text"
+																			class="form-control parsley-validated"
+																			maxlength="20" placeholder="디바이스 이름" />
 																	</div>
 																	<div class="col-sm-4">
 																		<label>* Vendor ID</label>
-																		<input id="vendor_id" name="vendor_id" type="text" class="form-control parsley-validated" maxlength="4" placeholder="Vendor ID" />
+																		<input id="vendor_id" name="vendor_id"
+																			type="text"
+																			class="form-control parsley-validated"
+																			maxlength="4" placeholder="Vendor ID" />
 																	</div>
 																	<div class="col-sm-4">
 																		<label>* Product ID</label>
-																		<input id="product_id" name="product_id" type="text" class="form-control parsley-validated" maxlength="4" placeholder="Product ID" />
+																		<input id="product_id" name="product_id"
+																			type="text"
+																			class="form-control parsley-validated"
+																			maxlength="4" placeholder="Product ID" />
 																	</div>
-																	
+
 																</div>
 																<div class="form-group pull-in clearfix">
 																	<div class="col-sm-8">
-																		<input id="sm_dc" name="sm_dc" type="text" class="form-control parsley-validated" maxlength="30" placeholder="디바이스에 대한 상세 설명을 입력해주세요."  style="width: 539px;"/>
+																		<input id="sm_dc" name="sm_dc" type="text"
+																			class="form-control parsley-validated"
+																			maxlength="30"
+																			placeholder="디바이스에 대한 상세 설명을 입력해주세요."
+																			style="width: 539px;" />
 																	</div>
-																	<button class="btn btn-info pull-right btn-sm" id="saveDevice">디바이스 규칙 추가</button>
+																	<button class="btn btn-info pull-right btn-sm"
+																		id="saveDevice">디바이스 규칙 추가</button>
 																</div>
 															</div>
 															<footer class="panel-footer " style="border-top: 0;">
@@ -227,24 +246,50 @@
 								<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
 								<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
+
 								<!-- update list -->
-								<ul class="promlist">
-									<c:forEach items="${pList}" var="data" varStatus="status">
-										<li>
+								<c:forEach items="${pList}" var="data" varStatus="status">
+									<div class="panel-body col-lg-3 ">
+										<blockquote class="">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="sm_seq"
-													id="${data.sm_seq}" value="<c:out value='${data.sm_seq}' />" data-device="${data.sm_name}" data-devicecode="${data.sm_device_code}" />
+												<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq"
+													id="${data.sm_seq}" value="<c:out value='${data.sm_seq}' />"
+													data-device="${data.sm_name}"
+													data-devicecode="${data.sm_device_code}" />
 												<label class="form-check-label" for="${data.sm_seq}">
 													<c:out value="${data.sm_name}" />
 												</label>
 											</div>
+											<small>
+												<c:out value="${data.sm_dc}" />
+												<a href="#" data-toggle="class" class="btn btn-default btn-xs"
+													onClick="deviceClickCellbox('${data.sm_seq}')"
+													id="btn${data.sm_seq}">
+													<i class="fa fa-square-o text-muted text"></i>
+													<i class="fa fa-check-square-o text-danger text-active">선택</i>
+												</a>
+											</small>
+										</blockquote>
+									</div>
 
+								</c:forEach>
+
+								<!-- 
+								<ul class="promlist">
+									<c:forEach items="${pList}" var="data" varStatus="status">
+										<li>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="sm_seq"id="${data.sm_seq}" value="<c:out value='${data.sm_seq}' />" data-device="${data.sm_name}" data-devicecode="${data.sm_device_code}" />
+												<label class="form-check-label" for="${data.sm_seq}">
+													<c:out value="${data.sm_name}" />
+												</label>
+											</div>
 											<p class="card-text">
 												<c:out value="${data.sm_dc}" />
 											</p>
 										</li>
 									</c:forEach>
-								</ul>
+								</ul> -->
 
 							</form>
 
@@ -273,10 +318,9 @@
 			var ppm_seq = "";
 			let ppm_names = [];
 			$('input:checkbox[name=sm_seq]').each(function (i) {
-				if ($(this).is(':checked')){
+				if ($(this).is(':checked'))
 					ppm_seq += ($(this).val()) + ",";
-					ppm_names.push($(this).data("device")+"-"+$(this).data("devicecode"));
-				}
+				ppm_names.push($(this).data("device") + "-" + $(this).data("devicecode"));
 			});
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
 			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
@@ -289,27 +333,33 @@
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			var queryArr = [];
 
-			queryArr.push({"org_seq": parseInt($('form[name=frm] input[name=org_seq]').val())});
+			queryArr.push({
+				"org_seq": parseInt($('form[name=frm] input[name=org_seq]').val())
+			});
 			$.ajax({
-				url : '/org/orgManage',
+				url: '/org/orgManage',
 				type: 'POST',
-				async:false,
-				data:{type:'searchChildDept',seq:$('form[name=frm] input[name=org_seq]').val()},
-				success : function(res) {
-					if(res.length > 0){
+				async: false,
+				data: {
+					type: 'searchChildDept',
+					seq: $('form[name=frm] input[name=org_seq]').val()
+				},
+				success: function (res) {
+					if (res.length > 0) {
 						console.log(res.length);
-						$.each(res,function(i,v){
+						$.each(res, function (i, v) {
 							console.log("v===" + v.seq);
 							var data = {
 								"org_seq": v.seq
-									}
-								console.log("data===" + data);
-								queryArr.push(data);
+							}
+							console.log("data===" + data);
+							queryArr.push(data);
 						});
 					}
 				},
-				error:function(request,status,error){
-					console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				error: function (request, status, error) {
+					console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" +
+						"error:" + error);
 				}
 			});
 
@@ -347,8 +397,11 @@
 				function (result) {
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
-						checkAnsibleJobStatus(result.ID);;
-						location.reload();
+						checkAnsibleJobStatus(result.ID);
+						//$('form[name=frm] input[name=job_id]').val(result.ID);
+						//alert($('form[name=frm] input[name=job_id]').val());
+						//button.disabled = false;
+						//location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;
@@ -369,7 +422,7 @@
 	function fromReset() {
 		$('#sm_name').val('');
 		$('#sm_dc').val('');
-		$('#sm_port').val('');
+		// $('#sm_port').val('');
 		$('#vendor_id').val('');
 		$('#product_id').val('');
 	}
@@ -410,7 +463,7 @@
 
 		$('#sm_device_code').val($('#vendor_id').val() + ":" + $('#product_id').val());
 
-		
+
 		// 검증
 		if (name.length <= 0) {
 			alert('디바이스명을 입력해 주세요!');
@@ -557,9 +610,11 @@
 				gbInnerHtml += "<tr data-code='" + value.sm_seq + "'>";
 				gbInnerHtml += "<td class='t_left'>";
 				if (value.ppm_seq == value.sm_seq) {
-					gbInnerHtml += "<input type='checkbox' id=d" + no + " class='deviceCheck' disabled><label for=d" + no + " class='dook'></label></td>";
+					gbInnerHtml += "<input type='checkbox' id=d" + no +
+						" class='deviceCheck' disabled><label for=d" + no + " class='dook'></label></td>";
 				} else {
-					gbInnerHtml += "<input type='checkbox' id=d" + no + " class='deviceCheck'><label for=d" + no + " class='dook'></label></td>";
+					gbInnerHtml += "<input type='checkbox' id=d" + no + " class='deviceCheck'><label for=d" +
+						no + " class='dook'></label></td>";
 				}
 				gbInnerHtml += "<td><span>" + no + "</span>";
 
@@ -595,7 +650,22 @@
 
 
 	}
+
+	function deviceClickCellbox(_val) {
+
+		if ($("input:checkbox[id='" + _val + "']").is(":checked") == true) {
+			$("input:checkbox[id='" + _val + "']").prop("checked", false);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
+		} else {
+			$("input:checkbox[id='" + _val + "']").prop("checked", true);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
+		}
+
+	}
 </script>
+
 
 
 <%@ include file="../template/footer.jsp" %>

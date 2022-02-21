@@ -8,8 +8,9 @@ FILEPATH_TMP="/etc/hamonize/propertiesJob/chkpropertiesInfo.hm"
 cat /dev/null >$LOGFILE
 
 UUID=$(cat /etc/hamonize/uuid)
-INFOHM="/etc/hamonize/propertiesJob/propertiesInfo.hm"
-CENTERURLINFO=$(cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}')
+
+# INFOHM="/etc/hamonize/propertiesJob/propertiesInfo.hm"                <------------- 사용안함
+# CENTERURLINFO=$(cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}')<------------- 사용안함
 
 # 초기 필수 정보......
 # vpn 연결후  센터 url을 통해 서버정보 get

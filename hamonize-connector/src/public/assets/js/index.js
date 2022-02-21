@@ -188,7 +188,8 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 // # step 3. program Ready ] vpn install  ====================================/
 function hamonizeVpnInstall() {
 	$("#stepA").addClass("br animate");
-	ipcRenderer.send('hamonizeVpnInstall');
+
+	ipcRenderer.send('hamonizeVpnInstall', $("#domain").val());
 }
 ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
 	console.log("hamonizeVpnInstall_Result===" + result);
@@ -287,7 +288,7 @@ ipcRenderer.on('aptRepositoryChkProcResult', (event, mkfolderResult) => {
 		fn_alert("프로그램 설치 환경 셋팅에 실패했습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.");
 	}
 
-});
+});// # step 4. apt repository check ==========사용안함===========================/
 
 
 // # step 8. backup

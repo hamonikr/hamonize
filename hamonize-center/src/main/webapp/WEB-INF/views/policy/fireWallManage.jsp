@@ -48,22 +48,26 @@
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		let former_ppm_names = [];
-			$('form[name=frm] input[name=org_seq]').val(treeNode.id);
-			$('form[name=frm] input[name=domain]').val(treeNode.domain);
-			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
-			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
+		$('form[name=frm] input[name=org_seq]').val(treeNode.id);
+		$('form[name=frm] input[name=domain]').val(treeNode.domain);
+		$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
+		$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 		// if (treeNode.checked) {
-			$.ajaxSetup({ async:false });
-			$.post("/gplcs/fshow", {
-					org_seq: treeNode.id,
-					domain: treeNode.domain
-				},
-				function (result) {
-					var agrs = result;
-					var jsonData = JSON.stringify(agrs.dataInfo);
+		$.ajaxSetup({
+			async: false
+		});
+		$.post("/gplcs/fshow", {
+				org_seq: treeNode.id,
+				domain: treeNode.domain
+			},
+			function (result) {
+				var agrs = result;
+				var jsonData = JSON.stringify(agrs.dataInfo);
+
+				if (typeof jsonData != "undefined") {
 					var obj = JSON.parse(jsonData);
 
-					if(obj !=  null){
+					if (obj != null) {
 						var ppm_seq = agrs.dataInfo.ppm_seq;
 						ppm_seq = ppm_seq.split(",");
 						for (var i = 0; i < ppm_seq.length; i++) {
@@ -71,22 +75,24 @@
 								if ($(this).val() == ppm_seq[i]) {
 									$(this).prop("checked", true);
 									former_ppm_names.push($(this).data("port"));
+									$("#btn" + ppm_seq[i].trim()).addClass("active");
+									$(this).closest('blockquote').addClass('boder-line_on');
+									$(this).closest('blockquote').removeClass('boder-line_off');
 								}
-
-
 							});
 						}
 						$('form[name=frm] input[name=former_ppm_name]').val(former_ppm_names);
-						//$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
-						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					}
 					checkAnsibleJobStatus(agrs.job_id);
-				});
+				}
+
+
+			});
 		// }
 	}
 
 	function onCheck(event, treeId, treeNode) {
-		
+
 	}
 
 	function beforeClick(treeId, treeNode, clickFlag) {
@@ -134,35 +140,44 @@
 										<section class="dropdown-menu on aside-md m-l-n"
 											style="width:800px; height: 700px; top: 0;">
 											<section class="panel bg-white">
-												<header class="panel-heading b-b b-light">방화벽  관리</header>
+												<header class="panel-heading b-b b-light">방화벽 관리</header>
 
 												<div class="panel-body animated fadeInRight">
 
-													<form id="addForm" class="form-inline col-md-12 row" action="" style="display:none;">
-													<div class="well m-t">
+													<form id="addForm" class="form-inline col-md-12 row" action=""
+														style="display:none;">
+														<div class="well m-t">
 															<div class="col-xs-12">
 																<div class="form-group pull-in clearfix">
 																	<div class="col-sm-4">
 																		<label>방화벽 이름</label>
-																		<input id="sm_name" name="sm_name" type="text" class="form-control parsley-validated" maxlength="10" placeholder="방화벽 이름"/>
+																		<input id="sm_name" name="sm_name" type="text"
+																			class="form-control parsley-validated"
+																			maxlength="10" placeholder="방화벽 이름" />
 																	</div>
 																	<div class="col-sm-4">
 																		<label>방화벽 상세 정보</label>
-																		<input id="sm_dc" name="sm_dc" type="text" class="form-control parsley-validated"  maxlength="20" placeholder="방화벽 상세 정보"/>
+																		<input id="sm_dc" name="sm_dc" type="text"
+																			class="form-control parsley-validated"
+																			maxlength="20" placeholder="방화벽 상세 정보" />
 																	</div>
 																	<div class="col-sm-4">
 																		<label>Port</label>
-																		<input id="sm_port" name="sm_port" type="text" class="form-control parsley-validated" maxlength="5" placeholder="port"/>
+																		<input id="sm_port" name="sm_port" type="text"
+																			class="form-control parsley-validated"
+																			maxlength="5" placeholder="port" />
 																	</div>
 																</div>
 															</div>
 															<footer class="panel-footer " style="border-top: 0;">
-																<button class="btn btn-info pull-right btn-sm" id="saveFirewall">확인</button>
+																<button class="btn btn-info pull-right btn-sm"
+																	id="saveFirewall">확인</button>
 															</footer>
-													</div>
+														</div>
 													</form>
-													
-													<input type="hidden" id="MngeListInfoCurrentPage" name="MngeListInfoCurrentPage" value="1" />
+
+													<input type="hidden" id="MngeListInfoCurrentPage"
+														name="MngeListInfoCurrentPage" value="1" />
 												</div>
 
 
@@ -223,29 +238,29 @@
 									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
 									<!-- update list -->
-									<ul class="promlist">
-										<c:forEach items="${pList}" var="data" varStatus="status">
-											<li>
-
+									<c:forEach items="${pList}" var="data" varStatus="status">
+										<div class="panel-body col-lg-3 ">
+											<blockquote class="">
 												<div class="form-check">
-													<input class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}"
-													value="<c:out value=' ${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
+													
+													<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value=' ${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
 													<label class="form-check-label" for="${data.sm_seq}">
-														<c:out value="${data.sm_name}" />
+														<p><c:out value="${data.sm_name}" /></p>
 													</label>
 												</div>
+												<small>
+													<c:out value="${data.sm_dc}" /> - <c:out value="${data.sm_port}" />
+													<a href="#" data-toggle="class" class="btn btn-default btn-xs"
+														onClick="fireClickCellbox('${data.sm_seq}')"
+														id="btn${data.sm_seq}">
+														<i class="fa fa-square-o text-muted text"></i>
+														<i class="fa fa-check-square-o text-danger text-active">선택</i>
+													</a>
+												</small>
+											</blockquote>
+										</div>
 
-
-												<p class="card-text">
-													<c:out value="${data.sm_dc}" /> -
-													<c:out value="${data.sm_port}" />
-												</p>
-											</li>
-										</c:forEach>
-										<c:if test="${empty pList}">
-											등록된 방화벽 서비스가 없습니다.
-										</c:if>
-									</ul>
+									</c:forEach>
 
 								</form>
 
@@ -267,13 +282,13 @@
 <script>
 	function fnFireSave() {
 		if (confirm("하위부서 및 부서가 있다면 하위부서 및 부서에도 전부 적용됩니다 적용하시겠습니까?")) {
+
 			var ppm_seq = "";
 			let ppm_names = [];
 			$('input:checkbox[name=sm_seq]').each(function (i) {
-				if ($(this).is(':checked')){
+				if ($(this).is(':checked'))
 					ppm_seq += ($(this).val()) + ",";
-					ppm_names.push($(this).data("port"));
-				}
+				ppm_names.push($(this).data("port"));
 			});
 
 
@@ -288,27 +303,33 @@
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 			var queryArr = [];
 
-			queryArr.push({"org_seq": parseInt($('form[name=frm] input[name=org_seq]').val())});
+			queryArr.push({
+				"org_seq": parseInt($('form[name=frm] input[name=org_seq]').val())
+			});
 			$.ajax({
-				url : '/org/orgManage',
+				url: '/org/orgManage',
 				type: 'POST',
-				async:false,
-				data:{type:'searchChildDept',seq:$('form[name=frm] input[name=org_seq]').val()},
-				success : function(res) {
-					if(res.length > 0){
+				async: false,
+				data: {
+					type: 'searchChildDept',
+					seq: $('form[name=frm] input[name=org_seq]').val()
+				},
+				success: function (res) {
+					if (res.length > 0) {
 						console.log(res.length);
-						$.each(res,function(i,v){
+						$.each(res, function (i, v) {
 							console.log("v===" + v.seq);
 							var data = {
 								"org_seq": v.seq
-									}
-								console.log("data===" + data);
-								queryArr.push(data);
+							}
+							console.log("data===" + data);
+							queryArr.push(data);
 						});
 					}
 				},
-				error:function(request,status,error){
-					console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				error: function (request, status, error) {
+					console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" +
+						"error:" + error);
 				}
 			});
 
@@ -326,10 +347,10 @@
 
 
 			console.log("queryArr========+++" + queryArr);
-			 if( queryArr.length  == 0 ){
-			 	alert("정책을 적용할 조직을 선택해주세요.");
-			 	return false;
-			 }
+			if (queryArr.length == 0) {
+				alert("정책을 적용할 조직을 선택해주세요.");
+				return false;
+			}
 
 			$.post("/gplcs/fsave", {
 					dataType: 'json',
@@ -346,7 +367,10 @@
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
 						checkAnsibleJobStatus(result.ID);
-						location.reload();
+						//$('form[name=frm] input[name=job_id]').val(result.ID);
+						//alert($('form[name=frm] input[name=job_id]').val());
+						//button.disabled = false;
+						//location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;
@@ -401,9 +425,11 @@
 				gbInnerHtml += "<td>";
 
 				if (value.ppm_seq == value.sm_seq) {
-					gbInnerHtml += "<input type='checkbox' id=p" + no + " disabled class='fireCheck'><label for=p" + no + " ></label></td>";
+					gbInnerHtml += "<input type='checkbox' id=p" + no +
+						" disabled class='fireCheck'><label for=p" + no + " ></label></td>";
 				} else {
-					gbInnerHtml += "<input type='checkbox' id=p" + no + " class='fireCheck'><label for=p" + no + "  ></label></td>";
+					gbInnerHtml += "<input type='checkbox' id=p" + no + " class='fireCheck'><label for=p" +
+						no + "  ></label></td>";
 				}
 
 				gbInnerHtml += "<td><span>" + no + "</span>";
@@ -437,86 +463,100 @@
 		$('#sm_port').val('');
 	}
 	// 방화벽 추가
-	function addFirewallFnt(){
+	function addFirewallFnt() {
 		var name = $('#sm_name').val();
 		var info = $('#sm_dc').val();
 		var port = $('#sm_port').val();
 		var regExp = /^[0-9_]/;
 
 		// 검증
-		if(name.length  <= 0){
+		if (name.length <= 0) {
 			alert('방화벽명을 입력해 주세요!');
 			return;
 		}
-		
-		if(info.length  <= 0){
+
+		if (info.length <= 0) {
 			alert('방화벽설명을 입력해 주세요!');
 			return;
 		}
-		
-		if(port.length  <= 0){
+
+		if (port.length <= 0) {
 			alert('방화벽설명을 입력해 주세요!');
 			return;
 		}
-		
-		if(!regExp.test(port)){
+
+		if (!regExp.test(port)) {
 			alert('방화벽은 숫자만 입력가능합니다!');
 			return flase;
 		}
-		
+
 		// 전송
 		$.ajax({
-			url : '/gplcs/fManagePopSave',
+			url: '/gplcs/fManagePopSave',
 			type: 'POST',
 			data: $('#addForm').serialize(),
-			success : function(res) {
-				if( res.success == true ){
-					alert(res.msg+'!');
+			success: function (res) {
+				if (res.success == true) {
+					alert(res.msg + '!');
 					getListAddDeleteVer();
-		        	fromReset();
+					fromReset();
 					location.reload();
 
-				}else{
-					alert(res.msg+'!');
+				} else {
+					alert(res.msg + '!');
 				}
 			},
-			error:function(request,status,error){
-				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			error: function (request, status, error) {
+				console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" +
+					"error:" + error);
 			}
-		}); 
+		});
 	}
 
 	// 방화벽 삭제 버튼
-	function deleteFirewallFnt(){
+	function deleteFirewallFnt() {
 		var iptArr = $('.fireCheck:checked');
 		var addressArr = [];
 
 		// 검증
-		$.each(iptArr, function(idx, ipt){
+		$.each(iptArr, function (idx, ipt) {
 			addressArr.push($(ipt).parent().parent().attr('data-code'));
 		});
-		
-		if(0 >= addressArr.length){
+
+		if (0 >= addressArr.length) {
 			alert('삭제할 방화벽을 선택해 주시기 바랍니다!');
 			return;
 		}
-		
-		
-		
-		function ftn(data, status, xhr, groupId){
+
+
+
+		function ftn(data, status, xhr, groupId) {
 			alert('정상적으로 삭제되었습니다!');
 			getListAddDeleteVer();
-        	fromReset();
+			fromReset();
 			location.reload();
 		}
-		
+
 		// 전송
 		var url = '/gplcs/fManagePopDelete';
 		var vData = "deleteList=" + addressArr;
-		console.log("a==="+ vData);
+		console.log("a===" + vData);
 		callAjax('POST', url, vData, ftn, getError, 'json');
 	}
-	
+
+	function fireClickCellbox(_val) {
+
+		if ($("input:checkbox[id='" + _val + "']").is(":checked") == true) {
+			$("input:checkbox[id='" + _val + "']").prop("checked", false);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
+		} else {
+			$("input:checkbox[id='" + _val + "']").prop("checked", true);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
+		}
+
+	}
 </script>
 
 <%@ include file="../template/footer.jsp" %>

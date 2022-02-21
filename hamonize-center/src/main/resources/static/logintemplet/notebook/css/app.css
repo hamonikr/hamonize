@@ -3249,3 +3249,20 @@ fieldset[disabled] .btn-gplus.active {
 	#divCalendar .btn_cal_close {position:absolute; top:-2px; right:-19px; text-align:right;}
 	#divCalendar .btn_cal_close a {display:block; background:url(/images/ico_delete.gif) no-repeat; text-indent:100%; white-space:nowrap; overflow:hidden;}
 	#divCalendar .btn_cal_close, #divCalendar .btn_cal_close a {width:17px; height:16px;}
+	
+	
+	.boder-line_on {
+  /* border-radius: 16px; */
+  border-left: 5px solid #728cc7;
+  /* border-right: 5px solid #728cc7; */
+  /* border-bottom: 5px solid #728cc7;
+		border-top: 5px solid #728cc7; */
+}
+
+.boder-line_off {
+  /* border-radius: 16px; */
+  border-left: 5px solid #eee;
+  /* border-right: 5px solid #eee; */
+  /* border-bottom: 5px solid #eee;
+		border-top: 5px solid #eee; */
+}

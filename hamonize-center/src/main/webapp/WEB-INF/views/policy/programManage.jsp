@@ -44,14 +44,21 @@
 					var html = "";
 					if(agrs.pList.length > 0){
 						for (var y = 0; y < agrs.pList.length; y++) {
-							html += '<li>';
+
+							html += '<div class="panel-body col-lg-3 "><blockquote class="">';
 							html += '<div class="form-check">';
-							html += '<input class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y]
-								.pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '"data-package="'+agrs.pList[y].pcm_name+'" />';
+							html += '<input width=0 height=0 style="visibility:hidden"  class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y].pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '"data-package="'+agrs.pList[y].pcm_name+'" />';
 							html += '<label class="form-check-label" for="' + agrs.pList[y].pcm_seq + '">';
 							html += agrs.pList[y].pcm_name;
 							html += '</label>';
-							html += '</li>';
+							html += '</div>';
+							html += '<small>프로그램 차단 상태 :';
+							html += '<a href="#" data-toggle="class" class="btn btn-default btn-xs" onClick="updtClickCellbox(' + agrs.pList[y].pcm_seq + ')" id="btn' + agrs.pList[y].pcm_seq + '">';
+							html += '<i class="fa fa-square-o text-muted text"></i>';
+							html += '<i class="fa fa-check-square-o text-danger text-active">차단</i>';
+							html += '</a>';
+							html += '</small>';
+							html += '</blockquote></div>';
 						}
 					}else{
 						html += '<li>';
@@ -63,11 +70,16 @@
 					if(obj !=  null){
 						var ppm_seq = agrs.dataInfo.ppm_seq;
 						ppm_seq = ppm_seq.split(",");
+						
 						for (var i = 0; i < ppm_seq.length; i++) {
 							$('input:checkbox[name=pcm_seq]').each(function () {
 								if ($(this).val() == ppm_seq[i]) {
+									console.log("ppm_seq[i]=========+++"+ $(this).val() +"==+"+ ppm_seq[i]);
 									$(this).prop("checked", true);
 									former_ppm_name.push($(this).data("package"));
+									$("#btn" + ppm_seq[i]).addClass("active");
+									$(this).closest('blockquote').addClass('boder-line_on');
+									$(this).closest('blockquote').removeClass('boder-line_off');
 								}
 							});
 						}
@@ -118,7 +130,7 @@
 
 							<section class="panel panel-default">
 
-								<form name="frm" method="post" action="orgManage" class="row">
+								<form name="frm" method="post" action="orgManage" class="row ">
 									<input type="hidden" name="org_seq" id="org_seq" value="" />
 									<input type="hidden" name="ppm_seq" id="ppm_seq" value="" />
 									<input type="hidden" name="section" id="section" value="" />
@@ -129,26 +141,8 @@
 									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
 									<!-- update list -->
-									<ul class="promlist">
-										<!-- <c:forEach items="${pList}" var="data" varStatus="status">
-											<li>
-
-
-												<div class="form-check">
-													<input class="form-check-input" type="checkbox" name="pcm_seq"
-														id="${data.pcm_seq}" value="<c:out value='${data.pcm_seq}'/>">
-													<label class="form-check-label" for="${data.pcm_seq}">
-														<c:out value="${data.pcm_name}" />
-													</label>
-												</div>
-
-												<p class="card-text">
-													<c:out value="${data.pcm_dc}" />
-												</p>
-											</li>
-										</c:forEach> -->
-									</ul>
-									
+									<!-- <ul class="promlist"></ul> -->
+									<div class="promlist"></div>
 									
 								</form>
 
@@ -248,7 +242,10 @@
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
 						checkAnsibleJobStatus(result.ID);
-						location.reload();
+						//$('form[name=frm] input[name=job_id]').val(result.ID);
+						//alert($('form[name=frm] input[name=job_id]').val());
+						//button.disabled = false;
+						//location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;
@@ -257,6 +254,18 @@
 				});
 
 			return false;
+		}
+	}
+
+	function updtClickCellbox(_val) {
+		if ($("input:checkbox[id='" + _val + "']").is(":checked") == true) {
+			$("input:checkbox[id='" + _val + "']").prop("checked", false);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
+		} else {
+			$("input:checkbox[id='" + _val + "']").prop("checked", true);
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
 		}
 	}
 </script>

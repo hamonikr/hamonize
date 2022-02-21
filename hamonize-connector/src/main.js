@@ -114,18 +114,17 @@ ipcMain.on('shutdown', (event, path) => {
 
 
 //========================================================================
-//== STEP 1. install_program_version_chkeck  =============================
+// # STEP 1. Init Hamonize 
 //========================================================================
 
 ipcMain.on('install_program_version_chkeck', (event) => {
 	console.log(`STEP 1. install_program_version_chkeck`);
 	install_program_version_chkeckAsync(event);
 
+	// 사용자 권한 체크 (테스트 , 삭제 예정)
 	var isRoot = (process.getuid && process.getuid() === 0)
 	console.log("isRoot======111=======" + isRoot);
 
-	// // if (!isRoot) {
-	// // }
 	var env = process.env;
 	var home = env.HOME;
 	var user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME;
@@ -178,29 +177,33 @@ const install_program_version_chkeckAsync = async (event) => {
 		console.log("install_program_version_chkeckProc---" + err);
 		return Object.assign(err);
 	}
-}
+} // Init Hamonize End ------------------------------------------------------------#
 
 
 
 //========================================================================
-//== STEP 2. hamonize vpn install   ======================================
+// # STEP 2. hamonize vpn install
 //========================================================================
-ipcMain.on('hamonizeVpnInstall', (event) => {
+ipcMain.on('hamonizeVpnInstall', (event, domain) => {
 	mainWindow.setSize(620, 540);
 	var vpn_used;
+
+
 	unirest.get(baseurl + '/hmsvc/isVpnUsed')
 		.header('content-type', 'application/json')
+		.send({
+			events: [{
+				domain: domain.trim()
+			}]
+		})
 		.end(function (response) {
 			var json = response.body;
-			console.log("get vpn_used info ===" + json);
-			var obj = eval('(' + json + ')');
-
-			console.log(obj[0]["vpn_used"]);
-			vpn_used = obj[0]["vpn_used"];
-
-			if (vpn_used == 1) {
+			console.log("get vpn_used info ===" + JSON.stringify(response.body));
+			vpn_used = response.body[0]["vpn_used"];
+			console.log("vpn_used========++"+vpn_used);
+			if (vpn_used == 'Y') {
 				console.log("vpn install..");
-				hamonizeVpnInstall_Action(event);
+				// hamonizeVpnInstall_Action(event);
 			} else if (vpn_used == 0) {
 				console.log("vpn bypass..");
 				event.sender.send('hamonizeVpnInstall_Result', 'Y');
@@ -224,12 +227,12 @@ const hamonizeVpnInstall_Action = async (event) => {
 		console.log("hamonizeVpnInstall_Action Error---" + err);
 		return Object.assign(err);
 	}
-}
+} // hamonize vpn install END -----------------------------------------------#
 
 
 
 //========================================================================
-//== STEP 3. program install   ===========================================
+// # STEP 3. program install
 //========================================================================
 
 ipcMain.on('hamonizeProgramInstall', (event, domain) => {
@@ -264,10 +267,10 @@ function hamonizeProgramInstallProc(domain) {
 			}
 		);
 	});
-}
+} //program install END -----------------------------------------------------#
 
 //========================================================================
-//== STEP 4. Backup  =====================================================
+// # STEP 4. Backup
 //========================================================================
 
 ipcMain.on('hamonizeSystemBackup', (event) => {
@@ -308,12 +311,7 @@ function hamonizeSystemBackupProc(userId) {
 			}
 		);
 	});
-}
-
-
-
-
-// =================================================================================
+}// Backup END ---------------------------------------------------------------#
 
 
 
@@ -702,15 +700,15 @@ function vpnchk() {
 } // =======================================================================================================================#
 
 
-//========================================================================
-//== aptRepositoryChk  ===========================================
-//========================================================================
-
+//========================================================================#
+// # aptRepositoryChk 
+//========================================================================#
+//(사용안함)
 ipcMain.on('aptRepositoryChk', (event) => {
 	aptRepositoryChkAsync(event);
 });
 
-
+//(사용안함)
 const aptRepositoryChkAsync = async (event) => {
 	try {
 		let mkfolderResult = await aptRepositoryChkProc();
@@ -722,6 +720,7 @@ const aptRepositoryChkAsync = async (event) => {
 	}
 }
 
+// install_program_version_chkeckAsync 에서 호출
 function aptRepositoryChkProc() {
 	return new Promise(function (resolve, reject) {
 
@@ -741,7 +740,7 @@ function aptRepositoryChkProc() {
 			}
 		);
 	});
-}
+}	// aptRepositoryChk==============================================#
 
 
 // 조직정보 
