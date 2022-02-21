@@ -267,13 +267,13 @@
 <script>
 	function fnFireSave() {
 		if (confirm("하위부서 및 부서가 있다면 하위부서 및 부서에도 전부 적용됩니다 적용하시겠습니까?")) {
-
 			var ppm_seq = "";
 			let ppm_names = [];
 			$('input:checkbox[name=sm_seq]').each(function (i) {
-				if ($(this).is(':checked'))
+				if ($(this).is(':checked')){
 					ppm_seq += ($(this).val()) + ",";
 					ppm_names.push($(this).data("port"));
+				}
 			});
 
 
@@ -346,10 +346,7 @@
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
 						checkAnsibleJobStatus(result.ID);
-						//$('form[name=frm] input[name=job_id]').val(result.ID);
-						//alert($('form[name=frm] input[name=job_id]').val());
-						//button.disabled = false;
-						//location.reload();
+						location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;
