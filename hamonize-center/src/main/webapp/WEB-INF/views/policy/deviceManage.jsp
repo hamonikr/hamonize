@@ -273,9 +273,10 @@
 			var ppm_seq = "";
 			let ppm_names = [];
 			$('input:checkbox[name=sm_seq]').each(function (i) {
-				if ($(this).is(':checked'))
+				if ($(this).is(':checked')){
 					ppm_seq += ($(this).val()) + ",";
 					ppm_names.push($(this).data("device")+"-"+$(this).data("devicecode"));
+				}
 			});
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
 			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
@@ -346,11 +347,8 @@
 				function (result) {
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
-						checkAnsibleJobStatus(result.ID);
-						//$('form[name=frm] input[name=job_id]').val(result.ID);
-						//alert($('form[name=frm] input[name=job_id]').val());
-						//button.disabled = false;
-						//location.reload();
+						checkAnsibleJobStatus(result.ID);;
+						location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;

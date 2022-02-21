@@ -93,11 +93,11 @@ public class Test {
       try {
         System.out.println("11111111111111111111111111111111");
         Mono<String> response = wc.get().uri(UriBuilder -> UriBuilder
-        .path("/api/v2/ad_hoc_commands/").path("{id}/")
-        //.path("/api/v2/ad_hoc_command_events/").path("{id}/").path("events/")
+        //.path("/api/v2/ad_hoc_command_events/").path("{id}/")
+        .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
         //.queryParam("--user", "admin:password")
         //.queryParam("password", "password")
-        .build(281))
+        .build(389))
         .exchange().flatMap(clientResponse -> {
           if (clientResponse.statusCode().is5xxServerError()) {
               clientResponse.body((clientHttpResponse, context) -> {
@@ -119,7 +119,104 @@ public class Test {
         String objects = response.block();
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-        System.out.println("jsonObj===="+jsonObj.toJSONString());
+        //System.out.println("jsonObj===="+jsonObj.toJSONString());
+        
+        JSONArray resultsArray = (JSONArray) jsonObj.get("results");
+        JSONArray makeResultArray = new JSONArray();
+        JSONObject okHostObj = new JSONObject();
+        int index = 0;
+        System.out.println("resultsArray======"+resultsArray.size());
+        for(Object tmp : resultsArray){
+          JSONObject summary_fieldsObj = new JSONObject();
+          JSONObject event_dataObj = new JSONObject();
+          summary_fieldsObj = (JSONObject) tmp;
+          event_dataObj = (JSONObject) tmp;
+          if(index == 0)
+          {
+            okHostObj = summary_fieldsObj;
+          }
+          summary_fieldsObj = (JSONObject) summary_fieldsObj.get("summary_fields");
+          event_dataObj = (JSONObject) event_dataObj.get("event_data");
+          // if(event_dataObj != null){
+          //   event_dataObj = (JSONObject) event_dataObj.get("res");
+          // }
+          //event_dataObj = (JSONObject) event_dataObj.get("res");
+          //event_dataObj = (JSONObject) event_dataObj.get("msg");
+          //event_dataObj = (JSONObject) event_dataObj.get("res");
+          //event_dataObj = (JSONObject) event_dataObj.get("msg");
+          if(!summary_fieldsObj.isEmpty() && index > 0)
+          {
+            //JSONObject makeResultObj = (JSONObject) summary_fieldsObj.get("host");
+            JSONObject makeResultObj = (JSONObject) tmp;
+            //makeResultObj.put("event_dataObj", event_dataObj);
+            //summary_fieldsObj.put("event_dataObj", event_dataObj);
+            //System.out.println("makeResultObj========="+makeResultObj);
+            makeResultArray.add(makeResultObj);
+          }
+System.out.println("makeResultArray==="+makeResultArray.size());
+System.out.println("index==="+index);
+          // if(!event_dataObj.isEmpty() && index > 0)
+          //   event_dataArray.add(event_dataObj);
+          
+            index++;
+        }
+        JSONObject allHostObj = new JSONObject();
+        index = 0;
+        JSONArray finalResultArray = new JSONArray();
+        for(Object tmp : makeResultArray){
+          JSONObject finalResult = new JSONObject();
+          //JSONObject stdout = new JSONObject();
+          JSONObject host_uuid = new JSONObject();
+          finalResult = (JSONObject) tmp;
+          String stdout = finalResult.get("stdout").toString();
+          System.out.println("finalResult.get().toString()==========="+!stdout.isEmpty());
+          //if(finalResult.get("stdout").toString() != null)
+          //stdout = (JSONObject) finalResult.get("stdout");
+          host_uuid = (JSONObject) finalResult.get("summary_fields");
+          host_uuid = (JSONObject) host_uuid.get("host");
+          //host_uuid = (JSONObject) host_uuid.get("description");
+          //event_dataObj = (JSONObject) host.get("event_dataObj");
+          if(!stdout.isEmpty())
+          {
+            System.out.println("finalResult111==================="+finalResult);
+            System.out.println("finalResult222==================="+finalResult.get("stdout"));
+            System.out.println("host111111111=============="+host_uuid);
+          }
+          //event_dataObj = (JSONObject) event_dataObj.get("res");
+          //System.out.println("host==========="+host);
+          //System.out.println("event_dataObj==========="+event_dataObj);
+          //host = (JSONObject) host.get("host");
+          //res = (JSONObject) event_dataArray.get(index);
+          // if(host.get("name") != null)
+          // {
+          // //allHostObj.put(host.get("name"),host.get("description"));
+          // allHostObj.put(host.get("name"), host);
+          // }
+          index++;
+        }
+        System.out.println("allHostObj========="+allHostObj);
+        // okHostObj = (JSONObject) okHostObj.get("event_data");
+        // okHostObj = (JSONObject) okHostObj.get("ok");
+        // Set<String> okHostSet = new HashSet<>(okHostObj.keySet());
+        // Set<String> allHostSet = new HashSet<>(allHostObj.keySet());
+        // ArrayList<String> okHostList = new ArrayList<String>(okHostSet);
+        // ArrayList<String> allHostList = new ArrayList<String>(allHostSet);
+        // JSONObject resultHostObj = new JSONObject();
+        // int x = 0;
+        // for(String allHost : allHostList){
+        //   for(String okHost : okHostList){
+        //     if(allHost.equals(okHost)){
+        //       resultHostObj.put(allHostList.get(x).trim(), allHostObj.get(allHostList.get(x).trim()));
+        //       break;
+        //     }else{
+        //       resultHostObj.put(allHostList.get(x).trim(), allHostObj.get(allHostList.get(x).trim()));
+        //     }
+        //   }
+        //   x++;
+        // }
+        // System.out.println("resultHostObj========"+resultHostObj);
+
+
         // JSONArray resultsArray = (JSONArray) jsonObj.get("results");
         // JSONArray summary_fieldsArray = new JSONArray();
         // JSONObject summary_fieldsObj = new JSONObject();

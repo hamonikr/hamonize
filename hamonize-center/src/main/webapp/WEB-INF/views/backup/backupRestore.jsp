@@ -104,6 +104,7 @@
 				$("#recoveryPclist").append(strHtml);
 				console.log("org_seq==="+$('form[name=frm] input[name=org_seq]').val());
 			});
+			//checkAnsibleJobStatus(agrs.job_id);
 	}
 
 	function beforeClick(treeId, treeNode, clickFlag) {

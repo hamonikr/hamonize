@@ -299,58 +299,8 @@ public JSONObject checkPolicyJobResult(int id) throws ParseException{
   });
 
         String objects = response.block();
-        System.out.println("objects====="+objects);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-        System.out.println("jsonObj===="+jsonObj.toJSONString());
-        // JSONArray resultsArray = (JSONArray) jsonObj.get("results");
-        // JSONArray summary_fieldsArray = new JSONArray();
-        // JSONObject summary_fieldsObj = new JSONObject();
-        // JSONObject okHostObj = new JSONObject();
-        // int i = 0;
-        // for(Object tmp : resultsArray){
-        //   tmp = resultsArray.get(i);
-        //   summary_fieldsObj = (JSONObject) tmp;
-        //   if(i == 0)
-        //   {
-        //     okHostObj = summary_fieldsObj;
-        //   }
-        //   summary_fieldsObj = (JSONObject) summary_fieldsObj.get("summary_fields");
-        //   summary_fieldsArray.add(summary_fieldsObj);
-        //   i++;
-        // }
-        // JSONObject allHostObj = new JSONObject();
-        // i = 0;
-        // for(Object tmp : summary_fieldsArray){
-        //   tmp = summary_fieldsArray.get(i);
-        //   JSONObject host = new JSONObject();
-        //   host = (JSONObject) summary_fieldsArray.get(i);
-        //   host = (JSONObject) host.get("host");
-        //   if(host != null){
-        //   allHostObj.put(host.get("name"), host.get("description"));
-        //   }
-        //   i++;
-        // }
-        // okHostObj = (JSONObject) okHostObj.get("event_data");
-        // okHostObj = (JSONObject) okHostObj.get("ok");
-        // Set<String> okHostSet = new HashSet<>(okHostObj.keySet());
-        // Set<String> allHostSet = new HashSet<>(allHostObj.keySet());
-        // ArrayList<String> okHostList = new ArrayList<String>(okHostSet);
-        // ArrayList<String> allHostList = new ArrayList<String>(allHostSet);
-        // JSONObject resultHostObj = new JSONObject();
-        // int x = 0;
-        // for(String allHost : allHostList){
-        //   for(String okHost : okHostList){
-        //     if(allHost.equals(okHost)){
-        //       resultHostObj.put(allHostObj.get(allHostList.get(x).trim()), "Y");
-        //       break;
-        //     }else{
-        //       resultHostObj.put(allHostObj.get(allHostList.get(x).trim()), "N");
-        //     }
-        //   }
-        //   x++;
-        // }
-        // System.out.println("resultHostObj========"+resultHostObj);
         return jsonObj;
 }
   

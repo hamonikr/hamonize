@@ -268,6 +268,8 @@ function checkAnsibleJobStatus(job_id){
 			if(res.status == "running"){
 				console.log("작업중입니다.");
 				target.disabled = true;
+				setTimeout(checkAnsibleJobStatus,3000,job_id);
+				//checkAnsibleJobStatus(job_id);
 			}else if(res.status == "successful"){
 				console.log("작업성공.");
 				target.disabled = false;
