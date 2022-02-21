@@ -38,6 +38,11 @@
 					domain: treeNode.domain
 				},
 				function (result) {
+
+					$('form[name=frm] a[name=selectName]').removeClass("active");
+					$(".bodyDataLayer").removeClass("boder-line_on");
+					$(".bodyDataLayer").removeClass("boder-line_off");
+
 					var agrs = result;
 					var jsonData = JSON.stringify(agrs.dataInfo);
 					var obj = JSON.parse(jsonData);
@@ -45,7 +50,7 @@
 					if(agrs.pList.length > 0){
 						for (var y = 0; y < agrs.pList.length; y++) {
 
-							html += '<div class="panel-body col-lg-3 "><blockquote class="">';
+							html += '<div class="panel-body col-lg-3 "><blockquote class="bodyDataLayer">';
 							html += '<div class="form-check">';
 							html += '<input width=0 height=0 style="visibility:hidden"  class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y].pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '"data-package="'+agrs.pList[y].pcm_name+'" />';
 							html += '<label class="form-check-label" for="' + agrs.pList[y].pcm_seq + '">';
@@ -53,7 +58,7 @@
 							html += '</label>';
 							html += '</div>';
 							html += '<small>프로그램 차단 상태 :';
-							html += '<a href="#" data-toggle="class" class="btn btn-default btn-xs" onClick="updtClickCellbox(' + agrs.pList[y].pcm_seq + ')" id="btn' + agrs.pList[y].pcm_seq + '">';
+							html += '<a href="#" data-toggle="class" name="selectName" class="btn btn-default btn-xs" onClick="updtClickCellbox(' + agrs.pList[y].pcm_seq + ')" id="btn' + agrs.pList[y].pcm_seq + '">';
 							html += '<i class="fa fa-square-o text-muted text"></i>';
 							html += '<i class="fa fa-check-square-o text-danger text-active">차단</i>';
 							html += '</a>';

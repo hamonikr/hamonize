@@ -67,7 +67,14 @@
 				if (typeof jsonData != "undefined") {
 					var obj = JSON.parse(jsonData);
 
+					$('form[name=frm] a[name=selectName]').removeClass("active");
+					$(".bodyDataLayer").removeClass("boder-line_on");
+					$(".bodyDataLayer").removeClass("boder-line_off");
+			
+
 					if (obj != null) {
+
+						
 						var ppm_seq = agrs.dataInfo.ppm_seq;
 						ppm_seq = ppm_seq.split(",");
 						for (var i = 0; i < ppm_seq.length; i++) {
@@ -75,7 +82,8 @@
 								if ($(this).val() == ppm_seq[i]) {
 									$(this).prop("checked", true);
 									former_ppm_names.push($(this).data("port"));
-									$("#btn" + ppm_seq[i].trim()).addClass("active");
+									console.log("==="+ppm_seq[i]+"---")
+									$("#btn" + ppm_seq[i]).addClass("active");
 									$(this).closest('blockquote').addClass('boder-line_on');
 									$(this).closest('blockquote').removeClass('boder-line_off');
 								}
@@ -240,17 +248,17 @@
 									<!-- update list -->
 									<c:forEach items="${pList}" var="data" varStatus="status">
 										<div class="panel-body col-lg-3 ">
-											<blockquote class="">
+											<blockquote class="bodyDataLayer">
 												<div class="form-check">
-													
-													<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value=' ${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
+													<!-- width=0 height=0 style="visibility:hidden" -->
+													<input  class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value='${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
 													<label class="form-check-label" for="${data.sm_seq}">
 														<p><c:out value="${data.sm_name}" /></p>
 													</label>
 												</div>
 												<small>
 													<c:out value="${data.sm_dc}" /> - <c:out value="${data.sm_port}" />
-													<a href="#" data-toggle="class" class="btn btn-default btn-xs"
+													<a href="#" name="selectName" data-toggle="class" class="btn btn-default btn-xs"
 														onClick="fireClickCellbox('${data.sm_seq}')"
 														id="btn${data.sm_seq}">
 														<i class="fa fa-square-o text-muted text"></i>

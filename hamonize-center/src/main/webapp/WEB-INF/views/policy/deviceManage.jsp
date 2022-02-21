@@ -37,7 +37,7 @@
 		});
 
 
-		getList();
+		// getList();
 
 
 	});
@@ -66,6 +66,10 @@
 				var agrs = result;
 				var jsonData = JSON.stringify(agrs.dataInfo);
 				var obj = JSON.parse(jsonData);
+				$('form[name=frm] a[name=selectName]').removeClass("active");
+				
+				$(".bodyDataLayer").removeClass("boder-line_on");
+				$(".bodyDataLayer").removeClass("boder-line_off");
 
 				if (obj != null) {
 					var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -75,6 +79,7 @@
 							if ($(this).val() == ppm_seq[i]) {
 								$(this).prop("checked", true);
 								former_ppm_names.push($(this).data("device") + "-" + $(this).data("devicecode"));
+								
 								$("#btn" + ppm_seq[i].trim()).addClass("active");
 								$(this).closest('blockquote').addClass('boder-line_on');
 								$(this).closest('blockquote').removeClass('boder-line_off');
@@ -250,9 +255,10 @@
 								<!-- update list -->
 								<c:forEach items="${pList}" var="data" varStatus="status">
 									<div class="panel-body col-lg-3 ">
-										<blockquote class="">
+										<blockquote class="boder-line_off bodyDataLayer">
 											<div class="form-check">
-												<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq"
+												<!-- width=0 height=0 style="visibility:hidden"  -->
+												<input class="form-check-input" type="checkbox" name="sm_seq"
 													id="${data.sm_seq}" value="<c:out value='${data.sm_seq}' />"
 													data-device="${data.sm_name}"
 													data-devicecode="${data.sm_device_code}" />
@@ -262,9 +268,7 @@
 											</div>
 											<small>
 												<c:out value="${data.sm_dc}" />
-												<a href="#" data-toggle="class" class="btn btn-default btn-xs"
-													onClick="deviceClickCellbox('${data.sm_seq}')"
-													id="btn${data.sm_seq}">
+												<a href="#" data-toggle="class" name="selectName" class="btn btn-default btn-xs" onClick="deviceClickCellbox('${data.sm_seq}')" id="btn${data.sm_seq}">
 													<i class="fa fa-square-o text-muted text"></i>
 													<i class="fa fa-check-square-o text-danger text-active">선택</i>
 												</a>
@@ -655,12 +659,12 @@
 
 		if ($("input:checkbox[id='" + _val + "']").is(":checked") == true) {
 			$("input:checkbox[id='" + _val + "']").prop("checked", false);
-			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
-			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
+			// $("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
+			// $("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
 		} else {
 			$("input:checkbox[id='" + _val + "']").prop("checked", true);
-			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
-			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
+			// $("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
+			// $("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
 		}
 
 	}

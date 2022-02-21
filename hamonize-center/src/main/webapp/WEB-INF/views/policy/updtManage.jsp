@@ -33,6 +33,10 @@
 				var jsonData = JSON.stringify(agrs.dataInfo);
 				var obj = JSON.parse(jsonData);
 
+				$('form[name=frm] a[name=selectName]').removeClass("active");
+				$(".bodyDataLayer").removeClass("boder-line_on");
+				$(".bodyDataLayer").removeClass("boder-line_off");
+				
 				if(obj !=  null){
 					var ppm_seq = obj.ppm_seq; //agrs.dataInfo.ppm_seq;
 					ppm_seq = ppm_seq.split(",");
@@ -109,7 +113,7 @@
 									<c:forEach items="${pList}" var="data" varStatus="status">
 										<c:if test="${data.pu_name.indexOf('hamonize')!=0}">
 											<div class="panel-body col-lg-3">
-												<blockquote>
+												<blockquote class="bodyDataLayer">
 													<div class="form-check">
 														<input  width=0 height=0 style="visibility:hidden" class="form-check-input" data-package="<c:out value='${data.pu_name}' />" type="checkbox" name="pu_seq" id="${data.pu_seq}" value="<c:out value='${data.pu_seq}'/>">
 														<label class="form-check-label" for="${data.pu_seq}">
@@ -123,7 +127,7 @@
 														<c:if test="${data.deb_now_version eq null}">
 															신규 프로그램
 														</c:if>
-														<a href="#" data-toggle="class" class="btn btn-default btn-xs"  onClick="updtClickCellbox('${data.pu_seq}')" id="btn${data.pu_seq}">
+														<a href="#" name="selectName" data-toggle="class" class="btn btn-default btn-xs"  onClick="updtClickCellbox('${data.pu_seq}')" id="btn${data.pu_seq}">
 															<i class="fa fa-square-o text-muted text"></i>
 															<i  class="fa fa-check-square-o text-danger text-active">선택</i> 
 															
