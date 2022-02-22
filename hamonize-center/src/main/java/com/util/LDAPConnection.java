@@ -197,10 +197,12 @@ public class LDAPConnection {
 		
 		if( pvo.getPc_vpnip().toString().equals("no vpn")){
 			attributes.put("ipHostNumber", pvo.getPc_ip().toString());
-
+			attributes.put("ipNetworkNumber", "null");
 		} else{
-			attributes.put("ipHostNumber", pvo.getPc_vpnip().toString());
+			attributes.put("ipHostNumber", pvo.getPc_ip().toString());
+			attributes.put("ipNetworkNumber", pvo.getPc_vpnip().toString());
 		}
+		
 
 
 		dn = "cn=" + pvo.getPc_hostname() + ",ou=computers" + upperDn + ",dc=hamonize,dc=com";
@@ -532,7 +534,7 @@ public class LDAPConnection {
 		}
 
 		dn = "cn=" + pvo.getPc_hostname() + ",ou=computers" + upperDn + ",dc=hamonize,dc=com";
-
+		System.out.println("dn=========="+ dn);
 		try {
 
 			dc.modifyAttributes(dn, mods);

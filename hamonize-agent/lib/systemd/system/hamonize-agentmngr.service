@@ -1,0 +1,11 @@
+[Unit]
+Description=Update log for Tilon agent on HamoniKR
+Wants=hamonize-agentmngr.timer
+
+[Service]
+ExecStart=/usr/share/hamonize-agent/hamonize-agent-run 
+WorkingDirectory=/usr/local/bin
+Slice=tilon.slice
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+[Unit]
+Description=Limited resources Slice
+DefaultDependencies=no
+Before=slices.target
+
+[Slice]
+CPUQuota=80%
+MemoryLimit=2.7G
