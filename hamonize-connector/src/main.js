@@ -200,17 +200,17 @@ ipcMain.on('hamonizeVpnInstall', (event, domain) => {
 			var json = response.body;
 			console.log("get vpn_used info ===" + JSON.stringify(response.body));
 			vpn_used = response.body[0]["vpn_used"];
-			console.log("vpn_used========++"+vpn_used);
+			console.log("vpn_used========++" + vpn_used);
 			if (vpn_used == 'Y') {
 				console.log("vpn install..");
-				// hamonizeVpnInstall_Action(event);
+				hamonizeVpnInstall_Action(event, domain);
 			} else if (vpn_used == 0) {
 				console.log("vpn bypass..");
 				event.sender.send('hamonizeVpnInstall_Result', 'Y');
 			}
 		});
 });
-const hamonizeVpnInstall_Action = async (event) => {
+const hamonizeVpnInstall_Action = async (event, domain) => {
 	try {
 		// vpn install 
 		await vpnCreate();
@@ -218,7 +218,7 @@ const hamonizeVpnInstall_Action = async (event) => {
 		let vpnCreateResult = await vpnCreateChk();
 		if (vpnCreateResult == 'Y') {
 			// vpn 연결후 pc 정보 업데이트
-			pcInfoUpdate();
+			// pcInfoUpdate(domain);
 			event.sender.send('hamonizeVpnInstall_Result', 'Y');
 		} else {
 			event.sender.send('hamonizeVpnInstall_Result', 'N002');
@@ -597,7 +597,34 @@ const sysInfo = async (event, groupname, sabun, username, domain) => {
 		original: true
 	});
 
-	let vpnipaddr = 'no vpn';
+	//
+	// let vpnipaddr = 'no vpn';
+
+	const { networkInterfaces } = require('os');
+
+	const nets = networkInterfaces();
+	const results = Object.create(null); // Or just '{}', an empty object
+
+	for (const name of Object.keys(nets)) {
+		for (const net of nets[name]) {
+			// Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+			if (!net.internal) {
+				// if (net.family === 'IPv4' && !net.internal) {
+				if (!results[name]) {
+					results[name] = [];
+				}
+				results[name].push(net.address);
+			}
+
+		}
+	}
+
+	let vpnipaddr = '';
+	if (typeof results['tun0'] != 'undefined') {
+		console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
+		vpnipaddr = results['tun0'][0];
+	}
+console.log("=============vpnipaddr================" + vpnipaddr);
 	var md5 = require('md5');
 	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	let hwData = md5(hwinfoMD5);
@@ -639,7 +666,7 @@ const sysInfo = async (event, groupname, sabun, username, domain) => {
 }
 
 // vpn 연결후 pc 정보 업데이트
-function pcInfoUpdate() {
+function pcInfoUpdate(domain) {
 	let vpnipaddr = '';
 	let vpnInfoData = vpnchk();
 	console.log("vpnInfoData====" + vpnInfoData);
@@ -658,6 +685,7 @@ function pcInfoUpdate() {
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
+				domain: domain,
 				uuid: machindid,
 				vpnipaddr: vpnipaddr,
 				hostname: pcHostNameVal
