@@ -1,0 +1,13 @@
+[Unit]
+Description=Run tilon servie every 2 sec
+Requires=hamonize-agentmngr.service
+
+[Timer]
+Unit=hamonize-agentmngr.service
+OnUnitInactiveSec=5s
+RandomizedDelaySec=5s
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target
+

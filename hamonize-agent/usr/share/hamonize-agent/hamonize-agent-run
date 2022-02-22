@@ -1,0 +1,92 @@
+#!/bin/bash
+
+. /etc/hamonize/propertiesJob/propertiesInfo.hm
+
+# CENTERURL="http://${CENTERURL}/hmsvc/prcssKill"
+# PCUUID=`cat /etc/hamonize/uuid`
+# TENENT=`cat /etc/hamonize/hamonize_tanent`
+# LOGFILE="/var/log/hamonize/agentjob/progrmjob.log"
+
+# if [ ! -f "$FILE" ]; then
+# 	sudo touch $LOGFILE
+# fi
+
+
+OSUSERID=`users |cut -d' ' -f1`
+
+
+
+# UPDT
+if [ -e /etc/hamonize/runupdt ]
+then
+    echo "updt ===========================================ok"
+
+    export DISPLAY=:0.0  &
+    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 프로그램 설치 및 삭제를 진행합니다.\n [Info]  Program Manage  by ADMIN "'
+
+    rm -fr /etc/hamonize/updt/runupdt
+    hamonize-agent --updt
+else
+    echo "nok"
+fi
+
+# progrmblock
+if [ -e /etc/hamonize/runprogrmblock ]
+then
+    echo "updt ===========================================ok"
+    export DISPLAY=:0.0  &
+    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 프로그램 차단정책을  진행합니다.\n [Info]  Program Manage  by ADMIN "'
+    rm -fr /etc/hamonize/runprogrmblock
+    hamonize-agent --progrmblock
+else
+    echo "nok"
+fi
+
+
+# devicepolicy
+if [ -e /etc/hamonize/rundevicepolicy ]
+then
+    echo "updt ===========================================ok"
+    export DISPLAY=:0.0  &
+    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 비인가디바이스 정책을 진행합니다.\n [Info]  Program Manage  by ADMIN "'
+
+    rm -fr /etc/hamonize/rundevicepolicy
+    hamonize-agent --devicepolicy
+else
+    echo "nok"
+fi
+
+
+# ufw
+if [ -e /etc/hamonize/runufw ]
+then
+    echo "updt ===========================================ok"
+    export DISPLAY=:0.0  &
+    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서방화벽 정책을 진행합니다.\n [Info]  Program Manage  by ADMIN "'
+    rm -fr /etc/hamonize/runufw
+    hamonize-agent --ufw
+else
+    echo "nok"
+fi
+
+# recovery
+if [ -e /etc/hamonize/runrecovery ]
+then
+    echo "updt ===========================================ok"
+    export DISPLAY=:0.0  &
+    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 복구를 진행합니다.\n [Info]  Program Manage  by ADMIN "'
+    rm -fr /etc/hamonize/runrecovery
+    hamonize-agent --recovery
+else
+    echo "nok"
+fi
+
+
+# 비인가 비다이스 로그 체크
+if [ -e /etc/hamonize/usblog/usb-unauth.hm ]
+then
+    echo "ok"
+    hamonize-agent --unauthlog
+else
+    echo "nok"
+fi

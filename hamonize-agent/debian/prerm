@@ -1,8 +1,20 @@
 #!/bin/bash
+
+set -e
+
+gtk-update-icon-cache
+
+
+# hamonize-agent service 
+systemctl stop hamonize-agentmngr
+systemctl disable hamonize-agentmngr
+
+# hamonize-agent node 
 systemctl stop hamonize-agent
 systemctl disable hamonize-agent
-#systemctl daemon-reload
-sudo rm -r /lib/systemd/system/hamonize-agent.service
+
+# sudo rm -r /lib/systemd/system/hamonize-agent.service
+# sudo rm -r /lib/systemd/system/hamonize-agentmngr
 
 systemctl daemon-reload
 

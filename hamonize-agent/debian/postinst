@@ -1,28 +1,17 @@
 #!/bin/bash
 
-# make uuid 
-# uuid=`cat /etc/machine-id`
-# echo "$uuid" >> /etc/hamonize/uuid
+set -e
 
-# hamonize-agent service start 
-# sudo systemctl daemon-reload
-# sudo systemctl enable hamonize-agent
-# sudo systemctl start hamonize-agent
-
-# ufw setting
-# sudo ufw enable
-# sudo ufw allow 80
-# sudo ufw allow 8080
-# sudo ufw allow 443
-# sudo ufw allow 8086
-# sudo ufw allow 11100
-
-# install device control
-# cd /usr/share/hamonize-agent/usb-lockdown
-# make install
-# /etc/init.d/udev restart
+gtk-update-icon-cache
 
 
-sudo systemctl daemon-reload
-sudo systemctl enable hamonize-agent
-sudo systemctl start hamonize-agent
+systemctl daemon-reload
+systemctl enable hamonize-agent
+
+
+
+
+systemctl enable hamonize-agentmngr
+
+systemctl restart hamonize-agent
+systemctl restart hamonize-agentmngr
