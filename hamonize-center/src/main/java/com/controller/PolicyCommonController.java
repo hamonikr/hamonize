@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.mapper.IPolicyCommonMapper;
@@ -40,14 +41,16 @@ public class PolicyCommonController {
 	public JSONObject checkAnsibleJobStatus(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
 		JSONObject data = new JSONObject();
 		data = restApiService.checkPolicyJobResult(Integer.parseInt(params.get("job_id").toString()));
-		System.out.println("data====="+data);
 		return data;
 
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "addAnsibleJobEvent", method = RequestMethod.POST)
-	public int addAnsibleJobEvent(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException, SQLException {
+	public int addAnsibleJobEvent(HttpSession session,@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException {
+		System.out.println("url===="+request.getHeader("referer"));
+		String[] before_url = request.getHeader("referer").split("/");
+		params.put("before_url", before_url[before_url.length -1]);
 		JSONArray dataArr = new JSONArray();
 		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
 		Map<String, Object> resultMap;

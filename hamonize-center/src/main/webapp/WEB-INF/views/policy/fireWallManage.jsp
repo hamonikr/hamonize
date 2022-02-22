@@ -39,7 +39,7 @@
 		});
 
 		getList();
-
+		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 	});
 
 	function onClick(event, treeId, treeNode, clickFlag) {
@@ -64,6 +64,9 @@
 				var agrs = result;
 				var jsonData = JSON.stringify(agrs.dataInfo);
 
+				$('form[name=frm] input[name=job_id]').val(agrs.job_id);
+				console.log("ssss===="+$('form[name=frm] input[name=job_id]').val());
+
 				if (typeof jsonData != "undefined") {
 					var obj = JSON.parse(jsonData);
 
@@ -82,7 +85,6 @@
 								if ($(this).val() == ppm_seq[i]) {
 									$(this).prop("checked", true);
 									former_ppm_names.push($(this).data("port"));
-									console.log("==="+ppm_seq[i]+"---")
 									$("#btn" + ppm_seq[i]).addClass("active");
 									$(this).closest('blockquote').addClass('boder-line_on');
 									$(this).closest('blockquote').removeClass('boder-line_off');
@@ -91,7 +93,6 @@
 						}
 						$('form[name=frm] input[name=former_ppm_name]').val(former_ppm_names);
 					}
-					checkAnsibleJobStatus(agrs.job_id);
 				}
 
 
@@ -241,6 +242,7 @@
 									<input type="hidden" name="section" id="section" value="" />
 									<input type="hidden" name="inventory_id" id="inventory_id" value="" />
 									<input type="hidden" name="group_id" id="group_id" value="" />
+									<input type="hidden" name="job_id" id="job_id" value="" />
 									<input type="hidden" name="domain" id="domain" value="" />
 									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
 									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
@@ -375,10 +377,7 @@
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
 						checkAnsibleJobStatus(result.ID);
-						//$('form[name=frm] input[name=job_id]').val(result.ID);
-						//alert($('form[name=frm] input[name=job_id]').val());
-						//button.disabled = false;
-						//location.reload();
+						location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;

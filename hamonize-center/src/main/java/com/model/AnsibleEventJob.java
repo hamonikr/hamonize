@@ -14,12 +14,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +39,9 @@ public class AnsibleEventJob {
 
 	@Size(max=50)
 	private String domain;
+
+	@Size(max=50)
+	private String kind;
 
 	private Long org_seq;
 
