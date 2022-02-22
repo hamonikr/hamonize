@@ -60,6 +60,7 @@
 	<update id="deletePc" parameterType="com.model.PcMangrVo">
 		delete from tbl_pc_mangr
 		where seq = #{seq}
+		and domain = #{domain}
 	</update>
 
 	<!-- update recove policy-->
