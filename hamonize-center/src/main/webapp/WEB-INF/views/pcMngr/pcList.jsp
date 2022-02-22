@@ -23,9 +23,11 @@
 
 
 		$("#org_seq").val(treeNode.id);
+		$("#domain").val(treeNode.domain);
 		$.post("/pcMngr/pcMngrList.proc", {
 				org_seq: treeNode.id,
-				pcMngrListCurrentPage: $("#pcMngrListCurrentPage").val()
+				pcMngrListCurrentPage: $("#pcMngrListCurrentPage").val(),
+				domain: treeNode.domain
 			},
 			function (data) {
 				var gbInnerHtml = "";
@@ -480,7 +482,8 @@
 				data: {
 					seq: $('#seq').val(),
 					org_seq: $('#old_org_seq').val(),
-					pc_hostname: $("#detail_hostname").text()
+					pc_hostname: $("#detail_hostname").text(),
+					domain: $('#domain').val()
 				},
 				success: function (data) {
 					if (data == 1) {
@@ -527,6 +530,7 @@
 								style="width: 100px; display:none;">확인</button>
 							<input type="hidden" id="seq" />
 							<input type="hidden" id="old_org_seq" />
+							<input type="hidden" id="domain" name="domain" value="">
 						</div>
 					</div>
 
