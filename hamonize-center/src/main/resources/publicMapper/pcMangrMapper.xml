@@ -131,13 +131,6 @@
 		and domain = #{domain}
 	</select>
 
-	<select id="getOrgInfoParamPCSEQ" parameterType="com.model.PcMangrVo" resultType="com.model.OrgVo">
-		select *
-		from tbl_org 
-		where seq = (select org_seq from tbl_pc_mangr where seq = #{seq})
-		and domain = #{domain}
-	</select>
-
 	<select id="chkPcinfo" parameterType="com.model.PcMangrVo" resultType="com.model.PcMangrVo">
 		select seq, pc_uuid, pc_ip, pc_vpnip, pc_macaddress, org_seq, host_id
 		from tbl_pc_mangr
@@ -244,11 +237,11 @@
 			tb.pc_memory, 
 			tb.pc_disk, 
 			tb.pc_macaddress, 
-			tb.pc_guid, 
 			tb.pc_ip, 
 			tb.RGSTR_DATE, 
 			tb.UPDT_DATE,
 			tb.pc_hostname,
+			tb.pc_uuid,
 			tb.pc_os,
 			tb.pc_change,
 			tb.pc_vpnip,

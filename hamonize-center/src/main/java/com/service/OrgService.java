@@ -10,6 +10,7 @@ import com.mapper.IPcMangrMapper;
 import com.mapper.ITenantconfigMapper;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
+import com.model.PolicyRestoreVo;
 import com.model.RecoveryVo;
 import com.model.TenantconfigVo;
 import com.util.AuthUtil;
@@ -155,8 +156,9 @@ public class OrgService {
 		int result = 0;
 		result = pcMapper.moveTeam(vo);
 		OrgVo orgVo = new OrgVo();
-		orgVo = pcMapper.getOrgInfoParamPCSEQ(vo);
+		orgVo = pcMapper.getOrgInfoParamPCUUID(vo);
 		System.out.println("vo====="+vo.toString());
+		System.out.println("orgVo====="+orgVo.toString());
 		//ansible 삭제 재등록
 		restApiService.deleteHost(vo);
 		restApiService.addHost(vo, orgVo);
@@ -177,9 +179,9 @@ public class OrgService {
 		con.movePc(vo);
 		
 		// 백업 파일 들도 org_seq 변경 tbl_backup_recovery_mngr
-		RecoveryVo rvo = new RecoveryVo();
+		PolicyRestoreVo rvo = new PolicyRestoreVo();
 		rvo.setBr_org_seq(vo.getOrg_seq());
-		rvo.setDept_seq(vo.getSeq());
+		rvo.setPc_seq(vo.getSeq());
 		//logger.info("pc seq : "+Integer.toString(vo.getSeq()));
 		logger.info("update org seq : "+vo.getOrg_seq());
 
