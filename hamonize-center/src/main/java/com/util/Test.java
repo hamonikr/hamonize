@@ -125,7 +125,6 @@ public class Test {
         JSONArray makeResultArray = new JSONArray();
         JSONObject okHostObj = new JSONObject();
         int index = 0;
-        System.out.println("resultsArray======"+resultsArray.size());
         for(Object tmp : resultsArray){
           JSONObject summary_fieldsObj = new JSONObject();
           JSONObject event_dataObj = new JSONObject();
@@ -153,8 +152,7 @@ public class Test {
             //System.out.println("makeResultObj========="+makeResultObj);
             makeResultArray.add(makeResultObj);
           }
-System.out.println("makeResultArray==="+makeResultArray.size());
-System.out.println("index==="+index);
+
           // if(!event_dataObj.isEmpty() && index > 0)
           //   event_dataArray.add(event_dataObj);
           
