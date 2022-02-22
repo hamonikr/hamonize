@@ -89,6 +89,8 @@ public interface IPcMangrMapper {
 
 	public OrgVo chkPcOrgNum(PcMangrVo vo);
 	
+	public OrgVo getOrgInfoParamPCUUID(PcMangrVo vo);
+	
 	// 부서 이동시 복구 테이블 org값 업데이트
 	public int updateRcovPolicyOrgseq(RecoveryVo vo);
 

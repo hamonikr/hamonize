@@ -218,6 +218,64 @@ public class RestApiService {
   return result;
 }
 
+public void updateHost(PcMangrVo hdVo, OrgVo orgNumChkVo) throws ParseException
+  {
+    String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_uuid()+"\",\"inventory\": "+orgNumChkVo.getInventory_id()+"}";
+    System.out.println("request====="+request);
+    Mono<String> response = webClient.patch().uri(UriBuilder -> UriBuilder
+    .path("/api/v2/hosts/").path("{id}/")
+    .build(hdVo.getHost_id()))
+    .contentType(MediaType.APPLICATION_JSON)
+    .body(BodyInserters.fromValue(request))
+    .exchange().flatMap(clientResponse -> {
+      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+          clientResponse.body((clientHttpResponse, context) -> {
+              return clientHttpResponse.getBody();
+          });
+          return clientResponse.bodyToMono(String.class);
+      }
+      else
+          return clientResponse.bodyToMono(String.class);
+  });
+    //.accept(MediaType.APPLICATION_JSON)
+    //.retrieve()
+    //.bodyToMono(String.class); 
+
+    String objects = response.block();
+    JSONParser jsonParser = new JSONParser();
+    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+  //return result;
+}
+
+public void deleteHost(PcMangrVo hdVo) throws ParseException
+  {
+    //String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_uuid()+"\",\"inventory\": "+orgNumChkVo.getInventory_id()+"}";
+    //System.out.println("request====="+request);
+    Mono<String> response = webClient.delete().uri(UriBuilder -> UriBuilder
+    .path("/api/v2/hosts/").path("{id}/")
+    .build(hdVo.getHost_id()))
+    //.contentType(MediaType.APPLICATION_JSON)
+    //.body(BodyInserters.fromValue(request))
+    .exchange().flatMap(clientResponse -> {
+      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+          clientResponse.body((clientHttpResponse, context) -> {
+              return clientHttpResponse.getBody();
+          });
+          return clientResponse.bodyToMono(String.class);
+      }
+      else
+          return clientResponse.bodyToMono(String.class);
+  });
+    //.accept(MediaType.APPLICATION_JSON)
+    //.retrieve()
+    //.bodyToMono(String.class); 
+
+    String objects = response.block();
+    //JSONParser jsonParser = new JSONParser();
+    //JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+  //return result;
+}
+
 public JSONObject makePolicy(Map<String, Object> params) throws ParseException
   {
     String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")

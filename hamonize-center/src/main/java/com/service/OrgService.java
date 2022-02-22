@@ -193,10 +193,12 @@ public class OrgService {
 
 	}
 
-	public int deletePc(PcMangrVo vo) throws NamingException {
+	public int deletePc(PcMangrVo vo) throws NamingException, ParseException {
 		int result = 0;
 		result = pcMapper.deletePc(vo);
-
+		if(result == 1){
+			restApiService.deleteHost(vo);
+		}
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 //		vo.setOrg_seq(vo.getOld_org_seq());

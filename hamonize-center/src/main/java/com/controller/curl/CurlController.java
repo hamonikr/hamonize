@@ -176,10 +176,11 @@ System.out.println("retData===="+retData.toString());
 			retVal = pcMangrMapper.inserPcInfo(hdVo);
 			if(retVal == 1)
 			{
-				isAddPcInfo = true;
 				int result = restApiService.addHost(hdVo, orgNumChkVo);
-				if(result == 1)
-				con.addPC(hdVo);
+				if(result == 1){
+					con.addPC(hdVo);
+					isAddPcInfo = true;
+				}
 			}else {
 				isAddPcInfo = true;
 			}
@@ -355,11 +356,13 @@ System.out.println("retData===="+retData.toString());
 				hdVo.setPc_uuid(tempObj.get("uuid").toString());
 				hdVo.setPc_vpnip(tempObj.get("vpnipaddr").toString());
 				hdVo.setPc_hostname(tempObj.get("hostname").toString());
+				hdVo.setDomain(tempObj.get("domain").toString());
 
 			}
 
 		retVal = pcMangrMapper.updateVpnInfo(hdVo);
-
+		
+		OrgVo orgNumChkVo = pcMangrMapper.getOrgInfoParamPCUUID(hdVo);
 		
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
@@ -368,14 +371,17 @@ System.out.println("retData===="+retData.toString());
 
 		PcMangrVo tmpPcVo = pcMangrMapper.chkPcinfo(hdVo);
 		hdVo.setOrg_seq(tmpPcVo.getOrg_seq());
-
+		hdVo.setHost_id(tmpPcVo.getHost_id());
 		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 		
-		if (retVal == 1) {			
-			con.updatePcVpn(hdVo);
-			isAddPcInfo = true;
-
+		if (retVal == 1) {
+			//int result = 
+			restApiService.updateHost(hdVo, orgNumChkVo);
+			//if(result == 1)	{
+				con.updatePcVpn(hdVo);
+				isAddPcInfo = true;
+			//}
 		} else {
 			isAddPcInfo = false;
 		}
