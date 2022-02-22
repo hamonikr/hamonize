@@ -60,7 +60,7 @@ public interface IPcMangrMapper {
 	
 	public List<PcMangrVo> pcBlockListInfo(HashMap<String, Object> map);
 	
-	public List<OrgVo> teamList();
+	public List<OrgVo> teamList(PcMangrVo vo);
 	
 	public int updateBlock(PcMangrVo vo);
 	
@@ -88,8 +88,10 @@ public interface IPcMangrMapper {
 	public int updateVpnInfo(PcMangrVo vo);
 
 	public OrgVo chkPcOrgNum(PcMangrVo vo);
-	
+
 	public OrgVo getOrgInfoParamPCUUID(PcMangrVo vo);
+
+	public OrgVo getOrgInfoParamPCSEQ(PcMangrVo vo);
 	
 	// 부서 이동시 복구 테이블 org값 업데이트
 	public int updateRcovPolicyOrgseq(RecoveryVo vo);

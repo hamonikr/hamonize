@@ -151,9 +151,15 @@ public class OrgService {
 
 	}
 
-	public int pcMove(PcMangrVo vo) throws NamingException {
+	public int pcMove(PcMangrVo vo) throws NamingException, ParseException {
 		int result = 0;
 		result = pcMapper.moveTeam(vo);
+		OrgVo orgVo = new OrgVo();
+		orgVo = pcMapper.getOrgInfoParamPCSEQ(vo);
+		System.out.println("vo====="+vo.toString());
+		//ansible 삭제 재등록
+		restApiService.deleteHost(vo);
+		restApiService.addHost(vo, orgVo);
 
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
