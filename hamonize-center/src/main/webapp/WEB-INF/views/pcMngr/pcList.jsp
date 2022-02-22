@@ -70,7 +70,7 @@
 								.pc_ip + "','" + value.pc_vpnip + "','" + value.pc_macaddress + "','" + value
 								.pc_disk + "','" + value.pc_cpu + "','" + value.pc_memory + "','" + value
 								.rgstr_date.substr(0, value.rgstr_date.length - 7) + "','" + value.seq +
-								"','" + value.org_seq + "')\">" + value.pc_hostname + "</a></td>";
+								"','" + value.org_seq + "','" + value.host_id + "')\">" + value.pc_hostname + "</a></td>";
 						} else {
 
 							gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('" + no + "','" +
@@ -78,7 +78,7 @@
 								value.pc_ip + "','" + value.pc_macaddress + "','" + value.pc_disk + "','" +
 								value.pc_cpu + "','" + value.pc_memory + "','" + value.rgstr_date.substr(0,
 									value.rgstr_date.length - 7) + "','" + value.seq + "','" + value.org_seq +
-								"')\">" + value.pc_hostname + "</a></td>";
+								"','" + value.host_id + "')\">" + value.pc_hostname + "</a></td>";
 						}
 
 						gbInnerHtml += "<td>" + timestampTodate(value.rgstr_date) +
@@ -290,14 +290,14 @@
 						"','" + value.pc_os + "','" + value.pc_hostname + "','" + value.pc_ip + "','" + value
 						.pc_vpnip + "','" + value.pc_macaddress + "','" + value.pc_disk + "','" + value
 						.pc_cpu + "','" + value.pc_memory + "','" + value.rgstr_date.substr(0, value.rgstr_date
-							.length - 7) + "','" + value.seq + "','" + value.org_seq + "')\">" + value
+							.length - 7) + "','" + value.seq + "','" + value.org_seq + "','" + value.host_id + "')\">" + value
 						.pc_hostname + "</a></td>";
 				} else {
 					gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('" + no + "','" + value
 						.deptname + "','" + value.pc_os + "','" + value.pc_hostname + "','" + value.pc_ip +
 						"','" + value.pc_macaddress + "','" + value.pc_disk + "','" + value.pc_cpu + "','" +
 						value.pc_memory + "','" + value.rgstr_date.substr(0, value.rgstr_date.length - 7) +
-						"','" + value.seq + "','" + value.org_seq + "')\">" + value.pc_hostname + "</a></td>";
+						"','" + value.seq + "','" + value.org_seq + "','" + value.host_id + "')\">" + value.pc_hostname + "</a></td>";
 				}
 				gbInnerHtml += "<td>" + timestampTodate(value.rgstr_date) + "</td>";
 				gbInnerHtml += "</tr>";
@@ -325,9 +325,9 @@
 
 
 	function detail_popup(no, name, pc_os, hostname, pc_ip, pc_vpnip, macaddress, pc_disk, cpu, memory, rgstr_date, seq,
-		old_org_seq) {
+		old_org_seq, host_id) {
 		console.log("detail_popup >> ");
-
+		console.log("host_id >> " + host_id);
 		if (pc_os == "H") {
 			pc_os = hamonikrIcon;
 		} else if (pc_os == "W") {
@@ -359,6 +359,7 @@
 		$("#detail_rgstr_date").html(rgstr_date);
 		$("#seq").val(seq);
 		$("#old_org_seq").val(old_org_seq);
+		$("#host_id").val(host_id);
 
 		console.log("vpn_used >> " + vpn_used);
 		if (vpn_used != 0 && pc_vpnip != "no vpn") {
@@ -373,8 +374,9 @@
 	};
 
 	function detail_popup_novpn(no, name, pc_os, hostname, pc_ip, macaddress, pc_disk, cpu, memory, rgstr_date, seq,
-		old_org_seq) {
+		old_org_seq,host_id) {
 		console.log("detail_popup_novpn >> " + pc_os);
+		console.log("host_id >> " + host_id);
 
 		if (pc_os == "H") {
 			pc_os = hamonikrIcon;
@@ -405,6 +407,7 @@
 		$("#detail_rgstr_date").html(rgstr_date);
 		$("#seq").val(seq);
 		$("#old_org_seq").val(old_org_seq);
+		$("#host_id").val(host_id);
 
 
 		$('#popupLayer').show();
@@ -483,7 +486,8 @@
 					seq: $('#seq').val(),
 					org_seq: $('#old_org_seq').val(),
 					pc_hostname: $("#detail_hostname").text(),
-					domain: $('#domain').val()
+					domain: $('#domain').val(),
+					host_id: $('#host_id').val()
 				},
 				success: function (data) {
 					if (data == 1) {
@@ -530,7 +534,8 @@
 								style="width: 100px; display:none;">확인</button>
 							<input type="hidden" id="seq" />
 							<input type="hidden" id="old_org_seq" />
-							<input type="hidden" id="domain" name="domain" value="">
+							<input type="hidden" id="domain" name="domain">
+							<input type="hidden" id="host_id" name="host_id">
 						</div>
 					</div>
 

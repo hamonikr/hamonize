@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.json.simple.JSONArray;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -154,10 +155,10 @@ public class PcMangrController {
 
 	@ResponseBody
 	@RequestMapping(value = "deletePc", method = RequestMethod.POST)
-	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
+	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException {
 		int result = 0;
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
-		vo.setDomain(lvo.getDomain());
+		//LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		//vo.setDomain(lvo.getDomain());
 //		result = oService.pcMove(vo);
 		result = oService.deletePc(vo);
 		System.out.println("delete pc result ================"+ result );
