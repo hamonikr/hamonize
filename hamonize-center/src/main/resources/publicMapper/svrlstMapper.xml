@@ -16,7 +16,7 @@
 			svr_domain, 
 			svr_ip, 
 			svr_vip, 
-			'1' as svr_used, 
+			'0' as svr_used, 
 			CASE 
 				WHEN svr_port is null  THEN 'N'
 				WHEN svr_port = ''  THEN 'N'

@@ -405,6 +405,7 @@ System.out.println("retData===="+retData.toString());
 
 		for (SvrlstVo svrlstData : svrlstVo) {
 			JSONObject tmpObject = new JSONObject();
+			
 			if(svrlstData.getSvr_used() == 1 && svrlstData.getSvr_vip() != null){	
 				svrlstData.setSvr_ip(svrlstData.getSvr_vip().trim());
 				if(svrlstData.getSvr_nm().equals("VPNIP")){
@@ -436,9 +437,7 @@ System.out.println("retData===="+retData.toString());
 
 		output = jsonObject.toJSONString();
 
-		logger.info("//===================================");
 		logger.debug("//commInfoData result data is : {}", output);
-		logger.info("//===================================");
 
 		return output;
 	}
