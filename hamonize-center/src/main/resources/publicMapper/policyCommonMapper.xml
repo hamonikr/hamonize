@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IPolicyCommonMapper">
+
+	
+	<!-- <insert id="addAnsibleJobEvent" parameterType="java.util.HashMap">
+			INSERT INTO tbl_ansible_event_job 
+				(DOMAIN,
+				JOB_ID,
+				ORG_SEQ,
+				DATA,
+				RGSTR_DATE) 
+				VALUES
+				<foreach collection="data" item="item" separator=",">
+				(
+					(select distinct domain from tbl_org where inventory_id = #{inventory_id}::int),
+					#{job_id}::int,
+					#{org_seq}::int,
+					#{item.result}::jsonb,
+					now()
+				) on conflict (JOB_ID) DO update set 
+				DOMAIN = (select distinct domain from tbl_org where inventory_id = #{inventory_id}::int),
+				JOB_ID = #{job_id}::int,
+				ORG_SEQ = #{org_seq}::int,
+				DATA = #{item.result}::jsonb,
+				RGSTR_DATE = now()
+				</foreach>
+	</insert> -->
+
+	<insert id="addAnsibleJobEvent" parameterType="java.util.HashMap">
+			INSERT INTO tbl_ansible_event_job 
+				(DOMAIN,
+				JOB_ID,
+				ORG_SEQ,
+				DATA,
+				RGSTR_DATE) 
+				VALUES
+				<foreach collection="data" item="item" separator=",">
+				(
+					(select distinct domain from tbl_org where inventory_id = #{inventory_id}::int),
+					#{job_id}::int,
+					#{org_seq}::int,
+					#{item.result}::jsonb,
+					now()
+				)
+				</foreach>
+	</insert>
+
+	<select id="checkCountAnsibleJobId" parameterType="java.util.HashMap" resultType="Integer">
+	SELECT count(*) FROM tbl_ansible_event_job WHERE JOB_ID = #{job_id}::int
+	</select>
+
+</mapper>

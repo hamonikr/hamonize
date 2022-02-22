@@ -249,36 +249,10 @@ public JSONObject makePolicy(Map<String, Object> params) throws ParseException
     //System.out.println("jsonObj.get======"+jsonObj.get("id").toString());
     
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
-    System.out.println("result=================="+result);
-    //JSONObject jsonResultObj = new JSONObject();
-    // try {
-    //   Thread.sleep(3000);
-    // } catch (InterruptedException e) {
-    //   // TODO Auto-generated catch block
-    //   e.printStackTrace();
-    // }
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
       jsonResultObj = checkPolicyJobResult(result);
-      System.out.println("jsonResultObj====="+jsonResultObj.get("status"));
     }
-  //   Thread subTread2 = new Thread() {
-  //     public void run() {
-  //       try {
-  //         jsonResultObj = checkPolicyJobResult(result);
-  //       } catch (ParseException e) {
-  //         // TODO Auto-generated catch block
-  //         e.printStackTrace();
-  //       }
-  //     }
-  // };
-  // try {
-  //   subTread2.sleep(3000);
-  //   System.out.println("jsonResultObj====="+jsonResultObj.get("status"));
-  // } catch (InterruptedException e) {
-  //   // TODO Auto-generated catch block
-  //   e.printStackTrace();
-  // }
   return jsonResultObj;
 }
 
@@ -302,6 +276,53 @@ public JSONObject checkPolicyJobResult(int id) throws ParseException{
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
         return jsonObj;
+}
+
+public JSONArray addAnsibleJobEvent(int id) throws ParseException{
+
+  Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
+  .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
+    .build(id))
+    .exchange().flatMap(clientResponse -> {
+      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+          clientResponse.body((clientHttpResponse, context) -> {
+              return clientHttpResponse.getBody();
+          });
+          return clientResponse.bodyToMono(String.class);
+      }
+      else
+          return clientResponse.bodyToMono(String.class);
+  });
+
+        String objects = response.block();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+        JSONArray resultsArray = (JSONArray) jsonObj.get("results");
+        JSONArray makeResultArray = new JSONArray();
+        int index = 0;
+        for(Object tmp : resultsArray){
+          JSONObject summary_fieldsObj = new JSONObject();
+          summary_fieldsObj = (JSONObject) tmp;
+          summary_fieldsObj = (JSONObject) summary_fieldsObj.get("summary_fields");
+          if(!summary_fieldsObj.isEmpty() && index > 0)
+          {
+            JSONObject makeResultObj = (JSONObject) tmp;
+            makeResultArray.add(makeResultObj);
+          }
+          
+            index++;
+        }
+        JSONArray finalResultArray = new JSONArray();
+        for(Object tmp : makeResultArray){
+          JSONObject finalResult = new JSONObject();
+          finalResult = (JSONObject) tmp;
+          String stdout = finalResult.get("stdout").toString();
+          if(!stdout.isEmpty())
+          {
+            finalResultArray.add(finalResult);
+          }
+        }
+        return finalResultArray;
 }
   
 }

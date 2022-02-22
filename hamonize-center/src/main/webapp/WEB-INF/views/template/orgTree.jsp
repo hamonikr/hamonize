@@ -265,6 +265,7 @@ function checkAnsibleJobStatus(job_id){
 		async:false,
 		data:{job_id:job_id},
 		success : function(res) {
+			console.log(res);
 			if(res.status == "running"){
 				console.log("작업중입니다.");
 				target.disabled = true;
@@ -276,7 +277,28 @@ function checkAnsibleJobStatus(job_id){
 			}else if(res.status == "failed"){
 				console.log("실패한작업이 있습니다.");
 				target.disabled = false;
+				addAnsibleJobEvent(res.inventory,res.limit,job_id);
 			}
+		},
+		error:function(request,status,error){
+			console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		}
+	});
+}
+
+//ansible작업상태확인
+function addAnsibleJobEvent(...args){
+	const target = document.getElementById('btnSave');
+	console.log("job_id===="+args[0]);
+	console.log("job_id===="+args[1]);
+	console.log("job_id===="+args[2]);
+	$.ajax({
+		url : '/gplcs/addAnsibleJobEvent',
+		type: 'POST',
+		async:false,
+		data:{inventory_id:args[0],org_seq:args[1],job_id:args[2]},
+		success : function(res) {
+			console.log("res===="+res);
 		},
 		error:function(request,status,error){
 			console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
