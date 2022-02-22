@@ -8,7 +8,7 @@
 	$(document).ready(function () {
 		//등록버튼
 		$("#btnSave").click(fnSaveUpdt);
-		//checkAnsibleJobStatus(job_id);
+		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 	});
 
 	//메뉴 Tree onClick
@@ -55,11 +55,10 @@
 							}
 						});
 					}
-					console.log("aaaa==="+queryArr);
+					$('form[name=frm] input[name=job_id]').val(agrs.job_id);
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					
 				}
-				checkAnsibleJobStatus(agrs.job_id);
 
 			});
 		$('form[name=frm] input[name=former_ppm_name]').val(queryArr);                               
@@ -105,6 +104,7 @@
 									<input type="hidden" name="section" id="section" value="" />
 									<input type="hidden" name="inventory_id" id="inventory_id" value="" />
 									<input type="hidden" name="group_id" id="group_id" value="" />
+									<input type="hidden" name="job_id" id="job_id" value="" />
 									<input type="hidden" name="domain" id="domain" value="" />
 									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
 									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
@@ -266,10 +266,7 @@
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
 						checkAnsibleJobStatus(result.ID);
-						//$('form[name=frm] input[name=job_id]').val(result.ID);
-						//alert($('form[name=frm] input[name=job_id]').val());
-						//button.disabled = false;
-						//location.reload();
+						location.reload();
 					} else {
 						alert("실패하였습니다.");
 						//button.disabled = false;

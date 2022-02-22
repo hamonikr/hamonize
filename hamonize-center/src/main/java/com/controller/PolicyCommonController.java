@@ -40,7 +40,6 @@ public class PolicyCommonController {
 	public JSONObject checkAnsibleJobStatus(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
 		JSONObject data = new JSONObject();
 		data = restApiService.checkPolicyJobResult(Integer.parseInt(params.get("job_id").toString()));
-		System.out.println("data====="+data);
 		return data;
 
 	}
