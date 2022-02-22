@@ -523,16 +523,18 @@ System.out.println("retData===="+retData.toString());
 			hdVo.setPc_cpu_id(tempObj.get("CPUID").toString());
 			hdVo.setPc_uuid(tempObj.get("pcuuid").toString());
 			hdVo.setStatus(tempObj.get("action").toString());
+			hdVo.setDomain(tempObj.get("domain").toString());
 		}
-		hdVo.setOrg_seq(pcUUID(hdVo.getPc_uuid()));
+		//hdVo.setOrg_seq(pcUUID(hdVo.getPc_uuid()));
 
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
 		PcMangrVo chkPcMangrVo = pcMangrMapper.chkPcinfo(hdVo);
+		hdVo.setOrg_seq(chkPcMangrVo.getOrg_seq());
 		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
-
+		hdVo.setHost_id(chkPcMangrVo.getHost_id());
 		int retVal = 0;
 
 		hdVo.setOld_pc_ip(chkPcMangrVo.getPc_ip());
@@ -545,7 +547,10 @@ System.out.println("retData===="+retData.toString());
 			retVal = pcMangrMapper.updateVpnInfo(hdVo);
 			pcMangrMapper.pcIpchnLog(hdVo);
 
+			OrgVo orgVo = pcMangrMapper.getOrgInfoParamPCUUID(hdVo);
+
 			if (retVal == 1) {
+				restApiService.updateHost(hdVo, orgVo);
 				con.updatePcVpn(hdVo);
 			}
 

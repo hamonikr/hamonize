@@ -53,7 +53,7 @@
 		update tbl_pc_mangr
 		set 	
 				org_seq = #{org_seq}
-		where seq = #{seq}
+		where seq = #{seq} and domain = #{domain}
 	</update>
 
 	<!-- updatePcinfo -->
@@ -206,7 +206,8 @@
 	<select id="teamList" resultType="com.model.OrgVo">
 		select *
 		from tbl_org
-		where section = 'S'
+		where domain = #{domain} and seq != 1
+		order by seq asc
 	</select>
 
 	<!-- PcController.mngrListInfo -->
@@ -236,11 +237,11 @@
 			tb.pc_memory, 
 			tb.pc_disk, 
 			tb.pc_macaddress, 
-			tb.pc_guid, 
 			tb.pc_ip, 
 			tb.RGSTR_DATE, 
 			tb.UPDT_DATE,
 			tb.pc_hostname,
+			tb.pc_uuid,
 			tb.pc_os,
 			tb.pc_change,
 			tb.pc_vpnip,
