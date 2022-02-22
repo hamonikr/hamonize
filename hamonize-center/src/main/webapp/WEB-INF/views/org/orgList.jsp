@@ -170,7 +170,7 @@ $(document).ready(function () {
 			alert("최상위조직은 삭제할 수 없습니다.");
 			return false;
 		} else{
-			if(confirm("하위조직이 있다면 하위조직도 전부 삭제됩니다 삭제하시겠습니까?")){
+			if(confirm("하위조직이 있다면 하위조직 및 등록 되어있는 PC도 전부 삭제됩니다.\n한번 삭제한 정보는 복구 할 수 없습니다.\n삭제하시겠습니까?")){
 				
 				 $.post("/org/orgManage",{
 						type: 'delt',

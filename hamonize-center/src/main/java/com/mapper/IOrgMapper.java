@@ -16,6 +16,8 @@ public interface IOrgMapper {
 	
 	public int orgDelete(OrgVo orgvo);
 
+	public int pcDelete(OrgVo orgvo);
+
 	public OrgVo selectGroupInfo( OrgVo gvo );
 	
 	public OrgVo groupUpperCode(OrgVo gvo);
