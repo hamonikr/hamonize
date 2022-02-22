@@ -64,6 +64,9 @@
 				var agrs = result;
 				var jsonData = JSON.stringify(agrs.dataInfo);
 
+				$('form[name=frm] input[name=job_id]').val(agrs.job_id);
+				console.log("ssss===="+$('form[name=frm] input[name=job_id]').val());
+
 				if (typeof jsonData != "undefined") {
 					var obj = JSON.parse(jsonData);
 
@@ -89,7 +92,6 @@
 							});
 						}
 						$('form[name=frm] input[name=former_ppm_name]').val(former_ppm_names);
-						$('form[name=frm] input[name=job_id]').val(agrs.job_id);
 					}
 				}
 
