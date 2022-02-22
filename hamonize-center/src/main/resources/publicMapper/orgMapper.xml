@@ -332,11 +332,31 @@
 		and DOMAIN = #{domain}
 	</update>
 
-	<!-- 조직삭제 -->
+	<!-- 조직 및 하위조직 삭제 -->
 	<delete id="orgDelete" parameterType="com.model.OrgVo">
 		DELETE FROM TBL_ORG
 			WHERE DOMAIN = #{domain}
 			AND SEQ IN
+			(
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{seq}
+				and a.DOMAIN = #{domain}
+				union all
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				from tbl_org a, search_org so 
+				where a.p_seq = so.seq and a.DOMAIN = so.domain and not cycle)
+				select seq
+				from search_org
+			)
+	</delete>
+
+	<!-- 조직의 PC들 삭제 -->
+	<delete id="pcDelete" parameterType="com.model.OrgVo">
+		DELETE FROM TBL_PC_MANGR
+			WHERE DOMAIN = #{domain}
+			AND ORG_SEQ IN
 			(
 				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false

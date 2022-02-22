@@ -168,12 +168,12 @@ public class OrgService {
 		
 		OrgVo orgPath = orgMapper.getAllOrgNm(vo);
 		
-		Long org_seq = vo.getOrg_seq();
+		//Long org_seq = vo.getOrg_seq();
 		vo.setMove_org_nm(orgPath.getAll_org_nm());
-		
+		vo.setOrg_seq(vo.getOld_org_seq());
 		orgPath = orgMapper.getAllOrgNm(vo);
 		
-		vo.setOrg_seq(org_seq);
+		vo.setOrg_seq(vo.getOrg_seq());
 		vo.setAlldeptname(orgPath.getAll_org_nm());
 		
 		con.movePc(vo);
@@ -222,11 +222,13 @@ public class OrgService {
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		
-
 		int result = 0;
-		result = orgMapper.orgDelete(orgvo);
-		restApiService.deleteOrg(orgvo);
-		con.deleteOu(orgvo);
+		result = orgMapper.pcDelete(orgvo);
+		if(result > 0){
+			result = orgMapper.orgDelete(orgvo);
+			restApiService.deleteOrg(orgvo);
+			con.deleteOu(orgvo);
+		}
 
 		return result;
 	}
