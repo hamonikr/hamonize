@@ -187,13 +187,13 @@ public class RestApiService {
 				//return result;
 	}
 
-  public int addHost(PcMangrVo hdVo, OrgVo orgNumChkVo) throws ParseException
+  public int addHost(PcMangrVo hdVo, OrgVo orgVo) throws ParseException
   {
-    String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_uuid()+"\",\"inventory\": "+orgNumChkVo.getInventory_id()+"}";
+    String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_uuid()+"\",\"inventory\": "+orgVo.getInventory_id()+"}";
     System.out.println("request====="+request);
     Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
     .path("/api/v2/groups/").path("{id}/").path("hosts/")
-    .build(orgNumChkVo.getGroup_id()))
+    .build(orgVo.getGroup_id()))
     .contentType(MediaType.APPLICATION_JSON)
     .body(BodyInserters.fromValue(request))
     .exchange().flatMap(clientResponse -> {
@@ -218,9 +218,9 @@ public class RestApiService {
   return result;
 }
 
-public void updateHost(PcMangrVo hdVo, OrgVo orgNumChkVo) throws ParseException
+public void updateHost(PcMangrVo hdVo, OrgVo orgVo) throws ParseException
   {
-    String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_uuid()+"\",\"inventory\": "+orgNumChkVo.getInventory_id()+"}";
+    String request = "{\"name\": \""+hdVo.getPc_vpnip()+"\",\"description\": \""+hdVo.getPc_uuid()+"\",\"inventory\": "+orgVo.getInventory_id()+"}";
     System.out.println("request====="+request);
     Mono<String> response = webClient.patch().uri(UriBuilder -> UriBuilder
     .path("/api/v2/hosts/").path("{id}/")

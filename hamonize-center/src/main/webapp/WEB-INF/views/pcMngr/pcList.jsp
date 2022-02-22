@@ -62,13 +62,12 @@
 							gbInnerHtml += "<td>" + hamonikrIcon + "</td>";
 						}
 
-						// if(vpn_used ==1 ){
-								gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
-						// }else{
-						// gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
-						// }
-						// gbInnerHtml += "<td><a style='color:steelblue;' href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.pc_vpnip+"','"+value.host_id+"')\">"+value.pc_hostname+"</a></td>";
-						
+						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('" + no + "','" + value
+							.deptname + "','" + value.pc_os + "','" + value.pc_hostname + "','" + value
+							.pc_ip + "','" + value.pc_vpnip + "','" + value.pc_macaddress + "','" + value
+							.pc_disk + "','" + value.pc_cpu + "','" + value.pc_memory + "','" + value
+							.rgstr_date.substr(0, value.rgstr_date.length - 7) + "','" + value.seq +
+							"','" + value.org_seq + "','" + value.host_id + "','" + value.pc_uuid + "')\">" + value.pc_hostname + "</a></td>";
 
 						gbInnerHtml += "<td>" + timestampTodate(value.rgstr_date) +
 							"</td>";
@@ -272,12 +271,12 @@ console.log("value=========+++"+value);
 					gbInnerHtml += "<td>" + hamonikrIcon + "</td>";
 				}
 
-				// if(vpn_used ==1 ){
-				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_vpnip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
-				// }else{
-				// gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.pc_vpnip+"')\">"+value.pc_hostname+"</a></td>";
-				// }
-				// gbInnerHtml += "<td><a style='color:steelblue;' href=\"#\" onclick=\"detail_popup_novpn('"+no+"','"+value.deptname+"','"+value.pc_os+"','"+value.pc_hostname+"','"+value.pc_ip+"','"+value.pc_macaddress+"','"+value.pc_disk+"','"+value.pc_cpu+"','"+value.pc_memory+"','"+value.rgstr_date.substr(0,value.rgstr_date.length-7)+"','"+value.pc_vpnip+"','"+value.host_id+"')\">"+value.pc_hostname+"</a></td>";
+				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('" + no + "','" + value
+					.deptname + "','" + value.pc_os + "','" + value.pc_hostname + "','" + value
+					.pc_ip + "','" + value.pc_vpnip + "','" + value.pc_macaddress + "','" + value
+					.pc_disk + "','" + value.pc_cpu + "','" + value.pc_memory + "','" + value
+					.rgstr_date.substr(0, value.rgstr_date.length - 7) + "','" + value.seq +
+					"','" + value.org_seq + "','" + value.host_id + "','" + value.pc_uuid + "')\">" + value.pc_hostname + "</a></td>";
 
 				gbInnerHtml += "<td>" + timestampTodate(value.rgstr_date) + "</td>";
 				gbInnerHtml += "</tr>";
@@ -305,7 +304,7 @@ console.log("value=========+++"+value);
 
 
 	function detail_popup(no, name, pc_os, hostname, pc_ip, pc_vpnip, macaddress, pc_disk, cpu, memory, rgstr_date, seq,
-		old_org_seq, host_id) {
+		old_org_seq, host_id,pc_uuid) {
 		console.log("detail_popup >> ");
 		console.log("host_id >> " + host_id);
 		if (pc_os == "H") {
@@ -340,6 +339,7 @@ console.log("value=========+++"+value);
 		$("#seq").val(seq);
 		$("#old_org_seq").val(old_org_seq);
 		$("#host_id").val(host_id);
+		$("#pc_uuid").val(pc_uuid);
 
 		console.log("vpn_uwwwwwwwwwwwwwwsed >> " + vpn_used);
 		// if (vpn_used != 0 && pc_vpnip != "no vpn") {
@@ -348,47 +348,6 @@ console.log("value=========+++"+value);
 			// $('#detail_vpnip').append(innerHtml);
 			$("#detail_vpnip").text(pc_vpnip);
 		// }
-
-		$('#popupLayer').show();
-		$("#bg_fix").show();
-	};
-
-	function detail_popup_novpn(no, name, pc_os, hostname, pc_ip, macaddress, pc_disk, cpu, memory, rgstr_date, seq,
-		old_org_seq,host_id) {
-		console.log("detail_popup_novpn >> " + pc_os);
-		console.log("host_id >> " + host_id);
-
-		if (pc_os == "H") {
-			pc_os = hamonikrIcon;
-		} else if (pc_os == "W") {
-			pc_os = windowIcon;
-		} else if (pc_os == "L") {
-			pc_os = linuxmintIcon;
-		} else if (pc_os == "D") {
-			pc_os = debianIcon;
-		} else if (pc_os == "U") {
-			pc_os = ubuntuIcon;
-		} else if (pc_os == "G") {
-			pc_os = gooroomIcon;
-		} else {
-			pc_os = "";
-		}
-
-		var innerHtml = "";
-		$("#detail_no").html(no);
-		$("#detail_pc_os").html(pc_os);
-		$("#detail_hostname").html(hostname);
-		$("#detail_name").html(name);
-		$("#detail_pc_ip").html(pc_ip);
-		$("#detail_macaddress").html(macaddress.toString());
-		$("#detail_pc_disk").html(pc_disk);
-		$("#detail_cpu").html(cpu);
-		$("#detail_memory").html(memory);
-		$("#detail_rgstr_date").html(rgstr_date);
-		$("#seq").val(seq);
-		$("#old_org_seq").val(old_org_seq);
-		$("#host_id").val(host_id);
-
 
 		$('#popupLayer').show();
 		$("#bg_fix").show();
@@ -405,6 +364,7 @@ console.log("value=========+++"+value);
 			$.ajax({
 				url: '/pcMngr/teamList',
 				type: 'post',
+				data: {domain: $('#domain').val()},
 				success: function (data) {
 					for (var x = 0; x < data.length; x++) {
 						var option = document.createElement("option");
@@ -428,7 +388,12 @@ console.log("value=========+++"+value);
 	}
 
 	function move_team() {
-
+		console.log("1========"+$('#seq').val());
+		console.log("2========"+$('#team option:selected').val());
+		console.log("3========"+$('#old_org_seq').val());
+		console.log("4========"+$('#host_id').val());
+		console.log("4========"+$("#detail_vpnip").text());
+		console.log("4========"+$('#pc_uuid').val());
 		if (confirm("부서를 이동할 경우 기존 부서에서 내린 정책이 포함된 \n일반 백업본은 모두 삭제됩니다. \n부서를 이동하시겠습니까?")) {
 			$.ajax({
 				url: '/pcMngr/moveTeam',
@@ -437,7 +402,11 @@ console.log("value=========+++"+value);
 					seq: $('#seq').val(),
 					org_seq: $('#team option:selected').val(),
 					old_org_seq: $('#old_org_seq').val(),
-					pc_hostname: $("#detail_hostname").text()
+					pc_hostname: $("#detail_hostname").text(),
+					domain: $('#domain').val(),
+					host_id: $('#host_id').val(),
+					pc_vpnip: $("#detail_vpnip").text(),
+					pc_uuid: $('#pc_uuid').val()
 				},
 				success: function (data) {
 					if (data == 1) {
@@ -458,7 +427,7 @@ console.log("value=========+++"+value);
 	function delete_pc() {
 
 
-		if (confirm("해당 PC를 삭제하시겠습니까?")) {
+		if (confirm("한번 삭제한 PC는 복구 할 수 없습니다. 삭제 하시겠습니까?")) {
 			$.ajax({
 				url: '/pcMngr/deletePc',
 				type: 'post',
@@ -516,6 +485,7 @@ console.log("value=========+++"+value);
 							<input type="hidden" id="old_org_seq" />
 							<input type="hidden" id="domain" name="domain">
 							<input type="hidden" id="host_id" name="host_id">
+							<input type="hidden" id="pc_uuid" name="pc_uuid">
 						</div>
 					</div>
 

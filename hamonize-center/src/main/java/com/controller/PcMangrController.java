@@ -124,8 +124,8 @@ public class PcMangrController {
 
 	@ResponseBody
 	@RequestMapping(value = "teamList", method = RequestMethod.POST)
-	public List<OrgVo> teamList() {
-		List<OrgVo> teamList = pcmapper.teamList();
+	public List<OrgVo> teamList(PcMangrVo vo) {
+		List<OrgVo> teamList = pcmapper.teamList(vo);
 		// if (result > 0) {
 		// 	int re = pcmapper.changeInsertHistory(vo);
 		// 	pcmapper.updateHistory(vo);
@@ -144,10 +144,10 @@ public class PcMangrController {
 
 	@ResponseBody
 	@RequestMapping(value = "moveTeam", method = RequestMethod.POST)
-	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException {
+	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException {
 		int result = 0;
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
-		vo.setDomain(lvo.getDomain());
+		//LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		//vo.setDomain(lvo.getDomain());
 		result = oService.pcMove(vo);
 		return result;
 
