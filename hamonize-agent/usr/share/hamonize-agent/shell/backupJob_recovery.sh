@@ -15,12 +15,12 @@ BKDIR="/timeshift/snapshots"
 centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
 
 BK_RECOV_CENTERURL="http://${centerUrl}/act/stBackupRecoveryJob"
-
+TENANT=$(cat /etc/hamonize/hamonize_tanent)
 LOGFILE="/var/log/hamonize/agentjob/agentjob_backup_recovery.log"
 # sudo touch $LOGFILE
 
 DEVICE=`df | grep -w "/" | awk '{print $1}'`
-DIR_NAME="/tmp/backuptest";
+# DIR_NAME="/tmp/backuptest";
 BACKUP_NAME=`cat /etc/hamonize/recovery/recoveryInfo.hm`
 # BACKUP_NAME="2021-07-13_16-01-42"
 
@@ -57,6 +57,7 @@ BK_JSON="{\
 		\"hostname\": \"$HOSTNAME\",\
 		\"action_status\": \"Y\",\
 		\"name\": \"$BACKUP_NAME\",\
+		\"domain\": \"$TENANT\",\
 		\"result\": \"N\",\
 		\"dir\": \"$BKDIR\"\
 		} ]\

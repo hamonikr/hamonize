@@ -24,17 +24,6 @@ sudo systemctl stop hamonize-agent.service
 # ===================================================================================
 
 sleep 2
-#==== agnet-process]  <-------------------------------------------------------------------- test 
-echo "$DATETIME] 3. hamonize-agentmngr install ============ [start]" >>$LOGFILE
-# sudo apt-get install hamonize-agentmngr -y > /dev/null
-
- sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-agent-mngr-1.0.3_amd64.deb >>$LOGFILE
-
-echo "$DATETIME] hamonize-agentmngr install === [END]" >>$LOGFILE
-echo "$DATETIME ] $(sudo service hamonize-agentmngr status)" >>$LOGFILE
-sudo systemctl stop hamonize-agentmngr
-
-sleep 2
 
 
 #==== process-mngr  <-------------------------------------------------------------------- test 
