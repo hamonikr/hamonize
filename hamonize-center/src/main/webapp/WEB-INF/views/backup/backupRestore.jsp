@@ -138,6 +138,7 @@
 								<input type="hidden" name="br_seq"  id="br_seq" value="" />
 								<input type="hidden" name="inventory_id" id="inventory_id" value="" />
 								<input type="hidden" name="group_id" id="group_id" value="" />
+								<input type="hidden" name="job_id" id="job_id" value="" />
 								<input type="hidden" name="domain" id="domain" value="" />
 
 								<div class="form-group">
@@ -217,10 +218,7 @@
 				if (result.STATUS == "SUCCESS") {
 					alert("정상적으로 처리되었습니다.");
 					checkAnsibleJobStatus(result.ID);
-					//$('form[name=frm] input[name=job_id]').val(result.ID);
-					//alert($('form[name=frm] input[name=job_id]').val());
-					//button.disabled = false;
-					//location.reload();
+					location.reload();
 				} else {
 					alert("실패하였습니다.");
 					//button.disabled = false;
