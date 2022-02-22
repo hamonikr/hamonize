@@ -159,12 +159,15 @@ public class OrgService {
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		
 		OrgVo orgPath = orgMapper.getAllOrgNm(vo);
+		
 		Long org_seq = vo.getOrg_seq();
 		vo.setMove_org_nm(orgPath.getAll_org_nm());
-//		vo.setOrg_seq(vo.getOld_org_seq());
+		
 		orgPath = orgMapper.getAllOrgNm(vo);
+		
 		vo.setOrg_seq(org_seq);
 		vo.setAlldeptname(orgPath.getAll_org_nm());
+		
 		con.movePc(vo);
 		
 		// 백업 파일 들도 org_seq 변경 tbl_backup_recovery_mngr

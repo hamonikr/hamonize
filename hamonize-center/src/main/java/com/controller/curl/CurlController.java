@@ -194,27 +194,50 @@ System.out.println("retData===="+retData.toString());
 
 	@ResponseBody
 	@GetMapping("/isVpnUsed")
-	public String vpnUsed(HttpServletRequest request) throws Exception {
-		logger.debug("-------isVpnUsed------");
-		JSONArray jsonArr = new JSONArray();
+	public String vpnUsed(HttpServletRequest request, @RequestBody String retData) throws Exception {
+        logger.debug("-------isVpnUsed------");
+        JSONArray jsonArr = new JSONArray();
 
-		List<SvrlstVo> vpnSvrList = svrlstMapper.getVpnSvrlstList();
-		
-		for (SvrlstVo el : vpnSvrList) {
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(retData.toString());
+        JSONArray hmdArray = (JSONArray) jsonObj.get(EVENTS);
 
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("svr_nm", el.getSvr_nm());
-			jsonObject.put("ip", el.getSvr_ip()+":"+el.getSvr_port());
-			jsonObject.put("vip", el.getSvr_vip()+":"+el.getSvr_port());
-			jsonObject.put("vpn_used", el.getSvr_used());
+        SvrlstVo setvo = new SvrlstVo();
+        for (int i = 0; i < hmdArray.size(); i++) {
+            JSONObject tempObj = (JSONObject) hmdArray.get(i);
+            setvo.setSvr_domain(tempObj.get("domain").toString());
+        }
 
-			jsonArr.add(jsonObject);
-		}
+        SvrlstVo vpnSvrVo = svrlstMapper.getVpnUsedInfo(setvo);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("vpn_used", vpnSvrVo.getVpn_used());
+        jsonArr.add(jsonObject);
 
-		logger.debug("//== vpnUsed jsonObject  data is : {}", jsonArr);
+        logger.info("//== vpnUsed jsonObject  data is : {}", jsonArr);
 
-		return jsonArr.toString();
+        return jsonArr.toString();
 	}
+//	public String vpnUsed(HttpServletRequest request) throws Exception {
+//		logger.debug("-------isVpnUsed------");
+//		JSONArray jsonArr = new JSONArray();
+//
+//		List<SvrlstVo> vpnSvrList = svrlstMapper.getVpnSvrlstList();
+//		
+//		for (SvrlstVo el : vpnSvrList) {
+//
+//			JSONObject jsonObject = new JSONObject();
+//			jsonObject.put("svr_nm", el.getSvr_nm());
+//			jsonObject.put("ip", el.getSvr_ip()+":"+el.getSvr_port());
+//			jsonObject.put("vip", el.getSvr_vip()+":"+el.getSvr_port());
+//			jsonObject.put("vpn_used", el.getSvr_used());
+//
+//			jsonArr.add(jsonObject);
+//		}
+//
+//		logger.debug("//== vpnUsed jsonObject  data is : {}", jsonArr);
+//
+//		return jsonArr.toString();
+//	}
 
 
 
@@ -373,7 +396,6 @@ System.out.println("retData===="+retData.toString());
 	 */
 	@GetMapping("/commInfoData")
 	public String getAgentJob(HttpServletRequest request) throws Exception {
-
 		String output = "";
 
 		JSONObject jsonObject = new JSONObject();

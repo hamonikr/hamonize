@@ -16,7 +16,7 @@
 			svr_domain, 
 			svr_ip, 
 			svr_vip, 
-			svr_used, 
+			'1' as svr_used, 
 			CASE 
 				WHEN svr_port is null  THEN 'N'
 				WHEN svr_port = ''  THEN 'N'
@@ -27,6 +27,12 @@
 		FROM tbl_svrlst
 	</select>
 
+	<select id="getVpnUsedInfo" resultType="com.model.SvrlstVo">
+       select
+       	tenant_vpn_used as vpn_used
+       from tbl_tenant_config
+       where domain =#{svr_domain}
+    </select>
 
 	<select id="getSvrlstList" resultType="com.model.SvrlstVo" parameterType="hashmap">
 		SELECT 

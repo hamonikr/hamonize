@@ -158,8 +158,9 @@ public class PcMangrController {
 		int result = 0;
 		LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
-		result = oService.pcMove(vo);
+//		result = oService.pcMove(vo);
 		result = oService.deletePc(vo);
+		System.out.println("delete pc result ================"+ result );
 		return result;
 
 	}

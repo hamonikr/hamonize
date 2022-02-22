@@ -18,6 +18,7 @@ public class SvrlstVo {
 	private String svr_dc;
 	private String insert_dt;
 	private int svr_used;
+	private String vpn_used;
 
 	// search ====
 	private String txtSearch;

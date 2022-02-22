@@ -11,6 +11,8 @@ public interface ISvrlstMapper {
 	public List<SvrlstVo> getSvrlstList(HashMap<String, Object> map);
 	
 	public List<SvrlstVo> getVpnSvrlstList();
+	
+	public SvrlstVo getVpnUsedInfo( SvrlstVo vo );
 
 	public SvrlstVo getVpnSvrUsed(SvrlstVo vo);
 

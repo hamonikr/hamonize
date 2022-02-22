@@ -81,7 +81,7 @@ public class MonitoringController {
 		try {
 			list = mService.pcListInfo(params);
 			for (int i = 0; i < list.size(); i++) {
-				if( list.get(i).get("pc_status").equals("true") ) {
+				if( list.get(i).get("pc_status") != null && list.get(i).get("pc_status").equals("true") ) {
 					on++;
 				} else {
 					off++;
