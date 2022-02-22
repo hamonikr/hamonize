@@ -217,7 +217,7 @@
 			function (result) {
 				if (result.STATUS == "SUCCESS") {
 					alert("정상적으로 처리되었습니다.");
-					checkAnsibleJobStatus(result.ID);
+					checkAnsibleJobStatus(result.ID,"restore");
 					location.reload();
 				} else {
 					alert("실패하였습니다.");

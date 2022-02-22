@@ -32,7 +32,7 @@
 				var agrs = result;
 				var jsonData = JSON.stringify(agrs.dataInfo);
 				var obj = JSON.parse(jsonData);
-
+				$('form[name=frm] input[name=job_id]').val(agrs.job_id);
 				$('form[name=frm] a[name=selectName]').removeClass("active");
 				$(".bodyDataLayer").removeClass("boder-line_on");
 				$(".bodyDataLayer").removeClass("boder-line_off");
@@ -55,7 +55,6 @@
 							}
 						});
 					}
-					$('form[name=frm] input[name=job_id]').val(agrs.job_id);
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					
 				}

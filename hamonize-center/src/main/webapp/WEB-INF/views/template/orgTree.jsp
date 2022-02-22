@@ -100,20 +100,23 @@
 		$.fn.zTree.init($("#tree"), setting, zNodes); 
 		var treeObj =  $.fn.zTree.getZTreeObj("tree");
 		var sNodes = treeObj.getSelectedNodes();
-		if (treeObj.getNodes().length < 1) {
-			if(confirm("최상위 부서가 등록되지 않았습니다. 등록하시겠습니까?")){
-					$.ajax({
-					url: '/org/orgManage',							// Any URL
-					type: 'post',
-					data: {type:'save',org_nm:'${domain}',all_org_nm:'',p_org_nm:'',section:''},                 // Serialize the form data
-					success: function (data) { 					// If 200 OK
-						location.reload();
-					},
-					error: function (xhr, text, error) {              // If 40x or 50x; errors
-						alert("최상위 부서가 등록되지 않았습니다. QnA에 문의 주기시 바랍니다.");
-						return false;
-					}
-				});
+		console.log(window.location.href.split("/").reverse()[0]);
+		if(window.location.href.split("/").reverse()[0] == "orgManage"){
+			if (treeObj.getNodes().length < 1) {
+				if(confirm("최상위 부서가 등록되지 않았습니다. 등록하시겠습니까?")){
+						$.ajax({
+						url: '/org/orgManage',							// Any URL
+						type: 'post',
+						data: {type:'save',org_nm:'${domain}',all_org_nm:'',p_org_nm:'',section:''},                 // Serialize the form data
+						success: function (data) { 					// If 200 OK
+							location.reload();
+						},
+						error: function (xhr, text, error) {              // If 40x or 50x; errors
+							alert("최상위 부서가 등록되지 않았습니다. QnA에 문의 주기시 바랍니다.");
+							return false;
+						}
+					});
+				}
 			}
 		}
 		//treeObj.checkNode(zNodes, zNodes.checked, true, true);

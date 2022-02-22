@@ -33,6 +33,7 @@
 				(DOMAIN,
 				JOB_ID,
 				ORG_SEQ,
+				KIND,
 				DATA,
 				RGSTR_DATE) 
 				VALUES
@@ -41,6 +42,7 @@
 					(select distinct domain from tbl_org where inventory_id = #{inventory_id}::int),
 					#{job_id}::int,
 					#{org_seq}::int,
+					#{before_url},
 					#{item.result}::jsonb,
 					now()
 				)
