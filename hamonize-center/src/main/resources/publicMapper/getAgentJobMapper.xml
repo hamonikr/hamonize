@@ -29,8 +29,9 @@
 		    TB.seq as seq,
 		    TB.pc_uuid
 		from tbl_org TA join tbl_pc_mangr TB on TA.seq = TB.org_seq
-		where TA.seq = (SELECT org_seq FROM public.tbl_pc_mangr where pc_uuid = #{pc_uuid})
+		where TA.seq = (SELECT org_seq FROM public.tbl_pc_mangr where domain = #{domain} and pc_uuid = #{pc_uuid})
    		 and TB.pc_uuid = #{pc_uuid}
+   		 limit 1
 	</select>
 	
 	

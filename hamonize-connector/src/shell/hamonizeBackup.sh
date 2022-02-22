@@ -10,6 +10,7 @@ CENTERURL=`cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}'`
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 UUID=`cat /etc/hamonize/uuid |head -1`
 HOSTNAME=`hostname`
+TENANT=$(cat /etc/hamonize/hamonize_tanent)
 
 cat  /dev/null > $Log_backup 
 
@@ -80,6 +81,7 @@ echo "start==device========$DEVICE" >>$Log_backup
                 \"name\": \"$BKNAME\",\
                 \"hostname\": \"$HOSTNAME\",\
                 \"gubun\": \"A\",\
+                \"domain\": \"$TENANT\",\
                 \"dir\": \"$BKDIR\"\
                 } ]\
         }"

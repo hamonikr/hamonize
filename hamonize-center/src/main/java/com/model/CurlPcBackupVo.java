@@ -1,5 +1,10 @@
 package com.model;
 
+import javax.persistence.Id;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Comment;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +14,10 @@ import lombok.ToString;
 @ToString
 public class CurlPcBackupVo {
 	
+	@Id
+	@Size(max=50)
+	@Comment("")
+	private String domain;
 	
 	// db table====
 	private int br_seq;

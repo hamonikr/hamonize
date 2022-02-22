@@ -8,6 +8,7 @@ VPNCNT=`nmcli con|grep ^${VPNKEY}.*vpn|awk '{print $2}' | wc -l`
 PCHOSTNAME=`hostname`
 LOGFILE=/tmp/auto-vpn.log
 LOGGING="true"
+TENANT=$(cat /etc/hamonize/hamonize_tanent)
 
 function hmnlog {
 
@@ -41,6 +42,7 @@ function sendInfo {
                         \"hostname\": \"${PCHOSTNAME}\",\
                         \"CPUID\": \"${CPUID}\",\
                         \"pcuuid\": \"${PCUUID}\",\
+                        \"domain\": \"${TENANT}\",\
                         \"action\": \"${ACTION}\"\
                         } ]\
                 }"

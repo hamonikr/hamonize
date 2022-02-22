@@ -198,7 +198,7 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 		// $(".layerpop__container").text("정보 체크중입니다......!!");
 
 		// window.setTimeout(nextStap, 5000);
-		// hamonizeProgramInstall();
+		hamonizeProgramInstall();
 
 	} else {
 		console.log("false");

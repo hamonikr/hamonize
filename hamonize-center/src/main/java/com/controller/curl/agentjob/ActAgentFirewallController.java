@@ -288,10 +288,11 @@ public class ActAgentFirewallController {
 			inputVo.setHostname(tempObj.get("hostname").toString());
 			inputVo.setAction_status(tempObj.get("action_status").toString());
 			inputVo.setResult(tempObj.get("result").toString());
+			inputVo.setDomain(tempObj.get("domain").toString());
 
 		}
 
-		Long uuid = pcUUID(inputVo.getUuid(), "domain");// ===================================
+		Long uuid = pcUUID(inputVo.getUuid(), inputVo.getDomain());// ===================================
 		inputVo.setOrg_seq(uuid);
 
 		int retVal = getAgentRecoveryMapper.insertActAgentBackupRecovery(inputVo);
