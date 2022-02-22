@@ -127,16 +127,19 @@ const pcChkBtn = document.getElementById('pcChkBtn');
 pcChkBtn.addEventListener('click', function (event) {
 	if (!doubleSubmitFlag) {
 
-		let groupname = $("#groupName option:selected").val(); //$("#groupName").val(); //부서번호
+		// let groupname = $("#groupName option:selected").val(); //$("#groupName").val(); //부서번호
 
-		if (typeof groupname == "undefined") {
-			doubleSubmitFlag = false;
-			return false
-		}
-		let sabun = "sabun"; //$("#sabun").val(); //사번
-		let username = "username"; //$("#username").val(); // 사용자 이름
+		// if (typeof groupname == "undefined") {
+		// 	doubleSubmitFlag = false;
+		// 	return false
+		// }
+		// let sabun = "sabun"; //$("#sabun").val(); //사번
+		// let username = "username"; //$("#username").val(); // 사용자 이름
 
-		ipcRenderer.send('pcInfoChk', groupname, sabun, username, $("#domain").val());
+		// ipcRenderer.send('pcInfoChk', groupname, sabun, username, $("#domain").val());
+		$("#selectOrg").val($("#groupName option:selected").val());
+		// window.setTimeout(nextStap, 5000);
+		nextStap();
 		doubleSubmitFlag = true;
 	} else {
 		doubleSubmitFlag = true;
@@ -162,17 +165,40 @@ function nextStap() {
 	hamonizeVpnInstall();
 };
 
+
+
+function setPcinfo() {
+	let groupname = $("#selectOrg").val(); //$("#groupName").val(); //부서번호
+
+	if (typeof groupname == "undefined") {
+		doubleSubmitFlag = false;
+		return false
+	}
+	let sabun = "sabun"; //$("#sabun").val(); //사번
+	let username = "username"; //$("#username").val(); // 사용자 이름
+
+	console.log("groupname===========++"+groupname +"==>> "+ $("#domain").val());
+	ipcRenderer.send('pcInfoChk', groupname, sabun, username, $("#domain").val());
+
+}
+
 ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 	console.log("pcInfoChkProc===" + isChkBool);
 
 	if (isChkBool == true) {
 		console.log("true");
-		$modal.show();
-		popupOpen();
-		$('.layerpop').css("left", (($(window).width() - $('.layerpop').outerWidth()) / 1.5) + $(window).scrollLeft());
-		$(".layerpop__container").text("정보 체크중입니다......!!");
 
-		window.setTimeout(nextStap, 5000);
+		$("#stepA").removeClass("br animate");
+		$("#stepB").addClass("br animate");
+		$("#infoStepA").text("완료");
+
+		// $modal.show();
+		// popupOpen();
+		// $('.layerpop').css("left", (($(window).width() - $('.layerpop').outerWidth()) / 1.5) + $(window).scrollLeft());
+		// $(".layerpop__container").text("정보 체크중입니다......!!");
+
+		// window.setTimeout(nextStap, 5000);
+		// hamonizeProgramInstall();
 
 	} else {
 		console.log("false");
@@ -194,10 +220,11 @@ function hamonizeVpnInstall() {
 ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
 	console.log("hamonizeVpnInstall_Result===" + result);
 	if (result == 'Y') {
-		$("#stepA").removeClass("br animate");
-		$("#stepB").addClass("br animate");
-		$("#infoStepA").text("완료");
-		hamonizeProgramInstall();
+		// $("#stepA").removeClass("br animate");
+		// $("#stepB").addClass("br animate");
+		// $("#infoStepA").text("완료");
+		// hamonizeProgramInstall();
+		setPcinfo();
 	} else if (result == 'N002') {
 		//fail vpn create 
 		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N002]");
