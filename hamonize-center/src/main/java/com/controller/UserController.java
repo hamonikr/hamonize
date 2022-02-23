@@ -7,6 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mapper.IUserMapper;
+import com.model.OrgVo;
+import com.model.UserVo;
+import com.paging.PagingUtil;
+import com.service.OrgService;
+import com.service.UserService;
+
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.mapper.IUserMapper;
-import com.model.OrgVo;
-import com.model.UserVo;
-import com.paging.PagingUtil;
-import com.service.OrgService;
-import com.service.UserService;
 
 
 @Controller

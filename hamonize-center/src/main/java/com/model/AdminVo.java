@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
 
 import com.paging.PagingVo;
 
-import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Comment;
 
 import lombok.Getter;

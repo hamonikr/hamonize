@@ -7,9 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mapper.IPolicyUpdtMapper;
 import com.model.OrgVo;
 import com.model.PolicyUpdtVo;
@@ -20,6 +17,7 @@ import com.service.RestApiService;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,9 +130,9 @@ public class PolicyUpdtController {
 	@RequestMapping(value = "/usave", method = RequestMethod.POST)
 	public JSONObject usave(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
-		JsonParser jp = new JsonParser();
+		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();
-		JsonArray jsonArray = (JsonArray) jp.parse(data);
+		JSONArray jsonArray = (JSONArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
 		for (int i = 0; i < jsonArray.size(); i++) {

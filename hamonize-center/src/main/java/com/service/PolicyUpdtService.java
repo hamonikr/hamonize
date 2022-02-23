@@ -2,29 +2,19 @@ package com.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
+import com.mapper.IOrgMapper;
+import com.mapper.IPolicyUpdtMapper;
+import com.model.PolicyUpdtVo;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import com.google.gson.JsonObject;
-import com.mapper.IGetAgentJobMapper;
-import com.mapper.IGetAgentUpdtMapper;
-import com.mapper.IOrgMapper;
-import com.mapper.IPolicyUpdtMapper;
-import com.model.GetAgentUpdtVo;
-import com.model.PolicyUpdtVo;
 
 @Service
 public class PolicyUpdtService {

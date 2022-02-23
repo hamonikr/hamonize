@@ -7,7 +7,6 @@ import java.util.Map;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PolicyRestoreVo;
-import com.model.RecoveryVo;
 import com.model.UserVo;
 
 public interface IPcMangrMapper {

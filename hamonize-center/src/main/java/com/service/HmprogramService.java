@@ -19,7 +19,7 @@ import com.paging.PagingVo;
 @Service
 public class HmprogramService {
 
-	private static final int HashMap = 0;
+	//private static final int HashMap = 0;
 
 	@Autowired
 	private IHmprogramMapper hmprogramMapper;

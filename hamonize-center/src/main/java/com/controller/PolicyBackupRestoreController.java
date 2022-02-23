@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.model.BackupVo;
 import com.model.OrgVo;
 import com.service.BackupService;
@@ -16,6 +14,7 @@ import com.service.OrgService;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,10 +67,10 @@ public class PolicyBackupRestoreController {
 	@ResponseBody
 	@RequestMapping(value = "backupSave", method = RequestMethod.POST)
 	public String backupSave(HttpSession session, Model model, BackupVo vo,
-			@RequestParam Map<String, Object> params) {
-		JsonParser jp = new JsonParser();
+			@RequestParam Map<String, Object> params) throws ParseException {
+		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();
-		JsonArray jsonArray = (JsonArray) jp.parse(data);
+		JSONArray jsonArray = (JSONArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
 		int result = 0;

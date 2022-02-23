@@ -14,7 +14,7 @@ import com.model.BackupCycleVo;
 @Service
 public class BackupCycleService {
 
-	private static final int HashMap = 0;
+	//private static final int HashMap = 0;
 
 	@Autowired
 	private IBackupCycleMapper backupCycleMapper;
