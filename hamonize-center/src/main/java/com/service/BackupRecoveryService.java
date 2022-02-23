@@ -15,7 +15,7 @@ import com.model.RecoveryVo;
 @Service
 public class BackupRecoveryService {
 
-	private static final int HashMap = 0;
+	//private static final int HashMap = 0;
 
 	@Autowired
 	private IRestoreRecoveryMapper restoreRecoveryMapper;

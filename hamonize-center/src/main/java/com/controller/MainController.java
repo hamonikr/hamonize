@@ -7,21 +7,20 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.mapper.ISvrlstMapper;
 import com.model.LoginVO;
 import com.model.SvrlstVo;
-import com.mapper.ISvrlstMapper;
-
 import com.service.MonitoringService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 @Controller
 public class MainController {
