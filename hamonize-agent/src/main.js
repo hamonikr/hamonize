@@ -122,6 +122,10 @@ function Polling(time) {
 			(value) => {
 				console.log(value)
 				if (value) {
+
+					agnet_ufw();	//	방화벽 체크
+
+
 					// getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
 					// getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
 					// getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
@@ -130,8 +134,8 @@ function Polling(time) {
 					console.log("agent --start ============================= ");
 					// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
 					// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-					
-					
+
+
 					// ipStatusCheck();
 
 
@@ -1460,6 +1464,7 @@ function fnRecovJob() {
 
 // #----------------------------------------------------------------------------##----------------------------------------------------------------------------#
 const { Command } = require('commander');
+const { foo } = require("./aaa");
 const program = new Command();
 
 program
@@ -1474,16 +1479,12 @@ program
 	.option('--start')
 	.parse();
 
-console.log(`updt====> ${program.opts().updt}`);
-console.log(`progrmblock ---> ${program.opts().progrmblock}`);
-console.log(`ufw === > ${program.opts().ufw}`);
-console.log(`hwcheck === > ${program.opts().hwcheck}`);
-console.log(`start === > ${program.opts().start}`);
-console.log(program.opts().name);
-
-if (program.opts().hamonizeInstall) {
-	console.log("aaaaaaaaaaaaaa");
-}
+// console.log(`updt====> ${program.opts().updt}`);
+// console.log(`progrmblock ---> ${program.opts().progrmblock}`);
+// console.log(`ufw === > ${program.opts().ufw}`);
+// console.log(`hwcheck === > ${program.opts().hwcheck}`);
+// console.log(`start === > ${program.opts().start}`);
+// console.log(program.opts().name);
 
 
 // 비인가디바이스  - hamonize-process 패키지에서 비인가 로그파일의 내용 유무를 판별하여 hamonize-agent --unauthlog를 실행한다.
@@ -1541,7 +1542,6 @@ if (program.opts().start) {
 	console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
 	sysInfo();
 	getPollTime(uuidVal);
-	console.log("send option bbbbbbbbbbbbbbbbbb");
 
 }
 
@@ -1564,7 +1564,9 @@ if (program.opts().start) {
 // hamonize-agent --hwcheck]		하드웨어 변경로그 (hw 및 ip 변경 체크 )
 // To-do ::: 필수 프로그램 체크.????
 // 1. 방화벽 포트 체크 
-
+async function agnet_ufw() {
+	await import('./zxtest.mjs')
+}
 
 
 // ==========================
