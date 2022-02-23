@@ -18,7 +18,7 @@ body {
   margin: 0;
 }
 a {
-  color: #2e3e4e;
+  color: #5c6068;
   text-decoration: none;
 }
 a:hover,
@@ -71,6 +71,9 @@ label {
 }
 .text-muted {
   color: #979797;
+}
+.text-nav {
+  color: #5c6068;
 }
 small {
   font-size: 90%;
@@ -807,7 +810,7 @@ a:hover .caret-white {
 }
 .nav-primary li > a > i > b {
   position: absolute;
-  left: -42px;
+  left: -36px;
   width: 100%;
   top: 0;
   bottom: 0;
@@ -972,6 +975,7 @@ a:hover .caret-white {
     border: 1px solid #ddd;
     border: 1px solid rgba(0,0,0,0.1);
     background-clip: padding-box;
+    background-color: #c3ced8;
   }
   .nav-xs .nav-primary li:hover > ul,
   .nav-xs .nav-primary li:focus > ul,
@@ -2166,6 +2170,16 @@ fieldset[disabled] .btn-gplus.active {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0028323c', endColorstr='#0c28323c', GradientType=0);
   filter: none;
 }
+
+.bg-orgtree {
+  background-color: #f5f6f8;
+  color: #f5f6f8;
+}
+.bg-orgtree.lter,
+.bg-orgtree .lter {
+  background-color: #e1e4ea;
+}
+
 .bg-light {
   background-color: #f1f1f1;
   color: #717171;
@@ -2597,10 +2611,16 @@ fieldset[disabled] .btn-gplus.active {
 .bg-warning .icon-muted {
   color: #ffcb4d !important;
 }
-.bg-danger {
-  background-color: #fb6b5b;
+
+.bg-menu {
+  background-color: #7f76ff;
   color: #ffffff;
 }
+
+.bg-danger {
+  background-color: #7f76ff;
+  color: #ffffff;
+} 
 .bg-danger.lt,
 .bg-danger .lt {
   background-color: #fc8174;
@@ -2859,7 +2879,7 @@ fieldset[disabled] .btn-gplus.active {
   border-top: 1px solid #cfcfcf;
 }
 .b-r {
-  border-right: 1px solid #cfcfcf;
+  border-right: 1px solid #e1e4ea;
 }
 .b-b {
   border-bottom: 1px solid #cfcfcf;
@@ -3251,8 +3271,9 @@ fieldset[disabled] .btn-gplus.active {
 	#divCalendar .btn_cal_close, #divCalendar .btn_cal_close a {width:17px; height:16px;}
 	
 	
-	.boder-line_on {
-  /* border-radius: 16px; */
+.boder-line_on {
+  background-color: #f5f6f8;
+  border-radius: 24px;
   border-left: 5px solid #728cc7;
   /* border-right: 5px solid #728cc7; */
   /* border-bottom: 5px solid #728cc7;
@@ -3261,8 +3282,15 @@ fieldset[disabled] .btn-gplus.active {
 
 .boder-line_off {
   /* border-radius: 16px; */
+/*   background-color: #f5f6f8; */
+/*   border-radius: 24px; */
   border-left: 5px solid #eee;
   /* border-right: 5px solid #eee; */
   /* border-bottom: 5px solid #eee;
 		border-top: 5px solid #eee; */
 }
+ 
+.bodyDataLayer{
+  background-color: #f5f6f8;
+  border-radius: 24px;	
+} 

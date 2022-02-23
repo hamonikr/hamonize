@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="/logintemplet/notebook/css/animate.css" type="text/css" />
   <link rel="stylesheet" href="/logintemplet/notebook/css/font-awesome.min.css" type="text/css" />
   <link rel="stylesheet" href="/logintemplet/notebook/css/font.css" type="text/css" />
-  <link rel="stylesheet" href="/logintemplet/notebook/css/app.css" type="text/css" />
+  <link rel="stylesheet" href="/logintemplet/notebook/css/app.css?after" type="text/css" />
   <link rel="stylesheet" href="/logintemplet/notebook/js/datatables/datatables.css" type="text/css">
   <!--[if lt IE 9]>
     <script src="js/ie/html5shiv.js"></script>

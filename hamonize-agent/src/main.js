@@ -75,38 +75,38 @@ function getPollTime(uuid) {
 	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
 	var retval = 0;
 
-	Polling(1000);
-	// networkChk().then(
-	// 	(value) => {
-	// 		if (value) {
-	// 			http.get(setUrl, (res) => {
-	// 				res.on('data', (data) => {
-	// 					console.log("data===============++"+data);
-	// 					var pollingObj = JSON.parse(data);
+	// Polling(1000);
+	networkChk().then(
+		(value) => {
+			if (value) {
+				http.get(setUrl, (res) => {
+					res.on('data', (data) => {
+						console.log("data===============++"+data);
+						var pollingObj = JSON.parse(data);
 
-	// 					if (pollingObj.data != 'nodata') {
-	// 						var pollingObj = JSON.parse(data);
-	// 						log.info("//====================================");
-	// 						log.info("//== Polling time has changed... " + pollingObj.data);
-	// 						log.info("//====================================");
+						if (pollingObj.data != 'nodata') {
+							var pollingObj = JSON.parse(data);
+							log.info("//====================================");
+							log.info("//== Polling time has changed... " + pollingObj.data);
+							log.info("//====================================");
 
-	// 						retval = pollingObj.data * 1000;
-	// 						log.info("//== Polling time has result... " + retval);
-	// 						Polling(retval);
+							retval = pollingObj.data * 1000;
+							log.info("//== Polling time has result... " + retval);
+							Polling(retval);
 
-	// 					} else {
-	// 						Polling(DEFAUT_POLLTIME);
-	// 						log.info("//== Polling time doesn't changes..");
-	// 					}
-	// 				});
-	// 			});
-	// 		} else {
-	// 			log.info("network close~");
-	// 			retval = 10000;
-	// 			Polling(retval);
-	// 		}
-	// 	}
-	// );
+						} else {
+							Polling(DEFAUT_POLLTIME);
+							log.info("//== Polling time doesn't changes..");
+						}
+					});
+				});
+			} else {
+				log.info("network close~");
+				retval = 10000;
+				Polling(retval);
+			}
+		}
+	);
 }
 
 
@@ -1464,7 +1464,7 @@ function fnRecovJob() {
 
 // #----------------------------------------------------------------------------##----------------------------------------------------------------------------#
 const { Command } = require('commander');
-const { foo } = require("./aaa");
+
 const program = new Command();
 
 program

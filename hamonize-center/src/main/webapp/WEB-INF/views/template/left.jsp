@@ -1,5 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- background-color: #2a304c; -->
+<style>
+a {
+  color: #e2c9c9;
+}
+.nav-xs .nav-primary > ul > li > a span {
+  font-weight: normal;
+  text-transform: none;
+  font-size: 13px;
+  color:#000;
+}
+/* .fa-dashboard{content:url("/logintemplet/notebook/images/moicon.png")} */
+.fa-dashboard:before{content:url("/logintemplet/notebook/images/moicon.png")}
+.fa-columns:before{content:url("/logintemplet/notebook/images/orgicon.png")}
+.fa-laptop:before{content:url("/logintemplet/notebook/images/pcicon.png")}
+.circle-0:before{content:url("/logintemplet/notebook/images/policyicon.png")}
+.circle-1:before{content:url("/logintemplet/notebook/images/backupicon.png")}
+.circle-2:before{content:url("/logintemplet/notebook/images/logicon.png")}
 
+
+</style>
 <section class="vbox">
 
 
@@ -8,18 +28,36 @@
             <!-- .aside -->
 
             <!-- .aside -->
-            <aside class="bg-light lter b-r aside-md hidden-print" id="nav">
+            <aside class=" aside-md hidden-print" id="nav" style="background-color: #2a304c;">
+            <!-- <aside class="bg-light lter b-r aside-md hidden-print" id="nav" style="background-color: #2a304c;"> -->
                 <section class="vbox">
-
-                    <header class="header bg-primary lter text-center clearfix">
+                    
+                    <header class="header dker navbar navbar-fixed-top-xs">
+                        <div class="navbar-header">
+                          
+                          <a href="#" class="navbar-brand" data-toggle="fullscreen">
+                            <img src="/logintemplet/notebook/images/hlogo.png" class="m-r-sm">
+                            <span class="hidden-nav-xs"><img src="/logintemplet/notebook/images/hamonize.png" class="m-r-sm" width="70%"></span>
+                          </a>
+                          
+                        </div>
+                      </header>
+                      
+                    <!-- <header class="header text-center clearfix">
                         <div class="btn-group">
                             <div class="btn-group hidden-nav-xs">
-                                <a href="/" class="" data-toggle="fullscreen"><img
-                                        src="http://ts.hamonikr.org/images/hlogo.png" class="m-r-sm" width="90%"></a>
+                                <a href="#" class="navbar-brand" data-toggle="fullscreen">
+                                    <img src="/logintemplet/notebook/images/hlogo.png" class="m-r-sm">
+                                    <span class="hidden-nav-xs">Notebook</span>
+                                  </a>
+                                </div>
                             </div>
-                        </div>
-                    </header>
-
+                        </header> -->
+                        <!-- <a href="/" class="" data-toggle="fullscreen">
+                          <img src="http://ts.hamonikr.org/images/hlogo.png" class="m-r-sm" width="90%"></a> -->
+                        
+                        <!-- <img src="/logintemplet/notebook/images/hlogo.png" class="m-r-sm" >
+                        <img src="/logintemplet/notebook/images/hamonize.png" class="m-r-sm" width="90%"></a -->
 
                     <section class="w-f scrollable">
                         <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0"
@@ -29,9 +67,11 @@
                             <nav class="nav-primary hidden-xs">
                                 <ul class="nav">
                                     <li>
-                                        <a href="/mntrng/pcControlList">
-                                            <i class="fa fa-dashboard icon">
-                                                <b class="bg-danger"></b>
+                                        <a href="/mntrng/pcControlList" >
+                                            <!-- <i class="fa fa-dashboard icon"> -->
+                                            <i class="fa fa-dashboard icon" >
+                                                
+                                                <b class="bg-menu"></b>
                                             </i>
                                             <span>모니터링</span>
                                         </a>
@@ -46,7 +86,7 @@
                                     </li>
                                     <li>
                                         <a href="/pcMngr/pcMngrList">
-                                            <i class="fa fa-envelope-o icon">
+                                            <i class="fa fa-laptop icon">
                                                 <b class="bg-primary dker"></b>
                                             </i>
                                             <span>PC관리</span>
@@ -54,7 +94,7 @@
                                     </li>
                                     <li>
                                         <a href="/gplcs/umanage">
-                                            <i class="fa fa-file-text icon">
+                                            <i class="fa circle-0 icon">
                                                 <b class="bg-primary"></b>
                                             </i>
                                             <span class="pull-right">
@@ -98,7 +138,7 @@
                                     </li>
                                     <li>
                                         <a href="/backupRestore/backupR">
-                                            <i class="fa fa-file-text icon">
+                                            <i class="fa circle-1 icon">
                                                 <b class="bg-primary"></b>
                                             </i>
                                             <span class="pull-right">
@@ -136,7 +176,7 @@
                                     </li> -->
                                     <li>
                                         <a href="/auditLog/pcUserLog">
-                                            <i class="fa fa-file-text icon">
+                                            <i class="fa circle-2 icon">
                                                 <b class="bg-primary"></b>
                                             </i>
                                             <span class="pull-right">

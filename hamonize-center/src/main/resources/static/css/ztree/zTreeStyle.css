@@ -8,7 +8,7 @@ website:	http://code.google.com/p/jquerytree/
 
 -------------------------------------*/
 
-.ztree * {padding:0; margin:0; font-size:13px;}
+.ztree * {padding:0; margin:0; font-size:14px;}
 .ztree {margin:0; padding:5px; color:#333}
 .ztree li{padding:0; margin:0; list-style:none; line-height:14px; text-align:left; white-space:nowrap; outline:0}
 .ztree li ul{ margin:0; padding:0 0 0 18px}
@@ -17,9 +17,9 @@ website:	http://code.google.com/p/jquerytree/
 .ztree li a {padding:0px 3px 4px 4px; margin:0; cursor:pointer; height:17px; color:#333; background-color: transparent;
 	text-decoration:none; vertical-align:top; display: inline-block}
 .ztree li a:hover {text-decoration:underline}
-.ztree li a.curSelectedNode {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;}
-.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;}
-.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#316AC5; color:white; height:16px; border:1px #316AC5 solid;
+.ztree li a.curSelectedNode {padding-top:0px; background-color:#c3ced8; color:black; height:16px; border:1px #c3ced8 solid; opacity:0.8;}
+.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#c3ced8; color:black; height:16px; border:1px #c3ced8 solid; opacity:0.8;}
+.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#c3ced8; color:white; height:16px; border:1px #c3ced8 solid;
 	opacity:0.8; filter:alpha(opacity=80)}
 .ztree li a.tmpTargetNode_prev {}
 .ztree li a.tmpTargetNode_next {}

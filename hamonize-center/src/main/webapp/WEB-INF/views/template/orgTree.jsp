@@ -2,19 +2,19 @@
 
 
 
-<aside class="aside-lg bg-light lter b-r">
+<aside class="aside-lg bg-orgtree  b-r">
 	<section class="vbox">
 		<section class="scrollable">
 			<div class="wrapper">
 
 				<div class="clearfix m-b">
 					<div class="clear" style="float:right">
-						<small class="text-muted" id="navInfo"><i class="fa fa-map-marker"></i> </small>
+						<small class="text-nav" id="navInfo"><i class="fa fa-map-marker"></i> </small>
 					</div>
 				</div>
 
 
-				<div class="panel wrapper panel-success">
+				<div class=" wrapper-sm ">
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="btn-group btn-group-justified m-b">
