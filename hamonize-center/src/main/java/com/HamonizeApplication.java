@@ -3,26 +3,22 @@ package com;
 
 import java.nio.charset.Charset;
 
-import javax.servlet.Filter;
-
 import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootApplication
-public class HamoeyesApplication {
+public class HamonizeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HamoeyesApplication.class);
+		SpringApplication.run(HamonizeApplication.class);
 	}
 
 	@Bean

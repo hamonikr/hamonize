@@ -8,18 +8,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.naming.NamingException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import com.mapper.ISvrlstMapper;
+
 import com.mapper.IFileMapper;
 import com.mapper.IGetAgentPollingMapper;
-
+import com.mapper.ISvrlstMapper;
 import com.model.AdminVo;
 import com.model.FileVo;
 import com.model.HmProgrmUpdtVo;
 import com.model.LoginVO;
-import com.model.OrgVo;
 import com.model.SvrlstVo;
 import com.paging.PagingUtil;
 import com.paging.PagingVo;
@@ -31,7 +30,6 @@ import com.util.Constant;
 import com.util.RSAUtil;
 import com.util.SHA256Util;
 
-import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

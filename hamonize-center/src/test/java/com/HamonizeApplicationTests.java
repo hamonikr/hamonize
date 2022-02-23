@@ -8,7 +8,7 @@
 // @RunWith(SpringRunner.class)
 
 // @SpringBootTest 
-// public class HamoeyesApplicationTests {
+// public class HamonizeApplicationTests {
 
 //     @Test 
 //     public void contextLoads() { }

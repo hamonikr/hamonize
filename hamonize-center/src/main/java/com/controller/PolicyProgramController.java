@@ -7,8 +7,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.model.OrgVo;
+import com.model.PolicyProgrmVo;
+import com.service.OrgService;
+import com.service.PolicyProgramService;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.model.OrgVo;
-import com.model.PolicyProgrmVo;
-import com.service.OrgService;
-import com.service.PolicyProgramService;
 
 @Controller
 @RequestMapping("/gplcs")
@@ -68,9 +67,9 @@ public class PolicyProgramController {
 	public JSONObject pinsert(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
 
-		JsonParser jp = new JsonParser();
+		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();
-		JsonArray jsonArray = (JsonArray) jp.parse(data);
+		JSONArray jsonArray = (JSONArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
 		for (int i = 0; i < jsonArray.size(); i++) {

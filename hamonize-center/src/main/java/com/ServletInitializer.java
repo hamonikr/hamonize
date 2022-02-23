@@ -8,7 +8,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(HamoeyesApplication.class);
+		return application.sources(HamonizeApplication.class);
 	}
 
 }

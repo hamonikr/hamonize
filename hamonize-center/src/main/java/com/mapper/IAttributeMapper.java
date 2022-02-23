@@ -12,14 +12,7 @@ public interface IAttributeMapper {
 	
 	
 	List<AttributeVo> commcodeListInfo(AttributeVo vo);
-	
-	
-	// ========================
-	
-	
-	
-	
-	
+		
 	
 	List<AttributeVo> listCategoryMultipleAttribute();
 

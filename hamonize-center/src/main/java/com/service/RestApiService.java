@@ -1,9 +1,6 @@
 package com.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
@@ -19,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 
 import reactor.core.publisher.Mono;
 

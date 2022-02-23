@@ -32,8 +32,9 @@ public class MonitoringService {
 	@Autowired
 	private IMonitoringMapper mMpper;
 
-	@Autowired
-	private InfluxDBTemplate<Point> influxDBTemplate;
+	// @Autowired
+	// private InfluxDBTemplate<Point> influxDBTemplate;
+	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public List<Map<String, Object>> pcListInfo(Map<String, Object> params) {

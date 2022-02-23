@@ -9,8 +9,20 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.mapper.IPolicyFireWallMapper;
+import com.model.LoginVO;
+import com.model.OrgVo;
+import com.model.PolicyFireWallVo;
+import com.paging.PagingUtil;
+import com.paging.PagingVo;
+import com.service.OrgService;
+import com.service.PolicyFireWallService;
+import com.util.AuthUtil;
+import com.util.Constant;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.mapper.IPolicyFireWallMapper;
-import com.model.LoginVO;
-import com.model.OrgVo;
-import com.model.PolicyFireWallVo;
-import com.paging.PagingUtil;
-import com.paging.PagingVo;
-import com.service.OrgService;
-import com.service.PolicyFireWallService;
-import com.util.AuthUtil;
-import com.util.Constant;
 
 @Controller
 @RequestMapping("/gplcs")
@@ -79,9 +78,9 @@ public class PolicyFireWallController {
 	public JSONObject finsert(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException {
 
-		JsonParser jp = new JsonParser();
+		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();
-		JsonArray jsonArray = (JsonArray) jp.parse(data);
+		JSONArray jsonArray = (JSONArray) jp.parse(data);
 		List<Map<String, Object>> resultSet = new ArrayList<Map<String, Object>>();
 		Map<String, Object> resultMap;
 

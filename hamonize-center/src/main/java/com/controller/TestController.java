@@ -1,11 +1,14 @@
 package com.controller;
 
 
-import java.util.Random;
-
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.GlobalPropertySource;
+import com.model.OrgVo;
+import com.service.OrgService;
+import com.util.LDAPConnection;
 
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
@@ -14,11 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.GlobalPropertySource;
-import com.model.OrgVo;
-import com.service.OrgService;
-import com.util.LDAPConnection;
 
 
 @Controller
