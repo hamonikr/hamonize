@@ -148,7 +148,13 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     
     #  Case  OpenOS  (Download by Git repository )
     # if [ $CHK_HAMONIZE_REMOTE = 0 ]; then
-    
+
+    # dependany install     
+    apt-get install libqca-qt5-2-plugins -y
+    apt-get install libfakekey0 -y
+    apt-get install libqca-qt5-2 -y
+
+
     OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
     if [ "${OSGUBUN}" = "HAMONIKR" ] || [ "${OSGUBUN}" = "LINUXMINT" ] || [ "${OSGUBUN}" = "UBUNTU" ]; then
         JSONDATA=`curl -s  https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url'`

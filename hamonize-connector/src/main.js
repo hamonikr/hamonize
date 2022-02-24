@@ -29,7 +29,7 @@ const options = {
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
-const baseurl = "http://192.168.0.118:8081";
+const baseurl = "http://192.168.0.121:8081";
 // const baseurl = "<Hamonize Center Url>";
 const osType = require('os');
 

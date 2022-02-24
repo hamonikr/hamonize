@@ -26,7 +26,7 @@ echo "DEVICE === > $DEVICE"
 FILEPATH=""
 if [ -f "/etc/timeshift/timeshift.json" ]; then
     echo "case 1 --- file exist"
-    mv /etc/timeshift.timeshift.json  /etc/timeshift/timeshift.json_back
+    mv /etc/timeshift/timeshift.json  /etc/timeshift/timeshift.json_back
 elif [ -f "/etc/timeshift.json" ]; then
     echo "case 2---file exist "
     mv /etc/timeshift.json  /etc/timeshift.json_back
@@ -56,7 +56,11 @@ sed -i "s/do_first_run\" \: \"true\"/do_first_run\" \: \"first\"/g" $FILEPATH
 
 
 # # # backup directory  설정
-sed -i "s/exclude\" \: \[/exclude\" \: \[\n \"+ \/home\/ryan2\/**\" /g" $FILEPATH
+# # # backup directory  설정
+USERID=$1
+echo $USERID >> $Log_backup
+
+sed -i "s/exclude\" \: \[/exclude\" \: \[\n \"+ \/home\/$USERID\/**\" /g" $FILEPATH
 sed -i "s/exclude\" \: \[/exclude\" \: \[\n \"+ \/root\/**\", /g" $FILEPATH
 
 echo `cat $FILEPATH` >>$Log_backup
