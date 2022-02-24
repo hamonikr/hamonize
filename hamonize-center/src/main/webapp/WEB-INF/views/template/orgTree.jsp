@@ -273,7 +273,7 @@ function checkAnsibleJobStatus(job_id){
 				target.disabled = true;
 				setTimeout(checkAnsibleJobStatus,3000,job_id);
 				//checkAnsibleJobStatus(job_id);
-			}else{
+			}else if(job_id != 0){
 				console.log("작업성공여부=="+res.status);
 				target.disabled = false;
 				addAnsibleJobEvent(res.inventory,res.limit,job_id);
@@ -288,9 +288,6 @@ function checkAnsibleJobStatus(job_id){
 //ansible작업상태확인
 function addAnsibleJobEvent(...args){
 	const target = document.getElementById('btnSave');
-	console.log("job_id===="+args[0]);
-	console.log("job_id===="+args[1]);
-	console.log("job_id===="+args[2]);
 	$.ajax({
 		url : '/gplcs/addAnsibleJobEvent',
 		type: 'POST',
