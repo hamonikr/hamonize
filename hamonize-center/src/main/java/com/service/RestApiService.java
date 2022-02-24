@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
+import com.mapper.IPolicyCommonMapper;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 
@@ -30,6 +31,9 @@ public class RestApiService {
 
   @Autowired
   IPcMangrMapper pcMangrMapper;
+
+  @Autowired
+  IPolicyCommonMapper policyCommonMapper;
 
   public int addRootOrg(OrgVo orgvo) throws ParseException
 	{
@@ -297,12 +301,14 @@ public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseExce
     //.bodyToMono(String.class); 
 
     String objects = response.block();
-    //System.out.println("objects====="+objects);
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
     //System.out.println("jsonObj.get======"+jsonObj.get("id").toString());
     
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
+    params.put("job_id",result);
+    params.put("object",objects);
+    policyCommonMapper.addAnsibleJobEventByGroup(params);
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
       jsonResultObj = checkPolicyJobResult(result);
@@ -312,12 +318,13 @@ public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseExce
 
 public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseException
   {
-    String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")
-    +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | touch "+params.get("policyRunFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0,\"forks\": 10}";
+    String output = params.get("module_args").toString();
+    output = output.replaceAll("\"", "\\\\\\\"");
+    String request = "{\"credential\": 3,\"module_name\": \"shell\",\"module_args\": \""+output+"\",\"become_enabled\": \"True\",\"verbosity\": 0}";
     System.out.println("request====="+request);
     Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
-    .path("/api/v2/ad_hoc_commands/")
-    .build())
+    .path("/api/v2/hosts/").path("{id}/").path("ad_hoc_commands/")
+    .build(params.get("host_id")))
     .contentType(MediaType.APPLICATION_JSON)
     .body(BodyInserters.fromValue(request))
     .exchange().flatMap(clientResponse -> {
@@ -335,10 +342,9 @@ public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseExc
     //.bodyToMono(String.class); 
 
     String objects = response.block();
-    //System.out.println("objects====="+objects);
+    System.out.println("objects====="+objects);
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-    //System.out.println("jsonObj.get======"+jsonObj.get("id").toString());
     
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
     JSONObject jsonResultObj = new JSONObject();
@@ -367,12 +373,13 @@ public JSONObject checkPolicyJobResult(int id) throws ParseException{
   });
 
         String objects = response.block();
+        System.out.println("objects2222222222==="+objects);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
         return jsonObj;
 }
 
-public JSONArray addAnsibleJobEvent(int id) throws ParseException{
+public JSONArray addAnsibleJobEventByHost(int id) throws ParseException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")

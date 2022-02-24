@@ -28,7 +28,7 @@
 				</foreach>
 	</insert> -->
 
-	<insert id="addAnsibleJobEvent" parameterType="java.util.HashMap">
+	<insert id="addAnsibleJobEventByHost" parameterType="java.util.HashMap">
 			INSERT INTO tbl_ansible_event_job 
 				(DOMAIN,
 				JOB_ID,
@@ -49,6 +49,37 @@
 				</foreach>
 	</insert>
 
+	<insert id="addAnsibleJobEventByGroup" parameterType="java.util.HashMap">
+			INSERT INTO tbl_ansible_policy_result 
+				(DOMAIN,
+				JOB_ID,
+				ORG_SEQ,
+				DATA,
+				RGSTR_DATE) 
+				VALUES
+				(
+					#{domain},
+					#{job_id},
+					#{org_seq}::int,
+					#{object}::jsonb,
+					now()
+				)
+	</insert>
+
+	<insert id="addAnsibleJobEventRelaunch" parameterType="java.util.HashMap">
+			INSERT INTO tbl_ansible_event_job_relaunch 
+				(
+				JOB_ID,
+				DATA,
+				RGSTR_DATE) 
+				VALUES
+				(
+					#{job_id}::int,
+					#{object}::jsonb,
+					now()
+				)
+	</insert>
+
 	<select id="checkCountAnsibleJobId" parameterType="java.util.HashMap" resultType="Integer">
 	SELECT count(*) FROM tbl_ansible_event_job WHERE JOB_ID = #{job_id}::int
 	</select>
@@ -56,5 +87,9 @@
 	<delete id="deleteAnsibleJobEvent" parameterType="java.util.HashMap">
 	DELETE FROM tbl_ansible_event_job WHERE JOB_ID = #{job_id}::int
 	</delete>
+
+	<select id="getAnsibleJobEventByGroup" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	SELECT data ->> 'module_args' as module_args FROM tbl_ansible_policy_result where JOB_ID = #{job_id}::int
+	</select>
 
 </mapper>

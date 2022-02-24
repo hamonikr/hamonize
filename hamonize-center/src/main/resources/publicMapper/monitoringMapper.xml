@@ -80,7 +80,6 @@
 			a.pc_status,
 			a.domain,
 			b.job_id,
-			b.data ->> 'changed' as status,
 			b.data
 		FROM tbl_pc_mangr a right outer join tbl_ansible_event_job b on
 		a."domain" = b."domain" 

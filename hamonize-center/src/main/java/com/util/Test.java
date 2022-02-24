@@ -524,12 +524,13 @@ public class Test {
       
       try {
           //String request = "{\"credential\": 3,\"limit\": \"1\",\"inventory\": 21,\"module_name\": \"shell\",\"module_args\": \"echo '{\\\"PATH\\\":\\\"/timeshift/snapshots\\\",\\\"NAME\\\":\\\"2021-12-10_12-30-01\\\"}' > /etc/hamonize/recovery/2aaaaa.hm\",\"become_enabled\": \"True\",\"verbosity\": 0}";
-          //System.out.println("request====="+request);
+          String request = "{\"credential\": 3,\"module_name\": \"shell\",\"module_args\": \"echo '{\\\"DEL\\\":\\\"ubiquity-slideshow-mint,atom-nightly,hancomoffice-hwpviewer,github-desktop,fsearch-trunk,boot-select,hamonikr-welcome\\\",\\\"INS\\\":\\\"stacer,skypeforlinux,htop\\\"}' > /etc/hamonize/updt/updtInfo.hm | touch /etc/hamonize/runupdt\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+          System.out.println("request====="+request);
           Mono<String> response = wc.post().uri(UriBuilder -> UriBuilder
-          .path("/api/v2/jobs/").path("{id}/").path("relaunch/")
-          .build(17415))
+          .path("/api/v2/hosts/").path("{id}/").path("ad_hoc_commands/")
+          .build(63))
           .contentType(MediaType.APPLICATION_JSON)
-          //.body(BodyInserters.fromValue(request))
+          .body(BodyInserters.fromValue(request))
           .exchange().flatMap(clientResponse -> {
             if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
                 clientResponse.body((clientHttpResponse, context) -> {

@@ -46,15 +46,15 @@ public class PolicyCommonController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "addAnsibleJobEvent", method = RequestMethod.POST)
-	public int addAnsibleJobEvent(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException {
+	@RequestMapping(value = "addAnsibleJobEventByHost", method = RequestMethod.POST)
+	public int addAnsibleJobEventByHost(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException {
 		System.out.println("url===="+request.getHeader("referer"));
 		String[] before_url = request.getHeader("referer").split("/");
 		params.put("before_url", before_url[before_url.length -1]);
 		JSONArray dataArr = new JSONArray();
 		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
 		Map<String, Object> resultMap;
-		dataArr = restApiService.addAnsibleJobEvent(Integer.parseInt(params.get("job_id").toString()));
+		dataArr = restApiService.addAnsibleJobEventByHost(Integer.parseInt(params.get("job_id").toString()));
 		System.out.println("dataArr.size()============"+dataArr.size());
 		//String processedLength = "";
 		for (int i = 0; i < dataArr.size(); i++) {
@@ -89,9 +89,31 @@ public class PolicyCommonController {
 			{
 				commonMapper.deleteAnsibleJobEvent(params);
 			}
-			result = commonMapper.addAnsibleJobEvent(params);
+			result = commonMapper.addAnsibleJobEventByHost(params);
 		}
 		return result;
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "makePolicyToSingle", method = RequestMethod.POST)
+	public JSONObject makePolicyToSingle(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
+		params.putAll(commonMapper.getAnsibleJobEventByGroup(params));
+		System.out.println("params==========="+params);
+		JSONObject jobResult = new JSONObject();
+		jobResult = restApiService.makePolicyToSingle(params);
+		System.out.println("jobResult===="+jobResult);
+		params.put("object", jobResult.toJSONString());
+		JSONObject jsonObj = new JSONObject();
+		int result = commonMapper.addAnsibleJobEventRelaunch(params);
+		if (result >= 1){
+			jsonObj.put("STATUS", "SUCCESS");
+			jsonObj.put("ID", jobResult.get("id"));
+			jsonObj.put("JOBSTATUS", jobResult.get("status"));
+		} else{
+			jsonObj.put("STATUS", "FAIL");
+		}
+		return jsonObj;
 
 	}
 

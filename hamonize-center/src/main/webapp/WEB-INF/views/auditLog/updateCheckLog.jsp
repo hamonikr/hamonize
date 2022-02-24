@@ -115,6 +115,7 @@
 					shtml += '<ul class="monitor_list">';
 					$.each(data.pcList, function (index, value) {
 						var hostnameVal = '';
+						let data = JSON.parse(value.data);
 						if (value.pc_hostname.length >= textCutLength) {
 							hostnameVal = value.pc_hostname.substr(0, textCutLength) + '...';
 						} else {
@@ -125,12 +126,16 @@
 							shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='" + value
 								.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" + hostnameVal +
 								"</a></li>";
-								shtml += value.status;
+								//shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+									//value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "')\">" +
+									//data.changed + value.job_id+"</a></li>";
 						} else {
 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
 							value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" +
 							hostnameVal + "</a></li>";
-							shtml += value.status;
+							//shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+								//value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "')\">" +
+								//data.changed + value.job_id+"</a></li>";
 						}
 					});
 
@@ -672,6 +677,30 @@ function detail(uuid){
 }
 function addZero(data){
     return (data<10) ? "0"+data : data;
+}
+
+function relaunch(host_id,job_id,seq){
+	if (confirm("최신정책을 적용 하시겠습니까?")) {
+	$.ajax({
+		url : '/gplcs/makePolicyToSingle',
+		type: 'POST',
+		async:false,
+		data:{job_id:job_id,host_id:host_id,seq:seq},
+		success : function(res) {
+			if (res.STATUS == "SUCCESS") {
+				alert("정상적으로 처리되었습니다.");
+				//checkAnsibleJobStatus(res.ID);
+				//location.reload();
+			} else {
+				alert("실패하였습니다.");
+				//button.disabled = false;
+			}
+		},
+		error:function(request,status,error){
+			console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		}
+	});
+}
 }
 
 
