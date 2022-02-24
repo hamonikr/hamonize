@@ -95,7 +95,6 @@
 						<div class="wrapper">
 
 
-							<section class="panel panel-default">
 
 								<form name="frm" method="post" action="/gplcs/orgManage" class="row">
 									<input type="hidden" name="org_seq" id="org_seq" value="" />
@@ -137,44 +136,16 @@
 										</c:if>
 									</c:forEach>
 
-								
-									
-
-
-									<!-- update list -->
-									<!-- <ul class="promlist">
-										<c:forEach items="${pList}" var="data" varStatus="status">
-
-											<c:if test="${data.pu_name.indexOf('hamonize')!=0}">
-												<li>
-													<div class="form-check">
-														<input class="form-check-input" data-package="<c:out value='${data.pu_name}' />" type="checkbox" name="pu_seq"
-															id="${data.pu_seq}" value="<c:out value='${data.pu_seq}'/>">
-														<label class="form-check-label" for="${data.pu_seq}">
-															<c:out value="${data.pu_name}" />
-														</label>
-													</div>
-													<c:if test="${data.deb_now_version ne data.deb_new_version and data.deb_now_version ne null}">
-														<p>업데이트가 필요합니다. 최신버전은
-														<c:out value="${data.deb_new_version}" /> 입니다.</p>
-													</c:if>
-													<c:if test="${data.deb_now_version eq null}">
-														<p>신규 프로그램</p>
-													</c:if>
-												</li>
-											</c:if>
-										</c:forEach>
-									</ul> -->
-
 								</form>
 
-							</section>
-							<div class="right mT20">
-								<button type="reset" class="btn_type2" id="btnInit"> 초기화</button>
-								<button type="button" class="btn_type2" id="btnSave"> 저장</button>
-							</div>
 						</div>
 					</section>
+					<div class="panel-body fotter-bg" >
+						<div class="right">
+							<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit"> 초기화</button>
+							<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 저장</button>
+						</div>
+					</div>
 				</section>
 			</section>
 		</aside>

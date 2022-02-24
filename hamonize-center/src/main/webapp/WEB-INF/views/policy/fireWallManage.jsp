@@ -176,10 +176,7 @@
 																	</div>
 																</div>
 															</div>
-															<footer class="panel-footer " style="border-top: 0;">
-																<button class="btn btn-info pull-right btn-sm"
-																	id="saveFirewall">확인</button>
-															</footer>
+															<button class="btn btn-rounded pull-right btn-sm btn-facebook" id="saveFirewall">신규 방화벽 등록 </button>
 														</div>
 													</form>
 
@@ -189,26 +186,22 @@
 
 
 												<div class="panel-body animated fadeInRight">
-													<!-- <p class="text-sm">No active chats.</p> -->
-													<!-- <p><a href="#" class="btn btn-sm btn-default">Start a chat</a></p> -->
-
-
 
 													<table class="table table-striped m-b-none ">
 														<colgroup>
 															<col style="width:10%;" />
 															<col style="width:10%;" />
-															<col style="width:35%;" />
-															<col style="width:35%;" />
+															<col style="width:15%;" />
+															<col style="width:15%;" />
 															<col />
 														</colgroup>
 														<thead>
 															<tr>
 																<th></th>
 																<th>번호</th>
-																<th>허용서비스</th>
+																<th>방화벽 이름</th>
+																<th>허용포트</th>
 																<th>방화벽 상세 정보</th>
-																<th>포트</th>
 															</tr>
 														</thead>
 
@@ -220,8 +213,8 @@
 													</div>
 												</div>
 
-												<button type="button" class="btn_type3" id="deleteFirewall">삭제</button>
-												<button type="button" class="btn_type2 insertBtn">방화벽 추가</button>
+												<button type="button" class="btn btn-s-md btn-default btn-rounded" id="deleteFirewall">삭제</button>
+												<button type="button" class="btn btn-s-md btn-default btn-rounded insertBtn">방화벽 추가</button>
 											</section>
 										</section>
 									</div>
@@ -232,7 +225,6 @@
 
 						<div class="wrapper">
 
-							<section class="panel panel-default">
 								<form name="frm" method="post" action="orgManage" class="row">
 
 									<input type="hidden" name="org_seq" id="org_seq" value="" />
@@ -250,8 +242,7 @@
 										<div class="panel-body col-lg-3 ">
 											<blockquote class="bodyDataLayer">
 												<div class="form-check">
-													<!-- width=0 height=0 style="visibility:hidden" -->
-													<input  class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value='${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
+													<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value='${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
 													<label class="form-check-label" for="${data.sm_seq}">
 														<p><c:out value="${data.sm_name}" /></p>
 													</label>
@@ -273,13 +264,14 @@
 								</form>
 
 
-							</section>
-							<div class="right mT20">
-								<button type="reset" class="btn_type2" id="btnInit"> 초기화</button>
-								<button type="button" class="btn_type2" id="btnSave"> 저장</button>
-							</div>
 						</div>
 					</section>
+					<div class="panel-body fotter-bg" >
+						<div class="right">
+							<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit"> 초기화</button>
+							<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 저장</button>
+						</div>
+					</div>
 				</section>
 			</section>
 		</aside>
@@ -439,8 +431,8 @@
 
 				gbInnerHtml += "<td><span>" + no + "</span>";
 				gbInnerHtml += "<td>" + value.sm_name + "</td>";
-				gbInnerHtml += "<td>" + value.sm_dc + "</td>";
 				gbInnerHtml += "<td>" + value.sm_port + "</td>";
+				gbInnerHtml += "<td>" + value.sm_dc + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});
@@ -562,6 +554,34 @@
 		}
 
 	}
+	function searchView(viewName, page){
+		switch(viewName){
+			case 'classMngrList' : $("#MngeListInfoCurrentPage").val(page); getList(); break;	//	공지사항
+			default :
+		}
+	}
+	/*
+	 * 이전 페이지
+	 */
+	function prevPage(viewName, currentPage){
+		var page = eval(currentPage) - 1;
+			if(page < 1){
+				page = 1;
+			}
+		searchView(viewName, page);
+	}
+	/*
+	 * 다음 페이지
+	 */
+	function nextPage(viewName, currentPage, totalPageSize){
+		var page = eval(currentPage) + 1;
+		var totalPageSize = eval(totalPageSize);
+		if(page > totalPageSize){
+			page = totalPageSize;
+		}
+		searchView(viewName, page);
+	}
+	
 </script>
 
 <%@ include file="../template/footer.jsp" %>

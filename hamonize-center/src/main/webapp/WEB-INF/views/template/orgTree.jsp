@@ -16,30 +16,29 @@
 
 				<div class=" wrapper-sm ">
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="btn-group btn-group-justified m-b">
-								<a class="btn btn-primary btn-rounded" id="expandAllBtn"><span
-										class="text">전체열기</span></a>
-								<a class="btn btn-dark btn-rounded" id="collapseAllBtn"><span
-										class="text">전체닫기</span></a>
-							</div>
-							<div class="tree_list">
-								<ul id="tree" class="ztree"></ul>
-							</div>
+						<div class="btn-group btn-group-justified m-b">
+							<a class="btn btn-primary btn-rounded" id="expandAllBtn"><span
+									class="text">전체열기</span></a>
+							<a class="btn btn-dark btn-rounded" id="collapseAllBtn"><span
+									class="text">전체닫기</span></a>
+						</div>
+						<div class="tree_list">
+							<ul id="tree" class="ztree"></ul>
 						</div>
 					</div>
 
 
 				</div>
-
-				<div class="panel-footer text-right" id="orgTreeBtnLayer">
-					<div class="btn-group">
-						<button class="btn btn-default" id="btnAddOrg" name="btnAddOrg"><i class="fa fa-arrow-right"></i>부서추가</button>
-						<button class="btn btn-default" id="btnAddOrg_s" name="btnAddOrg_s"><i class="fa fa-arrow-right"></i>팀추가</button>
-						<button class="btn btn-default" id="btnDelOrg" name="btnDelOrg"><i class="fa fa-trash-o"></i> 삭제</button>
-					</div>
-				</div>
+				
+					
 				<input type="hidden" name="pagegubun" id="pagegubun" value="">
+			</div>	
+			<div class="panel-body fotter-bg" id="orgTreeBtnLayer">
+				<div class="btn-group btn-group-justified ">
+					<a href="javascript:;" class="btn btn-default" id="btnAddOrg"><i class="fa fa-plus-circle"></i> 추가</a>
+					<a href="javascript:;" class="btn btn-default" id="btnDelOrg"><i class="fa fa-minus-circle"></i> 삭제</a>
+<!-- 						<button class="btn btn-default" id="btnAddOrg_s" name="btnAddOrg_s"><i class="fa fa-arrow-right"></i>팀추가</button> -->
+				</div>
 			</div>
 		</section>
 	</section>

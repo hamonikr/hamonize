@@ -10,13 +10,6 @@ a {
   font-size: 13px;
   color:#000;
 }
-/* .fa-dashboard{content:url("/logintemplet/notebook/images/moicon.png")} */
-.fa-dashboard:before{content:url("/logintemplet/notebook/images/moicon.png")}
-.fa-columns:before{content:url("/logintemplet/notebook/images/orgicon.png")}
-.fa-laptop:before{content:url("/logintemplet/notebook/images/pcicon.png")}
-.circle-0:before{content:url("/logintemplet/notebook/images/policyicon.png")}
-.circle-1:before{content:url("/logintemplet/notebook/images/backupicon.png")}
-.circle-2:before{content:url("/logintemplet/notebook/images/logicon.png")}
 
 
 </style>
