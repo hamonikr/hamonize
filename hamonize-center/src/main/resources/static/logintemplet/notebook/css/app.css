@@ -1253,10 +1253,10 @@ a:hover .caret-white {
 .btn-default {
   color: #717171 !important;
   background-color: #fafafa;
-  border-color: #dadada;
-  border-bottom-color: #ccc;
+  border-color: #7f76ff;
+  border-bottom-color: #7f76ff;
   -webkit-box-shadow: 0 1px 1px rgba(90,90,90,0.1);
-  box-shadow: 0 1px 1px rgba(90,90,90,0.1);
+  box-shadow: 2px 2px 1px rgb(90 90 90 / 10%);
 }
 .btn-default:hover,
 .btn-default:focus,
@@ -3294,3 +3294,32 @@ fieldset[disabled] .btn-gplus.active {
   background-color: #f5f6f8;
   border-radius: 24px;	
 } 
+.right{
+	float:right;
+}
+.fotter-bg{
+	background-color: #ebefef;
+}
+.mntrngBox {
+	padding: 14px 0 15px 24px;
+    font-size: 19px;
+}
+.mntrngBox > i{
+	margin-right: 15px;
+}
+
+.mntrngTitle {
+	font-size: 15px;
+}
+
+.fa-dashboard:before{content:url("/logintemplet/notebook/images/moicon.png")}
+.fa-columns:before{content:url("/logintemplet/notebook/images/orgicon.png")}
+.fa-laptop:before{content:url("/logintemplet/notebook/images/pcicon.png")}
+.circle-0:before{content:url("/logintemplet/notebook/images/policyicon.png")}
+.circle-1:before{content:url("/logintemplet/notebook/images/backupicon.png")}
+.circle-2:before{content:url("/logintemplet/notebook/images/logicon.png")}
+.fa-play:before{content:url("/logintemplet/notebook/images/pcOn.png")}
+.fa-pause:before{content:url("/logintemplet/notebook/images/pcOff.png")}
+
+
+ 

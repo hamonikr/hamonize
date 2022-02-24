@@ -37,7 +37,7 @@
 		});
 
 
-		// getList();
+		getDeviceListLayer();
 		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 
 	});
@@ -185,8 +185,7 @@
 																			placeholder="디바이스에 대한 상세 설명을 입력해주세요."
 																			style="width: 539px;" />
 																	</div>
-																	<button class="btn btn-info pull-right btn-sm"
-																		id="saveDevice">디바이스 규칙 추가</button>
+																	<button class="btn btn-rounded pull-right btn-sm btn-facebook" id="saveDevice">디바이스 규칙 추가</button>
 																</div>
 															</div>
 															<footer class="panel-footer " style="border-top: 0;">
@@ -199,15 +198,12 @@
 
 
 												<div class="panel-body animated fadeInRight">
-													<!-- <p class="text-sm">No active chats.</p> -->
-													<!-- <p><a href="#" class="btn btn-sm btn-default">Start a chat</a></p> -->
-
 													<table class="table table-striped m-b-none ">
 														<colgroup>
 															<col style="width:10%;" />
 															<col style="width:10%;" />
-															<col style="width:35%;" />
-															<col style="width:35%;" />
+															<col style="width:14%;" />
+															<col style="width:10%;" />
 															<col />
 														</colgroup>
 														<thead>
@@ -229,8 +225,8 @@
 													</div>
 												</div>
 
-												<button type="button" class="btn_type3" id="deleteDevice">삭제</button>
-												<button type="button" class="btn_type2 insertBtn">디바이스 추가</button>
+												<button type="button" class="btn btn-s-md btn-default btn-rounded" id="deleteDevice">삭제</button>
+												<button type="button" class="btn btn-s-md btn-default btn-rounded insertBtn">디바이스 추가</button>
 											</section>
 										</section>
 									</div>
@@ -239,8 +235,7 @@
 
 						</header>
 
-
-						<section class="panel panel-default">
+							<div class="wrapper">
 
 							<form name="frm" method="post" action="orgManage" class="row">
 								<input type="hidden" name="org_seq" id="org_seq" value="" />
@@ -259,8 +254,7 @@
 									<div class="panel-body col-lg-3 ">
 										<blockquote class="boder-line_off bodyDataLayer">
 											<div class="form-check">
-												<!-- width=0 height=0 style="visibility:hidden"  -->
-												<input class="form-check-input" type="checkbox" name="sm_seq"
+												<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq"
 													id="${data.sm_seq}" value="<c:out value='${data.sm_seq}' />"
 													data-device="${data.sm_name}"
 													data-devicecode="${data.sm_device_code}" />
@@ -280,33 +274,18 @@
 
 								</c:forEach>
 
-								<!-- 
-								<ul class="promlist">
-									<c:forEach items="${pList}" var="data" varStatus="status">
-										<li>
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="sm_seq"id="${data.sm_seq}" value="<c:out value='${data.sm_seq}' />" data-device="${data.sm_name}" data-devicecode="${data.sm_device_code}" />
-												<label class="form-check-label" for="${data.sm_seq}">
-													<c:out value="${data.sm_name}" />
-												</label>
-											</div>
-											<p class="card-text">
-												<c:out value="${data.sm_dc}" />
-											</p>
-										</li>
-									</c:forEach>
-								</ul> -->
 
 							</form>
 
-						</section>
 
 						</div>
-						<div class="right mT20">
-							<button type="reset" class="btn_type2" id="btnInit"> 초기화</button>
-							<button type="button" class="btn_type2" id="btnSave"> 저장</button>
-						</div>
 					</section>
+					<div class="panel-body fotter-bg" >
+						<div class="right">
+							<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit"> 초기화</button>
+							<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 저장</button>
+						</div>
+					</div>
 				</section>
 		</aside>
 
@@ -430,7 +409,7 @@
 		$('#product_id').val('');
 	}
 
-	function getList() {
+	function getDeviceListLayer() {
 		var url = '/gplcs/dManagePopList';
 
 		var keyWord = $("select[name=keyWord]").val();
@@ -563,8 +542,8 @@
 		switch (viewName) {
 			case 'classMngrList':
 				$("#MngeListInfoCurrentPage").val(page);
-				getList();
-				break; //	공지사항
+				getDeviceListLayer();
+				break; 
 			default:
 		}
 	}

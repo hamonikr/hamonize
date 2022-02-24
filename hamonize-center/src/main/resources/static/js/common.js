@@ -133,14 +133,14 @@ function getPaging(startPage,endPage,totalPageSize,currentPage,viewName){
 	// pagingHtml += '</div>';    
 
 	pagingHtml += '<div class="dataTables_paginate paging_full_numbers" >';
-	pagingHtml += '<a href="javascript:prevPage('+viewName+','+currentPage+');" class="previous paginate_button paginate_button_disabled">Previous</a>';
+	pagingHtml += '<a href="javascript:prevPage('+viewName+','+currentPage+');" class="previous paginate_button ">Previous</a>';
 	pagingHtml += '<span>';
 	
 	for(startPage; startPage <= endPage; startPage++ ){
 		if(startPage == currentPage){
-			pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');" class="paginate_active">'+startPage+'</a>';
+			pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');" class="paginate_button active">'+startPage+'</a>';
 		} else {
-			pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');">'+startPage+'</a>';
+			pagingHtml += '<a href="javascript:searchView('+viewName+','+startPage+');" class="paginate_button">'+startPage+'</a>';
 		}
 	}
 	pagingHtml += '</span>';

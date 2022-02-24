@@ -12,7 +12,6 @@ function onCheck(event, treeId, treeNode) {
 }
 //메뉴 Tree onClick
 function onClick(event, treeId, treeNode, clickFlag) {
-	console.log("p_seq===="+$('form[name=frm] input[name=p_seq]').val());
 	var zTree = $.fn.zTree.getZTreeObj("tree");
 	var node = zTree.getNodeByParam('id', treeNode.pId);
 	var pSpan = "#"+treeNode.parentTId+"_span";
@@ -253,61 +252,46 @@ function fnSave(){
 		<!-- body right -->
 		<aside class="bg-white">
 			<section class="vbox">
-				<section class="scrollable">
-					<div class="wrapper"> 
-
-						<section class="panel">
-
-							<div class="col-sm-12">
-								
-
-									<section class="panel panel-default">
-										<header class="panel-heading font-bold">조직정보</header>
-										<div class="panel-body" >
-											<!-- <form role="form"> -->
-											<form name="frm" id="frm" method="post" action="orgManage.do" class="row">
-													<input type="hidden" name="p_seq" id="p_seq" value="" />
-													<input type="hidden" name="seq" id="seq" value="" />
-													<input type="hidden" name="section" id="section" value="" />
-													<input type="hidden" name="all_org_nm" id="all_org_nm" value="" />
-													<input type="hidden" name="inventory_id" id="inventory_id" value="" />
-													<input type="hidden" name="group_id" id="group_id" value="" />
-												<div class="form-group">
-													<label>상위조직</label>
-													<input type="text" class="form-control" name="p_org_nm" id="p_org_nm"  placeholder="Enter email">
-												</div>
-												<div class="form-group">
-													<label>순서</label>
-													<input type="text" class="form-control" name="org_ordr" id="org_ordr"  placeholder="Password">
-												</div>
-												<div class="form-group">
-													<label id="nm">팀명</label>
-													<input type="text" class="form-control"  name="org_nm" id="org_nm"  placeholder="Password">
-												</div>
-											</form>
-											<!-- <button type="submit" class="btn btn-sm btn-default">Submit</button> -->
-										</div>
-									</section>
-								<!-- </form> -->
-
+				<section class="scrollable padder">
+				
+				<section class="panel panel-default">
+						<header class="panel-heading">
+							# 조직 관리
+							<i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom"
+								data-title="ajax to load the data." data-original-title="" title=""></i>
+						</header>
+						<div class="wrapper">
+							<div class="panel-body " >
+								<form name="frm" id="frm" method="post" action="orgManage.do" class="row">
+										<input type="hidden" name="p_seq" id="p_seq" value="" />
+										<input type="hidden" name="seq" id="seq" value="" />
+										<input type="hidden" name="section" id="section" value="" />
+										<input type="hidden" name="all_org_nm" id="all_org_nm" value="" />
+										<input type="hidden" name="inventory_id" id="inventory_id" value="" />
+										<input type="hidden" name="group_id" id="group_id" value="" />
+									<div class="form-group">
+										<label>상위조직</label>
+										<input type="text" class="form-control" name="p_org_nm" id="p_org_nm"  placeholder="Enter email">
+									</div>
+									<div class="form-group">
+										<label>순서</label>
+										<input type="text" class="form-control" name="org_ordr" id="org_ordr"  placeholder="Password">
+									</div>
+									<div class="form-group">
+										<label id="nm">팀명</label>
+										<input type="text" class="form-control"  name="org_nm" id="org_nm"  placeholder="Password">
+									</div>
+								</form>
 							</div>
-
-							
-							
-
-						</section>
-						<section class="panel clearfix bg-info lter" style="background-color: #ebefef;">
-							<div class="panel-body" >
-							 
-								<div class="">
-						
-									<!-- <a href="#" class="btn btn-xs btn-success m-t-xs">Follow</a> -->
-									<button type="reset" class="btn btn-sm btn-default" id="btnInit">초기화</button>
-								<button type="button" class="btn btn-sm btn-default" id="btnSave">저장</button>
-								</div>
+						</div>
+					</section>
+					
+						<div class="panel-body fotter-bg" >
+							<div class="right">
+								<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit">초기화</button>
+							<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave">저장</button>
 							</div>
-						</section>
-					</div>
+						</div>
 				</section>
 			</section>
 		</aside>
