@@ -132,14 +132,15 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     
     # TENANT=$(cat /etc/hamonize/hamonize_tanent)
     
-    TENANT_CONFIG=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=config\&domain=$DOMAININFO`
+    
+    TENANT_CONFIG=`curl -s $CENTER_BASE_URL/hmsvc/getTenantRemoteConfig?gubun=config\&domain=$DOMAININFO`
     echo -e ${TENANT_CONFIG}  |jq   > /etc/hamonize/hamonize.json
     
-    TENANT_PRIKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=prikey\&domain=$DOMAININFO`
+    TENANT_PRIKEY=`curl -s $CENTER_BASE_URL/hmsvc/getTenantRemoteConfig?gubun=prikey\&domain=$DOMAININFO`
     
     echo -e "-----BEGIN PRIVATE KEY-----\n" ${TENANT_PRIKEY} "\n-----END PRIVATE KEY-----"   > /etc/hamonize/keys/private/hamonize_private_key.pem
     
-    TENANT_PUBKEY=`curl -s http://192.168.0.118:8081/hmsvc/getTenantRemoteConfig?gubun=pubkey\&domain=$DOMAININFO`
+    TENANT_PUBKEY=`curl -s $CENTER_BASE_URL/hmsvc/getTenantRemoteConfig?gubun=pubkey\&domain=$DOMAININFO`
     echo -e "-----BEGIN PUBLIC KEY-----\n" ${TENANT_PUBKEY}  "\n-----END PUBLIC KEY-----"  > /etc/hamonize/keys/public/hamonize_public_key.pem
     
     # Check hamonize-user.deb file in hamonize apt repository
