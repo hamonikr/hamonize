@@ -24,7 +24,7 @@ then
     export DISPLAY=:0.0  &
     sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 프로그램 설치 및 삭제를 진행합니다.\n [Info]  Program Manage  by ADMIN "'
 
-    rm -fr /etc/hamonize/updt/runupdt
+    rm -fr /etc/hamonize/runupdt
     hamonize-agent --updt
 else
     echo "nok"
