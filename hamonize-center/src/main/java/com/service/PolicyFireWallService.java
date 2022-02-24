@@ -107,7 +107,7 @@ public class PolicyFireWallService {
 		params.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runufw");
 
-		JSONObject result = restApiService.makePolicy(params);
+		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("resuklt======="+result);
 	
 

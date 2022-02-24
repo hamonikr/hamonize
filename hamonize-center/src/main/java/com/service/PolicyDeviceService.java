@@ -107,7 +107,7 @@ public class PolicyDeviceService {
 		params.put("policyFilePath","/etc/hamonize/security/device.hm");
 		params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
 
-		JSONObject result = restApiService.makePolicy(params);
+		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("resuklt======="+result);
 	
 
