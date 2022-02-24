@@ -127,7 +127,7 @@
 						search_org so
 					where
 						b.p_seq = so.seq
-						and b."domain" = #{domain}
+						and b."domain" = so.domain
 						and not cycle)
 							select
 						"domain",

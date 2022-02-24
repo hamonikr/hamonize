@@ -47,7 +47,7 @@ public class PolicyCommonController {
 
 	@ResponseBody
 	@RequestMapping(value = "addAnsibleJobEvent", method = RequestMethod.POST)
-	public int addAnsibleJobEvent(HttpSession session,@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException {
+	public int addAnsibleJobEvent(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException {
 		System.out.println("url===="+request.getHeader("referer"));
 		String[] before_url = request.getHeader("referer").split("/");
 		params.put("before_url", before_url[before_url.length -1]);
@@ -55,16 +55,42 @@ public class PolicyCommonController {
 		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
 		Map<String, Object> resultMap;
 		dataArr = restApiService.addAnsibleJobEvent(Integer.parseInt(params.get("job_id").toString()));
+		System.out.println("dataArr.size()============"+dataArr.size());
+		//String processedLength = "";
 		for (int i = 0; i < dataArr.size(); i++) {
 			resultMap = new HashMap<String, Object>();
-			String json = dataArr.get(i).toString();
-			resultMap.put("result", json);
-			resultSet.add(resultMap);
+			if(i > 0)
+			{
+				String json = dataArr.get(i).toString();
+				resultMap.put("result", json);
+				resultSet.add(resultMap);
+			}
+			// else
+			// {
+			// 	processedLength = dataArr.get(i).toString();
+			// 	params.put("processedLength", processedLength);
+			// }
 		}
 		params.put("data", resultSet);
 		int result = commonMapper.checkCountAnsibleJobId(params);
-		if(result == 0)
-		result = commonMapper.addAnsibleJobEvent(params);
+		System.out.println("result===="+result);
+		// if((dataArr.size() -1) > result)
+		// {
+		// 	if(processedLength.split(",").length > (dataArr.size() -1))
+		// 	{
+		// 		commonMapper.deleteAnsibleJobEvent(params);
+		// 		addAnsibleJobEvent(params,request);
+		// 	}
+		// }
+		// result = commonMapper.addAnsibleJobEvent(params);
+		if((dataArr.size() -1) > result)
+		{
+			if(result > 0)
+			{
+				commonMapper.deleteAnsibleJobEvent(params);
+			}
+			result = commonMapper.addAnsibleJobEvent(params);
+		}
 		return result;
 
 	}
