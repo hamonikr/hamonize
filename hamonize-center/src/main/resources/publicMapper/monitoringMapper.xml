@@ -99,7 +99,6 @@
 		</if>
 		and domain = #{domain}
 		</where>
-		 
 	</select>
 		
 	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">

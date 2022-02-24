@@ -12,7 +12,7 @@
 		//등록버튼
 		$("#btnSave").click(fnSavePmanage);
 
-		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
+		//window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 	});
 
 	// 	var treeObj = $.fn.zTree.getZTreeObj("tree");
@@ -93,7 +93,7 @@
 						//$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
 						//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					}
-
+					checkAnsibleJobStatus(agrs.job_id);
 				});
 		// }
 	}

@@ -110,7 +110,7 @@
 	</select>
 
 	<select id="getDeviceHistoryLastJob" parameterType="com.model.PolicyDeviceVo" resultType="int">
-		SELECT COALESCE(max(JOB_ID),0) as job_id FROM tbl_device_applc_history WHERE DOMAIN = #{domain}
+		SELECT COALESCE(max(JOB_ID),0) as job_id FROM tbl_device_applc_history WHERE DOMAIN = #{domain} and ORG_SEQ = #{org_seq}
 	</select>
 
 </mapper>
