@@ -272,7 +272,7 @@ public void deleteHost(PcMangrVo hdVo) throws ParseException
   //return result;
 }
 
-public JSONObject makePolicy(Map<String, Object> params) throws ParseException
+public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseException
   {
     String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")
     +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | touch "+params.get("policyRunFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0,\"forks\": 10}";
@@ -309,6 +309,46 @@ public JSONObject makePolicy(Map<String, Object> params) throws ParseException
     }
   return jsonResultObj;
 }
+
+public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseException
+  {
+    String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")
+    +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | touch "+params.get("policyRunFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0,\"forks\": 10}";
+    System.out.println("request====="+request);
+    Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
+    .path("/api/v2/ad_hoc_commands/")
+    .build())
+    .contentType(MediaType.APPLICATION_JSON)
+    .body(BodyInserters.fromValue(request))
+    .exchange().flatMap(clientResponse -> {
+      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+          clientResponse.body((clientHttpResponse, context) -> {
+              return clientHttpResponse.getBody();
+          });
+          return clientResponse.bodyToMono(String.class);
+      }
+      else
+          return clientResponse.bodyToMono(String.class);
+  });
+    //.accept(MediaType.APPLICATION_JSON)
+    //.retrieve()
+    //.bodyToMono(String.class); 
+
+    String objects = response.block();
+    //System.out.println("objects====="+objects);
+    JSONParser jsonParser = new JSONParser();
+    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+    //System.out.println("jsonObj.get======"+jsonObj.get("id").toString());
+    
+    Integer result = Integer.parseInt(jsonObj.get("id").toString());
+    JSONObject jsonResultObj = new JSONObject();
+    if(result != null){
+      jsonResultObj = checkPolicyJobResult(result);
+    }
+  return jsonResultObj;
+}
+
+
 
 public JSONObject checkPolicyJobResult(int id) throws ParseException{
 

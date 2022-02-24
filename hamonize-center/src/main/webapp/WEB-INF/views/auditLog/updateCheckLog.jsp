@@ -125,11 +125,13 @@
 							shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='" + value
 								.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" + hostnameVal +
 								"</a></li>";
-						} else
+								shtml += value.status;
+						} else {
 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
 							value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" +
 							hostnameVal + "</a></li>";
-
+							shtml += value.status;
+						}
 					});
 
 // <ul class="monitor_list"><li>

@@ -42,10 +42,11 @@ public class Test {
       try {
         System.out.println("11111111111111111111111111111111");
         Mono<String> response = wc.get().uri(UriBuilder -> UriBuilder
-        .path("/api/v2/inventories/").path("{id}/").path("inventory_sources/")
+        //.path("/api/v2/inventories/").path("{id}/").path("inventory_sources/")
+        .path("/api/v2/ad_hoc_command_events/17415/")
         //.queryParam("--user", "admin:password")
         //.queryParam("password", "password")
-        .build(3))
+        .build())
         .exchange().flatMap(clientResponse -> {
           if (clientResponse.statusCode().is5xxServerError()) {
               clientResponse.body((clientHttpResponse, context) -> {
@@ -487,6 +488,47 @@ public class Test {
           .path("/api/v2/groups/").path("{id}/")
           .build(46))
           //.contentType(MediaType.APPLICATION_JSON)
+          //.body(BodyInserters.fromValue(request))
+          .exchange().flatMap(clientResponse -> {
+            if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+                clientResponse.body((clientHttpResponse, context) -> {
+                    return clientHttpResponse.getBody();
+                });
+                return clientResponse.bodyToMono(String.class);
+            }
+            else
+                return clientResponse.bodyToMono(String.class);
+        });
+          //.accept(MediaType.APPLICATION_JSON)
+          //.retrieve()
+          //.bodyToMono(String.class); 
+
+  String objects = response.block();
+  return objects.toString();
+  //JSONParser jsonParser = new JSONParser();
+  //JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+      } catch (Exception e) {
+        //TODO: handle exception
+      }
+      return null;
+  
+    }
+
+
+    @RequestMapping(value="test7")
+    public String relaunchPolicy(){
+
+      WebClient wc = WebClient.builder()
+      .defaultHeaders(header -> header.setBasicAuth("admin","password"))
+      .baseUrl("http://192.168.0.220").build();
+      
+      try {
+          //String request = "{\"credential\": 3,\"limit\": \"1\",\"inventory\": 21,\"module_name\": \"shell\",\"module_args\": \"echo '{\\\"PATH\\\":\\\"/timeshift/snapshots\\\",\\\"NAME\\\":\\\"2021-12-10_12-30-01\\\"}' > /etc/hamonize/recovery/2aaaaa.hm\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+          //System.out.println("request====="+request);
+          Mono<String> response = wc.post().uri(UriBuilder -> UriBuilder
+          .path("/api/v2/jobs/").path("{id}/").path("relaunch/")
+          .build(17415))
+          .contentType(MediaType.APPLICATION_JSON)
           //.body(BodyInserters.fromValue(request))
           .exchange().flatMap(clientResponse -> {
             if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {

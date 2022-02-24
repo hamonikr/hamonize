@@ -78,10 +78,43 @@
 			a.pc_hostname,
 			a.pc_uuid,
 			a.pc_status,
+			a.domain,
+			b.job_id,
+			b.data ->> 'changed' as status,
+			b.data
+		FROM tbl_pc_mangr a right outer join tbl_ansible_event_job b on
+		a."domain" = b."domain" 
+		and a.host_id::text = b."data" ->> 'host'
+		<where>
+		<if test="org_seq != 1 ">
+			a.org_seq in (
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{org_seq}
+				and a.domain = #{domain}
+				union all
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+				from tbl_org a, search_org so 
+				where a.p_seq = so.seq and a.domain = so.domain and not cycle)
+				select seq
+				from search_org
+			)
+		</if>
+		and a.domain = #{domain}
+		and b.job_id = (select max(job_id) from tbl_ansible_event_job where "domain" = #{domain} and org_seq = #{org_seq})
+		</where>
+	</select>
+
+	<!-- <select id="pcListInfo" resultType="java.util.HashMap"  parameterType="java.util.HashMap">
+		SELECT 
+			a.seq,
+			a.pc_hostname,
+			a.pc_uuid,
+			a.pc_status,
 			a.domain
 		FROM tbl_pc_mangr a 
 		<where>
-			<!-- a.pc_os = 'H' -->
 		<if test="org_seq != 1 ">
 			org_seq in (
 				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
@@ -99,7 +132,7 @@
 		</if>
 		and domain = #{domain}
 		</where>
-	</select>
+	</select> -->
 		
 	<select id="countPcListInfo" parameterType="com.model.PcMangrVo" resultType="Integer">
 		SELECT 

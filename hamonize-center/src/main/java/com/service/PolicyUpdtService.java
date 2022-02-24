@@ -114,7 +114,7 @@ public class PolicyUpdtService {
 		params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runupdt");
 
-		JSONObject result = restApiService.makePolicy(params);
+		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("ResultID====="+result);
 		// updtPolicy.clear();
 		// updtPolicy.put("INS", String.join(",",ppm_name));

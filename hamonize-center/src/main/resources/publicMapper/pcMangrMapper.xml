@@ -650,14 +650,15 @@
 							pc_uuid in (
 								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
 								(
-									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+									WITH recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+										SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 										FROM tbl_org a
 										WHERE a.seq = #{org_seq}
+											and a.domain = #{domain}
 										UNION all
-										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+										SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
 										FROM tbl_org a, search_org so
-										WHERE a.p_seq = so.seq and not cycle)
+										WHERE a.p_seq = so.seq and a.domain = so.domain and not cycle)
 										SELECT seq
 										FROM search_org
 								)

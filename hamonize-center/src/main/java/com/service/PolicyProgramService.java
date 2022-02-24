@@ -80,7 +80,7 @@ public class PolicyProgramService {
 		params.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
 
-		JSONObject result = restApiService.makePolicy(params);
+		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("resuklt======="+result);
 	
 
