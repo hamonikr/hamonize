@@ -92,7 +92,7 @@
 					//$('form[name=frm] input[name=org_seq]').val(agrs.dataInfo.org_seq);
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 				}
-
+				checkAnsibleJobStatus(agrs.job_id);
 			});
 		// }
 	}

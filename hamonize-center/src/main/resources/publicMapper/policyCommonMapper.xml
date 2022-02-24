@@ -53,4 +53,8 @@
 	SELECT count(*) FROM tbl_ansible_event_job WHERE JOB_ID = #{job_id}::int
 	</select>
 
+	<delete id="deleteAnsibleJobEvent" parameterType="java.util.HashMap">
+	DELETE FROM tbl_ansible_event_job WHERE JOB_ID = #{job_id}::int
+	</delete>
+
 </mapper>

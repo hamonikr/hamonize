@@ -351,6 +351,7 @@ public JSONArray addAnsibleJobEvent(int id) throws ParseException{
         String objects = response.block();
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+        System.out.println("jsonObj============"+jsonObj);
         JSONArray resultsArray = (JSONArray) jsonObj.get("results");
         JSONArray makeResultArray = new JSONArray();
         int index = 0;
@@ -358,24 +359,36 @@ public JSONArray addAnsibleJobEvent(int id) throws ParseException{
           JSONObject summary_fieldsObj = new JSONObject();
           summary_fieldsObj = (JSONObject) tmp;
           summary_fieldsObj = (JSONObject) summary_fieldsObj.get("summary_fields");
-          if(!summary_fieldsObj.isEmpty() && index > 0)
+          if(!summary_fieldsObj.isEmpty())
           {
             JSONObject makeResultObj = (JSONObject) tmp;
+            System.out.println(index+"=======makeResultObj=============="+makeResultObj);
             makeResultArray.add(makeResultObj);
           }
           
             index++;
         }
         JSONArray finalResultArray = new JSONArray();
+        System.out.println("makeResultArray========"+makeResultArray.size());
+        System.out.println("makeResultArray========"+makeResultArray.toJSONString());
+        JSONObject processed = new JSONObject();
+          processed = (JSONObject) resultsArray.get(0);
+          processed = (JSONObject) processed.get("event_data");
+          processed = (JSONObject) processed.get("processed");
+          finalResultArray.add(processed);
         for(Object tmp : makeResultArray){
           JSONObject finalResult = new JSONObject();
           finalResult = (JSONObject) tmp;
+          System.out.println("finalResult-============="+finalResult);
           String stdout = finalResult.get("stdout").toString();
+          System.out.println("stdout============="+stdout);
           if(!stdout.isEmpty())
           {
             finalResultArray.add(finalResult);
           }
         }
+        System.out.println("finalResultArray=========="+finalResultArray.size());
+        System.out.println("finalResultArray=========="+finalResultArray.toJSONString());
         return finalResultArray;
 }
   

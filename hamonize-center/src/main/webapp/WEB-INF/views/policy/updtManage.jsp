@@ -8,7 +8,7 @@
 	$(document).ready(function () {
 		//등록버튼
 		$("#btnSave").click(fnSaveUpdt);
-		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
+		//window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 	});
 
 	//메뉴 Tree onClick
@@ -58,7 +58,7 @@
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					
 				}
-
+				checkAnsibleJobStatus(agrs.job_id);
 			});
 		$('form[name=frm] input[name=former_ppm_name]').val(queryArr);                               
 	}

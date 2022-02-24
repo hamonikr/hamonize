@@ -39,7 +39,7 @@
 		});
 
 		getList();
-		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
+		//window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 	});
 
 	function onClick(event, treeId, treeNode, clickFlag) {
@@ -93,8 +93,7 @@
 						$('form[name=frm] input[name=former_ppm_name]').val(former_ppm_names);
 					}
 				}
-
-
+				checkAnsibleJobStatus(agrs.job_id);
 			});
 		// }
 	}

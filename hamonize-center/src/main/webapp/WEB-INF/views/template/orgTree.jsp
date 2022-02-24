@@ -273,11 +273,8 @@ function checkAnsibleJobStatus(job_id){
 				target.disabled = true;
 				setTimeout(checkAnsibleJobStatus,3000,job_id);
 				//checkAnsibleJobStatus(job_id);
-			}else if(res.status == "successful"){
-				console.log("작업성공.");
-				target.disabled = false;
-			}else if(res.status == "failed"){
-				console.log("실패한작업이 있습니다.");
+			}else{
+				console.log("작업성공여부=="+res.status);
 				target.disabled = false;
 				addAnsibleJobEvent(res.inventory,res.limit,job_id);
 			}
