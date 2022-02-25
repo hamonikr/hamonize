@@ -227,14 +227,21 @@ a {
                                     <span>환경설정</span>
                                 </a>
                             </li>
-                            <li>
+                            <%-- <li>
                                 <a href="http://192.168.0.210:8080/user/detail">
                                     <i class="fa fa-thumb-tack"></i>
                                     <span>${userSession.userid} 님</span>
                                 </a>
-                            </li>
-                            <li>
+                            </li> --%>
+                            <%-- <li>
                                 <a href="http://192.168.0.210:8080/login/logout">
+                                    <i class="fa fa-thumb-tack"></i>
+                                    <span>로그아웃</span>
+                                </a>
+                            </li> --%>
+
+                            <li>
+                                <a href="/login/logout">
                                     <i class="fa fa-thumb-tack"></i>
                                     <span>로그아웃</span>
                                 </a>
