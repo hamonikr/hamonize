@@ -36,7 +36,7 @@ public class MainController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String mainPage() throws Exception {
 	
-	return "redirect:http://192.168.0.226:8080/login";
+	return "redirect:http://192.168.0.210:8080/login";
 
 	}
 

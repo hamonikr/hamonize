@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
 import com.model.LoginVO;
@@ -155,7 +156,8 @@ public class AuditLogService {
 	/**
 	 * 방화벽 정책 적용 결과
 	 */
-	public List<Map<String, Object>> firewallList(HashMap<String, Object> params, LoginVO lvo ) {
+	// public List<Map<String, Object>> firewallList(HashMap<String, Object> params, LoginVO lvo ) {
+	public List<Map<String, Object>> firewallList(HashMap<String, Object> params, SecurityUser lvo ) {
 
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
