@@ -2,6 +2,8 @@ package com.mapper;
 
 import java.util.Map;
 
+import com.model.LogInOutVo;
+
 public interface IPolicyCommonMapper {
 	
 	public int addAnsibleJobEventByHost(Map<String, Object> params);
@@ -15,6 +17,8 @@ public interface IPolicyCommonMapper {
 	public int deleteAnsibleJobEvent(Map<String, Object> params);
 	
 	public int checkCountAnsibleJobId(Map<String, Object> params);
+
+	public Map<String, Object> checkAnsibleJobFailOrNot(LogInOutVo inputVo);
 
 	public int deleteAnsibleJobRelaunchEvent(Map<String, Object> params);
 	

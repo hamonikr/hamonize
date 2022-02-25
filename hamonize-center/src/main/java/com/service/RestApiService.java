@@ -398,6 +398,7 @@ public JSONObject addAnsibleJobEventByHost(int id) throws ParseException{
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
         JSONArray resultsArray = (JSONArray) jsonObj.get("results");
         JSONArray makeResultArray = new JSONArray();
+        System.out.println("resultsArray========="+resultsArray);
         int index = 0;
         for(Object tmp : resultsArray){
           JSONObject summary_fieldsObj = new JSONObject();
@@ -412,10 +413,10 @@ public JSONObject addAnsibleJobEventByHost(int id) throws ParseException{
             index++;
         }
         JSONArray finalResultArray = new JSONArray();
-        JSONObject processed = new JSONObject();
-          processed = (JSONObject) resultsArray.get(0);
-          processed = (JSONObject) processed.get("event_data");
-          processed = (JSONObject) processed.get("processed");
+        // JSONObject processed = new JSONObject();
+        //   processed = (JSONObject) resultsArray.get(0);
+        //   processed = (JSONObject) processed.get("event_data");
+        //   processed = (JSONObject) processed.get("processed");
         for(Object tmp : makeResultArray){
           JSONObject finalResult = new JSONObject();
           finalResult = (JSONObject) tmp;
@@ -427,7 +428,7 @@ public JSONObject addAnsibleJobEventByHost(int id) throws ParseException{
         }
         JSONObject finalResult = new JSONObject();
         finalResult.put("finalResult", finalResultArray);
-        finalResult.put("processed", processed);
+        //finalResult.put("processed", processed);
         return finalResult;
 }
 

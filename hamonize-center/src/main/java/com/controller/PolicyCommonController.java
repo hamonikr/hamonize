@@ -14,6 +14,7 @@ import com.service.RestApiService;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,26 +59,15 @@ public class PolicyCommonController {
 		data = restApiService.addAnsibleJobEventByHost(Integer.parseInt(params.get("job_id").toString()));
 		dataArr = (JSONArray) data.get("finalResult");
 		System.out.println("dataArr.size()============"+dataArr.size());
-		System.out.println("data============"+data.get("processed"));
-		String [] processed = data.get("processed").toString().split(",");
-		System.out.println("processedprocessedprocessedprocessedprocessed====="+processed.length);
+		// String [] processed = data.get("processed").toString().split(",");
 		for (int i = 0; i < dataArr.size(); i++) {
-			// if(i == 0)
-			// {
-			// 	processedLength = dataArr.get(i).toString();
-			// 	params.put("processedLength", processedLength);
-			// }else
-			// {
 				resultMap = new HashMap<String, Object>();
 				String json = dataArr.get(i).toString();
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParser.parse(json);
 				resultMap.put("result", json);
+				resultMap.put("status", jsonObj.get("changed"));
 				resultSet.add(resultMap);
-			//}
-			// else
-			// {
-			// 	processedLength = dataArr.get(i).toString();
-			// 	params.put("processedLength", processedLength);
-			// }
 		}
 		params.put("data", resultSet);
 		int result = commonMapper.checkCountAnsibleJobId(params);
@@ -91,14 +81,18 @@ public class PolicyCommonController {
 		// 	}
 		// }
 		// result = commonMapper.addAnsibleJobEvent(params);
-		if(dataArr.size() > result)
-		{
-			if(result > 0)
+		// if(processed.length > dataArr.size()){
+		// 	addAnsibleJobEventByHost(params,request);
+		// }else{
+			if(dataArr.size() > result)
 			{
-				commonMapper.deleteAnsibleJobEvent(params);
+				if(result > 0)
+				{
+					commonMapper.deleteAnsibleJobEvent(params);
+				}
+				result = commonMapper.addAnsibleJobEventByHost(params);
 			}
-			result = commonMapper.addAnsibleJobEventByHost(params);
-		}
+		// }
 		return result;
 
 	}
