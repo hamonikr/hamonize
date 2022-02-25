@@ -231,14 +231,21 @@ public class ActAgentFirewallController {
 		if (insArray.size() != 0) {
 			for (int i = 0; i < insArray.size(); i++) {
 				JSONObject tempObj = (JSONObject) insArray.get(i);
+				
+//				"progrmname":"stacer" "status_yn":"Y" "status":"ins" 
+//				"datetime":"2022-02-25 12:13:27" 
+//				"hostname":"hamonikr-X556UAK" "uuid":"df303afa09304ff8a3ec14f6f2d9ea22"  "domain":"naver"
+				
 				inputVo[i] = new ActAgentProgrmVo();
-				inputVo[i].setPc_uuid(tempObj.get("uuid").toString().trim());
-				inputVo[i].setPc_hostname(tempObj.get("hostname").toString());
-				inputVo[i].setStatus(tempObj.get("status_yn").toString());
-				inputVo[i].setKind(tempObj.get("status").toString());
-				inputVo[i].setProgrmname(tempObj.get("progrmname").toString());
-				inputVo[i].setDatetime(tempObj.get("datetime").toString());
+				
 				inputVo[i].setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
+				inputVo[i].setPc_uuid(tempObj.get("uuid").toString().trim());
+				inputVo[i].setDatetime(tempObj.get("datetime").toString());
+				inputVo[i].setPc_hostname(tempObj.get("hostname").toString());
+				inputVo[i].setStatus(tempObj.get("status").toString());
+				inputVo[i].setKind(tempObj.get("kind").toString());
+				inputVo[i].setProgrmname(tempObj.get("progrmname").toString());
+
 			}
 		}
 
