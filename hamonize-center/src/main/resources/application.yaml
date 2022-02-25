@@ -12,16 +12,16 @@ spring:
   #     force: true
   # db1:
   #   datasource:
-  redis:
-    host: 192.168.0.210
-    port: 6379
-    password: root
+  # redis:
+  #   host: 192.168.0.210
+  #   port: 6379
+  #   password: root
   
-  session: 
-    store-type: redis
-    redis:
-      flush-mode: on-save
-      namespace: spring:session
+  # session: 
+  #   store-type: redis
+  #   redis:
+  #     flush-mode: on-save
+  #     namespace: spring:session
 
 
   jpa:
