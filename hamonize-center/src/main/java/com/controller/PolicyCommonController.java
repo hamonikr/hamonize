@@ -58,13 +58,17 @@ public class PolicyCommonController {
 		System.out.println("dataArr.size()============"+dataArr.size());
 		//String processedLength = "";
 		for (int i = 0; i < dataArr.size(); i++) {
-			resultMap = new HashMap<String, Object>();
-			if(i > 0)
-			{
+			// if(i == 0)
+			// {
+			// 	processedLength = dataArr.get(i).toString();
+			// 	params.put("processedLength", processedLength);
+			// }else
+			// {
+				resultMap = new HashMap<String, Object>();
 				String json = dataArr.get(i).toString();
 				resultMap.put("result", json);
 				resultSet.add(resultMap);
-			}
+			//}
 			// else
 			// {
 			// 	processedLength = dataArr.get(i).toString();
@@ -83,7 +87,7 @@ public class PolicyCommonController {
 		// 	}
 		// }
 		// result = commonMapper.addAnsibleJobEvent(params);
-		if((dataArr.size() -1) > result)
+		if(dataArr.size() > result)
 		{
 			if(result > 0)
 			{
@@ -96,19 +100,51 @@ public class PolicyCommonController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "addAnsibleJobRelaunchEventByHost", method = RequestMethod.POST)
+	public int addAnsibleJobRelaunchEventByHost(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException {
+		JSONArray dataArr = new JSONArray();
+		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
+		Map<String, Object> resultMap;
+		dataArr = restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(params.get("job_id").toString()));
+		System.out.println("dataArr.size()============"+dataArr.size());
+		//String processedLength = "";
+		for (int i = 0; i < dataArr.size(); i++) {
+			resultMap = new HashMap<String, Object>();
+				String json = dataArr.get(i).toString();
+				resultMap.put("result", json);
+				resultSet.add(resultMap);
+		}
+		params.put("data", resultSet);
+		int result = commonMapper.checkCountAnsibleJobRelaunchId(params);
+		System.out.println("result===="+result);
+		if(dataArr.size() > result)
+		{
+			if(result > 0)
+			{
+				commonMapper.deleteAnsibleJobRelaunchEvent(params);
+			}
+			result = commonMapper.addAnsibleJobRelaunchEventByHost(params);
+		}
+		return result;
+
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "makePolicyToSingle", method = RequestMethod.POST)
 	public JSONObject makePolicyToSingle(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
 		params.putAll(commonMapper.getAnsibleJobEventByGroup(params));
-		System.out.println("params==========="+params);
 		JSONObject jobResult = new JSONObject();
 		jobResult = restApiService.makePolicyToSingle(params);
-		System.out.println("jobResult===="+jobResult);
 		params.put("object", jobResult.toJSONString());
+		params.put("parents_job_id", params.get("job_id"));
+		params.put("job_id", jobResult.get("id"));
 		JSONObject jsonObj = new JSONObject();
-		int result = commonMapper.addAnsibleJobEventRelaunch(params);
-		if (result >= 1){
+		//int result = commonMapper.addAnsibleJobEventRelaunch(params);
+		if (jobResult.toJSONString() != ""){
 			jsonObj.put("STATUS", "SUCCESS");
 			jsonObj.put("ID", jobResult.get("id"));
+			jsonObj.put("PARENTS_ID", params.get("parents_job_id"));
+			jsonObj.put("PC_UUID", params.get("pc_uuid"));
 			jsonObj.put("JOBSTATUS", jobResult.get("status"));
 		} else{
 			jsonObj.put("STATUS", "FAIL");

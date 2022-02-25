@@ -7,8 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.mapper.ISvrlstMapper;
-import com.model.LoginVO;
 import com.model.SvrlstVo;
 import com.service.MonitoringService;
 
@@ -35,7 +35,9 @@ public class MainController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String mainPage() throws Exception {
-		return "redirect:/login/login";
+	
+	return "redirect:http://192.168.0.210:8080/login";
+
 	}
 
 	// @RequestMapping(value = "/home", method = RequestMethod.GET)
@@ -47,7 +49,7 @@ public class MainController {
 
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String mainMap(Model model,HttpSession session) throws Exception {
-		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser)session.getAttribute("userSession");
 		SvrlstVo center = new SvrlstVo();
 		center.setSvr_nm("GRAFANA_URL");
 		SvrlstVo svo = svrlstMapper.getVpnSvrUsed(center);
@@ -64,7 +66,8 @@ public class MainController {
 	@ResponseBody
 	@RequestMapping(value = "/pcList", method = RequestMethod.POST)
 	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params,HttpSession session) {
-		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
+		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("org_seq", 1);

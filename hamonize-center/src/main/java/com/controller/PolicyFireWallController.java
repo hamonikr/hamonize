@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.mapper.IPolicyFireWallMapper;
-import com.model.LoginVO;
+import com.hamonize.portal.user.SecurityUser;
 import com.model.OrgVo;
 import com.model.PolicyFireWallVo;
 import com.paging.PagingUtil;
@@ -55,7 +55,8 @@ public class PolicyFireWallController {
 
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyFireWallVo> pList = null;
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		
 		try {
 			OrgVo orgvo = new OrgVo();
 			PolicyFireWallVo vo = new PolicyFireWallVo();
@@ -141,7 +142,7 @@ public class PolicyFireWallController {
 			HttpSession session, HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		// 페이징
 		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage());
@@ -171,7 +172,7 @@ public class PolicyFireWallController {
 	public Map<String, Object> dManagePopSave(HttpSession session, PolicyFireWallVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		try {
 			fService.fireWallPopSave(vo);
@@ -201,7 +202,7 @@ public class PolicyFireWallController {
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		
 		try {

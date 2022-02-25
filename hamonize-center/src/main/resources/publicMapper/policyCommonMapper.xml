@@ -66,18 +66,29 @@
 				)
 	</insert>
 
-	<insert id="addAnsibleJobEventRelaunch" parameterType="java.util.HashMap">
+	<insert id="addAnsibleJobRelaunchEventByHost" parameterType="java.util.HashMap">
+		WITH rows AS (
 			INSERT INTO tbl_ansible_event_job_relaunch 
-				(
+				(DOMAIN,
 				JOB_ID,
+				PARENTS_JOB_ID,
+				PC_UUID,
 				DATA,
 				RGSTR_DATE) 
 				VALUES
+				<foreach collection="data" item="item" separator=",">
 				(
+					(select distinct domain from tbl_org where inventory_id = #{inventory_id}::int),
 					#{job_id}::int,
-					#{object}::jsonb,
+					#{parents_job_id}::int,
+					#{pc_uuid},
+					#{item.result}::jsonb,
 					now()
 				)
+				</foreach>
+				RETURNING data,parents_job_id,pc_uuid
+		) UPDATE tbl_ansible_event_job SET data = (SELECT data from rows),RGSTR_DATE = now() WHERE job_id = (SELECT parents_job_id from rows)::int
+		and (SELECT pc_uuid from rows) = data -> 'summary_fields' -> 'host' ->> 'description'
 	</insert>
 
 	<select id="checkCountAnsibleJobId" parameterType="java.util.HashMap" resultType="Integer">
@@ -86,6 +97,14 @@
 
 	<delete id="deleteAnsibleJobEvent" parameterType="java.util.HashMap">
 	DELETE FROM tbl_ansible_event_job WHERE JOB_ID = #{job_id}::int
+	</delete>
+
+	<select id="checkCountAnsibleJobRelaunchId" parameterType="java.util.HashMap" resultType="Integer">
+	SELECT count(*) FROM tbl_ansible_event_job_relaunch WHERE JOB_ID = #{job_id}::int
+	</select>
+
+	<delete id="deleteAnsibleJobRelaunchEvent" parameterType="java.util.HashMap">
+	DELETE FROM tbl_ansible_event_job_relaunch WHERE JOB_ID = #{job_id}::int
 	</delete>
 
 	<select id="getAnsibleJobEventByGroup" parameterType="java.util.HashMap" resultType="java.util.HashMap">

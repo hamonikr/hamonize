@@ -7,6 +7,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
+import com.influxdb.query.FluxRecord;
+import com.mapper.IAuditLogMapper;
+import com.model.AuditLogVo;
+import com.model.OrgVo;
+import com.model.PcMangrVo;
+import com.paging.PagingUtil;
+import com.paging.PagingVo;
+import com.service.AuditLogService;
+import com.service.MonitoringService;
+import com.service.OrgService;
+import com.util.AuthUtil;
+
 import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,19 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.influxdb.query.FluxRecord;
-import com.mapper.IAuditLogMapper;
-import com.model.AuditLogVo;
-import com.model.LoginVO;
-import com.model.OrgVo;
-import com.model.PcMangrVo;
-import com.paging.PagingUtil;
-import com.paging.PagingVo;
-import com.service.AuditLogService;
-import com.service.OrgService;
-import com.util.AuthUtil;
-import com.service.MonitoringService;
 
 @Controller
 @RequestMapping("/auditLog")
@@ -82,8 +82,8 @@ public class AuditLogController {
 			vo.setDate_fr(vo.getDate_fr().replaceAll("/", "") + " 00:00:00");
 		if (!"".equals(vo.getDate_to()))
 			vo.setDate_to(vo.getDate_to().replaceAll("/", "") + " 23:59:59");
-
-		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
 		vo.setDomain(lvo.getDomain());
 		
 		System.out.println("aaaaaaaaaaaaa");
@@ -158,7 +158,7 @@ public class AuditLogController {
 			vo.setDate_to(vo.getDate_to().replaceAll("/", "") + " 23:59:59");
 
 
-		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
 		vo.setDomain(lvo.getDomain());
 		
 		// 페이징
@@ -279,7 +279,7 @@ public class AuditLogController {
 		pagingVo.setCurrentPage(vo.getCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
 
-		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
 		vo.setDomain(lvo.getDomain());
 		
 		int cnt = Integer.parseInt(logMapper.countPrcssBlockLogListInfo(vo) + "");
@@ -312,7 +312,7 @@ public class AuditLogController {
 	public String updateCheckLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
-			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+			SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 			OrgVo orgvo = new OrgVo();
 			orgvo.setDomain(lvo.getDomain());
 			jsonArray = oService.orgList(orgvo);
@@ -381,7 +381,7 @@ public class AuditLogController {
 
 		try {
 			
-			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+			SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 			
 			System.out.println("#########################################" + lvo.getDomain());
 			jsonObject.put("udpt", logService.udptList(params));

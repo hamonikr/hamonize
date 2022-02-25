@@ -7,9 +7,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
-import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.SvrlstVo;
@@ -71,7 +71,7 @@ public class MonitoringController {
 	@ResponseBody
 	@PostMapping("/pcList")
 	public Map<String, Object> pcList(Model model, @RequestParam Map<String, Object> params, HttpSession session) {
-		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
@@ -116,7 +116,7 @@ public class MonitoringController {
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 
 		
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		
 		
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
