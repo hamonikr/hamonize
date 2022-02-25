@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
-import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.SvrlstVo;

@@ -381,7 +381,7 @@ public class AuditLogController {
 
 		try {
 			
-			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+			SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 			
 			System.out.println("#########################################" + lvo.getDomain());
 			jsonObject.put("udpt", logService.udptList(params));
