@@ -19,12 +19,12 @@
 				VALUES
 			<foreach collection="list" item="item" separator=" , ">
         (
-					#{item.orgseq}, 
-					#{item.uuid}, 
+					#{item.org_seq}, 
+					#{item.pc_uuid}, 
 					#{item.datetime}, 
-					#{item.hostname}, 
-					#{item.status_yn}, 
+					#{item.pc_hostname}, 
 					#{item.status},
+					#{item.kind}, 
 					#{item.progrmname},
 					now()
 				)

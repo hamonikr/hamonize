@@ -830,10 +830,13 @@
 	</select>
 
 	<!-- 방화벽 허용 정책 배포 -->
-	<select id="firewallPackageList" resultType="String">
-				SELECT sm_port
-					FROM tbl_policy_firewall_list
-			 </select>
+	<select id="firewallPackageList" resultType="String" parameterType="String">
+		SELECT sm_port
+		FROM tbl_policy_firewall_list
+		where domain = #{domain}
+	</select>
+	
+	
 	<select id="firewallList" resultType="map" parameterType="hashmap">
 		<foreach collection="debList" item="item" index="index">
 			(select

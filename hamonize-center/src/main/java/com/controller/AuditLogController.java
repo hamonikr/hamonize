@@ -380,10 +380,14 @@ public class AuditLogController {
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
 
 		try {
+			
+			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+			
+			System.out.println("#########################################" + lvo.getDomain());
 			jsonObject.put("udpt", logService.udptList(params));
 			jsonObject.put("program", logService.programList(params));
 			jsonObject.put("device", logService.deviceList(params));
-			jsonObject.put("firewall", logService.firewallList(params));
+			jsonObject.put("firewall", logService.firewallList(params, lvo));
 		} catch (Exception e) {
 			jsonObject.put("success", false);
 			logger.error(e.getMessage(), e);

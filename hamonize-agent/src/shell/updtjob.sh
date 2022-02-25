@@ -15,7 +15,12 @@ echo "install file total  data=========$UPDT_INS"  >>$LOGFILE
 
 if [ "$UPDT_INS" != null ] 
 then
-	echo "data insert ==" >>$LOGFILE
+        echo "data insert ==" >>$LOGFILE
+
+
+        sudo apt-get update >>$LOGFILE
+        sleep 1
+
 
 EC=0
 INSRET=""
@@ -27,8 +32,18 @@ do
 
         echo "install deb name is ===> $I" >>$LOGFILE
 
-	sudo apt-get update >>$LOGFILE
- 	sleep 1
+        INIT_INSTALLED_CHK=`dpkg --get-selections | grep $I | grep -v "[[:graph:]]$I\|$I[[:graph:]]" | wc -l`
+        echo "$I Install Check Result ==========>$INIT_INSTALLED_CHK"
+
+        if [ "$INIT_INSTALLED_CHK" -ne 1 ]
+        then
+                echo "[$I] Not Installed " >>$LOGFILE
+                sudo apt-get install $I -y >>$LOGFILE
+                sleep 1
+        else    
+                echo "[$I] Installed " >>$LOGFILE
+        fi
+
 
 	sudo apt-get install $I -y >>$LOGFILE
         sleep 1
@@ -97,6 +112,11 @@ echo "upgrade file total data=========$UPDT_UPDT" >>$LOGFILE
 
 if [ "$UPDT_UPDT" != null ]; then
         echo "data update  ==" >>$LOGFILE
+
+sudo apt-get update > /dev/null       
+sleep 1
+
+
 UC=0
 UPSRET=""
 OLD_IFUPS=$IFUPS;
@@ -124,8 +144,7 @@ do
                 do
                         if [ `expr $INSTALLED_VER \< $VERSION` = 1 ]; then
                                 echo "The new version is bigger...===> $VERSION" >>$LOGFILE
-                                sudo apt-get update > /dev/null       
-                                sleep 1
+                                
 
                                 echo "dpkg --get-selections | grep $NAME" >> $LOGFILE
                                 UPS_REAL_FILE_NM=`dpkg --get-selections | grep $NAME | awk '{print $1}'`
@@ -226,8 +245,22 @@ do
 
         echo "delete deb name is ===> $I" >>$LOGFILE
 
-        sudo apt-get purge $I -y >>$LOGFILE
-        sleep 1
+
+        INIT_DELETED_CHK=`dpkg --get-selections | grep $I | grep -v "[[:graph:]]$I\|$I[[:graph:]]" | wc -l`
+        echo "INIT_DELETED_CHK==========>$INIT_DELETED_CHK" >>$LOGFILE
+
+        if [ "$INIT_DELETED_CHK" -eq 1 ]
+        then
+                echo "[$I] Not Deleted " >>$LOGFILE
+                sudo apt-get remove --purge  $I -y >>$LOGFILE
+                sleep 1
+        else
+                echo "[$I] package Deleted  " >>$LOGFILE
+        fi
+
+
+        # sudo apt-get remove --purge $I -y >>$LOGFILE
+        # sleep 1
 
 
         DEL_CHK_CNT=`dpkg --get-selections | grep $I | grep -v "[[:graph:]]$I\|$I[[:graph:]]" | wc -l`

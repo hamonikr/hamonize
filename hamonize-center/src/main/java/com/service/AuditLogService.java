@@ -13,6 +13,7 @@ import java.text.ParseException;
 
 import com.mapper.IAuditLogMapper;
 import com.model.AuditLogVo;
+import com.model.LoginVO;
 import com.paging.PagingVo;
 
 
@@ -154,18 +155,19 @@ public class AuditLogService {
 	/**
 	 * 방화벽 정책 적용 결과
 	 */
-	public List<Map<String, Object>> firewallList(HashMap<String, Object> params) {
+	public List<Map<String, Object>> firewallList(HashMap<String, Object> params, LoginVO lvo ) {
 
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 
 		try {
 
-			List<String> list = auditLogMapper.firewallPackageList();
+			List<String> list = auditLogMapper.firewallPackageList(lvo.getDomain());
 
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
 			jsonObject.put("uuid", params.get("pc_uuid"));
+			jsonObject.put("domain", lvo.getDomain());
 
 			result = auditLogMapper.firewallList(jsonObject);
 
