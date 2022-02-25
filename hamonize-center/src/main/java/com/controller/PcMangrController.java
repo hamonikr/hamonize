@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
 import com.model.LoginVO;
@@ -91,7 +92,7 @@ public class PcMangrController {
 			HttpServletRequest request) {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		// 페이징
 		pagingVo.setCurrentPage(vo.getPcListInfoCurrentPage());
@@ -146,8 +147,8 @@ public class PcMangrController {
 	@RequestMapping(value = "moveTeam", method = RequestMethod.POST)
 	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException {
 		int result = 0;
-		//LoginVO lvo = AuthUtil.getLoginSessionInfo();
-		//vo.setDomain(lvo.getDomain());
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
 		result = oService.pcMove(vo);
 		return result;
 
@@ -157,9 +158,9 @@ public class PcMangrController {
 	@RequestMapping(value = "deletePc", method = RequestMethod.POST)
 	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException {
 		int result = 0;
-		//LoginVO lvo = AuthUtil.getLoginSessionInfo();
-		//vo.setDomain(lvo.getDomain());
-//		result = oService.pcMove(vo);
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
+		result = oService.pcMove(vo);
 		result = oService.deletePc(vo);
 		System.out.println("delete pc result ================"+ result );
 		return result;

@@ -12,6 +12,18 @@ spring:
   #     force: true
   # db1:
   #   datasource:
+  redis:
+    host: localhost
+    port: 6379
+    password: root
+  
+  session: 
+    store-type: redis
+    redis:
+      flush-mode: on-save
+      namespace: spring:session
+
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -52,4 +64,6 @@ logging.config: classpath:logback.xml
 server:
   port: 8081
 
+
 attach.path: ${user.home}/uploads/adminkeys
+
