@@ -2,20 +2,30 @@ package com;
 
 
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+
+import javax.servlet.http.HttpSession;
 
 import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootApplication
 public class HamonizeApplication {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    HttpSession httpSession;
 
 	public static void main(String[] args) {
 		SpringApplication.run(HamonizeApplication.class);
@@ -75,4 +85,12 @@ public class HamonizeApplication {
 		.build();
 	}
 
+	@GetMapping(path = "/getsession")
+    public String getsessionAPI() {
+        String value = (String) httpSession.getAttribute("KEY");
+    	logger.info("\n\n\n returnValue >> {}\n\n", value);
+
+		String returnValue = LocalDateTime.now().toString() + " \n<br>session get id : " + httpSession.getId() + " \n<br>session get userid :  " + value; 
+		return returnValue;
+    }
 }
