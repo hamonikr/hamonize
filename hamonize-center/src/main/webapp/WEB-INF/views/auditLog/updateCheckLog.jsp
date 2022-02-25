@@ -58,7 +58,8 @@
 
 		$.post("/mntrng/pcPolicyList", {
 				org_seq: treeNode.id,
-				type: 'view'
+				type: 'view',
+				domain: treeNode.domain
 			},
 			function (data) {
 				var shtml = "";
@@ -126,16 +127,16 @@
 							shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='" + value
 								.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" + hostnameVal +
 								"</a></li>";
-								//shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-									//value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "')\">" +
-									//data.changed + value.job_id+"</a></li>";
+								shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+									value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
+									data.changed + value.job_id+"</a></li>";
 						} else {
 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
 							value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" +
 							hostnameVal + "</a></li>";
-							//shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-								//value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "')\">" +
-								//data.changed + value.job_id+"</a></li>";
+							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+								value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
+								data.changed + value.job_id+"</a></li>";
 						}
 					});
 
@@ -679,17 +680,21 @@ function addZero(data){
     return (data<10) ? "0"+data : data;
 }
 
-function relaunch(host_id,job_id,seq){
+function relaunch(host_id,job_id,seq,pc_uuid){
+	console.log(host_id);
+	console.log(job_id);
+	console.log(seq);
+	console.log(pc_uuid);
 	if (confirm("최신정책을 적용 하시겠습니까?")) {
 	$.ajax({
 		url : '/gplcs/makePolicyToSingle',
 		type: 'POST',
 		async:false,
-		data:{job_id:job_id,host_id:host_id,seq:seq},
+		data:{job_id:job_id,host_id:host_id,seq:seq,pc_uuid:pc_uuid},
 		success : function(res) {
 			if (res.STATUS == "SUCCESS") {
 				alert("정상적으로 처리되었습니다.");
-				//checkAnsibleJobStatus(res.ID);
+				checkAnsibleJobRelaunchStatus(res.ID,res.PARENTS_ID,res.PC_UUID);
 				//location.reload();
 			} else {
 				alert("실패하였습니다.");
@@ -701,6 +706,51 @@ function relaunch(host_id,job_id,seq){
 		}
 	});
 }
+}
+
+//ansible group작업상태확인
+function checkAnsibleJobRelaunchStatus(job_id,parents_job_id,pc_uuid){
+	//const target = document.getElementById('btnSave');
+	console.log("job_id===="+job_id);
+	$.ajax({
+		url : '/gplcs/checkAnsibleJobStatus',
+		type: 'POST',
+		async:false,
+		data:{job_id:job_id},
+		success : function(res) {
+			console.log(res);
+			if(res.status == "running"){
+				console.log("작업중입니다.");
+				//target.disabled = true;
+				setTimeout(checkAnsibleJobRelaunchStatus,3000,job_id,parents_job_id,pc_uuid);
+				//checkAnsibleJobStatus(job_id);
+			}else if(job_id != 0){
+				console.log("작업성공여부=="+res.status);
+				//target.disabled = false;
+				addAnsibleJobRelaunchEventByHost(res.inventory,res.limit,job_id,parents_job_id,pc_uuid);
+			}
+		},
+		error:function(request,status,error){
+			console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		}
+	});
+}
+
+//ansible작업상태확인
+function addAnsibleJobRelaunchEventByHost(...args){
+	const target = document.getElementById('btnSave');
+	$.ajax({
+		url : '/gplcs/addAnsibleJobRelaunchEventByHost',
+		type: 'POST',
+		async:false,
+		data:{inventory_id:args[0],org_seq:args[1],job_id:args[2],parents_job_id:args[3],pc_uuid:args[4]},
+		success : function(res) {
+			console.log("res===="+res);
+		},
+		error:function(request,status,error){
+			console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		}
+	});
 }
 
 

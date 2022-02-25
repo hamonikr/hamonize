@@ -40,9 +40,15 @@ public class AnsibleEventJobRelaunch {
 	@Size(max=50)
 	private String kind;
 
+	@Size(max=100)
+	@Comment("PC고유번호")
+	private String pc_uuid;
+
 	private Long org_seq;
 
 	private Long job_id;
+
+	private Long parents_job_id;
 	
 	@Type(type="jsonb")
 	@Column(columnDefinition = "jsonb")

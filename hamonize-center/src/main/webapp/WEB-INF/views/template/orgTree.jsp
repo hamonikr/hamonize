@@ -257,7 +257,7 @@ function expandNode(e) {
 		zTree.expandAll(false);
 	} 
 }
-//ansible작업상태확인
+//ansible 작업상태확인
 function checkAnsibleJobStatus(job_id){
 	const target = document.getElementById('btnSave');
 	console.log("job_id===="+job_id);
@@ -285,7 +285,7 @@ function checkAnsibleJobStatus(job_id){
 	});
 }
 
-//ansible작업상태확인
+//ansible작업상태등록
 function addAnsibleJobEventByHost(...args){
 	const target = document.getElementById('btnSave');
 	$.ajax({
