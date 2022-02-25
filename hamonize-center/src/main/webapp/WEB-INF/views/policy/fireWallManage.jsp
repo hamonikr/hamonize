@@ -252,8 +252,8 @@
 													<a href="#" name="selectName" data-toggle="class" class="btn btn-default btn-xs"
 														onClick="fireClickCellbox('${data.sm_seq}')"
 														id="btn${data.sm_seq}">
-														<i class="fa fa-square-o text-muted text"></i>
-														<i class="fa fa-check-square-o text-danger text-active">선택</i>
+														<i class="fa fa-square-o text-muted text"> </i>
+														<i class="fa fa-check-square-o text-danger text-active">허용</i>
 													</a>
 												</small>
 											</blockquote>
@@ -286,9 +286,10 @@
 			var ppm_seq = "";
 			let ppm_names = [];
 			$('input:checkbox[name=sm_seq]').each(function (i) {
-				if ($(this).is(':checked'))
+				if ($(this).is(':checked')) {
 					ppm_seq += ($(this).val()) + ",";
-				ppm_names.push($(this).data("port"));
+					ppm_names.push($(this).data("port"));
+				}
 			});
 
 

@@ -303,16 +303,27 @@
 			var ppm_seq = "";
 			let ppm_names = [];
 			$('input:checkbox[name=sm_seq]').each(function (i) {
-				if ($(this).is(':checked'))
+				if ($(this).is(':checked')){
 					ppm_seq += ($(this).val()) + ",";
-				ppm_names.push($(this).data("device") + "-" + $(this).data("devicecode"));
+					ppm_names.push($(this).data("device") + "-" + $(this).data("devicecode"));
+				}
 			});
+			
+			console.log("1===="+ ppm_names);
+			
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
+			console.log("2==="+ ppm_seq);
+			
 			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
+			
 			if (ppm_seq == "") {
 				ppm_seq = 0;
 			}
-
+			
+			console.log("ppm===" + $('form[name=frm] input[name=ppm_name]').val()); 
+			console.log("forma==="+ $('form[name=frm] input[name=former_ppm_name]').val()); 
+// 			return false;
+			
 			var zTree = $.fn.zTree.getZTreeObj("tree");
 			var nodes = zTree.getCheckedNodes(true);
 			var nodeLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

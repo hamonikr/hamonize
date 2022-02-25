@@ -20,9 +20,9 @@
 			<foreach collection="list" item="item" separator=" , ">
 					( 
 						#{item.org_seq}, 
-						#{item.uuid},
-						#{item.hostname}, 
-						#{item.status_yn}, 
+						#{item.pc_uuid},
+						#{item.pc_hostname}, 
+						#{item.status}, 
 						#{item.product},
 						#{item.vendorCode}, 
 						#{item.productCode}, 

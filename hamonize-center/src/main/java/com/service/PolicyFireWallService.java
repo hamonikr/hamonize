@@ -78,30 +78,63 @@ public class PolicyFireWallService {
 	public JSONObject applyFirewallPolicy(Map<String, Object> params) throws ParseException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		
-		String[] listA = {};
-		String[] listB = {};
-		if(params.get("ppm_name").toString() != "")
-		listA = params.get("ppm_name").toString().split(",");
-		if(params.get("former_ppm_name").toString() != "")
-		listB = params.get("former_ppm_name").toString().split(",");
+//		String[] listA = {};
+//		String[] listB = {};
+//		
+//		
+//		
+//		if(params.get("ppm_name").toString() != "")
+//		listA = params.get("ppm_name").toString().split(",");
+//		if(params.get("former_ppm_name").toString() != "")
+//		listB = params.get("former_ppm_name").toString().split(",");
+//
+//		ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
+//		ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
+//
+//		former_ppm_name.removeAll(ppm_name);
 
-		ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
-		ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
-
-		former_ppm_name.removeAll(ppm_name);
-
+		
+		ArrayList<String> list_ppm_name = new ArrayList<String>();
+		ArrayList<String> list_former_ppm_name = new ArrayList<String>();
+		
+		for (String el : params.get("ppm_name").toString().split(",")) {
+			list_ppm_name.add(el);
+		}
+		
+		for (String el : params.get("former_ppm_name").toString().split(",")) {
+			list_former_ppm_name.add(el);
+		}
+		
+		list_former_ppm_name.removeAll(list_ppm_name);	
+		
+		
+		
 		//String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
+		
+		System.out.println("@@@@@@@@@@@@@@@ ppm_name === "+ list_ppm_name.isEmpty()+":::" + list_ppm_name.get(0) +", --- " + list_ppm_name.get(0).length());
+		System.out.println("@@@@@@@@@@@@@@@ former_ppm_name === "+ list_former_ppm_name.isEmpty()+":::" +  list_former_ppm_name.get(0) +", --- " + list_former_ppm_name.get(0).length());
+		
+		
+		System.out.println("@@@@@@@@@@@@@@@ ppm_name === "+ list_ppm_name.isEmpty() +",---length " + list_ppm_name.size());
+		System.out.println("@@@@@@@@@@@@@@@ former_ppm_name === "+ list_former_ppm_name.isEmpty() +", length---" +list_former_ppm_name.size());
+
+		
+		
 		String output = "";
 		JSONObject updtPolicy = new JSONObject();
-		if(!ppm_name.isEmpty())
-		{
-			updtPolicy.put("INS", String.join(",",ppm_name));
+//		if(!ppm_name.isEmpty()) {
+		if( list_ppm_name.get(0).length() != 0 ) {
+			updtPolicy.put("INS", String.join(",",list_ppm_name));
 		}
-		if(!former_ppm_name.isEmpty())
-		{
-			updtPolicy.put("DEL", String.join(",",former_ppm_name));
+		System.out.println("############## output ==1111111111111============+"+ output );
+//		if(!former_ppm_name.isEmpty())
+		if( list_former_ppm_name.get(0).length() != 0 ) {
+			System.out.println("=============+"+ list_former_ppm_name);
+			updtPolicy.put("DEL", String.join(",",list_former_ppm_name));
 		}
+		System.out.println("############## output ========222222222======+"+ output );
 		output = updtPolicy.toJSONString();
+		System.out.println("############## output ==============+"+ output );
 		output = output.replaceAll("\"", "\\\\\\\"");
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
@@ -112,7 +145,7 @@ public class PolicyFireWallService {
 	
 
 		return result;
-
+//		return null;
 	}
 
 	public int getFrwlHistoryLastJob(PolicyFireWallVo vo) {

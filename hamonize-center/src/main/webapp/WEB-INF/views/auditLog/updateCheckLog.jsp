@@ -632,7 +632,15 @@ function detail(uuid){
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());				shtml += "<tr>";
 				firewallResult += "<tr>";
 				firewallResult += "<td>"+value.retport+"</td>";
-				firewallResult += "<td>"+value.kind+"</td>";
+
+				
+				if( value.kind == "deny"){
+					firewallResult += "<td>차단</td>";	
+				}else{
+					firewallResult += "<td>허용</td>";
+				}
+			
+// 				firewallResult += "<td>"+value.kind+"</td>";
 				if(value.status == "Y")
 					firewallResult += "<td>완료</td>";
 				else
