@@ -77,46 +77,81 @@ public class PolicyDeviceService {
 
 	public JSONObject applyDevicePolicy(Map<String, Object> params) throws ParseException{
 		
-		ArrayList<String> list_ppmnm = new ArrayList<String>();
-		ArrayList<String> list_former_ppmnm = new ArrayList<String>();
+		String[] listA = {};
+		String[] listB = {};
+		if(params.get("ppm_name").toString() != "")
+		listA = params.get("ppm_name").toString().split(",");
+		if(params.get("former_ppm_name").toString() != "")
+		listB = params.get("former_ppm_name").toString().split(",");
 
-		for (String el : params.get("ppm_name").toString().split(",")) {
-			list_ppmnm.add(el);
-		}
-		
-		for (String el : params.get("former_ppm_name").toString().split(",")) {
-			list_former_ppmnm.add(el);
-		}
-		
-		list_former_ppmnm.removeAll(list_ppmnm);
-		
+		ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
+		ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
+
+		former_ppm_name.removeAll(ppm_name);
+
+		//String output = "{\\\"INS\\\":\\\""+String.join(",",ppm_name)+"\\\",\\\"DEL\\\":\\\""+String.join(",",former_ppm_name)+"\\\"}";
 		String output = "";
 		JSONObject updtPolicy = new JSONObject();
-		System.out.println("#############ppm_name##########" + list_ppmnm);
-		System.out.println("#############former_ppm_name##########" + list_former_ppmnm);
-		System.out.println("@@@@@@@@@@@@@@@ list_ppmnm === "+ list_ppmnm.get(0) +", --- " + list_ppmnm.get(0).length());
-		System.out.println("@@@@@@@@@@@@@@@ list_former_ppmnm === "+ list_former_ppmnm.get(0) +", --- " + list_former_ppmnm.get(0).length());
-		
-		System.out.println("@@@@@@@@@@@@@@@ list_ppmnm === "+ list_ppmnm.isEmpty() +",---length " + list_ppmnm.size());
-		System.out.println("@@@@@@@@@@@@@@@ list_former_ppmnm === "+ list_former_ppmnm.isEmpty() +", length---" +list_former_ppmnm.size());
-		
-		if( list_ppmnm.get(0).length() != 0 ) {
-			updtPolicy.put("INS", String.join(",",list_ppmnm));
+		if(!ppm_name.isEmpty())
+		{
+			updtPolicy.put("INS", String.join(",",ppm_name));
 		}
-		if( list_former_ppmnm.get(0).length() != 0) {
-			updtPolicy.put("DEL", String.join(",",list_former_ppmnm));
+		if(!former_ppm_name.isEmpty())
+		{
+			updtPolicy.put("DEL", String.join(",",former_ppm_name));
 		}
-				
-		
 		output = updtPolicy.toJSONString();
 		output = output.replaceAll("\"", "\\\\\\\"");
-		System.out.println("####### output================="+output);
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/security/device.hm");
 		params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
 
 		JSONObject result = restApiService.makePolicyToGroup(params);
+		System.out.println("resuklt======="+result);
+	
+
 		return result;
+		
+//		ArrayList<String> list_ppmnm = new ArrayList<String>();
+//		ArrayList<String> list_former_ppmnm = new ArrayList<String>();
+//
+//		for (String el : params.get("ppm_name").toString().split(",")) {
+//			list_ppmnm.add(el);
+//		}
+//		
+//		for (String el : params.get("former_ppm_name").toString().split(",")) {
+//			list_former_ppmnm.add(el);
+//		}
+//		
+//		list_former_ppmnm.removeAll(list_ppmnm);
+//		
+//		String output = "";
+//		JSONObject updtPolicy = new JSONObject();
+//		System.out.println("#############ppm_name##########" + list_ppmnm);
+//		System.out.println("#############former_ppm_name##########" + list_former_ppmnm);
+//		System.out.println("@@@@@@@@@@@@@@@ list_ppmnm === "+ list_ppmnm.get(0) +", --- " + list_ppmnm.get(0).length());
+//		System.out.println("@@@@@@@@@@@@@@@ list_former_ppmnm === "+ list_former_ppmnm.get(0) +", --- " + list_former_ppmnm.get(0).length());
+//		
+//		System.out.println("@@@@@@@@@@@@@@@ list_ppmnm === "+ list_ppmnm.isEmpty() +",---length " + list_ppmnm.size());
+//		System.out.println("@@@@@@@@@@@@@@@ list_former_ppmnm === "+ list_former_ppmnm.isEmpty() +", length---" +list_former_ppmnm.size());
+//		
+//		if( list_ppmnm.get(0).length() != 0 ) {
+//			updtPolicy.put("INS", String.join(",",list_ppmnm));
+//		}
+//		if( list_former_ppmnm.get(0).length() != 0) {
+//			updtPolicy.put("DEL", String.join(",",list_former_ppmnm));
+//		}
+//				
+//		
+//		output = updtPolicy.toJSONString();
+//		output = output.replaceAll("\"", "\\\\\\\"");
+//		System.out.println("####### output================="+output);
+//		params.put("output", output);
+//		params.put("policyFilePath","/etc/hamonize/security/device.hm");
+//		params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
+//
+//		JSONObject result = restApiService.makePolicyToGroup(params);
+//		return result;
 //		return null;
 
 	}
