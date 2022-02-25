@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IPolicyDeviceMapper;
 import com.model.LoginVO;
 import com.model.OrgVo;
@@ -62,7 +63,7 @@ public class PolicyDeviceController {
 
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyDeviceVo> pList = null;
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		try {
 			OrgVo orgvo = new OrgVo();
 			PolicyDeviceVo vo = new PolicyDeviceVo();
@@ -146,7 +147,7 @@ public class PolicyDeviceController {
 			HttpSession session, HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		// 페이징
 		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage());
@@ -179,7 +180,7 @@ public class PolicyDeviceController {
 	public Map<String, Object> dManagePopSave(HttpSession session, PolicyDeviceVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		try {
 			dService.devicePopSave(vo);
@@ -208,7 +209,7 @@ public class PolicyDeviceController {
 	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyDeviceVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		try {
 			dService.devicePopDelete(vo);
