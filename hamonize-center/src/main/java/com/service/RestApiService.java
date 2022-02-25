@@ -377,7 +377,7 @@ public JSONObject checkPolicyJobResult(int id) throws ParseException{
         return jsonObj;
 }
 
-public JSONArray addAnsibleJobEventByHost(int id) throws ParseException{
+public JSONObject addAnsibleJobEventByHost(int id) throws ParseException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
@@ -416,7 +416,6 @@ public JSONArray addAnsibleJobEventByHost(int id) throws ParseException{
           processed = (JSONObject) resultsArray.get(0);
           processed = (JSONObject) processed.get("event_data");
           processed = (JSONObject) processed.get("processed");
-          finalResultArray.add(processed);
         for(Object tmp : makeResultArray){
           JSONObject finalResult = new JSONObject();
           finalResult = (JSONObject) tmp;
@@ -426,7 +425,10 @@ public JSONArray addAnsibleJobEventByHost(int id) throws ParseException{
             finalResultArray.add(finalResult);
           }
         }
-        return finalResultArray;
+        JSONObject finalResult = new JSONObject();
+        finalResult.put("finalResult", finalResultArray);
+        finalResult.put("processed", processed);
+        return finalResult;
 }
 
 public JSONArray addAnsibleJobRelaunchEventByHost(int id) throws ParseException{

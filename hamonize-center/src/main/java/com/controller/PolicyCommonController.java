@@ -51,12 +51,16 @@ public class PolicyCommonController {
 		System.out.println("url===="+request.getHeader("referer"));
 		String[] before_url = request.getHeader("referer").split("/");
 		params.put("before_url", before_url[before_url.length -1]);
+		JSONObject data = new JSONObject();
 		JSONArray dataArr = new JSONArray();
 		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
 		Map<String, Object> resultMap;
-		dataArr = restApiService.addAnsibleJobEventByHost(Integer.parseInt(params.get("job_id").toString()));
+		data = restApiService.addAnsibleJobEventByHost(Integer.parseInt(params.get("job_id").toString()));
+		dataArr = (JSONArray) data.get("finalResult");
 		System.out.println("dataArr.size()============"+dataArr.size());
-		//String processedLength = "";
+		System.out.println("data============"+data.get("processed"));
+		String [] processed = data.get("processed").toString().split(",");
+		System.out.println("processedprocessedprocessedprocessedprocessed====="+processed.length);
 		for (int i = 0; i < dataArr.size(); i++) {
 			// if(i == 0)
 			// {
