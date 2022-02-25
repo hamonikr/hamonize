@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.GlobalPropertySource;
-import com.hamonize.portal.user.SecurityUser;
+// import com.hamonize.portal.user.SecurityUser;
 import com.model.LoginVO;
 import com.model.OrgVo;
 import com.service.OrgService;
@@ -110,7 +110,9 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=save", method = RequestMethod.POST)
 	public int orgSave(HttpSession session, Model model, OrgVo vo) throws Exception {
-		SecurityUser lvo = (SecurityUser)session.getAttribute("userSession");
+		// SecurityUser lvo = (SecurityUser)session.getAttribute("userSession");
+		LoginVO lvo = (LoginVO)session.getAttribute("userSession");
+		
 		vo.setDomain(lvo.getDomain());
 		int result = oService.orgSave(vo);
 		return result;
@@ -137,7 +139,9 @@ public class OrgController {
 	@ResponseBody
 	@RequestMapping(params = "type=searchChildDept", method = RequestMethod.POST)
 	public List<OrgVo> searchChildDept(HttpSession session, Model model, OrgVo vo) throws Exception {
-		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		
 		vo.setDomain(lvo.getDomain());
 		List<OrgVo> list = oService.searchChildDept(vo);
 		return list;
