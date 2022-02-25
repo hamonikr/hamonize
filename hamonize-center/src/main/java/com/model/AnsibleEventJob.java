@@ -40,6 +40,9 @@ public class AnsibleEventJob {
 	@Size(max=50)
 	private String kind;
 
+	@Size(max=10)
+	private String status;
+
 	private Long org_seq;
 
 	private Long job_id;

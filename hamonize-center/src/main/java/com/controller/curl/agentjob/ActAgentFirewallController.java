@@ -25,12 +25,14 @@ import com.mapper.IActAgentLogInOutMapper;
 import com.mapper.IActAgentProgrmMapper;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IGetAgentRecoveryMapper;
+import com.mapper.IPolicyCommonMapper;
 import com.model.ActAgentBackupRecoveryVo;
 import com.model.ActAgentDeviceVo;
 import com.model.ActAgentFirewallVo;
 import com.model.ActAgentProgrmVo;
 import com.model.GetAgentJobVo;
 import com.model.LogInOutVo;
+import com.service.RestApiService;
 
 
 /**
@@ -61,6 +63,12 @@ public class ActAgentFirewallController {
 	@Autowired
 	private IActAgentLogInOutMapper actAgentLogInOutMapper;
 
+	@Autowired
+	private IPolicyCommonMapper commonMapper;
+
+	@Autowired
+	RestApiService restApiService;
+
 	@RequestMapping(value = "/loginout", method = RequestMethod.POST)
 	public void login(HttpServletRequest request) throws Exception {
 		StringBuffer json = new StringBuffer();
@@ -85,20 +93,64 @@ public class ActAgentFirewallController {
 		JSONArray logInArray = (JSONArray) jsonObj.get("events");
 
 		LogInOutVo inputVo = new LogInOutVo();
+		Map<String,Object> checkResult = new HashMap<String,Object>();
 		for (int i = 0; i < logInArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) logInArray.get(i);
 
 			inputVo.setDatetime(tempObj.get("datetime").toString());
 			inputVo.setUuid(tempObj.get("uuid").toString());
 			inputVo.setGubun(tempObj.get("gubun").toString());
+			//inputVo.setGubun("LOGIN");
+			checkResult.put("pc_uuid", inputVo.getUuid());
 
 		}
 
 		int retVal = 0;
-
 		if (inputVo.getGubun().equals("LOGIN")) { // login insert
 			inputVo.setLogin_dt(inputVo.getDatetime());
 			retVal = actAgentLogInOutMapper.insertLoginLog(inputVo);
+			checkResult = commonMapper.checkAnsibleJobFailOrNot(inputVo);
+			checkResult.put("pc_uuid", inputVo.getUuid());
+			//PC가 꺼졌을때 정책 내려졌을 경우 PC부팅하면서 최신 정책을 불러와서 정책적용
+			System.out.println("aaaaaaaaaaaaaaaaaaaa==="+checkResult.get("status").toString());
+			if(checkResult.get("status").toString().equals("false")){
+				checkResult.putAll(commonMapper.getAnsibleJobEventByGroup(checkResult));
+				JSONObject jobResult = new JSONObject();
+				jobResult = restApiService.makePolicyToSingle(checkResult);
+				checkResult.put("object", jobResult.toJSONString());
+				checkResult.put("parents_job_id", checkResult.get("job_id"));
+				checkResult.put("job_id", jobResult.get("id"));
+				jobResult.clear();
+				jobResult = restApiService.checkPolicyJobResult(Integer.parseInt(checkResult.get("job_id").toString()));
+				System.out.println("jobResult====="+jobResult);
+				Thread.sleep(5000);
+				//if(!jobResult.get("status").toString().equals("running")){
+					//restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(checkResult.get("job_id").toString()));
+					JSONArray dataArr = new JSONArray();
+					List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
+					Map<String, Object> resultMap;
+					dataArr = restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(checkResult.get("job_id").toString()));
+					for (int i = 0; i < dataArr.size(); i++) {
+						resultMap = new HashMap<String, Object>();
+							String obj = dataArr.get(i).toString();
+							resultMap.put("result", obj);
+							resultSet.add(resultMap);
+					}
+					checkResult.put("data", resultSet);
+					System.out.println("pc_uuid====="+checkResult.get("pc_uuid"));
+					int result = commonMapper.checkCountAnsibleJobRelaunchId(checkResult);
+					System.out.println("result===="+result);
+					if(dataArr.size() > result)
+					{
+						if(result > 0)
+						{
+							commonMapper.deleteAnsibleJobRelaunchEvent(checkResult);
+						}
+						result = commonMapper.addAnsibleJobRelaunchEventByHost(checkResult);
+					}
+				//}
+			}
+			System.out.println("checkResult======="+checkResult);
 			System.out.println("uuid" + inputVo.getUuid());
 
 		} else if (inputVo.getGubun().equals("LOGOUT")) { // logout update
@@ -106,7 +158,6 @@ public class ActAgentFirewallController {
 			inputVo.setLogout_dt(inputVo.getDatetime());
 			retVal = actAgentLogInOutMapper.updateLoginLog(inputVo);
 		}
-
 
 	}
 

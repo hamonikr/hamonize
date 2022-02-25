@@ -735,6 +735,7 @@ function checkAnsibleJobRelaunchStatus(job_id,parents_job_id,pc_uuid){
 			}else if(job_id != 0){
 				console.log("작업성공여부=="+res.status);
 				//target.disabled = false;
+				console.log(res.inventory,res.limit,job_id,parents_job_id,pc_uuid);
 				addAnsibleJobRelaunchEventByHost(res.inventory,res.limit,job_id,parents_job_id,pc_uuid);
 			}
 		},
