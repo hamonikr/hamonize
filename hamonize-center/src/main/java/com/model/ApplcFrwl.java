@@ -35,4 +35,7 @@ public class ApplcFrwl {
 	@Size(max=500)
 	private String ppm_seq;
 
+	@Size(max=500)
+	private String ppm_name;
+
 }

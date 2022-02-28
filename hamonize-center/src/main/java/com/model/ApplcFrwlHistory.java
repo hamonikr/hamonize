@@ -35,6 +35,9 @@ public class ApplcFrwlHistory {
 	@Size(max=150)
 	private String ppm_seq;
 
+	@Size(max=500)
+	private String ppm_name;
+
 	private Integer frwl_seq;
 
 	private Timestamp rgstr_date;

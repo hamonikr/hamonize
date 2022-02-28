@@ -91,6 +91,9 @@
 				RETURNING data,parents_job_id,pc_uuid
 		) UPDATE tbl_ansible_event_job SET data = (SELECT data from rows),RGSTR_DATE = now(), status = (SELECT data -> 'changed' from rows) WHERE job_id = (SELECT parents_job_id from rows)::int
 		and (SELECT pc_uuid from rows) = data -> 'summary_fields' -> 'host' ->> 'description'
+		<!-- and kind = 'umanage'
+		and job_id > (SELECT parents_job_id from rows)::int
+		and status = 'false' -->
 	</insert>
 
 	<select id="checkCountAnsibleJobId" parameterType="java.util.HashMap" resultType="Integer">
@@ -105,7 +108,7 @@
 	SELECT count(*) FROM tbl_ansible_event_job_relaunch WHERE JOB_ID = #{job_id}::int
 	</select>
 
-	<delete id="deleteAnsibleJobRelaunchEvent" parameterType="java.util.HashMap">
+	<delete id="deleteAnsibleJobRelaunchEvent" parameterType="java.util.HashMap">-> 'summary_fields' -> 'host' ->> 'description'
 	DELETE FROM tbl_ansible_event_job_relaunch WHERE JOB_ID = #{job_id}::int
 	</delete>
 
@@ -115,11 +118,36 @@
 
 	<select id="checkAnsibleJobFailOrNot" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
 	SELECT domain,job_id,status,data ->> 'host' as host_id FROM tbl_ansible_event_job 
-		WHERE job_id = (select job_id from tbl_frwl_applc 
+		WHERE job_id = (select job_id from tbl_updt_applc 
 		WHERE 
 		org_seq = (SELECT org_seq FROM tbl_pc_mangr tpm where pc_uuid=#{uuid}) 
-		and domain='naver')
+		and domain= #{domain})
 		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+	</select>
+
+	<select id="checkAnsibleJobWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	select * from tbl_updt_applc_history where job_id in ( 
+	(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		and status = 'true' 
+		and kind = 'umanage'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		),
+		(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid} 
+		and kind = 'umanage' 
+		and status='false'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		) 
+) and org_seq  = (select org_seq from tbl_pc_mangr tpm where pc_uuid = #{uuid}) order by job_id asc
 	</select>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.controller.curl.agentjob;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ import com.service.RestApiService;
  */
 @RestController
 @RequestMapping("/act")
-public class ActAgentFirewallController {
+public class ActAgentController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -100,7 +101,8 @@ public class ActAgentFirewallController {
 			inputVo.setDatetime(tempObj.get("datetime").toString());
 			inputVo.setUuid(tempObj.get("uuid").toString());
 			inputVo.setGubun(tempObj.get("gubun").toString());
-			//inputVo.setGubun("LOGIN");
+			inputVo.setDomain(tempObj.get("domain").toString());
+			inputVo.setGubun("LOGIN");
 			checkResult.put("pc_uuid", inputVo.getUuid());
 
 		}
@@ -112,9 +114,42 @@ public class ActAgentFirewallController {
 			checkResult = commonMapper.checkAnsibleJobFailOrNot(inputVo);
 			checkResult.put("pc_uuid", inputVo.getUuid());
 			//PC가 꺼졌을때 정책 내려졌을 경우 PC부팅하면서 최신 정책을 불러와서 정책적용
-			System.out.println("aaaaaaaaaaaaaaaaaaaa==="+checkResult.get("status").toString());
 			if(checkResult.get("status").toString().equals("false")){
-				checkResult.putAll(commonMapper.getAnsibleJobEventByGroup(checkResult));
+				//checkResult.putAll(commonMapper.getAnsibleJobEventByGroup(checkResult));
+				List<Map<String,Object>> getjobList  = new ArrayList<Map<String, Object>>();
+				getjobList = commonMapper.checkAnsibleJobWhenOffPc(inputVo);
+				for(int i = 0; i< getjobList.size();i++){
+					String[] listA = {};
+					String[] listB = {};
+					if(i < getjobList.size() -1){
+					if(getjobList.get(i+1).get("ppm_name").toString() != "")
+					listA = getjobList.get(i+1).get("ppm_name").toString().split(",");
+
+					if(getjobList.get(i).get("ppm_name").toString() != "")
+					listB = getjobList.get(i).get("ppm_name").toString().split(",");
+					
+					ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
+					ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
+					//former_ppm_name 차집합 ppm_name
+					former_ppm_name.removeAll(ppm_name);
+					JSONObject updtPolicy = new JSONObject();
+					if(!ppm_name.isEmpty())
+					{
+						updtPolicy.put("INS", String.join(",",ppm_name));
+					}
+					if(!former_ppm_name.isEmpty())
+					{
+						updtPolicy.put("DEL", String.join(",",former_ppm_name));
+					}
+					System.out.println("updtPolicy-====="+updtPolicy);
+					String output = updtPolicy.toJSONString();
+					output = output.replaceAll("\"", "\\\\\\\"");
+					System.out.println("output======"+output);
+					checkResult.put("output", output);
+					checkResult.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
+					checkResult.put("policyRunFilePath","/etc/hamonize/runupdt");
+					}
+				}
 				JSONObject jobResult = new JSONObject();
 				jobResult = restApiService.makePolicyToSingle(checkResult);
 				checkResult.put("object", jobResult.toJSONString());
@@ -151,7 +186,7 @@ public class ActAgentFirewallController {
 				//}
 			}
 			System.out.println("checkResult======="+checkResult);
-			System.out.println("uuid" + inputVo.getUuid());
+			System.out.println("uuid===" + inputVo.getUuid());
 
 		} else if (inputVo.getGubun().equals("LOGOUT")) { // logout update
 			inputVo.setSeq(actAgentLogInOutMapper.selectLoginLogSeq(inputVo));

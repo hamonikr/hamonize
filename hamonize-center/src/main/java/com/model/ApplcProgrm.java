@@ -35,4 +35,7 @@ public class ApplcProgrm {
 	@Size(max=150)
 	private String ppm_seq;
 
+	@Size(max=500)
+	private String ppm_name;
+
 }
