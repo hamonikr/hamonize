@@ -41,7 +41,7 @@ public class PolicyCommonController {
 	@RequestMapping(value = "checkAnsibleJobStatus", method = RequestMethod.POST)
 	public JSONObject checkAnsibleJobStatus(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
 		JSONObject data = new JSONObject();
-		data = restApiService.checkPolicyJobResult(Integer.parseInt(params.get("job_id").toString()));
+		data = restApiService.checkPolicyJobResult(params);
 		return data;
 
 	}
@@ -56,7 +56,7 @@ public class PolicyCommonController {
 		JSONArray dataArr = new JSONArray();
 		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
 		Map<String, Object> resultMap;
-		data = restApiService.addAnsibleJobEventByHost(Integer.parseInt(params.get("job_id").toString()));
+		data = restApiService.addAnsibleJobEventByHost(params);
 		dataArr = (JSONArray) data.get("finalResult");
 		System.out.println("dataArr.size()============"+dataArr.size());
 		// String [] processed = data.get("processed").toString().split(",");

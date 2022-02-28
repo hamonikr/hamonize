@@ -1,5 +1,8 @@
 package com.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.mapper.IOrgMapper;
@@ -308,10 +311,11 @@ public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseExce
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
     params.put("job_id",result);
     params.put("object",objects);
+    params.put("id",result);
     policyCommonMapper.addAnsibleJobEventByGroup(params);
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
-      jsonResultObj = checkPolicyJobResult(result);
+      jsonResultObj = checkPolicyJobResult(params);
     }
   return jsonResultObj;
 }
@@ -344,22 +348,22 @@ public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseExc
     String objects = response.block();
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-    
+    params.put("id",jsonObj.get("id").toString() );
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
-      jsonResultObj = checkPolicyJobResult(result);
+      jsonResultObj = checkPolicyJobResult(params);
     }
   return jsonResultObj;
 }
 
 
 
-public JSONObject checkPolicyJobResult(int id) throws ParseException{
+public JSONObject checkPolicyJobResult(Map<String, Object> params) throws ParseException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/")
-    .build(id))
+    .build(params.get("job_id")))
     .exchange().flatMap(clientResponse -> {
       if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
           clientResponse.body((clientHttpResponse, context) -> {
@@ -370,18 +374,48 @@ public JSONObject checkPolicyJobResult(int id) throws ParseException{
       else
           return clientResponse.bodyToMono(String.class);
   });
-
+System.out.println("params=============="+params);
         String objects = response.block();
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+        System.out.println("aaaaaaaaaaa==="+jsonObj.get("status").toString());
+        int i = 0;
+        String status = jsonObj.get("status").toString();
+        //ThreadService th = new ThreadService(params.get("id"),status);
+         // Thread tt = new Thread(th);
+        if(status.equals("running") || status.equals("waiting")){
+          //tt.start();
+          //checkPolicyJobResult(id);
+          Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // code goes here.
+                try {
+                  Thread.sleep(1000);
+                  JSONObject jsonObj = checkPolicyJobResult(params);
+                } catch (ParseException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                } catch (InterruptedException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+            }
+        });
+        t1.start();
+        }else{
+          System.out.println("end!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+          //addAnsibleJobEventByHost(Integer.parseInt(jsonObj.get("id").toString()));
+          addAnsibleJobEventByHost(params);
+        }
         return jsonObj;
 }
 
-public JSONObject addAnsibleJobEventByHost(int id) throws ParseException{
+public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws ParseException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
-    .build(id))
+    .build(params.get("job_id")))
     .exchange().flatMap(clientResponse -> {
       if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
           clientResponse.body((clientHttpResponse, context) -> {
@@ -428,7 +462,37 @@ public JSONObject addAnsibleJobEventByHost(int id) throws ParseException{
         }
         JSONObject finalResult = new JSONObject();
         finalResult.put("finalResult", finalResultArray);
-        //finalResult.put("processed", processed);
+        
+        JSONObject data = new JSONObject();
+      JSONArray dataArr = new JSONArray();
+      List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
+      Map<String, Object> resultMap;
+      data = finalResult;
+      dataArr = (JSONArray) data.get("finalResult");
+      System.out.println("dataArr.size()============"+dataArr.size());
+      // String [] processed = data.get("processed").toString().split(",");
+      for (int i = 0; i < dataArr.size(); i++) {
+          resultMap = new HashMap<String, Object>();
+          String json = dataArr.get(i).toString();
+          JSONParser jsonParser2 = new JSONParser();
+          JSONObject jsonObj2 = (JSONObject) jsonParser2.parse(json);
+          resultMap.put("result", json);
+          resultMap.put("status", jsonObj2.get("changed"));
+          resultMap.put("job_id",params.get("job_id"));
+          resultSet.add(resultMap);
+      }
+      params.put("data", resultSet);
+      System.out.println("params1111111111111111111=============="+params);
+      int result = policyCommonMapper.checkCountAnsibleJobId(params);
+      System.out.println("result===="+result);
+			if(dataArr.size() > result)
+			{
+				if(result > 0)
+				{
+					policyCommonMapper.deleteAnsibleJobEvent(params);
+				}
+				result = policyCommonMapper.addAnsibleJobEventByHost(params);
+			}
         return finalResult;
 }
 
