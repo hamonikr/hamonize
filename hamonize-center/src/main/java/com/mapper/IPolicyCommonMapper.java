@@ -19,9 +19,17 @@ public interface IPolicyCommonMapper {
 	
 	public int checkCountAnsibleJobId(Map<String, Object> params);
 
-	public Map<String, Object> checkAnsibleJobFailOrNot(LogInOutVo inputVo);
+	public List<Map<String, Object>> checkAnsibleJobFailOrNot(LogInOutVo inputVo);
+	
+	public List<Map<String, Object>> checkAnsibleJobFailOrNotList(LogInOutVo inputVo);
 
-	public List<Map<String, Object>> checkAnsibleJobWhenOffPc(LogInOutVo inputVo);
+	public List<Map<String, Object>> checkAnsibleJobUpdtWhenOffPc(LogInOutVo inputVo);
+
+	public List<Map<String, Object>> checkAnsibleJobProgrmWhenOffPc(LogInOutVo inputVo);
+
+	public List<Map<String, Object>> checkAnsibleJobFrwlWhenOffPc(LogInOutVo inputVo);
+
+	public List<Map<String, Object>> checkAnsibleJobDeviceWhenOffPc(LogInOutVo inputVo);
 
 	public int deleteAnsibleJobRelaunchEvent(Map<String, Object> params);
 	

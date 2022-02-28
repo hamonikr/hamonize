@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,83 +112,7 @@ public class ActAgentController {
 		if (inputVo.getGubun().equals("LOGIN")) { // login insert
 			inputVo.setLogin_dt(inputVo.getDatetime());
 			retVal = actAgentLogInOutMapper.insertLoginLog(inputVo);
-			checkResult = commonMapper.checkAnsibleJobFailOrNot(inputVo);
-			checkResult.put("pc_uuid", inputVo.getUuid());
-			//PC가 꺼졌을때 정책 내려졌을 경우 PC부팅하면서 최신 정책을 불러와서 정책적용
-			if(checkResult.get("status").toString().equals("false")){
-				//checkResult.putAll(commonMapper.getAnsibleJobEventByGroup(checkResult));
-				List<Map<String,Object>> getjobList  = new ArrayList<Map<String, Object>>();
-				getjobList = commonMapper.checkAnsibleJobWhenOffPc(inputVo);
-				for(int i = 0; i< getjobList.size();i++){
-					String[] listA = {};
-					String[] listB = {};
-					if(i < getjobList.size() -1){
-					if(getjobList.get(i+1).get("ppm_name").toString() != "")
-					listA = getjobList.get(i+1).get("ppm_name").toString().split(",");
-
-					if(getjobList.get(i).get("ppm_name").toString() != "")
-					listB = getjobList.get(i).get("ppm_name").toString().split(",");
-					
-					ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
-					ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
-					//former_ppm_name 차집합 ppm_name
-					former_ppm_name.removeAll(ppm_name);
-					JSONObject updtPolicy = new JSONObject();
-					if(!ppm_name.isEmpty())
-					{
-						updtPolicy.put("INS", String.join(",",ppm_name));
-					}
-					if(!former_ppm_name.isEmpty())
-					{
-						updtPolicy.put("DEL", String.join(",",former_ppm_name));
-					}
-					System.out.println("updtPolicy-====="+updtPolicy);
-					String output = updtPolicy.toJSONString();
-					output = output.replaceAll("\"", "\\\\\\\"");
-					System.out.println("output======"+output);
-					checkResult.put("output", output);
-					checkResult.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
-					checkResult.put("policyRunFilePath","/etc/hamonize/runupdt");
-					}
-				}
-				JSONObject jobResult = new JSONObject();
-				jobResult = restApiService.makePolicyToSingle(checkResult);
-				checkResult.put("object", jobResult.toJSONString());
-				checkResult.put("parents_job_id", checkResult.get("job_id"));
-				checkResult.put("job_id", jobResult.get("id"));
-				jobResult.clear();
-				jobResult = restApiService.checkPolicyJobResult(Integer.parseInt(checkResult.get("job_id").toString()));
-				System.out.println("jobResult====="+jobResult);
-				Thread.sleep(5000);
-				//if(!jobResult.get("status").toString().equals("running")){
-					//restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(checkResult.get("job_id").toString()));
-					JSONArray dataArr = new JSONArray();
-					List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
-					Map<String, Object> resultMap;
-					dataArr = restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(checkResult.get("job_id").toString()));
-					for (int i = 0; i < dataArr.size(); i++) {
-						resultMap = new HashMap<String, Object>();
-							String obj = dataArr.get(i).toString();
-							resultMap.put("result", obj);
-							resultSet.add(resultMap);
-					}
-					checkResult.put("data", resultSet);
-					System.out.println("pc_uuid====="+checkResult.get("pc_uuid"));
-					int result = commonMapper.checkCountAnsibleJobRelaunchId(checkResult);
-					System.out.println("result===="+result);
-					if(dataArr.size() > result)
-					{
-						if(result > 0)
-						{
-							commonMapper.deleteAnsibleJobRelaunchEvent(checkResult);
-						}
-						result = commonMapper.addAnsibleJobRelaunchEventByHost(checkResult);
-					}
-				//}
-			}
-			System.out.println("checkResult======="+checkResult);
-			System.out.println("uuid===" + inputVo.getUuid());
-
+			applyNonReflectionPolicy(inputVo,checkResult);
 		} else if (inputVo.getGubun().equals("LOGOUT")) { // logout update
 			inputVo.setSeq(actAgentLogInOutMapper.selectLoginLogSeq(inputVo));
 			inputVo.setLogout_dt(inputVo.getDatetime());
@@ -429,6 +354,98 @@ public class ActAgentController {
 			segSeq = agentVo.getSeq();
 		}
 		return segSeq;
+	}
+
+	public void applyNonReflectionPolicy(LogInOutVo inputVo, Map<String,Object> checkResult) throws ParseException, InterruptedException{
+
+		List<Map<String,Object>> getFailJobList  = new ArrayList<Map<String, Object>>();
+			//checkResult = commonMapper.checkAnsibleJobFailOrNot(inputVo);
+			getFailJobList = commonMapper.checkAnsibleJobFailOrNot(inputVo);
+			System.out.println("getFailJobList======"+getFailJobList.size());
+			checkResult.put("pc_uuid", inputVo.getUuid());
+			//PC가 꺼졌을때 정책 내려졌을 경우 PC부팅하면서 최신 정책을 불러와서 정책적용
+			for(int x = 0; x < getFailJobList.size();x++){
+				if(getFailJobList.get(x).get("status").toString().equals("false")){
+					checkResult.put("host_id", getFailJobList.get(x).get("host_id"));
+					List<Map<String,Object>> getjobList  = new ArrayList<Map<String, Object>>();
+					if(getFailJobList.get(x).get("kind").toString().equals("umanage")){
+						getjobList = commonMapper.checkAnsibleJobUpdtWhenOffPc(inputVo);
+						checkResult.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
+						checkResult.put("policyRunFilePath","/etc/hamonize/runupdt");
+					}else if(getFailJobList.get(x).get("kind").toString().equals("pmanage")){
+						getjobList = commonMapper.checkAnsibleJobProgrmWhenOffPc(inputVo);
+						checkResult.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
+						checkResult.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
+					}else if(getFailJobList.get(x).get("kind").toString().equals("dmanage")){
+						getjobList = commonMapper.checkAnsibleJobDeviceWhenOffPc(inputVo);
+						checkResult.put("policyFilePath","/etc/hamonize/security/device.hm");
+						checkResult.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
+					}else if(getFailJobList.get(x).get("kind").toString().equals("fmanage")){
+						getjobList = commonMapper.checkAnsibleJobFrwlWhenOffPc(inputVo);
+						checkResult.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
+						checkResult.put("policyRunFilePath","/etc/hamonize/runufw");
+					}else{
+
+					}
+					for(int i = 0; i< getjobList.size();i++){
+						String[] listA = {};
+						String[] listB = {};
+						if(i < getjobList.size() -1){
+						if(getjobList.get(i+1).get("ppm_name").toString() != "")
+						listA = getjobList.get(i+1).get("ppm_name").toString().split(",");
+	
+						if(getjobList.get(i).get("ppm_name").toString() != "")
+						listB = getjobList.get(i).get("ppm_name").toString().split(",");
+						
+						ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
+						ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
+						//former_ppm_name 차집합 ppm_name
+						former_ppm_name.removeAll(ppm_name);
+						JSONObject updtPolicy = new JSONObject();
+						if(!ppm_name.isEmpty())
+						{
+							updtPolicy.put("INS", String.join(",",ppm_name));
+						}
+						if(!former_ppm_name.isEmpty())
+						{
+							updtPolicy.put("DEL", String.join(",",former_ppm_name));
+						}
+						String output = updtPolicy.toJSONString();
+						output = output.replaceAll("\"", "\\\\\\\"");
+						checkResult.put("output", output);
+						}
+					}
+					JSONObject jobResult = new JSONObject();
+					jobResult = restApiService.makePolicyToSingle(checkResult);
+					checkResult.put("object", jobResult.toJSONString());
+					checkResult.put("parents_job_id", getFailJobList.get(x).get("job_id"));
+					checkResult.put("job_id", jobResult.get("id"));
+					jobResult.clear();
+					jobResult = restApiService.checkPolicyJobResult(Integer.parseInt(checkResult.get("job_id").toString()));
+					Thread.sleep(7000);
+						JSONArray dataArr = new JSONArray();
+						List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
+						Map<String, Object> resultMap;
+						dataArr = restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(checkResult.get("job_id").toString()));
+						for (int i = 0; i < dataArr.size(); i++) {
+							resultMap = new HashMap<String, Object>();
+								String obj = dataArr.get(i).toString();
+								resultMap.put("result", obj);
+								resultSet.add(resultMap);
+						}
+						checkResult.put("data", resultSet);
+						int result = commonMapper.checkCountAnsibleJobRelaunchId(checkResult);
+						if(dataArr.size() > result)
+						{
+							if(result > 0)
+							{
+								commonMapper.deleteAnsibleJobRelaunchEvent(checkResult);
+							}
+							result = commonMapper.addAnsibleJobRelaunchEventByHost(checkResult);
+						}
+				}
+		}
+
 	}
 
 }
