@@ -5,6 +5,7 @@
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 UUID=`cat /etc/uuid`
 LOGFILE="/var/log/hamonize/agentjob/loginout.log"
+DOMAIN=`cat /etc/hamonize/hamonize_tanent`
 sudo touch $LOGFILE
 
 GUBUN=""
@@ -25,6 +26,7 @@ LOGININFO_JSON="{\
        \"events\" : [ {\
        \"datetime\":\"$DATETIME\",\
        \"uuid\":\"$UUID\",\
+       \"domain\": \"$DOMAIN\",\
        \"gubun\": \"$GUBUN\"\
        } ]\
 }"

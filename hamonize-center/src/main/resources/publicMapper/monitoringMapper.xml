@@ -101,7 +101,7 @@
 			)
 		</if>
 		and a.domain = #{domain}
-		and b.job_id = (select max(job_id) from tbl_ansible_event_job where "domain" = #{domain} and org_seq = #{org_seq})
+		and b.job_id = (select job_id from tbl_updt_applc where "domain" = #{domain} and org_seq = #{org_seq} )
 		</where>
 	</select>
 
