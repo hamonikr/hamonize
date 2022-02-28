@@ -239,7 +239,12 @@
 							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
 							programBlockResult += "<tr>";
 							programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
-							programBlockResult += "<td>" + data.policyProgrmResult[i].status_yn + "</td>";
+							if( data.policyProgrmResult[i].status == 'Y'){
+								programBlockResult += "<td>차단</td>";
+							}else {
+								programBlockResult += "<td>허용</td>";
+							}
+							
 							programBlockResult += "<td>" + data.pcList.length + "</td>";
 							programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
 							programBlockResult += "<td>" + noinstall + "</td>";
@@ -251,7 +256,12 @@
 							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
 							programBlockResult += "<tr>";
 							programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
-							programBlockResult += "<td>" + data.policyProgrmResult[i].status_yn + "</td>";
+							if( data.policyProgrmResult[i].status == 'Y'){
+								programBlockResult += "<td>차단</td>";
+							}else {
+								programBlockResult += "<td>허용</td>";
+							}
+// 							programBlockResult += "<td>" + data.policyProgrmResult[i].status + "</td>";
 							programBlockResult += "<td>" + data.pcList.length + "</td>";
 							programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
 							programBlockResult += "<td>" + noinstall + "</td>";

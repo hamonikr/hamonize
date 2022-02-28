@@ -734,7 +734,7 @@
 	<!-- 정책배포결과 방화벽 -->
 	<select id="pcPolicyFirewallList" resultType="map" parameterType="map">
 		SELECT
-    DISTINCT PA.count, PA.retport, (CASE WHEN PA.status = 'allow'  THEN '허용' ELSE '차단' END ) as status , (CASE WHEN PA.kind = 'Y'  THEN '완료' ELSE '미완료' END ) as kind, PA.rgstr_date
+    DISTINCT PA.count, PA.retport, (CASE WHEN PA.kind = 'allow'  THEN '허용' ELSE '차단' END ) as status , (CASE WHEN PA.status = 'Y'  THEN '완료' ELSE '미완료' END ) as kind, PA.rgstr_date
 		FROM (
 			SELECT
 				ROW_NUMBER() OVER( PARTITION BY TA.retport, TA.status ),
