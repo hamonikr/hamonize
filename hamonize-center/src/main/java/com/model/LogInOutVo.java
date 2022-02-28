@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class LogInOutVo {
 
+	private String domain;
 	private String uuid;
 	private String login_dt;
 	private String logout_dt;

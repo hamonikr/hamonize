@@ -1,5 +1,6 @@
 package com.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import com.model.LogInOutVo;
@@ -19,6 +20,8 @@ public interface IPolicyCommonMapper {
 	public int checkCountAnsibleJobId(Map<String, Object> params);
 
 	public Map<String, Object> checkAnsibleJobFailOrNot(LogInOutVo inputVo);
+
+	public List<Map<String, Object>> checkAnsibleJobWhenOffPc(LogInOutVo inputVo);
 
 	public int deleteAnsibleJobRelaunchEvent(Map<String, Object> params);
 	

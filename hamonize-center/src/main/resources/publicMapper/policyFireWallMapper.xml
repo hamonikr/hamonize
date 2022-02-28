@@ -13,14 +13,15 @@
 			INSERT INTO TBL_FRWL_APPLC 
 					(ORG_SEQ,								   
 					PPM_SEQ,
+					PPM_NAME,
 					DOMAIN,
 					JOB_ID) VALUES
 					<foreach collection="data" item="item" separator=",">
-	            (#{item.org_seq},#{ppm_seq},#{domain},#{job_id})
+	            (#{item.org_seq},#{ppm_seq},#{ppm_name},#{domain},#{job_id})
 	        		</foreach>
-		RETURNING seq, org_seq, ppm_seq, domain, job_id
+		RETURNING seq, org_seq, ppm_seq, ppm_name, domain, job_id
 		)   
-		INSERT INTO tbl_frwl_applc_history (frwl_seq, org_seq, ppm_seq, domain, job_id, RGSTR_DATE ) SELECT seq, org_seq, ppm_seq, domain, job_id, now() FROM rows 	
+		INSERT INTO tbl_frwl_applc_history (frwl_seq, org_seq, ppm_seq, ppm_name, domain, job_id, RGSTR_DATE ) SELECT seq, org_seq, ppm_seq, ppm_name, domain, job_id, now() FROM rows 	
 		
 	</insert>
 	

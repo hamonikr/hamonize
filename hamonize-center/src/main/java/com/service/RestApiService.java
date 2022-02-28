@@ -318,9 +318,9 @@ public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseExce
 
 public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseException
   {
-    String output = params.get("module_args").toString();
-    output = output.replaceAll("\"", "\\\\\\\"");
-    String request = "{\"credential\": 3,\"module_name\": \"shell\",\"module_args\": \""+output+"\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+    //String output = params.get("module_args").toString();
+    //output = output.replaceAll("\"", "\\\\\\\"");
+    String request = "{\"credential\": 3,\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | touch "+params.get("policyRunFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0}";
     System.out.println("request====="+request);
     Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
     .path("/api/v2/hosts/").path("{id}/").path("ad_hoc_commands/")
