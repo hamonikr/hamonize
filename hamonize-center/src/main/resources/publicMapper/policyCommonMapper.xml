@@ -116,16 +116,46 @@
 	SELECT data ->> 'module_args' as module_args FROM tbl_ansible_policy_result where JOB_ID = #{job_id}::int
 	</select>
 
-	<select id="checkAnsibleJobFailOrNot" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	<!-- <select id="checkAnsibleJobFailOrNot" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
 	SELECT domain,job_id,status,data ->> 'host' as host_id FROM tbl_ansible_event_job 
 		WHERE job_id = (select job_id from tbl_updt_applc 
 		WHERE 
 		org_seq = (SELECT org_seq FROM tbl_pc_mangr tpm where pc_uuid=#{uuid}) 
 		and domain= #{domain})
 		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+	</select> -->
+
+	<select id="checkAnsibleJobFailOrNot" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	select domain,job_id,status,data ->> 'host' as host_id,kind
+		from tbl_ansible_event_job
+		where (kind,job_id)
+		in(select kind,max(job_id) as job_id from tbl_ansible_event_job group by kind)
+		and domain = #{domain}
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
 	</select>
 
-	<select id="checkAnsibleJobWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	<select id="checkAnsibleJobFailOrNotList" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	select domain,job_id,status,data ->> 'host' as host_id,kind
+		from tbl_ansible_event_job
+		where (kind,job_id)
+		in(select kind,max(job_id) as job_id from tbl_ansible_event_job group by kind)
+		and domain = #{domain}
+		and org_seq in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.seq = #{org_seq}
+			and a.domain = #{domain}
+			union all
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select seq
+		from search_org 
+		where 1=1
+		order by level,org_ordr)
+	</select>
+
+	<select id="checkAnsibleJobUpdtWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
 	select * from tbl_updt_applc_history where job_id in ( 
 	(select job_id from tbl_ansible_event_job 
 		where 
@@ -143,6 +173,81 @@
 		(select max(job_id) from tbl_ansible_event_job where 
 		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid} 
 		and kind = 'umanage' 
+		and status='false'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		) 
+) and org_seq  = (select org_seq from tbl_pc_mangr tpm where pc_uuid = #{uuid}) order by job_id asc
+	</select>
+
+	<select id="checkAnsibleJobProgrmWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	select * from tbl_progrm_applc_history where job_id in ( 
+	(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		and status = 'true' 
+		and kind = 'pmanage'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		),
+		(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid} 
+		and kind = 'pmanage' 
+		and status='false'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		) 
+) and org_seq  = (select org_seq from tbl_pc_mangr tpm where pc_uuid = #{uuid}) order by job_id asc
+	</select>
+
+	<select id="checkAnsibleJobFrwlWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	select * from tbl_frwl_applc_history where job_id in ( 
+	(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		and status = 'true' 
+		and kind = 'fmanage'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		),
+		(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid} 
+		and kind = 'fmanage' 
+		and status='false'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		) 
+) and org_seq  = (select org_seq from tbl_pc_mangr tpm where pc_uuid = #{uuid}) order by job_id asc
+	</select>
+
+	<select id="checkAnsibleJobDeviceWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	select * from tbl_device_applc_history where job_id in ( 
+	(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		and status = 'true' 
+		and kind LIKE '%' || 'dmanage' || '%'
+		)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		),
+		(select job_id from tbl_ansible_event_job 
+		where 
+		job_id = 
+		(select max(job_id) from tbl_ansible_event_job where 
+		data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid} 
+		and kind LIKE '%' || 'dmanage' || '%'
 		and status='false'
 		)
 		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
