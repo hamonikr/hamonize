@@ -421,7 +421,7 @@ public class ActAgentController {
 					checkResult.put("parents_job_id", getFailJobList.get(x).get("job_id"));
 					checkResult.put("job_id", jobResult.get("id"));
 					jobResult.clear();
-					jobResult = restApiService.checkPolicyJobResult(Integer.parseInt(checkResult.get("job_id").toString()));
+					jobResult = restApiService.checkPolicyJobResult(checkResult);
 					Thread.sleep(7000);
 						JSONArray dataArr = new JSONArray();
 						List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();

@@ -40,7 +40,8 @@
 				VALUES
 				<foreach collection="data" item="item" separator=",">
 				(
-					(select distinct domain from tbl_org where inventory_id = #{inventory_id}::int),
+					<!-- (select distinct domain from tbl_org where inventory_id = #{inventory_id}::int), -->
+					#{domain},
 					#{job_id}::int,
 					#{org_seq}::int,
 					#{before_url},

@@ -58,7 +58,7 @@
 					//$('form[name=frm] input[name=pOrgNm]').val(agrs.pOrgNm);
 					
 				}
-				checkAnsibleJobStatus(agrs.job_id);
+				//checkAnsibleJobStatus(agrs.job_id);
 			});
 		$('form[name=frm] input[name=former_ppm_name]').val(queryArr);                               
 	}
@@ -235,7 +235,7 @@
 				function (result) {
 					if (result.STATUS == "SUCCESS") {
 						alert("정상적으로 처리되었습니다.");
-						checkAnsibleJobStatus(result.ID);
+						//checkAnsibleJobStatus(result.ID);
 						location.reload();
 					} else {
 						alert("실패하였습니다.");
