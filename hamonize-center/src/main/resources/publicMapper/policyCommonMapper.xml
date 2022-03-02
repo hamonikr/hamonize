@@ -130,8 +130,8 @@
 	select domain,job_id,status,data ->> 'host' as host_id,kind
 		from tbl_ansible_event_job
 		where (kind,job_id)
-		in(select kind,max(job_id) as job_id from tbl_ansible_event_job group by kind)
-		and domain = #{domain}
+		in(select kind,max(job_id) as job_id from tbl_ansible_event_job where domain = #{domain} group by kind)
+		<!-- and domain = #{domain} -->
 		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
 	</select>
 
@@ -139,8 +139,8 @@
 	select domain,job_id,status,data ->> 'host' as host_id,kind
 		from tbl_ansible_event_job
 		where (kind,job_id)
-		in(select kind,max(job_id) as job_id from tbl_ansible_event_job group by kind)
-		and domain = #{domain}
+		in(select kind,max(job_id) as job_id from tbl_ansible_event_job where domain = #{domain} group by kind)
+		<!-- and domain = #{domain} -->
 		and org_seq in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
 			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
 			from tbl_org a 
