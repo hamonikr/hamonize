@@ -56,7 +56,7 @@ public class PolicyCommonController {
 		JSONArray dataArr = new JSONArray();
 		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
 		Map<String, Object> resultMap;
-		data = restApiService.addAnsibleJobEventByHost(params);
+		data = restApiService.addAnsibleJobEventByHost(params,0);
 		dataArr = (JSONArray) data.get("finalResult");
 		System.out.println("dataArr.size()============"+dataArr.size());
 		// String [] processed = data.get("processed").toString().split(",");
