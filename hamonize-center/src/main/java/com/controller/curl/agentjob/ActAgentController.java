@@ -391,28 +391,28 @@ public class ActAgentController {
 						String[] listA = {};
 						String[] listB = {};
 						if(i < getjobList.size() -1){
-						if(getjobList.get(i+1).get("ppm_name").toString() != "")
-						listA = getjobList.get(i+1).get("ppm_name").toString().split(",");
-	
-						if(getjobList.get(i).get("ppm_name").toString() != "")
-						listB = getjobList.get(i).get("ppm_name").toString().split(",");
-						
-						ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
-						ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
-						//former_ppm_name 차집합 ppm_name
-						former_ppm_name.removeAll(ppm_name);
-						JSONObject updtPolicy = new JSONObject();
-						if(!ppm_name.isEmpty())
-						{
-							updtPolicy.put("INS", String.join(",",ppm_name));
-						}
-						if(!former_ppm_name.isEmpty())
-						{
-							updtPolicy.put("DEL", String.join(",",former_ppm_name));
-						}
-						String output = updtPolicy.toJSONString();
-						output = output.replaceAll("\"", "\\\\\\\"");
-						checkResult.put("output", output);
+							if(getjobList.get(i+1).get("ppm_name").toString() != "")
+							listA = getjobList.get(i+1).get("ppm_name").toString().split(",");
+		
+							if(getjobList.get(i).get("ppm_name").toString() != "")
+							listB = getjobList.get(i).get("ppm_name").toString().split(",");
+							
+							ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
+							ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
+							//former_ppm_name 차집합 ppm_name
+							former_ppm_name.removeAll(ppm_name);
+							JSONObject updtPolicy = new JSONObject();
+							if(!ppm_name.isEmpty())
+							{
+								updtPolicy.put("INS", String.join(",",ppm_name));
+							}
+							if(!former_ppm_name.isEmpty())
+							{
+								updtPolicy.put("DEL", String.join(",",former_ppm_name));
+							}
+							String output = updtPolicy.toJSONString();
+							output = output.replaceAll("\"", "\\\\\\\"");
+							checkResult.put("output", output);
 						}
 					}
 					JSONObject jobResult = new JSONObject();
