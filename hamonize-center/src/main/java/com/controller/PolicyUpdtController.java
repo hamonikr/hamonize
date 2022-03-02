@@ -129,7 +129,7 @@ public class PolicyUpdtController {
 	@ResponseBody
 	@RequestMapping(value = "/usave", method = RequestMethod.POST)
 	public JSONObject usave(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) throws ParseException {
+			@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
 		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();
 		JSONArray jsonArray = (JSONArray) jp.parse(data);

@@ -75,7 +75,7 @@ public class PolicyFireWallService {
 		ifireWallMapper.fireWallPopDelete(vo);
 	}
 
-	public JSONObject applyFirewallPolicy(Map<String, Object> params) throws ParseException{
+	public JSONObject applyFirewallPolicy(Map<String, Object> params) throws ParseException, InterruptedException{
 
 		String[] listA = {};
 		String[] listB = {};
@@ -105,7 +105,7 @@ public class PolicyFireWallService {
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runufw");
-
+		params.put("before_url","fmanage");
 		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("resuklt======="+result);
 	

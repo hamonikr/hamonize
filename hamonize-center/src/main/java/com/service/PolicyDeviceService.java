@@ -75,7 +75,7 @@ public class PolicyDeviceService {
 		iDeviceMapper.devicePopDelete(vo);
 	}
 
-	public JSONObject applyDevicePolicy(Map<String, Object> params) throws ParseException{
+	public JSONObject applyDevicePolicy(Map<String, Object> params) throws ParseException, InterruptedException{
 		
 		String[] listA = {};
 		String[] listB = {};
@@ -105,7 +105,7 @@ public class PolicyDeviceService {
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/security/device.hm");
 		params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
-
+		params.put("before_url","dmanage");
 		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("resuklt======="+result);
 	

@@ -48,7 +48,7 @@ public class PolicyCommonController {
 
 	@ResponseBody
 	@RequestMapping(value = "addAnsibleJobEventByHost", method = RequestMethod.POST)
-	public int addAnsibleJobEventByHost(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException {
+	public int addAnsibleJobEventByHost(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException, InterruptedException {
 		System.out.println("url===="+request.getHeader("referer"));
 		String[] before_url = request.getHeader("referer").split("/");
 		params.put("before_url", before_url[before_url.length -1]);
@@ -129,7 +129,7 @@ public class PolicyCommonController {
 
 	@ResponseBody
 	@RequestMapping(value = "makePolicyToSingle", method = RequestMethod.POST)
-	public JSONObject makePolicyToSingle(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException {
+	public JSONObject makePolicyToSingle(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
 		params.putAll(commonMapper.getAnsibleJobEventByGroup(params));
 		JSONObject jobResult = new JSONObject();
 		jobResult = restApiService.makePolicyToSingle(params);

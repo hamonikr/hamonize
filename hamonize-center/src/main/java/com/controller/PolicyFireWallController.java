@@ -79,7 +79,7 @@ public class PolicyFireWallController {
 	@ResponseBody
 	@RequestMapping(value = "/fsave", method = RequestMethod.POST)
 	public JSONObject finsert(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) throws ParseException {
+			@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
 
 		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();
