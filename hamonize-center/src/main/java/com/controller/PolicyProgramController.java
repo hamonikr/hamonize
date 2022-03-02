@@ -65,7 +65,7 @@ public class PolicyProgramController {
 	@ResponseBody
 	@RequestMapping(value = "/psave", method = RequestMethod.POST)
 	public JSONObject pinsert(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) throws ParseException {
+			@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
 
 		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();

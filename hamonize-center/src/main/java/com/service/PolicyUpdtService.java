@@ -81,7 +81,7 @@ public class PolicyUpdtService {
 	// 	return iUpdtMapper.updtResult(params);
 	// }
 
-	public JSONObject applyPackagePolicy(Map<String, Object> params) throws ParseException{
+	public JSONObject applyPackagePolicy(Map<String, Object> params) throws ParseException, InterruptedException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		String[] listA = {};
 		String[] listB = {};
@@ -113,6 +113,7 @@ public class PolicyUpdtService {
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runupdt");
+		params.put("before_url","umanage");
 
 		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("ResultID====="+result);

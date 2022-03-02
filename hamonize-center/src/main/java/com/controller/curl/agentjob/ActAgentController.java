@@ -417,11 +417,13 @@ public class ActAgentController {
 					}
 					JSONObject jobResult = new JSONObject();
 					jobResult = restApiService.makePolicyToSingle(checkResult);
+					System.out.println("jobResultjobResult11111======"+jobResult);
 					checkResult.put("object", jobResult.toJSONString());
 					checkResult.put("parents_job_id", getFailJobList.get(x).get("job_id"));
 					checkResult.put("job_id", jobResult.get("id"));
 					jobResult.clear();
 					jobResult = restApiService.checkPolicyJobResult(checkResult);
+					System.out.println("jobResultjobResult222222======"+jobResult);
 					Thread.sleep(7000);
 						JSONArray dataArr = new JSONArray();
 						List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();

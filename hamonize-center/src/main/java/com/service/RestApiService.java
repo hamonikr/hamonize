@@ -279,7 +279,7 @@ public void deleteHost(PcMangrVo hdVo) throws ParseException
   //return result;
 }
 
-public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseException
+public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseException, InterruptedException
   {
     String request = "{\"credential\": 3,\"limit\": \""+params.get("org_seq")+"\",\"inventory\": "+params.get("inventory_id")
     +",\"module_name\": \"shell\",\"module_args\": \"echo '"+params.get("output")+"' > "+params.get("policyFilePath")+" | touch "+params.get("policyRunFilePath")+"\",\"become_enabled\": \"True\",\"verbosity\": 0,\"forks\": 10}";
@@ -315,12 +315,12 @@ public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseExce
     policyCommonMapper.addAnsibleJobEventByGroup(params);
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
-      jsonResultObj = checkPolicyJobResult(params);
+      jsonResultObj = checkAndAddPolicyJobResult(params);
     }
   return jsonResultObj;
 }
 
-public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseException
+public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseException, InterruptedException
   {
     //String output = params.get("module_args").toString();
     //output = output.replaceAll("\"", "\\\\\\\"");
@@ -348,7 +348,7 @@ public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseExc
     String objects = response.block();
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-    params.put("id",jsonObj.get("id").toString() );
+    params.put("job_id",jsonObj.get("id").toString() );
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
@@ -356,8 +356,6 @@ public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseExc
     }
   return jsonResultObj;
 }
-
-
 
 public JSONObject checkPolicyJobResult(Map<String, Object> params) throws ParseException{
 
@@ -374,7 +372,28 @@ public JSONObject checkPolicyJobResult(Map<String, Object> params) throws ParseE
       else
           return clientResponse.bodyToMono(String.class);
   });
-System.out.println("params=============="+params);
+        String objects = response.block();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+        return jsonObj;
+}
+
+public JSONObject checkAndAddPolicyJobResult(Map<String, Object> params) throws ParseException, InterruptedException{
+
+  Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
+  .path("/api/v2/ad_hoc_commands/").path("{id}/")
+    .build(params.get("job_id")))
+    .exchange().flatMap(clientResponse -> {
+      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+          clientResponse.body((clientHttpResponse, context) -> {
+              return clientHttpResponse.getBody();
+          });
+          return clientResponse.bodyToMono(String.class);
+      }
+      else
+          return clientResponse.bodyToMono(String.class);
+  });
+        System.out.println("params=============="+params);
         String objects = response.block();
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
@@ -392,7 +411,7 @@ System.out.println("params=============="+params);
                 // code goes here.
                 try {
                   Thread.sleep(1000);
-                  JSONObject jsonObj = checkPolicyJobResult(params);
+                  JSONObject jsonObj = checkAndAddPolicyJobResult(params);
                 } catch (ParseException e) {
                   // TODO Auto-generated catch block
                   e.printStackTrace();
@@ -411,7 +430,7 @@ System.out.println("params=============="+params);
         return jsonObj;
 }
 
-public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws ParseException{
+public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws ParseException, InterruptedException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
@@ -447,10 +466,6 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws Pa
             index++;
         }
         JSONArray finalResultArray = new JSONArray();
-        // JSONObject processed = new JSONObject();
-        //   processed = (JSONObject) resultsArray.get(0);
-        //   processed = (JSONObject) processed.get("event_data");
-        //   processed = (JSONObject) processed.get("processed");
         for(Object tmp : makeResultArray){
           JSONObject finalResult = new JSONObject();
           finalResult = (JSONObject) tmp;
@@ -470,7 +485,6 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws Pa
       data = finalResult;
       dataArr = (JSONArray) data.get("finalResult");
       System.out.println("dataArr.size()============"+dataArr.size());
-      // String [] processed = data.get("processed").toString().split(",");
       for (int i = 0; i < dataArr.size(); i++) {
           resultMap = new HashMap<String, Object>();
           String json = dataArr.get(i).toString();
@@ -483,16 +497,28 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws Pa
       }
       params.put("data", resultSet);
       System.out.println("params1111111111111111111=============="+params);
-      int result = policyCommonMapper.checkCountAnsibleJobId(params);
-      System.out.println("result===="+result);
-			if(dataArr.size() > result)
-			{
-				if(result > 0)
-				{
-					policyCommonMapper.deleteAnsibleJobEvent(params);
-				}
-				result = policyCommonMapper.addAnsibleJobEventByHost(params);
-			}
+      int pcCount = policyCommonMapper.getPcCountByOrgSeq(params);
+      System.out.println("pcCount===="+pcCount);
+      // int result = policyCommonMapper.checkCountAnsibleJobId(params);
+      //String[] before_url = request.getHeader("referer").split("/");
+		  //params.put("before_url", before_url[before_url.length -1]);
+      int result = 0;
+      if(dataArr.size() < pcCount){
+        Thread.sleep(1000);
+        addAnsibleJobEventByHost(params);
+      }else{
+        result = policyCommonMapper.addAnsibleJobEventByHost(params);
+      }
+      // int result = policyCommonMapper.checkCountAnsibleJobId(params);
+      // System.out.println("result===="+result);
+			// if(dataArr.size() > result)
+			// {
+			// 	if(result > 0)
+			// 	{
+			// 		policyCommonMapper.deleteAnsibleJobEvent(params);
+			// 	}
+			// 	result = policyCommonMapper.addAnsibleJobEventByHost(params);
+			// }
         return finalResult;
 }
 

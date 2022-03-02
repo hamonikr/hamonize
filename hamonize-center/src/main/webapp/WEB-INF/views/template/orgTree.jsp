@@ -276,7 +276,7 @@ function checkAnsibleJobStatus(job_id){
 			}else if(job_id != 0){
 				console.log("작업성공여부=="+res.status);
 				target.disabled = false;
-				addAnsibleJobEventByHost(res.inventory,res.limit,job_id);
+				//addAnsibleJobEventByHost(res.inventory,res.limit,job_id);
 			}
 		},
 		error:function(request,status,error){

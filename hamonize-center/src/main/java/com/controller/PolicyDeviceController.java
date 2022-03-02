@@ -86,7 +86,7 @@ public class PolicyDeviceController {
 	@ResponseBody
 	@RequestMapping(value = "/dsave", method = RequestMethod.POST)
 	public JSONObject dinsert(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) throws ParseException {
+			@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
 
 		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();

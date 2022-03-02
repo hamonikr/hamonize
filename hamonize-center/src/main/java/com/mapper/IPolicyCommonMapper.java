@@ -18,6 +18,8 @@ public interface IPolicyCommonMapper {
 	public int deleteAnsibleJobEvent(Map<String, Object> params);
 	
 	public int checkCountAnsibleJobId(Map<String, Object> params);
+	
+	public int getPcCountByOrgSeq(Map<String, Object> params);
 
 	public List<Map<String, Object>> checkAnsibleJobFailOrNot(LogInOutVo inputVo);
 	
