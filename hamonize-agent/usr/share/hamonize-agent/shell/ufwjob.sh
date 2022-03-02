@@ -6,7 +6,7 @@ sudo touch $LOGFILE
 
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 IVSC="http://${CENTERURL}/act/firewallAct"
-TENANT=$1
+TENANT=$(cat /etc/hamonize/hamonize_tanent)
 
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 echo "==============================[$DATETIME]=========================" >> $LOGFILE
