@@ -12,7 +12,7 @@
 		//등록버튼
 		$("#btnSave").click(fnSavePmanage);
 
-		//window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
+		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 	});
 
 	// 	var treeObj = $.fn.zTree.getZTreeObj("tree");

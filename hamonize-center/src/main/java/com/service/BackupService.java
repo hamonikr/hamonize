@@ -63,7 +63,7 @@ public class BackupService {
 		return bacmapper.backupRecoveryDelete(params);
 	}
 
-	public JSONObject applyRestorePolicy(Map<String, Object> params) throws ParseException{
+	public JSONObject applyRestorePolicy(Map<String, Object> params) throws ParseException, InterruptedException{
 		//Long segSeq = Long.parseLong(params.get("org_seq").toString());
 		System.out.println("br_backup_name-======"+params.get("br_backup_name"));
 		System.out.println("br_backup_path-======"+params.get("br_backup_path"));;

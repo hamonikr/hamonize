@@ -195,7 +195,7 @@ public class PolicyBackupRestoreController {
 	@ResponseBody
 	@RequestMapping(value = "backupRCSave", method = RequestMethod.POST)
 	public JSONObject backupRCSave(HttpSession session, Model model,
-			@RequestParam Map<String, Object> params) throws ParseException {
+			@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
 		params.put("pc_seq", Integer.parseInt(params.get("pc_seq").toString()));
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		params.put("br_seq", Integer.parseInt(params.get("br_seq").toString()));
