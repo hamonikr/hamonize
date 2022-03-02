@@ -9,7 +9,7 @@ touch $LOGFILE
 UUID=`cat /etc/hamonize/uuid |head -1`
 DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
 HOSTNAME=`hostname`
-TENANT=$1
+TENANT=$(cat /etc/hamonize/hamonize_tanent)
 echo $TENANT  >> $LOGFILE
 
 # PROGM_INS=`cat /etc/hamonize/progrm/progrm.hm | /usr/share/hamonize-agent/jq '.INS' | sed -e "s/\"//g" ` 
@@ -39,7 +39,7 @@ do
        	# sudo chmod 644 $DO_FILE_PATH
 
 
-        INSRET=$INSRET"{\"progrmname\":\"${I}\",\"status_yn\":\"Y\",\"status\":\"ins\",\"datetime\":\"$DATETIME\",\"hostname\":\"$HOSTNAME\",\"uuid\":\"$UUID\", \"domain\":\"$TENANT\"}"
+        INSRET=$INSRET"{\"progrmname\":\"${I}\",\"status\":\"Y\",\"kind\":\"ins\",\"datetime\":\"$DATETIME\",\"hostname\":\"$HOSTNAME\",\"uuid\":\"$UUID\", \"domain\":\"$TENANT\"}"
 
         if [ "$EC" -eq "$#" ]; then
                 INSRET=$INSRET","
@@ -80,7 +80,7 @@ do
        	# sudo chmod 755 $DO_FILE_PATH
 
 
-        INSRET=$INSRET"{\"progrmname\":\"${I}\",\"status_yn\":\"N\",\"status\":\"del\",\"datetime\":\"$DATETIME\",\"hostname\":\"$HOSTNAME\",\"uuid\":\"$UUID\", \"domain\":\"$TENANT\"}"
+        INSRET=$INSRET"{\"progrmname\":\"${I}\",\"status\":\"N\",\"kind\":\"del\",\"datetime\":\"$DATETIME\",\"hostname\":\"$HOSTNAME\",\"uuid\":\"$UUID\", \"domain\":\"$TENANT\"}"
 
         if [ "$EC" -eq "$#" ]; then
                 INSRET=$INSRET","

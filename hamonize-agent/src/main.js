@@ -1565,7 +1565,9 @@ if (program.opts().start) {
 // To-do ::: 필수 프로그램 체크.????
 // 1. 방화벽 포트 체크 
 async function agnet_ufw() {
-	await import('./zxtest.mjs')
+	//
+	// await import('./zxtest.mjs')
+	// 빌드시 오류 발생함   "zx": "^5.1.0"
 }
 
 
