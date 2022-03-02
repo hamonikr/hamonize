@@ -1,6 +1,6 @@
 [Unit]
 Description=hamonize-agent
-After=network.target
+After=systemd-user-sessions.service
 StartLimitInterval=33
 StartLimitBurst=5
 Restart=always
