@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.mapper.IGetAgentPollingMapper;
 import com.model.GetAgentPollingVo;
+import com.model.TenantconfigVo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,17 +40,17 @@ public class CurlAgentPollingController {
 		
 		uuid = uuid.trim();
 
-		GetAgentPollingVo vo = new GetAgentPollingVo();
+		TenantconfigVo vo = new TenantconfigVo();
 		vo.setUuid(uuid);
-		vo.setPu_name(name);
+//		vo.setPu_name(name);
 		
 
-		GetAgentPollingVo output = getAgentPollingMapper.getPollingTime(vo);
+		TenantconfigVo output = getAgentPollingMapper.getPollingTime(vo);
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		
 		System.out.println("==="+ output);
 		if( output != null ) {
-			jsonObject.put("data", output.getPolling_tm());
+			jsonObject.put("data", output.getTenant_polling_time());
 		}else {
 			jsonObject.put("data", "3600");
 		}

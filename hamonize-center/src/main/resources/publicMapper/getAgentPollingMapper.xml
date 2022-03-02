@@ -15,7 +15,7 @@
 			)
 	</insert>
 
-	<select id="getPollingTime" parameterType="com.model.GetAgentPollingVo" resultType="com.model.GetAgentPollingVo">
+	<select id="getPollingTime" parameterType="com.model.TenantconfigVo" resultType="com.model.TenantconfigVo">
 		select * 
 		from tbl_tenant_config ta
 		where domain = ( select domain from tbl_pc_mangr	where pc_uuid = #{uuid} )

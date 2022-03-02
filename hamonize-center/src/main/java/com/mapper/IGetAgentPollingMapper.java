@@ -2,11 +2,12 @@ package com.mapper;
 
 import com.model.GetAgentPollingVo;
 import com.model.HmProgrmUpdtVo;
+import com.model.TenantconfigVo;
 
 public interface IGetAgentPollingMapper {
 
 
-	public GetAgentPollingVo getPollingTime(GetAgentPollingVo vo);
+	public TenantconfigVo getPollingTime(TenantconfigVo vo);
 
 	public int insertPollingData(HmProgrmUpdtVo vo);
 }
