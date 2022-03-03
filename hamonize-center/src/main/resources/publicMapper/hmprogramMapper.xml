@@ -87,7 +87,7 @@
 	<insert id="prcssKillLog" parameterType="map">
 		INSERT INTO tbl_progrm_block_log
 		(PC_HOSTNAME,PROGRM_NAME,PC_IP,PC_UUID,ORG_SEQ,RGSTR_DATE)
-		VALUES(#{hostname},#{prcssname},#{vpnipaddr},#{uuid},#{org_seq},#{rgstr_date}::timestamp)	
+		VALUES(#{hostname},#{prcssname},#{vpnipaddr},#{uuid},#{org_seq},#{rgstr_date}::timestamp)
 	</insert>
 
 
