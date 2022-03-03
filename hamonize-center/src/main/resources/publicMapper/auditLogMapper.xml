@@ -433,33 +433,34 @@
 			ta.pc_disk_id, 
 			ta.pc_cpu_id, 
 			ta.pc_uuid, 
-			to_char(ta.insert_dt,'YYYY-MM-DD HH24:MI:SS') as insert_dt
-			FROM tbl_pc_change_info ta
+			to_char(ta.rgstr_date,'YYYY-MM-DD HH24:MI:SS') as rgstr_date
+			FROM tbl_pc_hardware_change_log ta
 			left outer join tbl_org  tb on ta.org_seq  = tb.seq
 		<where>
 			tb.domain = #{auditLogVo.domain}
 			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 			and ta.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 				from tbl_org a
 				where a.seq = #{auditLogVo.org_seq}
+				and a.domain = #{auditLogVo.domain}
 				union all
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and not cycle)
+				select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,level+1,path || b.seq,b.seq=any(path)
+				from tbl_org b, search_org so 
+				where b.p_seq = so.seq and b.domain = so.domain and not cycle)
 				select seq
 				from search_org
 				)
 		</if>
 			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
 				<![CDATA[
-			and ta.insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+			and ta.rgstr_date >= #{auditLogVo.date_fr}::TIMESTAMP
 			]]>
 			</if>
 			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
 				<![CDATA[
-			and ta.insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+			and ta.rgstr_date <= #{auditLogVo.date_to}::TIMESTAMP
 			]]>
 			</if>
 			<if test="auditLogVo.txtSearch != ''">
@@ -468,7 +469,7 @@
 			</if>
 			</if>
 		</where>
-		order by ta.insert_dt desc
+		order by ta.rgstr_date desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
 
@@ -476,32 +477,33 @@
 	<select id="countPcChangeLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		FROM tbl_pc_change_info ta
+		FROM tbl_pc_hardware_change_log ta
 		left outer join tbl_org  tb on ta.org_seq  = tb.seq
 		<where>
 			tb.domain = #{domain}
 			<if test="org_seq != null and org_seq != ''">
 			and ta.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-				    from tbl_org a
-				    where a.seq = #{org_seq}
-				    union all
-				    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				    from tbl_org a, search_org so 
-				    where a.p_seq = so.seq and not cycle)
-				    select seq
-				    from search_org
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{org_seq}
+				and a.domain = #{domain}
+				union all
+				select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,level+1,path || b.seq,b.seq=any(path)
+				from tbl_org b, search_org so 
+				where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+				select seq
+				from search_org
 				)
 		</if>
 			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
-				and ta.insert_dt >= #{date_fr}::TIMESTAMP
+				and ta.rgstr_date >= #{date_fr}::TIMESTAMP
 				]]>
 			</if>
 			<if test="date_to != null and date_to != ''">
 				<![CDATA[
-				and ta.insert_dt <= #{date_to}::TIMESTAMP
+				and ta.rgstr_date <= #{date_to}::TIMESTAMP
 				]]>
 			</if>
 			<if test="txtSearch != ''">
@@ -519,31 +521,32 @@
 			tu.product, 
 			tu.info, 
 			tpm.pc_hostname, 
-			tu.insert_dt
-			from tbl_unauthroized tu left join tbl_pc_mangr tpm on tpm.pc_uuid = tu.pc_uuid
+			tu.rgstr_date
+			from tbl_unauthorized_device_log tu left join tbl_pc_mangr tpm on tpm.pc_uuid = tu.pc_uuid
 		<where>
 			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 		tu.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-					from tbl_org a
-					where a.seq = #{auditLogVo.org_seq}
-					union all
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-					from tbl_org a, search_org so 
-					where a.p_seq = so.seq and not cycle)
-					select seq
-					from search_org
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{auditLogVo.org_seq}
+				and a.domain = #{auditLogVo.domain}
+				union all
+				select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,level+1,path || b.seq,b.seq=any(path)
+				from tbl_org b, search_org so 
+				where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+				select seq
+				from search_org
 				)
 		</if>
 			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
 				<![CDATA[
-			and tu.insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+			and tu.rgstr_date >= #{auditLogVo.date_fr}::TIMESTAMP
 			]]>
 			</if>
 			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
 				<![CDATA[
-			and tu.insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+			and tu.rgstr_date <= #{auditLogVo.date_to}::TIMESTAMP
 			]]>
 			</if>
 			<if test="auditLogVo.txtSearch != ''">
@@ -552,7 +555,7 @@
 			</if>
 			</if>
 		</where>
-		order by tu.insert_dt desc
+		order by tu.rgstr_date desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
 
@@ -560,30 +563,31 @@
 	<select id="countUnAuthLogListInfo" parameterType="com.model.AuditLogVo" resultType="Integer">
 		SELECT 
 			count(*)  as tbl_cnt
-		from tbl_unauthroized tu left join tbl_pc_mangr tpm on tpm.pc_uuid = tu.pc_uuid
+		from tbl_unauthorized_device_log tu left join tbl_pc_mangr tpm on tpm.pc_uuid = tu.pc_uuid
 		<where>
 			<if test="org_seq != null and org_seq != ''">
 			tu.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
-					from tbl_org a
-					where a.seq = #{org_seq}
-					union all
-					select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-					from tbl_org a, search_org so 
-					where a.p_seq = so.seq and not cycle)
-					select seq
-					from search_org
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				from tbl_org a
+				where a.seq = #{org_seq}
+				and a.domain = #{domain}
+				union all
+				select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,level+1,path || b.seq,b.seq=any(path)
+				from tbl_org b, search_org so 
+				where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+				select seq
+				from search_org
 				)
 		</if>
 			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
-			and tu.insert_dt >= #{date_fr}::TIMESTAMP
+			and tu.rgstr_date >= #{date_fr}::TIMESTAMP
 			]]>
 			</if>
 			<if test="date_to != null and date_to != ''">
 				<![CDATA[
-			and tu.insert_dt <= #{date_to}::TIMESTAMP
+			and tu.rgstr_date <= #{date_to}::TIMESTAMP
 			]]>
 			</if>
 			<if test="txtSearch != ''">
@@ -600,7 +604,7 @@
 		a.uuid,a.vendor,a.product,a.info,
 		a.pc_user,a.insert_dt,
 			(select org_nm from tbl_org where seq=b.org_seq) as org_nm
-			 FROM tbl_unauthroized a 
+			 FROM tbl_unauthorized_device_log a 
 			 join tbl_user b
 			 on a.pc_user = b.user_id
 		<where>
@@ -626,52 +630,53 @@
 		select 
 		  
 			( select org_nm from tbl_org where seq = tb.org_seq and  domain=#{auditLogVo.domain}) as org_nm 
-			, ta.hostname 
-			, ta.prcssname 
-			, ta.ipaddress 
-			, ta.insert_dt 
+			, ta.pc_hostname 
+			, ta.progrm_name 
+			, ta.pc_ip 
+			, ta.rgstr_date
 			, tb.org_seq 
 			, tb.pc_ip 
-			from TBL_PRCSS_BLOCK_LOG ta, tbl_pc_mangr tb
+			from tbl_progrm_block_log ta, tbl_pc_mangr tb
 				
 				
 		<where>
-			ta.uuid  = tb.pc_uuid
+			ta.pc_uuid  = tb.pc_uuid
 			and tb.domain = #{auditLogVo.domain}
 			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
 			and tb.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 				from tbl_org a
 				where a.seq = #{auditLogVo.org_seq}
+				and a.domain = #{auditLogVo.domain}
 				union all
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and not cycle)
+				select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,level+1,path || b.seq,b.seq=any(path)
+				from tbl_org b, search_org so 
+				where b.p_seq = so.seq and b.domain = so.domain and not cycle)
 				select seq
 				from search_org
 						)
 			</if>
 			<if test="auditLogVo.date_fr != null and auditLogVo.date_fr != ''">
 				<![CDATA[
-				and ta.insert_dt >= #{auditLogVo.date_fr}::TIMESTAMP
+				and ta.rgstr_date >= #{auditLogVo.date_fr}::TIMESTAMP
 				]]>
 			</if>
 			<if test="auditLogVo.date_to != null and auditLogVo.date_to != ''">
 				<![CDATA[
-				and ta.insert_dt <= #{auditLogVo.date_to}::TIMESTAMP
+				and ta.rgstr_date <= #{auditLogVo.date_to}::TIMESTAMP
 				]]>
 			</if>
 			<if test="auditLogVo.txtSearch != ''">
 				<if test="auditLogVo.keyWord == 1">
-				and ta.HOSTNAME like '%' || #{auditLogVo.txtSearch} || '%'
+				and ta.PC_HOSTNAME like '%' || #{auditLogVo.txtSearch} || '%'
 				</if>
 				<if test="auditLogVo.keyWord == 2">
-				and ta.PRCSSNAME like '%' || #{auditLogVo.txtSearch} || '%'
+				and ta.PROGRM_NAME like '%' || #{auditLogVo.txtSearch} || '%'
 				</if>
 			</if>
 		</where>
-		order by ta.insert_dt desc
+		order by ta.rgstr_date desc
 		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
 	</select>
 
@@ -680,20 +685,21 @@
 		
 		select 
 		  count(*)  as tbl_cnt
-			from TBL_PRCSS_BLOCK_LOG ta, tbl_pc_mangr tb
+			from tbl_progrm_block_log ta, tbl_pc_mangr tb
 
 		<where>
 			tb.domain = #{domain}
 			<if test="org_seq != null and org_seq != ''">
 			and tb.org_seq in (
-				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 				from tbl_org a
 				where a.seq = #{org_seq}
+				and a.domain = #{domain}
 				union all
-				select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
-				from tbl_org a, search_org so 
-				where a.p_seq = so.seq and not cycle)
+				select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,level+1,path || b.seq,b.seq=any(path)
+				from tbl_org b, search_org so 
+				where b.p_seq = so.seq and b.domain = so.domain and not cycle)
 				select seq
 				from search_org
 						)
@@ -701,20 +707,20 @@
 			
 			<if test="date_fr != null and date_fr != ''">
 				<![CDATA[
-				and ta.insert_dt >= #{date_fr}::TIMESTAMP
+				and ta.rgstr_date >= #{date_fr}::TIMESTAMP
 				]]>
 			</if>
 			<if test="date_to != null and date_to != ''">
 				<![CDATA[
-				and ta.insert_dt <= #{date_to}::TIMESTAMP
+				and ta.rgstr_date <= #{date_to}::TIMESTAMP
 				]]>
 			</if>
 			<if test="txtSearch != ''">
 				<if test="keyWord == 1">
-				and ta.HOSTNAME like '%' || #{txtSearch} || '%'
+				and ta.PC_HOSTNAME like '%' || #{txtSearch} || '%'
 				</if>
 				<if test="keyWord == 2">
-				and ta.PRCSSNAME like '%' || #{txtSearch} || '%'
+				and ta.PROGRM_NAME like '%' || #{txtSearch} || '%'
 				</if>
 			</if>
 		</where>
@@ -723,15 +729,14 @@
 	<select id="prcssBlockLogListExcel" resultType="hashmap" parameterType="hashmap">
 		SELECT
 		(ROW_NUMBER() OVER()) AS rownum,
-		HOSTNAME,
+		PC_HOSTNAME,
 		(select org_nm from tbl_org where seq = org_seq)as ORG_NM,
-		PRCSSNAME,
-		ipaddress,
-		macaddress,
-		INSERT_DT,
+		PROGRM_NAME,
+		PC_IP,
+		RGSTR_DATE,
 		USER_ID,
 		ORG_SEQ
-		FROM TBL_PRCSS_BLOCK_LOG
+		FROM tbl_progrm_block_log
 		<where>
 			<if test="org_seq != null and org_seq != ''">
 				and org_seq in (

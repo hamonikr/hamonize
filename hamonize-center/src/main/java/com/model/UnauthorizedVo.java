@@ -1,5 +1,7 @@
 package com.model;
 
+import java.sql.Timestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,14 +11,15 @@ import lombok.ToString;
 @ToString
 public class UnauthorizedVo{
 	
-	private  int seq;
-	private  int org_seq;
+	private Long seq;
+	private Long org_seq;
 	private String pc_uuid; 
 	private String vendor;
 	private String product; 
 	private String info;
+	private String pc_hostname;
 	private String pc_user;
-	private String insert_dt;
+	private Timestamp rgstr_date;
 	
 	
 }

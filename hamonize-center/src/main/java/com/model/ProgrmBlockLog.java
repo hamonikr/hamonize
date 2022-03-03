@@ -20,17 +20,25 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name="tbl_act_device_log")
-public class ActAgentDeviceVo {
-	
+@Table(name="tbl_progrm_block_log")
+public class ProgrmBlockLog {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Comment("시리얼넘버")
 	private Long seq;
-	
+
 	@Comment("부서번호")
 	private Long org_seq;
+	
+	@Size(max=100)
+	@Comment("프로그램명")
+	private String progrm_name;
 
+	@Size(max=30)
+	@Comment("PC아이피")
+	private String pc_ip;
+	
 	@Size(max=100)
 	@Comment("PC고유번호")
 	private String pc_uuid;
@@ -38,24 +46,6 @@ public class ActAgentDeviceVo {
 	@Size(max=100)
 	@Comment("PC호스트명")
 	private String pc_hostname;
-
-	@Size(max=10)
-	@Comment("정책적용여부 Y:허용 N:차단")
-	private String status;
-
-	@Size(max=200)
-	@Comment("디바이스명")
-	private String product;
-
-	@Size(max=200)
-	@Comment("디바이스vender코드")
-	@Column(name = "vendorcode", nullable = false)
-	private String vendorCode;
-
-	@Size(max=200)
-	@Comment("디바이스product코드")
-	@Column(name = "productcode", nullable = false)
-	private String productCode;
 
 	@Comment("등록일")
 	private Timestamp rgstr_date;

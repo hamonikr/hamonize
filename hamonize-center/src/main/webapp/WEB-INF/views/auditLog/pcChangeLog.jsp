@@ -39,6 +39,7 @@
 		$("#org_seq").val(treeNode.id);
 		$.post("pcChangeLogList.proc", {
 				org_seq: treeNode.id,
+				domain: treeNode.domain,
 				currentPage: $("#currentPage").val(),
 				date_fr: $("#date_fr").val(),
 				date_to: $("#date_to").val()
@@ -61,7 +62,7 @@
 						gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 						gbInnerHtml += "<td>" + value.pc_disk_id + "</td>";
 						gbInnerHtml += "<td>" + value.pc_cpu_id + "</td>";
-						gbInnerHtml += "<td>" + value.insert_dt + "</td>";
+						gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
 						gbInnerHtml += "</tr>";
 
 					});
@@ -224,7 +225,7 @@
 				gbInnerHtml += "<td>" + value.pc_disk_id + "</td>";
 				gbInnerHtml += "<td>" + value.pc_cpu_id + "</td>";
 				// gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; 
-				gbInnerHtml += "<td>" + value.insert_dt + "</td>";
+				gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});

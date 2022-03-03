@@ -28,10 +28,10 @@ import com.mapper.IActAgentProgrmMapper;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IGetAgentRecoveryMapper;
 import com.mapper.IPolicyCommonMapper;
-import com.model.ActAgentBackupRecoveryVo;
-import com.model.ActAgentDeviceVo;
-import com.model.ActAgentFirewallVo;
-import com.model.ActAgentProgrmVo;
+import com.model.ActAgentLogBackupRestoreVo;
+import com.model.ActAgentLogDeviceVo;
+import com.model.ActAgentLogFirewallVo;
+import com.model.ActAgentLogProgrmVo;
 import com.model.GetAgentJobVo;
 import com.model.LogInOutVo;
 import com.service.RestApiService;
@@ -103,7 +103,6 @@ public class ActAgentController {
 			inputVo.setUuid(tempObj.get("uuid").toString());
 			inputVo.setGubun(tempObj.get("gubun").toString());
 			inputVo.setDomain(tempObj.get("domain").toString());
-			inputVo.setGubun("LOGIN");
 			checkResult.put("pc_uuid", inputVo.getUuid());
 
 		}
@@ -143,7 +142,7 @@ public class ActAgentController {
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
 		JSONArray hmdArray = (JSONArray) jsonObj.get("events");
 
-		ActAgentFirewallVo inputVo = new ActAgentFirewallVo();
+		ActAgentLogFirewallVo inputVo = new ActAgentLogFirewallVo();
 		for (int i = 0; i < hmdArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
 
@@ -191,10 +190,10 @@ public class ActAgentController {
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
 		JSONArray hmdArray = (JSONArray) jsonObj.get("events");
 
-		List<ActAgentDeviceVo> inputVoList = new ArrayList<ActAgentDeviceVo>();
+		List<ActAgentLogDeviceVo> inputVoList = new ArrayList<ActAgentLogDeviceVo>();
 		for (int i = 0; i < hmdArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
-			ActAgentDeviceVo tmpVo = new ActAgentDeviceVo();
+			ActAgentLogDeviceVo tmpVo = new ActAgentLogDeviceVo();
 
 			tmpVo.setPc_uuid(tempObj.get("uuidVal").toString().trim());
 			tmpVo.setPc_hostname(tempObj.get("hostname").toString());
@@ -237,7 +236,7 @@ public class ActAgentController {
 		JSONObject jsonObj = (JSONObject) Parser.parse(json.toString());
 
 		JSONArray insArray = (JSONArray) jsonObj.get("insresert");
-		ActAgentProgrmVo[] inputVo = new ActAgentProgrmVo[insArray.size()];
+		ActAgentLogProgrmVo[] inputVo = new ActAgentLogProgrmVo[insArray.size()];
 
 		if (insArray.size() != 0) {
 			for (int i = 0; i < insArray.size(); i++) {
@@ -247,7 +246,7 @@ public class ActAgentController {
 //				"datetime":"2022-02-25 12:13:27" 
 //				"hostname":"hamonikr-X556UAK" "uuid":"df303afa09304ff8a3ec14f6f2d9ea22"  "domain":"naver"
 				
-				inputVo[i] = new ActAgentProgrmVo();
+				inputVo[i] = new ActAgentLogProgrmVo();
 				
 				inputVo[i].setOrg_seq(pcUUID(tempObj.get("uuid").toString().trim(), tempObj.get("domain").toString().trim())); // ===================================
 				inputVo[i].setPc_uuid(tempObj.get("uuid").toString().trim());
@@ -297,20 +296,20 @@ public class ActAgentController {
 		JSONObject jsonObj = (JSONObject) jsonParser.parse(json.toString());
 		JSONArray hmdArray = (JSONArray) jsonObj.get("events");
 
-		ActAgentBackupRecoveryVo inputVo = new ActAgentBackupRecoveryVo();
+		ActAgentLogBackupRestoreVo inputVo = new ActAgentLogBackupRestoreVo();
 		for (int i = 0; i < hmdArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) hmdArray.get(i);
 
 			inputVo.setDatetime(tempObj.get("datetime").toString());
-			inputVo.setUuid(tempObj.get("uuid").toString().trim());
-			inputVo.setHostname(tempObj.get("hostname").toString());
-			inputVo.setAction_status(tempObj.get("action_status").toString());
+			inputVo.setPc_uuid(tempObj.get("uuid").toString().trim());
+			inputVo.setPc_hostname(tempObj.get("hostname").toString());
+			inputVo.setStatus(tempObj.get("action_status").toString());
 			inputVo.setResult(tempObj.get("result").toString());
 			inputVo.setDomain(tempObj.get("domain").toString());
 
 		}
 
-		Long uuid = pcUUID(inputVo.getUuid(), inputVo.getDomain());// ===================================
+		Long uuid = pcUUID(inputVo.getPc_uuid(), inputVo.getDomain());// ===================================
 		inputVo.setOrg_seq(uuid);
 
 		int retVal = getAgentRecoveryMapper.insertActAgentBackupRecovery(inputVo);
@@ -318,7 +317,7 @@ public class ActAgentController {
 			/**
 			 * 복구 실행 후 기존 작업 내역 삭제
 			 */
-			ActAgentBackupRecoveryVo retVo =
+			ActAgentLogBackupRestoreVo retVo =
 					getAgentRecoveryMapper.getDataActAgentBackupRecovery(inputVo);
 
 			if ("N".equals(retVo.getResult())) {

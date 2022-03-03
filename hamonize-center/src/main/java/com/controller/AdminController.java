@@ -24,7 +24,6 @@ import com.paging.PagingUtil;
 import com.paging.PagingVo;
 import com.service.AdminService;
 import com.service.LoginService;
-import com.service.OrgService;
 import com.service.SvrlstService;
 import com.util.Constant;
 import com.util.RSAUtil;
@@ -51,9 +50,6 @@ public class AdminController {
 
 	@Autowired
 	private LoginService loginService;
-
-	@Autowired
-	private OrgService oService;
 
 	@Autowired
 	private SvrlstService svrlstService;

@@ -38,6 +38,7 @@
 		$("#org_seq").val(treeNode.id);
 		$.post("unAuthLogList.proc", {
 				org_seq: treeNode.id,
+				domain: treeNode.domain,
 				currentPage: $("#currentPage").val(),
 				date_fr: $("#date_fr").val(),
 				date_to: $("#date_to").val()
@@ -57,7 +58,7 @@
 						gbInnerHtml += "<td>" + value.vendor + "</td>";
 						gbInnerHtml += "<td>" + value.product + "</td>";
 						gbInnerHtml += "<td>" + value.info + "</td>";
-						gbInnerHtml += "<td>" + value.insert_dt.substr(0, value.insert_dt.length) + "</td>";
+						gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 						gbInnerHtml += "</tr>";
 
 					});
@@ -210,7 +211,7 @@
 				gbInnerHtml += "<td>" + value.vendor + "</td>";
 				gbInnerHtml += "<td>" + value.product + "</td>";
 				gbInnerHtml += "<td>" + value.info + "</td>";
-				gbInnerHtml += "<td>" + value.insert_dt.substr(0, value.insert_dt.length) + "</td>";
+				gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});

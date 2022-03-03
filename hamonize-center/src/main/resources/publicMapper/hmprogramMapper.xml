@@ -85,7 +85,7 @@
 	</select>
 	
 	<insert id="prcssKillLog" parameterType="map">
-		INSERT INTO TBL_PRCSS_BLOCK_LOG
+		INSERT INTO tbl_progrm_block_log
 		(HOSTNAME,PRCSSNAME,IPADDRESS,UUID,ORG_SEQ,INSERT_DT)
 		VALUES(#{hostname},#{prcssname},#{vpnipaddr},#{uuid},#{org_seq},#{insert_dt}::timestamp)	
 	</insert>
