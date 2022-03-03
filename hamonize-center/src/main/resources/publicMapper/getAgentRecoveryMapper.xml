@@ -4,50 +4,51 @@
 <mapper namespace="com.mapper.IGetAgentRecoveryMapper">
 	
 	<!-- 복구 시작 정보 저장 -->
-	<insert id="insertActAgentBackupRecovery" parameterType="com.model.ActAgentBackupRecoveryVo">
-        INSERT 
-        	INTO tbl_act_backup_recovery_log
-        	(
-				org_seq, 
-		        uuid,
-				hostname,		        
-				datetime,		        
-		        status,
-				result,
-		        ins_date
-        	) 
-        	VALUES( 
-        		#{org_seq}, 
-				#{uuid},
-				#{hostname}, 
-				#{datetime}, 
-				#{action_status},
-				#{result},
-				now()
-			) 
+	<insert id="insertActAgentBackupRecovery" parameterType="com.model.ActAgentLogBackupRestoreVo">
+				INSERT 
+					INTO tbl_act_backup_restore_log
+					(
+						org_seq, 
+						pc_uuid,
+						pc_hostname,		        
+						datetime,		        
+						status,
+						result,
+						rgstr_date
+					) 
+					VALUES
+					( 
+						#{org_seq}, 
+						#{pc_uuid},
+						#{pc_hostname}, 
+						#{datetime}, 
+						#{status},
+						#{result},
+						now()
+					) 
 
 	</insert>
 	
 	
 	<!-- 북구 실행후 정책 초기화 시작을 위한 테이블 -->
-	<select id="getDataActAgentBackupRecovery" parameterType="com.model.ActAgentBackupRecoveryVo" resultType="com.model.ActAgentBackupRecoveryVo">
+	<select id="getDataActAgentBackupRecovery" parameterType="com.model.ActAgentLogBackupRestoreVo" resultType="com.model.ActAgentLogBackupRestoreVo">
 		select * 
-		from tbl_act_backup_recovery_log
-		where uuid = #{uuid}
-		order by ins_date desc
+		from tbl_act_backup_restore_log
+		where pc_uuid = #{pc_uuid}
+		order by rgstr_date desc
 		limit 1	
 	</select>
 
-	<update id="updateDataActAgentBackupRecovery" parameterType="com.model.ActAgentBackupRecoveryVo">
-		update tbl_act_backup_recovery_log
+	<update id="updateDataActAgentBackupRecovery" parameterType="com.model.ActAgentLogBackupRestoreVo">
+		update tbl_act_backup_restore_log
 		set result = 'Y'
 		where org_seq = #{org_seq}
-			and uuid = #{uuid}
+			and pc_uuid = #{pc_uuid}
 	</update>
 	
 
 	<!-- 정책 복구 진행 기존 정책작업 백업 후 삭제 -->
-	<delete id="deleteActPolicy" parameterType="com.model.ActAgentBackupRecoveryVo">
+	<delete id="deleteActPolicy" parameterType="com.model.ActAgentLogBackupRestoreVo">
 		begin;
 			delete from tbl_updt_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};
 			delete from tbl_progrm_agent_job where org_seq = #{org_seq} and pcm_uuid = #{uuid};

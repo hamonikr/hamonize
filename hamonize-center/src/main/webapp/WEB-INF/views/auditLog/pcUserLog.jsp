@@ -34,6 +34,7 @@
 		$("#org_seq").val(treeNode.id);
 		$.post("userLogList.proc", {
 				org_seq: treeNode.id,
+				domain: treeNode.domain,
 				currentPage: $("#currentPage").val(),
 				date_fr: $("#date_fr").val(),
 				date_to: $("#date_to").val()

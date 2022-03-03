@@ -7,7 +7,7 @@
 
  <insert id="pcHWInfoInsert" parameterType="com.model.EqualsHwVo">   
 		INSERT INTO 
-			tbl_pc_change_info (
+			tbl_pc_hardware_change_log (
 			    pc_cpu, 
 			    pc_memory, 
 			    pc_macaddress, 
@@ -19,7 +19,7 @@
 			    pc_disk,
 			    pc_disk_id,
 			    pc_user,
-			    insert_dt
+			    rgstr_date
 			)
 			VALUES
 			(

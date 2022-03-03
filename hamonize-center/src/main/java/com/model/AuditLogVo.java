@@ -1,5 +1,7 @@
 package com.model;
 
+import java.sql.Timestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -72,8 +74,8 @@ public class AuditLogVo {
 	private String status_yn;
 	
 	//프로세스차단 기록
-	private String prcssname;
-	private String ipaddress;
+	private String progrm_name;
+	private Timestamp rgstr_date;
 
 	
 	

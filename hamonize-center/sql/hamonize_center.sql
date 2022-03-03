@@ -5,7 +5,7 @@
 -- DROP TABLE public.export;
 
 CREATE TABLE public.export (
-	"INSERT INTO public.tbl_act_backup_recovery_log (org_seq" varchar(55) NULL,
+	"INSERT INTO public.tbl_act_backup_restore_log (org_seq" varchar(55) NULL,
 	uuid varchar(34) NULL,
 	hostname varchar(39) NULL,
 	datetime varchar(39) NULL,
@@ -20,13 +20,13 @@ ALTER TABLE public.export OWNER TO hamonize;
 GRANT ALL ON TABLE public.export TO hamonize;
 
 
--- public.tbl_act_backup_recovery_log definition
+-- public.tbl_act_backup_restore_log definition
 
 -- Drop table
 
--- DROP TABLE public.tbl_act_backup_recovery_log;
+-- DROP TABLE public.tbl_act_backup_restore_log;
 
-CREATE TABLE public.tbl_act_backup_recovery_log (
+CREATE TABLE public.tbl_act_backup_restore_log (
 	seq bigserial NOT NULL,
 	org_seq int8 NULL,
 	uuid varchar(200) NULL,
@@ -35,13 +35,13 @@ CREATE TABLE public.tbl_act_backup_recovery_log (
 	status varchar(100) NULL,
 	"result" varchar(100) NULL,
 	ins_date timestamp NULL,
-	CONSTRAINT tbl_act_backup_recovery_log_pkey PRIMARY KEY (seq)
+	CONSTRAINT tbl_act_backup_restore_log_pkey PRIMARY KEY (seq)
 );
 
 -- Permissions
 
-ALTER TABLE public.tbl_act_backup_recovery_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_act_backup_recovery_log TO hamonize;
+ALTER TABLE public.tbl_act_backup_restore_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_act_backup_restore_log TO hamonize;
 
 
 -- public.tbl_act_device_log definition
@@ -920,13 +920,13 @@ ALTER TABLE public.tbl_pc_block OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_pc_block TO hamonize;
 
 
--- public.tbl_pc_change_info definition
+-- public.tbl_pc_hardware_change_log definition
 
 -- Drop table
 
--- DROP TABLE public.tbl_pc_change_info;
+-- DROP TABLE public.tbl_pc_hardware_change_log;
 
-CREATE TABLE public.tbl_pc_change_info (
+CREATE TABLE public.tbl_pc_hardware_change_log (
 	seq bigserial NOT NULL, -- 시리얼 번호
 	pc_cpu varchar(100) NULL, -- cpu
 	pc_memory varchar(100) NULL, -- memory
@@ -940,30 +940,30 @@ CREATE TABLE public.tbl_pc_change_info (
 	org_seq int8 NULL, -- 부서 관리번호
 	insert_dt timestamp NULL, -- 변경일
 	pc_user varchar(50) NULL, -- 사용자 os 계정
-	CONSTRAINT tbl_pc_change_info_pkey PRIMARY KEY (seq)
+	CONSTRAINT tbl_pc_hardware_change_log_pkey PRIMARY KEY (seq)
 );
-COMMENT ON TABLE public.tbl_pc_change_info IS '부서 pc hw 상태 변경 기록';
+COMMENT ON TABLE public.tbl_pc_hardware_change_log IS '부서 pc hw 상태 변경 기록';
 
 -- Column comments
 
-COMMENT ON COLUMN public.tbl_pc_change_info.seq IS '시리얼 번호';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_cpu IS 'cpu';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_memory IS 'memory';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_disk IS 'disk';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_macaddress IS 'macaddress';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_ip IS 'ip';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_hostname IS 'PC 호스트명';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_disk_id IS 'disk_id';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_cpu_id IS 'cpu_id';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_uuid IS 'PC 관리번호';
-COMMENT ON COLUMN public.tbl_pc_change_info.org_seq IS '부서 관리번호';
-COMMENT ON COLUMN public.tbl_pc_change_info.insert_dt IS '변경일';
-COMMENT ON COLUMN public.tbl_pc_change_info.pc_user IS '사용자 os 계정';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.seq IS '시리얼 번호';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_cpu IS 'cpu';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_memory IS 'memory';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_disk IS 'disk';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_macaddress IS 'macaddress';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_ip IS 'ip';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_hostname IS 'PC 호스트명';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_disk_id IS 'disk_id';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_cpu_id IS 'cpu_id';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_uuid IS 'PC 관리번호';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.org_seq IS '부서 관리번호';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.insert_dt IS '변경일';
+COMMENT ON COLUMN public.tbl_pc_hardware_change_log.pc_user IS '사용자 os 계정';
 
 -- Permissions
 
-ALTER TABLE public.tbl_pc_change_info OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_pc_change_info TO hamonize;
+ALTER TABLE public.tbl_pc_hardware_change_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_pc_hardware_change_log TO hamonize;
 
 
 -- public.tbl_pc_influxdata definition
@@ -1200,13 +1200,13 @@ ALTER TABLE public.tbl_polling_applc OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_polling_applc TO hamonize;
 
 
--- public.tbl_prcss_block_log definition
+-- public.tbl_progrm_block_log definition
 
 -- Drop table
 
--- DROP TABLE public.tbl_prcss_block_log;
+-- DROP TABLE public.tbl_progrm_block_log;
 
-CREATE TABLE public.tbl_prcss_block_log (
+CREATE TABLE public.tbl_progrm_block_log (
 	seq serial NOT NULL,
 	hostname varchar(200) NULL,
 	prcssname varchar(200) NULL,
@@ -1214,14 +1214,14 @@ CREATE TABLE public.tbl_prcss_block_log (
 	uuid varchar(200) NULL,
 	org_seq int8 NULL,
 	insert_dt timestamp NULL,
-	CONSTRAINT tbl_prcss_block_log_pkey PRIMARY KEY (seq)
+	CONSTRAINT tbl_progrm_block_log_pkey PRIMARY KEY (seq)
 );
-COMMENT ON TABLE public.tbl_prcss_block_log IS '프로그램 차단 로그';
+COMMENT ON TABLE public.tbl_progrm_block_log IS '프로그램 차단 로그';
 
 -- Permissions
 
-ALTER TABLE public.tbl_prcss_block_log OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_prcss_block_log TO hamonize;
+ALTER TABLE public.tbl_progrm_block_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_progrm_block_log TO hamonize;
 
 
 -- public.tbl_policy_progrm_block_list definition
@@ -1700,13 +1700,13 @@ ALTER TABLE public.tbl_tchnlgy OWNER TO hamonize;
 GRANT ALL ON TABLE public.tbl_tchnlgy TO hamonize;
 
 
--- public.tbl_unauthroized definition
+-- public.tbl_unauthorized_device_log definition
 
 -- Drop table
 
--- DROP TABLE public.tbl_unauthroized;
+-- DROP TABLE public.tbl_unauthorized_device_log;
 
-CREATE TABLE public.tbl_unauthroized (
+CREATE TABLE public.tbl_unauthorized_device_log (
 	seq serial NOT NULL,
 	org_seq int8 NULL,
 	pc_uuid varchar NULL,
@@ -1715,13 +1715,13 @@ CREATE TABLE public.tbl_unauthroized (
 	info varchar(200) NULL,
 	pc_user varchar(50) NULL,
 	insert_dt timestamp NULL,
-	CONSTRAINT tbl_unauthroized_pkey PRIMARY KEY (seq)
+	CONSTRAINT tbl_unauthorized_device_log_pkey PRIMARY KEY (seq)
 );
 
 -- Permissions
 
-ALTER TABLE public.tbl_unauthroized OWNER TO hamonize;
-GRANT ALL ON TABLE public.tbl_unauthroized TO hamonize;
+ALTER TABLE public.tbl_unauthorized_device_log OWNER TO hamonize;
+GRANT ALL ON TABLE public.tbl_unauthorized_device_log TO hamonize;
 
 
 -- public.tbl_updt_agent_job definition

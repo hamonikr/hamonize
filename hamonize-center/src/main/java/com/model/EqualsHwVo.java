@@ -1,5 +1,7 @@
 package com.model;
 
+import java.sql.Timestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class EqualsHwVo{
 	
-	private int seq;
+	private Long seq;
 	
 	private String user;
 	private String pc_cpu;
@@ -23,7 +25,7 @@ public class EqualsHwVo{
 	private String pc_cpu_id;
 	private String pc_uuid;
 	private Long org_seq;
-	private String insert_dt;
+	private Timestamp rgstr_date;
 	private String pc_hddinfo;
 	private String pc_hddid;
 	private String pc_user;

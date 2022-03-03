@@ -3,7 +3,7 @@
  
 <mapper namespace="com.mapper.IActAgentFirewallMapper">
 	
-	<insert id="insertActAgentFirewall" parameterType="com.model.ActAgentFirewallVo">
+	<insert id="insertActAgentFirewall" parameterType="com.model.ActAgentLogFirewallVo">
         INSERT 
         	INTO tbl_act_firewall_log
         	(

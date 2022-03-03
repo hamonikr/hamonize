@@ -3,7 +3,7 @@
  
 <mapper namespace="com.mapper.IActAgentDeviceMapper">
 	
-	<insert id="insertActAgentDevice" parameterType="com.model.ActAgentDeviceVo">
+	<insert id="insertActAgentDevice" parameterType="com.model.ActAgentLogDeviceVo">
         INSERT 
         	INTO tbl_act_device_log
         	(

@@ -1,6 +1,7 @@
 package com.controller.curl;
 
 import java.io.BufferedReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mapper.IUnauthorizedMapper;
+import com.model.UnauthorizedDeviceLog;
 import com.model.UnauthorizedVo;
 
 @RestController
@@ -72,8 +74,8 @@ public class CurlUnAuthorizedController {
 			tmpVo.setVendor(tempObj.get("vendor").toString());
 			tmpVo.setProduct(tempObj.get("product").toString());
 			tmpVo.setInfo(tempObj.get("usbinfo").toString());
-			tmpVo.setPc_user(tempObj.get("user").toString());
-			tmpVo.setInsert_dt(tempObj.get("datetime").toString());
+			tmpVo.setPc_hostname(tempObj.get("user").toString());
+			tmpVo.setRgstr_date(Timestamp.valueOf(tempObj.get("datetime").toString()));
 
 			list.add(tmpVo);
 			System.out.println("setInetLogVo===" + list.get(i).toString());

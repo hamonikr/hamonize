@@ -2,7 +2,7 @@ package com.mapper;
 
 import java.util.List;
 
-import com.model.ActAgentBackupRecoveryVo;
+import com.model.ActAgentLogBackupRestoreVo;
 import com.model.GetAgentRecoveryVo;
 
 public interface IGetAgentRecoveryMapper {
@@ -18,14 +18,14 @@ public interface IGetAgentRecoveryMapper {
 	
 	
 	/** 복구 체크 */
-	public int insertActAgentBackupRecovery(ActAgentBackupRecoveryVo vo);
-	public ActAgentBackupRecoveryVo getDataActAgentBackupRecovery(ActAgentBackupRecoveryVo vo);
+	public int insertActAgentBackupRecovery(ActAgentLogBackupRestoreVo vo);
+	public ActAgentLogBackupRestoreVo getDataActAgentBackupRecovery(ActAgentLogBackupRestoreVo vo);
 
 	/** 정책 삭제 후 복구 여부 처리 */
-	public int updateDataActAgentBackupRecovery(ActAgentBackupRecoveryVo vo);
+	public int updateDataActAgentBackupRecovery(ActAgentLogBackupRestoreVo vo);
 	
 	/** 정책 삭제 */
-	public int deleteActPolicy(ActAgentBackupRecoveryVo vo);
+	public int deleteActPolicy(ActAgentLogBackupRestoreVo vo);
 	
 	
 	

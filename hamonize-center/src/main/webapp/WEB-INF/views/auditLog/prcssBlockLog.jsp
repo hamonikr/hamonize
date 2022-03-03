@@ -39,6 +39,7 @@
 		$("#org_seq").val(treeNode.id);
 		$.post("prcssBlockLogList.proc", {
 				org_seq: treeNode.id,
+				domain: treeNode.domain,
 				currentPage: $("#currentPage").val(),
 				date_fr: $("#date_fr").val(),
 				date_to: $("#date_to").val()
@@ -59,7 +60,7 @@
 						gbInnerHtml += "<td>" + value.hostname + "</td>";
 						// gbInnerHtml += "<td>"+value.ipaddress+"</td>";
 						gbInnerHtml += "<td>" + value.pc_ip + "</td>";
-						gbInnerHtml += "<td>" + value.insert_dt + "</td>";
+						gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
 						gbInnerHtml += "</tr>";
 
 					});
@@ -210,7 +211,7 @@
 				gbInnerHtml += "<td>" + value.hostname + "</td>";
 				// gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
 				gbInnerHtml += "<td>" + value.pc_ip + "</td>";
-				gbInnerHtml += "<td>" + value.insert_dt + "</td>";
+				gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});

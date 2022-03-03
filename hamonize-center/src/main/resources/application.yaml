@@ -13,7 +13,7 @@ spring:
   # db1:
   #   datasource:
   # redis:
-  #   host: 192.168.0.210
+  #   host: 192.168.0.6
   #   port: 6379
   #   password: root
   

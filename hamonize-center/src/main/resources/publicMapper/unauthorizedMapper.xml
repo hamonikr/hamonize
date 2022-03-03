@@ -5,15 +5,15 @@
 
 
 
- <insert id="unAuthorizedInsert" parameterType="com.model.UnauthorizedVo">   
+ <insert id="unAuthorizedInsert" parameterType="com.model.UnauthorizedDeviceLog">   
 		INSERT INTO 
-			tbl_unauthroized (
+			tbl_unauthorized_device_log (
 			    pc_uuid, 
 			    vendor, 
 			    product, 
 			    info, 
-				pc_user, 
-			    insert_dt,
+					pc_hostname, 
+			    rgstr_date,
 			    org_seq
 			)
 			VALUES
@@ -23,8 +23,9 @@
 			    #{item.vendor},
 			    #{item.product}, 
 			    #{item.info},
-			    #{item.pc_user}, 
-			    TO_TIMESTAMP(#{item.insert_dt},'YYYY-MM-DD HH24:MI:SS.MS'),
+			    #{item.pc_hostname},
+					#{item.rgstr_date},
+			    <!-- TO_TIMESTAMP(#{item.insert_dt},'YYYY-MM-DD HH24:MI:SS.MS'), -->
 			    (select org_seq from public.tbl_pc_mangr where pc_uuid = #{item.pc_uuid} ) 
 			)
 		</foreach>
