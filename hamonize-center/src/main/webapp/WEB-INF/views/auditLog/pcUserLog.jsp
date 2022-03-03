@@ -201,7 +201,6 @@
 
 <script>
 	function getPcloginoutList() {
-		
 		var url = '/auditLog/userLogList.proc';
 		var keyWord = $("select[name=keyWord]").val();
 		if ($("#date_fr").val() == "") {
@@ -211,7 +210,7 @@
 		var vData = 'currentPage=' + $("#currentPage").val() + "&keyWord=" + keyWord + "&txtSearch=" + $("#txtSearch")
 			.val() + "&org_seq=" + $("#org_seq").val() + "&date_fr=" + $("#date_fr").val() + "&date_to=" + $("#date_to")
 			.val();
-		// callAjax('POST', url, vData, userLogGetSuccess, getError, 'json');
+		callAjax('POST', url, vData, userLogGetSuccess, getError, 'json');
 	}
 	var userLogGetSuccess = function (data, status, xhr, groupId) {
 		var gbInnerHtml = "";
@@ -291,7 +290,7 @@
 		switch (viewName) {
 			case 'classMngrList':
 				$("#currentPage").val(page);
-				getList();
+				getPcloginoutList();
 				break;
 			default:
 		}

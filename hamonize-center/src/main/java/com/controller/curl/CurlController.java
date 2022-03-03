@@ -268,7 +268,7 @@ System.out.println("retData===="+retData.toString());
 
 		for (int i = 0; i < inetvalArray.size(); i++) {
 			JSONObject tempObj = (JSONObject) inetvalArray.get(i);
-			prcssList.put("insert_dt", tempObj.get("datetime").toString());
+			prcssList.put("rgstr_date", tempObj.get("datetime").toString());
 			prcssList.put("prcssname", tempObj.get("name").toString());
 			prcssList.put("uuid", tempObj.get("uuid").toString());
 //			prcssList.put("org_seq", pcUUID(tempObj.get("uuid").toString()));
