@@ -62,7 +62,7 @@
 						gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 						gbInnerHtml += "<td>" + value.pc_disk_id + "</td>";
 						gbInnerHtml += "<td>" + value.pc_cpu_id + "</td>";
-						gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
+						gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 						gbInnerHtml += "</tr>";
 
 					});
@@ -225,7 +225,7 @@
 				gbInnerHtml += "<td>" + value.pc_disk_id + "</td>";
 				gbInnerHtml += "<td>" + value.pc_cpu_id + "</td>";
 				// gbInnerHtml += "<td>"+value.pc_uuid+"</td>"; 
-				gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
+				gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});

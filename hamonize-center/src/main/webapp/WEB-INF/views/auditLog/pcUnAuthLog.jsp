@@ -36,6 +36,7 @@
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
 		$("#org_seq").val(treeNode.id);
+		$("#domain").val(treeNode.domain);
 		$.post("unAuthLogList.proc", {
 				org_seq: treeNode.id,
 				domain: treeNode.domain,
@@ -113,6 +114,7 @@
 									<div class="row">
 										<input type="hidden" id="currentPage" name="currentPage" value="1">
 										<input type="hidden" id="org_seq" name="org_seq" value="">
+										<input type="hidden" id="domain" name="domain" value="">
 
 										<div class="col-sm-12">
 											<form class="form-inline" role="form" style="float:left;">
@@ -191,7 +193,7 @@
 		}
 		var keyWord = $("select[name=keyWord]").val();
 		var vData = 'currentPage=' + $("#currentPage").val() + "&keyWord=" + keyWord + "&txtSearch=" + $("#txtSearch")
-			.val() + "&org_seq=" + $("#org_seq").val() + "&date_fr=" + $("#date_fr").val() + "&date_to=" + $("#date_to")
+			.val() + "&org_seq=" + $("#org_seq").val() + "&domain=" + $("#domain").val() + "&date_fr=" + $("#date_fr").val() + "&date_to=" + $("#date_to")
 			.val();
 		callAjax('POST', url, vData, userLogGetSuccess, getError, 'json');
 	}

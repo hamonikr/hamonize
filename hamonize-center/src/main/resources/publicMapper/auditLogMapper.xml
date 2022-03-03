@@ -688,7 +688,8 @@
 			from tbl_progrm_block_log ta, tbl_pc_mangr tb
 
 		<where>
-			tb.domain = #{domain}
+			ta.pc_uuid = tb.pc_uuid
+			and tb.domain = #{domain}
 			<if test="org_seq != null and org_seq != ''">
 			and tb.org_seq in (
 				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (

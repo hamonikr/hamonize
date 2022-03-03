@@ -785,7 +785,13 @@ function timestampTodatetime(timestamp){
 	let day = ('0' + date.getDate()).slice(-2);
 	let hours = date.getHours();
 	let minutes = date.getMinutes();
+	if(minutes < 10){
+		minutes = "0" + date.getMinutes();
+	}
 	let seconds = date.getSeconds();
+	if(seconds < 10){
+		seconds = "0" + date.getSeconds();
+	}
 
 	let datetimeString = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 

@@ -56,11 +56,11 @@
 						gbInnerHtml += "<tr data-code='' data-guidcode=''>";
 						gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.org_nm + "</td>";
-						gbInnerHtml += "<td>" + value.prcssname + "</td>";
-						gbInnerHtml += "<td>" + value.hostname + "</td>";
+						gbInnerHtml += "<td>" + value.progrm_name + "</td>";
+						gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 						// gbInnerHtml += "<td>"+value.ipaddress+"</td>";
 						gbInnerHtml += "<td>" + value.pc_ip + "</td>";
-						gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
+						gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 						gbInnerHtml += "</tr>";
 
 					});
@@ -207,11 +207,11 @@
 				gbInnerHtml += "<tr data-code='' data-guidcode=''>";
 				gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
 				gbInnerHtml += "<td>" + value.org_nm + "</td>";
-				gbInnerHtml += "<td>" + value.prcssname + "</td>";
-				gbInnerHtml += "<td>" + value.hostname + "</td>";
+				gbInnerHtml += "<td>" + value.progrm_name + "</td>";
+				gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 				// gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
 				gbInnerHtml += "<td>" + value.pc_ip + "</td>";
-				gbInnerHtml += "<td>" + value.rgstr_date + "</td>";
+				gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});
