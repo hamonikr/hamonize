@@ -16,7 +16,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -48,20 +50,20 @@ public class RestApiService {
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(request))
         //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
-        //.bodyValue(request)
-        //.accept(MediaType.APPLICATION_JSON)
-        //.retrieve()
-        //.bodyToMono(String.class); 
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+
         String objects = response.block();
 				JSONParser jsonParser = new JSONParser();
 				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
@@ -73,17 +75,20 @@ public class RestApiService {
         .build())
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(request))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
         //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
 			jsonObj = (JSONObject) jsonParser.parse(response.block());
 			orgvo.setGroup_id((Long) jsonObj.get("id"));
 			int result = orgMapper.addAwxId(orgvo);
@@ -100,20 +105,19 @@ public class RestApiService {
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(request))
         //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
-        //.bodyValue(request)
-        //.accept(MediaType.APPLICATION_JSON)
-        //.retrieve()
-        //.bodyToMono(String.class); 
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class); 
 
         String objects = response.block();
 				JSONParser jsonParser = new JSONParser();
@@ -133,20 +137,19 @@ public class RestApiService {
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(request))
         //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
-        //.bodyValue(request)
-        //.accept(MediaType.APPLICATION_JSON)
-        //.retrieve()
-        //.bodyToMono(String.class); 
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class); 
 
         String objects = response.block();
 				JSONParser jsonParser = new JSONParser();
@@ -166,20 +169,19 @@ public class RestApiService {
         //.contentType(MediaType.APPLICATION_JSON)
         //.body(BodyInserters.fromValue(request))
         //에러 확인
-        .exchange().flatMap(clientResponse -> {
-          if (clientResponse.statusCode().is5xxServerError()) {
-              clientResponse.body((clientHttpResponse, context) -> {
-                  return clientHttpResponse.getBody();
-              });
-              return clientResponse.bodyToMono(String.class);
-          }
-          else
-              return clientResponse.bodyToMono(String.class);
-      });
-        //.bodyValue(request)
-        //.accept(MediaType.APPLICATION_JSON)
-        //.retrieve()
-        //.bodyToMono(String.class); 
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class); 
 
         String objects = response.block();
         //System.out.println("oject==========="+objects.toString());
@@ -199,19 +201,19 @@ public class RestApiService {
     .build(orgVo.getGroup_id()))
     .contentType(MediaType.APPLICATION_JSON)
     .body(BodyInserters.fromValue(request))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-    //.accept(MediaType.APPLICATION_JSON)
-    //.retrieve()
-    //.bodyToMono(String.class); 
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+    .accept(MediaType.APPLICATION_JSON)
+    .retrieve()
+    .bodyToMono(String.class); 
 
     String objects = response.block();
     JSONParser jsonParser = new JSONParser();
@@ -230,19 +232,19 @@ public void updateHost(PcMangrVo hdVo, OrgVo orgVo) throws ParseException
     .build(hdVo.getHost_id()))
     .contentType(MediaType.APPLICATION_JSON)
     .body(BodyInserters.fromValue(request))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-    //.accept(MediaType.APPLICATION_JSON)
-    //.retrieve()
-    //.bodyToMono(String.class); 
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+    .accept(MediaType.APPLICATION_JSON)
+    .retrieve()
+    .bodyToMono(String.class); 
 
     String objects = response.block();
     JSONParser jsonParser = new JSONParser();
@@ -259,19 +261,19 @@ public void deleteHost(PcMangrVo hdVo) throws ParseException
     .build(hdVo.getHost_id()))
     //.contentType(MediaType.APPLICATION_JSON)
     //.body(BodyInserters.fromValue(request))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-    //.accept(MediaType.APPLICATION_JSON)
-    //.retrieve()
-    //.bodyToMono(String.class); 
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+    .accept(MediaType.APPLICATION_JSON)
+    .retrieve()
+    .bodyToMono(String.class); 
 
     String objects = response.block();
     //JSONParser jsonParser = new JSONParser();
@@ -289,19 +291,19 @@ public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseExce
     .build())
     .contentType(MediaType.APPLICATION_JSON)
     .body(BodyInserters.fromValue(request))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-    //.accept(MediaType.APPLICATION_JSON)
-    //.retrieve()
-    //.bodyToMono(String.class); 
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+    .accept(MediaType.APPLICATION_JSON)
+    .retrieve()
+    .bodyToMono(String.class); 
 
     String objects = response.block();
     JSONParser jsonParser = new JSONParser();
@@ -331,19 +333,19 @@ public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseExc
     .build(params.get("host_id")))
     .contentType(MediaType.APPLICATION_JSON)
     .body(BodyInserters.fromValue(request))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-    //.accept(MediaType.APPLICATION_JSON)
-    //.retrieve()
-    //.bodyToMono(String.class); 
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+    .accept(MediaType.APPLICATION_JSON)
+    .retrieve()
+    .bodyToMono(String.class); 
 
     String objects = response.block();
     JSONParser jsonParser = new JSONParser();
@@ -368,23 +370,27 @@ public JSONObject makeCommandToSingle(Map<String, Object> params) throws ParseEx
     .build(params.get("host_id")))
     .contentType(MediaType.APPLICATION_JSON)
     .body(BodyInserters.fromValue(request))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-    //.accept(MediaType.APPLICATION_JSON)
-    //.retrieve()
-    //.bodyToMono(String.class); 
+    // .exchangeToMono(clientResponse -> {
+    //   if(clientResponse.statusCode().equals(HttpStatus.OK)){
+    //     return clientResponse.bodyToMono(String.class);
+    //   }else if(clientResponse.statusCode().is4xxClientError()){
+    //     clientResponse.body((clientHttpResponse, context) -> {
+    //       return clientHttpResponse.getBody();
+    //   });
+    //   }else{
+    //     return clientResponse.createException().flatMap(Mono::error);
+    //   }
+    //   return null;
+    // });
+    .accept(MediaType.APPLICATION_JSON)
+    .retrieve()
+    .bodyToMono(String.class); 
 
     String objects = response.block();
+    System.out.println("objects===="+objects.toString());
     JSONParser jsonParser = new JSONParser();
-    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects.toString());
+    System.out.println("jsonObj===="+jsonObj);
     params.put("job_id",jsonObj.get("id").toString() );
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
     JSONObject jsonResultObj = new JSONObject();
@@ -398,90 +404,99 @@ public JSONObject checkPolicyJobResult(Map<String, Object> params) throws ParseE
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/")
-    .build(params.get("job_id")))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-        String objects = response.block();
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-        return jsonObj;
+  .build(params.get("job_id")))
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+  .accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .bodyToMono(String.class); 
+    String objects = response.block();
+    JSONParser jsonParser = new JSONParser();
+    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+    return jsonObj;
 }
 
 public JSONObject checkAndAddPolicyJobResult(Map<String, Object> params) throws ParseException, InterruptedException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/")
-    .build(params.get("job_id")))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
-        System.out.println("params=============="+params);
-        String objects = response.block();
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-        System.out.println("aaaaaaaaaaa==="+jsonObj.get("status").toString());
-        int i = 0;
-        String status = jsonObj.get("status").toString();
-        //ThreadService th = new ThreadService(params.get("id"),status);
-         // Thread tt = new Thread(th);
-        if(status.equals("running") || status.equals("waiting") || status.equals("pending")){
-          //tt.start();
-          //checkPolicyJobResult(id);
-          Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // code goes here.
-                try {
-                  Thread.sleep(1000);
-                  JSONObject jsonObj = checkAndAddPolicyJobResult(params);
-                } catch (ParseException e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
-                } catch (InterruptedException e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
-                }
+  .build(params.get("job_id")))
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+  .accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .bodyToMono(String.class); 
+    System.out.println("params=============="+params);
+    String objects = response.block();
+    JSONParser jsonParser = new JSONParser();
+    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+    System.out.println("aaaaaaaaaaa==="+jsonObj.get("status").toString());
+    int i = 0;
+    String status = jsonObj.get("status").toString();
+    //ThreadService th = new ThreadService(params.get("id"),status);
+      // Thread tt = new Thread(th);
+    if(status.equals("running") || status.equals("waiting") || status.equals("pending")){
+      //tt.start();
+      //checkPolicyJobResult(id);
+      Thread t1 = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            // code goes here.
+            try {
+              Thread.sleep(1000);
+              JSONObject jsonObj = checkAndAddPolicyJobResult(params);
+            } catch (ParseException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            } catch (InterruptedException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
             }
-        });
-        t1.start();
-        }else{
-          System.out.println("end!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-          //addAnsibleJobEventByHost(Integer.parseInt(jsonObj.get("id").toString()));
-          addAnsibleJobEventByHost(params,0);
         }
-        return jsonObj;
+    });
+    t1.start();
+    }else{
+      System.out.println("end!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      //addAnsibleJobEventByHost(Integer.parseInt(jsonObj.get("id").toString()));
+      addAnsibleJobEventByHost(params,0);
+    }
+    return jsonObj;
 }
 
 public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count) throws ParseException, InterruptedException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
-    .build(params.get("job_id")))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
+  .build(params.get("job_id")))
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+  .accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .bodyToMono(String.class); 
 
         String objects = response.block();
         JSONParser jsonParser = new JSONParser();
@@ -569,17 +584,20 @@ public JSONArray addAnsibleJobRelaunchEventByHost(int id) throws ParseException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
-    .build(id))
-    .exchange().flatMap(clientResponse -> {
-      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
-          clientResponse.body((clientHttpResponse, context) -> {
-              return clientHttpResponse.getBody();
-          });
-          return clientResponse.bodyToMono(String.class);
-      }
-      else
-          return clientResponse.bodyToMono(String.class);
-  });
+  .build(id))
+  //   .exchange().flatMap(clientResponse -> {
+  //     if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+  //         clientResponse.body((clientHttpResponse, context) -> {
+  //             return clientHttpResponse.getBody();
+  //         });
+  //         return clientResponse.bodyToMono(String.class);
+  //     }
+  //     else
+  //         return clientResponse.bodyToMono(String.class);
+  // });
+  .accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .bodyToMono(String.class); 
 
         String objects = response.block();
         JSONParser jsonParser = new JSONParser();
