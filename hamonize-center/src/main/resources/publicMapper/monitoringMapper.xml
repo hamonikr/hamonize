@@ -78,7 +78,8 @@
 			a.pc_hostname,
 			a.pc_uuid,
 			a.pc_status,
-			a.domain
+			a.domain,
+			a.host_id
 		FROM tbl_pc_mangr a
 		<where>
 		a.domain = #{domain}

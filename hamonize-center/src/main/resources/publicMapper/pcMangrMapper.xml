@@ -204,10 +204,71 @@
 	</select>
 
 	<select id="teamList" resultType="com.model.OrgVo">
-		select *
-		from tbl_org
-		where domain = #{domain} and seq != 1
-		order by seq asc
+		with recursive search_org(
+					"domain",
+					seq,
+					p_seq,
+					org_nm,
+					org_ordr,
+					section,
+					level,
+					path,
+					inventory_id,
+					group_id,
+					cycle) as (
+					select
+					a."domain" ,
+						a.seq,
+						a.p_seq,
+						a.org_nm,
+						a.org_ordr,
+						a.section,
+						0,
+						array[a.seq],
+						a.inventory_id,
+						a.group_id,
+						false
+					from
+						tbl_org a
+					where
+						a.p_seq = 0
+						and a.domain = #{domain}
+					union all
+					select
+						b."domain",
+						b.seq,
+						b.p_seq,
+						b.org_nm,
+						b.org_ordr,
+						b.section,
+						level + 1,
+						path || b.seq,
+						b.inventory_id,
+						b.group_id,
+						b.seq = any(path)
+					from
+						tbl_org b,
+						search_org so
+					where
+						b.p_seq = so.seq
+						and b."domain" = so.domain
+						and not cycle)
+							select
+						"domain",
+						seq,
+						p_seq,
+						lpad('', LEVEL) || org_nm as org_nm,
+						org_ordr,
+						section,
+						level,
+						path,
+						inventory_id,
+						group_id
+					from
+						search_org
+					where seq != 1
+					order by
+						path
 	</select>
 
 	<!-- PcController.mngrListInfo -->

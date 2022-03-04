@@ -368,7 +368,7 @@ console.log("value=========+++"+value);
 				success: function (data) {
 					for (var x = 0; x < data.length; x++) {
 						var option = document.createElement("option");
-						option.innerText = data[x].org_nm;
+						option.innerText = data[x].level+"-"+data[x].org_nm;
 						option.value = data[x].seq;
 						$('#team').append(option);
 					}
