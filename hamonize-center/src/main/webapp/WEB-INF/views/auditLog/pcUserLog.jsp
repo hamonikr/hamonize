@@ -31,7 +31,7 @@
 		}
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+// 		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 		$("#org_seq").val(treeNode.id);
 		$.post("userLogList.proc", {
 				org_seq: treeNode.id,
@@ -297,7 +297,7 @@
 		}
 	}
 	$(document).ready(function () {
-		onClick(null,$("#tree"),zNodes[0]);
+// 		onClick(null,$("#tree"),zNodes[0]);
 	});
 </script>
 <%@ include file="../template/footer.jsp" %>

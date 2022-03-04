@@ -47,7 +47,7 @@
 		$('input:checkbox[name=sm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+// 		zTree.selectNode(zTree.getNodeByTId(node));
 		let former_ppm_names = [];
 		$('form[name=frm] input[name=org_seq]').val(treeNode.id);
 		$('form[name=frm] input[name=domain]').val(treeNode.domain);
@@ -296,9 +296,9 @@
 
 			ppm_seq = ppm_seq.substr(0, ppm_seq.length - 1);
 			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
-			if (ppm_seq == "") {
-				ppm_seq = 0;
-			}
+// 			if (ppm_seq == "") {
+// 				ppm_seq = ;
+// 			}
 
 			var zTree = $.fn.zTree.getZTreeObj("tree");
 			var nodes = zTree.getCheckedNodes(true);
@@ -583,9 +583,9 @@
 		}
 		searchView(viewName, page);
 	}
-	$(document).ready(function () {
-		onClick(null,$("#tree"),zNodes[0]);
-	});
+// 	$(document).ready(function () {
+// 		onClick(null,$("#tree"),zNodes[0]);
+// 	});
 </script>
 
 <%@ include file="../template/footer.jsp" %>

@@ -86,7 +86,7 @@ a {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/gplcs/umanage">
+                                        <a href="/auditLog/updateCheckLog">
                                             <i class="fa circle-0 icon">
                                                 <b class="bg-primary"></b>
                                             </i>
@@ -97,6 +97,12 @@ a {
                                             <span>정책관리</span>
                                         </a>
                                         <ul class="nav lt">
+                                            <li>
+                                                <a href="/auditLog/updateCheckLog">
+                                                    <i class="fa fa-angle-right"></i>
+                                                    <span>정책배포결과</span>
+                                                </a>
+                                            </li>
                                             <li>
                                                 <a href="/gplcs/umanage">
                                                     <i class="fa fa-angle-right"></i>
@@ -119,12 +125,6 @@ a {
                                                 <a href="/gplcs/dmanage">
                                                     <i class="fa fa-angle-right"></i>
                                                     <span>디바이스관리</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/auditLog/updateCheckLog">
-                                                    <i class="fa fa-angle-right"></i>
-                                                    <span>정책배포결과</span>
                                                 </a>
                                             </li>
                                         </ul>

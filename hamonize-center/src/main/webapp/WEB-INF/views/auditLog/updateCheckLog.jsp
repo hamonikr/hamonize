@@ -14,6 +14,9 @@
 		return (treeNode.click != false);
 	}
 	//메뉴 Tree onClick - 부서별 정책 결과
+	
+	
+	
 	function onClick(event, treeId, treeNode, clickFlag) {
 
 		$(".right_box_l").empty();
@@ -28,7 +31,7 @@
 		var cnt = 0;
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+// 		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 
 		// if (node == null) {
 		// 	$(".right_box_r").hide();
@@ -980,7 +983,9 @@ function genRowspan2(className){
     });
 }
 $(document).ready(function () {
-	onClick(null,$("#tree"),zNodes[1]);
+// 	onClick(null,$("#tree"),zNodes[1]);
+	var zTree = $.fn.zTree.getZTreeObj("tree");
+	zTree.selectNode(zTree.getNodeByTId('tree_1'));
 });
 </script>
 

@@ -24,7 +24,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	$('#off').empty();
 	var zTree = $.fn.zTree.getZTreeObj("tree");
 	var node = zTree.getNodeByParam('id', treeNode.pId);
-	zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+// 	zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 	
 	$.post("/mntrng/pcList",{org_seq:treeNode.id},
 	function(result){
@@ -248,7 +248,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	//]]>
 	
 $(document).ready(function () {
-	onClick(null,$("#tree"),zNodes[0]);
+// 	onClick(null,$("#tree"),zNodes[0]);
 });
 </script>
 

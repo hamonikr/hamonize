@@ -121,7 +121,9 @@
 		//treeObj.checkNode(zNodes, zNodes.checked, true, true);
 		//beforeClick($("#tree"),zNodes[0]);
 // 		onClick(null,$("#tree"),zNodes[0]);
-		//onCheck(null,$("#tree"),zNodes[0]);
+		onClick(null,$("#tree"),zNodes[0]);
+// 		var zTree = $.fn.zTree.getZTreeObj("tree");
+// 		treeObj.selectNode(treeObj.getNodeByTId('tree_1'));
 		//console.log(zNodes[0]);
 		if (sNodes.length > 0) {
 			var isOpen = sNodes[2].open;

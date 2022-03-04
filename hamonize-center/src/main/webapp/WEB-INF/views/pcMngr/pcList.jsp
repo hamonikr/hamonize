@@ -20,7 +20,7 @@
 
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+// 		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 
 		$("#org_seq").val(treeNode.id);
 		$("#domain").val(treeNode.domain);
@@ -576,7 +576,7 @@ console.log("value=========+++"+value);
 
 <script>
 	$(document).ready(function () {
-	onClick(null,$("#tree"),zNodes[0]);
+// 	onClick(null,$("#tree"),zNodes[0]);
 });
 </script>
 
