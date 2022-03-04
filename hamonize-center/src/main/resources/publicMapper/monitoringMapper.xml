@@ -78,15 +78,13 @@
 			a.pc_hostname,
 			a.pc_uuid,
 			a.pc_status,
-			a.domain,
-			b.job_id,
-			b.data
-		FROM tbl_pc_mangr a right outer join tbl_ansible_event_job b on
-		a."domain" = b."domain" 
-		and a.host_id::text = b."data" ->> 'host'
+			a.domain
+		FROM tbl_pc_mangr a
 		<where>
+		1=1 
+		and a.domain = #{domain}
 		<if test="org_seq != 1 ">
-			a.org_seq in (
+			and org_seq in (
 				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 				from tbl_org a
@@ -100,8 +98,8 @@
 				from search_org
 			)
 		</if>
-		and a.domain = #{domain}
-		and b.job_id = (select job_id from tbl_updt_applc where "domain" = #{domain} and org_seq = #{org_seq} )
+		 
+		 
 		</where>
 	</select>
 

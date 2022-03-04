@@ -55,7 +55,7 @@
 
 
 		$("#org_seq").val(treeNode.id);
-
+console.log("treeNode.id=========++"+ treeNode.id);
 		$.post("/mntrng/pcPolicyList", {
 				org_seq: treeNode.id,
 				type: 'view',
@@ -67,10 +67,13 @@
 
 				var textCutLength = 20;
 
+				$("#org_seq").val(treeNode.id);
+				console.log("t2222222reeNode.id=========++"+ treeNode.id);
+				
 				$(".programResultTr").empty();
 				$(".programResultTbody").empty();
 				var programResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
-				programResultTrHtml += '<th data-property="countrycode" class="sortable">버전</th>';
+// 				programResultTrHtml += '<th data-property="countrycode" class="sortable">버전</th>';
 				programResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
 				programResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
 				programResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
@@ -116,7 +119,7 @@
 					shtml += '<ul class="monitor_list">';
 					$.each(data.pcList, function (index, value) {
 						var hostnameVal = '';
-						let data = JSON.parse(value.data);
+// 						let data = JSON.parse(value.data);
 						if (value.pc_hostname.length >= textCutLength) {
 							hostnameVal = value.pc_hostname.substr(0, textCutLength) + '...';
 						} else {
@@ -127,16 +130,16 @@
 							shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='" + value
 								.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" + hostnameVal +
 								"</a></li>";
-								shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-									value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
-									data.changed + value.job_id+"</a></li>";
+// 								shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+// 									value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
+// 									data.changed + value.job_id+"</a></li>";
 						} else {
 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
 							value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" +
 							hostnameVal + "</a></li>";
-							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-								value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
-								data.changed + value.job_id+"</a></li>";
+// 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+// 								value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
+// 								data.changed + value.job_id+"</a></li>";
 						}
 					});
 
@@ -175,10 +178,10 @@
 							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 							progrmResultHtml += "<tr>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
-							if (typeof data.policyUpdtResult[i].debver === "undefined")
-								progrmResultHtml += "<td>-</td>";
-							else
-								progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
+// 							if (typeof data.policyUpdtResult[i].debver === "undefined")
+// 								progrmResultHtml += "<td>-</td>";
+// 							else
+// 								progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
 
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
 							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
@@ -206,7 +209,7 @@
 							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 							progrmResultHtml += "<tr>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
+// 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
 							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].count + "</td>";
@@ -547,8 +550,9 @@ function detail(uuid){
 		// $(".content_bapo").remove();
 		// $(".right_box_r").show();
 		// $('.right_box_l').width( '40%' );
-	console.log("detail -=--- uuit ::: " + uuid);
-	 $.post("detailPolicy.proc",{pc_uuid:uuid},
+	console.log("detail -=--- uuit ::: " + uuid +"=="+ $("#org_seq").val());
+	
+	 $.post("detailPolicy.proc",{pc_uuid:uuid, org_seq:$("#org_seq").val()},
 			function(data){
 			var shtml = "";
 
@@ -712,7 +716,7 @@ function relaunch(host_id,job_id,seq,pc_uuid){
 		success : function(res) {
 			if (res.STATUS == "SUCCESS") {
 				alert("정상적으로 처리되었습니다.");
-				checkAnsibleJobRelaunchStatus(res.ID,res.PARENTS_ID,res.PC_UUID);
+// 				checkAnsibleJobRelaunchStatus(res.ID,res.PARENTS_ID,res.PC_UUID);
 				//location.reload();
 			} else {
 				alert("실패하였습니다.");
@@ -774,4 +778,6 @@ function addAnsibleJobRelaunchEventByHost(...args){
 
 
 </script>
+
+<input type="hidden" name="org_seq" id="org_seq" value=""> 
 <%@ include file="../template/footer.jsp" %>
