@@ -151,4 +151,24 @@ public class PolicyCommonController {
 
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "makeCommandToSingle", method = RequestMethod.POST)
+	public JSONObject makeCommandToSingle(HttpSession session,@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
+		JSONObject jobResult = new JSONObject();
+		jobResult = restApiService.makeCommandToSingle(params);
+		JSONObject jsonObj = new JSONObject();
+		//int result = commonMapper.addAnsibleJobEventRelaunch(params);
+		if (jobResult.toJSONString() != ""){
+			jsonObj.put("STATUS", "SUCCESS");
+			jsonObj.put("ID", jobResult.get("id"));
+			//jsonObj.put("PARENTS_ID", params.get("parents_job_id"));
+			//jsonObj.put("PC_UUID", params.get("pc_uuid"));
+			jsonObj.put("JOBSTATUS", jobResult.get("status"));
+		} else{
+			jsonObj.put("STATUS", "FAIL");
+		}
+		return jsonObj;
+
+	}
+
 }
