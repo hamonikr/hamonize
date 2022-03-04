@@ -630,6 +630,144 @@
 
 	<!-- 정책배포결과 업데이트 -->
 	<select id="pcPolicyUpdtList" resultType="map" parameterType="map">
+	
+	
+
+		select GA.* 
+		, GB.*
+		, (
+		    select 
+		      array_to_string(array(select data -> 'summary_fields' -> 'host' ->> 'description' ||':'||status || ':' || count(status) as status from tbl_ansible_event_job
+		    where domain =  #{domain} and job_id = GA.job_id
+		    group by job_id, data , status), ', ')
+		) as run_status
+		from (
+		   select ta.* 
+		    , tb.deb_apply_name  as debname
+		    , tc.rgstr_date
+		    from (
+		      select A.ppm_seq, 'INSERT' as gubun 
+		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}
+		        EXCEPT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      union all 
+		      select A.ppm_seq, 'DELETE' as gubun 
+		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 1 OFFSET  1 ) ta
+		        EXCEPT
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}
+		      ) A 
+		      union all
+		      
+		      select A.ppm_seq , 'M' as gubun 
+		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}
+		        INTERSECT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq} order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      
+		    ) ta
+		    left outer join tbl_policy_package_list tb on ta.ppm_seq = tb.pu_seq 
+		    left outer join (
+		      select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 2
+		    ) tc  on ta.job_id = tc.job_id
+		  
+		  ) GA
+		  
+		  
+		left outer join (
+		   SELECT
+		    DISTINCT PA.count, PA.debname as act_debname, PA.kind
+		  FROM
+		    (
+		      SELECT
+		        ROW_NUMBER() OVER( PARTITION BY TA.debname , TA.kind)
+		        , COUNT(TA.debname) over( partition by TA.debname , TA.kind )
+		        , TA.*
+		      FROM
+		        (
+		          SELECT
+		            ROW_NUMBER() OVER( PARTITION BY A.debname , A.pc_uuid ORDER BY A.rgstr_date DESC )
+		            , A.debname
+		            , A.kind
+		            , A.rgstr_date
+		            , A.status
+		            , A.pc_uuid
+		            , A.debver
+		          FROM
+		            (
+		              SELECT
+		                DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(debname), ',') , ',')) debname
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		                , debver
+		              FROM
+		                tbl_act_updt_log
+		              WHERE
+		                pc_uuid in (
+		                  SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
+		                    (
+		                      WITH recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+		                        SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+		                        FROM tbl_org a
+		                        WHERE a.seq = #{org_seq}
+		                          and a.domain = #{domain}
+		                        UNION all
+		                        SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+		                        FROM tbl_org a, search_org so
+		                        WHERE a.p_seq = so.seq and a.domain = so.domain and not cycle)
+		                        SELECT seq
+		                        FROM search_org
+		                    )
+		                  )
+		              GROUP BY
+		                debname
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		                , debver
+		              order by
+		                rgstr_date desc
+		            ) A
+		          WHERE
+		            A.debname != ''
+		        ) TA
+		      WHERE
+		        row_number = 1
+		        and rgstr_date >= (select rgstr_date from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)
+		      ORDER BY
+		        TA.rgstr_date DESC
+		    ) PA
+		    
+		  ) GB on GA.debname = GB.act_debname
+		  
+		  where  1=1
+		  ORDER BY GA.gubun desc
+
+
+	
+	
+	</select>
+	<select id="temp_pcPolicyUpdtList" resultType="map" parameterType="map">
 		SELECT
     DISTINCT PA.count, PA.debname, PA.kind , PA.rgstr_date , PA.debver , PA.status
 		FROM (
@@ -679,6 +817,138 @@
 
 	<!-- 정책배포결과 프로그램 -->
 	<select id="pcPolicyProgrmList" resultType="map" parameterType="map">
+	
+		select GA.* 
+		, GB.*
+		, (
+		    select 
+		      array_to_string(array(select status || ':' ||  (data -> 'summary_fields' -> 'host' ->> 'description') ||':'||count(status) as status from tbl_ansible_event_job
+		    where domain = #{domain} and job_id = GA.job_id
+		    group by job_id, data , status), ', ')
+		) as run_status
+		from (
+		   select ta.* 
+		    , tb.deb_apply_name  as progrmname
+		    , to_char(tc.rgstr_date, 'YYYY-MM-DD HH24:MI:SS.MS')as rgstr_date
+		    from (
+		      select A.ppm_seq, 'INSERT' as gubun 
+		      , (select job_id from  tbl_progrm_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_progrm_applc where domain = #{domain} and org_seq = #{org_seq}
+		        EXCEPT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      union all 
+		      select A.ppm_seq, 'DELETE' as gubun 
+		      , (select job_id from  tbl_progrm_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 1 OFFSET  1 ) ta
+		        EXCEPT
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_progrm_applc where domain = #{domain} and org_seq = #{org_seq}
+		      ) A 
+		      union all
+		      
+		      select A.ppm_seq , 'M' as gubun 
+		      , (select job_id from  tbl_progrm_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_progrm_applc where domain = #{domain} and org_seq = #{org_seq}
+		        INTERSECT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      
+		    ) ta
+		    left outer join tbl_policy_package_list tb on ta.ppm_seq = tb.pu_seq 
+		    left outer join (
+		      select * from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 2
+		    ) tc  on ta.job_id = tc.job_id
+		  
+		  ) GA
+		  
+		
+		  
+		left outer join (
+		   SELECT
+		    DISTINCT PA.count,  --PA.*
+		    PA.progrmname as act_debname, PA.KIND
+		  FROM
+		    (
+		      SELECT
+		        ROW_NUMBER() OVER( PARTITION BY TA.progrmname , TA.kind)
+		        , COUNT(TA.progrmname) over( partition by TA.progrmname , TA.kind )
+		        , TA.*
+		      FROM
+		        (
+		          SELECT
+		            ROW_NUMBER() OVER( PARTITION BY A.progrmname , A.pc_uuid ORDER BY A.rgstr_date DESC )
+		            , A.progrmname
+		            , A.kind
+		            , A.rgstr_date
+		            , A.status
+		            , A.pc_uuid
+		          FROM
+		            (
+		              SELECT
+		                DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(progrmname), ',') , ',')) progrmname
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		              FROM
+		                tbl_act_progrm_log
+		              WHERE
+		                pc_uuid in (
+		                  SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
+		                    (
+		                      WITH recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+		                        SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+		                        FROM tbl_org a
+		                        WHERE a.seq = #{org_seq}
+		                          and a.domain = #{domain}
+		                        UNION all
+		                        SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+		                        FROM tbl_org a, search_org so
+		                        WHERE a.p_seq = so.seq and a.domain = so.domain and not cycle)
+		                        SELECT seq
+		                        FROM search_org
+		                    )
+		                  )
+		              GROUP BY
+		                progrmname
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		              order by
+		                rgstr_date desc
+		            ) A
+		          WHERE
+		            A.progrmname != ''
+		        ) TA
+		      WHERE
+		        row_number = 1
+		        and  rgstr_date > (select rgstr_date from  tbl_updt_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0)
+		      ORDER BY
+		        TA.rgstr_date DESC
+		    ) PA
+		  ) GB on GA.progrmname = GB.act_debname
+		  
+		  where  1=1
+		  ORDER BY GA.rgstr_date desc
+			
+			
+	</select>
+	<select id="tmp_pcPolicyProgrmList" resultType="map" parameterType="map">
 		SELECT
     DISTINCT PA.count, PA.progrmname, PA.status , (CASE WHEN PA.kind = 'N'  THEN '허용' ELSE '차단' END ) as kind , PA.rgstr_date
 		FROM (
@@ -708,7 +978,7 @@
 									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 										FROM tbl_org a
-										WHERE a.seq = #{org_seq}
+										WHERE a.seq = #{org_seq} and a.domain = #{domain}
 										UNION all
 										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
 										FROM tbl_org a, search_org so
@@ -727,7 +997,6 @@
 		<if test="type == 'main'">
 			limit 5
 			</if>
-		--TA.debname,  TA.gubun DESC
 		) PA
 	</select>
 

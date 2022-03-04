@@ -14,6 +14,7 @@ function onCheck(event, treeId, treeNode) {
 function onClick(event, treeId, treeNode, clickFlag) {
 	var zTree = $.fn.zTree.getZTreeObj("tree");
 	var node = zTree.getNodeByParam('id', treeNode.pId);
+	zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 	var pSpan = "#"+treeNode.parentTId+"_span";
 	console.log(treeNode);
 	
@@ -301,6 +302,10 @@ function fnSave(){
 </section>
 
 
-
+<script>
+$(document).ready(function () {
+	onClick(null,$("#tree"),zNodes[0]);
+});
+</script>
 
 <%@ include file="../template/footer.jsp" %>

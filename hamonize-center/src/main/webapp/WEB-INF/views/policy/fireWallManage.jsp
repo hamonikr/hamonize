@@ -47,6 +47,7 @@
 		$('input:checkbox[name=sm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
+		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 		let former_ppm_names = [];
 		$('form[name=frm] input[name=org_seq]').val(treeNode.id);
 		$('form[name=frm] input[name=domain]').val(treeNode.domain);
@@ -582,7 +583,9 @@
 		}
 		searchView(viewName, page);
 	}
-	
+	$(document).ready(function () {
+		onClick(null,$("#tree"),zNodes[0]);
+	});
 </script>
 
 <%@ include file="../template/footer.jsp" %>

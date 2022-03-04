@@ -5,24 +5,7 @@
 
 
 <script>
-	$(document).ready(function () {
-
-		// getList();
-		// //등록버튼
-		// $("#excelBtn").on("click", function () {
-		// 	location.href = "prcssBlockLogExcel?org_seq=" + $("#org_seq").val() + "&date_fr=" + $(
-		// 			"#date_fr").val() + "&date_to=" + $("#date_to").val() + "&txtSearch=" + $("#txtSearch")
-		// 		.val() + "&keyWord=" + $("#keyWord").val();
-		// });
-		// $("#txtSearch").keydown(function (key) {
-		// 	if (key.keyCode == 13) {
-		// 		key.preventDefault();
-		// 		getList();
-		// 	}
-		// });
-
-
-	});
+	
 
 	function onCheck(event, treeId, treeNode) {}
 
@@ -45,6 +28,8 @@
 		var cnt = 0;
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
+		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+
 		// if (node == null) {
 		// 	$(".right_box_r").hide();
 		// 	$('.right_box_l').width('100%');
@@ -55,7 +40,6 @@
 
 
 		$("#org_seq").val(treeNode.id);
-
 		$.post("/mntrng/pcPolicyList", {
 				org_seq: treeNode.id,
 				type: 'view',
@@ -67,10 +51,12 @@
 
 				var textCutLength = 20;
 
+				$("#org_seq").val(treeNode.id);
+				
 				$(".programResultTr").empty();
 				$(".programResultTbody").empty();
 				var programResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
-				programResultTrHtml += '<th data-property="countrycode" class="sortable">버전</th>';
+// 				programResultTrHtml += '<th data-property="countrycode" class="sortable">버전</th>';
 				programResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
 				programResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
 				programResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
@@ -80,7 +66,9 @@
 
 				$(".programBlockResultTr").empty();
 				$(".programBlockResultTbody").empty();
-				var programBlockResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
+				var programBlockResultTrHtml = '';
+				programBlockResultTrHtml += '<th data-property="" class="sortable">정책 적용일</th>';
+				programBlockResultTrHtml +='<th data-property="toponymName" class="sortable">프로그램명</th>';
 				programBlockResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
 				programBlockResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
 				programBlockResultTrHtml += '<th data-property="geonameId" class="sortable">완료</th>';
@@ -116,7 +104,7 @@
 					shtml += '<ul class="monitor_list">';
 					$.each(data.pcList, function (index, value) {
 						var hostnameVal = '';
-						let data = JSON.parse(value.data);
+// 						let data = JSON.parse(value.data);
 						if (value.pc_hostname.length >= textCutLength) {
 							hostnameVal = value.pc_hostname.substr(0, textCutLength) + '...';
 						} else {
@@ -127,16 +115,16 @@
 							shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='" + value
 								.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" + hostnameVal +
 								"</a></li>";
-								shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-									value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
-									data.changed + value.job_id+"</a></li>";
+// 								shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+// 									value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
+// 									data.changed + value.job_id+"</a></li>";
 						} else {
 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
 							value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\">" +
 							hostnameVal + "</a></li>";
-							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-								value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
-								data.changed + value.job_id+"</a></li>";
+// 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
+// 								value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
+// 								data.changed + value.job_id+"</a></li>";
 						}
 					});
 
@@ -175,10 +163,10 @@
 							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 							progrmResultHtml += "<tr>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
-							if (typeof data.policyUpdtResult[i].debver === "undefined")
-								progrmResultHtml += "<td>-</td>";
-							else
-								progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
+// 							if (typeof data.policyUpdtResult[i].debver === "undefined")
+// 								progrmResultHtml += "<td>-</td>";
+// 							else
+// 								progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
 
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
 							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
@@ -206,7 +194,7 @@
 							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
 							progrmResultHtml += "<tr>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
+// 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
 							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].count + "</td>";
@@ -227,55 +215,183 @@
 
 					console.log("data.policyProgrmResult.length========+++"+ data.policyProgrmResult.length);
 					var programBlockResult = '';
+					var tmp_progrmName='', tmp2_progrmName='', tmp3_progrmName='', tmp_rowcnt=0, tmp_rgstrdate='',tmp_rgstrdate2='';
+					var tmp_installCnt2 = '', tmp_installCnt3 = '';
+					var tmp_runStatus2 = '', tmp_runStatus3 = '';
 					for (var i = 0; i < data.policyProgrmResult.length; i++) {
-						var chk = 1;
-						if ((i + 1) == data.policyProgrmResult.length) {
-							chk = 0;
+						
+						
+						var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+// 						programBlockResult += "<tr class='aplusIcon' >";
+// 						programBlockResult += "<td class='rgstr1'>" + data.policyProgrmResult[i].rgstr_date + "</td>";
+// 						programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
+// 						programBlockResult += "<td>" + data.pcList.length + "</td>";
+// 						programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
+// 						programBlockResult += "<td >"+noinstall+"</td>";
+// 						programBlockResult += "</tr>";
+						
+						var policyGubun = '';
+						if( data.policyProgrmResult[i].kind == 'ins'){
+							policyGubun = "(차단)";
+						}else {
+							policyGubun = "(허용)";
 						}
-						if (data.policyProgrmResult[i].progrmname != data.policyProgrmResult[i + chk].progrmname) {
-							var inset_dt = data.policyProgrmResult[i].rgstr_date;
-							var date = new Date(inset_dt);
-							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
-							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
-							programBlockResult += "<tr>";
-							programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
-							if( data.policyProgrmResult[i].status == 'Y'){
-								programBlockResult += "<td>차단</td>";
-							}else {
-								programBlockResult += "<td>허용</td>";
-							}
+						
+						if( i > 0 ){
+							if( tmp_rgstrdate == data.policyProgrmResult[i].rgstr_date){
+								if( i == 1){
+									tmp2_progrmName +=data.policyProgrmResult[0].progrmname+policyGubun + "," + data.policyProgrmResult[i].progrmname+policyGubun;
+								}else{
+									tmp2_progrmName += ", " + data.policyProgrmResult[i].progrmname+policyGubun;
+								}
+								tmp_rgstrdate = data.policyProgrmResult[i].rgstr_date;
+								tmp_installCnt2 = "전체 : "+ data.pcList.length +", 완료 : "+ data.policyProgrmResult[i].count ;
+								if( data.pcList.length > 1 ){
+									tmp_installCnt2 += ", 미완료 : " + (data.pcList.length - data.policyProgrmResult[i].count);
+								}
+								tmp_runStatus2 = data.policyProgrmResult[i].run_status;
+							}else{
+								console.log("tmp3_progrmName.length=========+"+tmp3_progrmName.length);
 							
-							programBlockResult += "<td>" + data.pcList.length + "</td>";
-							programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
-							programBlockResult += "<td>" + noinstall + "</td>";
-							programBlockResult += "</tr>";
-						} else if ((i + 1) == data.policyProgrmResult.length) {
-							var inset_dt = data.policyProgrmResult[i].rgstr_date;
-							var date = new Date(inset_dt);
-							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
-							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
-							programBlockResult += "<tr>";
-							programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
-							if( data.policyProgrmResult[i].status == 'Y'){
-								programBlockResult += "<td>차단</td>";
-							}else {
-								programBlockResult += "<td>허용</td>";
+								if(tmp3_progrmName.length == 0){
+									tmp3_progrmName = data.policyProgrmResult[i].progrmname+policyGubun;
+									tmp_rgstrdate2 = data.policyProgrmResult[i].rgstr_date;
+								}else{
+									tmp3_progrmName = ", " +data.policyProgrmResult[i].progrmname+policyGubun;
+									tmp_rgstrdate2= data.policyProgrmResult[i].rgstr_date;
+								}
+								tmp_installCnt3 = "전체 : "+ data.pcList.length +", 완료 : "+data.policyProgrmResult[i].count ;
+								if( data.pcList.length > 1 ){
+									tmp_installCnt3 += ", 미완료 : " + (data.pcList.length - data.policyProgrmResult[i].count);
+								}
+								tmp_runStatus3 = data.policyProgrmResult[i].run_status;
 							}
-// 							programBlockResult += "<td>" + data.policyProgrmResult[i].status + "</td>";
-							programBlockResult += "<td>" + data.pcList.length + "</td>";
-							programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
-							programBlockResult += "<td>" + noinstall + "</td>";
-							programBlockResult += "</tr>";
+						}else if( i == 0 ) {
+							tmp_rgstrdate = data.policyProgrmResult[i].rgstr_date;
+							tmp_progrmName = data.policyProgrmResult[i].progrmname+policyGubun;
 						}
 					}
-
+					if( tmp_rgstrdate.size != 0){
+						programBlockResult += '<article id="comment-id-4" class="comment-item">';
+						programBlockResult += '<span class="arrow left"></span>';
+						programBlockResult += '<section class="comment-body panel panel-default">';
+						programBlockResult += '<header class="panel-heading">';
+						programBlockResult += '<a href="javascript:;"><정책 적용일> '+ tmp_rgstrdate+ '</a>';
+						programBlockResult += '</header>';
+						programBlockResult += '<div class="panel-body">';
+						programBlockResult += '<p>프로그램 차단 정책 결과 : '+tmp_installCnt2+'</p>';
+						programBlockResult += '<blockquote>';
+						programBlockResult += '<p>프로그램 패키지명 </p>';
+						programBlockResult += '<small>'+tmp2_progrmName +'</small>';
+						programBlockResult += '<div class="comment-action m-t-sm">';
+						programBlockResult += '<p> 미완료 정보  </p>';
+						var tmpSplit = tmp_runStatus3.split(",");
+						if(tmpSplit.length > 0){
+							for(var i=0; i<tmpSplit.length; i++ ){
+								if( tmpSplit[i].split(":")[0].trim() == 'false'){
+								programBlockResult += "<small>Host Name : " + tmpSplit[i].split(":")[1] +",  미완료 사유 : Power Off, ";
+								programBlockResult += '<a href="#comment-form" class="btn btn-default btn-xs"><i class="fa fa-mail-reply text-muted"></i> 정책 적용하기</a></small>';
+								}
+							}
+						}
+						programBlockResult += '</blockquote>';
+						programBlockResult += '</div>';
+						programBlockResult += '</div>';
+						programBlockResult += '</section>';
+						programBlockResult += '</article>';
+					}			
+					if(tmp_rgstrdate2.length != 0){
+						programBlockResult += '<article id="comment-id-4" class="comment-item">';
+						programBlockResult += '<span class="arrow left"></span>';
+						programBlockResult += '<section class="comment-body panel panel-default">';
+						programBlockResult += '<header class="panel-heading">';
+						programBlockResult += '<a href="javascript:;"><정책 적용일> '+ tmp_rgstrdate+ '</a>';
+						programBlockResult += '</header>';
+						programBlockResult += '<div class="panel-body">';
+						programBlockResult += '<div>프로그램 차단 정책 결과 : '+tmp_installCnt2+'</div>';
+						programBlockResult += '<blockquote>';
+						programBlockResult += '<p>프로그램 패키지명</p>';
+						programBlockResult += '<small>'+tmp3_progrmName +'</small>';
+						programBlockResult += '<div class="comment-action m-t-sm">';
+						programBlockResult += '<p> 미완료 정보  </p>';
+						var tmpSplit = tmp_runStatus3.split(",");
+						if(tmpSplit.length > 0){
+							for(var i=0; i<tmpSplit.length; i++ ){
+								if( tmpSplit[i].split(":")[0].trim() == 'false'){
+								programBlockResult += "<small>Host Name : " + tmpSplit[i].split(":")[1] +",  미완료 사유 : Power Off, ";
+								programBlockResult += '<a href="#comment-form" class="btn btn-default btn-xs"><i class="fa fa-mail-reply text-muted"></i> 정책 적용하기</a></small>';
+								}
+							}
+						}
+						programBlockResult += '</blockquote>';
+						programBlockResult += '</div>';
+						programBlockResult += '</div>';
+						programBlockResult += '</section>';
+						programBlockResult += '</article>';
+					}
+					
+// 					for (var i = 0; i < data.policyProgrmResult.length; i++) {
+// 						var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+// 						programBlockResult += '<article id="comment-id-4" class="comment-item">';
+// 						programBlockResult += '<span class="arrow left"></span>';
+// 						programBlockResult += '<section class="comment-body panel panel-default">';
+// 						programBlockResult += '<header class="panel-heading">';
+// 						programBlockResult += '<a href="javascript:;"><i class="fa fa-clock-o"></i>   '+ data.policyProgrmResult[i].rgstr_date+ '</a>';
+// 						programBlockResult += '</header>';
+// 						programBlockResult += '<div class="panel-body">';
+// 						programBlockResult += '<blockquote>';
+// 						programBlockResult += '<p>프로그램 차단 명 : '+data.policyProgrmResult[i].progrmname +'</p>';
+// 						programBlockResult += '<p>프로그램 차단 구분  : '+data.policyProgrmResult[i].kind +'</p>';
+// 						programBlockResult += '<small>Someone famous in <cite title="Source Title">Source Title</cite></small>';
+// 						programBlockResult += '</blockquote>';
+// 						programBlockResult += '<div>Lorem ipsum dolor sit amet, consecteter adipiscing elit...</div>';
+// 						programBlockResult += '<div class="comment-action m-t-sm">';
+// 						programBlockResult += '<a href="#" data-toggle="class" class="btn btn-default btn-xs">';
+// 						programBlockResult += '<i class="fa fa-star-o text-muted text"></i>';
+// 						programBlockResult += '<i class="fa fa-star text-danger text-active"></i>'; 
+// 						programBlockResult += 'Like';
+// 						programBlockResult += '</a>';
+// 						programBlockResult += '<a href="#comment-form" class="btn btn-default btn-xs"><i class="fa fa-mail-reply text-muted"></i> Reply</a>';
+// 						programBlockResult += '</div>';
+// 						programBlockResult += '</div>';
+// 						programBlockResult += '</section>';
+// 						programBlockResult += '</article>';
+// 					}
 					if(data.policyProgrmResult.length == 0){
 						$(".programBlockResultTbody").append('<tr><td colspan="5">등록된 데이터가 없습니다.</td></tr>');
 					}
 					
 
 					$(".programBlockResultTbody").append(programBlockResult);
+					genRowspan("rgstr1");
+// 					genRowspan2("titles");
+					
+// 					$(".programBlockResultTbody").on("click", "tr", function(){
 
+// 						alert( $(this).find("td:first-child").text() );
+
+// 						alert( $(this).find("td:eq(1)").text() );
+
+// 					});
+
+
+
+// 					$(".aplusIcon").on("click",function(){
+// 						  var obj = $(this);
+// 						  console.log("obj=="+JSON.stringify(obj));
+// 						  if( obj.hasClass("glyphicon-plus") ){
+// 							  console.log(obj.parent());
+// 						    obj.hide();
+// // 						    var rows = $(".rgstr1:contains('" + $(this).text() + "')");
+// // 						    console.log("1=="+ JSON.stringify(rows));
+// 						    obj.next().show();            
+// 						    obj.parent().parent().next().show();
+// 						  }else{
+// 						     obj.hide();
+// 						     obj.prev().show();
+// 						     obj.parent().parent().next().hide();
+// 						  }
+// 						});
 					//방화벽 차단 배포 결과 // ========================================================================
 					
 
@@ -448,12 +564,80 @@
 
 						<div class="tab-pane" id="progrmBlockResult">
 							<div class="table-responsive">
-								<table  class="table table-striped datagrid m-b-sm">
-									<thead>
-										<tr class="programBlockResultTr"></tr>
-									</thead>
-									<tbody class="programBlockResultTbody"></tbody>
-								</table>
+<!-- 								<table  class="table table-striped datagrid m-b-sm"> -->
+<!-- 									<thead> -->
+<!-- 										<tr class="programBlockResultTr"></tr> -->
+<!-- 									</thead> -->
+<!-- 									<tbody class="programBlockResultTbody"></tbody> -->
+<!-- 								</table> -->
+								<section class=" block programBlockResultTbody"> <!--  comment-list -->
+								
+								
+<!--                     <article id="comment-id-1" class="comment-item"> -->
+<!--                       <span class="arrow left"></span> -->
+<!--                       <section class="comment-body panel panel-default"> -->
+<!--                         <header class="panel-heading bg-white"> -->
+                        
+<!--                           <label class="label bg-info m-l-xs"><i class="fa fa-clock-o"></i> Editor</label>  -->
+                          
+<!--                         </header> -->
+<!--                         <div class="panel-body"> -->
+<!--                           <div>Lorem ipsum dolor sit amet, consecteter adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet.</div> -->
+<!--                           <div class="comment-action m-t-sm"> -->
+<!--                             <a href="#" data-toggle="class" class="btn btn-default btn-xs active"> -->
+<!--                               <i class="fa fa-star-o text-muted text"></i> -->
+<!--                               <i class="fa fa-star text-danger text-active"></i>  -->
+<!--                               Like -->
+<!--                             </a> -->
+<!--                             <a href="#comment-form" class="btn btn-default btn-xs"> -->
+<!--                               <i class="fa fa-mail-reply text-muted"></i> Reply -->
+<!--                             </a> -->
+<!--                           </div> -->
+<!--                         </div> -->
+<!--                       </section> -->
+<!--                     </article> -->
+                    
+<!--                     <article id="comment-id-4" class="comment-item"> -->
+<!--                       <span class="arrow left"></span> -->
+<!--                       <section class="comment-body panel panel-default"> -->
+<!--                         <header class="panel-heading"> -->
+<!--                           <label class="label bg-info m-l-xs"><i class="fa fa-clock-o"></i> Editor</label> -->
+<!--                         </header> -->
+<!--                         <div class="panel-body"> -->
+<!--                           <blockquote> -->
+<!--                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p> -->
+<!--                             <small>Someone famous in <cite title="Source Title">Source Title</cite></small> -->
+<!--                           </blockquote> -->
+<!--                           <div>Lorem ipsum dolor sit amet, consecteter adipiscing elit...</div> -->
+<!--                           <div class="comment-action m-t-sm"> -->
+<!--                             <a href="#" data-toggle="class" class="btn btn-default btn-xs"> -->
+<!--                               <i class="fa fa-star-o text-muted text"></i> -->
+<!--                               <i class="fa fa-star text-danger text-active"></i>  -->
+<!--                               Like -->
+<!--                             </a> -->
+<!--                             <a href="#comment-form" class="btn btn-default btn-xs"><i class="fa fa-mail-reply text-muted"></i> Reply</a> -->
+<!--                           </div> -->
+<!--                         </div> -->
+<!--                       </section> -->
+<!--                     </article> -->
+                    <!-- comment form -->
+<!--                     <article class="comment-item media" id="comment-form"> -->
+<!--                       <a class="pull-left thumb-sm avatar"><img src="images/avatar.jpg" class="img-circle"></a> -->
+<!--                       <section class="media-body"> -->
+<!--                         <form action="" class="m-b-none"> -->
+<!--                           <div class="input-group"> -->
+<!--                             <input type="text" class="form-control" placeholder="Input your comment here"> -->
+<!--                             <span class="input-group-btn"> -->
+<!--                               <button class="btn btn-primary" type="button">POST</button> -->
+<!--                             </span> -->
+<!--                           </div> -->
+<!--                         </form> -->
+<!--                       </section> -->
+<!--                     </article> -->
+                  </section>
+                  
+                  
+                  
 							</div>
 						</div>
 						
@@ -547,8 +731,9 @@ function detail(uuid){
 		// $(".content_bapo").remove();
 		// $(".right_box_r").show();
 		// $('.right_box_l').width( '40%' );
-	console.log("detail -=--- uuit ::: " + uuid);
-	 $.post("detailPolicy.proc",{pc_uuid:uuid},
+	console.log("detail -=--- uuit ::: " + uuid +"=="+ $("#org_seq").val());
+	
+	 $.post("detailPolicy.proc",{pc_uuid:uuid, org_seq:$("#org_seq").val()},
 			function(data){
 			var shtml = "";
 
@@ -624,7 +809,7 @@ function detail(uuid){
 					programBlockResult += "</tr>";
 			});	
 			$(".programBlockResultTbody").append(programBlockResult);
-
+			
 			
 			// 방화벽 정책 배포 결과] ===============================================================
 			$(".firewallResultTr").empty();
@@ -712,7 +897,7 @@ function relaunch(host_id,job_id,seq,pc_uuid){
 		success : function(res) {
 			if (res.STATUS == "SUCCESS") {
 				alert("정상적으로 처리되었습니다.");
-				checkAnsibleJobRelaunchStatus(res.ID,res.PARENTS_ID,res.PC_UUID);
+// 				checkAnsibleJobRelaunchStatus(res.ID,res.PARENTS_ID,res.PC_UUID);
 				//location.reload();
 			} else {
 				alert("실패하였습니다.");
@@ -772,6 +957,32 @@ function addAnsibleJobRelaunchEventByHost(...args){
 	});
 }
 
+ 
+function genRowspan(className){
+    $("." + className).each(function() {
+        var rows = $("." + className + ":contains('" + $(this).text() + "')");
+        if (rows.length > 1) {
+            rows.eq(0).attr("rowspan", rows.length);
+            rows.not(":eq(0)").remove();
+        }
+    });
+}
 
+
+function genRowspan2(className){
+    $("." + className).each(function() {
+        var rows = $("." + className + ":contains('" + $(this).text() + "')");
+        console.log("rows.length=========+"+$(this).text()  +"=="+rows.length);
+        if (rows.length > 1) {
+//             rows.eq(0).attr("rowspan", rows.length);
+            rows.not(":eq(0)").remove();
+        }
+    });
+}
+$(document).ready(function () {
+	onClick(null,$("#tree"),zNodes[1]);
+});
 </script>
+
+<input type="hidden" name="org_seq" id="org_seq" value=""> 
 <%@ include file="../template/footer.jsp" %>

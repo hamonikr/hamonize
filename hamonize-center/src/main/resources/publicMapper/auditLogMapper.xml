@@ -781,7 +781,124 @@
 		SELECT PU_NAME FROM tbl_policy_package_list
 	</select>
 
-	<select id="updtList" resultType="map" parameterType="hashmap">
+
+<select id="updtList" resultType="map" parameterType="hashmap">
+select GA.* 
+		, GB.*
+		, (
+		    select 
+		      array_to_string(array(select data -> 'summary_fields' -> 'host' ->> 'description' ||':'||status || ':' || count(status) as status from tbl_ansible_event_job
+		    where domain =  #{domain} and job_id = GA.job_id
+		    group by job_id, data , status), ', ')
+		) as run_status
+		from (
+		   select ta.* 
+		    , tb.deb_apply_name  as debname
+		    , tc.rgstr_date
+		    from (
+		      select A.ppm_seq, 'INSERT' as gubun 
+		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq}::int order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}::int
+		        EXCEPT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq}::int  order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      union all 
+		      select A.ppm_seq, 'DELETE' as gubun 
+		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq}::int order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq}::int  order by rgstr_date  desc limit 1 OFFSET  1 ) ta
+		        EXCEPT
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}::int
+		      ) A 
+		      union all
+		      
+		      select A.ppm_seq , 'M' as gubun 
+		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq}::int order by rgstr_date desc limit 1 OFFSET 1)  as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}::int
+		        INTERSECT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq}::int order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      
+		    ) ta
+		    left outer join tbl_policy_package_list tb on ta.ppm_seq = tb.pu_seq 
+		    left outer join (
+		      select * from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq}::int  order by rgstr_date  desc limit 2
+		    ) tc  on ta.job_id = tc.job_id
+		  
+		  ) GA
+		  
+		  
+		left outer join (
+		   SELECT
+		    DISTINCT PA.count, PA.debname as act_debname, PA.kind
+		  FROM
+		    (
+		      SELECT
+		        ROW_NUMBER() OVER( PARTITION BY TA.debname , TA.kind)
+		        , COUNT(TA.debname) over( partition by TA.debname , TA.kind )
+		        , TA.*
+		      FROM
+		        (
+		          SELECT
+		            ROW_NUMBER() OVER( PARTITION BY A.debname , A.pc_uuid ORDER BY A.rgstr_date DESC )
+		            , A.debname
+		            , A.kind
+		            , A.rgstr_date
+		            , A.status
+		            , A.pc_uuid
+		            , A.debver
+		          FROM
+		            (
+		              SELECT
+		                DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(debname), ',') , ',')) debname
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		                , debver
+		              FROM
+		                tbl_act_updt_log
+		              WHERE
+		                pc_uuid = #{uuid}
+		              GROUP BY
+		                debname
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		                , debver
+		              order by
+		                rgstr_date desc
+		            ) A
+		          WHERE
+		            A.debname != ''
+		        ) TA
+		      WHERE
+		        row_number = 1
+		        and rgstr_date >= (select rgstr_date from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq}::int order by rgstr_date desc limit 1 OFFSET 1)
+		      ORDER BY
+		        TA.rgstr_date DESC
+		    ) PA
+		    
+		  ) GB on GA.debname = GB.act_debname
+		  
+		  where  1=1
+		  ORDER BY GA.gubun desc
+</select>
+	<select id="tmp_updtList" resultType="map" parameterType="hashmap">
 		<foreach collection="debList" item="item" index="index">
 			(	select
 					*

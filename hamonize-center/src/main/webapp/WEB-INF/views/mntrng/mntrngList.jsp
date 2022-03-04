@@ -5,7 +5,6 @@
 
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exhide.js"></script>
 <script>
-
 // $.fn.zTree.getZTreeObj("tree").getNodes()[0].checked = true;
 
 function beforeClick(treeId, treeNode, clickFlag) {
@@ -25,6 +24,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	$('#off').empty();
 	var zTree = $.fn.zTree.getZTreeObj("tree");
 	var node = zTree.getNodeByParam('id', treeNode.pId);
+	zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+	
 	$.post("/mntrng/pcList",{org_seq:treeNode.id},
 	function(result){
 			var agrs = result.pcList;
@@ -197,7 +198,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						mntrngStrHtml += '<div class="col-sm-2 col-md-3 padder-v b-r b-light lt">';
 						mntrngStrHtml += '<span class="fa-stack fa-2x pull-left m-r-sm"> <i class="fa fa-circle fa-stack-2x text-dark"></i> </span>';
 						mntrngStrHtml += '<span class="h3 block m-t-xs"><strong id="bugs">'+hostnameVal+'</strong></span>';
-						mntrngStrHtml += '<small class="text-muted text-uc">description</small>';
+						mntrngStrHtml += '<small class="text-muted text-uc">description</small>'; 
 						mntrngStrHtml += '</div>';
 
 					}
@@ -245,6 +246,10 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 
 	//]]>
+	
+$(document).ready(function () {
+	onClick(null,$("#tree"),zNodes[0]);
+});
 </script>
 
 

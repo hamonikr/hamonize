@@ -104,7 +104,7 @@ public class AuditLogService {
 	/**
 	 * 업데이트 정책 적용 결과
 	 */
-	public List<Map<String, Object>> udptList(HashMap<String, Object> params) {
+	public List<Map<String, Object>> udptList(HashMap<String, Object> params, LoginVO lvo ) {
 
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
@@ -116,6 +116,9 @@ public class AuditLogService {
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
 			jsonObject.put("uuid", params.get("pc_uuid"));
+			jsonObject.put("org_seq", params.get("org_seq"));
+			jsonObject.put("domain", lvo.getDomain());
+			
 			result = auditLogMapper.updtList(jsonObject);
 
 
@@ -130,7 +133,7 @@ public class AuditLogService {
 	/**
 	 * 프로그램 정책 적용 결과
 	 */
-	public List<Map<String, Object>> programList(HashMap<String, Object> params) {
+	public List<Map<String, Object>> programList(HashMap<String, Object> params, LoginVO lvo ) {
 
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
@@ -141,7 +144,7 @@ public class AuditLogService {
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
 			jsonObject.put("uuid", params.get("pc_uuid"));
-
+			jsonObject.put("domain", lvo.getDomain());
 			result = auditLogMapper.programList(jsonObject);
 
 
