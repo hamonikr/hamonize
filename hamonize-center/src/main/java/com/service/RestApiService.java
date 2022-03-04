@@ -425,12 +425,12 @@ public JSONObject checkAndAddPolicyJobResult(Map<String, Object> params) throws 
         }else{
           System.out.println("end!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
           //addAnsibleJobEventByHost(Integer.parseInt(jsonObj.get("id").toString()));
-          addAnsibleJobEventByHost(params);
+          addAnsibleJobEventByHost(params,0);
         }
         return jsonObj;
 }
 
-public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws ParseException, InterruptedException{
+public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count) throws ParseException, InterruptedException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
@@ -502,11 +502,17 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params) throws Pa
       // int result = policyCommonMapper.checkCountAnsibleJobId(params);
       //String[] before_url = request.getHeader("referer").split("/");
 		  //params.put("before_url", before_url[before_url.length -1]);
-      int result = 0;
+      
       if(dataArr.size() < pcCount){
-        Thread.sleep(1000);
-        addAnsibleJobEventByHost(params);
+        count++;
+        System.out.println("result======="+count);
+        if(count > 5){
+          return finalResult;
+        }
+        Thread.sleep(2000);
+        addAnsibleJobEventByHost(params,count);
       }else{
+        int result = 0;
         result = policyCommonMapper.addAnsibleJobEventByHost(params);
       }
       // int result = policyCommonMapper.checkCountAnsibleJobId(params);

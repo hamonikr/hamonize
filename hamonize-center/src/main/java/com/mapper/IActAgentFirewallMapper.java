@@ -1,10 +1,10 @@
 package com.mapper;
 
-import com.model.ActAgentFirewallVo;
+import com.model.ActAgentLogFirewallVo;
 
 public interface IActAgentFirewallMapper {
 
 
-	public int insertActAgentFirewall(ActAgentFirewallVo vo);
+	public int insertActAgentFirewall(ActAgentLogFirewallVo vo);
 	
 }

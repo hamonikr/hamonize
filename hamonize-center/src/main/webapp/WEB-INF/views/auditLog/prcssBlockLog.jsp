@@ -39,6 +39,7 @@
 		$("#org_seq").val(treeNode.id);
 		$.post("prcssBlockLogList.proc", {
 				org_seq: treeNode.id,
+				domain: treeNode.domain,
 				currentPage: $("#currentPage").val(),
 				date_fr: $("#date_fr").val(),
 				date_to: $("#date_to").val()
@@ -55,11 +56,11 @@
 						gbInnerHtml += "<tr data-code='' data-guidcode=''>";
 						gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.org_nm + "</td>";
-						gbInnerHtml += "<td>" + value.prcssname + "</td>";
-						gbInnerHtml += "<td>" + value.hostname + "</td>";
+						gbInnerHtml += "<td>" + value.progrm_name + "</td>";
+						gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 						// gbInnerHtml += "<td>"+value.ipaddress+"</td>";
 						gbInnerHtml += "<td>" + value.pc_ip + "</td>";
-						gbInnerHtml += "<td>" + value.insert_dt + "</td>";
+						gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 						gbInnerHtml += "</tr>";
 
 					});
@@ -206,11 +207,11 @@
 				gbInnerHtml += "<tr data-code='' data-guidcode=''>";
 				gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
 				gbInnerHtml += "<td>" + value.org_nm + "</td>";
-				gbInnerHtml += "<td>" + value.prcssname + "</td>";
-				gbInnerHtml += "<td>" + value.hostname + "</td>";
+				gbInnerHtml += "<td>" + value.progrm_name + "</td>";
+				gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 				// gbInnerHtml += "<td>"+value.ipaddress+"</td>"; 
 				gbInnerHtml += "<td>" + value.pc_ip + "</td>";
-				gbInnerHtml += "<td>" + value.insert_dt + "</td>";
+				gbInnerHtml += "<td>" + timestampTodatetime(value.rgstr_date) + "</td>";
 				gbInnerHtml += "</tr>";
 
 			});
