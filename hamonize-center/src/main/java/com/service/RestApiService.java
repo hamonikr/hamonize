@@ -357,6 +357,43 @@ public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseExc
   return jsonResultObj;
 }
 
+public JSONObject makeCommandToSingle(Map<String, Object> params) throws ParseException, InterruptedException
+  {
+    //String output = params.get("module_args").toString();
+    //output = output.replaceAll("\"", "\\\\\\\"");
+    String request = "{\"credential\": 3,\"module_name\": \"shell\",\"module_args\": \""+params.get("input")+"\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+    System.out.println("request====="+request);
+    Mono<String> response = webClient.post().uri(UriBuilder -> UriBuilder
+    .path("/api/v2/hosts/").path("{id}/").path("ad_hoc_commands/")
+    .build(params.get("host_id")))
+    .contentType(MediaType.APPLICATION_JSON)
+    .body(BodyInserters.fromValue(request))
+    .exchange().flatMap(clientResponse -> {
+      if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+          clientResponse.body((clientHttpResponse, context) -> {
+              return clientHttpResponse.getBody();
+          });
+          return clientResponse.bodyToMono(String.class);
+      }
+      else
+          return clientResponse.bodyToMono(String.class);
+  });
+    //.accept(MediaType.APPLICATION_JSON)
+    //.retrieve()
+    //.bodyToMono(String.class); 
+
+    String objects = response.block();
+    JSONParser jsonParser = new JSONParser();
+    JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+    params.put("job_id",jsonObj.get("id").toString() );
+    Integer result = Integer.parseInt(jsonObj.get("id").toString());
+    JSONObject jsonResultObj = new JSONObject();
+    if(result != null){
+      jsonResultObj = checkPolicyJobResult(params);
+    }
+  return jsonResultObj;
+}
+
 public JSONObject checkPolicyJobResult(Map<String, Object> params) throws ParseException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
@@ -402,7 +439,7 @@ public JSONObject checkAndAddPolicyJobResult(Map<String, Object> params) throws 
         String status = jsonObj.get("status").toString();
         //ThreadService th = new ThreadService(params.get("id"),status);
          // Thread tt = new Thread(th);
-        if(status.equals("running") || status.equals("waiting")){
+        if(status.equals("running") || status.equals("waiting") || status.equals("pending")){
           //tt.start();
           //checkPolicyJobResult(id);
           Thread t1 = new Thread(new Runnable() {

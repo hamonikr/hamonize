@@ -79,6 +79,7 @@
 			a.pc_uuid,
 			a.pc_status,
 			a.domain,
+			a.host_id,
 			b.job_id,
 			b.data
 		FROM tbl_pc_mangr a right outer join tbl_ansible_event_job b on
