@@ -956,9 +956,7 @@ function addAnsibleJobRelaunchEventByHost(...args){
 		}
 	});
 }
-$(document).ready(function () {
-	onClick(null,$("#tree"),zNodes[1]);
-});
+
  
 function genRowspan(className){
     $("." + className).each(function() {
@@ -981,7 +979,9 @@ function genRowspan2(className){
         }
     });
 }
-
+$(document).ready(function () {
+	onClick(null,$("#tree"),zNodes[1]);
+});
 </script>
 
 <input type="hidden" name="org_seq" id="org_seq" value=""> 

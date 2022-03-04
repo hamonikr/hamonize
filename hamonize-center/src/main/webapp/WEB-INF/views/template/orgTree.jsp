@@ -273,6 +273,16 @@ function checkAnsibleJobStatus(job_id){
 				target.disabled = true;
 				setTimeout(checkAnsibleJobStatus,3000,job_id);
 				//checkAnsibleJobStatus(job_id);
+			}else if(res.status == "wating"){
+				console.log("작업 대기중입니다.");
+				target.disabled = true;
+				setTimeout(checkAnsibleJobStatus,3000,job_id);
+				//checkAnsibleJobStatus(job_id);
+			}else if(res.status == "pending"){
+				console.log("작업 대기중입니다.");
+				target.disabled = true;
+				setTimeout(checkAnsibleJobStatus,3000,job_id);
+				//checkAnsibleJobStatus(job_id);
 			}else if(job_id != 0){
 				console.log("작업성공여부=="+res.status);
 				target.disabled = false;

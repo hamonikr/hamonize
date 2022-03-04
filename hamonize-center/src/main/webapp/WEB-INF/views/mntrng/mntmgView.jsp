@@ -5,11 +5,32 @@
 
 <script type="text/javascript" src="/js/ztree/fuzzysearch.js"></script>
 <script type="text/javascript" src="/js/ztree/jquery.ztree.exhide.js"></script>
+<script>
+$(document).ready(function(){
+	$(".tui-chart-chartExportMenu-area").hide();
+	$( "#deviceInfo" ).slideToggle( "slow" ); 
+
+$( "#sp_on" ).click(function() {  
+	$( "#deviceInfo" ).slideToggle( "slow" ); 
+	if(document.getElementById('sp_on').innerText=="▲닫기"){
+		document.getElementById('sp_on').innerText="▼펼치기";
+	}else{
+		document.getElementById('sp_on').innerText="▲닫기";
+	}
+});
+});
+function onCheck(event, treeId, treeNode) {}
+function onClick(event, treeId, treeNode) {}
+function beforeClick(treeId, treeNode, clickFlag) {
+	className = (className === "dark" ? "":"dark");
+	return (treeNode.click != false);
+}
+</script>
 
 <section class="scrollable">
 	<section class="hbox stretch">
 		<!-- body left Start  -->
-		<!-- <%@ include file="../template/orgTree.jsp" %> -->
+		<%-- <%@ include file="../template/orgTree.jsp" %> --%>
 		<!-- body left End  -->
 
 
@@ -95,7 +116,6 @@
 									</div>
 
 								</section>
-								<!-- </form> -->
 
 							</div>
 

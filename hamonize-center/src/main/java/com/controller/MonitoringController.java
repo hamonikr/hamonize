@@ -122,11 +122,11 @@ public class MonitoringController {
 		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
 		LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		
-		
+		System.out.println("###############3params.get(\"org_seq\").toString()==="+ params.get("org_seq").toString());
 		params.put("org_seq", Integer.parseInt(params.get("org_seq").toString()));
 		params.put("type", params.get("type").toString());
 		params.put("domain", lvo.getDomain());
-
+System.out.println(params);
 		int on = 0;
 		int off = 0;
 

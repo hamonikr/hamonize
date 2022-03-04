@@ -81,10 +81,9 @@
 			a.domain
 		FROM tbl_pc_mangr a
 		<where>
-		1=1 
-		and a.domain = #{domain}
+		a.domain = #{domain}
 		<if test="org_seq != 1 ">
-			and org_seq in (
+			and a.org_seq in (
 				with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
 				select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
 				from tbl_org a

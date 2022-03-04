@@ -44,11 +44,11 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					if( agrs[i].pc_status == "true"){
 						strHtml += '<div class="panel-body col-lg-3 "><blockquote class="bodyDataLayer mntrngBox">'; 
 						strHtml += '<span class="fa-stack pull-left m-r-sm"> <i class="fa fa-play"></i> </span>';
+						strHtml += '<a class="clear" href="/mntrng/pcView?uuid=' + uuid +'">';
 						strHtml += hostnameVal;
-						strHtml += '</blockquote></div>';
+						strHtml += '</a>';
+						strHtml += '<a href="#" onclick="inputCommand('+agrs[i].host_id+'); return false;"><i class="fa fa-code"></i></a></blockquote></div>';
 					}else{
-
-
 						strHtml += '<div class="panel-body col-lg-3 "><blockquote class="bodyDataLayer mntrngBox">';
 						strHtml += '<span class="fa-stack pull-left m-r-sm"> <i class="fa fa-pause"></i> </span>';
 						strHtml += hostnameVal;
@@ -203,10 +203,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 					}
 
-
-					
-
-
 				}
 				console.log(mntrngStrHtml);
 				$(".monitor_list").append(mntrngStrHtml);
@@ -221,7 +217,32 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	var log, className = "dark",
 		curDragNodes, autoExpandNode;
 
-
+		function inputCommand(host_id){
+			var input = prompt('실행 할 명령어를 입력해주세요.');
+			if(input != null){
+				$.ajax({
+					url : '/gplcs/makeCommandToSingle',
+					type: 'POST',
+					async:false,
+					data:{host_id:host_id,input:input},
+					success : function(res) {
+						if (res.STATUS == "SUCCESS") {
+							alert("정상적으로 처리되었습니다.");
+							console.log(res.ID);
+							console.log(res.JOBSTATUS);
+							//checkAnsibleJobRelaunchStatus(res.ID,res.PARENTS_ID,res.PC_UUID);
+							//location.reload();
+						} else {
+							alert("실패하였습니다.");
+							//button.disabled = false;
+						}
+					},
+					error:function(request,status,error){
+						console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					}
+				});
+			}
+		}
 
 
 	//]]>
