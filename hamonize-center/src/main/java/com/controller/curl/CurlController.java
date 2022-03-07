@@ -371,12 +371,15 @@ System.out.println("retData===="+retData.toString());
 		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 		
 		if (retVal == 1) {
-			//int result = 
-			restApiService.updateHost(hdVo, orgNumChkVo);
-			//if(result == 1)	{
+			try {
+				restApiService.updateHost(hdVo, orgNumChkVo);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				isAddPcInfo = false;
+			}
 				con.updatePcVpn(hdVo);
 				isAddPcInfo = true;
-			//}
 		} else {
 			isAddPcInfo = false;
 		}
@@ -545,7 +548,13 @@ System.out.println("retData===="+retData.toString());
 			OrgVo orgVo = pcMangrMapper.getOrgInfoParamPCUUID(hdVo);
 
 			if (retVal == 1) {
-				restApiService.updateHost(hdVo, orgVo);
+				try {
+					restApiService.updateHost(hdVo, orgVo);
+				} catch (Exception e) {
+					//TODO: handle exception
+					retVal = 0;
+				}
+				if(retVal > 0)
 				con.updatePcVpn(hdVo);
 			}
 

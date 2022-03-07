@@ -50,7 +50,4 @@ public interface IOrgMapper {
 	public OrgVo getOrgAuth(OrgVo vo);
 
 	public int addAwxId(OrgVo gvo);
-	
-	public int addDownAwxId(OrgVo gvo);
-
 }
