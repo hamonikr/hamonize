@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.model.LogInOutVo;
+import com.model.PcMangrVo;
 
 public interface IPolicyCommonMapper {
 	
@@ -41,4 +42,10 @@ public interface IPolicyCommonMapper {
 
 	public int addAnsibleJobEventRelaunch(Map<String, Object> params);
 
+	public List<Map<String, Object>> checkAnsibleLastSuccessJob(PcMangrVo vo);
+	public List<Map<String, Object>> comparePolicyUpdtBeforeAndAfter(Map<String, Object> params);
+	public List<Map<String, Object>> comparePolicyProgrmBeforeAndAfter(Map<String, Object> params);
+	public List<Map<String, Object>> comparePolicyFrwlBeforeAndAfter(Map<String, Object> params);
+	public List<Map<String, Object>> comparePolicyDeviceBeforeAndAfter(Map<String, Object> params);
+	
 }

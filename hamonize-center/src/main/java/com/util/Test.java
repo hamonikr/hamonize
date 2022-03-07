@@ -597,4 +597,47 @@ public class Test {
   
     }
 
+
+    @RequestMapping(value="test9")
+    public String deletePc(){
+
+      WebClient wc = WebClient.builder()
+      .defaultHeaders(header -> header.setBasicAuth("admin","password"))
+      .baseUrl("http://192.168.0.220").build();
+      
+      try {
+          //String request = "{\"credential\": 3,\"limit\": \"1\",\"inventory\": 21,\"module_name\": \"shell\",\"module_args\": \"echo '{\\\"PATH\\\":\\\"/timeshift/snapshots\\\",\\\"NAME\\\":\\\"2021-12-10_12-30-01\\\"}' > /etc/hamonize/recovery/2aaaaa.hm\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+          //String request = "{\"credential\": 3,\"module_name\": \"shell\",\"module_args\": \"echo '{\\\"DEL\\\":\\\"ubiquity-slideshow-mint,atom-nightly,hancomoffice-hwpviewer,github-desktop,fsearch-trunk,boot-select,hamonikr-welcome\\\",\\\"INS\\\":\\\"stacer,skypeforlinux,htop\\\"}' > /etc/hamonize/updt/updtInfo.hm | touch /etc/hamonize/runupdt\",\"become_enabled\": \"True\",\"verbosity\": 0}";
+          //System.out.println("request====="+request);\
+
+          Mono<String> response = wc.delete().uri(UriBuilder -> UriBuilder
+          .path("/api/v2/hosts/").path("{id}/")
+          .build(105))
+          //.contentType(MediaType.APPLICATION_JSON)
+          //.body(BodyInserters.fromValue(request))
+          .exchange().flatMap(clientResponse -> {
+            if (clientResponse.statusCode().is5xxServerError() || clientResponse.statusCode().isError() || clientResponse.statusCode().is4xxClientError()) {
+                clientResponse.body((clientHttpResponse, context) -> {
+                 System.out.println("aaaaaaaaaaaaaa===="+clientHttpResponse.getStatusCode().toString());
+                    return clientHttpResponse.getBody();
+                });
+                return clientResponse.bodyToMono(String.class);
+            }
+            else
+                return clientResponse.bodyToMono(String.class);
+        });
+          //.accept(MediaType.APPLICATION_JSON)
+          //.retrieve()
+          //.bodyToMono(String.class); 
+  String objects = response.block();
+  return objects.toString();
+  //JSONParser jsonParser = new JSONParser();
+  //JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+      } catch (Exception e) {
+        //TODO: handle exception
+      }
+      return null;
+  
+    }
+
   }

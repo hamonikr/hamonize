@@ -1,13 +1,19 @@
 package com.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.NamingException;
 
 import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
+import com.mapper.IPolicyCommonMapper;
 import com.mapper.ITenantconfigMapper;
+import com.model.LogInOutVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PolicyRestoreVo;
@@ -17,6 +23,7 @@ import com.util.LDAPConnection;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(rollbackFor = NamingException.class)
+@Transactional(rollbackFor = {NamingException.class,ParseException.class})
 public class OrgService {
 	@Autowired
 	GlobalPropertySource gs;
@@ -36,6 +43,8 @@ public class OrgService {
 	private IPcMangrMapper pcMapper;
 	@Autowired
 	private ITenantconfigMapper tenantconfigMapper;
+	@Autowired
+	private IPolicyCommonMapper policyCommonMapper;
 
 	@Autowired
 	RestApiService restApiService;
@@ -70,7 +79,7 @@ public class OrgService {
 		return orgMapper.orgView(orgvo);
 	}
 
-	public int orgSave(OrgVo orgvo) throws NamingException, ParseException {
+	public int orgSave(OrgVo orgvo) throws NamingException {
 		// 수정전 이름 불러오기
 		OrgVo oldOrgVo = new OrgVo();
 		OrgVo orgPath = new OrgVo();
@@ -101,7 +110,9 @@ public class OrgService {
 				if(orgvo.getP_seq() == 0)
 				{
 					snf = restApiService.addRootOrg(orgvo);
-					tenantInsert(orgvo);
+					if(snf == 1){
+						tenantInsert(orgvo);
+					}
 				}else
 				{
 					snf = restApiService.addDownOrg(orgvo);
@@ -132,7 +143,13 @@ public class OrgService {
 					newAllOrgName.setSeq(list.get(i).getSeq());
 					orgMapper.allOrgNmUpdate(newAllOrgName);
 				}
-				restApiService.updateOrg(orgvo);
+				try {
+					restApiService.updateOrg(orgvo);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return result;
+				}
 				// ldap 서버 업데이트
 				con.updateOu(oldOrgVo, orgvo);
 			} else
@@ -145,7 +162,7 @@ public class OrgService {
 
 	}
 
-	public int pcMove(PcMangrVo vo) throws NamingException, ParseException {
+	public int pcMove(PcMangrVo vo) throws NamingException, ParseException, InterruptedException {
 		int result = 0;
 		result = pcMapper.moveTeam(vo);
 		OrgVo orgVo = new OrgVo();
@@ -153,20 +170,27 @@ public class OrgService {
 		System.out.println("vo====="+vo.toString());
 		System.out.println("orgVo====="+orgVo.toString());
 		//ansible 삭제 재등록
-		restApiService.deleteHost(vo);
-		restApiService.addHost(vo, orgVo);
+		try {
+			restApiService.deleteHost(vo);
+			restApiService.addHost(vo, orgVo);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result = 0;
+			return result;
+		}
 
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		
 		OrgVo orgPath = orgMapper.getAllOrgNm(vo);
 		
-		//Long org_seq = vo.getOrg_seq();
+		Long org_seq = vo.getOrg_seq();
 		vo.setMove_org_nm(orgPath.getAll_org_nm());
 		vo.setOrg_seq(vo.getOld_org_seq());
 		orgPath = orgMapper.getAllOrgNm(vo);
 		
-		vo.setOrg_seq(vo.getOrg_seq());
+		vo.setOrg_seq(org_seq);
 		vo.setAlldeptname(orgPath.getAll_org_nm());
 		
 		con.movePc(vo);
@@ -181,7 +205,7 @@ public class OrgService {
 		int rcovresult = pcMapper.updateRcovPolicyOrgseq(rvo);		
 	
 		logger.info("rcovresult : "+rcovresult);
-
+		
 		if(rcovresult >= 1){
 			logger.info("업데이트 완료");
 			// delete 이전 부서의 일반 백업본
@@ -190,39 +214,57 @@ public class OrgService {
 			logger.info("업데이트 실패");
 		}
 
+		// changePolicy(vo);
 		return result;
 
 	}
 
-	public int deletePc(PcMangrVo vo) throws NamingException, ParseException {
+	public int deletePc(PcMangrVo vo) throws NamingException {
 		int result = 0;
 		result = pcMapper.deletePc(vo);
 		if(result == 1){
-			restApiService.deleteHost(vo);
+			try {
+				restApiService.deleteHost(vo);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = 0;
+			}
 		}
-		LDAPConnection con = new LDAPConnection();
-		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
-//		vo.setOrg_seq(vo.getOld_org_seq());
-		OrgVo orgPath = orgMapper.getAllOrgNm(vo);
-		vo.setAlldeptname(orgPath.getAll_org_nm());
-		con.deletePc(vo);
-
+		if(result > 0){
+			LDAPConnection con = new LDAPConnection();
+			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+	//		vo.setOrg_seq(vo.getOld_org_seq());
+			OrgVo orgPath = orgMapper.getAllOrgNm(vo);
+			vo.setAlldeptname(orgPath.getAll_org_nm());
+			con.deletePc(vo);
+		}
 		return result;
 
 	}
 
-	public int orgDelete(OrgVo orgvo) throws NamingException, ParseException {
+	public int orgDelete(OrgVo orgvo) throws NamingException {
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		
 		int result = 0;
 		result = orgMapper.pcDelete(orgvo);
 		result = orgMapper.orgDelete(orgvo);
-		restApiService.deleteOrg(orgvo);
-		con.deleteOu(orgvo);
-
+		if(result > 0){
+			try {
+				restApiService.deleteOrg(orgvo);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = 0;
+			}
+		}
+		if(result > 0){
+			con.deleteOu(orgvo);
+		}
 		return result;
 	}
+	
 	public List<OrgVo> searchChildDept(OrgVo orgvo)
 	{
 		List<OrgVo> list = orgMapper.searchChildDept(orgvo);
@@ -424,14 +466,121 @@ public class OrgService {
 		System.out.println("tenantVo======++"+tenantVo);
 		
 		java.util.Random generator = new java.util.Random();
-       generator.setSeed(System.currentTimeMillis());
-       int authkeyTmp = generator.nextInt(1000000) % 1000000; 
-       tenantVo.setTenant_authkey( Integer.toString(authkeyTmp) );
-        
-       tenantVo.setTenant_hadmin_config(hadminConfigData);
-       tenantVo.setTenant_hadmin_public_key(publicKey);
-       tenantVo.setTenant_hadmin_private_key(privateKey);
+		generator.setSeed(System.currentTimeMillis());
+		int authkeyTmp = generator.nextInt(1000000) % 1000000; 
+		tenantVo.setTenant_authkey( Integer.toString(authkeyTmp) );
+
+		tenantVo.setTenant_hadmin_config(hadminConfigData);
+		tenantVo.setTenant_hadmin_public_key(publicKey);
+		tenantVo.setTenant_hadmin_private_key(privateKey);
 		tenantconfigMapper.tenantInfoSave(tenantVo);
 		
+	}
+
+	public void changePolicy(PcMangrVo vo) throws ParseException, InterruptedException{
+		//이동할 pc의 마지막 성공 정책 가져오기
+		List<Map<String,Object>> getLastJobList  = new ArrayList<Map<String, Object>>();
+		getLastJobList = policyCommonMapper.checkAnsibleLastSuccessJob(vo);
+		Map<String,Object> params = new HashMap<String,Object>();
+		//이동될 부서의 현재 정책과 비교하기
+		params.put("domain", vo.getDomain());
+		params.put("after_org_seq", vo.getOrg_seq());
+		params.put("before_org_seq", vo.getOld_org_seq());
+		params.put("host_id", vo.getHost_id());
+		params.put("org_seq", vo.getOrg_seq());
+		for(int x = 0; x < getLastJobList.size();x++){
+			List<Map<String,Object>> getjobList  = new ArrayList<Map<String, Object>>();
+			params.put("before_url",getLastJobList.get(x).get("kind").toString());
+			if(getLastJobList.get(x).get("kind").toString().equals("umanage")){
+				params.put("job_id", getLastJobList.get(x).get("job_id"));
+				params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
+				params.put("policyRunFilePath","/etc/hamonize/runupdt");
+				getjobList = policyCommonMapper.comparePolicyUpdtBeforeAndAfter(params);
+			}else if(getLastJobList.get(x).get("kind").toString().equals("pmanage")){
+				params.put("job_id", getLastJobList.get(x).get("job_id"));
+				params.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
+				params.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
+				getjobList = policyCommonMapper.comparePolicyProgrmBeforeAndAfter(params);
+			}else if(getLastJobList.get(x).get("kind").toString().equals("dmanage")){
+				params.put("job_id", getLastJobList.get(x).get("job_id"));
+				params.put("policyFilePath","/etc/hamonize/security/device.hm");
+				params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
+				getjobList = policyCommonMapper.comparePolicyDeviceBeforeAndAfter(params);
+			}else if(getLastJobList.get(x).get("kind").toString().equals("fmanage")){
+				params.put("job_id", getLastJobList.get(x).get("job_id"));
+				params.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
+				params.put("policyRunFilePath","/etc/hamonize/runufw");
+				getjobList = policyCommonMapper.comparePolicyFrwlBeforeAndAfter(params);
+			}
+
+			for(int i = 0; i< getjobList.size();i++){
+				String[] listA = {};
+				String[] listB = {};
+				if(i < getjobList.size() -1){
+					if(getjobList.get(i+1).get("ppm_name").toString() != "")
+					listA = getjobList.get(i+1).get("ppm_name").toString().split(",");
+
+					if(getjobList.get(i).get("ppm_name").toString() != "")
+					listB = getjobList.get(i).get("ppm_name").toString().split(",");
+					
+					ArrayList<String> ppm_name = new ArrayList<String>(Arrays.asList(listA));
+					ArrayList<String> former_ppm_name = new ArrayList<String>(Arrays.asList(listB));
+					//former_ppm_name 차집합 ppm_name
+					former_ppm_name.removeAll(ppm_name);
+					JSONObject updtPolicy = new JSONObject();
+					if(!ppm_name.isEmpty())
+					{
+						updtPolicy.put("INS", String.join(",",ppm_name));
+					}
+					if(!former_ppm_name.isEmpty())
+					{
+						updtPolicy.put("DEL", String.join(",",former_ppm_name));
+					}
+					String output = updtPolicy.toJSONString();
+					output = output.replaceAll("\"", "\\\\\\\"");
+					params.put("output", output);
+					System.out.println(x+"------------"+i+"output=========="+output);
+				}
+			}
+		//이동될 부서의 정책으로 변경하기
+		if(getjobList.size() > 1){
+			JSONObject jobResult = new JSONObject();
+					jobResult = restApiService.makePolicyToSingle(params);
+					System.out.println("jobResultjobResult11111======"+jobResult);
+					params.put("object", jobResult.toJSONString());
+					params.put("parents_job_id", getLastJobList.get(x).get("job_id"));
+					params.put("job_id", jobResult.get("id"));
+					jobResult.clear();
+					jobResult = restApiService.checkPolicyJobResult(params);
+					System.out.println("jobResultjobResult222222======"+jobResult);
+					Thread.sleep(10000);
+					JSONObject data = new JSONObject();
+						JSONArray dataArr = new JSONArray();
+						List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
+						Map<String, Object> resultMap;
+						//dataArr = restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(params.get("job_id").toString()));
+						data = restApiService.addAnsibleJobEventByHost(params,0);
+						dataArr = (JSONArray) data.get("finalResult");
+						for (int i = 0; i < dataArr.size(); i++) {
+							resultMap = new HashMap<String, Object>();
+							String json = dataArr.get(i).toString();
+							JSONParser jsonParser = new JSONParser();
+							JSONObject jsonObj = (JSONObject) jsonParser.parse(json);
+							resultMap.put("result", json);
+							resultMap.put("status", jsonObj.get("changed"));
+							resultSet.add(resultMap);
+						}
+						params.put("data", resultSet);
+						int result = policyCommonMapper.checkCountAnsibleJobId(params);
+						if(dataArr.size() > result)
+						{
+							if(result > 0)
+							{
+								policyCommonMapper.deleteAnsibleJobEvent(params);
+							}
+							result = policyCommonMapper.addAnsibleJobEventByHost(params);
+						}
+					}
+				}
 	}
 }

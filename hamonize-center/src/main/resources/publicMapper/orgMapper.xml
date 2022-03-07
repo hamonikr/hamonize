@@ -380,7 +380,4 @@
 		UPDATE TBL_ORG SET INVENTORY_ID = #{inventory_id}, GROUP_ID = #{group_id} WHERE domain = #{domain} and seq = #{seq}
 	</update>
 
-	<update id="addDownAwxId" parameterType="com.model.OrgVo"> 
-		UPDATE TBL_ORG SET GROUP_ID = #{group_id} WHERE domain = #{domain} and seq = #{seq}
-	</update>
 </mapper>
