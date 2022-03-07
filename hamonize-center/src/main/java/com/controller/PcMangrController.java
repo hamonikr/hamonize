@@ -146,12 +146,12 @@ public class PcMangrController {
 
 	@ResponseBody
 	@RequestMapping(value = "moveTeam", method = RequestMethod.POST)
-	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException {
+	public int moveTeam(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException, InterruptedException {
 		int result = 0;
 		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
+		//LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
 		
-		vo.setDomain(lvo.getDomain());
+		//vo.setDomain(lvo.getDomain());
 		result = oService.pcMove(vo);
 		return result;
 
@@ -159,13 +159,13 @@ public class PcMangrController {
 
 	@ResponseBody
 	@RequestMapping(value = "deletePc", method = RequestMethod.POST)
-	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException {
+	public int deletePc(HttpSession session, Model model, PcMangrVo vo) throws NamingException, ParseException, InterruptedException {
 		int result = 0;
 		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
+		//LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
 		
-		vo.setDomain(lvo.getDomain());
-		result = oService.pcMove(vo);
+		//vo.setDomain(lvo.getDomain());
+		//result = oService.pcMove(vo);
 		result = oService.deletePc(vo);
 		System.out.println("delete pc result ================"+ result );
 		return result;

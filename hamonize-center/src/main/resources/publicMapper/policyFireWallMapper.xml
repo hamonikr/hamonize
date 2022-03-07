@@ -63,7 +63,7 @@
 			(
 			    select
 			     DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(ppm_seq),',') , ',')::int[]) ppm_seq
-			    from tbl_frwl_applc
+			    from tbl_frwl_applc where length(ppm_seq) > 0
 			) TB on TA.sm_seq = TB.ppm_seq
 			where TA.domain = #{mngeVo.domain}
 			order by TA.sm_seq desc

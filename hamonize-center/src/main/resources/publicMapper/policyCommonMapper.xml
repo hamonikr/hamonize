@@ -127,7 +127,11 @@
 	</select> -->
 
 	<select id="checkAnsibleJobFailOrNot" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
-	select domain,job_id,status,data ->> 'host' as host_id,kind
+	select domain,
+	job_id,
+	status,
+	(select host_id from tbl_pc_mangr where pc_uuid = #{uuid}) as host_id,
+	kind
 		from tbl_ansible_event_job
 		where (kind,job_id)
 		in(select kind,max(job_id) as job_id from tbl_ansible_event_job where domain = #{domain} group by kind)
@@ -303,4 +307,66 @@
 						search_org ) and domain = #{domain}
 	</select>
 
+	<select id="checkAnsibleLastSuccessJob" parameterType="com.model.PcMangrVo" resultType="java.util.HashMap">
+	select domain,
+	job_id,
+	status,
+	(select host_id from tbl_pc_mangr where pc_uuid = #{pc_uuid}) as host_id,
+	kind
+		from tbl_ansible_event_job
+		where (kind,job_id)
+		in(select kind,max(job_id) as job_id from tbl_ansible_event_job where domain = #{domain} group by kind)
+		<!-- and domain = #{domain} -->
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{pc_uuid}
+	</select>
+
+
+	<select id="comparePolicyUpdtBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select ppm_name from tbl_updt_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{before_org_seq}
+		union
+		select ppm_name from tbl_updt_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_updt_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
+		and org_seq = #{after_org_seq}
+	</select>
+
+	<select id="comparePolicyProgrmBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select ppm_name from tbl_progrm_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{before_org_seq}
+		union
+		select ppm_name from tbl_progrm_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_progrm_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
+		and org_seq = #{after_org_seq}
+	</select>
+
+	<select id="comparePolicyFrwlBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select ppm_name from tbl_frwl_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{before_org_seq}
+		union
+		select ppm_name from tbl_frwl_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_frwl_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
+		and org_seq = #{after_org_seq}
+	</select>
+
+	<select id="comparePolicyDeviceBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select ppm_name from tbl_device_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{before_org_seq}
+		union
+		select ppm_name from tbl_device_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_device_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
+		and org_seq = #{after_org_seq}
+	</select>
+	
 </mapper>
