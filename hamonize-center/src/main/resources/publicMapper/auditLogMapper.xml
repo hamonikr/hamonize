@@ -959,24 +959,46 @@ select GA.*
 		where domain = #{domain}
 	</select>
 	
-	
 	<select id="firewallList" resultType="map" parameterType="hashmap">
-		<foreach collection="debList" item="item" index="index">
-			(select
-						    *
-						  from
-						    tbl_act_firewall_log tb1
-						    ,tbl_policy_firewall_list tb2
-						  where
-						    tb1.retport = tb2.sm_port
-						    and tb1.pc_uuid = #{uuid}
-						    and tb1.retport =  #{item} 
-						  order by
-						    tb1.rgstr_date desc limit 1)
-			<if test="debListCnt > index+1">
-				            	UNION ALL
-				            </if>
-		</foreach>
+	
+	select
+		ta.domain
+		, ta.sm_dc
+		, ta.sm_name
+		, ta.sm_port
+		, tb.org_seq
+		, tb.pc_uuid
+		, to_char(tb.rgstr_date, 'YYYY-MM-DD HH24:MI:SS') as rgstr_date
+		, tb.status
+		, tb.kind
+	from tbl_policy_firewall_list ta 
+	left outer join (
+		select 
+	    	sta.* 
+	  	from (
+	    	select 
+	       	seq, org_seq, pc_uuid, rgstr_date, status, retport, kind, ROW_NUMBER() OVER( PARTITION BY retport order by  rgstr_date desc  ) AS ROW_NUM
+	    	from tbl_act_firewall_log
+	    	where pc_uuid = #{uuid}
+	    	order by ROW_NUM asc  
+		) sta 
+		where sta. ROW_NUM = 1
+		order by sta.rgstr_date desc 
+	) tb on ta.sm_port = tb.retport
+	where ta.sm_seq in (
+	    select 
+	      distinct 
+	      unnest(string_to_array(ppm_seq, ','))::int   
+	    from ( 
+	      select 
+	        ppm_seq
+	      from  tbl_frwl_applc_history 
+	      where "domain" = #{domain}
+	      and org_seq = #{org_seq}::int
+	      order by rgstr_date desc 
+	      limit 2 
+	    ) ta
+	  )
 	</select>
 
 	<!-- 디바이스 허용 정책 배포 -->
@@ -992,6 +1014,47 @@ select GA.*
 			 </select>
 
 	<select id="deviceList" parameterType="hashmap" resultType="map">
+	
+	select
+		ta.domain
+		, ta.sm_dc
+		, ta.sm_device_code
+		, ta.sm_name
+	  	, tb.org_seq
+	  	, tb.pc_uuid
+	  	, to_char(tb.rgstr_date, 'YYYY-MM-DD HH24:MI:SS') as rgstr_date
+	  	, tb.status
+	from tbl_policy_device_list ta 
+	left outer join (
+	  select 
+	    sta.* 
+	  from (
+	    select 
+	       seq, org_seq, pc_uuid, rgstr_date, status, product, vendorcode, productcode
+	    ,   ROW_NUMBER() OVER( PARTITION BY product order by  rgstr_date desc  ) AS ROW_NUM
+	    from tbl_act_device_log
+	    where 1=1
+	      and pc_uuid = #{uuid}
+	    order by ROW_NUM asc  
+	  ) sta 
+	  where sta. ROW_NUM = 1
+	  order by sta.rgstr_date desc 
+	) tb on ta.sm_name = tb.product
+	where ta.sm_seq in (
+	    select 
+	      distinct unnest(string_to_array(ppm_seq, ','))::int   
+	    from ( 
+	      select 
+	        ppm_seq
+	      from  tbl_device_applc_history 
+	      where "domain" = #{domain}
+	      and org_seq = #{org_seq}::int
+	      order by rgstr_date desc 
+	      limit 2 
+	    ) ta
+	  )
+	</select>
+	<select id="tmp_deviceList" parameterType="hashmap" resultType="map">
 		<foreach collection="debList" item="item" index="index">
 			(select t.*
 							from(

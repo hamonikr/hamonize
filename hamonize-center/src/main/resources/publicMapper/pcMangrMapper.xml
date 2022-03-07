@@ -205,7 +205,7 @@
 
 	<select id="teamList" resultType="com.model.OrgVo">
 		with recursive search_org(
-					"domain",
+					domain,
 					seq,
 					p_seq,
 					org_nm,
@@ -217,7 +217,7 @@
 					group_id,
 					cycle) as (
 					select
-					a."domain" ,
+					a.domain ,
 						a.seq,
 						a.p_seq,
 						a.org_nm,
@@ -235,7 +235,7 @@
 						and a.domain = #{domain}
 					union all
 					select
-						b."domain",
+						b.domain,
 						b.seq,
 						b.p_seq,
 						b.org_nm,
@@ -251,10 +251,10 @@
 						search_org so
 					where
 						b.p_seq = so.seq
-						and b."domain" = so.domain
+						and b.domain = so.domain
 						and not cycle)
 							select
-						"domain",
+						domain,
 						seq,
 						p_seq,
 						lpad('', LEVEL) || org_nm as org_nm,
@@ -314,7 +314,7 @@
 		from tbl_org ta , tbl_pc_mangr  tb
 		<where>
 			ta.domain  = #{pcMangrVo.domain}
-			and ta."domain"  = tb."domain" 
+			and ta.domain  = tb.domain 
 			and ta.seq= tb.org_seq
 			<if test="pcMangrVo.org_seq != null and pcMangrVo.org_seq != ''">
 				and org_seq in (
@@ -450,7 +450,7 @@
 		from tbl_org ta , tbl_pc_mangr  tb
 		<where>
 			ta.domain  = #{domain}
-			and ta."domain"  = tb."domain" 
+			and ta.domain  = tb.domain 
 			and ta.seq= tb.org_seq
 			<if test="org_seq != null and org_seq != ''">
 				and org_seq in (
@@ -695,7 +695,8 @@
 	
 
 		select GA.* 
-		, GB.*
+		, ( CASE WHEN GB.count is null  THEN '0' ELSE  GB.count END ) as count  
+		, GB.act_debname, GB.KIND
 		, (
 		    select 
 		      array_to_string(array(select data -> 'summary_fields' -> 'host' ->> 'description' ||':'||status || ':' || count(status) as status from tbl_ansible_event_job
@@ -708,7 +709,7 @@
 		    , tc.rgstr_date
 		    from (
 		      select A.ppm_seq, 'INSERT' as gubun 
-		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      , (select job_id from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
 		      from 
 		      (
 		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}
@@ -719,7 +720,7 @@
 		      ) A
 		      union all 
 		      select A.ppm_seq, 'DELETE' as gubun 
-		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      , (select job_id from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
 		      from 
 		      (
 		        select    
@@ -731,7 +732,7 @@
 		      union all
 		      
 		      select A.ppm_seq , 'M' as gubun 
-		      , (select job_id from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
+		      , (select job_id from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
 		      from 
 		      (
 		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_updt_applc where domain =  #{domain} and org_seq = #{org_seq}
@@ -814,7 +815,7 @@
 		        ) TA
 		      WHERE
 		        row_number = 1
-		        and rgstr_date >= (select rgstr_date from  tbl_updt_applc_history where "domain" =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)
+		        and rgstr_date >= (select rgstr_date from  tbl_updt_applc_history where domain =  #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)
 		      ORDER BY
 		        TA.rgstr_date DESC
 		    ) PA
@@ -880,10 +881,11 @@
 	<select id="pcPolicyProgrmList" resultType="map" parameterType="map">
 	
 		select GA.* 
-		, GB.*
+		, ( CASE WHEN GB.count is null  THEN '0' ELSE  GB.count END ) as count  
+		, GB.act_debname, GB.KIND
 		, (
 		    select 
-		      array_to_string(array(select status || ':' ||  (data -> 'summary_fields' -> 'host' ->> 'description') ||':'||count(status) as status from tbl_ansible_event_job
+		      array_to_string(array(select data -> 'summary_fields' -> 'host' ->> 'description' ||':'||status || ':' || count(status) as status from tbl_ansible_event_job
 		    where domain = #{domain} and job_id = GA.job_id
 		    group by job_id, data , status), ', ')
 		) as run_status
@@ -893,7 +895,7 @@
 		    , to_char(tc.rgstr_date, 'YYYY-MM-DD HH24:MI:SS.MS')as rgstr_date
 		    from (
 		      select A.ppm_seq, 'INSERT' as gubun 
-		      , (select job_id from  tbl_progrm_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      , (select job_id from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
 		      from 
 		      (
 		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_progrm_applc where domain = #{domain} and org_seq = #{org_seq}
@@ -904,7 +906,7 @@
 		      ) A
 		      union all 
 		      select A.ppm_seq, 'DELETE' as gubun 
-		      , (select job_id from  tbl_progrm_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      , (select job_id from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
 		      from 
 		      (
 		        select    
@@ -916,7 +918,7 @@
 		      union all
 		      
 		      select A.ppm_seq , 'M' as gubun 
-		      , (select job_id from  tbl_progrm_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
+		      , (select job_id from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
 		      from 
 		      (
 		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_progrm_applc where domain = #{domain} and org_seq = #{org_seq}
@@ -998,7 +1000,7 @@
 		        ) TA
 		      WHERE
 		        row_number = 1
-		        and  rgstr_date > (select rgstr_date from  tbl_updt_applc_history where "domain" = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0)
+		        and  rgstr_date > (select rgstr_date from  tbl_updt_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0)
 		      ORDER BY
 		        TA.rgstr_date DESC
 		    ) PA
@@ -1063,6 +1065,136 @@
 
 	<!-- 정책배포결과 방화벽 -->
 	<select id="pcPolicyFirewallList" resultType="map" parameterType="map">
+	
+		select GA.* 
+		, ( CASE WHEN GB.count is null  THEN '0' ELSE  GB.count END ) as count  
+		, GB.act_retport, GB.KIND
+		, (
+		    select 
+		      array_to_string(array(select data -> 'summary_fields' -> 'host' ->> 'description' ||':'||status || ':' || count(status) as status from tbl_ansible_event_job
+		    where domain = #{domain} and job_id = GA.job_id
+		    group by job_id, data , status), ', ')
+		) as run_status
+		from (
+		   select ta.* 
+		    , tb.sm_port as retport
+		    , tc.rgstr_date
+		    from (
+		      select A.ppm_seq, 'INSERT' as gubun 
+		      , (select job_id from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_frwl_applc where domain = #{domain} and org_seq = #{org_seq}
+		        EXCEPT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      union all 
+		      select A.ppm_seq, 'DELETE' as gubun 
+		      , (select job_id from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date  desc limit 1 OFFSET  1 ) ta
+		        EXCEPT
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_frwl_applc where domain = #{domain} and org_seq = #{org_seq}
+		      ) A 
+		      union all
+		      
+		      select A.ppm_seq , 'M' as gubun 
+		      , (select job_id from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_frwl_applc where domain = #{domain} and org_seq = #{org_seq}
+		        INTERSECT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      
+		    ) ta
+		    left outer join tbl_policy_firewall_list tb on ta.ppm_seq = tb.sm_seq 
+		    left outer join (
+		      select * from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date  desc limit 2
+		    ) tc  on ta.job_id = tc.job_id
+		  
+		  ) GA
+		  
+		
+		left outer join (
+		   SELECT
+		    DISTINCT PA.count,
+		    PA.retport as act_retport, PA.KIND
+		  FROM
+		    (
+		      SELECT
+		        ROW_NUMBER() OVER( PARTITION BY TA.retport , TA.kind)
+		        , COUNT(TA.retport) over( partition by TA.retport , TA.kind )
+		        , TA.*
+		      FROM
+		        (
+		          SELECT
+		            ROW_NUMBER() OVER( PARTITION BY A.retport , A.pc_uuid ORDER BY A.rgstr_date DESC )
+		            , A.retport
+		            , A.kind
+		            , A.rgstr_date
+		            , A.status
+		            , A.pc_uuid
+		          FROM
+		            (
+		              SELECT
+		                DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(retport), ',') , ',')) retport
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		              FROM
+		                tbl_act_firewall_log
+		              WHERE
+		                pc_uuid in (
+								SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
+								(
+									WITH recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+										FROM tbl_org a
+										WHERE a.seq = #{org_seq}
+										and a.domain = #{domain}
+										UNION all
+										SELECT a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+										FROM tbl_org a, search_org so
+										WHERE a.p_seq = so.seq and not cycle)
+										SELECT seq
+										FROM search_org
+								)
+							)
+		              GROUP BY
+		                retport
+		                , kind
+		                , org_seq
+		                , rgstr_date
+		                , status
+		                , pc_uuid
+		              order by
+		                rgstr_date desc
+		            ) A
+		          WHERE
+		            A.retport != ''
+		        ) TA
+		      WHERE
+		        row_number = 1
+		        and  rgstr_date > (select rgstr_date from  tbl_frwl_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0)
+		      ORDER BY
+		        TA.rgstr_date DESC
+		    ) PA
+		  ) GB on GA.retport = GB.act_retport
+		  where  1=1
+		  ORDER BY GA.gubun desc
+			
+	</select>
+	<select id="tmp_pcPolicyFirewallList" resultType="map" parameterType="map">
 		SELECT
     DISTINCT PA.count, PA.retport, (CASE WHEN PA.kind = 'allow'  THEN '허용' ELSE '차단' END ) as status , (CASE WHEN PA.status = 'Y'  THEN '완료' ELSE '미완료' END ) as kind, PA.rgstr_date
 		FROM (
@@ -1116,6 +1248,142 @@
 
 	<!-- 정책배포결과 디바이스 -->
 	<select id="pcPolicyDeviceList" resultType="map" parameterType="map">
+		
+		select GA.*
+		  , ( CASE WHEN GB.count is null  THEN '0' ELSE  GB.count END ) as count  
+		, GB.act_product 
+		, GA.sm_name || '(' || GA.sm_device_code || ')' as product
+		 , GB.status
+		, (
+		    select 
+		      array_to_string(array(select data -> 'summary_fields' -> 'host' ->> 'description' ||':'||status || ':' || count(status) as status from tbl_ansible_event_job
+		    where domain = #{domain} and job_id = GA.job_id
+		    group by job_id, data , status), ', ')
+		) as run_status
+		from (
+		   select ta.*
+		    , tb.sm_name
+		    , tb.sm_device_code 
+		    , tc.rgstr_date
+		    from (
+		      select A.ppm_seq, 'INSERT' as gubun 
+		      , (select job_id from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_device_applc where domain = #{domain} and org_seq = #{org_seq}
+		        EXCEPT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      union all 
+		      select A.ppm_seq, 'DELETE' as gubun 
+		      , (select job_id from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0) as job_id
+		      from 
+		      (
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 1 OFFSET  1 ) ta
+		        EXCEPT
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_device_applc where domain = #{domain} and org_seq = #{org_seq}
+		      ) A 
+		      union all
+		      
+		      select A.ppm_seq , 'M' as gubun 
+		      , (select job_id from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 1)  as job_id
+		      from 
+		      (
+		        select unnest(string_to_array(ppm_seq, ','))::int as ppm_seq from  tbl_device_applc where domain = #{domain} and org_seq = #{org_seq}
+		        INTERSECT
+		        select    
+		          unnest(string_to_array(ta.ppm_seq, ','))::int  as ppm_seq 
+		        from ( select * from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date  desc limit 1 OFFSET  1 ) ta 
+		      ) A
+		      
+		    ) ta
+		    left outer join tbl_policy_device_list tb on ta.ppm_seq = tb.sm_seq 
+		    left outer join (
+		      select * from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq}  order by rgstr_date  desc limit 2
+		    ) tc  on ta.job_id = tc.job_id
+		  
+		  ) GA
+		  
+		  
+		
+		left outer join (
+		   SELECT
+		    DISTINCT PA.count,
+		    PA.product as act_product, PA.status
+		  FROM
+		    (
+		      SELECT
+		        ROW_NUMBER() OVER( PARTITION BY TA.product , TA.status)
+		        , COUNT(TA.product) over( partition by TA.product , TA.status )
+		        , TA.*
+		      FROM
+		        (
+		          SELECT
+		            ROW_NUMBER() OVER( PARTITION BY A.product , A.pc_uuid ORDER BY A.rgstr_date DESC )
+		            , A.product
+		            , A.rgstr_date
+		            , A.status
+		            , A.vendorcode
+		            , A.productcode
+		          FROM
+		            (
+		              SELECT
+		                 DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(product), ',') , ',')) product
+		                , pc_uuid
+		                , pc_hostname
+		                , status
+		                , rgstr_date
+		                , vendorcode
+		                , productcode
+		              FROM
+		                tbl_act_device_log
+		              WHERE
+		                  pc_uuid in ( 
+		                  SELECT pc_uuid from tbl_pc_mangr where pc_os != 'W' and org_seq in
+		                    (
+		                      WITH recursive search_org(domain,seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+		                        SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+		                        FROM tbl_org a
+		                        WHERE a.seq = #{org_seq}
+		                          and a.domain = #{domain}
+		                        UNION all
+		                        SELECT a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+		                        FROM tbl_org a, search_org so
+		                        WHERE a.p_seq = so.seq and a.domain = so.domain and not cycle)
+		                        SELECT seq
+		                        FROM search_org
+		                    )
+		                  )
+		              GROUP BY
+		                pc_uuid
+		                , pc_hostname
+		                , status
+		                , product
+		                , rgstr_date
+		                , vendorcode
+		                , productcode
+		              order by
+		                rgstr_date desc
+		            ) A
+		          WHERE
+		            A.product != ''
+		        ) TA
+		      WHERE
+		        row_number = 1
+		        and  rgstr_date > (select rgstr_date from  tbl_device_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0)
+		      ORDER BY
+		        TA.rgstr_date DESC
+		    ) PA
+		  ) GB on GA.sm_name = GB.act_product
+		  where  1=1
+		  ORDER BY GA.gubun desc
+				
+	</select>
+	<select id="tmnp_pcPolicyDeviceList" resultType="map" parameterType="map">
 		SELECT
     DISTINCT PA.count, PA.product||'('||PA.vendorcode||':'||PA.productcode||')' as product, (CASE WHEN PA.status = 'Y'  THEN '허용' ELSE '차단' END ) as status, PA.rgstr_date
 		FROM (

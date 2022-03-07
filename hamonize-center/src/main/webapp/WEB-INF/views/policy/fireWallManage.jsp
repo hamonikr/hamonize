@@ -137,7 +137,7 @@
 							<ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user">
 
 								<li class="hidden-xs ">
-									<a href="javascript:firewallMngrOpen();" data-toggle="dropdown"
+									<a href="javascript:;" data-toggle="dropdown"
 										data-target="#firewallLayer">
 										<!-- <i class="fa fa-bell"></i> -->
 										방화벽추가

@@ -13,7 +13,9 @@ import java.text.ParseException;
 
 // import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IAuditLogMapper;
+import com.mapper.IGetAgentJobMapper;
 import com.model.AuditLogVo;
+import com.model.GetAgentJobVo;
 import com.model.LoginVO;
 import com.paging.PagingVo;
 
@@ -21,6 +23,9 @@ import com.paging.PagingVo;
 @Service
 public class AuditLogService {
 
+	@Autowired
+	private IGetAgentJobMapper agentJobMapper;
+	
 	@Autowired
 	private IAuditLogMapper auditLogMapper;
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -169,10 +174,12 @@ public class AuditLogService {
 
 			List<String> list = auditLogMapper.firewallPackageList(lvo.getDomain());
 
+			
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
 			jsonObject.put("uuid", params.get("pc_uuid"));
 			jsonObject.put("domain", lvo.getDomain());
+			jsonObject.put("org_seq", pcUUID_Domain( params.get("pc_uuid").toString(), lvo.getDomain() ));
 
 			result = auditLogMapper.firewallList(jsonObject);
 
@@ -188,7 +195,7 @@ public class AuditLogService {
 	/**
 	 * 디바이스 정책 적용 결과
 	 */
-	public List<Map<String, Object>> deviceList(HashMap<String, Object> params) {
+	public List<Map<String, Object>> deviceList(HashMap<String, Object> params, LoginVO lvo) {
 
 		HashMap<String, Object> jsonObject = new HashMap<String, Object>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
@@ -201,6 +208,10 @@ public class AuditLogService {
 
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
+			jsonObject.put("uuid", params.get("pc_uuid"));
+			jsonObject.put("domain", lvo.getDomain());
+			jsonObject.put("org_seq", pcUUID_Domain( params.get("pc_uuid").toString(), lvo.getDomain() ));
+
 
 			result = auditLogMapper.deviceList(jsonObject);
 
@@ -236,4 +247,12 @@ public class AuditLogService {
 
 	}
 
+	public Long pcUUID_Domain(String uuid, String domain) {
+		GetAgentJobVo agentVo = new GetAgentJobVo();
+		agentVo.setPc_uuid(uuid);
+		agentVo.setDomain(domain);
+		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
+		Long segSeq = agentVo.getSeq();
+		return segSeq;
+	}
 }

@@ -316,9 +316,9 @@
 			
 			$('form[name=frm] input[name=ppm_name]').val(ppm_names);
 			
-			if (ppm_seq == "") {
-				ppm_seq = 0;
-			}
+// 			if (ppm_seq == "") {
+// 				ppm_seq = 0;
+// 			}
 			
 			console.log("ppm===" + $('form[name=frm] input[name=ppm_name]').val()); 
 			console.log("forma==="+ $('form[name=frm] input[name=former_ppm_name]').val()); 
