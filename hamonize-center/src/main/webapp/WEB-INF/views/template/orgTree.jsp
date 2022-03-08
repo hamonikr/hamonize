@@ -288,7 +288,7 @@ function checkAnsibleJobStatus(job_id){
 			}else if(job_id != 0){
 				console.log("작업성공여부=="+res.status);
 				target.disabled = false;
-				//addAnsibleJobEventByHost(res.inventory,res.limit,job_id);
+				//addAnsibleJobEventByHosts(res.inventory,res.limit,job_id);
 			}
 		},
 		error:function(request,status,error){
@@ -298,10 +298,10 @@ function checkAnsibleJobStatus(job_id){
 }
 
 //ansible작업상태등록
-function addAnsibleJobEventByHost(...args){
+function addAnsibleJobEventByHosts(...args){
 	const target = document.getElementById('btnSave');
 	$.ajax({
-		url : '/gplcs/addAnsibleJobEventByHost',
+		url : '/gplcs/addAnsibleJobEventByHosts',
 		type: 'POST',
 		async:false,
 		data:{inventory_id:args[0],org_seq:args[1],job_id:args[2]},

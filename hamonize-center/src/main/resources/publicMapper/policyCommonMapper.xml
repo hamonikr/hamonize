@@ -28,7 +28,7 @@
 				</foreach>
 	</insert> -->
 
-	<insert id="addAnsibleJobEventByHost" parameterType="java.util.HashMap">
+	<insert id="addAnsibleJobEventByHosts" parameterType="java.util.HashMap">
 			INSERT INTO tbl_ansible_event_job 
 				(DOMAIN,
 				JOB_ID,
@@ -43,6 +43,30 @@
 					<!-- (select distinct domain from tbl_org where inventory_id = #{inventory_id}::int), -->
 					#{domain},
 					#{job_id}::int,
+					#{org_seq}::int,
+					#{before_url},
+					#{item.status},
+					#{item.result}::jsonb,
+					now()
+				)
+				</foreach>
+	</insert>
+
+	<insert id="addAnsibleJobEventByHost" parameterType="java.util.HashMap">
+			INSERT INTO tbl_ansible_event_job 
+				(DOMAIN,
+				JOB_ID,
+				ORG_SEQ,
+				KIND,
+				STATUS,
+				DATA,
+				RGSTR_DATE) 
+				VALUES
+				<foreach collection="data" item="item" separator=",">
+				(
+					<!-- (select distinct domain from tbl_org where inventory_id = #{inventory_id}::int), -->
+					#{domain},
+					#{before_job_id}::int,
 					#{org_seq}::int,
 					#{before_url},
 					#{item.status},
@@ -127,16 +151,22 @@
 	</select> -->
 
 	<select id="checkAnsibleJobFailOrNot" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
-	select domain,
-	job_id,
-	status,
-	(select host_id from tbl_pc_mangr where pc_uuid = #{uuid}) as host_id,
-	kind
+	select *,
+	(select host_id from tbl_pc_mangr where pc_uuid = #{uuid}) as host_id
 		from tbl_ansible_event_job
-		where (kind,job_id)
-		in(select kind,max(job_id) as job_id from tbl_ansible_event_job where domain = #{domain} group by kind)
-		<!-- and domain = #{domain} -->
+		where (kind,rgstr_date)
+		in(select kind,max(rgstr_date) from tbl_ansible_event_job where domain = #{domain} group by kind)
 		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+	</select>
+
+	<select id="getAnsibleLastSuccessJob" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+	select *,
+	(select host_id from tbl_pc_mangr where pc_uuid = #{uuid}) as host_id
+		from tbl_ansible_event_job
+		where (kind,rgstr_date)
+		in(select kind,max(rgstr_date) as job_id from tbl_ansible_event_job where domain = #{domain} and status = 'true' group by kind)
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		and kind = #{kind}
 	</select>
 
 	<select id="checkAnsibleJobFailOrNotList" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
@@ -144,7 +174,6 @@
 		from tbl_ansible_event_job
 		where (kind,job_id)
 		in(select kind,max(job_id) as job_id from tbl_ansible_event_job where domain = #{domain} group by kind)
-		<!-- and domain = #{domain} -->
 		and org_seq in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
 			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
 			from tbl_org a 
@@ -161,6 +190,54 @@
 	</select>
 
 	<select id="checkAnsibleJobUpdtWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+		select * from tbl_updt_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{org_seq}
+		union all
+		select * from tbl_updt_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_updt_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
+		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+	</select>
+
+	<select id="checkAnsibleJobProgrmWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+		select * from tbl_progrm_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{org_seq}
+		union all
+		select * from tbl_progrm_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_progrm_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
+		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+	</select>
+
+	<select id="checkAnsibleJobFrwlWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+		select * from tbl_frwl_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{org_seq}
+		union all
+		select * from tbl_frwl_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_frwl_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
+		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+	</select>
+
+	<select id="checkAnsibleJobDeviceWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
+		select * from tbl_device_applc_history
+		where domain = #{domain}
+		and job_id = #{job_id}
+		and org_seq = #{org_seq}
+		union all
+		select * from tbl_device_applc_history
+		where domain = #{domain}
+		and job_id  = (select max(job_id) from tbl_device_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
+	and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+	</select>
+
+	<!-- <select id="checkAnsibleJobUpdtWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
 	select * from tbl_updt_applc_history where job_id in ( 
 	(select job_id from tbl_ansible_event_job 
 		where 
@@ -258,7 +335,7 @@
 		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
 		) 
 ) and org_seq  = (select org_seq from tbl_pc_mangr tpm where pc_uuid = #{uuid}) order by job_id asc
-	</select>
+	</select> -->
 
 	<select id="getPcCountByOrgSeq" parameterType="java.util.HashMap" resultType="Integer">
 	select count(*) as count from tbl_pc_mangr 
@@ -308,65 +385,61 @@
 	</select>
 
 	<select id="checkAnsibleLastSuccessJob" parameterType="com.model.PcMangrVo" resultType="java.util.HashMap">
-	select domain,
-	job_id,
-	status,
-	(select host_id from tbl_pc_mangr where pc_uuid = #{pc_uuid}) as host_id,
-	kind
+	select *,
+	(select host_id from tbl_pc_mangr where pc_uuid = #{pc_uuid}) as host_id
 		from tbl_ansible_event_job
-		where (kind,job_id)
-		in(select kind,max(job_id) as job_id from tbl_ansible_event_job where domain = #{domain} group by kind)
-		<!-- and domain = #{domain} -->
+		where (kind,rgstr_date)
+		in(select kind,max(rgstr_date) as job_id from tbl_ansible_event_job where domain = #{domain} and status = 'true' group by kind)
 		and data -> 'summary_fields' -> 'host' ->> 'description' = #{pc_uuid}
 	</select>
 
 
 	<select id="comparePolicyUpdtBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		select ppm_name from tbl_updt_applc_history
+		select * from tbl_updt_applc_history
 		where domain = #{domain}
 		and job_id = #{job_id}
 		and org_seq = #{before_org_seq}
-		union
-		select ppm_name from tbl_updt_applc_history
+		union all
+		select * from tbl_updt_applc_history
 		where domain = #{domain}
 		and job_id  = (select max(job_id) from tbl_updt_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
 		and org_seq = #{after_org_seq}
 	</select>
 
 	<select id="comparePolicyProgrmBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		select ppm_name from tbl_progrm_applc_history
+		select * from tbl_progrm_applc_history
 		where domain = #{domain}
 		and job_id = #{job_id}
 		and org_seq = #{before_org_seq}
-		union
-		select ppm_name from tbl_progrm_applc_history
+		union all
+		select * from tbl_progrm_applc_history
 		where domain = #{domain}
 		and job_id  = (select max(job_id) from tbl_progrm_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
 		and org_seq = #{after_org_seq}
 	</select>
 
 	<select id="comparePolicyFrwlBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		select ppm_name from tbl_frwl_applc_history
+		select * from tbl_frwl_applc_history
 		where domain = #{domain}
 		and job_id = #{job_id}
 		and org_seq = #{before_org_seq}
-		union
-		select ppm_name from tbl_frwl_applc_history
+		union all
+		select * from tbl_frwl_applc_history
 		where domain = #{domain}
 		and job_id  = (select max(job_id) from tbl_frwl_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
 		and org_seq = #{after_org_seq}
 	</select>
 
 	<select id="comparePolicyDeviceBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		select ppm_name from tbl_device_applc_history
+		select * from tbl_device_applc_history
 		where domain = #{domain}
 		and job_id = #{job_id}
 		and org_seq = #{before_org_seq}
-		union
-		select ppm_name from tbl_device_applc_history
+		union all
+		select * from tbl_device_applc_history
 		where domain = #{domain}
 		and job_id  = (select max(job_id) from tbl_device_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
 		and org_seq = #{after_org_seq}
 	</select>
-	
+
 </mapper>

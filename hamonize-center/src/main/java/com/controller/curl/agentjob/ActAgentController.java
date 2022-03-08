@@ -362,24 +362,36 @@ public class ActAgentController {
 			getFailJobList = commonMapper.checkAnsibleJobFailOrNot(inputVo);
 			System.out.println("getFailJobList======"+getFailJobList.size());
 			checkResult.put("pc_uuid", inputVo.getUuid());
+			checkResult.put("domain", inputVo.getDomain());
 			//PC가 꺼졌을때 정책 내려졌을 경우 PC부팅하면서 최신 정책을 불러와서 정책적용
 			for(int x = 0; x < getFailJobList.size();x++){
 				if(getFailJobList.get(x).get("status").toString().equals("false")){
+					inputVo.setKind(getFailJobList.get(x).get("kind").toString());
+					Map<String,Object> getSuccessJob  = new HashMap<String, Object>();
+					getSuccessJob = commonMapper.getAnsibleLastSuccessJob(inputVo);
 					checkResult.put("host_id", getFailJobList.get(x).get("host_id"));
 					List<Map<String,Object>> getjobList  = new ArrayList<Map<String, Object>>();
 					if(getFailJobList.get(x).get("kind").toString().equals("umanage")){
+						inputVo.setJob_id(Long.parseLong(getSuccessJob.get("job_id").toString()));
+						inputVo.setOrg_seq(Long.parseLong(getSuccessJob.get("org_seq").toString()));
 						getjobList = commonMapper.checkAnsibleJobUpdtWhenOffPc(inputVo);
 						checkResult.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 						checkResult.put("policyRunFilePath","/etc/hamonize/runupdt");
 					}else if(getFailJobList.get(x).get("kind").toString().equals("pmanage")){
+						inputVo.setJob_id(Long.parseLong(getFailJobList.get(x).get("job_id").toString()));
+						inputVo.setOrg_seq(Long.parseLong(getFailJobList.get(x).get("org_seq").toString()));
 						getjobList = commonMapper.checkAnsibleJobProgrmWhenOffPc(inputVo);
 						checkResult.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
 						checkResult.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
 					}else if(getFailJobList.get(x).get("kind").toString().equals("dmanage")){
+						inputVo.setJob_id(Long.parseLong(getFailJobList.get(x).get("job_id").toString()));
+						inputVo.setOrg_seq(Long.parseLong(getFailJobList.get(x).get("org_seq").toString()));
 						getjobList = commonMapper.checkAnsibleJobDeviceWhenOffPc(inputVo);
 						checkResult.put("policyFilePath","/etc/hamonize/security/device.hm");
 						checkResult.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
 					}else if(getFailJobList.get(x).get("kind").toString().equals("fmanage")){
+						inputVo.setJob_id(Long.parseLong(getFailJobList.get(x).get("job_id").toString()));
+						inputVo.setOrg_seq(Long.parseLong(getFailJobList.get(x).get("org_seq").toString()));
 						getjobList = commonMapper.checkAnsibleJobFrwlWhenOffPc(inputVo);
 						checkResult.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
 						checkResult.put("policyRunFilePath","/etc/hamonize/runufw");
@@ -411,6 +423,7 @@ public class ActAgentController {
 							}
 							String output = updtPolicy.toJSONString();
 							output = output.replaceAll("\"", "\\\\\\\"");
+							System.out.println("output============"+output);
 							checkResult.put("output", output);
 						}
 					}
@@ -420,9 +433,9 @@ public class ActAgentController {
 					checkResult.put("object", jobResult.toJSONString());
 					checkResult.put("parents_job_id", getFailJobList.get(x).get("job_id"));
 					checkResult.put("job_id", jobResult.get("id"));
-					jobResult.clear();
-					jobResult = restApiService.checkPolicyJobResult(checkResult);
-					System.out.println("jobResultjobResult222222======"+jobResult);
+					//jobResult.clear();
+					//jobResult = restApiService.checkPolicyJobResult(checkResult);
+					//System.out.println("jobResultjobResult222222======"+jobResult);
 					Thread.sleep(7000);
 						JSONArray dataArr = new JSONArray();
 						List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();

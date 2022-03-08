@@ -350,7 +350,7 @@ public JSONObject makePolicyToSingle(Map<String, Object> params) throws ParseExc
     String objects = response.block();
     JSONParser jsonParser = new JSONParser();
     JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
-    params.put("job_id",jsonObj.get("id").toString() );
+    params.put("job_id",jsonObj.get("id").toString());
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
@@ -473,13 +473,13 @@ public JSONObject checkAndAddPolicyJobResult(Map<String, Object> params) throws 
     t1.start();
     }else{
       System.out.println("end!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      //addAnsibleJobEventByHost(Integer.parseInt(jsonObj.get("id").toString()));
-      addAnsibleJobEventByHost(params,0);
+      //addAnsibleJobEventByHosts(Integer.parseInt(jsonObj.get("id").toString()));
+      addAnsibleJobEventByHosts(params,0);
     }
     return jsonObj;
 }
 
-public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count) throws ParseException, InterruptedException{
+public JSONObject addAnsibleJobEventByHosts(Map<String, Object> params,int count) throws ParseException, InterruptedException{
 
   Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
   .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
@@ -508,10 +508,13 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count)
         for(Object tmp : resultsArray){
           JSONObject summary_fieldsObj = new JSONObject();
           summary_fieldsObj = (JSONObject) tmp;
+          System.out.println("summary_fieldsObj1111111======"+summary_fieldsObj);
           summary_fieldsObj = (JSONObject) summary_fieldsObj.get("summary_fields");
+          System.out.println("summary_fieldsObj2222222======"+summary_fieldsObj);
           if(!summary_fieldsObj.isEmpty())
           {
             JSONObject makeResultObj = (JSONObject) tmp;
+            System.out.println("makeResultObj======"+makeResultObj);
             makeResultArray.add(makeResultObj);
           }
           
@@ -521,7 +524,9 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count)
         for(Object tmp : makeResultArray){
           JSONObject finalResult = new JSONObject();
           finalResult = (JSONObject) tmp;
+          System.out.println("finalResult====="+finalResult);
           String stdout = finalResult.get("stdout").toString();
+          System.out.println("stdout====="+stdout);
           if(!stdout.isEmpty())
           {
             finalResultArray.add(finalResult);
@@ -561,7 +566,103 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count)
         if(count > 5){
           return finalResult;
         }
-        Thread.sleep(2000);
+        Thread.sleep(1000);
+        addAnsibleJobEventByHosts(params,count);
+      }else{
+        int result = 0;
+        result = policyCommonMapper.addAnsibleJobEventByHosts(params);
+      }
+      // int result = policyCommonMapper.checkCountAnsibleJobId(params);
+      // System.out.println("result===="+result);
+			// if(dataArr.size() > result)
+			// {
+			// 	if(result > 0)
+			// 	{
+			// 		policyCommonMapper.deleteAnsibleJobEvent(params);
+			// 	}
+			// 	result = policyCommonMapper.addAnsibleJobEventByHosts(params);
+			// }
+        return finalResult;
+}
+
+public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count) throws ParseException, InterruptedException{
+
+  Mono<String> response = webClient.get().uri(UriBuilder -> UriBuilder
+  .path("/api/v2/ad_hoc_commands/").path("{id}/").path("events/")
+  .build(params.get("job_id")))
+  .accept(MediaType.APPLICATION_JSON)
+  .retrieve()
+  .bodyToMono(String.class); 
+
+        String objects = response.block();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+        JSONArray resultsArray = (JSONArray) jsonObj.get("results");
+        JSONArray makeResultArray = new JSONArray();
+        System.out.println("resultsArray========="+resultsArray);
+        int index = 0;
+        for(Object tmp : resultsArray){
+          JSONObject summary_fieldsObj = new JSONObject();
+          summary_fieldsObj = (JSONObject) tmp;
+          System.out.println("summary_fieldsObj1111111======"+summary_fieldsObj);
+          summary_fieldsObj = (JSONObject) summary_fieldsObj.get("summary_fields");
+          System.out.println("summary_fieldsObj2222222======"+summary_fieldsObj);
+          if(!summary_fieldsObj.isEmpty())
+          {
+            JSONObject makeResultObj = (JSONObject) tmp;
+            System.out.println("makeResultObj======"+makeResultObj);
+            makeResultArray.add(makeResultObj);
+          }
+          
+            index++;
+        }
+        JSONArray finalResultArray = new JSONArray();
+        for(Object tmp : makeResultArray){
+          JSONObject finalResult = new JSONObject();
+          finalResult = (JSONObject) tmp;
+          System.out.println("finalResult====="+finalResult);
+          String stdout = finalResult.get("stdout").toString();
+          System.out.println("stdout====="+stdout);
+          if(!stdout.isEmpty())
+          {
+            finalResultArray.add(finalResult);
+          }
+        }
+        JSONObject finalResult = new JSONObject();
+        finalResult.put("finalResult", finalResultArray);
+        
+        JSONObject data = new JSONObject();
+      JSONArray dataArr = new JSONArray();
+      List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
+      Map<String, Object> resultMap;
+      data = finalResult;
+      dataArr = (JSONArray) data.get("finalResult");
+      System.out.println("dataArr.size()============"+dataArr.size());
+      for (int i = 0; i < dataArr.size(); i++) {
+          resultMap = new HashMap<String, Object>();
+          String json = dataArr.get(i).toString();
+          JSONParser jsonParser2 = new JSONParser();
+          JSONObject jsonObj2 = (JSONObject) jsonParser2.parse(json);
+          resultMap.put("result", json);
+          resultMap.put("status", jsonObj2.get("changed"));
+          resultMap.put("job_id",params.get("job_id"));
+          resultSet.add(resultMap);
+      }
+      params.put("data", resultSet);
+      System.out.println("params1111111111111111111=============="+params);
+      int pcCount = policyCommonMapper.getPcCountByOrgSeq(params);
+      System.out.println("pcCount===="+pcCount);
+      // int result = policyCommonMapper.checkCountAnsibleJobId(params);
+      //String[] before_url = request.getHeader("referer").split("/");
+		  //params.put("before_url", before_url[before_url.length -1]);
+      
+      if(dataArr.size() < 1){
+        count++;
+        System.out.println("result======="+count);
+        if(count > 5){
+          return finalResult;
+        }
+        Thread.sleep(1000);
         addAnsibleJobEventByHost(params,count);
       }else{
         int result = 0;
@@ -575,7 +676,7 @@ public JSONObject addAnsibleJobEventByHost(Map<String, Object> params,int count)
 			// 	{
 			// 		policyCommonMapper.deleteAnsibleJobEvent(params);
 			// 	}
-			// 	result = policyCommonMapper.addAnsibleJobEventByHost(params);
+			// 	result = policyCommonMapper.addAnsibleJobEventByHosts(params);
 			// }
         return finalResult;
 }

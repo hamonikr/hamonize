@@ -13,7 +13,10 @@ public class LogInOutVo {
 	private String uuid;
 	private String login_dt;
 	private String logout_dt;
+	private String kind;
 	private int seq;
+	private Long org_seq;
+	private Long job_id;
 
 	//// json
 	String datetime;
