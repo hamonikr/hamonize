@@ -268,12 +268,9 @@ $('#div1').scrollTop($('#div1')[0].scrollHeight);
 		
 	}
 	
-<<<<<<< HEAD
 	$(document).ready(function () {
 // 		onClick(null,$("#tree"),zNodes[0]);;
 	});
-=======
->>>>>>> f2ffdc62c29de36e03434e697dfabca482fb51f3
 </script>
 
 <%@ include file="../template/footer.jsp" %>
