@@ -26,5 +26,7 @@ public interface IPolicyUpdtMapper {
 	public int updtCompareUpdate(Map<String, Object> params);
 
 	public int updatePolicyProgrm(Map<String, Object> params);
+	
+	public int updtPolicyProgrmDelete(Map<String, Object> params);
 
 }

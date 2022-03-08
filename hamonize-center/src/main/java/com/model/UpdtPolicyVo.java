@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class UpdtPolicyVo{
 	
+	private String domain;
 	private String debname;
 	private String debver;
 	private String[] arrDebname;

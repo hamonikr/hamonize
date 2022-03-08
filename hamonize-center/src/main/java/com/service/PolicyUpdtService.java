@@ -47,7 +47,13 @@ public class PolicyUpdtService {
 		
 	}
 	public int updatePolicyProgrm(Map<String, Object> params) {
-		return iUpdtMapper.updatePolicyProgrm(params);
+		
+		int policyDelRet = 0;
+//		policyDelRet = iUpdtMapper.updtPolicyProgrmDelete(params);
+//		if( policyDelRet > 0 ) {
+			policyDelRet = iUpdtMapper.updatePolicyProgrm(params);
+//		}
+		return policyDelRet;
 		
 	}
 	public int updtDelete(Map<String, Object> params) {

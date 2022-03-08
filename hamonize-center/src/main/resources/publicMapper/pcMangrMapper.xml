@@ -1000,7 +1000,7 @@
 		        ) TA
 		      WHERE
 		        row_number = 1
-		        and  rgstr_date > (select rgstr_date from  tbl_updt_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0)
+		        and  rgstr_date > (select rgstr_date from  tbl_progrm_applc_history where domain = #{domain} and org_seq = #{org_seq} order by rgstr_date desc limit 1 OFFSET 0)
 		      ORDER BY
 		        TA.rgstr_date DESC
 		    ) PA

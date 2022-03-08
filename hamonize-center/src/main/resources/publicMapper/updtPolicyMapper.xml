@@ -7,12 +7,10 @@
 
 	<delete id="updtDeleteProgrm" parameterType="java.util.Map">
 		DELETE FROM tbl_policy_progrm_block_list
-		WHERE pcm_name in
-	            (
-		 <foreach collection="list" item="item" separator=" , ">
-	            	#{item.debname}
-	        </foreach>
-	             )
+		WHERE 
+		<foreach collection="list" item="item" separator=" or ">
+			( domain = #{item.domain} and pcm_name = #{item.debname} )
+		</foreach>
 	</delete>
 	
 	<delete id="deleteProccessBlockProgrm" parameterType="java.util.Map">
@@ -25,8 +23,8 @@
 	</delete>
 
 	<insert id="updtInsertProgrm" parameterType="com.model.UpdtPolicyVo">
-		INSERT INTO tbl_policy_progrm_block_list (pcm_name, pcm_path, rgstr_date)
-		SELECT #{debname}, #{path} , now()
+		INSERT INTO tbl_policy_progrm_block_list (domain, pcm_name, pcm_path, rgstr_date)
+		SELECT #{domain}, #{debname}, #{path} , now()
 		WHERE NOT EXISTS (SELECT * FROM tbl_policy_progrm_block_list WHERE pcm_name= #{debname} )        
 	</insert>
 	

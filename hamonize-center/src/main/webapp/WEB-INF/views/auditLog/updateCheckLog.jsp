@@ -216,10 +216,10 @@
 						programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
 						programBlockResult += "<td>" + data.pcList.length + "</td>";
 						
-						if( data.policyProgrmResult[i].kind == 'ins'){
-							programBlockResult += "<td>차단</td>";
-						}else {
+						if( data.policyProgrmResult[i].gubun == 'DELETE'){
 							programBlockResult += "<td>허용</td>";
+						}else {
+							programBlockResult += "<td>차단</td>";
 						}
 						programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
 						programBlockResult += "<td>" + noinstall + "</td>";
@@ -268,6 +268,7 @@
 						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 						deviceResult += "<tr>";
 						deviceResult += "<td>" + data.policyDeviceResult[i].product + "</td>";
+						console.log("data.policyDeviceResult[i].kind========++"+ data.policyDeviceResult[i].kind +"--"+ data.policyDeviceResult[i].gubun);
 						if( data.policyDeviceResult[i].kind == "allow" ||  data.policyDeviceResult[i].gubun == 'M'){
 							deviceResult += "<td>허용</td>";
 						}else { 

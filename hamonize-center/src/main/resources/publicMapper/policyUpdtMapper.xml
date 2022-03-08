@@ -49,15 +49,37 @@
 		WHERE PU_NAME = #{package}
 	</update>
 
+	
+	
+	<delete id="updtPolicyProgrmDelete" parameterType="java.util.HashMap">
+		DELETE FROM tbl_progrm_applc
+		WHERE 
+			 domain = #{domain}
+			 <if test="org_seq != 1 ">
+				and	org_seq in (
+					with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+			    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+			    from tbl_org a
+			    where a.seq = #{org_seq}::int and a.domain = #{domain}
+			    union all
+			    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+			    from tbl_org a, search_org so 
+			    where a.p_seq = so.seq and not cycle)
+			    select seq
+			    from search_org
+				)
+			</if>
+	</delete>
+	
 	<update id="updatePolicyProgrm" parameterType="java.util.HashMap">
 		<foreach collection="data" item="item" separator=";">
 			update 
 			tbl_progrm_applc 
 			set ppm_seq = (select string_agg(A.ppm_seq,',')::text from 
 				(
-				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_progrm_applc where org_seq=#{item.org_seq}
+				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_progrm_applc where org_seq=#{item.org_seq} and domain = #{domain}
 				intersect
-				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_updt_applc where org_seq=#{item.org_seq}
+				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_updt_applc where org_seq=#{item.org_seq} and domain = #{domain}
 				) A) where org_seq = #{item.org_seq} and domain = #{domain}
 		</foreach>
 	</update>

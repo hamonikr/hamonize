@@ -78,6 +78,9 @@ public class CurlUpdtPolicyController {
 				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
 				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
 				insDataVo.setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
+				insDataVo.setDomain(jsonObj.getOrDefault("domain", "").toString());
+				
+				System.out.println("2==="+ jsonObj.getOrDefault("domain", "").toString());
 				updtPollicyMapper.updtInsertProgrm(insDataVo);
 
 			}
@@ -105,6 +108,7 @@ public class CurlUpdtPolicyController {
 
 				UpdtPolicyVo insDataVo = new UpdtPolicyVo();
 				insDataVo.setDebname(object.getOrDefault("debname", "").toString());
+				insDataVo.setDomain(jsonObj.getOrDefault("domain", "").toString());
 				updtPollicyMapper.updtInsertProgrm(insDataVo);
 
 			}
@@ -118,7 +122,6 @@ public class CurlUpdtPolicyController {
 		UpdtPolicyVo[] updtVo3 = new UpdtPolicyVo[delArray.size()];
 
 		if (delArray.size() != 0) {
-
 			for (int i = 0; i < delArray.size(); i++) {
 				JSONObject object = (JSONObject) delArray.get(i);
 
@@ -129,7 +132,7 @@ public class CurlUpdtPolicyController {
 				updtVo3[i].setPath(object.getOrDefault("path", "").toString());
 				updtVo3[i].setGubun("DELETE");
 				updtVo3[i].setPc_uuid(jsonObj.getOrDefault("uuid", "").toString());
-
+				updtVo3[i].setDomain(jsonObj.getOrDefault("domain", "").toString());
 			}
 			// deb insert & program del
 			Map<String, Object> mapDelete = new HashMap<String, Object>();
