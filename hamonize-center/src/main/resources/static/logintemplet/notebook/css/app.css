@@ -2204,7 +2204,7 @@ fieldset[disabled] .btn-gplus.active {
   background-color: #f1f1f1;
 }
 .bg-dark {
-  background-color: #2e3e4e;
+  background-color: #e8e8e8;
   color: #9db1c5;
 }
 .bg-dark.lt,
@@ -2217,7 +2217,8 @@ fieldset[disabled] .btn-gplus.active {
 }
 .bg-dark.dk,
 .bg-dark .dk {
-  background-color: #25313e;
+  background-color: #f5f5f5;
+  color:#333;
 }
 .bg-dark.dker,
 .bg-dark .dker {
@@ -2241,12 +2242,12 @@ fieldset[disabled] .btn-gplus.active {
   border-bottom-color: #9db1c5;
 }
 .bg-dark .nav > li > a {
-  color: #adbece;
+  color: #333;
 }
 .bg-dark .nav > li > a:hover,
 .bg-dark .nav > li > a:focus {
-  color: #fff;
-  background-color: #25313e;
+  color: #333;
+  background-color: #f5f5f5;
 }
 .bg-dark .nav > li > a:hover .caret,
 .bg-dark .nav > li > a:focus .caret {
@@ -2879,6 +2880,9 @@ fieldset[disabled] .btn-gplus.active {
   border-top: 1px solid #cfcfcf;
 }
 .b-r {
+  border-right: 1px solid #e1e4ea;
+}
+.b-r-2 {
   border-right: 1px solid #e1e4ea;
 }
 .b-b {

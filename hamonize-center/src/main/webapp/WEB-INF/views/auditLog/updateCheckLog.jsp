@@ -5,42 +5,24 @@
 
 
 <script>
-	
-
 	function onCheck(event, treeId, treeNode) {}
 
 	function beforeClick(treeId, treeNode, clickFlag) {
 		className = (className === "dark" ? "" : "dark");
 		return (treeNode.click != false);
 	}
-	//메뉴 Tree onClick - 부서별 정책 결과
-	
-	
 	
 	function onClick(event, treeId, treeNode, clickFlag) {
 
 		$(".right_box_l").empty();
-
-		// $(".monitor_list").remove();
-		// $("#list_info").empty();
-		// $(".info").empty();
-		// $(".result_detail").remove();
-		// $(".content_bapo").remove();
-		// $(".veiwcheck").css("display", "block");
-
 		var cnt = 0;
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-// 		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
-
-		// if (node == null) {
-		// 	$(".right_box_r").hide();
-		// 	$('.right_box_l').width('100%');
-		// } else {
-		// 	$(".right_box_r").show();
-		// 	$('.right_box_l').width('40%');
-		// }
-
+		if(node == null ){
+			onClick(null,$("#tree"),zNodes[1]);
+			return false;
+		}
+		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 
 		$("#org_seq").val(treeNode.id);
 		$.post("/mntrng/pcPolicyList", {
@@ -53,13 +35,13 @@
 				var shtml_r = "";
 
 				var textCutLength = 20;
-
+				$(".viewPolicyDetail").show();
 				$("#org_seq").val(treeNode.id);
 				
 				$(".programResultTr").empty();
 				$(".programResultTbody").empty();
-				var programResultTrHtml = '<th data-property="toponymName" class="sortable">프로그램명</th>';
-// 				programResultTrHtml += '<th data-property="countrycode" class="sortable">버전</th>';
+				var programResultTrHtml = '<th data-property="" class="sortable">정책 적용일</th>';
+				programResultTrHtml += '<th data-property="toponymName" class="sortable">프로그램명</th>';
 				programResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
 				programResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
 				programResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
@@ -81,7 +63,8 @@
 				
 				$(".firewallResultTr").empty();
 				$(".firewallResultTbody").empty();
-				var firewallResultTrHtml = '<th data-property="toponymName" class="sortable">포트번호</th>';
+				var firewallResultTrHtml = '<th data-property="" class="sortable">정책 적용일</th>';
+				firewallResultTrHtml += '<th data-property="toponymName" class="sortable">포트번호</th>';
 				firewallResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
 				firewallResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
 				firewallResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
@@ -91,7 +74,8 @@
 
 				$(".deviceResultTr").empty();
 				$(".deviceResultTbody").empty();
-				var deviceResultTrHtml = '<th data-property="toponymName" class="sortable">디바이스</th>';
+				var deviceResultTrHtml = '<th data-property="" class="sortable">정책 적용일</th>';
+				deviceResultTrHtml += '<th data-property="toponymName" class="sortable">디바이스</th>';
 				deviceResultTrHtml += '<th data-property="population" class="sortable">구분</th>';
 				deviceResultTrHtml += '<th data-property="fcodeName" class="sortable">전체</th>';
 				deviceResultTrHtml += '<th data-property="fcodeName" class="sortable">완료</th>';
@@ -104,7 +88,13 @@
 
 // ========================================= aa
 					// 선택한 조직의 pc 목록
-					shtml += '<ul class="monitor_list">';
+// 					shtml += '<ul class="monitor_list">';
+
+// 						$("#ortParent").html('<i class="fa fa-home"></i>  '+treeNode.domain);
+// 						$("#ortSub").html('<i class="fa fa-list-ul"></i>  '+treeNode.name);
+						$("#ortParent").html(treeNode.name);
+// 						$("#ortSub").html(treeNode.name);
+
 					$.each(data.pcList, function (index, value) {
 						var hostnameVal = '';
 // 						let data = JSON.parse(value.data);
@@ -113,22 +103,31 @@
 						} else {
 							hostnameVal = value.pc_hostname;
 						}
+// 						if (value.pc_status == "true") {
+// 							cnt++;
+// 							shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='" + value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\"><span>" + hostnameVal +"</span></a>";
+// 							shtml += "<input type='hidden' data-hostname='"+value.pc_hostname+"' name='pcuuid' value='"+value.pc_uuid+"'></li>";
+// 						} else {
+// 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\"><span>" +hostnameVal + "</span></a>";
+// 							shtml += "<input type='hidden' data-hostname='"+value.pc_hostname+"' name='pcuuid' value='"+value.pc_uuid+"'></li>";
+// 						}
+						
+						shtml += '<div class="panel-body col-xs-6 monitor_list">';
+						shtml += '<blockquote class="bodyDataLayer " onclick="detailPcInfo(\''+value.pc_uuid +'\')" style="font-size: 15.5px;">';
+						shtml += '<span class="fa-stack pull-left m-r-sm" style="margin-left: -34px; margin-top: -15px;">';
 						if (value.pc_status == "true") {
-							cnt++;
-							shtml += "<li class='on'><a href='#' data-toggle='tooltip' title='" + value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\"><span>" + hostnameVal +"</span></a>";
+							shtml += '<i class="fa fa-play"></i>';
 							shtml += "<input type='hidden' data-hostname='"+value.pc_hostname+"' name='pcuuid' value='"+value.pc_uuid+"'></li>";
-// 								shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-// 									value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
-// 									data.changed + value.job_id+"</a></li>";
-						} else {
-							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +value.pc_hostname + "' onclick=\"detail('" + value.pc_uuid + "')\"><span>" +hostnameVal + "</span></a>";
+						}else{
+							shtml += '<i class="fa fa-pause"></i>';
 							shtml += "<input type='hidden' data-hostname='"+value.pc_hostname+"' name='pcuuid' value='"+value.pc_uuid+"'></li>";
-// 							shtml += "<li><a style='color:#555;' href='#' data-toggle='tooltip' title='" +
-// 								value.pc_hostname + "' onclick=\"relaunch('" + data.host + "','" + value.job_id + "','" + value.seq + "','" + value.pc_uuid + "')\">" +
-// 								data.changed + value.job_id+"</a></li>";
 						}
+						shtml +='</span>';
+						shtml +=  hostnameVal +'</blockquote></div>';
+						
+// 						shtml +=  'aaaaaaaaawerwerwerwerweaaaaa</blockquote></div>';
+						
 					});
-
 
 					$(".right_box_l").append(shtml);
 
@@ -137,71 +136,30 @@
 
 					var progrmResultHtml = "";
 					$("#policyProgrmUpdtDetailData").val(data.policyUpdtResult[data.policyUpdtResult.length-1].run_status);
+					console.log("data.policyUpdtResult.length==="+data.policyUpdtResult.length);
 					for (var i = 0; i < data.policyUpdtResult.length; i++) {
-						var chk = 1;
-						if ((i + 1) == data.policyUpdtResult.length) {
-							chk = 0;
+						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
+						
+						progrmResultHtml += "<tr>";
+						progrmResultHtml += "<td class='updtRgstrData'>" + data.policyUpdtResult[i].rgstr_date + "</td>";
+						progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
+						if (data.policyUpdtResult[i].gubun == "INSERT" || data.policyUpdtResult[i].gubun == "M") {
+							progrmResultHtml += "<td>설치</td>";
+						}else{
+							progrmResultHtml += "<td>삭제</td>";
 						}
-						if (data.policyUpdtResult[i].debname != data.policyUpdtResult[i + chk].debname) {
-							var inset_dt = data.policyUpdtResult[i].ins_date;
-							var date = new Date(inset_dt);
-							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
-
-							//성공여부 체크 카운트
-							if (data.policyUpdtResult[i].kind == "INSTALL" || data.policyUpdtResult[i].kind == "UPGRADE") {
-								if (data.policyUpdtResult[i].status == 0) {
-									data.policyUpdtResult[i].count--;
-								}
-
-							} else if (data.policyUpdtResult[i].kind == "DELETE") {
-								if (data.policyUpdtResult[i].status == 1) {
-									data.policyUpdtResult[i].count--;
-								}
-							}
-							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
-							progrmResultHtml += "<tr>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
-
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
-							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].count + "</td>";
-							progrmResultHtml += "<td>" + noinstall + "</td>";
-							progrmResultHtml += "</tr>";
-
-						} else if ((i + 1) == data.policyUpdtResult.length) {
-							var inset_dt = data.policyUpdtResult[i].rgstr_date;
-							var date = new Date(inset_dt);
-							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
-							//성공여부 체크 카운트
-							if (data.policyUpdtResult[i].kind == "INSTALL" || data.policyUpdtResult[i].kind ==
-								"UPGRADE") {
-								if (data.policyUpdtResult[i].status == 0) {
-									data.policyUpdtResult[i].count--;
-								}
-
-							} else if (data.policyUpdtResult[i].kind == "DELETE") {
-								if (data.policyUpdtResult[i].status == 1) {
-									data.policyUpdtResult[i].count--;
-								}
-							}
-
-							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
-							progrmResultHtml += "<tr>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
-// 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debver + "</td>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].kind + "</td>";
-							progrmResultHtml += "<td>" + data.pcList.length + "</td>";
-							progrmResultHtml += "<td>" + data.policyUpdtResult[i].count + "</td>";
-							progrmResultHtml += "<td>" + noinstall + "</td>";
-							progrmResultHtml += "</tr>";
-						}
+						progrmResultHtml += "<td>" + data.pcList.length + "</td>";
+						progrmResultHtml += "<td>" + data.policyUpdtResult[i].count + "</td>";
+						progrmResultHtml += "<td>" + noinstall + "</td>";
+						progrmResultHtml += "</tr>";
+						
 					}
 
 					if(data.policyUpdtResult.length == 0){
-						$(".programResultTbody").append('<tr><td colspan="6">등록된 데이터가 없습니다.</td></tr>');
+						$(".programResultTbody").append('<tr><td colspan="6">등록된 데이터가 없습니다.</td></tr>'); 
 					}
-					
 					$(".programResultTbody").append(progrmResultHtml);
+					genRowspan('updtRgstrData');
 
 
 					//프로그램 차단 배포 결과 ==============================================================================================
@@ -212,10 +170,9 @@
 					for (var i = 0; i < data.policyProgrmResult.length; i++) {
 						var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
 						programBlockResult += "<tr>";
-						programBlockResult += "<td>" + data.policyProgrmResult[i].rgstr_date + "</td>";
+						programBlockResult += "<td class='blockRgstrData'>" + data.policyProgrmResult[i].rgstr_date + "</td>";
 						programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
 						programBlockResult += "<td>" + data.pcList.length + "</td>";
-						
 						if( data.policyProgrmResult[i].gubun == 'DELETE'){
 							programBlockResult += "<td>허용</td>";
 						}else {
@@ -223,42 +180,47 @@
 						}
 						programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
 						programBlockResult += "<td>" + noinstall + "</td>";
-						
-						 (data.pcList.length - data.policyProgrmResult[i].count)
 						programBlockResult += "</tr>";
 					}
 					if(data.policyProgrmResult.length == 0){
 						$(".programBlockResultTbody").append('<tr><td colspan="5">등록된 데이터가 없습니다.</td></tr>');
 					}
-					
-
 					$(".programBlockResultTbody").append(programBlockResult);
-// 					genRowspan("rgstr1");
+					genRowspan('blockRgstrData');
 					
 					//방화벽 차단 배포 결과 // ========================================================================
 					
 
-					var firewallResult = '';
+					var firewallResult = '', isViewDetail=false;
 					$("#policyFirewallDetailData").val(data.policyFirewallResult[data.policyFirewallResult.length-1].run_status);
-					for (var i = 0; i < data.policyFirewallResult.length; i++) {
-						var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
-						firewallResult += "<tr>";
-						firewallResult += "<td>" + data.policyFirewallResult[i].retport + "</td>";
-						if( data.policyFirewallResult[i].kind == "allow" ||  data.policyFirewallResult[i].gubun == 'M'){
-							firewallResult += "<td>허용</td>";
-						}else { 
-							firewallResult += "<td>차단</td>";
+// 					if( data.policyFirewallResult.length == 0 ){
+// 						firewallResult += "<td colspan='5' class='NoFireWallApplc'>방화벽 정책 적용 안함</td>";
+// 					}else{
+						
+						for (var i = 0; i < data.policyFirewallResult.length; i++) {
+							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
+							firewallResult += "<tr>";
+							firewallResult += "<td class='fireRgstrData'>" + data.policyFirewallResult[i].rgstr_date + "</td>";
+							firewallResult += "<td>" + data.policyFirewallResult[i].retport + "</td>";
+							if( data.policyFirewallResult[i].gubun == "INSERT" ||  data.policyFirewallResult[i].gubun == 'M'){
+								firewallResult += "<td>허용</td>";
+								isViewDetail = true;
+							}else { 
+								firewallResult += "<td>차단</td>";
+								isViewDetail = false;
+							}
+							firewallResult += "<td>" + data.pcList.length + "</td>";
+							firewallResult += "<td>" + data.policyFirewallResult[i].count + "</td>";
+							firewallResult += "<td>" + noinstall + "</td>";
+							firewallResult += "</tr>";
 						}
-						firewallResult += "<td>" + data.pcList.length + "</td>";
-						firewallResult += "<td>" + data.policyFirewallResult[i].count + "</td>";
-						firewallResult += "<td>" + noinstall + "</td>";
-						firewallResult += "</tr>";
-					}
+// 					}
+					
 					if(data.policyFirewallResult.length == 0){
 						$(".firewallResultTbody").append('<tr><td colspan="5">등록된 데이터가 없습니다.</td></tr>');
 					}
 					$(".firewallResultTbody").append(firewallResult);
-					
+					genRowspan('fireRgstrData');
 				
 					//디바이스 차단 배포 결과 ================================================
 
@@ -267,9 +229,9 @@
 					for (var i = 0; i < data.policyDeviceResult.length; i++) {
 						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 						deviceResult += "<tr>";
+						deviceResult += "<td class='deviceRgstrData'>" + data.policyDeviceResult[i].rgstr_date + "</td>";
 						deviceResult += "<td>" + data.policyDeviceResult[i].product + "</td>";
-						console.log("data.policyDeviceResult[i].kind========++"+ data.policyDeviceResult[i].kind +"--"+ data.policyDeviceResult[i].gubun);
-						if( data.policyDeviceResult[i].kind == "allow" ||  data.policyDeviceResult[i].gubun == 'M'){
+						if( data.policyDeviceResult[i].gubun == "INSERT" ||  data.policyDeviceResult[i].gubun == 'M'){
 							deviceResult += "<td>허용</td>";
 						}else { 
 							deviceResult += "<td>차단</td>";
@@ -278,50 +240,12 @@
 						deviceResult += "<td>" + data.policyDeviceResult[i].count + "</td>";
 						deviceResult += "<td>" + noinstall + "</td>";
 						deviceResult += "</tr>";
-						
-// 						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
-// 						deviceResult += "<tr>";
-// 						deviceResult += "<td>" + data.policyDeviceResult[i].product + "</td>";
-// 						deviceResult += "<td>" + data.policyDeviceResult[i].status + "</td>";
-// 						deviceResult += "<td>" + data.pcList.length + "</td>";
-// 						deviceResult += "<td>" + data.policyDeviceResult[i].count + "</td>";
-// 						deviceResult += "<td>" + noinstall + "</td>";
-// 						deviceResult += "</tr>";
-						
-// 						var chk = 1;
-// 						if ((i + 1) == data.policyDeviceResult.length) {
-// 							chk = 0;
-// 						}
-// 						if (data.policyDeviceResult[i].product != data.policyDeviceResult[i + chk].product) {
-// 							var inset_dt = data.policyDeviceResult[i].rgstr_date;
-// 							var date = new Date(inset_dt);
-// 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero( date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
-// 							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
-// 							deviceResult += "<tr>";
-// 							deviceResult += "<td>" + data.policyDeviceResult[i].product + "</td>";
-// 							deviceResult += "<td>" + data.policyDeviceResult[i].status + "</td>";
-// 							deviceResult += "<td>" + data.pcList.length + "</td>";
-// 							deviceResult += "<td>" + data.policyDeviceResult[i].count + "</td>";
-// 							deviceResult += "<td>" + noinstall + "</td>";
-// 							deviceResult += "</tr>";
-// 						} else if ((i + 1) == data.policyDeviceResult.length) {
-// 							var inset_dt = data.policyDeviceResult[i].rgstr_date;
-// 							var date = new Date(inset_dt);
-// 							date = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate().toString()) + " " + addZero(date.getHours().toString()) + ":" + addZero(date.getMinutes().toString()) + ":" + addZero(date.getSeconds().toString());
-// 							var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
-// 							deviceResult += "<tr>";
-// 							deviceResult += "<td>" + data.policyDeviceResult[i].product + "</td>";
-// 							deviceResult += "<td>" + data.policyDeviceResult[i].status + "</td>";
-// 							deviceResult += "<td>" + data.pcList.length + "</td>";
-// 							deviceResult += "<td>" + data.policyDeviceResult[i].count + "</td>";
-// 							deviceResult += "<td>" + noinstall + "</td>";
-// 							deviceResult += "</tr>";
-// 						}
 					}
 					if(data.policyDeviceResult.length == 0){
 						$(".deviceResultTbody").append('<tr><td colspan="5">등록된 데이터가 없습니다.</td></tr>');
 					}
 					$(".deviceResultTbody").append(deviceResult);
+					genRowspan('deviceRgstrData');
 					
 					
 
@@ -367,21 +291,14 @@
 }
 </style>
 		<!-- body right -->
-		<aside class="col-lg-4 b-l">
+		<aside class="col-lg-4 b-l b-r-2" style="background-color:white;">
 			<section class="vbox">
 				<section class="scrollable">
-					<div class="wrapper">
-						<section class="panel panel-default">
-							
-							<div class="right_box_l"> 
-
-
-							
-
-								
-							</div>
-						</section>
-					</div>
+	               <ul class="breadcrumb">
+                    <li> [<b> <a style="font-size:17px;" href="#" id="ortParent"></a></b>] <span>조직에 등록된 컴퓨터 목록</span></li>
+<!--                     <li><a href="#" id="ortSub"></a></li> -->
+                  </ul>
+							<div class="right_box_l row m-l-none m-r-none bg-light lter monitor_list"></div>
 				</section>
 			</section>
 		</aside>
@@ -405,8 +322,9 @@
 							<div class="table-responsive">
 								<section class="panel panel-default">
                     				<header class="panel-heading">
-                    					<span class="label bg-danger pull-right">
-                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget' data-gubun='progrm' data-target='#fireWallDetailLayer'>상세보기</a></span> 프로그램 정책 결과 목록 
+                    					<span class="label pull-right viewPolicyDetail">
+	                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget btn  btn-default btn-rounded' data-gubun='progrm' data-target='#fireWallDetailLayer' style="font-size:10px;">
+                    							상세보기</a></span> 프로그램 정책 결과 목록 
                     				</header>
                    				<table  class="table table-striped datagrid m-b-sm">
 										<thead><tr class="programResultTr"></tr></thead>
@@ -420,8 +338,9 @@
 							<div class="table-responsive">
 								<section class="panel panel-default">
                     				<header class="panel-heading">
-                    					<span class="label bg-danger pull-right">
-                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget' data-gubun='progrmBlock' data-target='#fireWallDetailLayer'>상세보기</a></span> 프로그램 정책 결과 목록 
+                    					<span class="label  pull-right viewPolicyDetail">
+                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget btn  btn-default btn-rounded' data-gubun='progrm' data-target='#fireWallDetailLayer' style="font-size:10px;">
+                    							상세보기</a></span> 프로그램 차단 정책 결과 목록 
                     				</header>
                    				<table  class="table table-striped datagrid m-b-sm">
 										<thead><tr class="programBlockResultTr"></tr></thead>
@@ -437,8 +356,9 @@
 							<div class="table-responsive">
 								<section class="panel panel-default">
                     				<header class="panel-heading">
-                    					<span class="label bg-danger pull-right">
-                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget' data-gubun='ufw' data-target='#fireWallDetailLayer'>상세보기</a></span> 방화벽 정책 결과 목록 
+                    					<span class="label  pull-right viewPolicyDetail">
+                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget btn  btn-default btn-rounded' data-gubun='progrm' data-target='#fireWallDetailLayer' style="font-size:10px;">
+                    							상세보기</a></span> 방화벽 정책 결과 목록
                     				</header>
                    				<table  class="table table-striped datagrid m-b-sm">
 										<thead><tr class="firewallResultTr"></tr></thead>
@@ -452,8 +372,9 @@
 							<div class="table-responsive">
 								<section class="panel panel-default">
                     				<header class="panel-heading">
-                    					<span class="label bg-danger pull-right">
-                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget' data-gubun='ufw' data-target='#fireWallDetailLayer'>상세보기</a></span> 디바이스 정책 결과 목록 
+                    					<span class="label  pull-right viewPolicyDetail">
+                    					<a href='javascript:;' data-toggle='dropdown' class='fireWalltarget btn  btn-default btn-rounded' data-gubun='progrm' data-target='#fireWallDetailLayer' style="font-size:10px;">
+                    							상세보기</a></span> 디바이스 정책 결과 목록
                     				</header>
                    				<table  class="table table-striped datagrid m-b-sm">
 										<thead>
@@ -526,23 +447,19 @@
 	}
 
 // pc 별상세 내역 출력
-function detail(uuid){
-		// $(".result_detail").remove();
-		// $(".content_bapo").remove();
-		// $(".right_box_r").show();
-		// $('.right_box_l').width( '40%' );
-	console.log("detail -=--- uuit ::: " + uuid +"=="+ $("#org_seq").val());
+function detailPcInfo(uuid){
+	alert(uuid);
 	
 	 $.post("detailPolicy.proc",{pc_uuid:uuid, org_seq:$("#org_seq").val()},
 			function(data){
 			var shtml = "";
-
+			
+			$(".viewPolicyDetail").hide();
 			// 프로그램 설치/삭제 배포 결과] ===============================================================
 			$(".programResultTr").empty();
 			$(".programResultTbody").empty();
 
 			var programResultTr = '<th data-property="toponymName" class="sortable">프로그램명</th>';
-			programResultTr += '<th data-property="countrycode" class="sortable">버전</th>';
 			programResultTr += '<th data-property="population" class="sortable">구분</th>';
 			programResultTr += '<th data-property="fcodeName" class="sortable">상태</th>';
 			programResultTr += '<th data-property="fcodeName" class="sortable">적용일</th>';
@@ -557,8 +474,11 @@ function detail(uuid){
 				date = date.getFullYear()+"-"+addZero(date.getMonth()+1)+"-"+addZero(date.getDate().toString())+" "+addZero(date.getHours().toString())+":"+addZero(date.getMinutes().toString());
 				programResult += "<tr>";
 				programResult += "<td>"+value.debname+"</td>";
-				programResult += "<td>"+value.debver+"</td>";
-				programResult += "<td>"+value.kind+"</td>";
+				if(value.kind == "INSTALL"){
+					programResult += "<td>설치</td>";
+				}else{
+					programResult += "<td>삭제</td>";
+				}
 				
 				
 				if(value.kind == "INSTALL" || value.kind == "UPGRADE" ){
@@ -601,12 +521,18 @@ function detail(uuid){
 			
 				programBlockResult += "<tr>";
 				programBlockResult += "<td>"+value.progrmname+"</td>";
-				if(value.status == "Y")
+				if(value.status == "Y"){
 					programBlockResult += "<td>차단</td>";
-				else
+				} else{
 					programBlockResult += "<td>허용</td>";
-					programBlockResult += "<td>"+date+"</td>";
-					programBlockResult += "</tr>";
+				}
+				if(value.status == "Y"){
+					programBlockResult += "<td>완료</td>";
+				} else {
+					programBlockResult += "<td>미완료</td>";
+				}
+				programBlockResult += "<td>"+value.rgstr_date+"</td>";
+				programBlockResult += "</tr>";
 			});	
 			$(".programBlockResultTbody").append(programBlockResult);
 			
@@ -783,10 +709,11 @@ function genRowspan2(className){
         }
     });
 }
+
+
 $(document).ready(function () {
 
-	var zTree = $.fn.zTree.getZTreeObj("tree");
-	zTree.selectNode(zTree.getNodeByTId('tree_1'));
+
 	
 	$(".fireWalltarget").click(function(){
 		$("#detailFireWallLayer").empty();
@@ -804,7 +731,7 @@ $(document).ready(function () {
 		
 		
 		var firewallDatailListHTML = '';
-		$(".monitor_list li input").each(function( index, element ) {
+		$(".monitor_list  input").each(function( index, element ) {
 			var pcUuid =  $(this).val();
 			var pcHostname = $(this).data("hostname");
 			
