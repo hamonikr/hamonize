@@ -8,6 +8,8 @@ import com.model.PcMangrVo;
 
 public interface IPolicyCommonMapper {
 	
+	public int addAnsibleJobEventByHosts(Map<String, Object> params);
+
 	public int addAnsibleJobEventByHost(Map<String, Object> params);
 
 	public int addAnsibleJobRelaunchEventByHost(Map<String, Object> params);
@@ -23,6 +25,8 @@ public interface IPolicyCommonMapper {
 	public int getPcCountByOrgSeq(Map<String, Object> params);
 
 	public List<Map<String, Object>> checkAnsibleJobFailOrNot(LogInOutVo inputVo);
+
+	public Map<String, Object> getAnsibleLastSuccessJob(LogInOutVo inputVo);
 	
 	public List<Map<String, Object>> checkAnsibleJobFailOrNotList(LogInOutVo inputVo);
 
@@ -47,5 +51,5 @@ public interface IPolicyCommonMapper {
 	public List<Map<String, Object>> comparePolicyProgrmBeforeAndAfter(Map<String, Object> params);
 	public List<Map<String, Object>> comparePolicyFrwlBeforeAndAfter(Map<String, Object> params);
 	public List<Map<String, Object>> comparePolicyDeviceBeforeAndAfter(Map<String, Object> params);
-	
+
 }

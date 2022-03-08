@@ -47,8 +47,8 @@ public class PolicyCommonController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "addAnsibleJobEventByHost", method = RequestMethod.POST)
-	public int addAnsibleJobEventByHost(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException, InterruptedException {
+	@RequestMapping(value = "addAnsibleJobEventByHosts", method = RequestMethod.POST)
+	public int addAnsibleJobEventByHosts(@RequestParam Map<String, Object> params,HttpServletRequest request) throws ParseException, SQLException, InterruptedException {
 		System.out.println("url===="+request.getHeader("referer"));
 		String[] before_url = request.getHeader("referer").split("/");
 		params.put("before_url", before_url[before_url.length -1]);
@@ -56,7 +56,7 @@ public class PolicyCommonController {
 		JSONArray dataArr = new JSONArray();
 		List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
 		Map<String, Object> resultMap;
-		data = restApiService.addAnsibleJobEventByHost(params,0);
+		data = restApiService.addAnsibleJobEventByHosts(params,0);
 		dataArr = (JSONArray) data.get("finalResult");
 		System.out.println("dataArr.size()============"+dataArr.size());
 		// String [] processed = data.get("processed").toString().split(",");
@@ -82,7 +82,7 @@ public class PolicyCommonController {
 		// }
 		// result = commonMapper.addAnsibleJobEvent(params);
 		// if(processed.length > dataArr.size()){
-		// 	addAnsibleJobEventByHost(params,request);
+		// 	addAnsibleJobEventByHosts(params,request);
 		// }else{
 			if(dataArr.size() > result)
 			{
@@ -90,7 +90,7 @@ public class PolicyCommonController {
 				{
 					commonMapper.deleteAnsibleJobEvent(params);
 				}
-				result = commonMapper.addAnsibleJobEventByHost(params);
+				result = commonMapper.addAnsibleJobEventByHosts(params);
 			}
 		// }
 		return result;
