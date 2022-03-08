@@ -4,6 +4,12 @@
 
 
 
+<script type="text/javascript">
+
+$(document).ready(function(){ 
+	var currentPosition = parseInt($(".quickmenu").css("top")); $(window).scroll(function() { var position = $(window).scrollTop(); $(".quickmenu").stop().animate({"top":position+currentPosition+"px"},1000); }); });
+
+</script>
 <script>
 	$(document).ready(function () {
 		//등록버튼
@@ -87,15 +93,13 @@
 			<section class="vbox">
 				<section class="scrollable padder">
 
-					<section class="panel panel-default">
+					<section class="panel panel-default" style="overflow-y:scroll; height:89%;">
 						<header class="panel-heading">
 							# 프로그램 설치 관리
 							<i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom"
 								data-title="ajax to load the data." data-original-title="" title=""></i>
 						</header>
 						<div class="wrapper">
-
-
 
 								<form name="frm" method="post" action="/gplcs/orgManage" class="row">
 									<input type="hidden" name="org_seq" id="org_seq" value="" />
@@ -141,22 +145,23 @@
 
 						</div>
 					</section>
-					<div class="panel-body fotter-bg" >
+					<div class="panel-body fotter-bg"  id="bodyfooter">
 						<div class="right">
 							<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit"> 초기화</button>
 							<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 저장</button>
 						</div>
 					</div>
+					
 				</section>
 			</section>
 		</aside>
-
 
 	</section>
 </section>
 
 
 <script>
+$('#div1').scrollTop($('#div1')[0].scrollHeight);
 	//등록 처리결과(공통명 : 프로그램명Json )
 	function fnSaveUpdt() {
 		var button = document.getElementById('btnSave');
@@ -263,9 +268,6 @@
 		
 	}
 	
-	$(document).ready(function () {
-// 		onClick(null,$("#tree"),zNodes[0]);
-	});
 </script>
 
 <%@ include file="../template/footer.jsp" %>

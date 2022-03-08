@@ -2,7 +2,6 @@
 <%@ include file="../template/head.jsp" %>
 <%@ include file="../template/left.jsp" %>
 
-
 <script>
 	$(document).ready(function () {
 
@@ -156,7 +155,7 @@
 
 						</div>
 					</section>
-					<div class="panel-body fotter-bg" >
+					<div class="panel-body fotter-bg">
 						<div class="right">
 							<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit"> 초기화</button>
 							<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 저장</button>
@@ -171,6 +170,8 @@
 </section>
 
 <script>
+
+
 	//등록 처리결과(공통명 : 프로그램명Json )
 	function fnSavePmanage() {
 		var button = document.getElementById('btnSave');

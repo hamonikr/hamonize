@@ -102,7 +102,7 @@
 		console.log(window.location.href.split("/").reverse()[0]);
 		if(window.location.href.split("/").reverse()[0] == "orgManage"){
 			if (treeObj.getNodes().length < 1) {
-				if(confirm("최상위 부서가 등록되지 않았습니다. 등록하시겠습니까?")){
+				if(confirm("조직정보가 등록되어 있지 않았습니다. 확인버튼을 클릭하여 조직정보를 등록하세요.?")){
 						$.ajax({
 						url: '/org/orgManage',							// Any URL
 						type: 'post',
@@ -111,7 +111,7 @@
 							location.reload();
 						},
 						error: function (xhr, text, error) {              // If 40x or 50x; errors
-							alert("최상위 부서가 등록되지 않았습니다. QnA에 문의 주기시 바랍니다.");
+							alert("조직 정보가 등록되지 않았습니다. QnA에 문의 주기시 바랍니다.");
 							return false;
 						}
 					});

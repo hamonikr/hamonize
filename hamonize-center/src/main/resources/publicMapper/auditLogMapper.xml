@@ -841,7 +841,7 @@ select GA.*
 		  
 		left outer join (
 		   SELECT
-		    DISTINCT PA.count, PA.debname as act_debname, PA.kind
+		    DISTINCT PA.count, PA.debname as act_debname, PA.kind, PA.status
 		  FROM
 		    (
 		      SELECT
@@ -944,6 +944,7 @@ select GA.*
 						    tb1.progrmname = tb2.pcm_name
 						    and tb1.pc_uuid = #{uuid}
 						    and upper(tb1.progrmname) =  upper(#{item}) 
+						    and tb1.rgstr_date  >= (select rgstr_date from  tbl_progrm_applc_history where domain = 'ryan' and org_seq = 3 order by rgstr_date  desc limit 1 )
 						  order by
 						    tb1.rgstr_date desc limit 1)
 			<if test="debListCnt > index+1">
