@@ -7,9 +7,9 @@
 <insert id="insertLoginLog" parameterType="com.model.LogInOutVo">
     INSERT
         INTO tbl_loginout
-            (uuid,login_dt)
+            (pc_uuid,login_dt)
         VALUES
-            (#{uuid},#{login_dt}::timestamp)
+            (#{pc_uuid},#{login_dt})
 </insert>
 
 <!-- 로그아웃 정보 업데이트 -->
@@ -17,7 +17,7 @@
     UPDATE
         tbl_loginout
     SET 
-        logout_dt = #{logout_dt}::timestamp
+        logout_dt = #{logout_dt}
     WHERE
         seq = #{seq}
 </update>
@@ -28,7 +28,7 @@
     FROM
         tbl_loginout
     WHERE
-        uuid = #{uuid} 
+        pc_uuid = #{pc_uuid} 
     order by login_dt desc limit 1  
 </select>
 

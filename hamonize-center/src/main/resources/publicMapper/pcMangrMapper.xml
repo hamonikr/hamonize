@@ -5,30 +5,32 @@
 
 	<insert id="pcIpchnLog" parameterType="com.model.PcMangrVo">
         INSERT 
-        	INTO tbl_pc_mangr_ip_chn_log
+        	INTO tbl_pc_ip_change_log
         	(
+						domain,
 				pc_uuid, 
 				pc_ip, 
 				pc_vpnip, 
-				macaddr, 
+				pc_macaddress, 
 				old_pc_ip, 
 				old_pc_vpnip, 
-				old_pc_macaddr,  
-				hostname, 
+				old_pc_macaddress,  
+				pc_hostname, 
 				status,
-				insert_dt 
+				rgstr_date 
         	) 
         	VALUES(
+						#{domain},
 		        #{pc_uuid}, 
-				#{pc_ip},
-				#{pc_vpnip},
-				#{pc_macaddress}, 
-				#{old_pc_ip},
-				#{old_pc_vpnip}, 
-				#{old_pc_macaddr},
-				#{pc_hostname}, 
-				#{status}, 
-				now() 
+						#{pc_ip},
+						#{pc_vpnip},
+						#{pc_macaddress}, 
+						#{old_pc_ip},
+						#{old_pc_vpnip}, 
+						#{old_pc_macaddress},
+						#{pc_hostname}, 
+						#{status}, 
+						now() 
 	        )
 	</insert>
 

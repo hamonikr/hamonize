@@ -39,7 +39,9 @@
 		});
 
 		getList();
-		window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
+		if($('form[name=frm] input[name=job_id]').val() > 0){
+			window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
+		}
 	});
 
 	function onClick(event, treeId, treeNode, clickFlag) {

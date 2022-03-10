@@ -129,7 +129,7 @@ public class PcMangrVo {
 	private String old_pc_vpnip;
 	
 	@Transient
-	private String old_pc_macaddr;
+	private String old_pc_macaddress;
 	
 	@Transient
 	private String sttus;

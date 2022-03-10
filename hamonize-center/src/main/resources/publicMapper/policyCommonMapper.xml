@@ -152,20 +152,20 @@
 
 	<select id="checkAnsibleJobFailOrNot" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
 	select *,
-	(select host_id from tbl_pc_mangr where pc_uuid = #{uuid}) as host_id
+	(select host_id from tbl_pc_mangr where pc_uuid = #{pc_uuid}) as host_id
 		from tbl_ansible_event_job
 		where (kind,rgstr_date)
 		in(select kind,max(rgstr_date) from tbl_ansible_event_job where domain = #{domain} group by kind)
-		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{pc_uuid}
 	</select>
 
 	<select id="getAnsibleLastSuccessJob" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
 	select *,
-	(select host_id from tbl_pc_mangr where pc_uuid = #{uuid}) as host_id
+	(select host_id from tbl_pc_mangr where pc_uuid = #{pc_uuid}) as host_id
 		from tbl_ansible_event_job
 		where (kind,rgstr_date)
 		in(select kind,max(rgstr_date) as job_id from tbl_ansible_event_job where domain = #{domain} and status = 'true' group by kind)
-		and data -> 'summary_fields' -> 'host' ->> 'description' = #{uuid}
+		and data -> 'summary_fields' -> 'host' ->> 'description' = #{pc_uuid}
 		and kind = #{kind}
 	</select>
 
@@ -197,8 +197,8 @@
 		union all
 		select * from tbl_updt_applc_history
 		where domain = #{domain}
-		and job_id  = (select max(job_id) from tbl_updt_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
-		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+		and job_id  = (select max(job_id) from tbl_updt_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}))
+		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid})
 	</select>
 
 	<select id="checkAnsibleJobProgrmWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
@@ -209,8 +209,8 @@
 		union all
 		select * from tbl_progrm_applc_history
 		where domain = #{domain}
-		and job_id  = (select max(job_id) from tbl_progrm_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
-		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+		and job_id  = (select max(job_id) from tbl_progrm_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}))
+		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid})
 	</select>
 
 	<select id="checkAnsibleJobFrwlWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
@@ -221,8 +221,8 @@
 		union all
 		select * from tbl_frwl_applc_history
 		where domain = #{domain}
-		and job_id  = (select max(job_id) from tbl_frwl_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
-		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+		and job_id  = (select max(job_id) from tbl_frwl_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}))
+		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid})
 	</select>
 
 	<select id="checkAnsibleJobDeviceWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
@@ -233,8 +233,8 @@
 		union all
 		select * from tbl_device_applc_history
 		where domain = #{domain}
-		and job_id  = (select max(job_id) from tbl_device_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid}))
-	and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{uuid})
+		and job_id  = (select max(job_id) from tbl_device_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}))
+	and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid})
 	</select>
 
 	<!-- <select id="checkAnsibleJobUpdtWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
