@@ -537,7 +537,7 @@ System.out.println("retData===="+retData.toString());
 
 		hdVo.setOld_pc_ip(chkPcMangrVo.getPc_ip());
 		hdVo.setOld_pc_vpnip(chkPcMangrVo.getPc_vpnip());
-		hdVo.setOld_pc_macaddr(chkPcMangrVo.getPc_macaddress());
+		hdVo.setOld_pc_macaddress(chkPcMangrVo.getPc_macaddress());
 
 		if (!chkPcMangrVo.getPc_vpnip().equals(hdVo.getPc_vpnip())) {
 			logger.debug("pcInfoChange chkPcMangrVo===={}", chkPcMangrVo.toString());

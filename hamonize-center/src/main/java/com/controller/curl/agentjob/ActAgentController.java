@@ -1,6 +1,7 @@
 package com.controller.curl.agentjob;
 
 import java.io.BufferedReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -100,21 +101,21 @@ public class ActAgentController {
 			JSONObject tempObj = (JSONObject) logInArray.get(i);
 
 			inputVo.setDatetime(tempObj.get("datetime").toString());
-			inputVo.setUuid(tempObj.get("uuid").toString());
+			inputVo.setPc_uuid(tempObj.get("uuid").toString());
 			inputVo.setGubun(tempObj.get("gubun").toString());
 			inputVo.setDomain(tempObj.get("domain").toString());
-			checkResult.put("pc_uuid", inputVo.getUuid());
+			checkResult.put("pc_uuid", inputVo.getPc_uuid());
 
 		}
 
 		int retVal = 0;
 		if (inputVo.getGubun().equals("LOGIN")) { // login insert
-			inputVo.setLogin_dt(inputVo.getDatetime());
+			inputVo.setLogin_dt(Timestamp.valueOf(inputVo.getDatetime()));
 			retVal = actAgentLogInOutMapper.insertLoginLog(inputVo);
 			applyNonReflectionPolicy(inputVo,checkResult);
 		} else if (inputVo.getGubun().equals("LOGOUT")) { // logout update
 			inputVo.setSeq(actAgentLogInOutMapper.selectLoginLogSeq(inputVo));
-			inputVo.setLogout_dt(inputVo.getDatetime());
+			inputVo.setLogout_dt(Timestamp.valueOf(inputVo.getDatetime()));
 			retVal = actAgentLogInOutMapper.updateLoginLog(inputVo);
 		}
 
@@ -361,7 +362,7 @@ public class ActAgentController {
 			//checkResult = commonMapper.checkAnsibleJobFailOrNot(inputVo);
 			getFailJobList = commonMapper.checkAnsibleJobFailOrNot(inputVo);
 			System.out.println("getFailJobList======"+getFailJobList.size());
-			checkResult.put("pc_uuid", inputVo.getUuid());
+			checkResult.put("pc_uuid", inputVo.getPc_uuid());
 			checkResult.put("domain", inputVo.getDomain());
 			//PC가 꺼졌을때 정책 내려졌을 경우 PC부팅하면서 최신 정책을 불러와서 정책적용
 			for(int x = 0; x < getFailJobList.size();x++){

@@ -34,12 +34,12 @@
 		  to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
 		  to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS') as logout_dt,
 		  EXTRACT(EPOCH FROM age(a.logout_dt, a.login_dt)) * interval '1 sec' as spent_time,
-		  (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) as pc_hostname,
-		  a.uuid as pc_uuid,
+		  (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.pc_uuid) as pc_hostname,
+		  a.pc_uuid,
 		  b.org_seq,
 		  ( select org_nm from tbl_org  where seq = b.org_seq and domain=#{auditLogVo.domain})as org_nm,
-  		  last_value (a.seq) over(partition by a.uuid order by a.seq ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_seq
-		FROM tbl_loginout a left outer join tbl_pc_mangr b on a.uuid = b.pc_uuid
+  		  last_value (a.seq) over(partition by a.pc_uuid order by a.seq ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as last_seq
+		FROM tbl_loginout a left outer join tbl_pc_mangr b on a.pc_uuid = b.pc_uuid
 		<where>
 			b.domain = #{auditLogVo.domain}
 			<if test="auditLogVo.org_seq != null and auditLogVo.org_seq != ''">
@@ -68,7 +68,7 @@
 			</if>
 			<if test="auditLogVo.txtSearch != ''">
 				<if test="auditLogVo.keyWord == 1">
-					and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
+					and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.pc_uuid) like '%' || UPPER(#{auditLogVo.txtSearch}) || '%'
 				</if>
 			</if>
 		</where>
@@ -82,7 +82,7 @@
 		   count(*) as tbl_cnt
 		FROM
 		  tbl_loginout a
-		left outer join tbl_pc_mangr b on  a.uuid = b.pc_uuid
+		left outer join tbl_pc_mangr b on  a.pc_uuid = b.pc_uuid
 
 		<where>
 			b.domain = #{domain}
@@ -112,7 +112,7 @@
 			</if>
 			<if test="txtSearch != ''">
 				<if test="keyWord == 1">
-					and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.uuid) like '%' || UPPER(#{txtSearch}) || '%'
+					and (select UPPER(pc_hostname) from tbl_pc_mangr where pc_uuid = a.pc_uuid) like '%' || UPPER(#{txtSearch}) || '%'
 				</if>
 			</if>
 		</where>
@@ -134,7 +134,7 @@
 		to_char(a.login_dt,'YYYY-MM-DD HH24:MI:SS') as login_dt, 
 		to_char(a.logout_dt,'YYYY-MM-DD HH24:MI:SS') as logout_dt, 
 		to_char(age(a.logout_dt,a.login_dt),'HH24:MI:SS') as spent_time,
-		(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.uuid))as org_nm,
+		(select org_nm from tbl_org where seq = (select org_seq from tbl_pc_mangr where pc_uuid = a.pc_uuid))as org_nm,
 		(select org_nm from tbl_org where seq=b.org_seq) as join_org_nm
 			 FROM tbl_loginout a 
 			 left outer join tbl_user b
@@ -601,7 +601,7 @@
 	<select id="unAuthLogListExcel" resultType="hashmap" parameterType="hashmap">
 		SELECT
 		(ROW_NUMBER() OVER()) AS rownum,
-		a.uuid,a.vendor,a.product,a.info,
+		a.pc_uuid,a.vendor,a.product,a.info,
 		a.pc_user,a.insert_dt,
 			(select org_nm from tbl_org where seq=b.org_seq) as org_nm
 			 FROM tbl_unauthorized_device_log a 
