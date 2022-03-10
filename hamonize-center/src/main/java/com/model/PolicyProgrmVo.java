@@ -24,10 +24,14 @@ import lombok.ToString;
 public class PolicyProgrmVo {
 
 	//정책확정Insert
-	@Transient
-	private Integer seq;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Comment("시리얼 번호")
+	private Long seq;
+	
 	@Transient
 	private Long org_seq;
+	
 	@Transient
 	private String ppm_seq;
 	
@@ -36,9 +40,7 @@ public class PolicyProgrmVo {
 	@Comment("테넌트")
 	private String domain;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Comment("시리얼 번호")
+	@Comment("패키지번호")
 	private Long pcm_seq;
 	
 	@Size(max=300)

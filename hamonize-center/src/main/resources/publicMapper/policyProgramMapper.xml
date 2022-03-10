@@ -15,11 +15,10 @@
 	</select> -->
 
 	<select id="programList" resultType="com.model.PolicyProgrmVo" parameterType="com.model.PolicyProgrmVo">
-			select
-				pu_seq as pcm_seq,
-				pu_name as pcm_name
-			from
-				tbl_policy_package_list
+			SELECT 
+				pu_seq as pcm_seq, 
+				pu_name as pcm_name 
+			FROM tbl_policy_package_list
 			where
 				pu_seq in (
 				select
@@ -80,6 +79,27 @@
 			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
 			from tbl_org a 
 			where a.seq = #{org_seq}
+			and a.domain = #{domain}
+			union all
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select seq
+		from search_org 
+		where 1=1
+		order by level,org_ordr) and domain = #{domain} )tua
+	</select>
+
+
+	<select id="getProgramApplc" resultType="java.lang.String" parameterType="java.util.HashMap" >
+ 			SELECT array_to_string(array_agg(tua.ppm_name),',')as ppm_name FROM
+			(SELECT distinct unnest(string_to_array(ppm_name, ',')) ppm_name
+			FROM 
+			TBL_PROGRM_APPLC 
+			WHERE ORG_SEQ in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.seq = #{org_seq}::int
 			and a.domain = #{domain}
 			union all
 			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)

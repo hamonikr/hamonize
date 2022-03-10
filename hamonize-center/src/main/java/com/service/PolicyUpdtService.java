@@ -2,14 +2,19 @@ package com.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.mapper.IOrgMapper;
+import com.mapper.IPolicyProgramMapper;
 import com.mapper.IPolicyUpdtMapper;
+import com.model.PolicyProgrmVo;
 import com.model.PolicyUpdtVo;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +28,13 @@ public class PolicyUpdtService {
 	RestApiService restApiService;
 
 	@Autowired
+	PolicyProgramService policyProgramService;
+
+	@Autowired
 	IPolicyUpdtMapper iUpdtMapper;
+
+	@Autowired
+	IPolicyProgramMapper iPolicyProgramMapper;
 	
 	@Autowired
 	IOrgMapper orgmapper;
@@ -46,13 +57,20 @@ public class PolicyUpdtService {
 		return iUpdtMapper.updtSave(params);
 		
 	}
-	public int updatePolicyProgrm(Map<String, Object> params) {
+	public int updatePolicyProgrm(Map<String, Object> params) throws ParseException {
 		
 		int policyDelRet = 0;
-//		policyDelRet = iUpdtMapper.updtPolicyProgrmDelete(params);
-//		if( policyDelRet > 0 ) {
-			policyDelRet = iUpdtMapper.updatePolicyProgrm(params);
-//		}
+		String former_ppm_name = iPolicyProgramMapper.getProgramApplc(params);
+		policyDelRet = iUpdtMapper.updatePolicyProgrm(params);
+		String ppm_name = iPolicyProgramMapper.getProgramApplc(params);
+		params.put("ppm_name", ppm_name);
+		params.put("former_ppm_name", former_ppm_name);
+		try {
+			policyProgramService.applyProgramPolicy(params);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return policyDelRet;
 		
 	}

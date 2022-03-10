@@ -459,7 +459,7 @@ public JSONObject checkAndAddPolicyJobResult(Map<String, Object> params) throws 
         public void run() {
             // code goes here.
             try {
-              Thread.sleep(1000);
+              Thread.sleep(2000);
               JSONObject jsonObj = checkAndAddPolicyJobResult(params);
             } catch (ParseException e) {
               // TODO Auto-generated catch block

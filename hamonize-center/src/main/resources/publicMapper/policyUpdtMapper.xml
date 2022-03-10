@@ -80,7 +80,14 @@
 				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_progrm_applc where org_seq=#{item.org_seq} and domain = #{domain}
 				intersect
 				select unnest(string_to_array(ppm_seq,',')) as ppm_seq from tbl_updt_applc where org_seq=#{item.org_seq} and domain = #{domain}
-				) A) where org_seq = #{item.org_seq} and domain = #{domain}
+				) A),
+				ppm_name = (select string_agg(A.ppm_name,',')::text from 
+				(
+				select unnest(string_to_array(ppm_name,',')) as ppm_name from tbl_progrm_applc where org_seq=#{item.org_seq} and domain = #{domain}
+				intersect
+				select unnest(string_to_array(ppm_name,',')) as ppm_name from tbl_updt_applc where org_seq=#{item.org_seq} and domain = #{domain}
+				) A)
+				 where org_seq = #{item.org_seq} and domain = #{domain}
 		</foreach>
 	</update>
 	
@@ -99,7 +106,23 @@
         </if>
         RETURNING seq, org_seq, ppm_seq, ppm_name, domain, job_id
 		)   
-		INSERT INTO tbl_updt_applc_history (updt_seq, org_seq, ppm_seq, ppm_name, domain, job_id, RGSTR_DATE  ) SELECT seq, org_seq, ppm_seq, ppm_name, domain, job_id, now() FROM rows 			
+		INSERT INTO tbl_updt_applc_history (updt_seq, org_seq, ppm_seq, ppm_name, domain, job_id, RGSTR_DATE  ) 
+		SELECT seq, org_seq, ppm_seq, ppm_name, domain, job_id, now() FROM rows
+		
+	</insert>
+
+	<insert id="updtProgrmSave" parameterType="java.util.HashMap">
+			INSERT INTO tbl_policy_progrm_block_list 
+				(DOMAIN,									   
+				PPM_SEQ,
+				PPM_NAME,
+				RGSTGR_DATE) VALUES
+				<if test="ppm_seq != null">
+					<foreach collection="data" item="item" separator=",">
+						(#{item.org_seq},#{ppm_seq},#{ppm_name},#{domain},#{job_id})
+					</foreach>
+        </if>
+		
 	</insert>
 
 	<select id="updtResult" parameterType="java.util.HashMap" resultType="java.util.HashMap">

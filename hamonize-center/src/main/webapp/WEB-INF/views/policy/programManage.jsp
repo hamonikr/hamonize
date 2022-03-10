@@ -31,7 +31,7 @@
 			$('form[name=frm] input[name=domain]').val(treeNode.domain);
 			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
 			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
-
+			$(".promlist").html("");
 		// if (treeNode.checked) {
 			$.ajaxSetup({ async:false });
 			$.post("/gplcs/pshow", {
@@ -49,6 +49,7 @@
 					var obj = JSON.parse(jsonData);
 					var html = "";
 					$('form[name=frm] input[name=job_id]').val(agrs.job_id);
+					console.log("leng===="+agrs.pList.length);
 					if(agrs.pList.length > 0){
 						for (var y = 0; y < agrs.pList.length; y++) {
 
@@ -72,7 +73,6 @@
 						html += '설치된 패키지가 없습니다.';
 						html += '</li>';
 					}
-					$(".promlist").html();
 					$(".promlist").html(html);
 					if(obj !=  null){
 						var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -88,7 +88,7 @@
 									$(this).closest('blockquote').addClass('boder-line_on');
 									$(this).closest('blockquote').removeClass('boder-line_off');
 									
-									$("#div"+$(this).val()).appendTo("#checkedUpdt");
+									//$("#div"+$(this).val()).appendTo("#checkedUpdt");
 								}
 							});
 						}
