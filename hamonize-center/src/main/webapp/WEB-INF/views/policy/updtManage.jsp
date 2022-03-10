@@ -59,6 +59,8 @@ $(document).ready(function(){
 								$("#btn" + ppm_seq[i]).addClass("active");
 								$(this).closest('blockquote').addClass('boder-line_on');
 								$(this).closest('blockquote').removeClass('boder-line_off');
+								console.log("$(this).val() ==="+$(this).val() );
+								$("#div"+$(this).val()).appendTo("#checkedUpdt");
 							}
 						});
 					}
@@ -96,9 +98,9 @@ $(document).ready(function(){
 					<section class="panel panel-default" style="overflow-y:scroll; height:89%;">
 						<header class="panel-heading">
 							# 프로그램 설치 관리
-							<i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom"
-								data-title="ajax to load the data." data-original-title="" title=""></i>
+							<i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom" data-title="ajax to load the data." data-original-title="" title=""></i>
 						</header>
+						
 						<div class="wrapper">
 
 								<form name="frm" method="post" action="/gplcs/orgManage" class="row">
@@ -112,10 +114,10 @@ $(document).ready(function(){
 									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
 									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
-
+									<div id="checkedUpdt" ></div>
 									<c:forEach items="${pList}" var="data" varStatus="status">
 										<c:if test="${data.pu_name.indexOf('hamonize')!=0}">
-											<div class="panel-body col-lg-3">
+											<div class="panel-body col-lg-3" id="div${data.pu_seq }">
 												<blockquote class="bodyDataLayer">
 													<div class="form-check">
 														<input  width=0 height=0 style="visibility:hidden" class="form-check-input" data-package="<c:out value='${data.pu_name}' />" type="checkbox" name="pu_seq" id="${data.pu_seq}" value="<c:out value='${data.pu_seq}'/>">
@@ -140,6 +142,8 @@ $(document).ready(function(){
 											</div>
 										</c:if>
 									</c:forEach>
+									
+									
 
 								</form>
 

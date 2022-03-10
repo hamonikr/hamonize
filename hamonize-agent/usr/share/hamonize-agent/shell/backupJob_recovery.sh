@@ -21,7 +21,7 @@ LOGFILE="/var/log/hamonize/agentjob/agentjob_backup_recovery.log"
 
 DEVICE=`df | grep -w "/" | awk '{print $1}'`
 # DIR_NAME="/tmp/backuptest";
-BACKUP_NAME=`cat /etc/hamonize/recovery/recoveryInfo.hm`
+BACKUP_NAME=`cat /etc/hamonize/recovery/recoveryInfo.hm |jq --raw-output .NAME`
 # BACKUP_NAME="2021-07-13_16-01-42"
 
 

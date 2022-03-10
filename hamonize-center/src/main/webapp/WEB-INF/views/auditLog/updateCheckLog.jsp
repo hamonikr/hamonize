@@ -448,7 +448,6 @@
 
 // pc 별상세 내역 출력
 function detailPcInfo(uuid){
-	alert(uuid);
 	
 	 $.post("detailPolicy.proc",{pc_uuid:uuid, org_seq:$("#org_seq").val()},
 			function(data){

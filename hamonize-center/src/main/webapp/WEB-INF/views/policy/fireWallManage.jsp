@@ -88,6 +88,8 @@
 									$("#btn" + ppm_seq[i]).addClass("active");
 									$(this).closest('blockquote').addClass('boder-line_on');
 									$(this).closest('blockquote').removeClass('boder-line_off');
+									
+									$("#div"+$(this).val()).appendTo("#checkedUpdt");
 								}
 							});
 						}
@@ -122,7 +124,7 @@
 			<section class="vbox">
 				<section class="scrollable padder">
 
-					<section class="panel panel-default">
+					<section class="panel panel-default" style="overflow-y:scroll; height:89%;">
 
 						<header class="bg-dark dk header navbar navbar-fixed-top-xs">
 							<ul class="nav navbar-nav hidden-xs">
@@ -238,9 +240,9 @@
 									<input type="hidden" name="former_ppm_name" id="former_ppm_name" value="" />
 									<input type="hidden" name="ppm_name" id="ppm_name" value="" />
 
-									<!-- update list -->
+									<div id="checkedUpdt" ></div>
 									<c:forEach items="${pList}" var="data" varStatus="status">
-										<div class="panel-body col-lg-3 ">
+										<div class="panel-body col-lg-3 " id="div${data.sm_seq }">
 											<blockquote class="bodyDataLayer">
 												<div class="form-check">
 													<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value='${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">

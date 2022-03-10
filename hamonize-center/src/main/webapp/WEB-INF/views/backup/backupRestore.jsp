@@ -2,8 +2,9 @@
 <%@ include file="../template/head.jsp" %>
 <%@ include file="../template/left.jsp" %>
 
-<!-- <link rel="stylesheet" href="/logintemplet/notebook/js/fuelux/fuelux.css" type="text/css" />
-<script src="/logintemplet/notebook/js/fuelux/fuelux.js"></script> -->
+<!-- <link type="text/css" rel="stylesheet" href="/logintemplet/fonts/font-awesome-4.7.0/css/font-awesome.min.css"> -->
+<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
 <style>
 	.boxborder {
 		border: 1px solid #e0e4e8;
@@ -15,40 +16,80 @@
 		*width: 100%;
 		height: 2px;
 		margin: 10 px;
-		font-size: 0;
+		font-size: 0; 
 		overflow: hidden;
 		background-color: transparent;
 		border-width: 0;
 		border-top: 1px solid #e8e8e8;
 	}
 
-	/* [라디오 버튼 커스텀 스타일 변경 실시] */
-	input[type='radio'] {
-		-webkit-appearance: none;
-		width: 17px;
-		height: 17px;
-		/* [라디오 버튼 테두리 색상 정의] */
-		border: 1px solid darkgray;
-		border-radius: 50%;
-		outline: none;
-		/* [라디오 버튼 배경 색상 정의] */
-		background: #ffffff;
-	}
+/* 	/* [라디오 버튼 커스텀 스타일 변경 실시] */ */
+ 	input[type='radio'] { 
+ 		-webkit-appearance: none; 
+ 		width: 17px; 
+ 		height: 17px; 
+ 		border: 1px solid darkgray; 
+ 		border-radius: 50%; 
+ 		outline: none; 
+ 		background: #ffffff; 
+ 	} 
 
-	input[type='radio']:before {
-		/* [content null 설정해서 커스텀 지정] */
-		content: '';
-		display: block;
-		width: 70%;
-		height: 70%;
-		margin: 15% auto;
-		border-radius: 50%;
-	}
+/* 	input[type='radio']:before { */
+/* 		/* [content null 설정해서 커스텀 지정] */ */
+/* 		content: ''; */
+/* 		display: block; */
+/* 		width: 70%; */
+/* 		height: 70%; */
+/* 		margin: 15% auto; */
+/* 		border-radius: 50%; */
+/* 	} */
 
-	input[type='radio']:checked:before {
-		/* [라디오 버튼이 클릭 되었을 경우 내부 원형 색상] */
-		background: #007bff;
-	}
+/* 	input[type='radio']:checked:before { */
+/* 		/* [라디오 버튼이 클릭 되었을 경우 내부 원형 색상] */ */
+/* 		background: #007bff; */
+/* 	} */
+	
+
+/*  section {  */
+/*    display: flex;  */
+/*    flex-flow: row wrap;  */
+/*  }  */
+ section > div { 
+   flex: 1; 
+   padding: 0.5rem; 
+ } 
+#pclistLayer  input[type="radio"] {
+  display: none;
+}
+#pclistLayer  .labels {
+  height: 100%;
+  display: block;
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  box-shadow: 0px 3px 10px -2px hsla(237deg 44% 59%);
+  position: relative;
+  font-weight: bold;
+}
+#pclistLayer  input[type="radio"]:checked + label {
+  background: hsla(237deg 44% 59%);
+  color: hsla(215, 0%, 100%, 1);
+  box-shadow: 0px 0px 20px hsla(150, 100%, 50%, 0.75);
+}
+#pclistLayer  input[type="radio"]#control_05:checked + label {
+  background: red;
+  border-color: red;
+}
+
+@media only screen and (max-width: 700px) {
+  section {
+    flex-direction: column;
+  }
+}
+
+
 </style>
 <script>
 	$(document).ready(function () {
@@ -60,7 +101,7 @@
 
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
-		$("#recoveryMsg").empty();
+// 		$("#recoveryMsg").empty();
 		$("#recoveryPclist").empty();
 		$("#recoveryPcBackuplist").empty();
 
@@ -85,19 +126,33 @@
 					$("#selectPcOne").text('');
 				} else {
 					$("#org_seq").val(treeNode.id);
+					strHtml += '<div class="wrapperBackupR">';
 					for (var i = 0; i < agrs.length; i++) {
-						console.log(agrs[i]);
-						if (i == 0) {
-							tmp = "checked";
+// 						strHtml += '<div class="radio col-sm-2" >';
+// 						strHtml += '<label class="radio-custom">';
+// 						strHtml += '<input type="radio" name="pc_seq" value="' + agrs[i].seq +'" onClick="selectPcRecovery()">';
+// 						strHtml += agrs[i].pc_hostname;
+// 						strHtml += '</label>';
+// 						strHtml += '</div>';
+						
+
+						var hostnameVal = '';
+						if (agrs[i].pc_hostname.length >= 20) {
+							hostnameVal = agrs[i].pc_hostname.substr(0, 20) + '...';
+						} else {
+							hostnameVal = agrs[i].pc_hostname;
 						}
-						strHtml += '<div class="radio col-sm-2" >';
-						strHtml += '<label class="radio-custom">';
-						strHtml += '<input type="radio" name="pc_seq" value="' + agrs[i].seq +'" onClick="selectPcRecovery()">';
-						strHtml += agrs[i].pc_hostname;
+						
+						strHtml += '<div class="col-sm-4">';
+						strHtml += '<input type="radio" id="control_0'+agrs[i].seq+'" name="pc_seq" value="'+agrs[i].seq+'">';
+						strHtml += '<label class="labels" for="control_0'+agrs[i].seq+'" onClick="selectPcRecovery('+agrs[i].seq+')">';
+						strHtml += hostnameVal;
 						strHtml += '</label>';
 						strHtml += '</div>';
+					
 					}
-					$("#recoveryMsg").append('* 복구할 PC를 선택해주세요.');
+						strHtml += '</div>';
+					$("#recoveryPcBackuplist").append('* 복구할 PC를 선택해주세요.');
 				}
 				strHtml += "</div>";
 				$("#recoveryPclist").show();
@@ -132,6 +187,13 @@
 							컴퓨터 복구 관리
 						</header>
 
+						<div class="panel-body fotter-bg"  id="bodyfooter">
+							<div class="right">
+								<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit"> 초기화</button>
+								<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 복구하기</button>
+							</div>
+						</div>
+						
 						<div class="panel-body">
 							<form class="form-horizontal" name="frm" method="post" action="backupRCSave">
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
@@ -146,25 +208,23 @@
 									<div class="col-sm-10" id="pclistLayer">
 
 										<!-- pc list -->
-										<div class="col-sm-10 boxborder" style="display:none;" id="recoveryPclist">
-										</div>
-
+										<div class="col-sm-10 boxborder" style="display:none;" id="recoveryPclist"></div>
+										
 										<!-- pc backup list -->
-										<div class="col-sm-10 boxborder" style="display:none;"
-											id="recoveryPcBackuplist"></div>
+										<div class="col-sm-10 boxborder" style="display:none;" id="recoveryPcBackuplist"></div>
 
 										<div class="col-sm-10">
 											<span class="help-block m-b-none" id="recoveryMsg"> </span>
 										</div>
 									</div>
 
-									<div class="form-group">
-										<div class="col-sm-4 col-sm-offset-2">
-											<button type="button" class="btn btn-primary" id="btnSave">복구하기</button>
-										</div>
-									</div>
+<!-- 									<div class="form-group"> -->
+<!-- 										<div class="col-sm-4 col-sm-offset-2"> -->
+<!-- 											<button type="button" class="btn btn-primary" id="btnSave">복구하기</button> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
 								</div>
-								<!-- <div class="line_bg line-dashed line-lg pull-in"></div> -->
+<!-- 								<div class="line_bg line-dashed line-lg pull-in"></div> -->
 							</form>
 						</div>
 					</section>
@@ -227,17 +287,12 @@
 		return false;
 	}
 
-	function selectPcRecovery() {
+	function selectPcRecovery(_val) {
 
+		var seq = _val; //$("input:radio[name='pc_seq']:checked").val();
+// 		var rasioNm = $("label[for='"+seq+"']").text(); 
+// 		console.log("seq :" + seq + "=="+ rasioNm); 
 		$("#recoveryPcBackuplist").empty();
-		console.log("recoveryPclist");
-
-
-
-		var seq = $("input:radio[name='pc_seq']:checked").val();
-		// var rasioNm = $("label[for='"+seq+"']").text(); 
-		// console.log("seq :" + seq + "=="+ rasioNm); 
-
 		$.post("backupRCList", {
 				seq: seq,
 				domain: $('form[name=frm] input[name=domain]').val()
@@ -245,16 +300,25 @@
 			function (result) {
 				var agrs = result;
 				var strHtml = "";
-
 				if (agrs.length == 0) {
-					$("#recoveryMsg").empty();
-					$("#recoveryMsg").append('* 등록된 PC의 백업파일이 없습니다.');
+// 					$("#recoveryPcBackuplist").empty();
+					$("#recoveryPcBackuplist").append('* 등록된 PC의 백업파일이 없습니다.');
 				} else {
 					for (var i = 0; i < agrs.length; i++) {
+						
+// 						strHtml += '<div class="col-sm-4">';
+// 						strHtml += '<input type="radio" id="br_seq'+i+'" name="pc_seq" value="'+agrs[i].br_seq+'" data-name="'+agrs[i].br_backup_name+'" data-path="'+agrs[i].br_backup_path+'">';
+// 						strHtml += '<label class="labels" for="br_seq'+i+'" >';
+// 						strHtml += agrs[i].br_backup_name;
+// 						strHtml += '</label>';
+// 						strHtml += '</div>';
+						
+
+					    
+						
 						strHtml += "<li style='padding-right: 0px; font-size:14px; min-width: unset;'>";
 						strHtml += "<span>";
-						strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq" + i + "\" value='" + agrs[i].br_seq + 
-						"' data-name='"+agrs[i].br_backup_name+"' data-path='"+agrs[i].br_backup_path+"'/>";
+						strHtml += "<input type=\"radio\" name=\"br_seq\" id=\"br_seq" + i + "\" value='" + agrs[i].br_seq +"' data-name='"+agrs[i].br_backup_name+"' data-path='"+agrs[i].br_backup_path+"' checked/>";
 						strHtml += "<label style='float: unset;' for=\"br_seq" + i + "\" class=\"\">";
 
 
@@ -263,8 +327,7 @@
 
 						strHtml += "</label>";
 						strHtml += "</span>";
-						strHtml += "<div style='padding: 10px 10px 10px 22px; font-size: 18px;'> 백업일자 : " + agrs[i]
-							.br_backup_name + "</div>";
+						strHtml += "<div style='padding: 10px 10px 10px 22px; font-size: 18px;'> 백업일자 : " + agrs[i].br_backup_name + "</div>";
 						strHtml += "</li>";
 
 					}
@@ -274,20 +337,19 @@
 						$('form[name=frm] input[name=org_seq]').val(agrs[0].br_org_seq);
 					}
 
-
-					$("#recoveryPcBackuplist").show();
-					$("#recoveryPcBackuplist").append(strHtml);
-					
-
 				}
+				$("#recoveryPcBackuplist").show();
+				$("#recoveryPcBackuplist").append(strHtml);
 			});
 
 
 	}
 	
-	$(document).ready(function () {
-		onClick(null,$("#tree"),zNodes[0]);
-	});
+// 	$(document).ready(function () {
+// 		onClick(null,$("#tree"),zNodes[0]);
+// 	});
 </script>
+
+
 
 <%@ include file="../template/footer.jsp" %>

@@ -4,6 +4,7 @@ centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | 
 CENTERURL="http://${centerUrl}/hmsvc/updtpolicy"
 PCUUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/updp.log"
+TENANT=$(cat /etc/hamonize/hamonize_tanent)
 touch $LOGFILE
 
 sudo systemctl stop hamonize-processmngr.service
@@ -87,7 +88,9 @@ UPDT_INSTALL_JSON="{\
         \"insresert\":[$INSRET],\
         \"updtresert\": [],\
         \"delresert\": [],\
+        \"domain\": \"$TENANT\",\
         \"uuid\": \"$PCUUID\"\
+        
 }"
 
 
@@ -209,6 +212,7 @@ UPDT_UPGRADE_JSON="{\
         \"insresert\":[],\
         \"updtresert\": [$UPSRET],\
         \"delresert\": [],\
+        \"domain\": \"$TENANT\",\
         \"uuid\": \"$PCUUID\"\
 }"
 
@@ -288,6 +292,7 @@ UPDT_DELETE_JSON="{\
         \"insresert\":[],\
         \"updtresert\": [],\
         \"delresert\": [$DELRET],\
+        \"domain\": \"$TENANT\",\
         \"uuid\": \"$PCUUID\"\
 }"
 
