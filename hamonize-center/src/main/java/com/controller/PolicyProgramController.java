@@ -66,7 +66,7 @@ public class PolicyProgramController {
 	@RequestMapping(value = "/psave", method = RequestMethod.POST)
 	public JSONObject pinsert(HttpSession session, Model model,
 			@RequestParam Map<String, Object> params) throws ParseException, InterruptedException {
-
+System.out.println("params======"+params);
 		JSONParser jp = new JSONParser();
 		String data = params.get("data").toString();
 		JSONArray jsonArray = (JSONArray) jp.parse(data);
@@ -104,6 +104,7 @@ public class PolicyProgramController {
 		List<PolicyProgrmVo> pList = null;
 		try {
 			data.put("job_id", pService.getProgrmHistoryLastJob(vo));
+			System.out.println("PolicyProgrmVo================="+vo);
 			pList = pService.programList(vo);
 			vo = pService.programApplcView(vo);
 			data.put("dataInfo", vo);

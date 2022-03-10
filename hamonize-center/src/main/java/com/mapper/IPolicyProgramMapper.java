@@ -15,6 +15,8 @@ public interface IPolicyProgramMapper {
 	
 	public PolicyProgrmVo programApplcView(PolicyProgrmVo vo);
 
+	public String getProgramApplc(Map<String, Object> params);
+
 	public int getProgrmHistoryLastJob(PolicyProgrmVo vo);
 
 }
