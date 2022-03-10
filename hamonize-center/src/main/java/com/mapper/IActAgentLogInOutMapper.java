@@ -8,5 +8,5 @@ public interface IActAgentLogInOutMapper {
 	public int insertLoginLog(LogInOutVo vo);
 	public int updateLoginLog(LogInOutVo vo);
 	
-	public int selectLoginLogSeq(LogInOutVo vo);
+	public Long selectLoginLogSeq(LogInOutVo vo);
 }
