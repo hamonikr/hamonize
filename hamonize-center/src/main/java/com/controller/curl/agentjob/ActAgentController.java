@@ -114,6 +114,7 @@ public class ActAgentController {
 			retVal = actAgentLogInOutMapper.insertLoginLog(inputVo);
 			applyNonReflectionPolicy(inputVo,checkResult);
 		} else if (inputVo.getGubun().equals("LOGOUT")) { // logout update
+			System.out.println("###########@@@@@@@@@22" + actAgentLogInOutMapper.selectLoginLogSeq(inputVo));
 			inputVo.setSeq(actAgentLogInOutMapper.selectLoginLogSeq(inputVo));
 			inputVo.setLogout_dt(Timestamp.valueOf(inputVo.getDatetime()));
 			retVal = actAgentLogInOutMapper.updateLoginLog(inputVo);

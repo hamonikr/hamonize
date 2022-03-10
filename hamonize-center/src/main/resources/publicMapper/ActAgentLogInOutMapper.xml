@@ -22,7 +22,7 @@
         seq = #{seq}
 </update>
 	
-<select id="selectLoginLogSeq" parameterType="com.model.LogInOutVo" resultType="Integer">
+<select id="selectLoginLogSeq" parameterType="com.model.LogInOutVo" resultType="Long">
     SELECT
         seq
     FROM
