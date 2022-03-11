@@ -63,6 +63,13 @@ public class PolicyUpdtService {
 		String former_ppm_name = iPolicyProgramMapper.getProgramApplc(params);
 		policyDelRet = iUpdtMapper.updatePolicyProgrm(params);
 		String ppm_name = iPolicyProgramMapper.getProgramApplc(params);
+		System.out.println("former_ppm_name=========="+former_ppm_name);
+		System.out.println("ppm_name=========="+ppm_name);
+		// if(ppm_name == null){
+		// 	ppm_name = "";
+		// }else if(former_ppm_name == null){
+		// 	former_ppm_name = "";
+		// }
 		params.put("ppm_name", ppm_name);
 		params.put("former_ppm_name", former_ppm_name);
 		try {
