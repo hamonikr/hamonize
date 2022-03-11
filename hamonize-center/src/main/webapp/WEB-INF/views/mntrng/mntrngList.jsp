@@ -51,7 +51,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					}else{
 						strHtml += '<div class="panel-body col-lg-3 "><blockquote class="bodyDataLayer mntrngBox">';
 						strHtml += '<span class="fa-stack pull-left m-r-sm"> <i class="fa fa-pause"></i> </span>';
+						strHtml += '<a class="clear" href="/mntrng/pcView?uuid=' + uuid +'">';
 						strHtml += hostnameVal;
+						strHtml += '</a>';
 						strHtml += '</blockquote></div>';
 						
 					}

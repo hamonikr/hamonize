@@ -74,7 +74,7 @@
 
 					$('form[name=frm] a[name=selectName]').removeClass("active");
 					$(".bodyDataLayer").removeClass("boder-line_on");
-					$(".bodyDataLayer").removeClass("boder-line_off");
+// 					$(".bodyDataLayer").removeClass("boder-line_off");
 			
 
 					if (obj != null) {
@@ -245,7 +245,7 @@
 									<div id="checkedUpdt" ></div>
 									<c:forEach items="${pList}" var="data" varStatus="status">
 										<div class="panel-body col-lg-3 " id="div${data.sm_seq }">
-											<blockquote class="bodyDataLayer">
+											<blockquote class="bodyDataLayer boder-line_off">
 												<div class="form-check">
 													<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq" id="${data.sm_seq}" value="<c:out value='${data.sm_seq}'/>" id="${data.sm_seq}" data-port="${data.sm_port}">
 													<label class="form-check-label" for="${data.sm_seq}">

@@ -72,7 +72,7 @@
 				$('form[name=frm] a[name=selectName]').removeClass("active");
 				
 				$(".bodyDataLayer").removeClass("boder-line_on");
-				$(".bodyDataLayer").removeClass("boder-line_off");
+// 				$(".bodyDataLayer").removeClass("boder-line_off");
 
 				if (obj != null) {
 					var ppm_seq = agrs.dataInfo.ppm_seq;
@@ -256,7 +256,7 @@
 								<div id="checkedUpdt" ></div>
 								<c:forEach items="${pList}" var="data" varStatus="status">
 									<div class="panel-body col-lg-3 " id="div${data.sm_seq }">
-										<blockquote class="boder-line_off bodyDataLayer">
+										<blockquote class="bodyDataLayer boder-line_off">
 											<div class="form-check">
 												<input width=0 height=0 style="visibility:hidden" class="form-check-input" type="checkbox" name="sm_seq"
 													id="${data.sm_seq}" value="<c:out value='${data.sm_seq}' />"
@@ -652,12 +652,13 @@
 
 		if ($("input:checkbox[id='" + _val + "']").is(":checked") == true) {
 			$("input:checkbox[id='" + _val + "']").prop("checked", false);
-			// $("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
-			// $("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
 		} else {
 			$("input:checkbox[id='" + _val + "']").prop("checked", true);
-			// $("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_on');
-			// $("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_off');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').addClass('boder-line_on');
+			$("input:checkbox[id='" + _val + "']").closest('blockquote').removeClass('boder-line_off');
+			
 		}
 
 	}

@@ -44,7 +44,7 @@ $(document).ready(function(){
 				$('form[name=frm] input[name=job_id]').val(agrs.job_id);
 				$('form[name=frm] a[name=selectName]').removeClass("active");
 				$(".bodyDataLayer").removeClass("boder-line_on");
-				$(".bodyDataLayer").removeClass("boder-line_off");
+// 				$(".bodyDataLayer").removeClass("boder-line_off");
 				
 				if(obj !=  null){
 					var ppm_seq = obj.ppm_seq; //agrs.dataInfo.ppm_seq;
@@ -119,8 +119,8 @@ $(document).ready(function(){
 									<div id="checkedUpdt" ></div>
 									<c:forEach items="${pList}" var="data" varStatus="status">
 										<c:if test="${data.pu_name.indexOf('hamonize')!=0}">
-											<div class="panel-body col-lg-3" id="div${data.pu_seq }">
-												<blockquote class="bodyDataLayer">
+											<div class="col-lg-3" id="div${data.pu_seq }">
+												<blockquote class="bodyDataLayer boder-line_off">
 													<div class="form-check">
 														<input  width=0 height=0 style="visibility:hidden" class="form-check-input" data-package="<c:out value='${data.pu_name}' />" type="checkbox" name="pu_seq" id="${data.pu_seq}" value="<c:out value='${data.pu_seq}'/>">
 														<label class="form-check-label" for="${data.pu_seq}">

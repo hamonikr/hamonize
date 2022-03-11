@@ -40,13 +40,13 @@ do
         then
                 echo "[$I] Not Installed " >>$LOGFILE
                 sudo apt-get install $I -y >>$LOGFILE
-                sleep 1
+                # sleep 1
         else    
                 echo "[$I] Installed " >>$LOGFILE
         fi
 
 
-	sudo apt-get install $I -y >>$LOGFILE
+	# sudo apt-get install $I -y >>$LOGFILE
         sleep 1
 	
         INS_INSTALL_CHK=`dpkg --get-selections | grep $I`

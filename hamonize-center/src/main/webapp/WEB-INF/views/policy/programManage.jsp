@@ -42,7 +42,7 @@
 
 					$('form[name=frm] a[name=selectName]').removeClass("active");
 					$(".bodyDataLayer").removeClass("boder-line_on");
-					$(".bodyDataLayer").removeClass("boder-line_off");
+// 					$(".bodyDataLayer").removeClass("boder-line_off");
 
 					var agrs = result;
 					var jsonData = JSON.stringify(agrs.dataInfo);
@@ -53,7 +53,7 @@
 					if(agrs.pList.length > 0){
 						for (var y = 0; y < agrs.pList.length; y++) {
 
-							html += '<div class="panel-body col-lg-3 " id="div'+agrs.pList[y].pcm_seq+'"><blockquote class="bodyDataLayer">';
+							html += '<div class="panel-body col-lg-3 " id="div'+agrs.pList[y].pcm_seq+'"><blockquote class="bodyDataLayer boder-line_off">';
 							html += '<div class="form-check">';
 							html += '<input width=0 height=0 style="visibility:hidden"  class="form-check-input" type="checkbox" name="pcm_seq" id="' + agrs.pList[y].pcm_seq + '" value="' + agrs.pList[y].pcm_seq + '"data-package="'+agrs.pList[y].pcm_name+'" />';
 							html += '<label class="form-check-label" for="' + agrs.pList[y].pcm_seq + '">';
