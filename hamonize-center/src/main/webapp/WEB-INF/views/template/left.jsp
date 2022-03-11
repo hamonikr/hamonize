@@ -1,22 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- background-color: #2a304c; -->
 <style>
-a {
+.hamonizeLeft a {
   color: #e2c9c9;
-}
-.nav-xs .nav-primary > ul > li > a span {
+} 
+.hamonizeLeft .nav-xs .nav-primary > ul > li > a span {
   font-weight: normal;
   text-transform: none;
   font-size: 13px;
   color:#000;
 }
-
+.hamonizeLeft .nav > li > a {
+    background-color: #2a304c;
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    color: white;
+}
 
 </style>
 <section class="vbox">
 
 
-    <section>
+    <section >
         <section class="hbox stretch">
             <!-- .aside -->
 
@@ -52,7 +58,7 @@ a {
                         <!-- <img src="/logintemplet/notebook/images/hlogo.png" class="m-r-sm" >
                         <img src="/logintemplet/notebook/images/hamonize.png" class="m-r-sm" width="90%"></a -->
 
-                    <section class="w-f scrollable">
+                    <section class="w-f scrollable hamonizeLeft">
                         <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0"
                             data-size="5px" data-color="#333333">
 
@@ -63,7 +69,6 @@ a {
                                         <a href="/mntrng/pcControlList" >
                                             <!-- <i class="fa fa-dashboard icon"> -->
                                             <i class="fa fa-dashboard icon" >
-                                                
                                                 <b class="bg-menu"></b>
                                             </i>
                                             <span>모니터링</span>
@@ -212,8 +217,8 @@ a {
                         </div>
                     </section>
 
-                    <footer class="footer lt hidden-xs b-t b-light">
-                        <ul class="nav">
+                    <footer class="footer lt hidden-xs b-light">
+                        <!-- <ul class="nav">
                             <li>
                                 <a href="javascript:;" data-toggle="dropdown" data-target="#notiLayer">
                                     <i class="fa fa-thumb-tack"></i>
@@ -222,24 +227,11 @@ a {
                             </li>
                             <li>
                                 <a href="javascript:;" data-toggle="dropdown" data-target="#settingsLayer">
-                                    <!-- <i class="fa fa-gears"></i> -->
+                                    <i class="fa fa-gears"></i>
                                     <i class="fa fa-thumb-tack"></i>
                                     <span>환경설정</span>
                                 </a>
                             </li>
-                            <%-- <li>
-                                <a href="http://192.168.0.210:8080/user/detail">
-                                    <i class="fa fa-thumb-tack"></i>
-                                    <span>${userSession.userid} 님</span>
-                                </a>
-                            </li> --%>
-                            <%-- <li>
-                                <a href="http://192.168.0.210:8080/login/logout">
-                                    <i class="fa fa-thumb-tack"></i>
-                                    <span>로그아웃</span>
-                                </a>
-                            </li> --%>
-
                             <li>
                                 <a href="/login/logout">
                                     <i class="fa fa-thumb-tack"></i>
@@ -264,13 +256,15 @@ a {
                                 <section class="panel bg-white">
                                     <header class="panel-heading b-b b-light animated fadeInRight">Hamonize 서버 정보</header>
                                     <div class="panel-body animated fadeInRight">
-                                        <!-- <p class="text-sm">No active chats.</p> -->
-                                        <p><a href="#" class="btn btn-sm btn-default">Start a chat</a></p>
+                                        <p class="text-sm">No active chats.</p>
+                                        <p><a href="#" class="btn btn-sm btn-default">Start a chat</a></p> 
                                     </div>
                                 </section>
                             </section>
-                        </div>
-                        
+                        </div> -->
+                        <div class="btn-group hidden-nav-xs">
+			                <button type="button" title="Logout" class="btn btn-icon btn-sm btn-default" ><i class="fa fa-sign-out"></i></button>
+			              </div>
                         <a href="#nav" data-toggle="class:nav-xs" class="pull-right btn btn-sm btn-default btn-icon">
                             <i class="fa fa-angle-left text"></i>
                             <i class="fa fa-angle-right text-active"></i>

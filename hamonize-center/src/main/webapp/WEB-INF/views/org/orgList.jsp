@@ -289,7 +289,6 @@ function fnSave(){
 					
 						<div class="panel-body fotter-bg" >
 							<div class="right">
-								<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit">초기화</button>
 							<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave">저장</button>
 							</div>
 						</div>

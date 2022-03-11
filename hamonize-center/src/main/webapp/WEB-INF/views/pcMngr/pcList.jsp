@@ -43,7 +43,7 @@
 
 						gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid +
 							"'>";
-						gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+						gbInnerHtml += "<td>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.deptname + "</td>";
 
 						if (value.pc_os == "H") {
@@ -75,7 +75,7 @@
 
 					});
 				} else {
-					gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+					gbInnerHtml += "<tr><td colspan='5' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 				}
 
 				startPage = data.pagingVo.startPage;
@@ -152,7 +152,7 @@
 								data-title="ajax to load the data." data-original-title="" title=""></i>
 						</header>
 						<div class="table-responsive">
-							<div class="dataTables_wrapper" role="grid">
+							
 								<div class="row">
 
 									<div class="col-sm-12">
@@ -180,19 +180,19 @@
 									</div>
 
 								</div>
-								<table class="table table-striped m-b-none " id="DataTables_Table_0"
-									aria-describedby="DataTables_Table_0_info">
+								<table class="table table-striped datagrid m-b-sm" id="" >
 									<thead>
 										<tr role="row">
-											<th width="20%">번호</th>
+											<th width="10%">번호</th>
 											<th width="25%">부서이름</th>
-											<th width="25%">OS</th>
-											<th width="15%">PC 호스트명</th>
+											<th width="10%">OS</th>
+											<th width="*">PC 호스트명</th>
 											<th width="15%">등록일</th>
 										</tr>
 									</thead>
 									<tbody id="pageGrideInPcMngrListTb"></tbody>
 								</table>
+								<div class="dataTables_wrapper" role="grid">
 								<!-- page number -->
 								<div class="page_num" id="page_num"> </div>
 							</div>
@@ -252,7 +252,7 @@ console.log("value=========+++"+value);
 				var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 10);
 
 				gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.pc_guid + "'>";
-				gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+				gbInnerHtml += "<td>" + no + "</td>";
 				gbInnerHtml += "<td>" + value.deptname + "</td>";
 
 				if (value.pc_os == "H") {
@@ -283,7 +283,7 @@ console.log("value=========+++"+value);
 
 			});
 		} else {
-			gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+			gbInnerHtml += "<tr><td colspan='5' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 		}
 
 		startPage = data.pagingVo.startPage;

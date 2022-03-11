@@ -55,7 +55,7 @@
 							10);
 
 						gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
-						gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+						gbInnerHtml += "<td>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 						gbInnerHtml += "<td>" + value.vendor + "</td>";
 						gbInnerHtml += "<td>" + value.product + "</td>";
@@ -65,7 +65,7 @@
 
 					});
 				} else {
-					gbInnerHtml += "<tr><td colspan='8' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+					gbInnerHtml += "<tr><td colspan='6' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 				}
 				var startPage = data.pagingVo.startPage;
 				var endPage = data.pagingVo.endPage;
@@ -75,8 +75,7 @@
 				$('#count').html("검색결과: " + numberWithCommas(totalRecordSize) + "건");
 				var viewName = 'classMngrList';
 				if (totalRecordSize > 0) {
-					$(".page_num").html(getPaging(startPage, endPage, totalPageSize, currentPage, '\'' + viewName +
-						'\''));
+					$(".page_num").html(getPaging(startPage, endPage, totalPageSize, currentPage, '\'' + viewName + '\''));
 				} else {
 					$("#pagginationInList").empty();
 				}
@@ -107,8 +106,6 @@
 
 					<section class="panel panel-default">
 						<header class="panel-heading"> # 비인가 디바이스 접속 로그</header>
-
-						<section class="panel panel-default">
 
 							<div class="table-responsive">
 								<div class="dataTables_wrapper" role="grid">
@@ -171,8 +168,6 @@
 									<div class="page_num" id="page_num"> </div>
 								</div>
 							</div>
-						</section>
-
 						</div>
 
 					</section>
@@ -209,7 +204,7 @@
 				var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 10);
 
 				gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
-				gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+				gbInnerHtml += "<td>" + no + "</td>";
 				gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
 				gbInnerHtml += "<td>" + value.vendor + "</td>";
 				gbInnerHtml += "<td>" + value.product + "</td>";
@@ -219,7 +214,7 @@
 
 			});
 		} else {
-			gbInnerHtml += "<tr><td colspan='8' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+			gbInnerHtml += "<tr><td colspan='6' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 		}
 
 		var startPage = data.pagingVo.startPage;

@@ -67,7 +67,7 @@
 						}
 
 						gbInnerHtml += "<tr data-code='" + value.idx + "' data-guidcode='" + value.idx + "'>";
-						gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+						gbInnerHtml += "<td>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.org_nm + "</td>";
 						gbInnerHtml += "<td>" + value.pc_hostname + "</td>"
 						gbInnerHtml += "<td>" + value.login_dt + "</td>";
@@ -77,7 +77,7 @@
 
 					});
 				} else {
-					gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+					gbInnerHtml += "<tr><td colspan='6' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 				}
 
 				var startPage = data.pagingVo.startPage;
@@ -124,7 +124,6 @@
 					<section class="panel panel-default">
 						<header class="panel-heading"> # 사용자 접속 로그</header>
 
-						<section class="panel panel-default">
 
 							<div class="table-responsive">
 								<div class="dataTables_wrapper" role="grid">
@@ -186,7 +185,6 @@
 									<div class="page_num" id="page_num"> </div>
 								</div>
 							</div>
-						</section>
 
 						</div>
 
@@ -244,7 +242,7 @@
 
 			});
 		} else {
-			gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+			gbInnerHtml += "<tr><td colspan='6' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 		}
 
 		var startPage = data.pagingVo.startPage;

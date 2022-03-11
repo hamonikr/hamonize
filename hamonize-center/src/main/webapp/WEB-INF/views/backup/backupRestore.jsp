@@ -2,95 +2,6 @@
 <%@ include file="../template/head.jsp" %>
 <%@ include file="../template/left.jsp" %>
 
-<!-- <link type="text/css" rel="stylesheet" href="/logintemplet/fonts/font-awesome-4.7.0/css/font-awesome.min.css"> -->
-<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-
-<style>
-	.boxborder {
-		border: 1px solid #e0e4e8;
-		padding: 10px;
-		border-radius: 4 px;
-	}
-
-	.line_bg {
-		*width: 100%;
-		height: 2px;
-		margin: 10 px;
-		font-size: 0; 
-		overflow: hidden;
-		background-color: transparent;
-		border-width: 0;
-		border-top: 1px solid #e8e8e8;
-	}
-
-/* 	/* [라디오 버튼 커스텀 스타일 변경 실시] */ */
- 	input[type='radio'] { 
- 		-webkit-appearance: none; 
- 		width: 17px; 
- 		height: 17px; 
- 		border: 1px solid darkgray; 
- 		border-radius: 50%; 
- 		outline: none; 
- 		background: #ffffff; 
- 	} 
-
-/* 	input[type='radio']:before { */
-/* 		/* [content null 설정해서 커스텀 지정] */ */
-/* 		content: ''; */
-/* 		display: block; */
-/* 		width: 70%; */
-/* 		height: 70%; */
-/* 		margin: 15% auto; */
-/* 		border-radius: 50%; */
-/* 	} */
-
-/* 	input[type='radio']:checked:before { */
-/* 		/* [라디오 버튼이 클릭 되었을 경우 내부 원형 색상] */ */
-/* 		background: #007bff; */
-/* 	} */
-	
-
-/*  section {  */
-/*    display: flex;  */
-/*    flex-flow: row wrap;  */
-/*  }  */
- section > div { 
-   flex: 1; 
-   padding: 0.5rem; 
- } 
-#pclistLayer  input[type="radio"] {
-  display: none;
-}
-#pclistLayer  .labels {
-  height: 100%;
-  display: block;
-  background: white;
-  border-radius: 20px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  text-align: center;
-  box-shadow: 0px 3px 10px -2px hsla(237deg 44% 59%);
-  position: relative;
-  font-weight: bold;
-}
-#pclistLayer  input[type="radio"]:checked + label {
-  background: hsla(237deg 44% 59%);
-  color: hsla(215, 0%, 100%, 1);
-  box-shadow: 0px 0px 20px hsla(150, 100%, 50%, 0.75);
-}
-#pclistLayer  input[type="radio"]#control_05:checked + label {
-  background: red;
-  border-color: red;
-}
-
-@media only screen and (max-width: 700px) {
-  section {
-    flex-direction: column;
-  }
-}
-
-
-</style>
 <script>
 	$(document).ready(function () {
 		//등록버튼
@@ -101,7 +12,6 @@
 
 	//메뉴 Tree onClick
 	function onClick(event, treeId, treeNode, clickFlag) {
-// 		$("#recoveryMsg").empty();
 		$("#recoveryPclist").empty();
 		$("#recoveryPcBackuplist").empty();
 
@@ -112,6 +22,8 @@
 		$('form[name=frm] input[name=domain]').val(treeNode.domain);
 		$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
 		$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
+		
+		$("#pcInfoNav").text("[ " +treeNode.name +"] 조직의 PC 목록");
 		$.post("backupRCShow", {
 				org_seq: treeNode.id,
 				domain: treeNode.domain
@@ -128,13 +40,6 @@
 					$("#org_seq").val(treeNode.id);
 					strHtml += '<div class="wrapperBackupR">';
 					for (var i = 0; i < agrs.length; i++) {
-// 						strHtml += '<div class="radio col-sm-2" >';
-// 						strHtml += '<label class="radio-custom">';
-// 						strHtml += '<input type="radio" name="pc_seq" value="' + agrs[i].seq +'" onClick="selectPcRecovery()">';
-// 						strHtml += agrs[i].pc_hostname;
-// 						strHtml += '</label>';
-// 						strHtml += '</div>';
-						
 
 						var hostnameVal = '';
 						if (agrs[i].pc_hostname.length >= 20) {
@@ -186,14 +91,6 @@
 						<header class="panel-heading font-bold">
 							컴퓨터 복구 관리
 						</header>
-
-						<div class="panel-body fotter-bg"  id="bodyfooter">
-							<div class="right">
-								<button type="reset" class="btn btn-s-md btn-default btn-rounded" id="btnInit"> 초기화</button>
-								<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 복구하기</button>
-							</div>
-						</div>
-						
 						<div class="panel-body">
 							<form class="form-horizontal" name="frm" method="post" action="backupRCSave">
 								<input type="hidden" name="org_seq"  id="org_seq" value="" />
@@ -204,7 +101,7 @@
 								<input type="hidden" name="domain" id="domain" value="" />
 
 								<div class="form-group">
-									<label class="col-sm-2 control-label">PC 목록(HostName)</label>
+									<label id="pcInfoNav" class="col-sm-2 control-label">PC 목록</label>
 									<div class="col-sm-10" id="pclistLayer">
 
 										<!-- pc list -->
@@ -217,16 +114,16 @@
 											<span class="help-block m-b-none" id="recoveryMsg"> </span>
 										</div>
 									</div>
-
-<!-- 									<div class="form-group"> -->
-<!-- 										<div class="col-sm-4 col-sm-offset-2"> -->
-<!-- 											<button type="button" class="btn btn-primary" id="btnSave">복구하기</button> -->
-<!-- 										</div> -->
-<!-- 									</div> -->
 								</div>
 <!-- 								<div class="line_bg line-dashed line-lg pull-in"></div> -->
 							</form>
 						</div>
+						<div class="panel-body fotter-bg"  id="bodyfooter">
+							<div class="right">
+								<button type="button" class="btn btn-s-md btn-default btn-rounded" id="btnSave"> 복구하기</button>
+							</div>
+						</div>
+						
 					</section>
 
 				</section>

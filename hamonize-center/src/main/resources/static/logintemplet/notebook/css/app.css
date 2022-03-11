@@ -810,7 +810,7 @@ a:hover .caret-white {
 }
 .nav-primary li > a > i > b {
   position: absolute;
-  left: -36px;
+  left: -40px;
   width: 100%;
   top: 0;
   bottom: 0;
@@ -892,7 +892,7 @@ a:hover .caret-white {
     display: none;
   }
   .nav-xs {
-    width: 55px;
+    width: 69px;
   }
   .nav-xs .slimScrollDiv,
   .nav-xs .slim-scroll {
@@ -940,7 +940,8 @@ a:hover .caret-white {
     transition: margin-top 0.2s;
   }
   .nav-xs .nav-primary > ul > li > a i b {
-    left: 0 !important;
+/*     left: 0 !important; */
+	left : -56px;
     -webkit-transition: top 0.2s;
     transition: top 0.2s;
   }
@@ -3327,3 +3328,59 @@ fieldset[disabled] .btn-gplus.active {
 
 
  
+	.boxborder {
+		border: 1px solid #e0e4e8;
+		padding: 10px;
+		border-radius: 4 px;
+	}
+
+	.line_bg {
+		*width: 100%;
+		height: 2px;
+		margin: 10 px;
+		font-size: 0; 
+		overflow: hidden;
+		background-color: transparent;
+		border-width: 0;
+		border-top: 1px solid #e8e8e8;
+	}
+
+ 	input[type='radio'] { 
+ 		-webkit-appearance: none; 
+ 		width: 17px; 
+ 		height: 17px; 
+ 		border: 1px solid darkgray; 
+ 		border-radius: 50%; 
+ 		outline: none; 
+ 		background: #ffffff; 
+ 	} 
+
+section > div { 
+   flex: 1; 
+   padding: 0.5rem; 
+ } 
+#pclistLayer  input[type="radio"] {
+  display: none;
+}
+#pclistLayer  .labels {
+  height: 100%;
+  display: block;
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  box-shadow: 0px 3px 10px -2px hsla(237deg 44% 59%);
+  position: relative;
+  font-weight: bold;
+}
+#pclistLayer  input[type="radio"]:checked + label {
+  background: hsla(237deg 44% 59%);
+  color: hsla(215, 0%, 100%, 1);
+  box-shadow: 0px 0px 20px hsla(150, 100%, 50%, 0.75);
+}
+#pclistLayer  input[type="radio"]#control_05:checked + label {
+  background: red;
+  border-color: red;
+}
+

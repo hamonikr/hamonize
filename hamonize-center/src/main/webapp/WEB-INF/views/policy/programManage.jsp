@@ -88,7 +88,7 @@
 									$(this).closest('blockquote').addClass('boder-line_on');
 									$(this).closest('blockquote').removeClass('boder-line_off');
 									
-									//$("#div"+$(this).val()).appendTo("#checkedUpdt");
+									$("#div"+$(this).val()).appendTo("#checkedUpdt");
 								}
 							});
 						}

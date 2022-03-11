@@ -53,11 +53,10 @@
 				if (data.list.length > 0) {
 
 					$.each(data.list, function (index, value) {
-						var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) *
-							10);
+						var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 10);
 
 						gbInnerHtml += "<tr data-code='' data-guidcode=''>";
-						gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+						gbInnerHtml += "<td>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.pc_cpu + "</td>";
 						gbInnerHtml += "<td>" + value.pc_memory + "</td>";
 						gbInnerHtml += "<td>" + value.pc_disk + "</td>";
@@ -70,7 +69,7 @@
 
 					});
 				} else {
-					gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+					gbInnerHtml += "<tr><td colspan='9' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 				}
 				var startPage = data.pagingVo.startPage;
 				var endPage = data.pagingVo.endPage;
@@ -80,8 +79,7 @@
 				$('#count').html("검색결과: " + numberWithCommas(totalRecordSize) + "건");
 				var viewName = 'classMngrList';
 				if (totalRecordSize > 0) {
-					$(".page_num").html(getPaging(startPage, endPage, totalPageSize, currentPage, '\'' + viewName +
-						'\''));
+					$(".page_num").html(getPaging(startPage, endPage, totalPageSize, currentPage, '\'' + viewName + '\''));
 				} else {
 					$("#pagginationInList").empty();
 				}
@@ -115,7 +113,6 @@
 					<section class="panel panel-default">
 						<header class="panel-heading"> # 하드웨어 변경로그</header>
 
-						<section class="panel panel-default">
 
 							<div class="table-responsive">
 								<div class="dataTables_wrapper" role="grid">
@@ -180,7 +177,6 @@
 									<div class="page_num" id="page_num"> </div>
 								</div>
 							</div>
-						</section>
 
 						</div>
 
@@ -218,7 +214,7 @@
 				var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 10);
 
 				gbInnerHtml += "<tr data-code='' data-guidcode=''>";
-				gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+				gbInnerHtml += "<td>" + no + "</td>";
 				gbInnerHtml += "<td>" + value.pc_cpu + "</td>";
 				gbInnerHtml += "<td>" + value.pc_memory + "</td>";
 				gbInnerHtml += "<td>" + value.pc_disk + "</td>";
@@ -233,7 +229,7 @@
 
 			});
 		} else {
-			gbInnerHtml += "<tr><td colspan='11' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+			gbInnerHtml += "<tr><td colspan='9' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 		}
 
 		var startPage = data.pagingVo.startPage;

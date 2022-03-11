@@ -55,7 +55,7 @@
 							10);
 
 						gbInnerHtml += "<tr data-code='' data-guidcode=''>";
-						gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+						gbInnerHtml += "<td>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.org_nm + "</td>";
 						gbInnerHtml += "<td>" + value.progrm_name + "</td>";
 						gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
@@ -66,7 +66,7 @@
 
 					});
 				} else {
-					gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+					gbInnerHtml += "<tr><td colspan='6' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 				}
 				var startPage = data.pagingVo.startPage;
 				var endPage = data.pagingVo.endPage;
@@ -110,11 +110,6 @@
 
 					<section class="panel panel-default">
 						<header class="panel-heading"> # 프로그램 차단 로그</header>
-
-
-
-
-						<section class="panel panel-default">
 
 							<div class="table-responsive">
 								<div class="dataTables_wrapper" role="grid">
@@ -168,8 +163,6 @@
 									<div class="page_num" id="page_num"> </div>
 								</div>
 							</div>
-						</section>
-
 						</div>
 						
 					</section>
@@ -206,7 +199,7 @@
 				var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 10);
 
 				gbInnerHtml += "<tr data-code='' data-guidcode=''>";
-				gbInnerHtml += "<td style='text-align:center;'>" + no + "</td>";
+				gbInnerHtml += "<td>" + no + "</td>";
 				gbInnerHtml += "<td>" + value.org_nm + "</td>";
 				gbInnerHtml += "<td>" + value.progrm_name + "</td>";
 				gbInnerHtml += "<td>" + value.pc_hostname + "</td>";
@@ -217,7 +210,7 @@
 
 			});
 		} else {
-			gbInnerHtml += "<tr><td colspan='7' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
+			gbInnerHtml += "<tr><td colspan='6' style='text-align:center;'>등록된 데이터가 없습니다. </td></tr>";
 		}
 
 		var startPage = data.pagingVo.startPage;

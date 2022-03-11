@@ -143,7 +143,7 @@
 								<li class="hidden-xs ">
 									<a href="javascript:;" data-toggle="dropdown"
 										data-target="#firewallLayer">
-										<!-- <i class="fa fa-bell"></i> -->
+										<i class="fa fa-plus-circle"></i>
 										방화벽추가
 										<!-- <span class="badge badge-sm up bg-danger m-l-n-sm count" style="display: inline-block;">방화벽추가</span> -->
 									</a>
