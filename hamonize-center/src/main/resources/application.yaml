@@ -3,6 +3,11 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+  jpa:
+    properties: 
+      hibernate:
+        ddl-auto: update
+      show-sql: true 
     #servlet:
     #  path: .do
   # server:
@@ -23,10 +28,6 @@ spring:
   #     flush-mode: on-save
   #     namespace: spring:session
 
-
-  jpa:
-    hibernate:
-      ddl-auto: update
     #   hikari:
     #     auto-commit: true
     #     connection-test-query: SELECT 1

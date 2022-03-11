@@ -150,6 +150,7 @@ public class PolicyUpdtController {
 		params.put("job_id", jobResult.get("id"));
 		uService.updtDelete(params);
 		result = uService.updtSave(params);
+		
 		//차단정책 초기화
 		uService.updatePolicyProgrm(params);
 		JSONObject jsonObj = new JSONObject();

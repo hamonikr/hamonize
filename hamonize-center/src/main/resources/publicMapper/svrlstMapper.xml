@@ -23,7 +23,7 @@
 	            ELSE svr_port
 	       END as svr_port,
 			svr_dc, 
-			insert_dt 
+			rgstr_date 
 		FROM tbl_svrlst
 	</select>
 
