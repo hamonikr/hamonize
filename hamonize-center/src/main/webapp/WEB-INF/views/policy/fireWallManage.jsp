@@ -11,6 +11,7 @@
 
 		$("#btnSave").click(fnFireSave);
 		$("#btnManage").click(fnManage);
+		$("#btnInit").click(fnInit);
 
 
 
@@ -545,6 +546,16 @@
 		var vData = "deleteList=" + addressArr;
 		console.log("a===" + vData);
 		callAjax('POST', url, vData, ftn, getError, 'json');
+	}
+
+	function fnInit(){
+		$('input:checkbox[name=ppm_seq]').each(function (i) {
+			if ($(this).is(':checked')){
+				fireClickCellbox($(this).attr('id'));
+			}
+		});
+		$('a[name=selectName]').removeClass("btn btn-default btn-xs active");
+		$('a[name=selectName]').addClass("btn btn-default btn-xs");
 	}
 
 	function fireClickCellbox(_val) {

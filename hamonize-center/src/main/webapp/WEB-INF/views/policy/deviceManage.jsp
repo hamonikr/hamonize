@@ -9,6 +9,7 @@
 
 		$("#btnSave").click(fnSaveDeviceMange);
 		$("#btnManage").click(fnManage);
+		$("#btnInit").click(fnInit);
 
 
 
@@ -646,6 +647,16 @@
 		$('#pageGrideInMngrListTb').append(gbInnerHtml);
 
 
+	}
+
+	function fnInit(){
+		$('input:checkbox[name=ppm_seq]').each(function (i) {
+			if ($(this).is(':checked')){
+				deviceClickCellbox($(this).attr('id'));
+			}
+		});
+		$('a[name=selectName]').removeClass("btn btn-default btn-xs active");
+		$('a[name=selectName]').addClass("btn btn-default btn-xs");
 	}
 
 	function deviceClickCellbox(_val) {

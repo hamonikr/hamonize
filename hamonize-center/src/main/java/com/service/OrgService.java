@@ -487,6 +487,7 @@ public class OrgService {
 		params.put("after_org_seq", vo.getOrg_seq());
 		params.put("host_id", vo.getHost_id());
 		params.put("org_seq", vo.getOrg_seq());
+		System.out.println("getLastJobList.size()======"+getLastJobList.size());
 		for(int x = 0; x < getLastJobList.size();x++){
 			List<Map<String,Object>> getjobList  = new ArrayList<Map<String, Object>>();
 			params.put("before_url",getLastJobList.get(x).get("kind").toString());
@@ -496,24 +497,28 @@ public class OrgService {
 				params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 				params.put("policyRunFilePath","/etc/hamonize/runupdt");
 				getjobList = policyCommonMapper.comparePolicyUpdtBeforeAndAfter(params);
+				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}else if(getLastJobList.get(x).get("kind").toString().equals("pmanage")){
 				params.put("job_id", getLastJobList.get(x).get("job_id"));
 				params.put("before_org_seq", getLastJobList.get(x).get("org_seq"));
 				params.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
 				params.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
 				getjobList = policyCommonMapper.comparePolicyProgrmBeforeAndAfter(params);
+				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}else if(getLastJobList.get(x).get("kind").toString().equals("dmanage")){
 				params.put("job_id", getLastJobList.get(x).get("job_id"));
 				params.put("before_org_seq", getLastJobList.get(x).get("org_seq"));
 				params.put("policyFilePath","/etc/hamonize/security/device.hm");
 				params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
 				getjobList = policyCommonMapper.comparePolicyDeviceBeforeAndAfter(params);
+				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}else if(getLastJobList.get(x).get("kind").toString().equals("fmanage")){
 				params.put("job_id", getLastJobList.get(x).get("job_id"));
 				params.put("before_org_seq", getLastJobList.get(x).get("org_seq"));
 				params.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
 				params.put("policyRunFilePath","/etc/hamonize/runufw");
 				getjobList = policyCommonMapper.comparePolicyFrwlBeforeAndAfter(params);
+				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}
 		if(getjobList.size() > 1){
 			for(int i = 0; i< getjobList.size();i++){

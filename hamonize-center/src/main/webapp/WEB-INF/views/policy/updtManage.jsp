@@ -14,6 +14,7 @@ $(document).ready(function(){
 	$(document).ready(function () {
 		//등록버튼
 		$("#btnSave").click(fnSaveUpdt);
+		$("#btnInit").click(fnInit);
 		if($('form[name=frm] input[name=job_id]').val() > 0){
 			window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 		}
@@ -258,6 +259,16 @@ $('#div1').scrollTop($('#div1')[0].scrollHeight);
 
 			return false;
 		}
+	}
+
+	function fnInit(){
+		$('input:checkbox[name=pu_seq]').each(function (i) {
+			if ($(this).is(':checked')){
+				updtClickCellbox($(this).attr('id'));
+			}
+		});
+		$('a[name=selectName]').removeClass("btn btn-default btn-xs active");
+		$('a[name=selectName]').addClass("btn btn-default btn-xs");
 	}
 
 	function updtClickCellbox(_val){

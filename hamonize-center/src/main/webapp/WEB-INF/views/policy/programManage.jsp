@@ -10,6 +10,7 @@
 		}
 		//등록버튼
 		$("#btnSave").click(fnSavePmanage);
+		$("#btnInit").click(fnInit);
 		if($('form[name=frm] input[name=job_id]').val() > 0){
 			window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 		}
@@ -263,6 +264,16 @@
 
 			return false;
 		}
+	}
+
+	function fnInit(){
+		$('input:checkbox[name=ppm_seq]').each(function (i) {
+			if ($(this).is(':checked')){
+				updtClickCellbox($(this).attr('id'));
+			}
+		});
+		$('a[name=selectName]').removeClass("btn btn-default btn-xs active");
+		$('a[name=selectName]').addClass("btn btn-default btn-xs");
 	}
 
 	function updtClickCellbox(_val) {
