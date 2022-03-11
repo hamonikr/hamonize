@@ -202,12 +202,16 @@
 	</select>
 
 	<select id="checkAnsibleJobProgrmWhenOffPc" parameterType="com.model.LogInOutVo" resultType="java.util.HashMap">
-		select * from tbl_progrm_applc_history
+		select 
+		domain,job_id,org_seq,pa_seq,coalesce(ppm_name,'')as ppm_name,coalesce(ppm_seq,'')as ppm_seq
+		from tbl_progrm_applc_history
 		where domain = #{domain}
 		and job_id = #{job_id}
 		and org_seq = #{org_seq}
 		union all
-		select * from tbl_progrm_applc_history
+		select
+		domain,job_id,org_seq,pa_seq,coalesce(ppm_name,'')as ppm_name,coalesce(ppm_seq,'')as ppm_seq
+		from tbl_progrm_applc_history
 		where domain = #{domain}
 		and job_id  = (select max(job_id) from tbl_progrm_applc_history where domain = #{domain} and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid}))
 		and org_seq = (select org_seq from tbl_pc_mangr where pc_uuid = #{pc_uuid})
@@ -407,12 +411,16 @@
 	</select>
 
 	<select id="comparePolicyProgrmBeforeAndAfter" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		select * from tbl_progrm_applc_history
+		select
+		domain,job_id,org_seq,pa_seq,coalesce(ppm_name,'')as ppm_name,coalesce(ppm_seq,'')as ppm_seq
+		from tbl_progrm_applc_history
 		where domain = #{domain}
 		and job_id = #{job_id}
 		and org_seq = #{before_org_seq}
 		union all
-		select * from tbl_progrm_applc_history
+		select
+		domain,job_id,org_seq,pa_seq,coalesce(ppm_name,'')as ppm_name,coalesce(ppm_seq,'')as ppm_seq
+		from tbl_progrm_applc_history
 		where domain = #{domain}
 		and job_id  = (select max(job_id) from tbl_progrm_applc_history where domain = #{domain} and org_seq = #{after_org_seq})
 		and org_seq = #{after_org_seq}

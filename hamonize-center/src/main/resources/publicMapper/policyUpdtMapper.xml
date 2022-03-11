@@ -73,6 +73,7 @@
 	
 	<update id="updatePolicyProgrm" parameterType="java.util.HashMap">
 		<foreach collection="data" item="item" separator=";">
+		WITH rows AS (
 			update 
 			tbl_progrm_applc 
 			set ppm_seq = (select string_agg(A.ppm_seq,',')::text from 
@@ -88,6 +89,10 @@
 				select unnest(string_to_array(ppm_name,',')) as ppm_name from tbl_updt_applc where org_seq=#{item.org_seq} and domain = #{domain}
 				) A)
 				 where org_seq = #{item.org_seq} and domain = #{domain}
+				 RETURNING ppm_seq,ppm_name
+		)
+		update tbl_progrm_applc_history set ppm_seq = (select ppm_seq from rows),ppm_name = (select ppm_name from rows),updt_date = now()
+		where org_seq = #{item.org_seq} and domain = #{domain}
 		</foreach>
 	</update>
 	
