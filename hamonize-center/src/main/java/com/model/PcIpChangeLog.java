@@ -28,6 +28,10 @@ public class PcIpChangeLog {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Comment("PC시리얼넘버")
 	private Long seq;
+
+	@Size(max=50)
+	@Comment("")
+	private String domain;
 	
 	@Size(max=100)
 	@Comment("macaddress정보")
@@ -64,6 +68,10 @@ public class PcIpChangeLog {
 	@Size(max=100)
 	@Comment("PC고유번호")
 	private String pc_uuid;
+
+	@Size(max=50)
+	@Comment("")
+	private String status;
 
 	private Long org_seq;
 	

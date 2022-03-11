@@ -92,7 +92,7 @@
 
 
 	<select id="getProgramApplc" resultType="java.lang.String" parameterType="java.util.HashMap" >
- 			SELECT array_to_string(array_agg(tua.ppm_name),',')as ppm_name FROM
+ 			SELECT coalesce(array_to_string(array_agg(tua.ppm_name), ','),'')as ppm_name FROM
 			(SELECT distinct unnest(string_to_array(ppm_name, ',')) ppm_name
 			FROM 
 			TBL_PROGRM_APPLC 
