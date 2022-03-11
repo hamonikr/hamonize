@@ -81,7 +81,7 @@ function getPollTime(uuid) {
 			if (value) {
 				http.get(setUrl, (res) => {
 					res.on('data', (data) => {
-						console.log("data===============++"+data);
+						console.log("data===============++" + data);
 						var pollingObj = JSON.parse(data);
 
 						if (pollingObj.data != 'nodata') {
@@ -122,24 +122,7 @@ function Polling(time) {
 			(value) => {
 				console.log(value)
 				if (value) {
-
-					agnet_ufw();	//	방화벽 체크
-
-
-					// getProgrmDataCall(uuidVal); // Call 비인가 프로세스 정책 
-					// getDeviceDataCall(uuidVal); // Call 비인가 디바이스 정책 
-					// getUpdtDataCall(uuidVal); // Call 프로그램 업데이트 정책 
-					// getRecoveryDataCall(uuidVal); // Call 복구 정책 
-					// getFirewallDataCall(uuidVal); // Call 비인가 디바이스 정책 
-					console.log("agent --start ============================= ");
-					// getBackupDataCall(uuidVal); // Call 백업 주기 정책 
-					// sendToCenter_unauth(); // 비인가 디바이스 로그 전송 	
-
-
-					// ipStatusCheck();
-
-
-					// sysInfo(); // hw 변경로그
+					check_ufw();	//	방화벽 체크
 				} else {
 					log.info("network close~");
 				}
@@ -1090,6 +1073,45 @@ function os_func() {
 	}
 }
 
+// UFW Check ============================
+const check_ufw = async () => {
+	try {
+
+		let ufwStatusVal = await execShellCommand("ufw status");
+		console.log(ufwStatusVal);
+
+		// 필수 포트 : 11100, 22
+		// 20	tcp	ftp-data
+		// 21	tcp	ftp server
+		// 22	tcp	ssh server
+		// 23	tcp	telnet server
+		// 25	tcp	email server
+		// 53	tcp/udp	Domain name server
+		// 69	udp	tftp server
+		// 80	tcp	HTTP server
+		// 110	tcp/udp	POP3 server
+		// 123	tcp/udp	NTP server
+		// 443	tcp	HTTPS server
+		const portlist = ["11100", "22", "2202"];
+		const reloadPort = new Array();
+		for (let i = 0; i < portlist.length; i++) {
+			if (ufwStatusVal.indexOf(portlist[i]) < 0) {
+				// console.log("portlist[i]==========++" + portlist[i]);
+				reloadPort.push(portlist[i]);
+			}
+		}
+
+		for (let i = 0; i < reloadPort.length; i++) {
+			let loadPort = reloadPort[i];
+			let p = await execShellCommand(`ufw allow ${loadPort}`);
+		}
+
+
+
+	} catch (err) {
+		return Object.assign(err);
+	}
+}
 
 // HW chk =====================================
 const sysInfo = async () => {
@@ -1468,7 +1490,7 @@ const { Command } = require('commander');
 const program = new Command();
 
 program
-	.option('-n, --name <name>', 'file name')
+	.option('--test')
 	.option('--updt')
 	.option('--progrmblock')
 	.option('--devicepolicy')
@@ -1479,73 +1501,30 @@ program
 	.option('--start')
 	.parse();
 
-// console.log(`updt====> ${program.opts().updt}`);
-// console.log(`progrmblock ---> ${program.opts().progrmblock}`);
-// console.log(`ufw === > ${program.opts().ufw}`);
-// console.log(`hwcheck === > ${program.opts().hwcheck}`);
-// console.log(`start === > ${program.opts().start}`);
-// console.log(program.opts().name);
 
+// To-Do
+// getBackupDataCall(uuidVal); // Call 백업 주기 정책 -- 클라우드버전에서는 제외 ( 차후 도입 예정 )
 
-// 비인가디바이스  - hamonize-process 패키지에서 비인가 로그파일의 내용 유무를 판별하여 hamonize-agent --unauthlog를 실행한다.
-if (program.opts().unauthlog) {
-	console.log("unauthlog()");
-	sendToCenter_unauth();
-}
-
-
-// hwcheck cli 
-if (program.opts().hwcheck) {
-	console.log("hwcheck()");
-	sysInfo();
-}
-
-// recovery cli 
-if (program.opts().recovery) {
-	console.log("recovery()");
-	fnRecovJob();
-}
-
-
-
-// ufw cli 
-// ===> ansible -> agnet (0)
-if (program.opts().ufw) {
-	console.log("ufw()");
-	fnFirewallJob();
-}
-
-
-// program block cli 
-// ===> ansible -> agnet (0)
-if (program.opts().progrmblock) {
-	console.log("progrmblock option fnUpdtAgentAction()");
-	fnProgrmJob();
-}
-
-// device policy cli 
-// ===> ansible -> agnet (0)
-if (program.opts().devicepolicy) {
-	console.log("device policy cli ");
-	fnDeviceJob();
-}
-// updt cli 
-// ===> ansible -> agent (0)
-if (program.opts().updt) {
-	console.log("updt option fnUpdtAgentAction()");
-	fnUpdtAgentAction();
-}
-
-// agent start cli 
-if (program.opts().start) {
+if (program.opts().unauthlog) { sendToCenter_unauth(); }		// 비인가디바이스  - hamonize-process 패키지에서 비인가 로그파일의 내용 유무를 판별하여 hamonize-agent --unauthlog를 실행한다.
+if (program.opts().hwcheck) { sysInfo(); }		// hwcheck cli 
+if (program.opts().recovery) { fnRecovJob(); }		// recovery cli 
+if (program.opts().ufw) { fnFirewallJob(); }		// ufw cli 
+if (program.opts().progrmblock) { fnProgrmJob(); }		// program block cli 
+if (program.opts().devicepolicy) { fnDeviceJob(); }		// device policy cli 
+if (program.opts().updt) { fnUpdtAgentAction(); }		// updt cli 
+if (program.opts().start) {		// agent start cli 
 	FnMkdir();
-	console.log("DEFAUT_POLLTIME : " + DEFAUT_POLLTIME)
 	sysInfo();
 	getPollTime(uuidVal);
 
 }
 
-// getBackupDataCall(uuidVal); // Call 백업 주기 정책 -- 클라우드버전에서는 제외 ( 차후 도입 예정 )
+
+if (program.opts().test) {
+	check_ufw();
+}
+
+
 
 
 // ansible -> agent (정책파일및 Agent실행 ) &&  ansible -> center (결과전송)#############################
@@ -1563,12 +1542,8 @@ if (program.opts().start) {
 // agent ####################################################
 // hamonize-agent --hwcheck]		하드웨어 변경로그 (hw 및 ip 변경 체크 )
 // To-do ::: 필수 프로그램 체크.????
-// 1. 방화벽 포트 체크 
-async function agnet_ufw() {
-	//
-	// await import('./zxtest.mjs')
-	// 빌드시 오류 발생함   "zx": "^5.1.0"
-}
+// 1. 방화벽 포트 체크 -----> 
+
 
 
 // ==========================
