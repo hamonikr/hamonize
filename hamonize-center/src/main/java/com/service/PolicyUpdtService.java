@@ -72,12 +72,12 @@ public class PolicyUpdtService {
 		// }
 		params.put("ppm_name", ppm_name);
 		params.put("former_ppm_name", former_ppm_name);
-		try {
-			policyProgramService.applyProgramPolicy(params);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// 	policyProgramService.applyProgramPolicy(params);
+		// } catch (InterruptedException e) {
+		// 	// TODO Auto-generated catch block
+		// 	e.printStackTrace();
+		// }
 		return policyDelRet;
 		
 	}
