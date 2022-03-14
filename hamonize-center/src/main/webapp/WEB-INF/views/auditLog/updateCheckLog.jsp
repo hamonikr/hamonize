@@ -113,11 +113,12 @@
 // 						}
 						
 						shtml += '<div class="panel-body col-xs-6 monitor_list">';
-						shtml += '<blockquote class="bodyDataLayer " onclick="detailPcInfo(\''+value.pc_uuid +'\')" style="font-size: 15.5px;">';
+						shtml += '<blockquote class="bodyDataLayer " onclick="detailPcInfo(this);" style="font-size: 15.5px;" data-pcname="'+hostnameVal+'" data-uuid="'+value.pc_uuid+'">';
+// 						shtml += '<blockquote class="bodyDataLayer " onclick="detailPcInfo(\''+value.pc_uuid +'\')" style="font-size: 15.5px;" data-pcnm="'+hostnameVal+'">';
 						shtml += '<span class="fa-stack pull-left m-r-sm" style="margin-left: -34px; margin-top: -15px;">';
 						if (value.pc_status == "true") {
 							shtml += '<i class="fa fa-play"></i>';
-							shtml += "<input type='hidden' data-hostname='"+value.pc_hostname+"' name='pcuuid' value='"+value.pc_uuid+"'></li>";
+							shtml += "<input type='hidden' data-hostname='"+value.pc_hostname+"' name='pcuuid' value='"+value.pc_uuid+"'></li>"; 
 						}else{
 							shtml += '<i class="fa fa-pause"></i>';
 							shtml += "<input type='hidden' data-hostname='"+value.pc_hostname+"' name='pcuuid' value='"+value.pc_uuid+"'></li>";
@@ -135,10 +136,13 @@
 					// 프로그램 설치 결과 전체 =======================================================
 
 					var progrmResultHtml = "";
+					
 					$("#policyProgrmUpdtDetailData").val(data.policyUpdtResult[data.policyUpdtResult.length-1].run_status);
-					console.log("data.policyUpdtResult.length==="+data.policyUpdtResult.length);
+					console.log("data.policyUpdtResult.length==="+data.policyUpdtResult.length +"=============+"+ data.policyUpdtResult[data.policyUpdtResult.length-1].run_status);
 					for (var i = 0; i < data.policyUpdtResult.length; i++) {
 						var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
+						
+						console.log("data.policyUpdtResult.length==="+data.policyUpdtResult.length +"=============+"+ data.policyUpdtResult[i].run_status);
 						
 						progrmResultHtml += "<tr>";
 						progrmResultHtml += "<td class='updtRgstrData'>" + data.policyUpdtResult[i].rgstr_date + "</td>";
@@ -309,14 +313,25 @@
 			<section class="vbox">
 				<header class="header bg-light bg-gradient">
 					<ul class="nav nav-tabs nav-white">
-						<li class="active"><a href="#programResult" data-toggle="tab">프로그램 설치 정책 결과</a></li>
-						<li class=""><a href="#progrmBlockResult" data-toggle="tab">프로그램 차단 정책 결과</a></li>
-						<li class=""><a href="#firewallResult" data-toggle="tab">방화벽 정책 결과</a></li>
-						<li class=""><a href="#deviceResult" data-toggle="tab">디바이스 정책 결과</a></li>
+						<li class="active"><a href="#programResult" data-toggle="tab"><span class="pcNav"></span>프로그램 설치 정책 결과</a></li>
+						<li class=""><a href="#progrmBlockResult" data-toggle="tab"><span class="pcNav"></span>프로그램 차단 정책 결과</a></li>
+						<li class=""><a href="#firewallResult" data-toggle="tab"><span class="pcNav"></span>방화벽 정책 결과</a></li>
+						<li class=""><a href="#deviceResult" data-toggle="tab"><span class="pcNav"></span>디바이스 정책 결과</a></li>
 					</ul>
 				</header>
+				
+<!-- <section class="scrollable">
+<div class="wrapper">
+asasd
+</div>
+<div class="panel-body animated fadeInRight">
+as
+</div>
+</section> -->
+
 
 				<section class="scrollable">
+
 					<div class="tab-content">
 						<div class="tab-pane active " id="programResult">
 							<div class="table-responsive">
@@ -387,7 +402,9 @@
 						</div>
 
 					</div>
+					
 				</section>
+
 			</section>
 		</aside>
 
@@ -447,7 +464,22 @@
 	}
 
 // pc 별상세 내역 출력
-function detailPcInfo(uuid){
+function detailPcInfo(_this){
+// 	$(".bodyDataLayer   span").each(function( index, element ) {
+// 		var pcUuid =  $(this).data("pcnm");
+// 		console.log("pcUuid==="+pcUuid);
+// 	});
+	
+// 	$(".monitor_list  input").each(function( index, element ) {
+// 		var pcUuid =  $(this).val();
+// 		var pcHostname = $(this).data("hostname");
+// 		console.log(pcHostname);
+// 	});
+	
+	var pcHostname = $(_this).data("pcname");
+	console.log(pcHostname);
+	var uuid = $(_this).data("uuid");
+	console.log(uuid);
 	
 	 $.post("detailPolicy.proc",{pc_uuid:uuid, org_seq:$("#org_seq").val()},
 			function(data){
@@ -465,7 +497,6 @@ function detailPcInfo(uuid){
 			$(".programResultTr").append(programResultTr);
 			
 			var programResult = '';
-			console.log("data.udpt============+"+data.udpt);
 			$.each(data.udpt, function(index, value) {
 				var inset_dt = value.rgstr_date;
 				var date = new Date(inset_dt);
@@ -511,7 +542,6 @@ function detailPcInfo(uuid){
 			$(".programBlockResultTr").append(programBlockResultTrHtml);
 
 			var programBlockResult = '';
-			console.log("data.program==============+"+data.program);
 			$.each(data.program, function(index, value) {
 				var inset_dt = value.rgstr_date;
 				var date = new Date(inset_dt);
@@ -582,7 +612,6 @@ function detailPcInfo(uuid){
 			deviceResultTrHtml += '<th width="*">적용일</th>';
 			$(".deviceResultTr").append(deviceResultTrHtml);
 
-			console.log("data.device==" , data.device);
 			var deviceResult = '';
 			$.each(data.device, function(index, value) {
 				deviceResult += "<tr>";
@@ -719,7 +748,6 @@ $(document).ready(function () {
 		$($(this).data("target")).show();
 		var policyFirewallDetailData = '';
 		
-		console.log("###############$(this).data(", $(this).data("gubun"));
 		if( $(this).data("gubun") == 'progrmBlock'){
 			policyFirewallDetailData = $("#policyProgrmDetailData").val().split(",");
 		}else if( $(this).data("gubun") == 'ufw'){
@@ -733,10 +761,11 @@ $(document).ready(function () {
 		$(".monitor_list  input").each(function( index, element ) {
 			var pcUuid =  $(this).val();
 			var pcHostname = $(this).data("hostname");
+			console.log("pcHostname=======+++"+pcHostname);
 			
 			policyFirewallDetailData.forEach (function (el, index) {
 				var tmpElement = el;
-// 				console.log('element', index, el, pcUuid, tmpElement.indexOf(pcUuid));
+				console.log('element', index, el, pcUuid, tmpElement.indexOf(pcUuid));
 				if(tmpElement.indexOf(pcUuid) > -1 ){
 					tmpElement.split(":")
 					firewallDatailListHTML += "<tr>";
