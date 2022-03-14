@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
@@ -311,13 +312,15 @@ public JSONObject makePolicyToGroup(Map<String, Object> params) throws ParseExce
     //System.out.println("jsonObj.get======"+jsonObj.get("id").toString());
     
     Integer result = Integer.parseInt(jsonObj.get("id").toString());
+    ConcurrentHashMap<String, Object> param = new ConcurrentHashMap<String, Object>();
     params.put("job_id",result);
     params.put("object",objects);
     params.put("id",result);
-    policyCommonMapper.addAnsibleJobEventByGroup(params);
+    param.putAll(params);
+    policyCommonMapper.addAnsibleJobEventByGroup(param);
     JSONObject jsonResultObj = new JSONObject();
     if(result != null){
-      jsonResultObj = checkAndAddPolicyJobResult(params);
+      jsonResultObj = checkAndAddPolicyJobResult(param);
     }
   return jsonResultObj;
 }
@@ -566,11 +569,13 @@ public JSONObject addAnsibleJobEventByHosts(Map<String, Object> params,int count
         if(count > 5){
           return finalResult;
         }
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         addAnsibleJobEventByHosts(params,count);
       }else{
         int result = 0;
-        result = policyCommonMapper.addAnsibleJobEventByHosts(params);
+        if(pcCount > 0){
+          result = policyCommonMapper.addAnsibleJobEventByHosts(params);
+        }
       }
       // int result = policyCommonMapper.checkCountAnsibleJobId(params);
       // System.out.println("result===="+result);

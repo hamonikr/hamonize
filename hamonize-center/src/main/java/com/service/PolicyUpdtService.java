@@ -65,19 +65,18 @@ public class PolicyUpdtService {
 		String ppm_name = iPolicyProgramMapper.getProgramApplc(params);
 		System.out.println("former_ppm_name=========="+former_ppm_name);
 		System.out.println("ppm_name=========="+ppm_name);
-		// if(ppm_name == null){
-		// 	ppm_name = "";
-		// }else if(former_ppm_name == null){
-		// 	former_ppm_name = "";
-		// }
+
 		params.put("ppm_name", ppm_name);
 		params.put("former_ppm_name", former_ppm_name);
-		// try {
-		// 	policyProgramService.applyProgramPolicy(params);
-		// } catch (InterruptedException e) {
-		// 	// TODO Auto-generated catch block
-		// 	e.printStackTrace();
-		// }
+		try {
+			JSONObject jobResult = policyProgramService.applyProgramPolicy(params);
+			params.put("job_id", jobResult.get("id"));
+			System.out.println("params=============="+params);
+			iUpdtMapper.updatePolicyProgrmJobId(params);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return policyDelRet;
 		
 	}
