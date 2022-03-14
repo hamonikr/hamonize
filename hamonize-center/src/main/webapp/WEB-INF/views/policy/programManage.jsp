@@ -26,14 +26,15 @@
 		$('input:checkbox[name=pcm_seq]').prop("checked", false);
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-// 		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+
 		let former_ppm_name = [];
 			$('form[name=frm] input[name=org_seq]').val(treeNode.id);
 			$('form[name=frm] input[name=domain]').val(treeNode.domain);
 			$('form[name=frm] input[name=inventory_id]').val(treeNode.inventoryId);
 			$('form[name=frm] input[name=group_id]').val(treeNode.groupId);
 			$(".promlist").html("");
-		// if (treeNode.checked) {
+
+			$("#checkedUpdt").empty();
 			$.ajaxSetup({ async:false });
 			$.post("/gplcs/pshow", {
 					org_seq: treeNode.id,
@@ -41,6 +42,7 @@
 				},
 				function (result) {
 
+					
 					$('form[name=frm] a[name=selectName]').removeClass("active");
 					$(".bodyDataLayer").removeClass("boder-line_on");
 // 					$(".bodyDataLayer").removeClass("boder-line_off");
@@ -50,7 +52,7 @@
 					var obj = JSON.parse(jsonData);
 					var html = "";
 					$('form[name=frm] input[name=job_id]').val(agrs.job_id);
-					console.log("leng===="+agrs.pList.length);
+
 					if(agrs.pList.length > 0){
 						for (var y = 0; y < agrs.pList.length; y++) {
 

@@ -149,6 +149,7 @@ public class AuditLogService {
 			jsonObject.put("debList", list);
 			jsonObject.put("debListCnt", list.size());
 			jsonObject.put("uuid", params.get("pc_uuid"));
+			jsonObject.put("org_seq", pcUUID_Domain( params.get("pc_uuid").toString(), lvo.getDomain() ));
 			jsonObject.put("domain", lvo.getDomain());
 			result = auditLogMapper.programList(jsonObject);
 
