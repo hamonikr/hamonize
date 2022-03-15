@@ -125,10 +125,10 @@
 					console.log("data.policyUpdtResult.length==="+ data.policyUpdtResult.length);
 					if( data.policyUpdtResult.length != 0 ){
 						
-						$("#policyProgrmUpdtDetailData").val(data.policyUpdtResult[data.policyUpdtResult.length-1].run_status);
+						$("#policyProgrmUpdtDetailData").val(data.policyUpdtResult[0].run_status);
 						for (var i = 0; i < data.policyUpdtResult.length; i++) {
 							var noinstall = data.pcList.length - data.policyUpdtResult[i].count;
-							
+							console.log(i +"==="+ data.policyUpdtResult[i].run_status );
 							progrmResultHtml += "<tr>";
 							progrmResultHtml += "<td class='updtRgstrData'>" + data.policyUpdtResult[i].rgstr_date + "</td>";
 							progrmResultHtml += "<td>" + data.policyUpdtResult[i].debname + "</td>";
@@ -143,7 +143,7 @@
 							progrmResultHtml += "<td>";
 							progrmResultHtml += "<a href='javascript:;' class='failInfoBtn btn  btn-default btn-rounded' data-gubun='progrmPolicy' style='font-size:10px;' >";
 // 							progrmResultHtml +='<button type="button" class="failInfoBtn btn btn-s-md btn-default btn-rounded" onClick="showFails(this);" data-status="'+data.policyUpdtResult[i].run_status+'">'+noinstall +'</button>';
-							progrmResultHtml +=  noinstall + "</a></td>";
+							progrmResultHtml +=  data.policyUpdtResult[i].job_id +"-"+noinstall + "</a></td>";
 							progrmResultHtml += "</tr>";
 							
 						}
@@ -163,10 +163,13 @@
 
 					var programBlockResult = '';
 					if( data.policyProgrmResult.length != 0 ){
-						
-						$("#policyProgrmDetailData").val(data.policyProgrmResult[data.policyProgrmResult.length-1].run_status);
+						console.log("=@@@@@@@@@@@@==+"+data.policyProgrmResult[0].run_status);
+						$("#policyProgrmDetailData").val(data.policyProgrmResult[0].run_status);
 						for (var i = 0; i < data.policyProgrmResult.length; i++) {
 							var noinstall = data.pcList.length - data.policyProgrmResult[i].count;
+							
+							console.log(i +"--wwwwwwwwwwwwwwwww-" + data.policyProgrmResult[i].run_status);
+							
 							programBlockResult += "<tr>";
 							programBlockResult += "<td class='blockRgstrData'>" + data.policyProgrmResult[i].rgstr_date + "</td>";
 							programBlockResult += "<td>" + data.policyProgrmResult[i].progrmname + "</td>";
@@ -178,7 +181,7 @@
 							}
 							programBlockResult += "<td>" + data.policyProgrmResult[i].count + "</td>";
 							programBlockResult += "<td><a href='javascript:;' class='failInfoBtn btn  btn-default btn-rounded' data-gubun='progrmBlockPolicy' style='font-size:10px;' onClick='showFails(this);' data-status='"+data.policyUpdtResult[i].run_status+"'>";
-							programBlockResult +=  noinstall + "</a></td>";
+							programBlockResult +=  data.policyProgrmResult[i].job_id +"-"+noinstall + "</a></td>";
 // 							programBlockResult += "<td>" + noinstall + "</td>";
 							programBlockResult += "</tr>";
 						}
@@ -194,7 +197,7 @@
 
 					var firewallResult = '', isViewDetail=false;
 					if( data.policyFirewallResult.length != 0 ){
-						$("#policyFirewallDetailData").val(data.policyFirewallResult[data.policyFirewallResult.length-1].run_status);
+						$("#policyFirewallDetailData").val(data.policyFirewallResult[0].run_status);
 						for (var i = 0; i < data.policyFirewallResult.length; i++) {
 							var noinstall = data.pcList.length - data.policyFirewallResult[i].count;
 							firewallResult += "<tr>";
@@ -222,7 +225,7 @@
 					//디바이스 차단 배포 결과 ================================================
 
 					var deviceResult = '';		
-					$("#policyDeviceDetailData").val(data.policyDeviceResult[data.policyDeviceResult.length-1].run_status);
+					$("#policyDeviceDetailData").val(data.policyDeviceResult[0].run_status);
 					for (var i = 0; i < data.policyDeviceResult.length; i++) {
 						var noinstall = data.pcList.length - data.policyDeviceResult[i].count;
 						deviceResult += "<tr>";
@@ -393,7 +396,7 @@
 					
 					<div class="panel-body fotter-bg failInfo" style="display:none;">
 							<section class="panel bg-white">
-								<header class="panel-heading b-b b-light">[정책 결과 상세정보 ]</header>
+								<header class="panel-heading b-b b-light"><span id="subPolicyInfo"></span> 정책 결과 상세 정보</header>
 				
 								<div class="panel-body animated fadeInRight"> 
 				
@@ -718,17 +721,19 @@ $(document).ready(function () {
 		var gubun = '';
 		if( $(this).data("gubun") == 'progrmBlockPolicy'){
 			policyFirewallDetailData = $("#policyProgrmDetailData").val().split(",");
-			gubun = '프로그램 차단 관리';
+			gubun = '프로그램 차단 관';
 		}else if( $(this).data("gubun") == 'ufwPolicy'){
 			policyFirewallDetailData = $("#policyFirewallDetailData").val().split(",");
-			gubun = '방화벽 관리';
+			gubun = '방화벽 관';
 		}else if( $(this).data("gubun") == 'progrmPolicy'){
 			policyFirewallDetailData = $("#policyProgrmUpdtDetailData").val().split(",");
-			gubun = '프로그램 설치 관리';
+			gubun = '프로그램 관리  ';
 		}else if( $(this).data("gubun") == 'devicePolicy'){
 			policyFirewallDetailData = $("#policyDeviceDetailData").val().split(",");
-			gubun = '디바이스 관리';
+			gubun = '디바이스 관리 ';
 		}
+		
+		$("#subPolicyInfo").text(gubun);
 		
 		var firewallDatailListHTML = '';
 		$(".monitor_list  input").each(function( index, element ) {
@@ -737,7 +742,7 @@ $(document).ready(function () {
 			
 			policyFirewallDetailData.forEach (function (el, index) {
 				var tmpElement = el;
-// 				console.log('element', index, el, pcUuid, tmpElement.indexOf(pcUuid));
+				console.log('element', index, el, pcUuid, tmpElement.indexOf(pcUuid));
 				if(tmpElement.indexOf(pcUuid) > -1 ){
 					tmpElement.split(":")
 					firewallDatailListHTML += "<tr>";

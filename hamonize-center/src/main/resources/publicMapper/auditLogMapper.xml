@@ -856,7 +856,7 @@ left outer join (
     where sta. ROW_NUM = 1
      
   ) GB on GA.debname = GB.debname
-;
+order by GA.rgstr_date desc
 </select>
 	<select id="tmp_updtList" resultType="map" parameterType="hashmap">
 		<foreach collection="debList" item="item" index="index">
