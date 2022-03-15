@@ -79,7 +79,9 @@
 			a.pc_uuid,
 			a.pc_status,
 			a.domain,
-			a.host_id
+			a.host_id,
+			a.pc_ip,
+			a.pc_vpnip
 		FROM tbl_pc_mangr a
 		<where>
 		a.domain = #{domain}

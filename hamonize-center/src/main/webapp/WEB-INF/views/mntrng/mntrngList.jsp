@@ -33,6 +33,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			
 			if(agrs.length > 0){
 				for(var i =0; i< agrs.length;i++){
+					console.log(agrs[i]);
 					var uuid = agrs[i].pc_uuid;
 					var hostnameVal = '';
 					if( agrs[i].pc_hostname.length >= textCutLength ){
@@ -47,7 +48,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						strHtml += '<a class="clear" href="/mntrng/pcView?uuid=' + uuid +'">';
 						strHtml += hostnameVal;
 						strHtml += '</a>';
-						strHtml += '<a href="#" onclick="inputCommand('+agrs[i].host_id+'); return false;"><i class="fa fa-code"></i></a></blockquote></div>';
+						strHtml += '<a href="#" onclick="inputCommand(\''+agrs[i].pc_ip+'\'); return false;"><i class="fa fa-code"></i></a></blockquote></div>';
 					}else{
 						strHtml += '<div class="panel-body col-lg-3 "><blockquote class="bodyDataLayer mntrngBox">';
 						strHtml += '<span class="fa-stack pull-left m-r-sm"> <i class="fa fa-pause"></i> </span>';
@@ -219,7 +220,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 	var log, className = "dark",
 		curDragNodes, autoExpandNode;
 
-		function inputCommand(host_id){
+		/* function inputCommand(host_id){
 			var input = prompt('실행 할 명령어를 입력해주세요.');
 			if(input != null){
 				$.ajax({
@@ -244,6 +245,21 @@ function onClick(event, treeId, treeNode, clickFlag) {
 					}
 				});
 			}
+		} */
+
+		function inputCommand(hostip){
+			console.log(hostip);
+			const hostForm = document.createElement("form");
+			hostForm.setAttribute("charset","UTF-8");
+			hostForm.setAttribute("method","Post");
+			hostForm.setAttribute("action","/");
+			const hiddenHostName = document.createElement("input");
+			hiddenHostName.setAttribute("type","hidden");
+			hiddenHostName.setAttribute("name","hostname");
+			hiddenHostName.setAttribute("value",hostip);
+			hostForm.appendChild(hiddenHostName);
+			document.body.appendChild(hostForm);
+			hostForm.submit();
 		}
 
 
