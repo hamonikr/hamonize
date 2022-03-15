@@ -269,7 +269,7 @@
 	}
 
 	function fnInit(){
-		$('input:checkbox[name=ppm_seq]').each(function (i) {
+		$('input:checkbox[name=pcm_seq]').each(function (i) {
 			if ($(this).is(':checked')){
 				updtClickCellbox($(this).attr('id'));
 			}
