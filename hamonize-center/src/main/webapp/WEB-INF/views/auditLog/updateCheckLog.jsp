@@ -20,11 +20,11 @@
 		var cnt = 0;
 		var zTree = $.fn.zTree.getZTreeObj("tree");
 		var node = zTree.getNodeByParam('id', treeNode.pId);
-		if(node == null ){
-			onClick(null,$("#tree"),zNodes[1]);
-			return false;
-		}
-		zTree.selectNode(zTree.getNodeByTId(treeNode.id));
+		//if(node == null ){
+		//	onClick(null,$("#tree"),zNodes[1]);
+		//	return false;
+		//}
+		//zTree.selectNode(zTree.getNodeByTId(treeNode.id));
 
 		$("#org_seq").val(treeNode.id);
 
