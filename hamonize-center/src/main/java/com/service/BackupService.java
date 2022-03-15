@@ -75,7 +75,7 @@ public class BackupService {
 		params.put("output", output);
 		params.put("policyFilePath","/etc/hamonize/recovery/recoveryInfo.hm");
 		params.put("policyRunFilePath","/etc/hamonize/runrecovery");
-
+		params.put("before_url","restore");
 		JSONObject result = restApiService.makePolicyToGroup(params);
 		System.out.println("ResultID====="+result);
 		// updtPolicy.clear();
