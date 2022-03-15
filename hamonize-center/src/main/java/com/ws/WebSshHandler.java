@@ -163,11 +163,9 @@ public class WebSshHandler {
                     str = "\r\n";
                 }
             }else if("".equals(str)){
-                System.out.println("backspace1111==="+dataToDst.length());
                 if (dataToDst.length()> 0) {
                     str = "\b";
                     dataToDst.deleteCharAt(dataToDst.length()-1);
-                    System.out.println("backspace2222==="+dataToDst.length());
                 }else{
                     str = "";
                 }
