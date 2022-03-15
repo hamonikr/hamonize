@@ -549,7 +549,7 @@
 	}
 
 	function fnInit(){
-		$('input:checkbox[name=ppm_seq]').each(function (i) {
+		$('input:checkbox[name=sm_seq]').each(function (i) {
 			if ($(this).is(':checked')){
 				fireClickCellbox($(this).attr('id'));
 			}
