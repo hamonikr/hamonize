@@ -11,6 +11,7 @@ import com.mapper.IUserMapper;
 import com.model.OrgVo;
 import com.model.UserVo;
 import com.paging.PagingUtil;
+import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.UserService;
 
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +53,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	
-	@PostMapping("/userList")
+	@GetMapping("/userList")
 	public String userList(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
@@ -66,8 +68,8 @@ public class UserController {
 	}
 
 	@ResponseBody
-	@PostMapping("/eachList")
-	public Map<String, Object> eachList(Model model, UserVo vo,
+	@PostMapping("/userList.proc")
+	public Map<String, Object> userListProc(Model model, UserVo vo,
 			@RequestParam Map<String, Object> params) throws Exception {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		List<UserVo> list = new ArrayList<UserVo>();
@@ -83,7 +85,7 @@ public class UserController {
 		vo = (UserVo) PagingUtil.setPaging(vo);
 
 		list = userSerivce.userList(vo);
-		dataMap.put("data", list);
+		dataMap.put("list", list);
 		dataMap.put("paging", vo);
 
 		return dataMap;
@@ -122,6 +124,7 @@ public class UserController {
 
 	@PostMapping("/userSave")
 	public String save(Model model, UserVo vo) throws Exception {
+		System.out.println("userVo====="+vo);
 		int result = userSerivce.userSave(vo);
 
 		return "redirect:/user/userList";
@@ -136,9 +139,6 @@ public class UserController {
 
 		int result = 0;
 
-		if (vo.getGubun().equals("R")) {
-			vo.setDischarge_dt(timefomat.format(timestamp));
-		}
 		result = userSerivce.userModify(vo);
 		return result;
 
@@ -146,7 +146,7 @@ public class UserController {
 
 	@PostMapping("/delete")
 	@ResponseBody
-	public int delete(Model model, @RequestParam(value = "seqs[]") List<Integer> list)
+	public int delete(Model model, @RequestParam(value = "seqs[]") List<Long> list)
 			throws Exception {
 		int result = 0;
 		List<UserVo> voList = new ArrayList<>();

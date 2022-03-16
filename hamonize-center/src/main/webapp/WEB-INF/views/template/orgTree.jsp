@@ -344,7 +344,7 @@ function setCheck() {
 		
 		case '/org/orgManage' :  $("#navInfo").text('Home / 조직관리' ); $("#pagegubun").val('org'); break;
 		case '/pcMngr/pcMngrList' :  $("#navInfo").text('Home / PC관리' );  $("#orgTreeBtnLayer").hide();  $("#pagegubun").val('mntrnglist');  break;
-
+		case '/user/userList' :  $("#navInfo").text('Home / 사용자관리' );  $("#orgTreeBtnLayer").hide();  $("#pagegubun").val('classUserList');  break;
 		case '/gplcs/umanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 설치 관리' ); $("#orgTreeBtnLayer").hide();   setting.check.enable=false; break;
 		case '/gplcs/pmanage' :  $("#navInfo").text('Home / 정책관리 / 프로그램 차단 관리' ); $("#orgTreeBtnLayer").hide(); setting.check.enable=false;    break;
 		case '/gplcs/fmanage' :  $("#navInfo").text('Home / 정책관리 / 방화벽관리' ); $("#orgTreeBtnLayer").hide(); setting.check.enable=false;  break;

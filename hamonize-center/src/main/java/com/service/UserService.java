@@ -49,7 +49,7 @@ public class UserService {
 		String pw = vo.getPass_wd();
 		OrgVo ovo = new OrgVo();
 
-		vo.setGubun("A");
+		//vo.setGubun("A");
 		vo.setPass_wd(SHA256Util.getEncrypt(vo.getPass_wd(), SHA256Util.generateSalt()));
 		result = userMapper.userSave(vo);
 
@@ -57,6 +57,7 @@ public class UserService {
 		if (result == 1) {
 			logger.info("db 저장 완료");
 			ovo.setSeq(vo.getOrg_seq());
+			ovo.setDomain(vo.getDomain());
 
 			tmp = orgMapper.orgView(ovo).getAll_org_nm();
 
@@ -65,7 +66,7 @@ public class UserService {
 				host += "." + p_array[i];
 				dn += ",ou=" + p_array[i];
 			}
-
+			host = ".hamonize.com";
 			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 			vo.setPass_wd(pw);
 			con.addUser(vo, dn, host);

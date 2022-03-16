@@ -140,16 +140,18 @@ public class LDAPConnection {
 		attribute.add("posixAccount");
 		attribute.add("account");
 		attributes.put(attribute);
-		host = vo.getUser_name() + host;
+		host = vo.getUser_id() + host;
 
 		// user details
-		attributes.put("cn", vo.getUser_name());
+		attributes.put("cn", vo.getUser_id());
 		attributes.put("gidNumber", vo.getOrg_seq().toString());
-		attributes.put("homeDirectory", "/home/" + vo.getUser_name());
+		attributes.put("uidNumber", vo.getOrg_seq().toString());
+		attributes.put("homeDirectory", "/home/" + vo.getUser_id());
 		attributes.put("host", host);
 		attributes.put("loginShell", "/bin/bash");
 		attributes.put("userPassword", vo.getPass_wd());
-		attributes.put("uidNumber", vo.getUser_sabun().toString());
+		//attributes.put("displayName", vo.getUser_name());
+		//attributes.put("uidNumber", vo.getUser_sabun().toString());
 
 		addUser = "uid=" + vo.getUser_name() + ",ou=users" + dn + ",dc=hamonize,dc=com";
 
@@ -364,14 +366,14 @@ public class LDAPConnection {
 		Attribute mod2 = new BasicAttribute("homeDirectory", "/home/" + newVo.getUser_name());
 		Attribute mod3 = new BasicAttribute("host", host);
 		Attribute mod4 = new BasicAttribute("userPassword", newVo.getPass_wd());
-		Attribute mod5 = new BasicAttribute("uidNumber", newVo.getUser_sabun());
+		//Attribute mod5 = new BasicAttribute("uidNumber", newVo.getUser_sabun());
 		Attribute mod6 = new BasicAttribute("cn", newVo.getUser_name());
 
 		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
 		mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
 		mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod4);
-		mods[4] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod5);
+		//mods[4] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod5);
 		mods[5] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod6);
 
 		if (!oldVo.getOrg_seq().equals(newVo.getOrg_seq())) {

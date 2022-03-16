@@ -24,10 +24,10 @@ public interface IUserMapper {
 	
 	public List<Map<String, Object>> userListExcel(UserVo vo);
 
-	public OrgVo getUserOrgPath(int seq);
+	public OrgVo getUserOrgPath(Long seq);
 
 	public OrgVo getUserNewOrgPath(Long seq);
 
-	public UserVo getUserInfo(int seq);
+	public UserVo getUserInfo(Long seq);
 	
 }
