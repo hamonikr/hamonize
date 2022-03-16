@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.IUserMapper">
+	
+	<select id="userList" resultType="com.model.UserVo"  parameterType="com.model.UserVo">
+		SELECT 
+			a.user_id,
+			a.user_name,
+			a.org_seq,
+			(select org_nm from tbl_org where seq = a.org_seq) as org_nm,
+			a.rgstr_date
+		FROM tbl_user a
+		<where>
+		a.domain = #{domain}
+		<if test="org_seq != 1 ">
+				and a.ORG_SEQ in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.seq = #{org_seq}
+			and a.domain = #{domain}
+			union all
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select seq
+		from search_org 
+		where 1=1
+		order by level,org_ordr)
+		</if>
+		<if test="date_fr != null and date_fr != ''">
+		<![CDATA[
+		and rgstr_date >= #{date_fr}::date 
+		]]>
+		</if>
+		<if test="date_to != null and date_to != ''">
+		<![CDATA[
+		and rgstr_date <= #{date_to}::date 
+		]]>
+		</if>
+		<if test="txtSearch != null " >
+			<if test="keyWord == 1 " >
+				and a.user_name like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 2 " >
+				and a.user_id like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 3 " >
+				and (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 0 " >
+				and (a.user_name like '%' || #{txtSearch} || '%'
+				or a.user_id like '%' || #{txtSearch} || '%'
+				or (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%')
+			</if>
+		</if>
+		</where>
+		 OFFSET #{limitStart} LIMIT #{recordSize}
+	</select>
+	
+	<select id="userListExcel" resultType="hashmap" parameterType="com.model.UserVo">
+		SELECT 
+		(ROW_NUMBER() OVER()) AS rownum,
+			a.idx, 
+			a.user_gunbun, 
+			a.user_id, 
+			a.pass_wd, 
+			a.user_name, 
+			to_char(a.insert_dt, 'YYYY-MM-DD') as insert_dt, 
+			to_char(a.update_dt, 'YYYY-MM-DD') as update_dt, 
+			a.kind,
+			case when a.rank = '002' then '이병'
+			when a.rank = '003' then '일병'
+			when a.rank = '004' then '상병'
+			when a.rank = '005' then '병장' 
+			else ''
+			end as rank , 
+			a.discharge_dt, 
+			a.org_seq,
+			(select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) as p_org_nm,
+			(select org_nm from tbl_org where seq = (select seq from tbl_org b where a.org_seq = b.seq)) as org_nm,
+			a.narasarang_no
+		FROM tbl_user a
+
+		<where>
+		1=1
+		<!-- <if test="org_seq != 1 "> -->
+		<if test="org_seq != null and org_seq != ''">
+				and a.org_seq in (
+				with recursive search_org(seq,p_seq,org_nm,org_ordr,level,path,cycle) as (
+    select a.seq,a.p_seq,a.org_nm,a.org_ordr,0,array[a.seq],false
+    from tbl_org a
+    where a.seq = #{org_seq}
+    union all
+    select a.seq,a.p_seq,a.org_nm,a.org_ordr,level+1,path || a.seq,a.seq=any(path)
+    from tbl_org a, search_org so 
+    where a.p_seq = so.seq and not cycle)
+    select seq
+    from search_org
+				)
+		</if>
+		<if test="txtSearch != null " >
+			<if test="keyWord == 1 " >
+				and a.user_name like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 2 " >
+				and a.user_id like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 3 " >
+				and (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 4 " >
+				and a.user_gunbun like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 0 " >
+				and (a.user_name like '%' || #{txtSearch} || '%'
+				or a.user_id like '%' || #{txtSearch} || '%'
+				or a.user_gunbun like '%' || #{txtSearch} || '%'
+				or (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where a.org_seq = b.seq)) like '%' || #{txtSearch} || '%')
+			</if>
+		</if>
+		</where>
+		order by enlistment_dt asc 
+
+	</select>
+	
+	<select id="countListInfo" parameterType="com.model.UserVo" resultType="Integer">
+	select count(*) as tbl_cnt
+	from tbl_user
+	<where>
+	domain = #{domain}
+		<if test="org_seq != 1 ">
+			and ORG_SEQ in (with recursive search_org(domain,seq,p_seq,org_nm,org_ordr,section,level,path,cycle) as (
+			select a.domain,a.seq,a.p_seq,a.org_nm,a.org_ordr,a.section,0,array[a.seq],false
+			from tbl_org a 
+			where a.seq = #{org_seq}
+			and a.domain = #{domain}
+			union all
+			select b.domain,b.seq,b.p_seq,b.org_nm,b.org_ordr,b.section,level+1,path || b.seq,b.seq=any(path)
+			from tbl_org b, search_org so 
+		where b.p_seq = so.seq and b.domain = so.domain and not cycle)
+		select seq
+		from search_org 
+		where 1=1
+		order by level,org_ordr)
+		</if>
+		<if test="txtSearch != null " >
+			<if test="keyWord == 1 " >
+				and user_name like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 2 " >
+				and user_id like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 3 " >
+				and (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where org_seq = b.seq)) like '%' || #{txtSearch} || '%'
+			</if>
+			<if test="keyWord == 0 " >
+				and (user_name like '%' || #{txtSearch} || '%'
+				or user_id like '%' || #{txtSearch} || '%'
+				or (select org_nm from tbl_org where seq = (select p_seq from tbl_org b where org_seq = b.seq)) like '%' || #{txtSearch} || '%')
+			</if>
+		</if>
+		</where>
+	</select>
+
+	<insert id="userSave" parameterType="com.model.UserVo">
+		INSERT into tbl_user
+		(seq,
+		domain,
+		user_id,
+		user_name,
+		org_seq,
+		pass_wd,
+		rgstr_date)
+		values(
+			(SELECT COALESCE(max(seq),0)+1 AS seq FROM tbl_user where domain = #{domain}),
+		#{domain},
+		#{user_id},
+		#{user_name},
+		#{org_seq},
+		#{pass_wd},
+		now())
+	</insert>
+
+	<!-- 사용자 정보 유효성 체크 -->
+	<select id="userIdCheck" parameterType="com.model.UserVo" resultType="Integer">
+		SELECT COUNT(USER_ID)
+		FROM TBL_USER
+		WHERE USER_ID = #{user_id}
+	</select>
+	
+		
+</mapper>

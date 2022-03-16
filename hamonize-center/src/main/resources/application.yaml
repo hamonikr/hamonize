@@ -4,10 +4,10 @@ spring:
       prefix: /WEB-INF/views/
       suffix: .jsp
   jpa:
-    properties: 
-      hibernate:
-        ddl-auto: update
-      show-sql: true 
+    #properties: 
+    hibernate:
+      ddl-auto: update
+    show-sql: true 
     #servlet:
     #  path: .do
   # server:

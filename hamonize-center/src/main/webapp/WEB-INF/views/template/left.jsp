@@ -91,6 +91,14 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="/user/userList">
+                                            <i class="fa fa-laptop icon">
+                                                <b class="bg-primary dker"></b>
+                                            </i>
+                                            <span>사용자관리</span>
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="/auditLog/updateCheckLog">
                                             <i class="fa circle-0 icon">
                                                 <b class="bg-primary"></b>
