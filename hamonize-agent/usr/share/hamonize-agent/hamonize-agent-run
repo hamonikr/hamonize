@@ -1,92 +1,133 @@
 #!/bin/bash
 
+#----------------------------------------------#
+#   Hamonize Agent Polling 
+#       => Policy * Process Bock Polling
+#----------------------------------------------#
+
+
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 
-# CENTERURL="http://${CENTERURL}/hmsvc/prcssKill"
-# PCUUID=`cat /etc/hamonize/uuid`
-# TENENT=`cat /etc/hamonize/hamonize_tanent`
-# LOGFILE="/var/log/hamonize/agentjob/progrmjob.log"
-
-# if [ ! -f "$FILE" ]; then
-# 	sudo touch $LOGFILE
-# fi
-
-
-OSUSERID=`users |cut -d' ' -f1`
-
-
+# ---------- Agnet Center Policy Action ---------------#
+OSUSERID=$(users | cut -d' ' -f1)
 
 # UPDT
-if [ -e /etc/hamonize/runupdt ]
-then
-    echo "updt ===========================================ok"
-
-    export DISPLAY=:0.0  &
-    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 프로그램 설치 및 삭제를 진행합니다.\n [Info]  Program Manage  by ADMIN "'
+if [ -e /etc/hamonize/runupdt ]; then
+    export DISPLAY=:0.0 &
+    sudo su - $OSUSERID -c 'notify-send "[Hamonize] 관리자에 의해서 프로그램 설치 및 삭제를 진행합니다."'
 
     rm -fr /etc/hamonize/runupdt
     hamonize-agent --updt
-else
-    echo "nok"
 fi
 
 # progrmblock
-if [ -e /etc/hamonize/runprogrmblock ]
-then
-    echo "updt ===========================================ok"
-    export DISPLAY=:0.0  &
-    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 프로그램 차단정책을  진행합니다.\n [Info]  Program Manage  by ADMIN "'
+if [ -e /etc/hamonize/runprogrmblock ]; then
+    export DISPLAY=:0.0 &
+    sudo su - $OSUSERID -c 'notify-send "[Hamonize] 관리자에 의해서 프로그램 차단정책을  진행합니다."'
     rm -fr /etc/hamonize/runprogrmblock
     hamonize-agent --progrmblock
-else
-    echo "nok"
 fi
-
 
 # devicepolicy
-if [ -e /etc/hamonize/rundevicepolicy ]
-then
-    echo "updt ===========================================ok"
-    export DISPLAY=:0.0  &
-    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 비인가디바이스 정책을 진행합니다.\n [Info]  Program Manage  by ADMIN "'
-
+if [ -e /etc/hamonize/rundevicepolicy ]; then
+    export DISPLAY=:0.0 &
+    sudo su - $OSUSERID -c 'notify-send "[Hamonize] 관리자에 의해서 비인가디바이스 정책을 진행합니다."'
     rm -fr /etc/hamonize/rundevicepolicy
     hamonize-agent --devicepolicy
-else
-    echo "nok"
 fi
 
-
 # ufw
-if [ -e /etc/hamonize/runufw ]
-then
-    echo "updt ===========================================ok"
-    export DISPLAY=:0.0  &
-    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서방화벽 정책을 진행합니다.\n [Info]  Program Manage  by ADMIN "'
+if [ -e /etc/hamonize/runufw ]; then
+    export DISPLAY=:0.0 &
+    sudo su - $OSUSERID -c 'notify-send "[Hamonize] 관리자에 의해서 방화벽 정책을 진행합니다."'
     rm -fr /etc/hamonize/runufw
     hamonize-agent --ufw
-else
-    echo "nok"
 fi
 
 # recovery
-if [ -e /etc/hamonize/runrecovery ]
-then
-    echo "updt ===========================================ok"
-    export DISPLAY=:0.0  &
-    sudo su - $OSUSERID -c 'notify-send "관리자에 의해서 복구를 진행합니다.\n [Info]  Program Manage  by ADMIN "'
+if [ -e /etc/hamonize/runrecovery ]; then
+    export DISPLAY=:0.0 &
+    sudo su - $OSUSERID -c 'notify-send "[Hamonize] 관리자에 의해서 OS복구를 진행합니다."'
     rm -fr /etc/hamonize/runrecovery
     hamonize-agent --recovery
-else
-    echo "nok"
 fi
 
-
 # 비인가 비다이스 로그 체크
-if [ -e /etc/hamonize/usblog/usb-unauth.hm ]
-then
-    echo "ok"
+if [ -e /etc/hamonize/usblog/usb-unauth.hm ]; then
     hamonize-agent --unauthlog
+fi
+
+########################################################
+# ---------- Agnet Porgram Block Action ---------------#
+########################################################
+
+CENTERURL="http://${CENTERURL}/hmsvc/prcssKill"
+PCUUID=$(cat /etc/hamonize/uuid)
+TENENT=$(cat /etc/hamonize/hamonize_tanent)
+LOGFILE="/var/log/hamonize/agentjob/progrmjob.log"
+
+if [ ! -f "$FILE" ]; then
+    sudo touch $LOGFILE
+fi
+
+DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
+CPUID=$(dmidecode -t 4 | grep ID)
+IPADDR=$(ifconfig | awk '/inet .*broadcast/' | awk '{print $2}')
+MACADDR=$(ifconfig | awk '/ether/' | awk '{print $2}')
+HOSTNAME=$(hostname)
+
+# 게스트 계정으로 로그인 했을경우.
+ISGUESTCNT=$(ls -t /tmp | grep ^guest-* | wc -l)
+
+if [ "$ISGUESTCNT" -eq "1" ]; then
+    USER_HOME=$(ls -t /tmp | grep ^guest-* | head -n 1)
+    USERID=$(cat /tmp/$USER_HOME/.huserinfo | head -1 | awk -F ':' '{print $1}')
 else
-    echo "nok"
+    USER_HOME=${HOME}
+    USERID=${USER}
+fi
+
+echo "$DATETIME ###  process ck  ###" >>$LOGFILE
+
+UPDT_INS=$(cat /etc/hamonize/progrm/progrm.hm | jq '.INS' | sed -e "s/\"//g")
+echo "install file total  data=$UPDT_INS" >>$LOGFILE
+
+if [ "$UPDT_INS" != null ]; then
+    echo "program access unpossible ==" >>$LOGFILE
+    BaseCnt=1
+    EC=0
+    INSRET=""
+    OLD_IFS=$IFS
+    IFS=,
+    for I in $UPDT_INS; do
+
+        echo "program active is ===> $I" >>$LOGFILE
+
+        PSCNT=$(ps aux | grep -c $I)
+
+        if [ $PSCNT -ne 1 ]; then
+            sudo ps aux | grep $I | awk {'print $2'} | xargs kill -9 >>$LOGFILE
+            OSUSERID=$(users | cut -d' ' -f1)
+
+            JSON="{\
+        \"events\" : [ {\
+        \"datetime\":\"$DATETIME\",\
+        \"uuid\":\"$PCUUID\",\
+        \"domain\":\"$TENENT\",\
+        \"name\": \"$I\"\
+        } ]\
+}"
+
+            /usr/bin/curl -i -S \
+                -H "Accept: application/json" \
+                -H "Content-Type:application/json" \
+                -X POST -d "${JSON}" $CENTERURL
+
+            export DISPLAY=:0.0 &>>$LOGFILE
+            sudo su - $OSUSERID -c 'notify-send -u critical "[Hamonize] 관리자에 의해서 이 '$I'는 사용이 금지되었습니다. [Warninig]  Not Allowed by ADMIN "'
+
+        fi
+
+    done
+
 fi

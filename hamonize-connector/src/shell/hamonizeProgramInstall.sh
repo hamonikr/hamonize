@@ -26,16 +26,6 @@ sudo systemctl stop hamonize-agent.service
 sleep 2
 
 
-#==== process-mngr  <-------------------------------------------------------------------- test 
-echo "$DATETIME] 3. process-mngr install ============ [start]" >>$LOGFILE
-# sudo dpkg -i $WORK_PATH/hamonize-process-mngr-1.0.3_amd64.deb >>$LOGFILE
-
-sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-process-mngr-1.0.3_amd64.deb >>$LOGFILE
-
-echo "$DATETIME] process-mngr install === [END]" >>$LOGFILE
-echo "$DATETIME ] $(sudo service hamonize-process-mngr status)" >>$LOGFILE
-
-sleep 2
 
 #==== usb protect =================================================
 echo "$DATETIME ] 4. usb protect install ============== [start]" >>$LOGFILE

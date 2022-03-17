@@ -13,6 +13,8 @@ hamonize-admin/svg
 hamonize-admin/Makefile
 hamonize-admin/plugins/addons
 hamonize-admin/plugins/extra
+package-lock.json
+**/package-lock.json
 node_modules
 **/node_modules/*
 dist*
