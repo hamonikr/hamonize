@@ -9,7 +9,7 @@
 			a.user_id,
 			a.user_name,
 			a.org_seq,
-			(select org_nm from tbl_org where seq = a.org_seq) as org_nm,
+			(select org_nm from tbl_org where seq = a.org_seq and domain=#{domain}) as org_nm,
 			a.rgstr_date
 		FROM tbl_user a
 		<where>

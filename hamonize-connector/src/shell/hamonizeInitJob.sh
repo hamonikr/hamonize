@@ -127,3 +127,5 @@ echo "$DATETIME] resboot==========END" >>$LOGFILE
 
 echo "$DATETIME] hamonize-user 필수 포트 allow 11100==========END" >>$LOGFILE
 sudo ufw allow 11100 >>$LOGFILE
+sudo ufw allow 11400 >>$LOGFILE
+sudo ufw allow 22 >>$LOGFILE
