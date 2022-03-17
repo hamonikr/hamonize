@@ -115,6 +115,7 @@
 		update tbl_pc_mangr
 		set 	
 			pc_vpnip = #{pc_vpnip},
+			pc_ip = #{pc_ip},
 			UPDT_DATE = now()
 		where pc_uuid = #{pc_uuid}
 	</update>

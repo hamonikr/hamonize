@@ -529,18 +529,28 @@ System.out.println("retData===="+retData.toString());
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 
+		// 현재 등록된 PC 정보
 		PcMangrVo chkPcMangrVo = pcMangrMapper.chkPcinfo(hdVo);
+		
 		hdVo.setOrg_seq(chkPcMangrVo.getOrg_seq());
+
 		OrgVo allOrgNameVo = orgMapper.getAllOrgNm(hdVo);
 		hdVo.setAlldeptname(allOrgNameVo.getAll_org_nm());
 		hdVo.setHost_id(chkPcMangrVo.getHost_id());
-		int retVal = 0;
-
 		hdVo.setOld_pc_ip(chkPcMangrVo.getPc_ip());
 		hdVo.setOld_pc_vpnip(chkPcMangrVo.getPc_vpnip());
 		hdVo.setOld_pc_macaddress(chkPcMangrVo.getPc_macaddress());
-
-		if (!chkPcMangrVo.getPc_vpnip().equals(hdVo.getPc_vpnip())) {
+		
+		System.out.println("###### old vpn--" + chkPcMangrVo.getPc_vpnip());
+		System.out.println("###### old ip--" + chkPcMangrVo.getPc_ip() );
+		
+		
+		System.out.println("@@@@@@@ now -- vpn --" + hdVo.getPc_vpnip());
+		System.out.println("@@@@@@@ now -- ip --" + hdVo.getPc_ip());
+		
+		
+		int retVal = 0;
+		if (!chkPcMangrVo.getPc_vpnip().equals(hdVo.getPc_vpnip()) || !chkPcMangrVo.getPc_ip().equals(hdVo.getPc_ip()) ) {
 			logger.debug("pcInfoChange chkPcMangrVo===={}", chkPcMangrVo.toString());
 
 			retVal = pcMangrMapper.updateVpnInfo(hdVo);
@@ -618,55 +628,22 @@ System.out.println("retData===="+retData.toString());
 	
 	
 	@GetMapping(value = "/getTenantRemoteConfig")
-//	public JSONObject getTenantRemoteConfig( TenantconfigVo tenantVo) throws Exception {
 	public String getTenantRemoteConfig( TenantconfigVo tenantVo, HttpServletRequest request) throws Exception {
-//		public String getTenantRemoteConfig(@RequestBody String retData) throws Exception {
 
-		
-		
-		
-//		JSONParser jsonParser = new JSONParser();
-//		JSONObject jsonObj = (JSONObject) jsonParser.parse(retData.toString());
-//		JSONArray hmdArray = (JSONArray) jsonObj.get(EVENTS);
-		
-//		for (int i = 0; i < hmdArray.size(); i++) {
-//			JSONObject tempObj = (JSONObject) hmdArray.get(i);
-//			tenantVo.setDomain(tempObj.get("domain").toString() );
-//		}
-
-		System.out.println("get param === "+ tenantVo);
 		tenantVo = tenantconfigMapper.getTenantRemoteConfig(tenantVo);
-		
-//		JSONObject jsonObject = new JSONObject();
-//		if( tenantVo == null ) {
-//			jsonObject.put("status", 		"N");
-//		}else {
-//			jsonObject.put("status", 		"Y");
-//			jsonObject.put("domain", 		tenantVo.getDomain() );
-//			jsonObject.put("tConfig", 		tenantVo.getTenant_hadmin_config() );
-////			jsonObject.put("tPublicKey",	tenantVo.getTenant_hadmin_public_key() );
-////			jsonObject.put("tPrivateKey", 	tenantVo.getTenant_hadmin_private_key());
-//
-//			System.out.println( "====jsonObject==="+ jsonObject);
-//
-//		}
 		
 		String output = "";
 		String gubun = request.getParameter("gubun");
 		if( gubun.equals("config")){
 			output = tenantVo.getTenant_hadmin_config(); 
-			System.out.println("config===================================++" + output);
 		}else if( gubun.equals("prikey")){
 			output = tenantVo.getTenant_hadmin_private_key(); 
-			System.out.println("prikey===================================++"+ output);
 		}else if( gubun.equals("pubkey")){
 			 output = tenantVo.getTenant_hadmin_public_key(); 
-			 System.out.println("pubkey===================================++" + output);
 		}
 		
 		return output;
 		
-//		return jsonObject.toString();
 	}
 	
 

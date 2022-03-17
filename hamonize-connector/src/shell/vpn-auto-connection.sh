@@ -25,7 +25,8 @@ function sendInfo {
         SERVER_API="http://$CENTERURL/hmsvc/pcInfoChange"
 
         DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
-        NETDEV_UUID=`nmcli con show --active |grep ethernet | gawk '{n=split($0,a," ");print a[n-2]}'`
+        # NETDEV_UUID=`nmcli con show --active |grep ethernet | gawk '{n=split($0,a," ");print a[n-2]}'`
+        NETDEV_UUID=`nmcli con show --active |grep -e wifi -e  ethernet | gawk '{n=split($0,a," ");print a[n-2]}' | tail -1`
         IPADDR=`nmcli con show --active ${NETDEV_UUID}|grep IP4.ADDRESS|gawk '{n=split($2,a,"/"); print a[1]}'`
         GWADDR=`ip route|grep ^default|awk '{print $3}'`
         MACADDR=`ifconfig | awk '/ether/'|awk '{print $2}'`

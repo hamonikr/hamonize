@@ -62,6 +62,8 @@ public class TenantconfigVo {
 
 	private Timestamp rgstr_date;
 	private Timestamp updt_date;
+
+	private String remote_tool_vpn_yn;
 	
 	@Transient
 	private String uuid;
