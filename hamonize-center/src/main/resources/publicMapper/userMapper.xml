@@ -5,6 +5,7 @@
 	
 	<select id="userList" resultType="com.model.UserVo"  parameterType="com.model.UserVo">
 		SELECT 
+			a.seq,
 			a.user_id,
 			a.user_name,
 			a.org_seq,
@@ -55,6 +56,7 @@
 			</if>
 		</if>
 		</where>
+		order by rgstr_date desc
 		 OFFSET #{limitStart} LIMIT #{recordSize}
 	</select>
 	
@@ -163,7 +165,20 @@
 		</where>
 	</select>
 
-	<insert id="userSave" parameterType="com.model.UserVo">
+	<update id="userSave" parameterType="com.model.UserVo">
+	WITH upsert AS (
+		UPDATE TBL_USER
+		SET
+		<if test="pass_wd != '' || pass_wd != null">
+		pass_wd = #{pass_wd},
+		</if>
+		user_name = #{user_name},
+		org_seq = #{org_seq},
+		updt_date = now()
+		where seq = #{seq}
+		and domain = #{domain} 
+		RETURNING *
+	)
 		INSERT into tbl_user
 		(seq,
 		domain,
@@ -172,21 +187,64 @@
 		org_seq,
 		pass_wd,
 		rgstr_date)
-		values(
+		SELECT
 			(SELECT COALESCE(max(seq),0)+1 AS seq FROM tbl_user where domain = #{domain}),
 		#{domain},
 		#{user_id},
 		#{user_name},
 		#{org_seq},
 		#{pass_wd},
-		now())
-	</insert>
+		now()
+		WHERE NOT EXISTS (SELECT * FROM upsert)
+	</update>
 
 	<!-- 사용자 정보 유효성 체크 -->
 	<select id="userIdCheck" parameterType="com.model.UserVo" resultType="Integer">
 		SELECT COUNT(USER_ID)
 		FROM TBL_USER
 		WHERE USER_ID = #{user_id}
+	</select>
+
+	<delete id="userDelete" parameterType="java.util.List"> 
+		DELETE FROM TBL_USER 
+		WHERE seq IN
+		<foreach collection="list" item="item"  index="i" open="(" separator="," close=")"> 
+			#{item.seq}
+		</foreach>
+			 
+	</delete>
+
+	<update id="userModify" parameterType="com.model.UserVo">
+		UPDATE TBL_USER
+		SET 
+		org_seq = #{org_seq},
+		<if test="pass_wd != null">
+			pass_wd = #{pass_wd},
+		</if>
+		user_name = #{user_name},
+		updt_date = now()
+		WHERE user_id = #{user_id}
+	</update>
+	
+	<select id="getUserOrgPath" parameterType="Long" resultType="com.model.OrgVo"> 
+		select distinct a.all_org_nm, a.org_nm , a.p_seq 
+		from tbl_org a left outer join tbl_user b on a.seq = b.org_seq 
+		where b.org_seq in (
+			select org_seq 
+			from tbl_user 
+			where seq = #{seq}
+		)
+	</select>
+
+	<select id="getUserNewOrgPath" parameterType="Long" resultType="com.model.OrgVo"> 
+		select all_org_nm 
+		from tbl_org 
+		where seq = #{seq}
+	</select>
+	
+	<select id="getUserInfo" parameterType="Long" resultType="com.model.UserVo"> 
+		select * from tbl_user tu 
+		where seq = #{seq}
 	</select>
 	
 		
