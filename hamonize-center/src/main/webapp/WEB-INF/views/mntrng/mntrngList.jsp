@@ -48,7 +48,10 @@ function onClick(event, treeId, treeNode, clickFlag) {
 						strHtml += '<a class="clear" href="/mntrng/pcView?uuid=' + uuid +'">';
 						strHtml += hostnameVal;
 						strHtml += '</a>';
-						strHtml += '<a href="#" onclick="inputCommand(\''+agrs[i].pc_ip+'\'); return false;"><i class="fa fa-code"></i></a></blockquote></div>';
+						strHtml += '<button type="button" class="btn btn-light" onClick="location.href=\'hamonizecli://'+agrs[i].pc_ip+'\'">원격접속</button>';
+						strHtml += '<button type="button" class="btn btn-light" onClick="inputCommand(\''+agrs[i].pc_ip+'\'); return false;">SSH접속</button>';
+// 						strHtml += '<a href="#" onclick="inputCommand(\''+agrs[i].pc_ip+'\'); return false;">SSH접속</a></blockquote></div>';
+						strHtml += '</blockquote></div>';
 					}else{
 						strHtml += '<div class="panel-body col-lg-3 "><blockquote class="bodyDataLayer mntrngBox">';
 						strHtml += '<span class="fa-stack pull-left m-r-sm"> <i class="fa fa-pause"></i> </span>';
@@ -253,6 +256,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 			hostForm.setAttribute("charset","UTF-8");
 			hostForm.setAttribute("method","Post");
 			hostForm.setAttribute("action","/");
+			hostForm.setAttribute("target","_blank");
 			const hiddenHostName = document.createElement("input");
 			hiddenHostName.setAttribute("type","hidden");
 			hiddenHostName.setAttribute("name","hostname");
