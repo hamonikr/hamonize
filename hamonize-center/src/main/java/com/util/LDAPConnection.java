@@ -153,7 +153,7 @@ public class LDAPConnection {
 		//attributes.put("displayName", vo.getUser_name());
 		//attributes.put("uidNumber", vo.getUser_sabun().toString());
 
-		addUser = "uid=" + vo.getUser_name() + ",ou=users" + dn + ",dc=hamonize,dc=com";
+		addUser = "uid=" + vo.getUser_id() + ",ou=users" + dn + ",dc=hamonize,dc=com";
 
 		try {
 			dc.createSubcontext(addUser, attributes);
@@ -279,7 +279,7 @@ public class LDAPConnection {
 	}
 
 	public void deleteUser(OrgVo ovo, UserVo uvo) throws NamingException {
-		System.out.println("cn : " + uvo.getUser_name());
+		System.out.println("cn : " + uvo.getUser_id());
 		System.out.println("All_org_nm : " + ovo.getAll_org_nm());
 
 		String baseDn = ",dc=hamonize,dc=com";
@@ -296,7 +296,7 @@ public class LDAPConnection {
 		}
 
 		baseDn = upperDn + baseDn;
-		String dn = "uid=" + uvo.getUser_name() + ",ou=users" + baseDn;
+		String dn = "uid=" + uvo.getUser_id() + ",ou=users" + baseDn;
 		System.out.println("dn : " + dn);
 
 		try {
@@ -358,30 +358,30 @@ public class LDAPConnection {
 		String oldDn = "";
 		String newDn = "";
 
-		host = newVo.getUser_name() + host;
+		host = newVo.getUser_id() + host;
 
 		ModificationItem[] mods = new ModificationItem[6];
 
 		Attribute mod1 = new BasicAttribute("gidNumber", newVo.getOrg_seq().toString());
-		Attribute mod2 = new BasicAttribute("homeDirectory", "/home/" + newVo.getUser_name());
+		Attribute mod2 = new BasicAttribute("homeDirectory", "/home/" + newVo.getUser_id());
 		Attribute mod3 = new BasicAttribute("host", host);
 		Attribute mod4 = new BasicAttribute("userPassword", newVo.getPass_wd());
-		//Attribute mod5 = new BasicAttribute("uidNumber", newVo.getUser_sabun());
-		Attribute mod6 = new BasicAttribute("cn", newVo.getUser_name());
+		Attribute mod5 = new BasicAttribute("uidNumber", newVo.getOrg_seq().toString());
+		Attribute mod6 = new BasicAttribute("cn", newVo.getUser_id());
 
 		mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 		mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
 		mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
 		mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod4);
-		//mods[4] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod5);
+		mods[4] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod5);
 		mods[5] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod6);
 
 		if (!oldVo.getOrg_seq().equals(newVo.getOrg_seq())) {
-			newDn = "uid=" + newVo.getUser_name() + ",ou=users" + nDn + ",dc=hamonize,dc=com";
-			oldDn = "uid=" + oldVo.getUser_name() + ",ou=users" + oDn + ",dc=hamonize,dc=com";
+			newDn = "uid=" + newVo.getUser_id() + ",ou=users" + nDn + ",dc=hamonize,dc=com";
+			oldDn = "uid=" + oldVo.getUser_id() + ",ou=users" + oDn + ",dc=hamonize,dc=com";
 		} else {
-			newDn = "uid=" + newVo.getUser_name() + ",ou=users" + oDn + ",dc=hamonize,dc=com";
-			oldDn = "uid=" + oldVo.getUser_name() + ",ou=users" + oDn + ",dc=hamonize,dc=com";
+			newDn = "uid=" + newVo.getUser_id() + ",ou=users" + oDn + ",dc=hamonize,dc=com";
+			oldDn = "uid=" + oldVo.getUser_id() + ",ou=users" + oDn + ",dc=hamonize,dc=com";
 		}
 
 		try {

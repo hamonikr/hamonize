@@ -7,15 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.mapper.IUserMapper;
 import com.model.OrgVo;
 import com.model.UserVo;
 import com.paging.PagingUtil;
-import com.paging.PagingVo;
 import com.service.OrgService;
 import com.service.UserService;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,8 +127,12 @@ public class UserController {
 	@PostMapping("/userSave")
 	public String save(Model model, UserVo vo) throws Exception {
 		System.out.println("userVo====="+vo);
-		int result = userSerivce.userSave(vo);
-
+		int result = 0;
+		if(vo.getSeq() == null){
+			result = userSerivce.userSave(vo);
+		}else{
+			result = userSerivce.userModify(vo);
+		}
 		return "redirect:/user/userList";
 	}
 
@@ -144,16 +150,21 @@ public class UserController {
 
 	}
 
-	@PostMapping("/delete")
+	@PostMapping("/userDelete")
 	@ResponseBody
-	public int delete(Model model, @RequestParam(value = "seqs[]") List<Long> list)
+	public int delete(Model model,  @RequestParam Map<String, Object> params)
 			throws Exception {
 		int result = 0;
+		JSONParser jsonPr = new JSONParser();
+		JSONArray jsonArray = (JSONArray) jsonPr.parse(params.get("userArr").toString());
 		List<UserVo> voList = new ArrayList<>();
 
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject jo = new JSONObject();
+			jo = (JSONObject) jsonArray.get(i);
 			UserVo tmp = new UserVo();
-			tmp.setSeq(list.get(i));
+			tmp.setSeq(Long.parseLong(jo.get("seq").toString()));
+			tmp.setUser_id(jo.get("user_id").toString());
 			voList.add(tmp);
 		}
 

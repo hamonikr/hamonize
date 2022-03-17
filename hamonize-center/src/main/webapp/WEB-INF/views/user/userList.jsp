@@ -7,8 +7,10 @@
 <link rel="stylesheet" href="/logintemplet/notebook/js/select2/select2.css" type="text/css" />
 <link rel="stylesheet" href="/logintemplet/notebook/js/select2/theme.css" type="text/css" />
 
-<script>
+<script type="text/javascript">
 	$(document).ready(function () {
+		//window.ParsleyValidator.setLocale('ko');
+		//$("#popfrm").parsley();
 			$('#select2-option').change(function(){
 				$('form[name=popfrm] input[name=org_seq]').val($("#select2-option option:selected").val());
 			});
@@ -31,6 +33,7 @@
 					}
 				});
 			});
+			//window.onload = function() {	$("#select2-option").val($("#org_seq").val()).attr("selected", "selected");};
 	});
 	
 	function beforeClick(treeId, treeNode, clickFlag) {
@@ -70,7 +73,8 @@
 							"'>";
 						gbInnerHtml += "<td>" + no + "</td>";
 						gbInnerHtml += "<td>" + value.org_nm + "</td>";
-						gbInnerHtml += "<td>" + value.user_id + "</td>";
+						gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('" + value.seq + "','" + value
+							.org_seq + "','" + value.user_id + "','" + value.user_name + "')\">" + value.user_id + "</a></td>";
 						gbInnerHtml += "<td>" + value.user_name + "</td>";
 
 						/*gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('" + no + "','" + value
@@ -157,15 +161,25 @@
 				<section class="scrollable padder">
 
 					<section class="panel panel-default">
-						<header class="panel-heading">
-							사용자 목록
+						<header class="bg-dark dk header navbar navbar-fixed-top-xs">
+							<ul class="nav navbar-nav hidden-xs">
+								<li>
+									<div class="m-t m-l">
+										사용자관리
+									</div>
+								</li>
+							</ul>
 							<i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom"
 								data-title="ajax to load the data." data-original-title="" title=""></i>
-								<a href="javascript:;" onClick="addUser(); return false;" data-toggle="dropdown"
+								<ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user">
+									<li class="hidden-xs ">
+										<a href="javascript:;" onClick="addUser(); return false;" data-toggle="dropdown"
 										data-target="#popupLayerUserAdd">
 										<i class="fa fa-plus-circle"></i>
 										사용자추가
 									</a>
+									</li>
+								</ul>
 						</header>
 						<div class="table-responsive">
 							
@@ -199,8 +213,8 @@
 									<thead>
 										<tr role="row">
 											<th width="10%">번호</th>
-											<th width="25%">부서이름</th>
-											<th width="10%">아이디</th>
+											<th width="25%">조직이름</th>
+											<th width="25%">아이디</th>
 											<th width="*%">이름</th>
 											<th width="15%">등록일</th>
 										</tr>
@@ -263,7 +277,8 @@
 				gbInnerHtml += "<tr data-code='" + value.seq + "' data-guidcode='" + value.org_seq + "'>";
 				gbInnerHtml += "<td>" + no + "</td>";
 				gbInnerHtml += "<td>" + value.org_nm + "</td>";
-				gbInnerHtml += "<td>" + value.user_id + "</td>";
+				gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('" + value.seq + "','" + value
+					.org_seq + "','" + value.user_id + "','" + value.user_name + "')\">" + value.user_id + "</a></td>";
 				gbInnerHtml += "<td>" + value.user_name + "</td>";
 
 				/*gbInnerHtml += "<td><a href=\"#\" onclick=\"detail_popup('" + no + "','" + value
@@ -303,51 +318,18 @@
 	}
 
 
-	function detail_popup(no, name, pc_os, hostname, pc_ip, pc_vpnip, macaddress, pc_disk, cpu, memory, rgstr_date, seq,
-		old_org_seq, host_id,pc_uuid) {
-		console.log("detail_popup >> ");
-		console.log("host_id >> " + host_id);
-		if (pc_os == "H") {
-			pc_os = hamonikrIcon;
-		} else if (pc_os == "W") {
-			pc_os = windowIcon;
-		} else if (pc_os == "L") {
-			pc_os = linuxmintIcon;
-		} else if (pc_os == "D") {
-			pc_os = debianIcon;
-		} else if (pc_os == "U") {
-			pc_os = ubuntuIcon;
-		} else if (pc_os == "G") {
-			pc_os = gooroomIcon;
-		} else {
-			pc_os = "";
-		}
-
-		var innerHtml = "";
-
-
-		$("#detail_no").html(no);
-		$("#detail_pc_os").html(pc_os);
-		$("#detail_hostname").html(hostname);
-		$("#detail_name").html(name);
-		$("#detail_pc_ip").html(pc_ip);
-		$("#detail_macaddress").html(macaddress);
-		$("#detail_pc_disk").html(pc_disk);
-		$("#detail_cpu").html(cpu);
-		$("#detail_memory").html(memory);
-		$("#detail_rgstr_date").html(rgstr_date);
-		$("#seq").val(seq);
-		$("#old_org_seq").val(old_org_seq);
-		$("#host_id").val(host_id);
-		$("#pc_uuid").val(pc_uuid);
-
-		console.log("vpn_uwwwwwwwwwwwwwwsed >> " + vpn_used);
-		// if (vpn_used != 0 && pc_vpnip != "no vpn") {
-			// innerHtml += "<th>VPN IP</th>";
-			// innerHtml += "<td colspan='3'><span id='vpnip_val'></span></td>";
-			// $('#detail_vpnip').append(innerHtml);
-			$("#detail_vpnip").text(pc_vpnip);
-		// }
+	function detail_popup(seq, org_seq, user_id, user_name) {
+		$('form[name=popfrm]')[0].reset();
+		$('form[name=popfrm] input[name=seq]').val(seq);
+		$('form[name=popfrm] input[name=domain]').val($("#domain").val());
+		$('form[name=popfrm] input[name=user_id]').val(user_id);
+		$('form[name=popfrm] input[name=user_name]').val(user_name);
+		$('#select2-option').val(org_seq).trigger("change");
+		$('form[name=popfrm] input[name=user_id]').attr("readonly",true);
+		//$('form[name=popfrm] input[name=pass_wd]').attr("data-required",false);
+		//$('form[name=popfrm] input[name=pass_wd2]').attr("data-required",false);
+		//$('form[name=popfrm] input[name=pass_wd]').removeAttr("data-required");
+		//$('form[name=popfrm] input[name=pass_wd2]').removeAttr("data-required");
 
 		$('#popupLayer').show();
 		$("#bg_fix").show();
@@ -424,19 +406,18 @@
 
 	}
 
-	function delete_pc() {
+	function deleteUser() {
 
-
-		if (confirm("한번 삭제한 PC는 복구 할 수 없습니다. 삭제 하시겠습니까?")) {
+		const user = {seq:$('form[name=popfrm] input[name=seq]').val(),user_id: $('form[name=popfrm] input[name=user_id]').val()};
+		const userArr = new Array();
+		userArr.push(user);
+		console.log(userArr);
+		if (confirm("한번 삭제한 유저는 복구 할 수 없습니다. 삭제 하시겠습니까?")) {
 			$.ajax({
-				url: '/pcMngr/deletePc',
+				url: '/user/userDelete',
 				type: 'post',
 				data: {
-					seq: $('#seq').val(),
-					org_seq: $('#old_org_seq').val(),
-					pc_hostname: $("#detail_hostname").text(),
-					domain: $('#domain').val(),
-					host_id: $('#host_id').val()
+					userArr: JSON.stringify(userArr)
 				},
 				success: function (data) {
 					if (data == 1) {
@@ -454,10 +435,14 @@
 	}
 
 	function addUser(){
+		document.getElementById("popfrm").reset();
+		$('form[name=popfrm] input[name=seq]').val("");
+		$('form[name=popfrm] input[name=org_seq]').val("");
+		$('form[name=popfrm] input[name=user_id]').attr("readonly",false);
 		$("#popupLayer").show();
 		$("#bg_fix").show();
-		console.log($("#domain").val());
 		$('form[name=popfrm] input[name=domain]').val($("#domain").val());
+		$('#select2-option').val($('#org_seq').val()).trigger("change");
 	}
 </script>
 
@@ -467,46 +452,39 @@
 <div id="popupLayer" class="popa" style="display: none;">
 
 	<div class="col-sm-12">
-			<form data-validate="parsley" method="post" action="/user/userSave" name="popfrm" autocomplete="off">
+			<form data-validate="parsley" method="post" action="/user/userSave" name="popfrm" id="popfrm">
 				<input type="hidden" name="domain" value="">
-				<input type="hidden" name="org_seq" value="">
+				<input type="hidden" name="org_seq" id="org_seq" value="">
+				<input type="hidden" name="seq" id="seq" value="">
 				<section class="panel panel-default">
 					<header class="panel-heading"> <span class="h4">사용자추가</span> </header>
 					<div class="panel-body">
 						<p class="text-muted">정보를 입력하세요.</p>
-						<div class="form-group"> <label>아이디</label> <input type="text" name="user_id" id="user_id" class="form-control parsley-validated"
-								data-required="true"> </div>
-						<div class="form-group"> <label>이름</label> <input type="text" name="user_name" class="form-control parsley-validated"
-								data-required="true"> </div>
+						<div class="form-group"> <label>아이디</label> 
+							<input type="text" autocomplete="new-password" name="user_id" id="user_id" class="form-control parsley-validated"
+								data-required="true" data-type="alphanum"
+								data-required-message="아이디는 필수 값 입니다."
+								data-type-alphanum-message="아이디는 영문만 입력 가능합니다."> </div>
+						<div class="form-group"> <label>이름</label> <input type="text" autocomplete="new-password" name="user_name" class="form-control parsley-validated"
+								data-required="true"
+								data-required-message="이름은 필수 값 입니다."> </div>
 								<div class="form-group"> <label>조직</label>
 									<div class="m-b">
-										<!-- <div class="select2-container" id="s2id_select2-option" style="width:260px">
-											<a href="javascript:void(0)" onclick="return false;" class="select2-choice" tabindex="-1">
-												<span class="select2-chosen"></span>
-												<abbr class="select2-search-choice-close"></abbr>
-												<span class="select2-arrow">
-													<b></b>
-												</span>
-											</a>
-											<input class="select2-focusser select2-offscreen" type="text" id="s2id_autogen1">
-											<div class="select2-drop select2-display-none select2-with-searchbox">
-												<div class="select2-search"> <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off"
-														spellcheck="false" class="select2-input"> </div>
-												<ul class="select2-results"> </ul>
-											</div>
-										</div> -->
-										<select id="select2-option" style="width:260px" tabindex="-1" class="select2-offscreen">
+										<select id="select2-option" style="width:385px" tabindex="-1" class="select2-offscreen">
 											<c:forEach var="vo" items="${oList}" varStatus="vs" >
-												<option value="${vo.seq}">${vo.org_nm}</option>
-											 </c:forEach>
+												<option value="${vo.seq}"> ${vo.org_nm}</option>
+											</c:forEach>
 										</select>
 									</div>
 								</div>
 						<div class="form-group pull-in clearfix">
 							<div class="col-sm-6"> <label>비밀번호</label> <input type="password"
-									class="form-control parsley-validated" data-required="true" id="pwd" name="pass_wd"> </div>
+									class="form-control parsley-validated" data-required="true" id="pwd" name="pass_wd" autocomplete="new-password"
+									data-required-message="비밀번호는 필수 값 입니다."> </div>
 							<div class="col-sm-6"> <label>비밀번호 확인</label> <input type="password"
-									class="form-control parsley-validated" data-equalto="#pwd" data-required="true"> </div>
+									class="form-control parsley-validated" name="pass_wd2" data-equalto="#pwd" data-required="true"
+									data-required-message="비밀번호 확인은 필수 값 입니다."
+									data-equalto-message="비밀번호와 비밀번호 확인값이 일치하지 않습니다."> </div>
 						</div>
 					</div>
 					<footer class="panel-footer text-right bg-light lter"> <button type="submit"
@@ -517,7 +495,7 @@
 
 	<div class="form-group" style="text-align: right;">
 
-		<button type="submit" class="btn btn-s-md btn-danger" onclick="delete_pc();">삭제</button>
+		<button type="submit" class="btn btn-s-md btn-danger" onclick="deleteUser();">삭제</button>
 		<button type="submit" class="btn btn-s-md btn-dark" onclick="hide_layer();">닫기</button>
 
 	</div>
@@ -532,6 +510,7 @@
 <div id="bg_fix" style="display:none;"></div>
 
 <script type="text/javascript" src="/logintemplet/notebook/js/parsley/parsley.min.js"></script>
+<!-- <script type="text/javascript" src="/logintemplet/notebook/js/parsley/ko.js"></script> -->
 <script type="text/javascript" src="/logintemplet/notebook/js/parsley/parsley.extend.js"></script>
 <script type="text/javascript" src="/logintemplet/notebook/js/select2/select2.min.js"></script>
 <script type="text/javascript" src="/logintemplet/notebook/js/app.plugin.js"></script>

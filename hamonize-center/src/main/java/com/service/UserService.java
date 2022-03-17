@@ -90,7 +90,8 @@ public class UserService {
 
 		OrgVo ovo = new OrgVo();
 		UserVo oldVo = userMapper.getUserInfo(newVo.getSeq());
-
+System.out.println("newVo==========="+newVo);
+System.out.println("oldVo==========="+oldVo);
 		LDAPConnection con = new LDAPConnection();
 		con.connection(gs.getLdapUrl(), gs.getLdapPassword());
 		ovo = userMapper.getUserOrgPath(newVo.getSeq());
@@ -104,12 +105,13 @@ public class UserService {
 				host += "." + p_array[i];
 				newDn += ",ou=" + p_array[i];
 			}
-
+			host = ".hamonize.com";
 		} else {
 			String[] p_array = ovo.getAll_org_nm().split("\\|");
 			for (int i = p_array.length - 1; i >= 0; i--) {
 				host += "." + p_array[i];
 			}
+			host = ".hamonize.com";
 		}
 
 		String[] p_array = ovo.getAll_org_nm().split("\\|");
@@ -145,7 +147,8 @@ public class UserService {
 			UserVo uvo = new UserVo();
 
 			ovo = userMapper.getUserOrgPath(vo.get(i).getSeq());
-			uvo = userMapper.userView(vo.get(i));
+			// uvo = userMapper.userView(vo.get(i));
+			uvo.setUser_id(vo.get(i).getUser_id());
 
 			con.deleteUser(ovo, uvo);
 		}
