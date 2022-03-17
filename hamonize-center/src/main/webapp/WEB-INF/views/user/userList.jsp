@@ -319,26 +319,22 @@
 
 
 	function detail_popup(seq, org_seq, user_id, user_name) {
-		$('form[name=popfrm]')[0].reset();
 		$('form[name=popfrm] input[name=seq]').val(seq);
 		$('form[name=popfrm] input[name=domain]').val($("#domain").val());
 		$('form[name=popfrm] input[name=user_id]').val(user_id);
 		$('form[name=popfrm] input[name=user_name]').val(user_name);
 		$('#select2-option').val(org_seq).trigger("change");
 		$('form[name=popfrm] input[name=user_id]').attr("readonly",true);
-		//$('form[name=popfrm] input[name=pass_wd]').attr("data-required",false);
-		//$('form[name=popfrm] input[name=pass_wd2]').attr("data-required",false);
-		//$('form[name=popfrm] input[name=pass_wd]').removeAttr("data-required");
-		//$('form[name=popfrm] input[name=pass_wd2]').removeAttr("data-required");
-
+		
 		$('#popupLayer').show();
 		$("#bg_fix").show();
 	};
 
 	function hide_layer() {
+		document.getElementById("popfrm").reset();
+		$('#popfrm').parsley().reset();
 		$('#popupLayer').hide();
 		$("#bg_fix").hide();
-		$("#detail_vpnip").empty();
 	};
 
 	function open_move() {
@@ -435,7 +431,6 @@
 	}
 
 	function addUser(){
-		document.getElementById("popfrm").reset();
 		$('form[name=popfrm] input[name=seq]').val("");
 		$('form[name=popfrm] input[name=org_seq]').val("");
 		$('form[name=popfrm] input[name=user_id]').attr("readonly",false);
@@ -443,6 +438,15 @@
 		$("#bg_fix").show();
 		$('form[name=popfrm] input[name=domain]').val($("#domain").val());
 		$('#select2-option').val($('#org_seq').val()).trigger("change");
+	}
+
+	function insertUser(seq){
+		if(seq == ""){
+			$("#popfrm").parsley();
+		}else{
+			$("#popfrm").parsley("destroy");
+		}
+		$("#popfrm").submit();
 	}
 </script>
 
@@ -452,7 +456,7 @@
 <div id="popupLayer" class="popa" style="display: none;">
 
 	<div class="col-sm-12">
-			<form data-validate="parsley" method="post" action="/user/userSave" name="popfrm" id="popfrm">
+			<form method="post" action="/user/userSave" name="popfrm" id="popfrm">
 				<input type="hidden" name="domain" value="">
 				<input type="hidden" name="org_seq" id="org_seq" value="">
 				<input type="hidden" name="seq" id="seq" value="">
@@ -482,13 +486,14 @@
 									class="form-control parsley-validated" data-required="true" id="pwd" name="pass_wd" autocomplete="new-password"
 									data-required-message="비밀번호는 필수 값 입니다."> </div>
 							<div class="col-sm-6"> <label>비밀번호 확인</label> <input type="password"
-									class="form-control parsley-validated" name="pass_wd2" data-equalto="#pwd" data-required="true"
+									class="form-control parsley-validated" name="pass_wd2" id="pwd2" data-equalto="#pwd" data-required="true"
 									data-required-message="비밀번호 확인은 필수 값 입니다."
 									data-equalto-message="비밀번호와 비밀번호 확인값이 일치하지 않습니다."> </div>
 						</div>
 					</div>
-					<footer class="panel-footer text-right bg-light lter"> <button type="submit"
-							class="btn btn-success btn-s-xs">등록</button> </footer>
+					<footer class="panel-footer text-right bg-light lter"> 
+						<button type="button" class="btn btn-success btn-s-xs" onclick="insertUser($('form[name=popfrm] input[name=seq]').val()); return false;">등록</button> 
+					</footer>
 				</section>
 			</form>
 	</div>
@@ -510,7 +515,6 @@
 <div id="bg_fix" style="display:none;"></div>
 
 <script type="text/javascript" src="/logintemplet/notebook/js/parsley/parsley.min.js"></script>
-<!-- <script type="text/javascript" src="/logintemplet/notebook/js/parsley/ko.js"></script> -->
 <script type="text/javascript" src="/logintemplet/notebook/js/parsley/parsley.extend.js"></script>
 <script type="text/javascript" src="/logintemplet/notebook/js/select2/select2.min.js"></script>
 <script type="text/javascript" src="/logintemplet/notebook/js/app.plugin.js"></script>
