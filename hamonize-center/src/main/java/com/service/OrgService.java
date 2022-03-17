@@ -12,11 +12,13 @@ import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
 import com.mapper.IPolicyCommonMapper;
+import com.mapper.ISvrlstMapper;
 import com.mapper.ITenantconfigMapper;
 import com.model.LogInOutVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PolicyRestoreVo;
+import com.model.SvrlstVo;
 import com.model.TenantconfigVo;
 import com.util.AuthUtil;
 import com.util.LDAPConnection;
@@ -46,6 +48,9 @@ public class OrgService {
 	@Autowired
 	private IPolicyCommonMapper policyCommonMapper;
 
+	@Autowired
+	private ISvrlstMapper svrlstMapper;
+	
 	@Autowired
 	RestApiService restApiService;
 
@@ -275,6 +280,15 @@ public class OrgService {
 	public void tenantInsert(OrgVo orgvo ) {
 		
 
+		List<SvrlstVo> svrlstVo = svrlstMapper.getSvrlstDataList();
+		String LdapUrl = "";
+		for (SvrlstVo svrlstData : svrlstVo) {
+			if( svrlstData.getSvr_nm().equals("LDAP") ){
+				LdapUrl = svrlstData.getSvr_ip();
+			}
+		}
+		
+		
 		String hadminConfigData = " {" + 
 				"    \"AccessControl\": {" + 
 				"        \"DomainGroupsEnabled\": \"true\"," + 
@@ -350,10 +364,10 @@ public class OrgService {
 				"        \"IdentifyGroupMembersByNameAttribute\": \"true\",\n" + 
 				"        \"LocationNameAttribute\": \"description\",\n" + 
 				"        \"RecursiveSearchOperations\": \"true\",\n" + 
-				"        \"ServerHost\": \"192.168.0.2\",\n" + 
+				"        \"ServerHost\": \""+LdapUrl+"\",\n" + 
 				"        \"UseBindCredentials\": \"true\",\n" + 
 				"        \"UserGroupsFilter\": \"\",\n" + 
-				"        \"UserLoginNameAttribute\": \"\",\n" + 
+				"        \"UserLoginNameAttribute\": \"uid\",\n" + 
 				"        \"UserTree\": \"\",\n" + 
 				"        \"UsersFilter\": \"\"\n" + 
 				"    },\n" + 
@@ -463,7 +477,6 @@ public class OrgService {
 		TenantconfigVo tenantVo = new TenantconfigVo();
 		
 		tenantVo.setDomain( orgvo.getDomain());
-		System.out.println("tenantVo======++"+tenantVo);
 		
 		java.util.Random generator = new java.util.Random();
 		generator.setSeed(System.currentTimeMillis());
@@ -487,7 +500,6 @@ public class OrgService {
 		params.put("after_org_seq", vo.getOrg_seq());
 		params.put("host_id", vo.getHost_id());
 		params.put("org_seq", vo.getOrg_seq());
-		System.out.println("getLastJobList.size()======"+getLastJobList.size());
 		for(int x = 0; x < getLastJobList.size();x++){
 			List<Map<String,Object>> getjobList  = new ArrayList<Map<String, Object>>();
 			params.put("before_url",getLastJobList.get(x).get("kind").toString());
@@ -497,32 +509,27 @@ public class OrgService {
 				params.put("policyFilePath","/etc/hamonize/updt/updtInfo.hm");
 				params.put("policyRunFilePath","/etc/hamonize/runupdt");
 				getjobList = policyCommonMapper.comparePolicyUpdtBeforeAndAfter(params);
-				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}else if(getLastJobList.get(x).get("kind").toString().equals("pmanage")){
 				params.put("job_id", getLastJobList.get(x).get("job_id"));
 				params.put("before_org_seq", getLastJobList.get(x).get("org_seq"));
 				params.put("policyFilePath","/etc/hamonize/progrm/progrm.hm");
 				params.put("policyRunFilePath","/etc/hamonize/runprogrmblock");
 				getjobList = policyCommonMapper.comparePolicyProgrmBeforeAndAfter(params);
-				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}else if(getLastJobList.get(x).get("kind").toString().equals("dmanage")){
 				params.put("job_id", getLastJobList.get(x).get("job_id"));
 				params.put("before_org_seq", getLastJobList.get(x).get("org_seq"));
 				params.put("policyFilePath","/etc/hamonize/security/device.hm");
 				params.put("policyRunFilePath","/etc/hamonize/rundevicepolicy");
 				getjobList = policyCommonMapper.comparePolicyDeviceBeforeAndAfter(params);
-				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}else if(getLastJobList.get(x).get("kind").toString().equals("fmanage")){
 				params.put("job_id", getLastJobList.get(x).get("job_id"));
 				params.put("before_org_seq", getLastJobList.get(x).get("org_seq"));
 				params.put("policyFilePath","/etc/hamonize/firewall/firewallInfo.hm");
 				params.put("policyRunFilePath","/etc/hamonize/runufw");
 				getjobList = policyCommonMapper.comparePolicyFrwlBeforeAndAfter(params);
-				System.out.println(getLastJobList.get(x).get("kind").toString()+"======getjobList===="+getjobList);
 			}
 		if(getjobList.size() > 1){
 			for(int i = 0; i< getjobList.size();i++){
-				System.out.println("aaaaaaaaaaaaaaaaaa==="+getjobList.get(i).get("job_id"));
 				String[] listA = {};
 				String[] listB = {};
 				if(i < getjobList.size() -1){
@@ -548,48 +555,24 @@ public class OrgService {
 					String output = updtPolicy.toJSONString();
 					output = output.replaceAll("\"", "\\\\\\\"");
 					params.put("output", output);
-					System.out.println(x+"------------"+i+"output=========="+output);
 				}
 			}
 		//이동될 부서의 정책으로 변경하기
-					JSONObject jobResult = new JSONObject();
-					jobResult = restApiService.makePolicyToSingle(params);
-					System.out.println("jobResultjobResult11111======"+jobResult);
-					params.put("object", jobResult.toJSONString());
-					params.put("parents_job_id", getLastJobList.get(x).get("job_id"));
-					params.put("job_id", jobResult.get("id"));
-					//jobResult.clear();
-					//jobResult = restApiService.checkPolicyJobResult(params);
-					//System.out.println("jobResultjobResult222222======"+jobResult);
-					Thread.sleep(10000);
-					JSONObject data = new JSONObject();
-						JSONArray dataArr = new JSONArray();
-						List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
-						Map<String, Object> resultMap;
-						//dataArr = restApiService.addAnsibleJobRelaunchEventByHost(Integer.parseInt(params.get("job_id").toString()));
-						params.put("before_job_id", getjobList.get(1).get("job_id"));
-						data = restApiService.addAnsibleJobEventByHost(params,0);
-					}
-						// dataArr = (JSONArray) data.get("finalResult");
-						// for (int i = 0; i < dataArr.size(); i++) {
-						// 	resultMap = new HashMap<String, Object>();
-						// 	String json = dataArr.get(i).toString();
-						// 	JSONParser jsonParser = new JSONParser();
-						// 	JSONObject jsonObj = (JSONObject) jsonParser.parse(json);
-						// 	resultMap.put("result", json);
-						// 	resultMap.put("status", jsonObj.get("changed"));
-						// 	resultSet.add(resultMap);
-						// }
-						// params.put("data", resultSet);
-						// int result = policyCommonMapper.checkCountAnsibleJobId(params);
-						// if(dataArr.size() > result)
-						// {
-						// 	if(result > 0)
-						// 	{
-						// 		policyCommonMapper.deleteAnsibleJobEvent(params);
-						// 	}
-						// 	result = policyCommonMapper.addAnsibleJobEventByHosts(params);
-						// }
-				}
+			JSONObject jobResult = new JSONObject();
+			jobResult = restApiService.makePolicyToSingle(params);
+			params.put("object", jobResult.toJSONString());
+			params.put("parents_job_id", getLastJobList.get(x).get("job_id"));
+			params.put("job_id", jobResult.get("id"));
+			
+			Thread.sleep(10000);
+			JSONObject data = new JSONObject();
+				JSONArray dataArr = new JSONArray();
+				List<Map<String,Object>> resultSet = new ArrayList<Map<String,Object>>();
+				Map<String, Object> resultMap;
+				params.put("before_job_id", getjobList.get(1).get("job_id"));
+				data = restApiService.addAnsibleJobEventByHost(params,0);
+			}
+				
+		}
 	}
 }

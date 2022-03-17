@@ -63,6 +63,7 @@ public class TenantconfigVo {
 	private Timestamp rgstr_date;
 	private Timestamp updt_date;
 
+	@Size(max=4)
 	private String remote_tool_vpn_yn;
 	
 	@Transient
