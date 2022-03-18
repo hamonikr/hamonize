@@ -66,6 +66,9 @@ public class TenantconfigVo {
 	@Size(max=4)
 	private String remote_tool_vpn_yn;
 	
+	@Size(max=4)
+	private String use_ldap_user_yn; 
+	
 	@Transient
 	private String uuid;
 	

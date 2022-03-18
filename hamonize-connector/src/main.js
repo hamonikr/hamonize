@@ -251,7 +251,6 @@ const hamonizeProgramInstall_Action = async (event, domain) => {
 function hamonizeProgramInstallProc(domain) {
 	return new Promise(function (resolve, reject) {
 
-		console.log("====hamonizeProgramInstallProc==");
 		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl + " " + domain;
 		console.log("aptRepositoryChkJobShell===========++" + aptRepositoryChkJobShell);
 		sudo.exec(aptRepositoryChkJobShell, options,

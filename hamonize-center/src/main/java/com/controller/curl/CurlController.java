@@ -640,7 +640,11 @@ System.out.println("retData===="+retData.toString());
 			output = tenantVo.getTenant_hadmin_private_key(); 
 		}else if( gubun.equals("pubkey")){
 			 output = tenantVo.getTenant_hadmin_public_key(); 
+		}else if( gubun.equals("ldapyn")){
+			SvrlstVo svo = tenantconfigMapper.getSvrLdapInfo();
+			 output = tenantVo.getUse_ldap_user_yn() +":"+svo.getSvr_ip(); 
 		}
+		
 		
 		return output;
 		

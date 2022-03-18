@@ -36,15 +36,11 @@
 		);
 	</update>
 
-<!-- 	
-WHERE seq = (select org_seq from public.tbl_pc_mangr where pc_uuid = #{pc_uuid} )
-		and DOMAIN = #{domain}
-
-<update id="orgSave" parameterType="com.model.OrgVo" useGeneratedKeys="true" keyProperty="seq" keyColumn="seq">
-	</update>
-
-
-	<update id="addDownAwxId" parameterType="com.model.OrgVo"> 
-		UPDATE TBL_ORG SET GROUP_ID = #{group_id} WHERE domain = #{domain} and seq = #{seq}
-	</update> -->
+	<select id="getSvrLdapInfo" resultType="com.model.SvrlstVo" parameterType="com.model.SvrlstVo">
+		SELECT 
+			* 
+		FROM tbl_svrlst
+		WHERE svr_nm = 'LDAP' 
+	</select>
+	
 </mapper>

@@ -30,7 +30,7 @@ echo "set pc info data $DATA_JSON" >>$LOGFILE
 RETDATA=$(curl -X GET -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$DATA_JSON" $CENTERURL)
 
 echo "$DATETIME ]--------> get data ::: " >>$LOGFILE
-echo "$RETDATA" #>>$LOGFILE
+echo "$RETDATA" >> $LOGFILE
 
 WRITE_DATA=""
 FILEPATH_DATA=$(cat ${FILEPATH})
