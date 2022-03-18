@@ -30,41 +30,49 @@ if [ $Ldap_used -eq "Y" ]; then
     ldap-auth-config ldap-auth-config/override boolean true
     ldap-auth-config ldap-auth-config/ldapns/ldap_version select 3
     ldap-auth-config ldap-auth-config/dblogin boolean false \
-    " | sudo debconf-set-selections
+    " | debconf-set-selections
 
-    sudo DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
+    if [ -f /tmp/debconf-ldap-preseed.txt ]; then
 
-    ## Add /etc/pam.d/common-session
-    sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
+        cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
+        DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
 
-    ## update /etc/pam.d/common-passwd
-    sed -i 's/use_authtok//g' /etc/pam.d/common-passwd
+        ## Add /etc/pam.d/common-session
+        sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
 
-    ## nsswitch.conf
-    mv /etc/nsswitch.conf /etc/nsswitch.conf_bak
-    echo -e "\
-    passwd:         files systemd ldap
-    group:          files systemd ldap
-    shadow:         files ldap
-    gshadow:        files
+        ## update /etc/pam.d/common-passwd
+        sed -i 's/use_authtok//g' /etc/pam.d/common-passwd
 
-    hosts:          files mdns4_minimal [NOTFOUND=return] dns myhostname
-    networks:       files
+        ## nsswitch.conf
+        mv /etc/nsswitch.conf /etc/nsswitch.conf_bak
+        echo -e "\
+        passwd:         files systemd ldap
+        group:          files systemd ldap
+        shadow:         files ldap
+        gshadow:        files
 
-    protocols:      db files
-    services:       db files
-    ethers:         db files
-    rpc:            db files
+        hosts:          files mdns4_minimal [NOTFOUND=return] dns myhostname
+        networks:       files
 
-    netgroup:       nis
-    " >/etc/nsswitch.conf
+        protocols:      db files
+        services:       db files
+        ethers:         db files
+        rpc:            db files
 
-    pam-auth-update
-    update-rc.d nslcd enable
-    systemctl restart nscd
+        netgroup:       nis
+        " >/etc/nsswitch.conf
+
+        pam-auth-update
+        update-rc.d nslcd enable
+        systemctl restart nscd
+
+    else
+        echo -e "Where the debconf-ldap-preseed.txt ??\n"
+    fi
+
 fi
 
-sleep 2 
+sleep 2
 
 # Agent ] =================================================
 echo "$DATETIME] 1. agent install ================ [start]" >>$LOGFILE
