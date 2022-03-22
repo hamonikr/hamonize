@@ -182,7 +182,7 @@
 																	</div>
 																</div>
 															</div>
-															<button class="btn btn-rounded pull-right btn-sm btn-facebook" id="saveFirewall">신규 방화벽 등록 </button>
+															<button type="button" class="btn btn-rounded pull-right btn-sm btn-facebook" id="saveFirewall">신규 방화벽 등록 </button>
 														</div>
 													</form>
 

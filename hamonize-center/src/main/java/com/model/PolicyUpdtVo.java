@@ -80,5 +80,10 @@ public class PolicyUpdtVo {
 
 	private Timestamp rgstr_date;
 	private Timestamp updt_date;
+
+	@Transient
+	private int mngeListInfoCurrentPage;
+	@Transient
+	private String[] deleteList;
 		
 }

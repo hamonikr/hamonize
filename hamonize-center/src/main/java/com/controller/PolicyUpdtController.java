@@ -1,19 +1,29 @@
 package com.controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.mapper.IPolicyUpdtMapper;
+import com.model.FileVo;
+import com.model.LoginVO;
 import com.model.OrgVo;
 import com.model.PolicyUpdtVo;
+import com.paging.PagingUtil;
+import com.paging.PagingVo;
 import com.service.AgentAptListService;
+import com.service.FileService;
 import com.service.OrgService;
 import com.service.PolicyUpdtService;
 import com.service.RestApiService;
+import com.util.AuthUtil;
+import com.util.Constant;
+import com.util.ShellRunner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,12 +32,14 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/gplcs")
@@ -47,6 +59,9 @@ public class PolicyUpdtController {
 
 	@Autowired
 	RestApiService restApiService;
+
+	@Autowired
+	FileService fileService;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -114,6 +129,9 @@ public class PolicyUpdtController {
 				int result = uService.updtCompareSave(params);
 				System.out.println("result====" + result);
 			}
+			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		
+			vo.setDomain(lvo.getDomain());
 			pList = uService.updtList(vo);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -180,6 +198,120 @@ public class PolicyUpdtController {
 
 		return data;
 
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "uManagePopList", method = RequestMethod.POST)
+	public Map<String, Object> uManagePopList(PolicyUpdtVo vo, PagingVo pagingVo,
+			HttpSession session, HttpServletRequest request) {
+		Map<String, Object> jsonObject = new HashMap<String, Object>();
+		JSONArray ja = new JSONArray();
+		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		
+		vo.setDomain(lvo.getDomain());
+		// 페이징
+		pagingVo.setCurrentPage(vo.getMngeListInfoCurrentPage());
+		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.LayerPopupPaging, pagingVo);
+
+		int cnt = uMapper.updtPopCount(vo);
+		pagingVo.setTotalRecordSize(cnt);
+		pagingVo = PagingUtil.setPaging(pagingVo);
+
+		try {
+			List<PolicyUpdtVo> gbList = uService.uManagePopList(vo, pagingVo);
+			List<FileVo> files = fileService.getFile("updt");
+			jsonObject.put("list", gbList);
+			jsonObject.put("filelist", files);
+			jsonObject.put("mngeVo", vo);
+			jsonObject.put("pagingVo", pagingVo);
+			jsonObject.put("success", true);
+		} catch (Exception e) {
+			jsonObject.put("success", false);
+			logger.error(e.getMessage(), e);
+		}
+
+		return jsonObject;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/uManagePopSave", method = RequestMethod.POST)
+	public Map<String, Object> uManagePopSave(HttpSession session, PolicyUpdtVo vo,@RequestParam("keyfile") MultipartFile mFile,@RequestParam Map<String,Object> params)
+			throws Exception {
+		Map<String, Object> jsonObject = new HashMap<String, Object>();
+		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		vo.setDomain(lvo.getDomain());
+		try {
+			FileVo fvo = new FileVo();
+			fvo.setP_seq(vo.getPu_seq());
+			fvo.setKind(params.get("kind").toString());
+			fvo.setDomain(lvo.getDomain());
+			Map sf = fileService.uploadFile(mFile,fvo);
+			fvo.setFilepath(sf.get("filepath").toString());
+			ShellRunner sr = new ShellRunner();
+			String cmd = "dpkg --info "+sf.get("filepath")+" | grep Package: \n"
+			+"dpkg --info "+sf.get("filepath")+" | grep Version:";
+			String[] callCmd = {"/bin/bash", "-c", cmd};
+			sf = sr.execCommand(callCmd);
+			String [] restunrs = sf.get(1).toString().split("\n");
+			vo.setDeb_apply_name(restunrs[0].split(":")[1]);
+			vo.setDeb_new_version(restunrs[1].split(":")[1]);
+			uService.updtPopSave(vo);
+			OrgVo orgvo = new OrgVo();
+			orgvo.setDomain(lvo.getDomain());
+			restApiService.addAptRepoPackage(orgvo,mFile);
+			fileService.deleteFile(fvo);
+			jsonObject.put("msg", Constant.Board.SUCCESS_GROUP_BOARD);
+			jsonObject.put("success", true);
+
+		} catch (SQLException sqle) {
+			logger.error(sqle.getMessage(), sqle);
+			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
+			jsonObject.put("success", false);
+		} catch (DataIntegrityViolationException dive) {
+			logger.error(dive.getMessage(), dive);
+			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
+			jsonObject.put("success", false);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
+			jsonObject.put("success", false);
+		}
+		return jsonObject;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/uManagePopDelete", method = RequestMethod.POST)
+	public Map<String, Object> uManagePopDelete(HttpSession session, PolicyUpdtVo vo)
+			throws Exception {
+		Map<String, Object> jsonObject = new HashMap<String, Object>();
+		
+		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		
+		vo.setDomain(lvo.getDomain());
+		
+		try {
+			uService.updtPopDelete(vo);
+
+			jsonObject.put("msg", Constant.Board.SUCCESS_GROUP_BOARD);
+			jsonObject.put("success", true);
+
+		} catch (SQLException sqle) {
+			logger.error(sqle.getMessage(), sqle);
+			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
+			jsonObject.put("success", false);
+		} catch (DataIntegrityViolationException dive) {
+			logger.error(dive.getMessage(), dive);
+			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
+			jsonObject.put("success", false);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			jsonObject.put("msg", Constant.Board.SUCCESS_FAIL);
+			jsonObject.put("success", false);
+		}
+		return jsonObject;
 	}
 
 }

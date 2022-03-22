@@ -46,7 +46,7 @@ public class FileController {
     @PostMapping("/upload")
     @ResponseBody
     public String uploadFile(@RequestParam("keyfile") MultipartFile mFile, FileVo vo) throws IOException {
-        
+        System.out.println("file==========="+mFile.getOriginalFilename());
         String result = "";
         Path uploadDir = Paths.get(path);
       

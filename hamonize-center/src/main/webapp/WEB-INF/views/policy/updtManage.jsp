@@ -2,7 +2,21 @@
 <%@ include file="../template/head.jsp" %>
 <%@ include file="../template/left.jsp" %>
 
+<style>
+	.file-drop-area {
+		position: relative;
+		display: flex;
+		align-items: center;
+		width: 90%;
+		max-width: 100%;
+		padding: 10px;
+		border: 1px dashed #ccc;
+	
+	border-radius: 3px;
+		transition: 0.2s
+	}
 
+</style>
 
 <script type="text/javascript">
 
@@ -18,6 +32,43 @@ $(document).ready(function(){
 		if($('form[name=frm] input[name=job_id]').val() > 0){
 			window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
 		}
+
+		//  팝업] 패키지 등록 버튼
+		$('#saveUpdt').on('click', function () {
+			addUpdtFnt();
+		});
+
+		// 팝업]  패키지 삭제 버튼
+		$('#deleteUpdt').on('click', function () {
+			deleteUpdtFnt();
+		});
+
+
+		$('.insertBtn').on('click', function () {
+			var ipt = $('.mdl-data-table__cell--non-numeric .form-control');
+			var form = $('#addForm');
+			if (form.css('display') == 'none') {
+				form.css('display', 'flex');
+				ipt.css('opacity', '1');
+			} else {
+				form.css('display', 'none');
+				ipt.css('opacity', '0');
+				fromReset();
+			}
+		});
+
+		$(document).on('change', '.file-input', function() {
+			var filesCount = $(this)[0].files.length;
+			var textbox = $(this).prev();
+		
+			if (filesCount === 1) {
+				var fileName = $(this).val().split('\\').pop();
+				textbox.text(fileName);
+			} else {
+				textbox.text('선택된 파일이 없습니다');
+			}
+		});
+		getList();
 	});
 
 	//메뉴 Tree onClick
@@ -99,9 +150,105 @@ $(document).ready(function(){
 				<section class="scrollable padder">
 
 					<section class="panel panel-default" style="overflow-y:scroll; height:89%;">
-						<header class="panel-heading">
-							# 프로그램 설치 관리
-							<i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom" data-title="ajax to load the data." data-original-title="" title=""></i>
+						<header class="bg-dark dk header navbar navbar-fixed-top-xs">
+							<ul class="nav navbar-nav hidden-xs">
+								<li>
+									<div class="m-t m-l">
+										# 프로그램 설치 관리
+									</div>
+								</li>
+							</ul>
+
+
+							<ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user">
+
+								<li class="hidden-xs ">
+									<a href="javascript:;" data-toggle="dropdown"
+										data-target="#updtLayer">
+										<i class="fa fa-plus-circle"></i>
+										패키지추가
+										<!-- <span class="badge badge-sm up bg-danger m-l-n-sm count" style="display: inline-block;">방화벽추가</span> -->
+									</a>
+
+									<div id="updtLayer" class="dropup">
+										<section class="dropdown-menu on aside-md m-l-n"
+											style="width:800px; height: 700px; top: 0;">
+											<section class="panel bg-white">
+												<header class="panel-heading b-b b-light">패키지 관리</header>
+
+												<div class="panel-body animated fadeInRight">
+
+													<form id="addForm" class="form-inline col-md-12 row" action=""
+														style="display:none;">
+														<input type="hidden" id="kind"
+														name="kind" value="updt" />
+														<div class="well m-t">
+															<div class="col-xs-12">
+																<div class="form-group pull-in clearfix">
+																	<div class="col-sm-4">
+																		<label>패키지 이름</label>
+																		<input id="pu_name" name="pu_name" type="text"
+																			class="form-control parsley-validated"
+																			placeholder="패키지 이름" />
+																	</div>
+																	<div class="col-sm-4">
+																		<label>패키지 상세 정보</label>
+																		<input id="pu_dc" name="pu_dc" type="text"
+																			class="form-control parsley-validated"
+																			maxlength="20" placeholder="패키지 상세 정보" />
+																	</div>
+																	<div class="col-sm-4">
+																		<label>첨부파일</label>
+																		<input type="file" style="position: fixed; left: -1500px; display: none;" class="filestyle" data-icon="false" data-classbutton="btn btn-default" 
+																		data-classinput="form-control inline input-s" name="keyfile" id="filestyle-0">
+																	</div>
+																</div>
+															</div>
+															<button type="button" class="btn btn-rounded pull-right btn-sm btn-facebook" id="saveUpdt">신규 패키지 등록 </button>
+														</div>
+													</form>
+
+													<input type="hidden" id="MngeListInfoCurrentPage"
+														name="MngeListInfoCurrentPage" value="1" />
+												</div>
+
+
+												<div class="panel-body animated fadeInRight">
+
+													<table class="table table-striped m-b-none ">
+														<colgroup>
+															<col style="width:10%;" />
+															<col style="width:10%;" />
+															<col style="width:15%;" />
+															<col style="width:15%;" />
+															<col />
+														</colgroup>
+														<thead>
+															<tr>
+																<th></th>
+																<th>번호</th>
+																<th>패키지 이름</th>
+																<th>패키지 버전</th>
+																<th>패키지 상세 정보</th>
+															</tr>
+														</thead>
+
+														<tbody id="pageGrideInMngrListTb"></tbody>
+													</table>
+													<div class="dataTables_wrapper">
+														<!-- page number -->
+														<div class="page_num"></div>
+													</div>
+												</div>
+
+												<button type="button" class="btn btn-s-md btn-default btn-rounded" id="deleteUpdt">삭제</button>
+												<button type="button" class="btn btn-s-md btn-default btn-rounded insertBtn">패키지 추가</button>
+											</section>
+										</section>
+									</div>
+
+								</li>
+							</ul>
 						</header>
 						
 						<div class="wrapper">
@@ -261,6 +408,171 @@ $('#div1').scrollTop($('#div1')[0].scrollHeight);
 		}
 	}
 
+	function getListAddDeleteVer() {
+		var url = '/gplcs/uManagePopList';
+
+		var keyWord = $("select[name=keyWord]").val();
+		var vData = 'MngeListInfoCurrentPage=' + $("#MngeListInfoCurrentPage").val() + "&keyWord=" + keyWord +
+			"&txtSearch=" + $("#txtSearch").val();
+
+		function fnt(data, status, xhr, groupId) {
+			deviceGetSuccess(data, status, xhr, groupId);
+			$('.mdl-data-table__cell--non-numeric .form-control').css('opacity', '1');
+		}
+
+		callAjax('POST', url, vData, fnt, getError, 'json');
+	}
+
+	function getList() {
+		var url = '/gplcs/uManagePopList';
+
+		var keyWord = $("select[name=keyWord]").val();
+		var vData = 'MngeListInfoCurrentPage=' + $("#MngeListInfoCurrentPage").val() + "&keyWord=" + keyWord +
+			"&txtSearch=" + $("#txtSearch").val();
+		callAjax('POST', url, vData, deviceGetSuccess, getError, 'json');
+	}
+
+	var deviceGetSuccess = function (data, status, xhr, groupId) {
+		var gbInnerHtml = "";
+		var classGroupList = data.list;
+		$('#pageGrideInMngrListTb').empty();
+		if (data.list.length > 0) {
+			$.each(data.list, function (index, value) {
+				var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 5);
+				if (value.pu_dc == null)
+					value.pu_dc = "설명이 없습니다"
+
+				gbInnerHtml += "<tr data-code='" + value.pu_seq + "'>";
+				gbInnerHtml += "<td>";
+
+				if (value.ppm_seq == value.pu_seq) {
+					gbInnerHtml += "<input type='checkbox' id=u" + no +
+						" disabled class='updtCheck'><label for=u" + no + " ></label></td>";
+				} else {
+					gbInnerHtml += "<input type='checkbox' id=u" + no + " class='updtCheck'><label for=u" +
+						no + "  ></label></td>";
+				}
+
+				gbInnerHtml += "<td><span>" + no + "</span>";
+				gbInnerHtml += "<td>" + value.pu_name + "</td>";
+				gbInnerHtml += "<td>" + value.deb_new_version + "</td>";
+				gbInnerHtml += "<td>" + value.pu_dc + "</td>";
+				//gbInnerHtml += "<td>" + data.filelist.filerealname + "</td>";
+				gbInnerHtml += "</tr>";
+
+			});
+		} else {
+			gbInnerHtml += "<tr><td colspan='5'>등록된 정보가 없습니다. </td></tr>";
+		}
+
+		startPage = data.pagingVo.startPage;
+		endPage = data.pagingVo.endPage;
+		totalPageSize = data.pagingVo.totalPageSize;
+		currentPage = data.pagingVo.currentPage;
+		totalRecordSize = data.pagingVo.totalRecordSize;
+
+		var viewName = 'classMngrList';
+		if (totalRecordSize > 0) {
+			$(".page_num").html(getPaging(startPage, endPage, totalPageSize, currentPage, '\'' + viewName + '\''));
+		}
+		$('#pageGrideInMngrListTb').append(gbInnerHtml);
+	}
+
+	// 패키지 추가
+	function addUpdtFnt() {
+		var name = $('#pu_name').val();
+		var info = $('#pu_dc').val();
+		//var port = $('#sm_port').val();
+		var regExp = /^[0-9_]/;
+		var InputFiles;
+		
+		InputFiles = $("#filestyle-0")[0];
+		var filename =  $("#filestyle-0").val().split('\\').pop();
+	
+		if(InputFiles.files.length === 0){
+				alert("파일을 선택해주세요");
+			return false;
+			}
+
+		// 검증
+		if (name.length <= 0) {
+			alert('패키지명을 입력해 주세요!');
+			return false;
+		}
+
+		if (info.length <= 0) {
+			alert('패키지설명을 입력해 주세요!');
+			return false;
+		}
+
+		var form = $('#addForm')[0];
+    var formData = new FormData(form);
+
+		// 전송
+		$.ajax({
+			url: '/gplcs/uManagePopSave',
+			type: 'POST',
+			enctype: 'multipart/form-data',
+			data: formData,
+			processData: false,    
+      contentType: false,      
+      cache: false,
+			success: function (res) {
+				if (res.success == true) {
+					alert(res.msg);
+					getListAddDeleteVer();
+					fromReset();
+					location.reload();
+
+				} else {
+					alert(res.msg);
+				}
+			},
+			error: function (request, status, error) {
+				console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" +
+					"error:" + error);
+			}
+		});
+	}
+
+	// 패키지 삭제 버튼
+	function deleteUpdtFnt() {
+		var iptArr = $('.updtCheck:checked');
+		var packageArr = [];
+
+		// 검증
+		$.each(iptArr, function (idx, ipt) {
+			packageArr.push($(ipt).parent().parent().attr('data-code'));
+		});
+
+		if (0 >= packageArr.length) {
+			alert('삭제할 패키지를 선택해 주시기 바랍니다!');
+			return;
+		}
+
+
+
+		function ftn(data, status, xhr, groupId) {
+			alert('정상적으로 삭제되었습니다!');
+			getListAddDeleteVer();
+			fromReset();
+			location.reload();
+		}
+
+		// 전송
+		var url = '/gplcs/uManagePopDelete';
+		var vData = "deleteList=" + addressArr;
+		console.log("a===" + vData);
+		callAjax('POST', url, vData, ftn, getError, 'json');
+	}
+
+	// 입력폼 초기화
+	function fromReset() {
+		$('#pu_name').val('');
+		$('#pu_dc').val('');
+		$('#sm_port').val('');
+	}
+
 	function fnInit(){
 		$('input:checkbox[name=pu_seq]').each(function (i) {
 			if ($(this).is(':checked')){
@@ -284,10 +596,131 @@ $('#div1').scrollTop($('#div1')[0].scrollHeight);
 		}
 		
 	}
-	
-	$(document).ready(function () {
-// 		onClick(null,$("#tree"),zNodes[0]);;
-	});
-</script>
 
+	function uploadFile(){
+		var InputFiles;
+		
+		InputFiles = $("#filestyle-0")[0];
+		var filename =  $("#filestyle-0").val().split('\\').pop();
+	
+		if(InputFiles.files.length === 0){
+				alert("파일을 선택해주세요");
+			return;
+			}
+		
+		var formData = new FormData();
+		formData.append("keyfile", InputFiles.files[0]);
+		//formData.append("keytype", keytype);
+	
+		$.ajax({
+			type:"POST",
+			url: "/file/upload",
+			processData: false,
+			contentType: false,
+			data: formData,
+		success: function(retval){
+			if(retval=="S"){
+				//alert("업로드 성공");
+				//location.reload();
+			}else{
+				//alert("업로드 실패");
+				//location.reload();
+			}
+		},
+		err: function(err){
+			console.log("err:", err)
+		}
+		});
+	
+	}
+	
+	function fnFileDownload(seq, filename, filerealname){
+		
+		$.ajax({
+			type:"POST",
+			url: "/file/download",
+			data: {
+				filename:filename,
+				filerealname:filerealname,
+				seq : seq
+			},
+			success: function(ret){
+				var blob = new Blob([ret], { type: "application/octetstream" });
+	 
+				var isIE = false || !!document.documentMode;
+				if (isIE) {
+					window.navigator.msSaveBlob(blob, filerealname);
+				} else {
+					var url = window.URL || window.webkitURL;
+					var a = $("<a class='openFile'/>");
+				
+					link = url.createObjectURL(blob);
+					a.attr("download", filerealname);
+					a.attr("href", link);
+					$("body").append(a);
+					a[0].click();
+					$(".openFile").remove();
+				}
+			},
+			err: function(err){
+				console.log("err:", err)
+			}
+			});
+	}
+	
+	function deleteFile(seq, filename){
+		
+		console.log("seq : "+seq);
+		console.log("filename : "+filename);
+			$.ajax({
+			type:"POST",
+			url: "/file/delete",
+			data: {
+				seq : seq, 
+				filename : filename
+			},
+			success: function(ret){
+				if(ret=="S"){
+					alert("파일이 정상적으로 삭제되었습니다.");
+				}else{
+					alert("파일 삭제에 실패했습니다. 관리자에게 문의주세요.");
+				}
+				location.reload();
+			},
+			err: function(err){
+				console.log("err:", err)
+			}
+			});
+	}
+
+	function searchView(viewName, page){
+		switch(viewName){
+			case 'classMngrList' : $("#MngeListInfoCurrentPage").val(page); getList(); break;	//	공지사항
+			default :
+		}
+	}
+	/*
+	 * 이전 페이지
+	 */
+	function prevPage(viewName, currentPage){
+		var page = eval(currentPage) - 1;
+			if(page < 1){
+				page = 1;
+			}
+		searchView(viewName, page);
+	}
+	/*
+	 * 다음 페이지
+	 */
+	function nextPage(viewName, currentPage, totalPageSize){
+		var page = eval(currentPage) + 1;
+		var totalPageSize = eval(totalPageSize);
+		if(page > totalPageSize){
+			page = totalPageSize;
+		}
+		searchView(viewName, page);
+	}
+
+</script>
+<script src="/logintemplet/notebook/js/file-input/bootstrap-filestyle.min.js"></script>
 <%@ include file="../template/footer.jsp" %>

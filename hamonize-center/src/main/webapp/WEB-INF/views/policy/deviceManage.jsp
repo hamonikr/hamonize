@@ -190,7 +190,7 @@
 																			placeholder="디바이스에 대한 상세 설명을 입력해주세요."
 																			style="width: 539px;" />
 																	</div>
-																	<button class="btn btn-rounded pull-right btn-sm btn-facebook" id="saveDevice">디바이스 규칙 추가</button>
+																	<button type="button" class="btn btn-rounded pull-right btn-sm btn-facebook" id="saveDevice">디바이스 규칙 추가</button>
 																</div>
 															</div>
 															<footer class="panel-footer " style="border-top: 0;">

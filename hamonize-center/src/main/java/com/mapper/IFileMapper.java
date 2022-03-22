@@ -7,7 +7,7 @@ public interface IFileMapper {
     
     public List <FileVo> getFiles();
     public FileVo getFile(String type);
-    public FileVo getFileSeq(int seq);
+    public FileVo getFileSeq(Long seq);
     public FileVo getFilePublic();
     public FileVo getFilePrivate();
     public FileVo getFileConfig();

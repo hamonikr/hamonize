@@ -31,4 +31,12 @@ public interface IPolicyUpdtMapper {
 	
 	public int updtPolicyProgrmDelete(Map<String, Object> params);
 
+	public List<PolicyUpdtVo> uManagePopList(Map<String, Object> params);
+
+	public int updtPopSave(PolicyUpdtVo vo);
+	
+	public void updtPopDelete(PolicyUpdtVo vo);
+	
+	public int updtPopCount(PolicyUpdtVo vo);
+
 }

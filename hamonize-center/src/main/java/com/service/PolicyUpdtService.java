@@ -9,12 +9,10 @@ import java.util.Map;
 import com.mapper.IOrgMapper;
 import com.mapper.IPolicyProgramMapper;
 import com.mapper.IPolicyUpdtMapper;
-import com.model.PolicyProgrmVo;
 import com.model.PolicyUpdtVo;
+import com.paging.PagingVo;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,6 +155,27 @@ public class PolicyUpdtService {
 
 		return result;
 
+	}
+
+	public List<PolicyUpdtVo> uManagePopList(PolicyUpdtVo vo, PagingVo pagingVo) {
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+
+		paramMap.put("mngeVo", vo);
+		paramMap.put("pagingVo", pagingVo);
+
+		List<PolicyUpdtVo> list = iUpdtMapper.uManagePopList(paramMap);
+
+		return list;
+	}
+
+	public int updtPopSave(PolicyUpdtVo vo) throws Exception{
+		return iUpdtMapper.updtPopSave(vo);
+		
+	}
+	
+	public void updtPopDelete(PolicyUpdtVo vo) throws Exception{
+		iUpdtMapper.updtPopDelete(vo);
 	}
 
 }
