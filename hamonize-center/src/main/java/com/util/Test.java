@@ -1,11 +1,18 @@
 package com.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -639,5 +646,113 @@ public class Test {
       return null;
   
     }
+    @RequestMapping(value="test10")
+    public String addAptRepo()
+	{
+
+    WebClient wc = WebClient.builder()
+      .baseUrl("http://192.168.0.216:8081").build();
+
+		String request = "{\"Name\": \"zzzzzz\"}";
+        Mono<String> response = wc.post()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/repos")
+        .build())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(request))
+        //에러 확인
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+
+
+				String objects = response.block();
+        return objects.toString();
+	}
+
+  @RequestMapping(value="test11")
+    public String publishAptRepo()
+	{
+
+    WebClient wc = WebClient.builder()
+      .baseUrl("http://192.168.0.216:8081").build();
+
+		String request = "{\"SourceKind\": \"local\",\"Sources\": [{\"Name\": \"zzzzzz\"}],\"Architectures\": [\"i386\", \"amd64\"],\"Distribution\": \"zzzzzz\"}";
+        Mono<String> response = wc.post()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/publish")
+        .build())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(request))
+        //에러 확인
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+
+
+				String objects = response.block();
+        return objects.toString();
+	}
+
+  @RequestMapping(value="test12")
+    public String fileuploadRepo() throws IOException
+	{
+
+    WebClient wc = WebClient.builder()
+      .baseUrl("http://192.168.0.216:8081").build();
+      File file = new File("/home/eden/uploads/b3099794-5e1b-4945-aa3b-775f724d4c03.deb");
+      byte[] fileContent = Files.readAllBytes(file.toPath());
+      MultipartBodyBuilder builder = new MultipartBodyBuilder();
+    //builder.part("name", "david");
+    //builder.part("version", "1.1.0");
+    builder.part("uploadfile", new ByteArrayResource(fileContent))
+        .header("Content-Disposition",
+            "form-data; name= uploadfile; filename=b3099794-5e1b-4945-aa3b-775f724d4c03.deb");
+		//String request = "{\"SourceKind\": \"local\",\"Sources\": [{\"Name\": \"zzzzzz\"}],\"Architectures\": [\"i386\", \"amd64\"],\"Distribution\": \"zzzzzz\"}";
+        Mono<String> response = wc.post()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/files/test")
+        .build())
+        .contentType(MediaType.MULTIPART_FORM_DATA)
+        .body(BodyInserters.fromMultipartData(builder.build()))
+        //에러 확인
+      //   .exchange().flatMap(clientResponse -> {
+      //     if (clientResponse.statusCode().is5xxServerError()) {
+      //         clientResponse.body((clientHttpResponse, context) -> {
+      //             return clientHttpResponse.getBody();
+      //         });
+      //         return clientResponse.bodyToMono(String.class);
+      //     }
+      //     else
+      //         return clientResponse.bodyToMono(String.class);
+      // });
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+
+
+				String objects = response.block();
+        return objects.toString();
+	}
 
   }

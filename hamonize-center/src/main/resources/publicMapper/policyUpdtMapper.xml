@@ -14,6 +14,8 @@
 		FROM tbl_policy_package_list
 		WHERE
 			1=1 
+			and domain = #{domain}
+			or domain is null
 			-- and status = 'N' 
 			-- and base_deb_yn = 'N'
 		ORDER  BY pu_seq desc 
@@ -213,6 +215,62 @@
 <select id="getUpdtHistoryLastJob" parameterType="com.model.PolicyUpdtVo" resultType="int">
 		SELECT COALESCE(max(JOB_ID),0) as job_id FROM tbl_updt_applc_history WHERE DOMAIN = #{domain} and ORG_SEQ = #{org_seq}
 		LIMIT 1
+	</select>
+
+	<select id="uManagePopList" resultType="com.model.PolicyUpdtVo" parameterType="java.util.HashMap">
+		select 
+    		TA.*,
+    		TB.ppm_seq
+		from tbl_policy_package_list TA
+			left outer join 
+			(
+			    select
+			     DISTINCT UNNEST(regexp_split_to_array(ARRAY_TO_STRING(ARRAY_AGG(ppm_seq),',') , ',')::int[]) ppm_seq
+			    from tbl_updt_applc where length(ppm_seq) > 0
+			) TB on TA.pu_seq = TB.ppm_seq
+			where TA.domain = #{mngeVo.domain}
+			order by TA.pu_seq desc
+		OFFSET #{pagingVo.limitStart} LIMIT #{pagingVo.recordSize}
+		
+	</select>
+
+	<insert id="updtPopSave" parameterType="com.model.PolicyUpdtVo" useGeneratedKeys="true" keyProperty="pu_seq" keyColumn="pu_seq">
+        INSERT
+        	INTO tbl_policy_package_list (
+						DOMAIN,
+        		PU_NAME,
+						DEB_APPLY_NAME,
+						DEB_NEW_VERSION,
+        		PU_DC,
+        		PU_STATUS,
+						RGSTR_DATE
+        		 ) 
+       		VALUES (
+						 #{domain},
+       			#{pu_name}, 
+        		#{deb_apply_name},
+						#{deb_new_version},
+        		#{pu_dc},
+						'I',
+						now()
+       		)
+	</insert>
+	
+
+	<delete id="updtPopDelete" parameterType="com.model.PolicyUpdtVo">
+		DELETE 
+			FROM tbl_policy_package_list
+		WHERE
+			domain = #{domain} 
+			and pu_seq IN 
+			<foreach collection="deleteList" item="item" separator="," index="index" open="(" close=")">
+				'${deleteList[index]}'::bigint
+			</foreach>
+			
+	</delete>
+
+	<select id="updtPopCount" parameterType="com.model.PolicyUpdtVo" resultType="Integer">
+		SELECT count(*) FROM tbl_policy_package_list where domain = #{domain}
 	</select>
 
 </mapper>

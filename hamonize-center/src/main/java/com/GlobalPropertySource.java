@@ -37,6 +37,9 @@ public class GlobalPropertySource {
 
     @Value("${apt.ip}")
     private String aptIp;
-
+    
+    @Value("${gpg.pass}")
+    private String gpgPass;
+    
 }
 

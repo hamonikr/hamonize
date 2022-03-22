@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.GlobalPropertySource;
 import com.mapper.IOrgMapper;
 import com.mapper.IPcMangrMapper;
 import com.mapper.IPolicyCommonMapper;
@@ -20,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -33,6 +36,9 @@ public class RestApiService {
   WebClient webClient;
 
   @Autowired
+	GlobalPropertySource gs;
+
+  @Autowired
   IOrgMapper orgMapper;
 
   @Autowired
@@ -40,6 +46,111 @@ public class RestApiService {
 
   @Autowired
   IPolicyCommonMapper policyCommonMapper;
+
+  public String addAptRepo(OrgVo orgvo) throws ParseException
+	{
+
+    WebClient wc = WebClient.builder()
+      .baseUrl("http://192.168.0.241:8081").build();
+
+		String request = "{\"Name\": \""+orgvo.getOrg_nm()+"\"}";
+        Mono<String> response = wc.post()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/repos")
+        .build())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(request))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+
+        String objects = response.block();
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+				request = "{\"SourceKind\": \"local\",\"Sources\": [{\"Name\": \""+orgvo.getOrg_nm()+"\"}],\"Architectures\": [\"i386\", \"amd64\"],\"Distribution\": \""+orgvo.getOrg_nm()+"\",\"Signing\": {\"Passphrase\": \""+gs.getGpgPass()+"\",\"Batch\": true}}";
+				response = wc.post()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/publish")
+        .build())
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(request))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+
+			//jsonObj = (JSONObject) jsonParser.parse(response.block());
+			return response.block();
+	}
+
+  public String addAptRepoPackage(OrgVo orgvo,MultipartFile multipartFile) throws ParseException
+	{
+
+    WebClient wc = WebClient.builder()
+      .baseUrl("http://192.168.0.241:8081").build();
+
+      MultipartBodyBuilder builder = new MultipartBodyBuilder();
+      builder.part("file", multipartFile.getResource());
+
+		//String request = "{\"Name\": \""+orgvo.getOrg_nm()+"\"}";
+        Mono<String> response = wc.post()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/files/").path("{id}")
+        .build(orgvo.getDomain()))
+        .contentType(MediaType.MULTIPART_FORM_DATA)
+        .body(BodyInserters.fromMultipartData(builder.build()))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+        System.out.println("block=============="+response.block());
+        //String objects = response.block();
+				//JSONParser jsonParser = new JSONParser();
+				//JSONObject jsonObj = (JSONObject) jsonParser.parse(objects);
+				//request = "{\"SourceKind\": \"local\",\"Sources\": [{\"Name\": \""+orgvo.getOrg_nm()+"\"}],\"Architectures\": [\"i386\", \"amd64\"],\"Distribution\": \""+orgvo.getOrg_nm()+"\",\"Signing\": {\"Passphrase\": \"exitem08\",\"Batch\": true}}";
+				Mono<String> response2 = wc.post()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/repos/").path("{id}/").path("file/{id}")
+        .build(orgvo.getDomain(),orgvo.getDomain()))
+        .contentType(MediaType.APPLICATION_JSON)
+        //.body(BodyInserters.fromValue(request))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+        System.out.println("block=============="+response2.block());
+        String request = "{\"Signing\": {\"Passphrase\": \""+gs.getGpgPass()+"\",\"Batch\": true}}";
+				Mono<String> response3 = wc.put()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/publish/./").path("{id}")
+        .build(orgvo.getDomain()))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(request))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+        System.out.println("block=============="+response3.block());
+			return response.block();
+	}
+
+  public String publishApt(OrgVo orgvo) throws ParseException
+	{
+
+    WebClient wc = WebClient.builder()
+      .baseUrl("http://192.168.0.241:8081").build();
+
+        String request = "{\"Signing\": {\"Passphrase\": \""+gs.getGpgPass()+"\",\"Batch\": true}}";
+				Mono<String> response = wc.put()
+        .uri(UriBuilder -> UriBuilder
+        .path("/api/publish/./").path("{id}")
+        .build(orgvo.getDomain()))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(request))
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .bodyToMono(String.class);
+
+			//jsonObj = (JSONObject) jsonParser.parse(response.block());
+      System.out.println("block=============="+response.block());
+			return response.block();
+	}
 
   public int addRootOrg(OrgVo orgvo) throws ParseException
 	{

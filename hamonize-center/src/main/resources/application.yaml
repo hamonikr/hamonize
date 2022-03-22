@@ -59,6 +59,11 @@ spring:
   devtools:
     livereload:
       enabled: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+        
 
 logging.config: classpath:logback.xml
 
@@ -66,5 +71,5 @@ server:
   port: 8081
 
 
-attach.path: ${user.home}/uploads/adminkeys
+attach.path: ${user.home}/uploads/
 

@@ -114,6 +114,7 @@ public class OrgService {
 				// ansible awx 저장
 				if(orgvo.getP_seq() == 0)
 				{
+					restApiService.addAptRepo(orgvo);
 					snf = restApiService.addRootOrg(orgvo);
 					if(snf == 1){
 						tenantInsert(orgvo);

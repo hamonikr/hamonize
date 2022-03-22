@@ -6,20 +6,24 @@
     <insert id="saveFile" parameterType="com.model.FileVo">   
 		INSERT INTO 
 			tbl_files (
+								domain,
                 filename,
                 filerealname,
                 filepath,
                 filesize,
-                keytype,
-                ins_date
+                kind,
+								p_seq,
+                rgstr_date
 			)
 			VALUES
 			(
+				#{domain},
 			    #{filename},
 			    #{filerealname}, 
 			    #{filepath}, 
 			    #{filesize},
-                #{keytype},
+                #{kind},
+								#{p_seq},
 			    now()
 			)
 	</insert>
@@ -27,25 +31,25 @@
 	<select id="getFile" parameterType="String" resultType="com.model.FileVo" >
 		SELECT * 
 		FROM tbl_files
-		WHERE keytype = #{type}
+		WHERE kind = #{type}
 	</select>
 
 	<select id="getFilePublic" resultType="com.model.FileVo" >
 		SELECT * 
 		FROM tbl_files
-		WHERE keytype = 'public'
+		WHERE kind = 'public'
 	</select>
 
 	<select id="getFilePrivate" resultType="com.model.FileVo" >
 		SELECT * 
 		FROM tbl_files
-		WHERE keytype = 'private'
+		WHERE kind = 'private'
 	</select>
 
 	<select id="getFileConfig" resultType="com.model.FileVo" >
 		SELECT * 
 		FROM tbl_files
-		WHERE keytype = 'adminconfig'
+		WHERE kind = 'adminconfig'
 	</select>
 	
 	<select id="getFiles" resultType="com.model.FileVo" >
