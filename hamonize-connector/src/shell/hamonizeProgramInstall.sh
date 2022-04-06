@@ -19,6 +19,7 @@ Ldap_ip=$(echo $LDAPInfo | awk -F ":" '{print $2}')
 if [ $Ldap_used -eq "Y" ]; then
     echo "Ldap use && Ldap setting" >>$LOGFILE
 
+
     echo -e " \
     ldap-auth-config ldap-auth-config/dbrootlogin boolean true
     ldap-auth-config ldap-auth-config/pam_password select md5
@@ -32,9 +33,9 @@ if [ $Ldap_used -eq "Y" ]; then
     ldap-auth-config ldap-auth-config/dblogin boolean false \
     " | debconf-set-selections
 
-    if [ -f /tmp/debconf-ldap-preseed.txt ]; then
+    # if [ -f /tmp/debconf-ldap-preseed.txt ]; then
 
-        cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
+        # cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
         DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
 
         ## Add /etc/pam.d/common-session
@@ -66,9 +67,11 @@ if [ $Ldap_used -eq "Y" ]; then
         update-rc.d nslcd enable
         systemctl restart nscd
 
-    else
-        echo -e "Where the debconf-ldap-preseed.txt ??\n"
-    fi
+        
+
+    # else
+    #     echo -e "Where the debconf-ldap-preseed.txt ??\n"
+    # fi
 
 fi
 
