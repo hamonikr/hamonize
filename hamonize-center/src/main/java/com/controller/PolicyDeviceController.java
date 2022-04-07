@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
 // import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IPolicyDeviceMapper;
 import com.model.LoginVO;
@@ -63,8 +64,8 @@ public class PolicyDeviceController {
 
 		JSONArray jsonArray = new JSONArray();
 		List<PolicyDeviceVo> pList = null;
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
 		
 		try {
 			OrgVo orgvo = new OrgVo();
@@ -149,8 +150,8 @@ public class PolicyDeviceController {
 			HttpSession session, HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
 		
 		vo.setDomain(lvo.getDomain());
 		// 페이징
@@ -184,8 +185,8 @@ public class PolicyDeviceController {
 	public Map<String, Object> dManagePopSave(HttpSession session, PolicyDeviceVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
 				
 		vo.setDomain(lvo.getDomain());
 		try {
@@ -215,8 +216,8 @@ public class PolicyDeviceController {
 	public Map<String, Object> dManagePopDelete(HttpSession session, PolicyDeviceVo vo)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
 		
 		vo.setDomain(lvo.getDomain());
 		try {

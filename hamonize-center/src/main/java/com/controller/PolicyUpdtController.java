@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IPolicyUpdtMapper;
 import com.model.FileVo;
 import com.model.LoginVO;
@@ -129,7 +130,8 @@ public class PolicyUpdtController {
 				int result = uService.updtCompareSave(params);
 				System.out.println("result====" + result);
 			}
-			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+			SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+			// LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		
 			vo.setDomain(lvo.getDomain());
 			pList = uService.updtList(vo);
@@ -206,8 +208,8 @@ public class PolicyUpdtController {
 			HttpSession session, HttpServletRequest request) {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		JSONArray ja = new JSONArray();
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		
 		vo.setDomain(lvo.getDomain());
 		// 페이징
@@ -239,8 +241,8 @@ public class PolicyUpdtController {
 	public Map<String, Object> uManagePopSave(HttpSession session, PolicyUpdtVo vo,@RequestParam("keyfile") MultipartFile mFile,@RequestParam Map<String,Object> params)
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		vo.setDomain(lvo.getDomain());
 		try {
 			FileVo fvo = new FileVo();
@@ -287,8 +289,8 @@ public class PolicyUpdtController {
 			throws Exception {
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
 		
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo();
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		
 		vo.setDomain(lvo.getDomain());
 		

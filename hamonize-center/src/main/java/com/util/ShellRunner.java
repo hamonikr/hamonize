@@ -58,18 +58,4 @@ public class ShellRunner {
     }
     return map;
   }
-  public static void main(String args[]){
-    String home = System.getProperty("user.home");
-    String cmd = "dpkg --info "+home+"/uploads/1e7642da-ec75-4d71-9124-9ba4b195f8d7.deb | grep Package: \n"
-    +"dpkg --info "+home+"/uploads/1e7642da-ec75-4d71-9124-9ba4b195f8d7.deb | grep Version:";
-    String[] callCmd = {"/bin/bash", "-c", cmd};
-    ShellRunner sr = new ShellRunner();
-    Map map = sr.execCommand(callCmd);
-
-    System.out.println(map);
-    // String home = System.getProperty("user.home");
-    // Process process;
-    // process = Runtime.getRuntime().exec("");
-
-  }
 }

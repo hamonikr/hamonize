@@ -30,7 +30,7 @@ public class AgentAptListController {
 
 		logger.info("gs.getAptIp()  : {}",gs.getAptIp() );
 
-		String apiURL = "http://" + gs.getAptIp() + "/dists/sgb/main/binary-amd64/Packages";
+		String apiURL = "http://" + gs.getAptIp() + "/dists/public/main/binary-amd64/Packages";
 		List<String> list = new ArrayList<String>();
 		URL url = new URL(apiURL);
 

@@ -423,7 +423,7 @@
 			$.each(data.list, function (index, value) {
 				var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 5);
 				if (value.sm_dc == null)
-					value.sm_dc = "설명이 없습니다"
+					value.sm_dc = "설명이 없습니다";
 
 				gbInnerHtml += "<tr data-code='" + value.sm_seq + "'>";
 				gbInnerHtml += "<td>";

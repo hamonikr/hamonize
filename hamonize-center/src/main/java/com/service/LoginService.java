@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.mapper.ILoginMapper;
 import com.model.LoginVO;
 
@@ -35,7 +36,7 @@ public class LoginService {
 	}
 
 
-	public void updateLoginInfo(LoginVO lvo) throws Exception {
+	public void updateLoginInfo(SecurityUser lvo) throws Exception {
 		loginMapper.updateLoginInfo(lvo);
 	}
 

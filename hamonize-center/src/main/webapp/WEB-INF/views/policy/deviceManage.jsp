@@ -603,7 +603,7 @@
 				console.log(code[0]);
 
 				if (value.sm_dc == null)
-					value.sm_dc = "설명이 없습니다"
+					value.sm_dc = "설명이 없습니다";
 
 				gbInnerHtml += "<tr data-code='" + value.sm_seq + "'>";
 				gbInnerHtml += "<td class='t_left'>";

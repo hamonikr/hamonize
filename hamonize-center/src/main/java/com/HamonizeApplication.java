@@ -80,9 +80,9 @@ public class HamonizeApplication {
 	public WebClient webClient()
 	{
 		return WebClient.builder()
-		//.defaultHeaders(header -> header.setBasicAuth("admin","password"))
-		.defaultHeaders(header -> header.setBearerAuth("xIGCOMUmhmmQGynL4V8IwDQDaASWTs"))
-		.baseUrl("http://192.168.0.220")
+		.defaultHeaders(header -> header.setBasicAuth("admin","Nrj7IKnoX8AU2PUzvR25QzKuxtLsOhdk"))
+		//.defaultHeaders(header -> header.setBearerAuth("xIGCOMUmhmmQGynL4V8IwDQDaASWTs"))
+		.baseUrl("http://192.168.0.247:30419")
 		.build();
 	}
 

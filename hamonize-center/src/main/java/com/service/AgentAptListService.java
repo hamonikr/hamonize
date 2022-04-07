@@ -27,7 +27,7 @@ public class AgentAptListService {
 	public List<Map<String, Object>> getApt() throws MalformedURLException {
 
 //		System.out.println("apt url : " + gs.getAptIp());
-		String apiURL = "http://" + gs.getAptIp().trim() + "/dists/hamonize/main/binary-amd64/Packages";
+		String apiURL = "https://" + gs.getAptIp().trim() + "/dists/public/main/binary-amd64/Packages";
 
 		List<String> list = new ArrayList<String>();
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();

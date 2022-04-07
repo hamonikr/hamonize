@@ -29,9 +29,6 @@ $(document).ready(function(){
 		//등록버튼
 		$("#btnSave").click(fnSaveUpdt);
 		$("#btnInit").click(fnInit);
-		if($('form[name=frm] input[name=job_id]').val() > 0){
-			window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
-		}
 
 		//  팝업] 패키지 등록 버튼
 		$('#saveUpdt').on('click', function () {
@@ -68,7 +65,10 @@ $(document).ready(function(){
 				textbox.text('선택된 파일이 없습니다');
 			}
 		});
-		getList();
+		//getList();
+		if($('form[name=frm] input[name=job_id]').val() > 0){
+			window.onload = function() {checkAnsibleJobStatus($('form[name=frm] input[name=job_id]').val())};
+		}
 	});
 
 	//메뉴 Tree onClick
@@ -440,7 +440,7 @@ $('#div1').scrollTop($('#div1')[0].scrollHeight);
 			$.each(data.list, function (index, value) {
 				var no = data.pagingVo.totalRecordSize - (index) - ((data.pagingVo.currentPage - 1) * 5);
 				if (value.pu_dc == null)
-					value.pu_dc = "설명이 없습니다"
+					value.pu_dc = "설명이 없습니다";
 
 				gbInnerHtml += "<tr data-code='" + value.pu_seq + "'>";
 				gbInnerHtml += "<td>";
