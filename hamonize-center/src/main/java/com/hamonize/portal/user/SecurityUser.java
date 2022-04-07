@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class SecurityUser extends User {
 
+    private Long seq;
     private String userid;
     private String passwd;
     private String status;
@@ -25,8 +26,14 @@ public class SecurityUser extends User {
     private String domain;
     private int itemno;
 
+    // sns
+    private String name;
+    private String picture;
+
     public SecurityUser(com.hamonize.portal.user.User user) {
         super(user.getUserid(), user.getPasswd(), makeGrantedAuthority()); 
+        
+        this.seq = user.getSeq();
         this.userid = user.getUserid();
         this.passwd = user.getPasswd();
         this.username = user.getUsername();
