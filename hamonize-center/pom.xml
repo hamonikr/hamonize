@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.2</version>
+		<version>2.6.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com</groupId>
@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Hamonize</name>
 	<description>Hamonize</description>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<properties>
 		<java.version>11</java.version>
@@ -59,11 +59,11 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
-		<dependency>
-				<groupId>postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>9.1-901-1.jdbc4</version>
-		</dependency>
+		<!-- <dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -298,24 +298,24 @@
 
 		<!-- Redis dependency-->
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
-			<version>2.4.2</version>
-		</dependency> -->
+			<version>2.6.2</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.session/spring-session-data-redis -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-data-redis</artifactId>
-			<version>2.4.2</version>
-		</dependency> -->
+			<version>2.6.2</version>
+		</dependency>
 
 		<!-- security dependency-->
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency> -->
+		</dependency>
 
 		<!-- web ssh -->
 		<dependency>

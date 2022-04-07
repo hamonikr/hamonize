@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.model.LoginVO;
 import com.service.LoginService;
 import com.util.RSAUtil;
@@ -115,7 +116,8 @@ public class LoginController implements Serializable {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date time = new Date();
 		String time1 = format1.format(time);
-		LoginVO lvo = (LoginVO) request.getSession().getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) request.getSession().getAttribute("userSession");
+		// LoginVO lvo = (LoginVO) request.getSession().getAttribute("userSession");
 		
 //		logger.info("logout----------->{}", lvo.getUser_id(),">>> ");
 		

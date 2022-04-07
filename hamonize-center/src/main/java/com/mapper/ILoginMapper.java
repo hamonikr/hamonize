@@ -2,6 +2,7 @@ package com.mapper;
 
 import java.util.Map;
 
+import com.hamonize.portal.user.SecurityUser;
 import com.model.LoginVO;
 
 public interface ILoginMapper {
@@ -22,7 +23,7 @@ public interface ILoginMapper {
 
 	void updateLoginStatus(Map<String, Object> params) throws Exception;
 
-	void updateLoginInfo(LoginVO lvo) throws Exception;
+	void updateLoginInfo(SecurityUser lvo) throws Exception;
 
 	LoginVO getSSOLoginInfo(Map<String, String> params) throws Exception;
 

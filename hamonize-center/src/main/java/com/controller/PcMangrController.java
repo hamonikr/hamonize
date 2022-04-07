@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hamonize.portal.user.SecurityUser;
 // import com.hamonize.portal.user.SecurityUser;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
@@ -92,8 +93,8 @@ public class PcMangrController {
 			HttpServletRequest request) {
 
 		Map<String, Object> jsonObject = new HashMap<String, Object>();
-		// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-		LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
+		SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+		// LoginVO lvo = AuthUtil.getLoginSessionInfo(); 
 		vo.setDomain(lvo.getDomain());
 		// 페이징
 		pagingVo.setCurrentPage(vo.getPcListInfoCurrentPage());

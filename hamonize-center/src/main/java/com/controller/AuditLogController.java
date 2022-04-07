@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.hamonize.portal.user.SecurityUser;
 // import com.hamonize.portal.user.SecurityUser;
 import com.influxdb.query.FluxRecord;
 import com.mapper.IAuditLogMapper;
@@ -84,8 +85,8 @@ public class AuditLogController {
 		if (!"".equals(vo.getDate_to()))
 			vo.setDate_to(vo.getDate_to().replaceAll("/", "") + " 23:59:59");
 		
-		// SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
-		LoginVO lvo = (LoginVO) session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
+		// LoginVO lvo = (LoginVO) session.getAttribute("userSession");
 
 		vo.setDomain(lvo.getDomain());
 		
@@ -161,8 +162,8 @@ public class AuditLogController {
 			vo.setDate_to(vo.getDate_to().replaceAll("/", "") + " 23:59:59");
 
 
-		// SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
-		LoginVO lvo = (LoginVO) session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
+		// LoginVO lvo = (LoginVO) session.getAttribute("userSession");
 
 		vo.setDomain(lvo.getDomain());
 		
@@ -284,8 +285,8 @@ public class AuditLogController {
 		pagingVo.setCurrentPage(vo.getCurrentPage());
 		pagingVo = PagingUtil.setDefaultPaging(PagingUtil.DefaultPaging, pagingVo);
 
-		// SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
-		LoginVO lvo = (LoginVO) session.getAttribute("userSession");
+		SecurityUser lvo = (SecurityUser) session.getAttribute("userSession");
+		// LoginVO lvo = (LoginVO) session.getAttribute("userSession");
 
 		vo.setDomain(lvo.getDomain());
 		
@@ -319,8 +320,8 @@ public class AuditLogController {
 	public String updateCheckLog(Model model, @RequestParam Map<String, Object> params) {
 		JSONArray jsonArray = new JSONArray();
 		try {
-			// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+			SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+			// LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		
 			OrgVo orgvo = new OrgVo();
 			orgvo.setDomain(lvo.getDomain());
@@ -390,8 +391,8 @@ public class AuditLogController {
 
 		try {
 			
-			// SecurityUser lvo = AuthUtil.getLoginSessionInfo();
-			LoginVO lvo = AuthUtil.getLoginSessionInfo();
+			SecurityUser lvo = AuthUtil.getLoginSessionInfo();
+			// LoginVO lvo = AuthUtil.getLoginSessionInfo();
 		
 			System.out.println("#########################################" + lvo.getDomain());
 			jsonObject.put("udpt", logService.udptList(params, lvo));

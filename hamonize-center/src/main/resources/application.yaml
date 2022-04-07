@@ -17,16 +17,16 @@ spring:
   #     force: true
   # db1:
   #   datasource:
-  # redis:
-  #   host: 192.168.0.6
-  #   port: 6379
-  #   password: root
+  redis:
+    host: 192.168.0.121
+    port: 6379
+    password: root
   
-  # session: 
-  #   store-type: redis
-  #   redis:
-  #     flush-mode: on-save
-  #     namespace: spring:session
+  session: 
+    store-type: redis
+    redis:
+      flush-mode: on-save
+      namespace: spring:session
 
     #   hikari:
     #     auto-commit: true
@@ -68,7 +68,7 @@ spring:
 logging.config: classpath:logback.xml
 
 server:
-  port: 8081
+  port: 8083
 
 
 attach.path: ${user.home}/uploads/

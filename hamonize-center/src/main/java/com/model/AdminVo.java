@@ -23,10 +23,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name="tbl_admin_user",uniqueConstraints={
-	@UniqueConstraint( columnNames={"user_id"})
-			})
+//@Entity
+// @Table(name="tbl_admin_user",uniqueConstraints={
+// 	@UniqueConstraint( columnNames={"user_id"})
+// 			})
 public class AdminVo extends PagingVo {
 	// 센터 관리자
 	@Size(max=50)
