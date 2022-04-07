@@ -19,7 +19,6 @@ Ldap_ip=$(echo $LDAPInfo | awk -F ":" '{print $2}')
 if [ $Ldap_used -eq "Y" ]; then
     echo "Ldap use && Ldap setting" >>$LOGFILE
 
-
     echo -e " \
     ldap-auth-config ldap-auth-config/dbrootlogin boolean true
     ldap-auth-config ldap-auth-config/pam_password select md5
@@ -35,18 +34,18 @@ if [ $Ldap_used -eq "Y" ]; then
 
     # if [ -f /tmp/debconf-ldap-preseed.txt ]; then
 
-        # cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
-        DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
+    # cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
+    DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
 
-        ## Add /etc/pam.d/common-session
-        sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
+    ## Add /etc/pam.d/common-session
+    sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
 
-        ## update /etc/pam.d/common-passwd
-        sed -i 's/use_authtok//g' /etc/pam.d/common-passwd
+    ## update /etc/pam.d/common-passwd
+    sed -i 's/use_authtok//g' /etc/pam.d/common-passwd
 
-        ## nsswitch.conf
-        mv /etc/nsswitch.conf /etc/nsswitch.conf_bak
-        echo -e "\
+    ## nsswitch.conf
+    mv /etc/nsswitch.conf /etc/nsswitch.conf_bak
+    echo -e "\
         passwd:         files systemd ldap
         group:          files systemd ldap
         shadow:         files ldap
@@ -63,11 +62,20 @@ if [ $Ldap_used -eq "Y" ]; then
         netgroup:       nis
         " >/etc/nsswitch.conf
 
-        pam-auth-update
-        update-rc.d nslcd enable
-        systemctl restart nscd
+    ## sudo settings
+    sudo su <<EOF
+export SUDO_FORCE_REMOVE=yes
+apt-get install sudo-ldap -y
+export SUDO_FORCE_REMOVE=no
+EOF
 
-        
+    echo "sudoers:            files ldap" >>    /etc/nsswitch.conf
+    echo "SUDOERS_BASE    ou=SUDOers,ou=ryan,dc=hamonize,dc=com" >> /etc/ldap.conf
+    sudo ln -s /etc/ldap.conf /etc/sudo-ldap.conf
+
+    DEBIAN_FRONTEND=noninteractive pam-auth-update
+    systemctl restart nscd
+
 
     # else
     #     echo -e "Where the debconf-ldap-preseed.txt ??\n"
