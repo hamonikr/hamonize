@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.1">
 <context>
     <name>AboutDialog</name>
-    <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Translation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>License</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>About Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Contributors</source>
+        <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -32,13 +20,25 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Support Hamonize project with a donation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Current language not translated yet (or native English).
 
 If you&apos;re interested in translating Hamonize into your local or another language or want to improve an existing translation, please contact a Hamonize developer!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Support Hamonize project with a donation</source>
+        <source>License</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -49,7 +49,11 @@ If you&apos;re interested in translating Hamonize into your local or another lan
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Grant access to every authenticated user (default)</source>
+        <source>Restrict access to members of specific user groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User groups backend:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -58,6 +62,14 @@ If you&apos;re interested in translating Hamonize into your local or another lan
     </message>
     <message>
         <source>Process access control rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Grant access to every authenticated user (default)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable usage of domain groups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -81,6 +93,14 @@ If you&apos;re interested in translating Hamonize into your local or another lan
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Move selected rule up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit selected rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Add access control rule</source>
         <translation type="unfinished"></translation>
     </message>
@@ -93,11 +113,11 @@ If you&apos;re interested in translating Hamonize into your local or another lan
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Move selected rule up</source>
+        <source>Missing user groups backend</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Edit selected rule</source>
+        <source>No default user groups plugin was found. Please check your installation!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -122,26 +142,6 @@ If you&apos;re interested in translating Hamonize into your local or another lan
     </message>
     <message>
         <source>The specified user is not allowed to access computers with this configuration.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable usage of domain groups</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>User groups backend:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Missing user groups backend</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No default user groups plugin was found. Please check your installation!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restrict access to members of specific user groups</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -176,6 +176,10 @@ If you&apos;re interested in translating Hamonize into your local or another lan
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Always process rule and ignore conditions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Conditions</source>
         <translation type="unfinished"></translation>
     </message>
@@ -184,7 +188,27 @@ If you&apos;re interested in translating Hamonize into your local or another lan
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>If more than one condition is activated each condition has to meet in order to make the rule apply (logical AND). If only one of multiple conditions has to meet (logical OR) please create multiple access control rules.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accessing computer and local computer are at the same location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No user logged on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>is located at</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Accessing computer is localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Accessing user has one or more groups in common with local (logged on) user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -193,10 +217,6 @@ If you&apos;re interested in translating Hamonize into your local or another lan
     </message>
     <message>
         <source>Accessing user is already connected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If more than one condition is activated each condition has to meet in order to make the rule apply (logical AND). If only one of multiple conditions has to meet (logical OR) please create multiple access control rules.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -233,26 +253,6 @@ If you&apos;re interested in translating Hamonize into your local or another lan
     </message>
     <message>
         <source>Local computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Always process rule and ignore conditions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No user logged on</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Accessing user has one or more groups in common with local (logged on) user</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Accessing computer and local computer are at the same location</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>is located at</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -318,6 +318,26 @@ If you&apos;re interested in translating Hamonize into your local or another lan
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Please perform the following steps to set up key file authentication:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1) Create a key pair on the master computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2) Set an access group whose members should be allowed to access other computers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3) Export the public key and import it on all client computers with the same name.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please refer to the &lt;a href=&quot;https://hamonize.invesume.com/en/latest/admin/index.html&quot;&gt;Hamonize Administrator Manual&lt;/a&gt; for more information.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Key file directories</source>
         <translation type="unfinished"></translation>
     </message>
@@ -331,6 +351,13 @@ If you&apos;re interested in translating Hamonize into your local or another lan
     </message>
     <message>
         <source>Available authentication keys</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An authentication key pair consist of two coupled cryptographic keys, a private and a public key.
+A private key allows users on the master computer to access client computers.
+It is important that only authorized users have read access to the private key file.
+The public key is used on client computers to authenticate incoming connection request.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -387,33 +414,6 @@ If you&apos;re interested in translating Hamonize into your local or another lan
     </message>
     <message>
         <source>Please select a key which to set the access group for!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please perform the following steps to set up key file authentication:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1) Create a key pair on the master computer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2) Set an access group whose members should be allowed to access other computers.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>3) Export the public key and import it on all client computers with the same name.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please refer to the &lt;a href=&quot;https://hamonize.invesume.com/en/latest/admin/index.html&quot;&gt;Hamonize Administrator Manual&lt;/a&gt; for more information.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>An authentication key pair consist of two coupled cryptographic keys, a private and a public key.
-A private key allows users on the master computer to access client computers.
-It is important that only authorized users have read access to the private key file.
-The public key is used on client computers to authenticate incoming connection request.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -583,19 +583,19 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>NAME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This command creates a new authentication key pair with name &lt;NAME&gt; and saves private and public key to the configured key directories. The parameter must be a name for the key, which may only contain letters.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>KEY</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>ACCESS GROUP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This command adjusts file access permissions to &lt;KEY&gt; such that only the user group &lt;ACCESS GROUP&gt; has read access to it.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NAME</source>
+        <source>This command deletes the authentication key &lt;KEY&gt; from the configured key directory. Please note that a key can&apos;t be recovered once it has been deleted.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -607,6 +607,10 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>This command extracts the public key part from the private key &lt;KEY&gt; and saves it as the corresponding public key. When setting up another master computer, it is therefore sufficient to transfer the private key only. The public key can then be extracted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>This command imports the authentication key &lt;KEY&gt; from &lt;FILE&gt;. If &lt;FILE&gt; is not specified a name will be constructed from name and type of &lt;KEY&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -615,7 +619,19 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>ACCESS GROUP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This command adjusts file access permissions to &lt;KEY&gt; such that only the user group &lt;ACCESS GROUP&gt; has read access to it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Please specify the command to display help for!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify the key name (e.g. &quot;teacher/public&quot;) as the first argument.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -632,22 +648,6 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Commands for managing authentication keys</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This command creates a new authentication key pair with name &lt;NAME&gt; and saves private and public key to the configured key directories. The parameter must be a name for the key, which may only contain letters.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This command deletes the authentication key &lt;KEY&gt; from the configured key directory. Please note that a key can&apos;t be recovered once it has been deleted.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This command extracts the public key part from the private key &lt;KEY&gt; and saves it as the corresponding public key. When setting up another master computer, it is therefore sufficient to transfer the private key only. The public key can then be extracted.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please specify the key name (e.g. &quot;teacher/public&quot;) as the first argument.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -673,7 +673,27 @@ The public key is used on client computers to authenticate incoming connection r
 <context>
     <name>BuiltinDirectoryConfigurationPage</name>
     <message>
+        <source>Locations &amp; computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Builtin directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add new computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove selected computer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -689,30 +709,6 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Add new computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remove selected computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Builtin directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Locations &amp; computers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Locations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Add new location</source>
         <translation type="unfinished"></translation>
     </message>
@@ -721,11 +717,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>The import of CSV files is possible through the command line interface. For more information, see the &lt;a href=&quot;https://docs.veyon.io/en/latest/admin/cli.html#network-object-directory&quot;&gt;online documentation&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>New location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The import of CSV files is possible through the command line interface. For more information, see the &lt;a href=&quot;https://docs.veyon.io/en/latest/admin/cli.html#network-object-directory&quot;&gt;online documentation&lt;/a&gt;.</source>
+        <source>New computer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -733,106 +733,6 @@ The public key is used on client computers to authenticate incoming connection r
     <name>BuiltinDirectoryPlugin</name>
     <message>
         <source>Show help for specific command</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Import objects from given file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export objects to given file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid type specified. Valid values are &quot;%1&quot; or &quot;%2&quot;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Host address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MAC address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Specified object not found.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File &quot;%1&quot; does not exist!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Can&apos;t open file &quot;%1&quot; for reading!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown argument &quot;%1&quot;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer &quot;%1&quot; (host address: &quot;%2&quot; MAC address: &quot;%3&quot;)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unclassified object &quot;%1&quot; with ID &quot;%2&quot;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Root</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error while parsing line %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Network object directory which stores objects in local configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commands for managing the builtin network object directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No format string or regular expression specified!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Can&apos;t open file &quot;%1&quot; for writing!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No format string specified!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Object UUID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parent UUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -856,15 +756,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Location &quot;%1&quot;</source>
+        <source>Import objects from given file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Builtin (computers and locations in local configuration)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Location</source>
+        <source>Export objects to given file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -924,6 +820,14 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>HOST ADDRESS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MAC ADDRESS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>PARENT</source>
         <translation type="unfinished"></translation>
     </message>
@@ -956,19 +860,115 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Invalid type specified. Valid values are &quot;%1&quot; or &quot;%2&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Object UUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parent UUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Host address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MAC address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specified object not found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File &quot;%1&quot; does not exist!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t open file &quot;%1&quot; for reading!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown argument &quot;%1&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No format string or regular expression specified!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t open file &quot;%1&quot; for writing!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No format string specified!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Location &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer &quot;%1&quot; (host address: &quot;%2&quot; MAC address: &quot;%3&quot;)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unclassified object &quot;%1&quot; with ID &quot;%2&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error while parsing line %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network object directory which stores objects in local configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Builtin (computers and locations in local configuration)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Commands for managing the builtin network object directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Root</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&quot;Room 01&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&quot;Computer 01&quot;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HOST ADDRESS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MAC ADDRESS</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -989,11 +989,23 @@ The public key is used on client computers to authenticate incoming connection r
 <context>
     <name>ComputerControlListModel</name>
     <message>
+        <source>Location: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Host/IP address: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Active features: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[no user]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1006,6 +1018,10 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Computer offline or switched off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hamonize Server unreachable or not running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1024,31 +1040,15 @@ The public key is used on client computers to authenticate incoming connection r
         <source>Logged on user: %1</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Location: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>[no user]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>invalid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Veyon Server unreachable or not running</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ComputerControlServer</name>
     <message>
-        <source>Hamonize Service %1 at %2:%3</source>
+        <source>Authentication error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Authentication error</source>
+        <source>User &quot;%1&quot; at host &quot;%2&quot; attempted to access this computer but could not authenticate successfully.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1060,15 +1060,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>User &quot;%1&quot; at host &quot;%2&quot; attempted to access this computer but could not authenticate successfully.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Access control error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>User &quot;%1&quot; at host &quot;%2&quot; attempted to access this computer but has been blocked due to access control settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hamonize Service %1 at %2:%3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1091,11 +1091,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Location detection failed</source>
+        <source>Computer name;Hostname;User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Computer name;Hostname;User</source>
+        <source>Location detection failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1137,42 +1137,6 @@ The public key is used on client computers to authenticate incoming connection r
 <context>
     <name>ConfigCommandLinePlugin</name>
     <message>
-        <source>Please specify an existing configuration file to import.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please specify a valid filename for the configuration export.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please specify a valid key.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Specified key does not exist in current configuration!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please specify a valid value.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Configure Hamonize at command line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output file is not writable!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output directory is not writable!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Configuration file is not readable!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Clear system-wide Hamonize configuration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1201,11 +1165,47 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Commands for managing the configuration of Hamonize</source>
+        <source>Upgrade and save configuration of program and plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Upgrade and save configuration of program and plugins</source>
+        <source>Please specify an existing configuration file to import.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configuration file is not readable!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify a valid filename for the configuration export.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output file is not writable!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output directory is not writable!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify a valid key.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Specified key does not exist in current configuration!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify a valid value.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configure Hamonize at command line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Commands for managing the configuration of Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1224,11 +1224,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Configuration is not writable. Please check your permissions!</source>
+        <source>Could not apply platform-specific configuration settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Could not apply platform-specific configuration settings.</source>
+        <source>Configuration is not writable. Please check your permissions!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1250,15 +1250,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source> ms</source>
+        <source>Update interval</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Key frame interval</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Memory limit</source>
+        <source>Slow down thumbnail updates while demo is running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1266,38 +1262,30 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Update interval</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source> s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Slow down thumbnail updates while demo is running</source>
+        <source> ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Memory limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Key frame interval</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DemoFeaturePlugin</name>
     <message>
-        <source>Stop demo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Window demo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Give a demonstration by screen broadcasting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>In this mode your screen being displayed in a window on all computers. The users are able to switch to other windows as needed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Demo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop demo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1306,6 +1294,10 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Full screen demo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Window demo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1318,6 +1310,10 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Share your own screen in a window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>In this mode your screen being displayed in a window on all computers. The users are able to switch to other windows as needed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1352,6 +1348,10 @@ The public key is used on client computers to authenticate incoming connection r
         <source>Screen %1 [%2]</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Give a demonstration by screen broadcasting</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DesktopAccessDialog</name>
@@ -1364,15 +1364,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>The user %1 at computer %2 wants to access your desktop. Do you want to grant access?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Never for this session</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Always for this session</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The user %1 at computer %2 wants to access your desktop. Do you want to grant access?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1430,19 +1430,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Click this button to run a program on all computers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Open website</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Click this button to open a website on all computers.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Start programs and services in user desktop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Click this button to run a program on all computers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1461,6 +1457,10 @@ The public key is used on client computers to authenticate incoming connection r
         <source>Custom website</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Start programs and services in user desktop</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DocumentationFigureCreator</name>
@@ -1470,6 +1470,10 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Room %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>generic-student-user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1502,10 +1506,6 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Texts to read</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>generic-student-user</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1587,6 +1587,10 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Overwrite existing files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Transfer only</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1606,10 +1610,6 @@ The public key is used on client computers to authenticate incoming connection r
         <source>Start</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Overwrite existing files</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>FileTransferPlugin</name>
@@ -1626,10 +1626,6 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Transfer files to remote computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Received file &quot;%1&quot;.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1639,6 +1635,10 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Could not receive file &quot;%1&quot; as it could not be opened for writing!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transfer files to remote computer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1658,6 +1658,42 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Hamonize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Logon authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Key file authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network object directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backend:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update interval:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> seconds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1697,11 +1733,19 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Limit log file size</source>
+        <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear all log files</source>
+        <source>Rotate log files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> MB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit log file size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1709,15 +1753,19 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Network object directory</source>
+        <source>Write to logging system of operating system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Backend:</source>
+        <source>Clear all log files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Update interval:</source>
+        <source>Authentication is set up properly on this computer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Authentication keys are not set up properly on this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1742,54 +1790,6 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Could not remove all log files.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> MB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rotate log files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>x</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source> seconds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Write to logging system of operating system</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Authentication</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Method:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Logon authentication</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Key file authentication</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Authentication is set up properly on this computer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Authentication keys are not set up properly on this computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1829,7 +1829,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>LDAP server and port</source>
+        <source>Anonymous bind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use bind credentials</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1841,23 +1845,47 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Anonymous bind</source>
+        <source>LDAP server and port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Use bind credentials</source>
+        <source>Connection security</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TLS certificate verification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encryption protocol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Never (insecure!)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom CA certificate file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Base DN</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fixed base DN</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. dc=example,dc=org</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1869,6 +1897,14 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Fixed base DN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. dc=example,dc=org</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Environment settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1877,19 +1913,19 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>(only if different from group tree)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Computer tree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>e.g. OU=Groups</source>
+        <source>Perform recursive search operations in object trees</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>User tree</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. OU=Users</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1901,7 +1937,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Perform recursive search operations in object trees</source>
+        <source>Computer group tree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. OU=Users</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. OU=Groups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1909,7 +1953,23 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>e.g. hwAddress</source>
+        <source>e.g. name or description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hostnames stored as fully qualified domain names (FQDN, e.g. myhost.example.org)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. room or computerLab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User login name attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer location attribute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1917,7 +1977,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>e.g. dNSHostName</source>
+        <source>Group member attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. hwAddress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1925,11 +1989,27 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Group member attribute</source>
+        <source>e.g. dNSHostName</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>e.g. uid or sAMAccountName</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer display name attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer hostname attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Location name attribute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. cn or displayName</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1941,7 +2021,19 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Filter for user groups</source>
+        <source>Filter for computer groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. (objectClass=computer)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. (objectClass=group)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. (objectClass=person)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1949,7 +2041,31 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Filter for computer groups</source>
+        <source>Filter for computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter for user groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. (objectClass=room) or (objectClass=computerLab)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter for computer containers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>e.g. (objectClass=container) or (objectClass=organizationalUnit)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Query options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Query nested user groups (supported by AD only)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1958,6 +2074,34 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Distinguished name (Samba/AD)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configured attribute for user login name or computer hostname (OpenLDAP)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer locations identification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Identify computer locations (e.g. rooms) via:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer containers or OUs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Location attribute in computer objects</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Integration tests</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1973,19 +2117,19 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>LDAP connection failed</source>
+        <source>List all entries of a location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>LDAP bind failed</source>
+        <source>List all locations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>LDAP bind successful</source>
+        <source>Browse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Successfully connected to the LDAP server and performed an LDAP bind. The basic LDAP settings are configured correctly.</source>
+        <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1993,11 +2137,29 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Could not query the configured base DN. Please check the base DN parameter.
+
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>LDAP base DN test successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>The LDAP base DN has been queried successfully. The following entries were found:
+
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>LDAP naming context test failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not query the base DN via naming contexts. Please check the naming context attribute parameter.
+
+%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2019,6 +2181,10 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>computer tree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>computer group tree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2054,11 +2220,35 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enter computer name</source>
+        <source>Enter computer display name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter a computer display name to query:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>computer objects</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter computer name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter a computer hostname to query:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid hostname</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You configured computer hostnames to be stored as fully qualified domain names (FQDN) but entered a hostname without domain.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You configured computer hostnames to be stored as simple hostnames without a domain name but entered a hostname with a domain name part.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2074,6 +2264,22 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Enter computer location name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter the name of a computer location (wildcards allowed):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>computer locations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter location name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>users</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2082,7 +2288,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>computer groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>computer containers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2098,11 +2312,27 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Could not find a user with the name &quot;%1&quot;. Please check the username or the user tree parameter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter hostname</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter a computer hostname whose group memberships to query:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>groups of computer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Computer not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not find a computer with the hostname &quot;%1&quot;. Please check the hostname or the computer tree parameter.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2114,11 +2344,61 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>computers</source>
+        <source>Hostname lookup failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not lookup hostname for IP address %1. Please check your DNS server settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter the name of a location whose entries to query:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>location entries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Certificate files (*.pem)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LDAP connection failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not connect to the LDAP server. Please check the server parameters.
+
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LDAP bind failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not bind to the LDAP server. Please check the server parameters and bind credentials.
+
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LDAP bind successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Successfully connected to the LDAP server and performed an LDAP bind. The basic LDAP settings are configured correctly.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>LDAP %1 test failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not query any entries in configured %1. Please check the parameter &quot;%2&quot;.
+
+%3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2127,6 +2407,24 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>The %1 has been queried successfully and %2 entries were found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LDAP test failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not query any %1. Please check the parameter(s) %2 and enter the name of an existing object.
+
+%3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>and</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LDAP test successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2153,304 +2451,6 @@ The public key is used on client computers to authenticate incoming connection r
         <source>%1 %2 have been queried successfully using the configured filter.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>(only if different from group tree)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer group tree</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>computer group tree</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filter for computers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. room or computerLab</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Integration tests</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer groups</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. name or description</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filter for computer containers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer containers or OUs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Connection security</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TLS certificate verification</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>System defaults</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Never (insecure!)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom CA certificate file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TLS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. (objectClass=computer)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. (objectClass=group)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. (objectClass=person)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. (objectClass=room) or (objectClass=computerLab)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. (objectClass=container) or (objectClass=organizationalUnit)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not query the configured base DN. Please check the base DN parameter.
-
-%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The LDAP base DN has been queried successfully. The following entries were found:
-
-%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not query the base DN via naming contexts. Please check the naming context attribute parameter.
-
-%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Certificate files (*.pem)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not connect to the LDAP server. Please check the server parameters.
-
-%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not bind to the LDAP server. Please check the server parameters and bind credentials.
-
-%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Encryption protocol</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer location attribute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer display name attribute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Location name attribute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>e.g. cn or displayName</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer locations identification</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Identify computer locations (e.g. rooms) via:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Location attribute in computer objects</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>List all entries of a location</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>List all locations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enter computer display name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please enter a computer display name to query:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enter computer location name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please enter the name of a computer location (wildcards allowed):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>computer locations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enter location name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please enter the name of a location whose entries to query:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>location entries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>LDAP test failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not query any %1. Please check the parameter(s) %2 and enter the name of an existing object.
-
-%3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>and</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>LDAP test successful</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not query any entries in configured %1. Please check the parameter &quot;%2&quot;.
-
-%3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Browse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hostnames stored as fully qualified domain names (FQDN, e.g. myhost.example.org)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Computer hostname attribute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please enter a computer hostname to query:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid hostname</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You configured computer hostnames to be stored as fully qualified domain names (FQDN) but entered a hostname without domain.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You configured computer hostnames to be stored as simple hostnames without a domain name but entered a hostname with a domain name part.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not find a user with the name &quot;%1&quot;. Please check the username or the user tree parameter.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enter hostname</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please enter a computer hostname whose group memberships to query:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not find a computer with the hostname &quot;%1&quot;. Please check the hostname or the computer tree parameter.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hostname lookup failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not lookup hostname for IP address %1. Please check your DNS server settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>User login name attribute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Configured attribute for user login name or computer hostname (OpenLDAP)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>computer containers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Query options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Query nested user groups (supported by AD only)</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>LdapPlugin</name>
@@ -2464,18 +2464,6 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Show help about command</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commands for configuring and testing LDAP/AD integration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 (load computers and locations from LDAP/AD)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 (load users and groups from LDAP/AD)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2498,6 +2486,18 @@ The public key is used on client computers to authenticate incoming connection r
         <source>Basic LDAP/AD support for Veyon</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Commands for configuring and testing LDAP/AD integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 (load computers and locations from LDAP/AD)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 (load users and groups from LDAP/AD)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LinuxPlatformConfigurationPage</name>
@@ -2506,19 +2506,11 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Custom PAM service for user authentication</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>User authentication</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>User login</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Login key sequence</source>
+        <source>Custom PAM service for user authentication</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2527,6 +2519,14 @@ The public key is used on client computers to authenticate incoming connection r
     </message>
     <message>
         <source>Minimum session lifetime before server start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Login key sequence</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2566,67 +2566,11 @@ The public key is used on client computers to authenticate incoming connection r
 <context>
     <name>MainWindow</name>
     <message>
-        <source>toolBar</source>
+        <source>Hamonize Configurator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>L&amp;oad settings from file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About Qt</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Authentication impossible</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Configuration not writable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load settings from file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save settings to file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unsaved settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>There are unsaved settings. Quit anyway?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2642,7 +2586,71 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Save settings to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save settings to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+S</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L&amp;oad settings from file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+O</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>About Hamonize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About Qt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Standard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hamonize Master</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust size of computer icons automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2654,11 +2662,83 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Search users and computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Align computers to grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use custom computer arrangement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only show powered on computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Locations &amp;&amp; computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screenshots</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slideshow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spotlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>toolBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load settings from file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>JSON files (*.json)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Do you really want to reset the local configuration and revert all settings to their defaults?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 Configurator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unsaved settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There are unsaved settings. Quit anyway?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Insufficient privileges</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not start with administrative privileges. Please make sure a sudo-like program is installed for your desktop environment! The program will be run with normal user privileges.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configuration not writable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The local configuration backend reported that the configuration is not writable! Please run the %1 Configurator with higher privileges.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Authentication impossible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2674,10 +2754,6 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Screenshots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Feature active</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2685,85 +2761,13 @@ The public key is used on client computers to authenticate incoming connection r
         <source>The feature &quot;%1&quot; is still active. Please stop it before closing %2.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Reset configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Do you really want to reset the local configuration and revert all settings to their defaults?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Search users and computers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Align computers to grid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 Configurator</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Insufficient privileges</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Could not start with administrative privileges. Please make sure a sudo-like program is installed for your desktop environment! The program will be run with normal user privileges.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Only show powered on computers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Save settings to file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;View</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Standard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Advanced</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use custom computer arrangement</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Locations &amp;&amp; computers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slideshow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Spotlight</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Adjust size of computer icons automatically</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hamonize Configurator</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hamonize Master</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>MasterConfigurationPage</name>
+    <message>
+        <source>Basic settings</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Directories</source>
         <translation type="unfinished"></translation>
@@ -2773,51 +2777,7 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Feature on computer double click:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Features</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>All features</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disabled features</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Screenshots</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;no feature&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Basic settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Behaviour</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enforce selected mode for client computers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide local computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide computer filter field</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Actions such as rebooting or powering down computers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2825,23 +2785,15 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Background color</source>
+        <source>Text color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Thumbnail update interval</source>
+        <source> px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source> ms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Program start</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Modes and features</source>
+        <source>Thumbnail spacing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2857,11 +2809,7 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Computer thumbnail caption</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Text color</source>
+        <source>Computer and user name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2869,7 +2817,51 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Computer and user name</source>
+        <source>Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Computer thumbnail caption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thumbnail update interval</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Background color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Thumbnail aspect ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Behaviour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Program start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Perform access control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically select current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically adjust computer icon size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically open computer select panel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2885,23 +2877,7 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Hide empty locations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show confirmation dialog for potentially unsafe actions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Perform access control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Automatically select current location</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Automatically open computer select panel</source>
+        <source>Hide local computer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2909,38 +2885,62 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source> px</source>
+        <source>Hide empty locations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Thumbnail spacing</source>
+        <source>Hide computer filter field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Auto</source>
+        <source>Modes and features</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Thumbnail aspect ratio</source>
+        <source>Enforce selected mode for client computers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Automatically adjust computer icon size</source>
+        <source>Actions such as rebooting or powering down computers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show confirmation dialog for potentially unsafe actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Feature on computer double click:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open feature windows on the same screen as the main window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;no feature&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MonitoringMode</name>
     <message>
-        <source>Monitoring</source>
+        <source>Builtin monitoring mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Builtin monitoring mode</source>
+        <source>Monitoring</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2985,15 +2985,19 @@ The public key is used on client computers to authenticate incoming connection r
 <context>
     <name>PasswordDialog</name>
     <message>
+        <source>Hamonize Logon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter your username and password in order to access computers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Username</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Password</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hamonize Logon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3004,13 +3008,13 @@ The public key is used on client computers to authenticate incoming connection r
         <source>Logon failed with given username and password. Please try again!</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Please enter your username and password in order to access computers.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>PowerControlFeaturePlugin</name>
+    <message>
+        <source>Power on a computer via Wake-on-LAN (WOL)</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Power on</source>
         <translation type="unfinished"></translation>
@@ -3036,46 +3040,6 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Power on/down or reboot a computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Confirm reboot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Confirm power down</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Do you really want to reboot the selected computers?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Power on a computer via Wake-on-LAN (WOL)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MAC ADDRESS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This command broadcasts a Wake-on-LAN (WOL) packet to the network in order to power on the computer with the given MAC address.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please specify the command to display help for!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid MAC address specified!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commands for controlling power status of computers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Power down now</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3092,6 +3056,46 @@ The public key is used on client computers to authenticate incoming connection r
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>MAC ADDRESS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This command broadcasts a Wake-on-LAN (WOL) packet to the network in order to power on the computer with the given MAC address.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify the command to display help for!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm reboot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to reboot &lt;b&gt;ALL&lt;/b&gt; computers?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to reboot the selected computers?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm power down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to power down &lt;b&gt;ALL&lt;/b&gt; computers?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to power down the selected computers?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid MAC address specified!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The computer was remotely requested to power down. Do you want to power down the computer now?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3102,15 +3106,11 @@ Please save your work and close all programs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do you really want to reboot &lt;b&gt;ALL&lt;/b&gt; computers?</source>
+        <source>Power on/down or reboot a computer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do you really want to power down &lt;b&gt;ALL&lt;/b&gt; computers?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Do you really want to power down the selected computers?</source>
+        <source>Commands for controlling power status of computers</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3152,11 +3152,11 @@ Please save your work and close all programs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remote access</source>
+        <source>Show help about command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remote view or control a computer</source>
+        <source>Remote access</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3164,7 +3164,7 @@ Please save your work and close all programs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show help about command</source>
+        <source>Remote view or control a computer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3194,11 +3194,19 @@ Please save your work and close all programs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3241,31 +3249,19 @@ Please save your work and close all programs.</source>
         <source>Connected.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Screenshot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>RunProgramDialog</name>
-    <message>
-        <source>Please enter the programs or commands to run on the selected computer(s). You can separate multiple programs/commands by line.</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Run programs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>e.g. &quot;C:\Program Files\VideoLAN\VLC\vlc.exe&quot;</source>
+        <source>Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Name:</source>
+        <source>e.g. &quot;C:\Program Files\VideoLAN\VLC\vlc.exe&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3274,6 +3270,10 @@ Please save your work and close all programs.</source>
     </message>
     <message>
         <source>e.g. VLC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please enter the programs or commands to run on the selected computer(s). You can separate multiple programs/commands by line.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3285,10 +3285,6 @@ Please save your work and close all programs.</source>
     </message>
     <message>
         <source>Unlock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Lock screen and input devices of a computer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3305,6 +3301,10 @@ Please save your work and close all programs.</source>
     </message>
     <message>
         <source>To reclaim all user&apos;s full attention you can lock their computers using this button. In this mode all input devices are locked while the desktop is still visible.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock screen and input devices of a computer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3396,60 +3396,7 @@ Please save your work and close all programs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Autostart</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide tray icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Start service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stopped</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stop service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>State:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable firewall exception</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Allow connections from localhost only</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>VNC server</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Plugin:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Restart %1 Service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>All settings were saved successfully. In order to take effect the %1 service needs to be restarted. Restart it now?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Running</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enabling this option will make the service launch a server process for every interactive session on a computer.
-Typically this is required to support terminal servers.</source>
+        <source>Show notification when an unauthorized access is blocked</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3457,7 +3404,27 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show notification when an unauthorized access is blocked</source>
+        <source>Hide tray icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Autostart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>State:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop service</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3466,6 +3433,11 @@ Typically this is required to support terminal servers.</source>
     </message>
     <message>
         <source>Single session mode (create server instance for local/physical session only)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabling this option will make the service launch a server process for every interactive session on a computer.
+Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3500,23 +3472,51 @@ Typically this is required to support terminal servers.</source>
         <source>Miscellaneous network settings</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Enable firewall exception</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow connections from localhost only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VNC server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugin:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restart Hamonize Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All settings were saved successfully. In order to take effect the Hamonize service needs to be restarted. Restart it now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Running</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ServiceControl</name>
     <message>
-        <source>Starting service %1</source>
+        <source>Starting service Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Stopping service %1</source>
+        <source>Stopping service Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Registering service %1</source>
+        <source>Registering service Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unregistering service %1</source>
+        <source>Unregistering service Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3526,18 +3526,6 @@ Typically this is required to support terminal servers.</source>
 </context>
 <context>
     <name>ServiceControlPlugin</name>
-    <message>
-        <source>Service is running</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Service is not running</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Configure and control Hamonize service</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Register Hamonize Service</source>
         <translation type="unfinished"></translation>
@@ -3563,6 +3551,18 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Service is running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service is not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configure and control Hamonize service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Commands for configuring and controlling Hamonize Service</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3578,11 +3578,11 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Commands for shell functionalities</source>
+        <source>Interactive shell and script execution for Veyon Control</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Interactive shell and script execution for Veyon Control</source>
+        <source>Commands for shell functionalities</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3608,6 +3608,10 @@ Typically this is required to support terminal servers.</source>
 <context>
     <name>SpotlightPanel</name>
     <message>
+        <source>Add computers by clicking with the middle mouse button or clicking the first button below.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Add selected computers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3629,10 +3633,6 @@ Typically this is required to support terminal servers.</source>
     </message>
     <message>
         <source>Please select at least one computer to remove.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add computers by clicking with the middle mouse button or clicking the first button below.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3657,11 +3657,11 @@ Typically this is required to support terminal servers.</source>
 <context>
     <name>TestingCommandLinePlugin</name>
     <message>
-        <source>Commands for testing internal components and functions of Hamonize</source>
+        <source>Test internal Veyon components and functions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Test internal Veyon components and functions</source>
+        <source>Commands for testing internal components and functions of Hamonize</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3698,11 +3698,11 @@ Typically this is required to support terminal servers.</source>
 <context>
     <name>UltraVncConfigurationWidget</name>
     <message>
-        <source>Enable capturing of layered (semi-transparent) windows</source>
+        <source>Builtin UltraVNC server configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Poll full screen (leave this enabled per default)</source>
+        <source>Maximum CPU usage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3710,11 +3710,7 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Builtin UltraVNC server configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable multi monitor support</source>
+        <source>Poll full screen (leave this enabled per default)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3722,7 +3718,11 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Maximum CPU usage</source>
+        <source>Enable multi monitor support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable capturing of layered (semi-transparent) windows</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3779,15 +3779,15 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Do you really want to log off &lt;b&gt;ALL&lt;/b&gt; users?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Do you really want to log off the selected users?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>User session control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Do you really want to log off &lt;b&gt;ALL&lt;/b&gt; users?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3984,22 +3984,6 @@ Typically this is required to support terminal servers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Screen lock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide taskbar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide start menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide desktop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>User authentication</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4021,6 +4005,22 @@ Typically this is required to support terminal servers.</source>
     </message>
     <message>
         <source>Confirm legal notice (message displayed before user logs in)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide taskbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide start menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide desktop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
