@@ -70,7 +70,7 @@ export SUDO_FORCE_REMOVE=no
 EOF
 
     echo "sudoers:            files ldap" >>    /etc/nsswitch.conf
-    echo "SUDOERS_BASE    ou=SUDOers,ou=ryan,dc=hamonize,dc=com" >> /etc/ldap.conf
+    echo "SUDOERS_BASE    ou=SUDOers,ou=$DOMAININFO,dc=hamonize,dc=com" >> /etc/ldap.conf
     sudo ln -s /etc/ldap.conf /etc/sudo-ldap.conf
 
     DEBIAN_FRONTEND=noninteractive pam-auth-update
