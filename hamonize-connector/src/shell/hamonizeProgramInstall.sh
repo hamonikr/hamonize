@@ -32,20 +32,20 @@ if [ $Ldap_used -eq "Y" ]; then
     ldap-auth-config ldap-auth-config/dblogin boolean false \
     " | debconf-set-selections
 
-    if [ -f /tmp/debconf-ldap-preseed.txt ]; then
+    # if [ -f /tmp/debconf-ldap-preseed.txt ]; then
 
-        cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
-        DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
+    # cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
+    DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
 
-        ## Add /etc/pam.d/common-session
-        sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
+    ## Add /etc/pam.d/common-session
+    sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
 
-        ## update /etc/pam.d/common-passwd
-        sed -i 's/use_authtok//g' /etc/pam.d/common-passwd
+    ## update /etc/pam.d/common-passwd
+    sed -i 's/use_authtok//g' /etc/pam.d/common-passwd
 
-        ## nsswitch.conf
-        mv /etc/nsswitch.conf /etc/nsswitch.conf_bak
-        echo -e "\
+    ## nsswitch.conf
+    mv /etc/nsswitch.conf /etc/nsswitch.conf_bak
+    echo -e "\
         passwd:         files systemd ldap
         group:          files systemd ldap
         shadow:         files ldap
@@ -62,13 +62,24 @@ if [ $Ldap_used -eq "Y" ]; then
         netgroup:       nis
         " >/etc/nsswitch.conf
 
-        pam-auth-update
-        update-rc.d nslcd enable
-        systemctl restart nscd
+    ## sudo settings
+    sudo su <<EOF
+export SUDO_FORCE_REMOVE=yes
+apt-get install sudo-ldap -y
+export SUDO_FORCE_REMOVE=no
+EOF
 
-    else
-        echo -e "Where the debconf-ldap-preseed.txt ??\n"
-    fi
+    echo "sudoers:            files ldap" >>    /etc/nsswitch.conf
+    echo "SUDOERS_BASE    ou=SUDOers,ou=$DOMAININFO,dc=hamonize,dc=com" >> /etc/ldap.conf
+    sudo ln -s /etc/ldap.conf /etc/sudo-ldap.conf
+
+    DEBIAN_FRONTEND=noninteractive pam-auth-update
+    systemctl restart nscd
+
+
+    # else
+    #     echo -e "Where the debconf-ldap-preseed.txt ??\n"
+    # fi
 
 fi
 
@@ -175,9 +186,10 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
 fi
 
 sleep 2
-#== hamonize-user  =================================================
-if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
-    echo "$DATETIME ] 8.  hamonize-user install ============== [start]" >>$LOGFILE
+#== Hamonize Remote Tool  =================================================
+if [ $(dpkg-query -W | grep hamonize-admin | wc -l) = 0 ]; then
+# if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
+    echo "$DATETIME ] 8.  Hamonize Remote Tool install ============== [start]" >>$LOGFILE
 
     # TENANT=$(cat /etc/hamonize/hamonize_tanent)
     mkdir -p /etc/hamonize/keys
@@ -206,63 +218,72 @@ if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
 
     OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
     if [ "${OSGUBUN}" = "HAMONIKR" ] || [ "${OSGUBUN}" = "LINUXMINT" ] || [ "${OSGUBUN}" = "UBUNTU" ]; then
-        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url')
+        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-admin.*amd.*deb$")) .browser_download_url')
+        # JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*amd.*deb$")) .browser_download_url')
         JSONDATA=${JSONDATA#\"}
         JSONDATA=${JSONDATA%\"}
         wget -P /tmp ${JSONDATA} >>$LOGFILE
-        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-admin*.deb >>$LOGFILE
+        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
         # sudo apt-get install -y hamonize-user >>$LOGFILE
     elif [ "${OSGUBUN}" = "DEBIAN" ]; then
-        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url')
+        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-admin.*debian.*deb$")) .browser_download_url')
+        # JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*debian.*deb$")) .browser_download_url')
         JSONDATA=${JSONDATA#\"}
         JSONDATA=${JSONDATA%\"}
         wget -P /tmp ${JSONDATA#\"} >>$LOGFILE
-        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-admin*.deb >>$LOGFILE
+        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
     elif [ "${OSGUBUN}" = "GOOROOM" ]; then
-        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url')
+        JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-admin.*gooroom.*deb$")) .browser_download_url')
+        # JSONDATA=$(curl -s https://api.github.com/repos/hamonikr/hamonize/releases/latest | jq -r '.assets[] | select(.browser_download_url |test("^.*hamonize-user.*gooroom.*deb$")) .browser_download_url')
         JSONDATA=${JSONDATA#\"}
         JSONDATA=${JSONDATA%\"}
         wget -P /tmp ${JSONDATA#\"} >>$LOGFILE
-        sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
+        sudo dpkg -i /tmp/hamonize-admin*.deb >>$LOGFILE
+        # sudo dpkg -i /tmp/hamonize-user*.deb >>$LOGFILE
 
     # Download APT Repository
     else
-        sudo apt-get install -y hamonize-user >>$LOGFILE
+        sudo apt-get install -y hamonize-admin >>$LOGFILE
+        # sudo apt-get install -y hamonize-user >>$LOGFILE
     fi
 
-    echo "$DATETIME ] 8.  hamonize-user install ============== [end]" >>$LOGFILE
+    echo "$DATETIME ] 8.  Hamonize Remote Tool install ============== [end]" >>$LOGFILE
     sleep 1
 
     # echo "$DATETIME ] 8.  hamonize-user set auth key  ============== [start]" >>$LOGFILE
     # hamonize-user&admin Keys Check -----------------------------#
     HAMONIZE_AUTH_KEY_COUNT=$(hamonize-cli authkeys list | wc -l)
     if [ $(ls /etc/hamonize/keys | wc -l) ] >1; then
-        echo "#### hamonize-user & admin keys exist ####"
         for i in $(hamonize-cli authkeys list); do
-            echo "delete keys ===>"$i
             hamonize-cli authkeys delete $i
         done
     fi
 
     # # admin settings ------------------------------------------------------------------------------------#
-    # hamonize-cli authkeys import hamonize-key/public /etc/hamonize/keys/public/hamonize_public_key.pem
-    # hamonize-cli authkeys import hamonize-key/private /etc/hamonize/keys/private/hamonize_private_key.pem
-
-    # HOME_USER=$1
-    # hamonize-cli authkeys setaccessgroup hamonize-key/public $HOME_USER
-    # hamonize-cli authkeys setaccessgroup hamonize-key/private $HOME_USER
-    # hamonize-cli config import /etc/hamonize/hamonize.json
-
-    # hamonize-cli service restart
-
-    # user settings (일반사용자는 public key만 필요함) ------------------------------------------------#
     hamonize-cli authkeys import hamonize-key/public /etc/hamonize/keys/public/hamonize_public_key.pem
+    hamonize-cli authkeys import hamonize-key/private /etc/hamonize/keys/private/hamonize_private_key.pem
 
     HOME_USER=$1
     hamonize-cli authkeys setaccessgroup hamonize-key/public $HOME_USER
+    hamonize-cli authkeys setaccessgroup hamonize-key/private $HOME_USER
     hamonize-cli config import /etc/hamonize/hamonize.json
 
     hamonize-cli service restart
+
+    rm -fr /usr/share/applications/hamonize-master.desktop
+    rm -fr /usr/share/applications/hamonize-configurator.desktop
+
+
+    # user settings (일반사용자는 public key만 필요함) ------------------------------------------------#
+    # hamonize-cli authkeys import hamonize-key/public /etc/hamonize/keys/public/hamonize_public_key.pem
+
+    # HOME_USER=$1
+    # hamonize-cli authkeys setaccessgroup hamonize-key/public $HOME_USER
+    # hamonize-cli config import /etc/hamonize/hamonize.json
+
+    # hamonize-cli service restart
 fi
 
 sleep 2
