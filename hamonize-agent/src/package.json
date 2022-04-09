@@ -41,7 +41,7 @@
     "ip": "^1.1.5",
     "line-reader": "^0.4.0",
     "md5": "^2.3.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.33",
     "node-datetime": "^2.1.2",
     "node-fetch": "^2.6.1",
