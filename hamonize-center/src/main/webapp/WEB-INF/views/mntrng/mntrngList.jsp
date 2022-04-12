@@ -99,7 +99,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 									<header class="panel-heading bg-light">
 										<ul class="nav nav-tabs pull-right ">
-<!-- 											<li><a href="#" id="total">total</a></li> -->
+											<li><a href="hamonizecli://tools/tools"><img src='/logintemplet/notebook/images/icon128.png' style='width:22px; height:22px;'>모니터링 툴 열기</a></li>
 											<li><a href="#" id="on" class="mntrngTitle"></a></li>
 											<li><a href="#" id="off" class="mntrngTitle"></a></li>
 										</ul>

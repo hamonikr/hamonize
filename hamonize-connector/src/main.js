@@ -29,7 +29,7 @@ const options = {
 // require('events').EventEmitter.prototype._maxListeners = 100;
 const electronLocalshortcut = require('electron-localshortcut');
 
-const baseurl = "http://192.168.0.118:8081";
+const baseurl = "https://console.hamonize.com";
 // const baseurl = "<Hamonize Center Url>";
 const osType = require('os');
 
@@ -248,6 +248,7 @@ const hamonizeProgramInstall_Action = async (event, domain) => {
 		return Object.assign(err);
 	}
 }
+
 function hamonizeProgramInstallProc(domain) {
 	return new Promise(function (resolve, reject) {
 
@@ -310,7 +311,7 @@ function hamonizeSystemBackupProc(userId) {
 			}
 		);
 	});
-}// Backup END ---------------------------------------------------------------#
+} // Backup END ---------------------------------------------------------------#
 
 
 
@@ -599,7 +600,9 @@ const sysInfo = async (event, groupname, sabun, username, domain) => {
 	//
 	// let vpnipaddr = 'no vpn';
 
-	const { networkInterfaces } = require('os');
+	const {
+		networkInterfaces
+	} = require('os');
 
 	const nets = networkInterfaces();
 	const results = Object.create(null); // Or just '{}', an empty object
@@ -620,10 +623,10 @@ const sysInfo = async (event, groupname, sabun, username, domain) => {
 
 	let vpnipaddr = '';
 	if (typeof results['tun0'] != 'undefined') {
-		console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
+		console.log(results['tun0']); // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
 		vpnipaddr = results['tun0'][0];
 	}
-console.log("=============vpnipaddr================" + vpnipaddr);
+	console.log("=============vpnipaddr================" + vpnipaddr);
 	var md5 = require('md5');
 	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	let hwData = md5(hwinfoMD5);
@@ -767,7 +770,7 @@ function aptRepositoryChkProc() {
 			}
 		);
 	});
-}	// aptRepositoryChk==============================================#
+} // aptRepositoryChk==============================================#
 
 
 // 조직정보 
@@ -795,15 +798,19 @@ ipcMain.on('getOrgAuth', (event, authkeyVal) => {
 			}]
 		})
 		.end(function (response) {
-			// file write 
-			let fileDir = "/etc/hamonize/hamonize_tanent";
-			fs.writeFile(fileDir, response.body, (err) => {
-				if (err) {
-					// log.info("//== sysInfo hw check create file error  "+ err.message)
-				}
-			});
-			event.sender.send('getAuthResult', response.body);
+
+			if (response.error) {
+				// file write 
+				let fileDir = "/etc/hamonize/hamonize_tanent";
+				fs.writeFile(fileDir, response.body, (err) => {
+					if (err) {
+						console.log("//== sysInfo hw check create file error  " + err.message)
+					}
+				});
+				event.sender.send('getAuthResult', response.body);
+			} else {
+				event.sender.send('getAuthResult', 'N');
+			}
 		});
 
 });
-

@@ -87,9 +87,9 @@ sleep 2
 
 # Agent ] =================================================
 echo "$DATETIME] 1. agent install ================ [start]" >>$LOGFILE
-# sudo apt-get install hamonize-agent -y >/dev/null
+sudo apt-get install hamonize-agent -y >/dev/null
 
-sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-agent_1.1.1_amd64.deb >>$LOGFILE
+# sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-agent_1.1.1_amd64.deb >>$LOGFILE
 
 echo "$DATETIME] agent install === [end]" >>$LOGFILE
 sudo systemctl stop hamonize-agent.service
