@@ -35,5 +35,13 @@ public class NotiVo {
 	private String rankSelect;
 	private String notiSelect;
 	private String groupSelect;
+	
+//	#=============================================#
+//	question ---
+//	#=============================================#
+	private String noti_kind;
+	private String pc_uuid;
+	private String domain;
+	private Long org_seq;
 
 }

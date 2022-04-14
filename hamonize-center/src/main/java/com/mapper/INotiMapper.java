@@ -9,6 +9,8 @@ import com.model.NotiVo;
 
 public interface INotiMapper {
 
+//	#==================================================================#
+//	미사용?
 	public List<NotiVo> notiListInfo(HashMap<String, Object> map);
 
 	public int countMngrListInfo(NotiVo vo);
@@ -23,9 +25,6 @@ public interface INotiMapper {
 	
 	public void notiDelete(int seq)throws SQLException;
 	
-	
-// ======================================	
-	
 	public int insertMngeUserInfo(NotiVo vo);
 
 	public int mngeIdDuplicateChk(NotiVo vo);
@@ -33,5 +32,11 @@ public interface INotiMapper {
 	public int mngeUpdateCheck(NotiVo vo);
 	
 	public int saveFile(Map<String, Object> params);
-
+//	#==================================================================#	
+	
+	
+//	#=============================================#
+//	question ---
+//	#=============================================#
+	public int saveQuestion(NotiVo vo);
 }

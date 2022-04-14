@@ -1,11 +1,17 @@
 package com.controller;
 
 
+import java.util.Map;
+
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.GlobalPropertySource;
+import com.mapper.IGetAgentJobMapper;
+import com.mapper.INotiMapper;
+import com.model.GetAgentJobVo;
+import com.model.NotiVo;
 import com.model.OrgVo;
 import com.service.OrgService;
 import com.util.LDAPConnection;
@@ -16,7 +22,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
@@ -27,9 +36,54 @@ public class TestController {
 	@Autowired
 	GlobalPropertySource gs;
 
+	@Autowired
+	INotiMapper notiMapper;
+	
+	
+
+	@Autowired
+	private IGetAgentJobMapper agentJobMapper;
+	
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
+	@ResponseBody
+	@RequestMapping("/saveTchnlgyIngry")
+	public Map<String, Object> save(HttpServletRequest request, NotiVo notivo, ModelMap model,
+			@RequestParam Map<String, Object> params) throws Exception {
+		
+		try {
+			// 질문등록
+//			Questions retQuestionVo = qs.save(vo);
+			
+			notivo.setOrg_seq(pcUUID_Domain(notivo.getPc_uuid(), notivo.getDomain()));
+			System.out.println("notivo======"+ notivo);
+			
+			int retVal = notiMapper.saveQuestion(notivo);
+			System.out.println("==========================+> "+ retVal);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("==========================+> ERROR");
+		}
+		
+		
+		return null;
+	}	
+
+	public Long pcUUID_Domain(String uuid, String domain) {
+		GetAgentJobVo agentVo = new GetAgentJobVo();
+		agentVo.setPc_uuid(uuid);
+		agentVo.setDomain(domain);
+		agentVo = agentJobMapper.getAgentJobPcUUID(agentVo);
+		Long segSeq = agentVo.getSeq();
+		return segSeq;
+	}
+	
+	
+	
+	
 	@RequestMapping("/layout")
 	public String test(HttpSession session, Model model, HttpServletRequest request) {
 

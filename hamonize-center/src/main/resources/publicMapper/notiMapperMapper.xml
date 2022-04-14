@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.mapper.INotiMapper">
+	
+	
+	<insert id="saveQuestion"  parameterType="com.model.NotiVo">
+		insert
+	  		into
+	  		tbl_questions (
+	  			"domain"
+	  			, org_seq
+		    	, uuid
+		    	, kind
+			    , title
+			    , contents
+			    , writer
+			    , rgstr_date
+			    , updt_date
+		  	)
+			values(
+				#{domain}
+				, #{org_seq}
+			  	, #{pc_uuid}
+			  	, #{noti_kind}
+			  	, #{noti_title}
+			  	, #{noti_contents}
+			  	, #{noti_writer_id}
+			  	, now()
+			  	, now()
+			)
+		         
+	</insert>
+
+
+</mapper>
