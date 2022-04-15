@@ -14,7 +14,7 @@
 		    	, kind
 			    , title
 			    , contents
-			    , writer
+			    , writewr
 			    , rgstr_date
 			    , updt_date
 		  	)

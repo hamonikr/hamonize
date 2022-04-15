@@ -89,11 +89,10 @@ sleep 2
 echo "$DATETIME] 1. agent install ================ [start]" >>$LOGFILE
 sudo apt-get install hamonize-agent -y >/dev/null
 
-# sudo dpkg -i $WORK_PATH/temp_cloud_dpkg/hamonize-agent_1.1.1_amd64.deb >>$LOGFILE
-
 echo "$DATETIME] agent install === [end]" >>$LOGFILE
 sudo systemctl stop hamonize-agent.service
 # ===================================================================================
+
 
 sleep 2
 
@@ -285,6 +284,17 @@ if [ $(dpkg-query -W | grep hamonize-admin | wc -l) = 0 ]; then
 
     # hamonize-cli service restart
 fi
+
+sleep 2
+
+# Hamonize help App ] =================================================
+echo "$DATETIME] 1. Hamonize Help Application Install ================ [start]" >>$LOGFILE
+sudo apt-get install hamonize-help -y >/dev/null
+
+echo "$DATETIME] Hamonize Help Application Install === [end]" >>$LOGFILE
+
+# ===================================================================================
+
 
 sleep 2
 ##==== 서버 정보 저장(domain,ip etc)===================================

@@ -84,7 +84,7 @@ echo "$DATETIME ]-------->agent에서 사용하는 rest 서버 정보 저장 [EN
 sudo apt-get update > /dev/null 2>&1
  
 
-
+# Hamonize Agent Application =====================================================#
 CHK_AGNET_INSTALLED=`dpkg-query -W | grep hamonize-agent | wc -l`
 echo "agent install checked is =="$CHK_AGNET_INSTALLED >> $LOGFILE
 if [ $CHK_AGNET_INSTALLED = 0  ]; then
@@ -98,34 +98,37 @@ if [ $CHK_AGENT -gt 0  ]; then
 fi
 
 
-CHK_PCMNGR_INSTALLED=`dpkg-query -W | grep hamonize-process-mngr | wc -l`
-echo "pcmngr install checked is =="$CHK_PCMNGR_INSTALLED >> $LOGFILE
-if [ $CHK_PCMNGR_INSTALLED = 0  ]; then
-        sudo apt-get install hamonize-process-mngr -y >> $LOGFILE
-fi
-
-CHK_PCMNGR=`apt list --upgradable 2>/dev/null | grep hamonize-process-mngr | wc -l`
-echo "pcmngr upgrade able is =="$CHK_PCMNGR >> $LOGFILE
-if [ $CHK_PCMNGR -gt 0  ]; then
-        sudo apt-get --only-upgrade install hamonize-process-mngr -y > /dev/null 2>&1
-fi
-
-
-CHK_ADMIN_INSTALLED=`dpkg-query -W | grep hamonize-user | wc -l`
-echo "hamonize-user install checked is =="$CHK_ADMIN_INSTALLED >> $LOGFILE
+# Hamonize Admin Application =====================================================#
+CHK_ADMIN_INSTALLED=`dpkg-query -W | grep hamonize-admin | wc -l`
+echo "hamonize-admin install checked is =="$CHK_ADMIN_INSTALLED >> $LOGFILE
 if [ $CHK_ADMIN_INSTALLED = 0  ]; then
-        sudo apt-get install hamonize-user -y >> $LOGFILE
+        sudo apt-get install hamonize-admin -y >> $LOGFILE
 fi
 
-CHK_ADMIN=`apt list --upgradable 2>/dev/null | grep hamonize-user | wc -l`
-echo "hamonize-user upgrade able is =="$CHK_ADMIN >> $LOGFILE
+CHK_ADMIN=`apt list --upgradable 2>/dev/null | grep hamonize-admin | wc -l`
+echo "hamonize-admin upgrade able is =="$CHK_ADMIN >> $LOGFILE
 if [ $CHK_ADMIN -gt 0  ]; then
-        sudo apt-get --only-upgrade install hamonize-user -y> /dev/null 2>&1
+        sudo apt-get --only-upgrade install hamonize-admin -y> /dev/null 2>&1
 fi
+
+# Hamonize Help Application =====================================================#
+CHK_HAMONIZE_HELP_INSTALLED=`dpkg-query -W | grep hamonize-help | wc -l`
+echo "hamonize-help install checked is =="$CHK_HAMONIZE_HELP_INSTALLED >> $LOGFILE
+if [ $CHK_ADMIN_INSTALLED = 0  ]; then
+        sudo apt-get install hamonize-help -y >> $LOGFILE
+fi
+
+
+CHK_HAMONIZE_HELP=`apt list --upgradable 2>/dev/null | grep hamonize-help | wc -l`
+echo "hamonize-help upgrade able is =="$CHK_HAMONIZE_HELP >> $LOGFILE
+if [ $CHK_HAMONIZE_HELP -gt 0  ]; then
+        sudo apt-get --only-upgrade install hamonize-help -y> /dev/null 2>&1
+fi
+
 
 echo "$DATETIME] resboot==========END" >>$LOGFILE
 
-echo "$DATETIME] hamonize-user 필수 포트 allow 11100==========END" >>$LOGFILE
+echo "$DATETIME] hamonize-user && admin 필수 포트 allow 11100==========END" >>$LOGFILE
 sudo ufw allow 11100 >>$LOGFILE
 sudo ufw allow 11400 >>$LOGFILE
 sudo ufw allow 22 >>$LOGFILE

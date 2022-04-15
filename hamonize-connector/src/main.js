@@ -284,6 +284,31 @@ const hamonizeSystemBackup_Action = async (event) => {
 		let userId = await execShellCommand("cat /etc/passwd | grep 1000 | awk -F':' '{print $1}' ");
 		let hamonizeSystemBackupProcResult = await hamonizeSystemBackupProc(userId);
 		console.log("hamonizeSystemBackup_Proc==" + hamonizeSystemBackupProcResult);
+
+		// application Uuid create 
+		let fileDir = "/etc/hamonize/hamonize.appinfo";
+		let applicationIdChk = await getOsMachineId(fileDir);
+		if (applicationIdChk == 'N' || applicationIdChk == '') {
+			let uniqid = require('uniqid');
+			let appUUID = uniqid() + (new Date()).getTime().toString(36);
+			const pcUuid = (await si.uuid());
+			console.log("License Add STEP 1-3 ] - MachineId Value is ::: " + pcUuid + ",  App UUID Value is ::: " + appUUID);
+
+			// 파일 저장
+			let createMachineId = await userOsMachineIdWriteFile(pcUuid.os + ":" + appUUID, fileDir);
+			console.log("License Add STEP 1-4 ] - create File  is  ::: " + createMachineId);
+
+			if (createMachineId == 'Y') {
+				// 저장된 파일 정보를 가져온다. 
+				let systemInfoVal = await getOsMachineId(fileDir);
+				console.log("License Add STEP 1-5 ] - create File  is  ::: " + systemInfoVal);
+			}
+		} else {
+			let systemInfoVal = await getOsMachineId(fileDir);
+			console.log("License Add STEP 1-6 ] - get File  is  ::: " + systemInfoVal);
+		}
+
+
 		event.sender.send('hamonizeSystemBackup_Result', hamonizeSystemBackupProcResult);
 	} catch (err) {
 		console.log("hamonizeSystemBackup_Action Error---" + err);

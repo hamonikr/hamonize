@@ -14,12 +14,14 @@ import javax.transaction.Transactional;
 import com.GlobalPropertySource;
 import com.mapper.IGetAgentJobMapper;
 import com.mapper.IHmprogramMapper;
+import com.mapper.INotiMapper;
 import com.mapper.IOrgMapper;
 import com.mapper.IPackageInfoMapper;
 import com.mapper.IPcMangrMapper;
 import com.mapper.ISvrlstMapper;
 import com.mapper.ITenantconfigMapper;
 import com.model.GetAgentJobVo;
+import com.model.NotiVo;
 import com.model.OrgVo;
 import com.model.PcMangrVo;
 import com.model.PcPackageVo;
@@ -37,6 +39,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -81,6 +84,9 @@ public class CurlController {
 	private ITenantconfigMapper tenantconfigMapper;
 
 
+	@Autowired
+	INotiMapper notiMapper;
+	
 	@Autowired
 	private RestApiService restApiService;
 
@@ -651,6 +657,25 @@ System.out.println("retData===="+retData.toString());
 	}
 	
 
+	@ResponseBody
+	@RequestMapping("/saveTchnlgyIngry")
+	public int save(HttpServletRequest request, NotiVo notivo, ModelMap model,
+			@RequestParam Map<String, Object> params) throws Exception {
+		int retVal = 0;
+		try {
+			// 질문등록
+			notivo.setOrg_seq(pcUUID_Domain(notivo.getPc_uuid(), notivo.getDomain()));
+			retVal = notiMapper.saveQuestion(notivo);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			retVal = 4;
+		}
+
+		return retVal;
+	}	
+	
+	
 	public Long pcUUID(String uuid) {
 		GetAgentJobVo agentVo = new GetAgentJobVo();
 		agentVo.setPc_uuid(uuid);

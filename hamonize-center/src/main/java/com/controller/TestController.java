@@ -17,6 +17,7 @@ import com.service.OrgService;
 import com.util.LDAPConnection;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,26 +51,20 @@ public class TestController {
 
 	@ResponseBody
 	@RequestMapping("/saveTchnlgyIngry")
-	public Map<String, Object> save(HttpServletRequest request, NotiVo notivo, ModelMap model,
+	public int save(HttpServletRequest request, NotiVo notivo, ModelMap model,
 			@RequestParam Map<String, Object> params) throws Exception {
-		
+		int retVal = 0;
 		try {
 			// 질문등록
-//			Questions retQuestionVo = qs.save(vo);
-			
 			notivo.setOrg_seq(pcUUID_Domain(notivo.getPc_uuid(), notivo.getDomain()));
-			System.out.println("notivo======"+ notivo);
-			
-			int retVal = notiMapper.saveQuestion(notivo);
-			System.out.println("==========================+> "+ retVal);
+			retVal = notiMapper.saveQuestion(notivo);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("==========================+> ERROR");
+			retVal = 4;
 		}
-		
-		
-		return null;
+
+		return retVal;
 	}	
 
 	public Long pcUUID_Domain(String uuid, String domain) {
