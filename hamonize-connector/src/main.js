@@ -823,13 +823,16 @@ ipcMain.on('getOrgAuth', (event, authkeyVal) => {
 			}]
 		})
 		.end(function (response) {
+			
 
-			if (response.error) {
-				// file write 
+			if (response.statusCode == 200) {
+			//	// file write 
 				let fileDir = "/etc/hamonize/hamonize_tanent";
 				fs.writeFile(fileDir, response.body, (err) => {
 					if (err) {
 						console.log("//== sysInfo hw check create file error  " + err.message)
+						event.sender.send('getAuthResult', 'N');
+
 					}
 				});
 				event.sender.send('getAuthResult', response.body);
