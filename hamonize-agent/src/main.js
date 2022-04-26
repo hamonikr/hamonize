@@ -8,6 +8,7 @@ const fs = require('fs')
 
 var log = require('./logger');
 var http = require('http');
+var https = require('https');
 const Poller = require('./Poller');
 
 var filePath = "/etc/hamonize/agent/";
@@ -72,14 +73,14 @@ let networkChk = async function () {
 function getPollTime(uuid) {
 	log.info("----getPollTime Func start----");
 
-	var setUrl = "http://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
+	var setUrl = "https://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
 	var retval = 0;
-
+console.log("setUrl==="+setUrl);
 	// Polling(1000);
 	networkChk().then(
 		(value) => {
 			if (value) {
-				http.get(setUrl, (res) => {
+				https.get(setUrl, (res) => {
 					res.on('data', (data) => {
 						console.log("data===============++" + data);
 						var pollingObj = JSON.parse(data);
@@ -181,11 +182,11 @@ function ipStatusCheck() {
 //========================================================================-
 function getFirewallDataCall(uuid) {
 	//	Firewall 정책 정보 조회 
-	var setUrl = "http://" + centerUrl + "/getAgent/firewall?name=" + uuid;
+	var setUrl = "https://" + centerUrl + "/getAgent/firewall?name=" + uuid;
 	log.info("Firewall 정책 정보 조회" + setUrl);
 
 
-	http.get(setUrl, (res) => {
+	https.get(setUrl, (res) => {
 		// log.info('//==statusCode is :', res.statusCode);
 
 		res.on('data', (data) => {
@@ -220,10 +221,10 @@ function getFirewallDataCall(uuid) {
 //========================================================================
 function getRecoveryDataCall(uuid) {
 	//	Recovery 정책 정보 조회
-	var setUrl = "http://" + centerUrl + "/getAgent/recov?name=" + uuid;
+	var setUrl = "https://" + centerUrl + "/getAgent/recov?name=" + uuid;
 	log.info("Recovery 정책 정보 조회" + setUrl);
 
-	http.get(setUrl, (res) => {
+	https.get(setUrl, (res) => {
 		res.on('data', (data) => {
 			log.info("//== Recovery 정책 data is : " + data);
 			if (data != "nodata" && data != "{}") {
@@ -263,9 +264,9 @@ function getRecoveryDataCall(uuid) {
 function getUpdtDataCall(uuid) {
 	//	Updt 정책 정보 조회
 
-	var setUrl = "http://" + centerUrl + "/getAgent/updt?name=" + uuid;
+	var setUrl = "https://" + centerUrl + "/getAgent/updt?name=" + uuid;
 	log.info("updt 정책 정보 조회" + setUrl);
-	http.get(setUrl, (res) => {
+	https.get(setUrl, (res) => {
 		res.on('data', (data) => {
 			log.info("//== updt 정책 data is :: " + data);
 			if (data != 'nodata') {
@@ -318,9 +319,9 @@ function fnUpdtJob(retData) {
 function getNxssDataCall(uuid) {
 
 	//	Nxss 정책 정보 조회
-	var setUrl = "http://" + centerUrl + "/getAgent/nxss?name=" + uuid;
+	var setUrl = "https://" + centerUrl + "/getAgent/nxss?name=" + uuid;
 	console.log("Nxss Job : " + setUrl)
-	http.get(setUrl, (res) => {
+	https.get(setUrl, (res) => {
 		let data = '';
 		res.on('data', (chunk) => {
 			data += chunk;
@@ -342,7 +343,7 @@ function sendNxssResultToCenter(fileDate, gubun) {
 	var os = require("os");
 	var hostname = os.hostname();
 
-	request.post('http://' + centerUrl + '/act/nxssAct', {
+	request.post('https://' + centerUrl + '/act/nxssAct', {
 		json: {
 			events: [{
 				hostname: hostname,
@@ -462,10 +463,10 @@ function fnNxssJob(retData) {
 //========================================================================
 function getDeviceDataCall(uuid) {
 	//	device 정책 정보 조회
-	var setUrl = "http://" + centerUrl + "/getAgent/device?name=" + uuid;
+	var setUrl = "https://" + centerUrl + "/getAgent/device?name=" + uuid;
 	log.info("device 정책 정보 조회" + setUrl);
 
-	http.get(setUrl, (res) => {
+	https.get(setUrl, (res) => {
 		res.on('data', (data) => {
 			log.info("//== device 정책 data is :: " + data);
 
@@ -507,7 +508,7 @@ function sendToCenter_unauth() {
 		var events = JSON.parse(data);
 
 
-		request.post('http://' + centerUrl + '/hmsvc/unauth', {
+		request.post('https://' + centerUrl + '/hmsvc/unauth', {
 			json: events
 		}, (error, res, body) => {
 			if (error) {
@@ -534,7 +535,7 @@ async function usbUnauthProc(filename) {
 
 	console.log(eventsData);
 
-	request.post('http://' + centerUrl + '/hmsvc/unauth', {
+	request.post('https://' + centerUrl + '/hmsvc/unauth', {
 		json: {
 			eventsData
 		}
@@ -583,13 +584,13 @@ function sendUsbUnauth() {
 
 function getProgrmDataCall(uuid) {
 	//	progrm 정책 정보 조회
-	var setUrl = "http://" + centerUrl + "/getAgent/progrm?name=" + uuid;
+	var setUrl = "https://" + centerUrl + "/getAgent/progrm?name=" + uuid;
 	log.info("progrm 정책 정보 조회" + setUrl);
 	var os = require("os");
 	var hostname = os.hostname();
 	var datetime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
-	http.get(setUrl, (res) => {
+	https.get(setUrl, (res) => {
 		res.on('data', (data) => {
 			log.info("//== progrm 정책 data is :: " + data);
 			if (data != 'nodata') {
@@ -665,9 +666,9 @@ function getProgrmDataCall(uuid) {
 
 function getBackupDataCall(uuid) {
 
-	var setUrl = "http://" + centerUrl + "/getAgent/backup?name=" + uuid;
+	var setUrl = "https://" + centerUrl + "/getAgent/backup?name=" + uuid;
 	log.info("Backup 정책 정보 조회" + setUrl);
-	http.get(setUrl, (res) => {
+	https.get(setUrl, (res) => {
 		res.on('data', (data) => {
 			log.info("//== Backup 정책 Backup data is :: " + data);
 			if (data != 'nodata') {
@@ -1209,11 +1210,12 @@ const sysInfo = async () => {
 		});
 	}
 
+	console.log(ipinfo.address()+"<------ipinfo.address()");
 	console.log("isSendYn=========++" + isSendYn);
 	if (isSendYn) {
 
 		var unirest = require('unirest');
-		unirest.post('http://' + centerUrl + '/hmsvc/eqhw')
+		unirest.post('https://' + centerUrl + '/hmsvc/eqhw')
 			.header('content-type', 'application/json')
 			.send({
 				events: [{
@@ -1347,7 +1349,7 @@ function fnDeviceJob_result(deviceData, statusyn) {
 	}
 
 
-	request.post('http://' + centerUrl + '/act/deviceAct', {
+	request.post('https://' + centerUrl + '/act/deviceAct', {
 		json: {
 			events: setDeviceJsonReturnData
 		}
@@ -1521,7 +1523,7 @@ if (program.opts().start) {		// agent start cli
 
 
 if (program.opts().test) {
-	check_ufw();
+	sysInfo();
 }
 
 

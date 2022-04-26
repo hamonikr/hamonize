@@ -78,6 +78,34 @@ public class TestController {
 	
 	
 	
+	@RequestMapping("/layout3")
+	public String test3(HttpSession session, Model model, HttpServletRequest request) {
+
+		JSONArray jsonArray = new JSONArray();
+
+		try {
+			// 저장된 조직 정보 출력
+			OrgVo orgvo = new OrgVo();
+			jsonArray = oService.orgList(orgvo);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		LDAPConnection con = new LDAPConnection();
+
+		try {
+			con.connection(gs.getLdapUrl(), gs.getLdapPassword());
+		} catch (NamingException e1) {
+			logger.error(e1.getMessage(), e1);
+		}
+
+		model.addAttribute("oList", jsonArray);
+		
+		return "/test3";
+//		return "/test";
+
+	}
 	
 	@RequestMapping("/layout")
 	public String test(HttpSession session, Model model, HttpServletRequest request) {
