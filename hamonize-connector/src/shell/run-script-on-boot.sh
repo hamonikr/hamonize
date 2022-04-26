@@ -9,7 +9,7 @@ DOMAIN=`cat /etc/hamonize/hamonize_tanent`
 sudo touch $LOGFILE
 
 GUBUN=""
-CENTERURL="http://${CENTERURL}/act/loginout"
+CENTERURL="https://${CENTERURL}/act/loginout"
 
 case $1 in
         login)
