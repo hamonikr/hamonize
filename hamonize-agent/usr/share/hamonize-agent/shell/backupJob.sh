@@ -4,8 +4,8 @@ UUID=$(cat /etc/hamonize/uuid | head -1)
 DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
 HOSTNAME=$(hostname)
 BKDIR="/timeshift/snapshots"
-centerUrl=$(cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}')
-BKCENTERURL="http://${centerUrl}/backup/setBackupJob"
+centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
+BKCENTERURL="https://${centerUrl}/backup/setBackupJob"
 LOGFILE="/var/log/hamonize/agentjob/agentjob_backup.log"
 
 # sudo touch $LOGFILE

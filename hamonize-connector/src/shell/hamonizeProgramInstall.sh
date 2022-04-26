@@ -16,7 +16,7 @@ LDAPInfo=$(curl -s "$CENTER_BASE_URL/hmsvc/getTenantRemoteConfig?gubun=ldapyn&do
 Ldap_used=$(echo $LDAPInfo | awk -F ":" '{print $1}')
 Ldap_ip=$(echo $LDAPInfo | awk -F ":" '{print $2}')
 
-if [ $Ldap_used -eq "Y" ]; then
+if [ $Ldap_used == "Y" ]; then
     echo "Ldap use && Ldap setting" >>$LOGFILE
 
     echo -e " \
@@ -191,7 +191,8 @@ if [ $(dpkg-query -W | grep hamonize-admin | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  Hamonize Remote Tool install ============== [start]" >>$LOGFILE
 
     # TENANT=$(cat /etc/hamonize/hamonize_tanent)
-    mkdir -p /etc/hamonize/keys
+    mkdir -p /etc/hamonize/keys/public
+    mkdir -p /etc/hamonize/keys/private
 
     TENANT_CONFIG=$(curl -s "$CENTER_BASE_URL/hmsvc/getTenantRemoteConfig?gubun=config&domain=$DOMAININFO")
     echo -e ${TENANT_CONFIG} | jq >/etc/hamonize/hamonize.json

@@ -75,7 +75,7 @@ echo "start==device========$DEVICE" >>$Log_backup
         BKNAME=`cat $Log_backup |grep 'Tagged*' | awk '{print $3}' | awk -F "'" '{print $2}'`
         BKUUID=`cat /etc/hamonize/uuid |head -1`
         BKDIR="/timeshift/snapshots"
-        BKCENTERURL="http://$CENTERURL/backup/setBackupJob"
+        BKCENTERURL="https://$CENTERURL/backup/setBackupJob"
 
     
         BK_JSON="{\
