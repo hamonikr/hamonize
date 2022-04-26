@@ -303,7 +303,7 @@ sleep 2
 IPADDR_SPLIT=($(echo $CENTER_BASE_URL | tr "/" "\n"))
 sudo cp -r $WORK_PATH/hamonizeInitJob.sh /etc/hamonize/propertiesJob
 
-sudo sed -i "s/CHANGE_CENTERURL/http:\/\/${IPADDR_SPLIT[1]}/" /etc/hamonize/propertiesJob/hamonizeInitJob.sh
+sudo sed -i "s/CHANGE_CENTERURL/https:\/\/${IPADDR_SPLIT[1]}/" /etc/hamonize/propertiesJob/hamonizeInitJob.sh
 
 sudo sed -i '/@reboot/d' /etc/crontab
 sudo sed -i '$s/$/\n\@reboot root  \/etc\/hamonize\/propertiesJob\/hamonizeInitJob.sh/g' /etc/crontab
