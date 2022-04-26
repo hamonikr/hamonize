@@ -1189,7 +1189,8 @@ const sysInfo = async () => {
 
 	let md5 = require('md5');
 	// let hwinfoMD5 = pcHostname + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
-	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid +"===";
+	// let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	let hwData = md5(hwinfoMD5);
 
 	const base_hwinfo = getHwpInfo("hwinfo.hm");
@@ -1241,6 +1242,138 @@ const sysInfo = async () => {
 		log.info("telegraf restart");
 		// await execShellCommand('service telegraf restart');
 	}
+
+
+}
+
+
+// HW chk =====================================
+const sysInfo2 = async () => {
+	let retData = {}
+	log.info("sysInfo.... ");
+
+	//		await execSetHostname(pcnum)
+
+	const si = require('systeminformation');
+
+	const cpu = await si.cpu(); // CPU Info
+
+	let cpuinfo = ` ${cpu.manufacturer} ${cpu.brand} ${cpu.speed}GHz`;
+	cpuinfo += ` ${cpu.cores} (${cpu.physicalCores} Physical)`;
+
+	let cpuinfoMd5 = ` ${cpu.manufacturer} ${cpu.brand}`;
+	cpuinfoMd5 += ` ${cpu.cores} (${cpu.physicalCores} Physical)`;
+
+	const disk = (await si.diskLayout())[0]; // Disk Info
+	const size = Math.round(disk.size / 1024 / 1024 / 1024);
+	let diskInfo = ` ${disk.vendor} ${disk.name} ${size}GB ${disk.type} (${disk.interfaceType})`;
+	let diskSerialNum = disk.serialNum;
+
+	const os = await si.osInfo(); //OS Info
+	let osinfo = ` ${os.distro} ${os.release} ${os.codename} (${os.platform})`;
+
+	let osinfoKernel = ` ${os.kernel} ${os.arch}`;
+
+	const ram = await si.mem(); // RAM Info
+	const totalRam = Math.round(ram.total / 1024 / 1024 / 1024);
+	let raminfo = ` ${totalRam}GB`;
+
+	const ipinfo = require("ip"); //	get os ip address
+	const pcuuid = (await si.uuid()); //	 get os mac address 
+
+	const machineIdSync = require('node-machine-id').machineIdSync;
+	let machindid = machineIdSync({
+		original: true
+	});
+
+
+
+
+	const { networkInterfaces } = require('os');
+
+	const nets = networkInterfaces();
+	const results = Object.create(null); // Or just '{}', an empty object
+
+	for (const name of Object.keys(nets)) {
+		for (const net of nets[name]) {
+			// Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+			if (!net.internal) {
+				// if (net.family === 'IPv4' && !net.internal) {
+				if (!results[name]) {
+					results[name] = [];
+				}
+				results[name].push(net.address);
+			}
+
+		}
+	}
+
+	let vpnInfo = '';
+	if (typeof results['tun0'] != 'undefined') {
+		console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
+		vpnInfo = results['tun0'][0];
+	}
+
+
+
+	const pcHostname = await execShellCommand('hostname');
+	const cpuid = await execShellCommand('dmidecode -t 4|grep ID');
+	const usernm = await execShellCommand('users');
+
+	let md5 = require('md5');
+	// let hwinfoMD5 = pcHostname + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
+	let hwData = md5(hwinfoMD5);
+
+	const base_hwinfo = getHwpInfo("hwinfo.hm");
+
+	console.log("hwData.trim()=====" + hwData.trim());
+	console.log("base_hwinfo.trim()=========++" + base_hwinfo.trim());
+	let isSendYn = false;
+	if (hwData.trim() == base_hwinfo.trim()) {
+
+		isSendYn = false;
+	} else {
+		isSendYn = true;
+		let fileDir = "/etc/hamonize/hwinfo/hwinfo.hm";
+		fs.writeFile(fileDir, hwData, (err) => {
+			if (err) {
+				log.info("//== sysInfo hw check() error  " + err.message)
+			}
+		});
+	}
+
+	console.log(ipinfo.address()+"<------ipinfo.address()");
+	console.log("isSendYn=========++" + isSendYn);
+	// if (isSendYn) {
+
+		var unirest = require('unirest');
+		unirest.post('https://' + centerUrl + '/hmsvc/eqhw')
+			.header('content-type', 'application/json')
+			.send({
+				events: [{
+					datetime: 'datetime',
+					hostname: pcHostname,
+					memory: raminfo,
+					cpuid: cpuid,
+					hddinfo: diskInfo,
+					hddid: diskSerialNum,
+					ipaddr: ipinfo.address(),
+					vpnip: vpnInfo,
+					uuid: machindid,
+					user: usernm,
+					macaddr: pcuuid.macs[0],
+					cpuinfo: cpuinfo,
+					domain: tenantVal
+				}]
+			})
+			.end(function (response) {
+				// console.log("response.body==="+JSON.stringify(response));
+				console.log("\nbbbresponse.body===" + response.body);
+			});
+		log.info("telegraf restart");
+		// await execShellCommand('service telegraf restart');
+	// }
 
 
 }
@@ -1523,7 +1656,7 @@ if (program.opts().start) {		// agent start cli
 
 
 if (program.opts().test) {
-	sysInfo();
+	sysInfo2();
 }
 
 
