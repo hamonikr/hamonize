@@ -22,7 +22,7 @@ function hmnlog {
 function sendInfo {
 
         #변경된 vpnip 정보 업데이트
-        SERVER_API="http://$CENTERURL/hmsvc/pcInfoChange"
+        SERVER_API="https://$CENTERURL/hmsvc/pcInfoChange"
 
         DATETIME=`date +'%Y-%m-%d %H:%M:%S'`
         # NETDEV_UUID=`nmcli con show --active |grep ethernet | gawk '{n=split($0,a," ");print a[n-2]}'`
