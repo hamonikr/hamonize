@@ -113,11 +113,11 @@ echo "start==device========$DEVICE" >>$Log_backup
 } 
 
 
-echo "backup End Timeshift Config File restore==== " >> $Log_backup
-if [ -f "/etc/timeshift/timeshift.json" ]; then
-    rm -fr /etc/timeshift/timeshift.json
-    mv /etc/timeshift/timeshift.json_back  /etc/timeshift/timeshift.json
-elif [ -f "/etc/timeshift.json" ]; then
-    rm -fr /etc/timeshift.json
-    mv /etc/timeshift.json_back  /etc/timeshift.json
-fi
+# echo "backup End Timeshift Config File restore==== " >> $Log_backup
+# if [ -f "/etc/timeshift/timeshift.json" ]; then
+#     rm -fr /etc/timeshift/timeshift.json
+#     mv /etc/timeshift/timeshift.json_back  /etc/timeshift/timeshift.json
+# elif [ -f "/etc/timeshift.json" ]; then
+#     rm -fr /etc/timeshift.json
+#     mv /etc/timeshift.json_back  /etc/timeshift.json
+# fi
