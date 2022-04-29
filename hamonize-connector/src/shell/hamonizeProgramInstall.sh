@@ -69,13 +69,12 @@ apt-get install sudo-ldap -y
 export SUDO_FORCE_REMOVE=no
 EOF
 
-    echo "sudoers:            files ldap" >>    /etc/nsswitch.conf
-    echo "SUDOERS_BASE    ou=SUDOers,ou=$DOMAININFO,dc=hamonize,dc=com" >> /etc/ldap.conf
+    echo "sudoers:            files ldap" >>/etc/nsswitch.conf
+    echo "SUDOERS_BASE    ou=SUDOers,ou=$DOMAININFO,dc=hamonize,dc=com" >>/etc/ldap.conf
     sudo ln -s /etc/ldap.conf /etc/sudo-ldap.conf
 
     DEBIAN_FRONTEND=noninteractive pam-auth-update
     systemctl restart nscd
-
 
     # else
     #     echo -e "Where the debconf-ldap-preseed.txt ??\n"
@@ -92,7 +91,6 @@ sudo apt-get install hamonize-agent -y >/dev/null
 echo "$DATETIME] agent install === [end]" >>$LOGFILE
 sudo systemctl stop hamonize-agent.service
 # ===================================================================================
-
 
 sleep 2
 
@@ -187,7 +185,7 @@ fi
 sleep 2
 #== Hamonize Remote Tool  =================================================
 if [ $(dpkg-query -W | grep hamonize-admin | wc -l) = 0 ]; then
-# if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
+    # if [ $(dpkg-query -W | grep hamonize-user | wc -l) = 0 ]; then
     echo "$DATETIME ] 8.  Hamonize Remote Tool install ============== [start]" >>$LOGFILE
 
     # TENANT=$(cat /etc/hamonize/hamonize_tanent)
@@ -275,7 +273,6 @@ if [ $(dpkg-query -W | grep hamonize-admin | wc -l) = 0 ]; then
     rm -fr /usr/share/applications/hamonize-master.desktop
     rm -fr /usr/share/applications/hamonize-configurator.desktop
 
-
     # user settings (일반사용자는 public key만 필요함) ------------------------------------------------#
     # hamonize-cli authkeys import hamonize-key/public /etc/hamonize/keys/public/hamonize_public_key.pem
 
@@ -296,7 +293,6 @@ echo "$DATETIME] Hamonize Help Application Install === [end]" >>$LOGFILE
 
 # ===================================================================================
 
-
 sleep 2
 ##==== 서버 정보 저장(domain,ip etc)===================================
 ##==== crontab reboot으로 부팅시마다 서버 정보를 파일로 저장한다.==============
@@ -307,3 +303,9 @@ sudo sed -i "s/CHANGE_CENTERURL/https:\/\/${IPADDR_SPLIT[1]}/" /etc/hamonize/pro
 
 sudo sed -i '/@reboot/d' /etc/crontab
 sudo sed -i '$s/$/\n\@reboot root  \/etc\/hamonize\/propertiesJob\/hamonizeInitJob.sh/g' /etc/crontab
+
+sleep 2
+
+# Add Tenant APT URL
+echo "deb http://$APTURL $DOMAININFO main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
+sudo apt-get update -y >>$LOGFILE

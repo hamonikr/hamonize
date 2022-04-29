@@ -136,7 +136,7 @@ function setPcinfo() {
 
 	if (typeof groupname == "undefined") {
 		doubleSubmitFlag = false;
-		return false
+		return false;
 	}
 	let sabun = "sabun";
 	let username = "username";

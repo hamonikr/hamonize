@@ -1,13 +1,13 @@
 #!/bin/bash
 
-centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}'`
+centerUrl=`cat /etc/hamonize/propertiesJob/propertiesInfo.hm | grep CENTERURL | awk -F'=' '{print $2}' | tr -d '[:space:]'`
 CENTERURL="http://${centerUrl}/hmsvc/updtpolicy"
 PCUUID=`cat /etc/hamonize/uuid`
 LOGFILE="/var/log/hamonize/agentjob/updp.log"
 TENANT=$(cat /etc/hamonize/hamonize_tanent)
 touch $LOGFILE
 
-sudo systemctl stop hamonize-processmngr.service
+# sudo systemctl stop hamonize-agentmngr.service
 
 echo "################### updt deb install ###########################" >>$LOGFILE
 
@@ -109,7 +109,7 @@ echo "" >>$LOGFILE
 
 echo "################## updt deb upgrade ############################" >>$LOGFILE
 
-UPDT_UPDT=`cat /etc/hamonize/updt/updtInfo.hm | jq '.UPGRADE' | sed -e "s/\"//g" `
+UPDT_UPDT=`cat /etc/hamonize/updt/updtInfo.hm | jq '.UPGRADE' | sed -e "s/\"//g" | tr -d '[:space:]'`
 
 echo "upgrade file total data=========$UPDT_UPDT" >>$LOGFILE
 
@@ -231,7 +231,7 @@ echo "################## updt deb del  ############################" >>$LOGFILE
 
 
 
-UPDT_DEL=`cat /etc/hamonize/updt/updtInfo.hm | jq '.DEL' | sed -e "s/\"//g" `
+UPDT_DEL=`cat /etc/hamonize/updt/updtInfo.hm | jq '.DEL' | sed -e "s/\"//g" | tr -d '[:space:]' `
 echo "delete file total  data=========$UPDT_DEL"  >>$LOGFILE
 
 
@@ -306,4 +306,4 @@ fi
 
 echo "RETUPDT agent to hamonize center result---->  $RETUPDT" >> ${LOGFILE}
 
-sudo systemctl start hamonize-processmngr.service
+# sudo systemctl start hamonize-agentmngr.service

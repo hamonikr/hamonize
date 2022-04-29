@@ -766,9 +766,9 @@ ipcMain.on('aptRepositoryChk', (event) => {
 //(사용안함)
 const aptRepositoryChkAsync = async (event) => {
 	try {
-		let mkfolderResult = await aptRepositoryChkProc();
-		console.log("aptRepositoryChkProc==" + mkfolderResult);
-		event.sender.send('aptRepositoryChkProcResult', mkfolderResult);
+		let aptResult = await aptRepositoryChkProc();
+		console.log("aptRepositoryChkProc==" + aptResult);
+		event.sender.send('aptRepositoryChkProcResult', aptResult);
 	} catch (err) {
 		console.log("aptRepositoryChkAsync---" + err);
 		return Object.assign(err);
