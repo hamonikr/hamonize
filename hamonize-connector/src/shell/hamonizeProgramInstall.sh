@@ -38,7 +38,13 @@ if [ $Ldap_used == "Y" ]; then
     DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd
 
     ## Add /etc/pam.d/common-session
-    sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
+
+    # sed -i '/session required pam_mkhomedir.so /d' /etc/pam.d/common-session  // 중복 설치한경우 ...
+    # sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session   ldap 사용자 홈폴더 생성
+    if [ $(grep -rn 'session required pam_mkhomedir.so' /etc/pam.d/common-session | wc -l) = 0 ]; then
+        echo "aa"
+        sed -i '$ i\session required pam_mkhomedir.so skel=/etc/skel umask=0022\' /etc/pam.d/common-session
+    fi
 
     ## update /etc/pam.d/common-passwd
     sed -i 's/use_authtok//g' /etc/pam.d/common-passwd
@@ -71,6 +77,10 @@ EOF
 
     echo "sudoers:            files ldap" >>/etc/nsswitch.conf
     echo "SUDOERS_BASE    ou=SUDOers,ou=$DOMAININFO,dc=hamonize,dc=com" >>/etc/ldap.conf
+
+    if [ -f /etc/sudo-ldap.conf ]; then
+        rm -fr /etc/sudo-ldap.conf
+    fi
     sudo ln -s /etc/ldap.conf /etc/sudo-ldap.conf
 
     DEBIAN_FRONTEND=noninteractive pam-auth-update
@@ -136,6 +146,8 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
 
     echo "$DATETIME ] 6. telegraf install ============== [end]" >>$LOGFILE
 
+    sudo service telegraf stop
+
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [start]" >>$LOGFILE
     mv /etc/telegraf/telegraf.conf /etc/telegraf/telegraf.conf_bak
 
@@ -178,7 +190,8 @@ if [ $(dpkg-query -W | grep telegraf | wc -l) = 0 ]; then
     domain = "'${DOMAININFO}'"
     ' >>/etc/telegraf/telegraf.conf
 
-    sudo service telegraf restart
+    #sudo service telegraf restart
+    #sudo service telegraf stop
     echo "$DATETIME ] 6-1.  telegraf Setting  ============== [end]" >>$LOGFILE
 fi
 
