@@ -235,34 +235,56 @@ const hamonizeVpnInstall_Action = async (event, domain) => {
 // # STEP 3. program install
 //========================================================================
 
-ipcMain.on('hamonizeProgramInstall', (event, domain) => {
+ipcMain.on('hamonizeProgramInstall', (event, domain) => { 
 	hamonizeProgramInstall_Action(event, domain);
 });
 const hamonizeProgramInstall_Action = async (event, domain) => {
 	try {
-		let hamonizeProgramInstallProcResult = await hamonizeProgramInstallProc(domain);
-		console.log("hamonizeProgramInstall_Result==" + hamonizeProgramInstallProcResult);
+		let userId = await execShellCommand("cat /etc/passwd | grep 1000 | awk -F':' '{print $1}' ");
+		let hamonizeProgramInstallProcResult = await hamonizeProgramInstallProc(domain, userId);
+		console.log("hamonizeProgramInstall_Result:::::::::::::::::::::::::::::" + hamonizeProgramInstallProcResult);
+
+
 		event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
+
+
+
 	} catch (err) {
 		console.log("hamonizeProgramInstall_Action Error---" + err);
 		return Object.assign(err);
 	}
 }
 
-function hamonizeProgramInstallProc(domain) {
+function hamonizeProgramInstallProc(domain, userId) {
 	return new Promise(function (resolve, reject) {
-
-		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl + " " + domain;
-		console.log("aptRepositoryChkJobShell===========++" + aptRepositoryChkJobShell);
+		
+		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl + " " + domain + " " + userId;
+		console.log("aptRepositoryChkJobShell===========>>>>>>>>>>>>>>>" + aptRepositoryChkJobShell);
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
 					console.log("hamonizeProgramInstallProc Error is " + error);
 					return resolve("N");
 				} else {
-					// console.log('stdout: ' + stdout);
-					// console.log('stderr: ' + stderr);
-					resolve("Y");
+					// console.log('stdout---->: ' + stdout);
+					console.log('stderr---->: ' + stderr);
+					if( stderr.trim() == '1942-LDAP' ){
+						resolve('N');
+					}else if( stderr.trim() == '1942-AGENT' ){
+						resolve('N');
+					}else if( stderr.trim() == '1942-OSLOGINOUT' ){
+						resolve('N');
+					}else if( stderr.trim() == '1942-HAMONIZE_ADMIN-TOOL' ){
+						resolve('N');
+					}else if( stderr.trim() == '1942-HAMONIZE_ADMIN-KEYS' ){
+						resolve('N');
+					}else if( stderr.trim() == '1942-HAMONIZE_ADMIN-ETC' ){
+						resolve('N');
+					}else if( stderr.trim() == '1942-HAMONIZE_HELP' ){
+						resolve('N');
+					}else{
+						resolve("Y");
+					}
 				}
 			}
 		);

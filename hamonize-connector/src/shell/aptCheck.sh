@@ -10,10 +10,10 @@ if [ ${APT_CHK_COUNT} = 0 ]; then
 	touch /etc/apt/sources.list.d/hamonize.list
 
 	# Hamonize APT
-	echo "deb http://$APTURL hamonize main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
+	echo "deb  [arch=amd64] http://$APTURL hamonize main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
 
 	# Hamonikr  Public APT
-	echo "deb http://pkg.hamonikr.org public main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
+	echo "deb  [arch=amd64] http://pkg.hamonikr.org public main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
 
 	# Add Hamonikr GPG KEY
 	wget -qO - http://pkg.hamonikr.org/hamonikr-pkg.key | sudo apt-key add -

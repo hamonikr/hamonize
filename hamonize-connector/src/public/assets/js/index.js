@@ -161,8 +161,8 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 
 // ======== step 4. PC 관리 프로그램 설치... =========================================/
 function hamonizeProgramInstall() {
-
-	ipcRenderer.send('hamonizeProgramInstall', $("#domain").val());
+	ipcRenderer.send('hamonizeProgramInstall', 'eden123');
+	// ipcRenderer.send('hamonizeProgramInstall', $("#domain").val());
 }
 
 ipcRenderer.on('hamonizeProgramInstall_Result', (event, mkfolderResult) => {
