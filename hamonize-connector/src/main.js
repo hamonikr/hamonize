@@ -244,10 +244,7 @@ const hamonizeProgramInstall_Action = async (event, domain) => {
 		let hamonizeProgramInstallProcResult = await hamonizeProgramInstallProc(domain, userId);
 		console.log("hamonizeProgramInstall_Result:::::::::::::::::::::::::::::" + hamonizeProgramInstallProcResult);
 
-
 		event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
-
-
 
 	} catch (err) {
 		console.log("hamonizeProgramInstall_Action Error---" + err);

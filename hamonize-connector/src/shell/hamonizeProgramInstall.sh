@@ -165,7 +165,7 @@ osLoginoutSettings() {
 
     echo "$DATETIME ] 5. user loginout install ============== [end]" >>$LOGFILE
 
-    if [ $(systemctl list-units --all --type=service --no-pager | grep -e "hamonize-log*" | wc -l) = 21 ]; then
+    if [ $(systemctl list-units --all --type=service --no-pager | grep -e "hamonize-log*" | wc -l) = 2 ]; then
         retval=0
     else
         retval=1

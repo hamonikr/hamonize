@@ -13,6 +13,7 @@ $modal = $(".modal");
 // # step 1. install file version check  ====================================
 // 폴더 생성 및 프로그램 설치 진행에 필요한 jq, curl 등 설치
 install_program_version_chkeck();
+// hamonizeSystemBackup();
 
 
 function install_program_version_chkeck() {
