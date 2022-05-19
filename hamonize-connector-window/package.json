@@ -75,6 +75,7 @@
     "ping-wrapper": "0.0.3",
     "react-countdown-circle-timer": "^1.1.0",
     "read-last-lines": "^1.7.2",
+    "request": "^2.88.2",
     "sudo-block": "^3.0.0",
     "sudo-prompt": "^9.1.1",
     "systeminformation": "^5.9.3",
@@ -115,15 +116,14 @@
     },
     "win": {
       "target": [
-        "zip",
         "nsis"
       ],
       "requestedExecutionLevel": "requireAdministrator",
       "icon": "res/bin/iconshm/logo3.png"
     },
     "nsis": {
-      "oneClick": false,
-      "perMachine" : true,
+      "oneClick": false, 
+      "perMachine": true,
       "allowToChangeInstallationDirectory": true
     },
     "directories": {

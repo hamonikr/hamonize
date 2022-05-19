@@ -19,17 +19,62 @@ function hamonize_org_settings() {
 
 	ipcRenderer.send('hamonize_org_settings');
 }
+ipcRenderer.on('hamonize_org_settings_Done', (event) => {
+	$modal.hide();
 
-// result org info == 
+});
+
+
+// 인증체크
+var doubleSubmitFlag = false;
+const pcChkAuthBtn = document.getElementById('pcChkAuthBtn');
+pcChkAuthBtn.addEventListener('click', function (event) {
+	if (!doubleSubmitFlag) {
+		let authkey_val = $("#authkey").val();
+		if (authkey_val.length == 0) {
+			doubleSubmitFlag = false;
+			return false
+		}
+
+		ipcRenderer.send('getAuth', authkey_val);
+
+	} else {
+		doubleSubmitFlag = true;
+		return false;
+	}
+
+});
+
+
+// 인증결과 
+ipcRenderer.on('getAuthResult', (event, authResult) => {
+
+	console.log(authResult);
+	// 조직정보
+	if (authResult == 'N') {
+		fn_alert("Hamonize 인증키 오류입니다. 다시 확인하신후 입력해 주시기바랍니다.");
+	} else {
+		$modal.show();
+		$(".layerpop__container").text("인증이 완료되었습니다. 조직정보를 불러오는 중입니다.  잠시만 기다려주세요.!!");
+		$("#domain").val(authResult);
+		ipcRenderer.send('getOrgData', authResult);
+	}
+});
+
+
+
+// 인증 완료 후  조직 표시 
 ipcRenderer.on('getOrgDataResult', (event, orgData) => {
 	var option = "";
 	$('#groupName').empty();
+	$("#orglayer").show();
+	$("#authkeylayer").hide();
+
 	$.each(orgData, function (key, value) {
 		console.log('key:' + key + ', seq:' + value.seq + ',orgnm:' + value.orgnm);
-
-		option += "<option>" + value.orgnm + "</option>";
-
+		option += "<option>  " + value.orgnm + "</option>";
 	});
+
 	$('#groupName').append(option);
 	$modal.hide();
 });
@@ -51,8 +96,8 @@ pcChkBtn.addEventListener('click', function (event) {
 		}
 		let sabun = "sabun"; //$("#sabun").val(); //사번
 		let username = "username"; //$("#username").val(); // 사용자 이름
-
-		ipcRenderer.send('pcInfoChk', groupname, sabun, username);
+		let tenantNm = $("#domain").val();
+		ipcRenderer.send('pcInfoChk', groupname, sabun, username, tenantNm);
 		doubleSubmitFlag = true;
 	} else {
 		doubleSubmitFlag = true;
@@ -105,7 +150,8 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 // 
 function install_program_Ready() {
 	$("#stepA").addClass("br animate");
-	ipcRenderer.send('install_program_Ready');
+	
+	ipcRenderer.send('install_program_Ready', $("#domain").val());
 }
 
 ipcRenderer.on('install_program_ReadyProcResult', (event, mkfolderResult) => {

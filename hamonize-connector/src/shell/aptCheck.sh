@@ -15,9 +15,16 @@ if [ ${APT_CHK_COUNT} = 0 ]; then
 	# Hamonikr  Public APT
 	echo "deb  [arch=amd64] http://pkg.hamonikr.org public main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
 
+
+
+
 	# Add Hamonikr GPG KEY
 	wget -qO - http://pkg.hamonikr.org/hamonikr-pkg.key | sudo apt-key add -
 
+
+	curl -sL https://pkg.hamonikr.org/add-hamonikr.apt | sudo -E bash -
+
+	
 	sudo apt-get update -y >>$LOGFILE
 
 fi

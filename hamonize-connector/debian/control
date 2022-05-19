@@ -8,8 +8,6 @@ Homepage: https://hamonikr.org
 
 Package: hamonize-connect
 Architecture: any
-Depends: curl,
-         jq,
-         ufw
+Depends:curl, ufw, fuse, libfuse2, net-tools
 Description: Agent program that manages pc in Harmonize projects.
  하모나이즈 프로젝트에서 pc를 관리하는 에이전트 프로그램입니다.

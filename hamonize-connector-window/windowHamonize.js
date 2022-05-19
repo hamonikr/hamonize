@@ -1,7 +1,8 @@
 const axios = require('axios')
 const https = require('https');
 const fs = require('fs');
-
+const unirest = require('unirest');
+const { verbose } = require('electron-log');
 
 let ps = "";
 let winFolderDir = "";
@@ -49,6 +50,7 @@ exports.fn_mk_base_folder = function (winFolderDir) {
         let data = "mkdir -p 'C:\\ProgramData\\Hamonize-connect-utils\\Settings\\' -ErrorAction SilentlyContinue \r\n";
         data += "mkdir 'C:\\ProgramData\\Hamonize-connect-utils\\Settings\\log' -ErrorAction SilentlyContinue \r\n";
         data += "mkdir 'C:\\ProgramData\\Hamonize-connect-utils\\OSLogOnOffLog' -ErrorAction SilentlyContinue \r\n";
+        data += "mkdir 'C:\\Windows\\System32\\GroupPolicy\\User\\Scripts' -ErrorAction SilentlyContinue \r\n";
 
         fileDir = winFolderDir + "mkBaseHamonize.ps1";
         console.log("fileDir==============================" + fileDir);
@@ -63,17 +65,68 @@ exports.fn_mk_base_folder = function (winFolderDir) {
 }
 
 
+exports.fn_VpnConnection = function (winFolderDir, vpnusedYn, winUUID) {
+    return new Promise(function (resolve, reject) {
+        vpnConnData = "";
+
+        if (vpnusedYn == 'Y') {
+            vpnConnData += "curl http://61.32.208.27:23000/getClients/hmon_vpn_vpn/" + winUUID + " \r\n";
+            vpnConnData += "wget http://61.32.208.27:23000/getClientsDownload/" + winUUID + " -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\winkey.ovpn'" + " \r\n";
+
+            vpnConnData += ' \r\n';
+            vpnConnData += ' \r\n';
+
+            vpnConnData += 'cd  "C:\\Program Files\\OpenVPN\\bin" \r\n';
+            vpnConnData += './openvpn-gui.exe --connect winkey \r\n';
+
+            vpnConnData += ' \r\n';
+            vpnConnData += ' \r\n';
+
+        }
+
+
+        fileDir = winFolderDir + "HvpnConnections.ps1";
+        console.log("fileDir==============================" + fileDir);
+        fs.writeFile(fileDir, vpnConnData, (err) => {
+            if (err) {
+                return reject("N");
+            } else {
+                return resolve("Y");
+            }
+        });
+    });
+}
+
+
+
+
+
 // mkdir Hamonize-usre Run Script
-exports.fn_mk_HUser_Run = function (winFolderDir) {
+exports.fn_mk_HUser_Run = function (winFolderDir, tenantNm) {
     return new Promise(function (resolve, reject) {
 
         let hUserToolData = "# Hamonize-user key & config Settings \r\n";
-        hUserToolData += ' wget ' + gopBaseUrl + '/getAgent/getpublickey -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem \r\n';
+        // hUserToolData += 'cmd /c ver \r\n';
+        // hUserToolData += ' wget https://console.hamonize.com/hmsvc/getTenantRemoteConfig?gubun=pubkey&domain=/' + tenantNm + ' -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem \r\n';
+        // hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe authkeys import hamonize/public C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem 2>&1 | out-null \r\n';
+        // hUserToolData += ' wget https://console.hamonize.com/hmsvc/getTenantRemoteConfig?gubun=config&domain=/' + tenantNm + ' -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
+        // hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe config import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json  2>&1 | out-null \r\n';
+        // hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe service restart  2>&1 | out-null \r\n';
+
+
+        hUserToolData += 'Invoke-WebRequest -Uri "https://console.hamonize.com/hmsvc/getTenantRemoteConfig?gubun=pubkey&domain=/' + tenantNm + ' " -OutFile C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key_temp.pem \r\n';
+        hUserToolData += 'Invoke-WebRequest -Uri "https://console.hamonize.com/hmsvc/getTenantRemoteConfig?gubun=config&domain=/' + tenantNm + ' " -OutFile C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
+
+        hUserToolData += '$PubilKey = Get-Content C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key_temp.pem';
+        hUserToolData += '"-----BEGIN PUBLIC KEY-----",$PublickKey, "-----END PUBLIC KEY-----" | Set-Content  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem ' ;
+
         hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe authkeys import hamonize/public C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize_public_key.pem 2>&1 | out-null \r\n';
-        hUserToolData += ' wget ' + gopBaseUrl + '/getAgent/getconfigfile -UseBasicParsing -O  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json \r\n';
         hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe config import  C:\\ProgramData\\Hamonize-connect-utils\\Settings\\hamonize.json  2>&1 | out-null \r\n';
         hUserToolData += ' & C:\\\'program files\'\\hamonize\\hamonize-cli.exe service restart  2>&1 | out-null \r\n';
 
+        hUserToolData += '';
+        hUserToolData += '';
+        hUserToolData += '';
 
         let fileDir = winFolderDir + "HUserRun.ps1";
         console.log("fileDir==============================" + fileDir);
@@ -167,7 +220,7 @@ exports.fn_install_Program_settings_step = function (winFolderDir, vpnused) {
 
 
 
-exports.fn_install_Program_settings_step_telegraf = function (winFolderDir, winUUID) {
+exports.fn_install_Program_settings_step_telegraf = function (winFolderDir, winUUID, tenantNm) {
     return new Promise(function (resolve, reject) {
 
         var StringPsData = "";
@@ -207,6 +260,9 @@ exports.fn_install_Program_settings_step_telegraf = function (winFolderDir, winU
         telegrafConfFile += '[[inputs.system]] \r\n';
         telegrafConfFile += '[global_tags] \r\n';
         telegrafConfFile += 'uuid = "' + winUUID + '" \r\n';
+        telegrafConfFile += 'domain = "' + tenantNm + '" \r\n';
+
+
 
         StringPsData = "wget https://dl.influxdata.com/telegraf/releases/telegraf-1.20.0~rc0_windows_amd64.zip -UseBasicParsing -O '" + winFolderDir + "telegraf.zip" + "' \r\n";
         // StringPsData += "\r\n unzip telegraf-1.20.0~rc0_windows_amd64.zip";
@@ -240,7 +296,7 @@ exports.fn_install_Program_settings_step_telegraf = function (winFolderDir, winU
 
 
 
-exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn, winUUID) {
+exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn, winUUID, tenantNm) {
     return new Promise(function (resolve, reject) {
 
 
@@ -257,13 +313,13 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         hamonizeWinOSLogDataPSFile += '$strFileName = "C:\\ProgramData\\Hamonize-connect-utils\\OSLogOnOffLog\\" \r\n';
         hamonizeWinOSLogDataPSFile += '$strFileName += [string]$strFile + ".txt" \r\n';
 
-        if (vpnusedYn == 1) {
-            hamonizeWinOSLogDataPSFile += 'cd  "C:\\Program Files\\OpenVPN\\bin" \r\n';
-            hamonizeWinOSLogDataPSFile += './openvpn-gui.exe --connect winkey \r\n';
+        // if (vpnusedYn == 'Y') {
+        // hamonizeWinOSLogDataPSFile += 'cd  "C:\\Program Files\\OpenVPN\\bin" \r\n';
+        // hamonizeWinOSLogDataPSFile += './openvpn-gui.exe --connect winkey \r\n';
 
-            hamonizeWinOSLogDataPSFile += ' \r\n';
-            hamonizeWinOSLogDataPSFile += ' \r\n';
-        }
+        // hamonizeWinOSLogDataPSFile += ' \r\n';
+        // hamonizeWinOSLogDataPSFile += ' \r\n';
+        // }
 
         hamonizeWinOSLogDataPSFile += '$strDate + "," + $strTime + "," + $strName + "," + $strComputerName + "," + "Status :LOGIN"  | Out-File $strFileName -append -Encoding ASCII \r\n';
         hamonizeWinOSLogDataPSFile += '\r\n';
@@ -272,7 +328,8 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         hamonizeWinOSLogDataPSFile += '"events":[{ \r\n'
         hamonizeWinOSLogDataPSFile += '"uuid":"' + winUUID + '", \r\n'
         hamonizeWinOSLogDataPSFile += '"gubun":"LOGIN", \r\n'
-        hamonizeWinOSLogDataPSFile += '"datetime":"$strDate $strTime" \r\n'
+        hamonizeWinOSLogDataPSFile += '"datetime":"$strDate $strTime", \r\n'
+        hamonizeWinOSLogDataPSFile += '"domain":"' + tenantNm + '" \r\n'
         hamonizeWinOSLogDataPSFile += '}] \r\n'
         hamonizeWinOSLogDataPSFile += '} \r\n'
         hamonizeWinOSLogDataPSFile += '"@ \r\n'
@@ -280,7 +337,7 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
 
 
 
-        if (vpnusedYn == 1) {
+        if (vpnusedYn == 'Y') {   // <-------------------- 수정대상 --------------------------------
             hamonizeWinOSLogDataPSFile += ' \r\n';
             hamonizeWinOSLogDataPSFile += 'Start-Sleep 10 \r\n';
             hamonizeWinOSLogDataPSFile += '$ipdatajson = @" \r\n';
@@ -298,9 +355,7 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
             hamonizeWinOSLogDataPSFile += '} \r\n';
             hamonizeWinOSLogDataPSFile += '"@ \r\n';
 
-            hamonizeWinOSLogDataPSFile += 'curl '+gopBaseUrl+'/hmsvc/pcInfoChange -contenttype "application/json" -method post -Body $ipdatajson \r\n';
-
-
+            hamonizeWinOSLogDataPSFile += 'curl ' + gopBaseUrl + '/hmsvc/pcInfoChange -contenttype "application/json" -method post -Body $ipdatajson \r\n';
 
         }
 
@@ -322,7 +377,8 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         hamonizeWinOSLogDataPSFile_OFF += '"events":[{ \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '"uuid":"' + winUUID + '", \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '"gubun":"LOGOUT", \r\n'
-        hamonizeWinOSLogDataPSFile_OFF += '"datetime":"$strDate $strTime" \r\n'
+        hamonizeWinOSLogDataPSFile_OFF += '"datetime":"$strDate $strTime", \r\n'
+        hamonizeWinOSLogDataPSFile_OFF += '"domain":"' + tenantNm + '" \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '}] \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '} \r\n'
         hamonizeWinOSLogDataPSFile_OFF += '"@ \r\n'
@@ -352,16 +408,37 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         StringPsData += "cd 'C:\\Windows\\System32\\GroupPolicy\\User\\Scripts\\' \r\n";
         StringPsData += 'New-Item -Name psscripts.ini -Value "' + hamonizeWinOSGOPScirptFile + '" \r\n';
 
-        if (vpnusedYn == 1) {
-            StringPsData += "wget http://" + VpnUrl + ":3000/getClientsDownload/winovpn -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\winkey.ovpn'" + " \r\n";
-        }
+        // if (vpnusedYn == 'Y') {
+        //     StringPsData += "curl http://61.32.208.27:23000/getClients/hmon_vpn_vpn/" + winUUID + " \r\n";
+
+        //     // StringPsData += "wget http://61.32.208.27:23000/getClientsDownload/"+winUUID+" -UseBasicParsing -O 'C:\\Users\\winkey.ovpn'" + " \r\n";
+        //     StringPsData += "wget http://61.32.208.27:23000/getClientsDownload/"+winUUID+" -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\winkey.ovpn'" + " \r\n";
 
 
 
-        StringPsData += '# paths \r\n'
+
+
+
+
+        //     hamonizeWinOSLogDataPSFile += ' \r\n';
+        //     hamonizeWinOSLogDataPSFile += ' \r\n';
+
+
+        //     hamonizeWinOSLogDataPSFile += 'cd  "C:\\Program Files\\OpenVPN\\bin" \r\n';
+        //     hamonizeWinOSLogDataPSFile += './openvpn-gui.exe --connect winkey \r\n';
+
+        //     hamonizeWinOSLogDataPSFile += ' \r\n';
+        //     hamonizeWinOSLogDataPSFile += ' \r\n';
+
+        //     // wget_key=$( wget -O "/etc/hamonize/ovpnclient/$CLIENT.ovpn" --server-response -c "http://$VPNIP/getClientsDownload/$CLIENT" 2>&1 )
+
+        //     // StringPsData += "wget http://" + VpnUrl + ":3000/getClientsDownload/winovpn -UseBasicParsing -O 'C:\\Program Files\\openvpn\\config\\winkey.ovpn'" + " \r\n";
+        // }
+
+
+
+
         StringPsData += '$GpRoot = "${env:SystemRoot}\\System32\\GroupPolicy" \r\n'
-
-        StringPsData += '# bumping machine/user script versions in gpt.ini \r\n'
         StringPsData += '$GpIni = Join-Path $GpRoot "gpt.ini" \r\n'
         StringPsData += '$MachineGpExtensions = "" \r\n'
         StringPsData += '$UserGpExtensions = \'{42B5FAAE-6536-11D2-AE5A-0000F87571E3}{40B66650-4972-11D1-A7CA-0000F87571E3}\' \r\n'
@@ -384,11 +461,11 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
         StringPsData += '# generating registry keys \r\n'
         StringPsData += 'gpupdate \r\n'
 
-        StringPsData += 'Write-Output "testAsync2Proc" \r\n'
+        // StringPsData += 'Write-Output "testAsync2Proc" \r\n'
 
         // console.log("StringPsData===" + StringPsData);
 
-        let fileDir =  winFolderDir + "gop.ps1";
+        let fileDir = winFolderDir + "gop.ps1";
         fs.writeFile(fileDir, StringPsData, (err) => {
             if (err) {
                 return reject("N");
@@ -404,7 +481,7 @@ exports.fn_install_Program_settings_step_GOP = function (winFolderDir, vpnusedYn
 // Get Hamonize base Info 
 exports.hamonizeServerInfo = function (baseurl, event) {
     return new Promise(function (resolve, reject) {
-        let setUrl = "http://" + baseurl + "/hmsvc/commInfoData";
+
         const machineIdSync = require('node-machine-id').machineIdSync;
         let WinMachindid = machineIdSync({
             original: true
@@ -449,8 +526,9 @@ exports.hamonizeServerInfo = function (baseurl, event) {
             console.log("InfluxOrg===" + InfluxOrg);
             console.log("InfluxToken===" + InfluxToken);
 
-            getOrgData(event, baseurl);
+            // getOrgData(event, baseurl);
 
+            event.sender.send('hamonize_org_settings_Done');
 
         }, (error) => {
             console.log(error);
@@ -460,23 +538,86 @@ exports.hamonizeServerInfo = function (baseurl, event) {
 }
 
 
-const getOrgData = async (event, baseurl) => {
-    var unirest = require('unirest');
-    console.log("조직정보======================" + baseurl);
+exports.getAuthProc = function (baseurl, authkeyVal, winFolderDir, event) {
+    return new Promise(function (resolve, reject) {
+
+        console.log("b===" + baseurl + '===' + authkeyVal)
+        unirest.get(baseurl + '/hmsvc/getOrgAuth')
+            .header('content-type', 'application/json')
+            .send({
+                events: [{
+                    authkey: authkeyVal
+                }]
+            })
+            .end(function (response) {
+
+                if (response.statusCode == 200) {
+                    // createHamonizeConfFile(winFolderDir, response.body);
+
+                    let retData = response.body;
+                    fileDir = winFolderDir + "hamonize_tenant.conf";
+                    console.log("fileDir==============================" + fileDir);
+                    console.log("response.body==============================" + response.body);
+
+                    if (retData != 'N') {
+
+                        fs.writeFile(fileDir, retData, (err) => {
+                            if (err) {
+                                console.log(error);
+                                // return reject("N");
+                            } else {
+                                console.log('y');
+                                // return resolve("Y");
+                                event.sender.send('getAuthResult', retData);
+                                // getOrgData(event, baseurl, retData);
+                            }
+                        });
+
+
+                    } else {
+                        // 인증 오류 (잘못된 인증번호)
+                        event.sender.send('getAuthResult', 'N');
+                    }
+                } else {
+                    // event.sender.send('getAuthResult', 'N');
+                }
+            });
+
+    });
+}
+
+
+
+
+const createHamonizeConfFile = async (winFolderDir, tenantNm, event) => {
+
+    let data = tenantNm;
+    fileDir = winFolderDir + "hamonize_tenant.conf";
+    console.log("fileDir==============================" + fileDir);
+    fs.writeFile(fileDir, data, (err) => {
+        if (err) {
+            return reject("N");
+        } else {
+            return resolve("Y");
+        }
+    });
+}
+
+
+exports.getOrgData = function (tenantNm, event) {
+
+    // const getOrgData = async (event, baseurl,retData) => {
     axios({
         method: 'get',
-        url: baseurl + '/hmsvc/getOrgData',
+        url: 'https://console.hamonize.com/hmsvc/getOrgData',
         data: {
             events: [{
-                baseInfo: "baseInfo"
+                domain: tenantNm
             }]
         }
     }).then((response) => {
-
-
-        // console.log(response.data);
+        console.log(response.data);
         event.sender.send('getOrgDataResult', response.data);
-
     }, (error) => {
         console.log(error);
     });

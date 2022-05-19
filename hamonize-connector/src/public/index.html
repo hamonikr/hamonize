@@ -2,7 +2,7 @@
 <html lang="ko" class="no-js">
 
 <head>
-    <title>Hamonize] PC 관리 프로그램 </title>
+    <title>[ Hamonize ] PC 관리 프로그램 </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -96,144 +96,168 @@
         <div class="content">
             <div class="container-fluid">
                 <div>
-                    <!-- class="row"-->
-                    <div>
-                        <!--class="col-lg-6 col-md-12"-->
-                        <div class="card">
-                            <div class="card-header card-header-tabs card-header-primary">
-                                <div class="nav-tabs-navigation">
-                                    <div class="nav-tabs-wrapper">
-                                        <span class="nav-tabs-title">Tasks:</span>
-                                        <ul class="nav nav-tabs" data-tabs="tabs">
-                                            <li class="nav-item">
-                                                <a class="nav-link active" id="initLayer" href="javascript:;"
-                                                    data-toggle="tab">
-                                                    <i class="material-icons">PC</i> 정보 입력
-                                                    <div class="ripple-container"></div>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link " id="procLayer" href="javascript:;"
-                                                    data-toggle="tab">
-                                                    <i class="material-icons">PC </i> 관리 프로그램 목록
-                                                    <div class="ripple-container"></div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                    <div class="card">
+                        <div class="card-header card-header-tabs card-header-primary">
+                            <div class="nav-tabs-navigation">
+                                <div class="nav-tabs-wrapper" id="hmInstallIng">
+                                    <span class="nav-tabs-title">Tasks:</span>
+                                    <ul class="nav nav-tabs" data-tabs="tabs">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="initLayer" href="javascript:;"
+                                                data-toggle="tab">
+                                                <i class="material-icons">PC</i> 정보 입력
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link " id="procLayer" href="javascript:;"
+                                                data-toggle="tab">
+                                                <i class="material-icons">PC </i> 관리 프로그램 목록
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </div>
-
-
-
-
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="initLayerBody">
-                                        
-                                        <div class="col-md-3" id="authkeylayer">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">Hamonize 인증 : </label>
-                                                <input type="text" id="authkey" name="authkey" class="form-control" >        
-                                            </div>
-                                            <button type="button" id="pcChkAuthBtn" class="btn btn-primary pull-right">등록</button>
-                                        </div>
-
-                                        <div class="col-md-3" id="orglayer" style="display: none;">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">조직명</label>
-                                                <select name="groupName" id="groupName" style="display: block;"></select>
-                                            </div>
-                                            <button type="button" id="pcChkBtn" class="btn btn-primary pull-right">등록</button>
-                                        </div>
-
-                                    </div>
-
-                                    <input type="hidden" id="selectOrg" name="selectOrg" class="form-control">
-                                    <input type="hidden" id="domain" name="domain" class="form-control">
-                                    <input type="hidden" id="sabun" name="sabun" class="form-control">
-                                    <input type="hidden" id="username" name="username" class="form-control">
-
-                                    <div class="tab-pane " id="procLayerBody">
-                                        <table class="table">
-                                            <tbody>
-                                                <tr id="stepA" class="">
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label">
-                                                                <input class="form-check-input" type="checkbox" value=""
-                                                                    checked>
-                                                                <span class="form-check-sign"><span
-                                                                        class="check"></span></span>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>하모나이즈 프로그램 환경 셋팅...</td>
-                                                    <td><button type="button" rel="tooltip" title="install"
-                                                            class="btn btn-danger btn-link btn-sm"><i
-                                                                class="material-icons">
-                                                                <span id="infoStepA">설치전</span></i></button></td>
-                                                </tr>
-
-                                                <tr id="stepB" class="">
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label">
-                                                                <input class="form-check-input" type="checkbox" value=""
-                                                                    checked>
-                                                                <span class="form-check-sign"><span
-                                                                        class="check"></span></span>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>하모나이즈 프로그램 설치...</td>
-                                                    <td><button type="button" rel="tooltip" title="install"
-                                                            class="btn btn-danger btn-link btn-sm"><i
-                                                                class="material-icons">
-                                                                <span id="infoStepB">설치전</span></i></button></td>
-                                                </tr>
-
-                                                <tr id="stepC" class="">
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <label class="form-check-label">
-                                                                <input class="form-check-input" type="checkbox" value=""
-                                                                    checked>
-                                                                <span class="form-check-sign"><span
-                                                                        class="check"></span></span>
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    <td> OS 백업...</td>
-                                                    <td><button type="button" rel="tooltip" title="install"
-                                                            class="btn btn-danger btn-link btn-sm"><i
-                                                                class="material-icons">
-                                                                <span id="infoStepC">설치전</span></i></button></td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="tab-pane " id="EndBody">
-                                        <div
-                                            style="height: 150px; text-align: center; margin-top: 20%; font-size: 16px;">
-                                            <i class="material-icons">
-                                                하모나이즈 프로그램 설치 완료.!
-                                                재부팅해 주시기 바랍니다.
-                                            </i>
-                                        </div>
-                                    </div>
-
+                                <div id="hmInstalled" style="display: none;">
+                                    Hamonize PC 관리 프로그램
                                 </div>
                             </div>
                         </div>
 
-                        <!-- <div id="loadingInfoText"></div> -->
+                        <div class="card-body" id="hmFreeDoneBody" style="display: none; height: 190px;">
+                            <p> </p>
+                            <ul class="intro_ul">
+                                <li>
+                                    <p>𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮 사용 기간이 만료되었습니다. </p>
+                                    <p>- 𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮 원격관리, 프로그램, 방화벽, 비인가 디바이스 등 𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮 PC관리를 사용하실 수 없습니다. </p>
+                                    <p>시스템 관리자에게 문의바랍니다.  </p>
+                                </li>
+                            </ul>
+                            <p><button type="button" id="hamonizeAuthChkBtn" class="btn btn-primary pull-right">인증</button></p>
+                        </div>
 
+                        <div class="card-body" id="hmInstalledBody" style="display: none; height: 190px;">
+                            <p> </p>
+                            <ul class="intro_ul">
+                                <li>
+                                    <p>이 컴퓨터는 𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮 프로그램이 설치되어 작동중입니다.</p>
+                                    <!-- <p>𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮 프로그램 재설치를 원하시는 경우 관리자에게 문의 하시기 바랍니다.</p> -->
+                                    <p></p>
+                                    <p>𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮 프로그램 재설치를 원하시는 경우 관리자에게 문의 후 프로그램을 재설치 해주시기 바랍니다.</p>
+                                    <p><button type="button" id="reInstallBtn" class="btn btn-primary pull-right">재설치</button></p>
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+
+
+
+                        
+                        <div class="card-body" id="hmInstallIngBody">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="initLayerBody">
+                                    
+                                    <div class="col-md-3" id="authkeylayer">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">Hamonize 인증 : </label>
+                                            <input type="text" id="authkey" name="authkey" class="form-control" >        
+                                        </div>
+                                        <button type="button" id="pcChkAuthBtn" class="btn btn-primary pull-right">등록</button>
+                                    </div>
+
+                                    <div class="col-md-3" id="orglayer" style="display: none;">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">조직명</label>
+                                            <select name="groupName" id="groupName" style="display: block;"></select>
+                                        </div>
+                                        <button type="button" id="pcChkBtn" class="btn btn-primary pull-right">등록</button>
+                                    </div>
+
+                                </div>
+
+                                <input type="hidden" id="selectOrg" name="selectOrg" class="form-control">
+                                <input type="hidden" id="domain" name="domain" class="form-control">
+                                <input type="hidden" id="sabun" name="sabun" class="form-control">
+                                <input type="hidden" id="username" name="username" class="form-control">
+                                <input type="hidden" id="tmpFreeDateDone" name="tmpFreeDateDone" class="form-control">
+
+                                <div class="tab-pane " id="procLayerBody">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr id="stepA" class="">
+                                                <td>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                checked>
+                                                            <span class="form-check-sign"><span
+                                                                    class="check"></span></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>하모나이즈 프로그램 환경 셋팅...</td>
+                                                <td><button type="button" rel="tooltip" title="install"
+                                                        class="btn btn-danger btn-link btn-sm"><i
+                                                            class="material-icons">
+                                                            <span id="infoStepA">설치전</span></i></button></td>
+                                            </tr>
+
+                                            <tr id="stepB" class="">
+                                                <td>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                checked>
+                                                            <span class="form-check-sign"><span
+                                                                    class="check"></span></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>하모나이즈 프로그램 설치...</td>
+                                                <td><button type="button" rel="tooltip" title="install"
+                                                        class="btn btn-danger btn-link btn-sm"><i
+                                                            class="material-icons">
+                                                            <span id="infoStepB">설치전</span></i></button></td>
+                                            </tr>
+
+                                            <tr id="stepC" class="">
+                                                <td>
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                checked>
+                                                            <span class="form-check-sign"><span
+                                                                    class="check"></span></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td> OS 백업...</td>
+                                                <td><button type="button" rel="tooltip" title="install"
+                                                        class="btn btn-danger btn-link btn-sm"><i
+                                                            class="material-icons">
+                                                            <span id="infoStepC">설치전</span></i></button></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="tab-pane " id="EndBody">
+                                    <div
+                                        style="height: 150px; text-align: center; margin-top: 20%; font-size: 16px;">
+                                        <i class="material-icons">
+                                            하모나이즈 프로그램 설치 완료.!
+                                            재부팅해 주시기 바랍니다.
+                                        </i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- </div> -->
 
 
                 <footer class="footer" style="padding:0px;">

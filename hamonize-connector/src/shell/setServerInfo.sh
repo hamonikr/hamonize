@@ -13,8 +13,22 @@ UUID=$(cat /etc/hamonize/uuid)
 # CENTERURLINFO=$(cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}')<------------- 사용안함
 
 # 초기 필수 정보......
-# vpn 연결후  센터 url을 통해 서버정보 get
-# CENTERURL="http://<Hamonize Center Url>/hmsvc/commInfoData"
+
+
+#  JQ install 
+REQUIRED_PKG="jq"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
+    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+fi
+
+# sudo apt-get install jq -y >/dev/null
+sleep 1
+echo "$DATETIME ]-------->jq install status \n `dpkg -l jq`">> $LOGFILE
+
+
 CENTERURL="$1/hmsvc/commInfoData"
 
 DATA_JSON="{\

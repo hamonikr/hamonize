@@ -30,11 +30,9 @@ const options = {
 const electronLocalshortcut = require('electron-localshortcut');
 
 const baseurl = "https://console.hamonize.com";
-// const baseurl = "<Hamonize Center Url>";
 const osType = require('os');
 
 let mainWindow, settingWindow;
-
 
 
 
@@ -46,7 +44,7 @@ function createWindow() {
 		'width': 620,
 		'height': 340,
 		frame: true,
-		alwaysOnTop: false,
+		alwaysOnTop: true,
 		resizable: true,
 		transparent: true,
 		show: true,
@@ -116,25 +114,35 @@ ipcMain.on('shutdown', (event, path) => {
 //========================================================================
 // # STEP 1. Init Hamonize 
 //========================================================================
-
+const hamonizeAppUUID_FILE = "/etc/hamonize/hamonize.appinfo";
 ipcMain.on('install_program_version_chkeck', (event) => {
 	console.log(`STEP 1. install_program_version_chkeck`);
+
+	
+	// old Process 
 	install_program_version_chkeckAsync(event);
 
-	// 사용자 권한 체크 (테스트 , 삭제 예정)
-	var isRoot = (process.getuid && process.getuid() === 0)
-	console.log("isRoot======111=======" + isRoot);
 
-	var env = process.env;
-	var home = env.HOME;
-	var user = env.LOGNAME || env.USER || env.LNAME || env.USERNAME;
-	if (process.platform === 'linux') {
-		home || (process.getuid() === 0 ? '/root' : (user ? '/home/' + user : null));
-	}
+	// new Process Doing
+	// var hamonizeAppUUID_STATS = fs.statSync(hamonizeAppUUID_FILE);
+	// console.log("//==Hamonize App UUID 파일 체크 " + hamonizeAppUUID_STATS.isFile());
 
-	console.log("home==" + home);
+	// // Hamonize Connecotr Install Check  
+	// if (!hamonizeAppUUID_STATS.isFile()) {
+	// 	// Hamonize Connector Not Install 
+	// 	install_program_version_chkeckAsync(event);
+	// }else{
+	// 	// Hamonize Connector Installed 
+	// 	var hamonizeAppUUIDVal = fs.readFileSync(hamonizeAppUUID_FILE, 'utf8');
+	// 	console.log("hamonizeAppUUIDVal.............." + hamonizeAppUUIDVal);
+	// 	// event.sender.send('install_program_version_chkeckResult', 'YDONE');	// 프로그램 설치 완료 후 재실행 했을경우 
+	// 	event.sender.send('install_program_version_chkeckResult', 'FREEDONE');	// 프로그램 프리 사용 기간이 끝난경우
+	// }
+
+
 
 });
+
 
 
 const install_program_version_chkeckAsync = async (event) => {
@@ -198,14 +206,10 @@ ipcMain.on('hamonizeVpnInstall', (event, domain) => {
 		})
 		.end(function (response) {
 			var json = response.body;
-			console.log("get vpn_used info ===" + JSON.stringify(response.body));
 			vpn_used = response.body[0]["vpn_used"];
-			console.log("vpn_used========++" + vpn_used);
 			if (vpn_used == 'Y') {
-				console.log("vpn install..");
 				hamonizeVpnInstall_Action(event, domain);
 			} else if (vpn_used == 0) {
-				console.log("vpn bypass..");
 				event.sender.send('hamonizeVpnInstall_Result', 'Y');
 			}
 		});
@@ -235,7 +239,7 @@ const hamonizeVpnInstall_Action = async (event, domain) => {
 // # STEP 3. program install
 //========================================================================
 
-ipcMain.on('hamonizeProgramInstall', (event, domain) => { 
+ipcMain.on('hamonizeProgramInstall', (event, domain) => {
 	hamonizeProgramInstall_Action(event, domain);
 });
 const hamonizeProgramInstall_Action = async (event, domain) => {
@@ -254,7 +258,7 @@ const hamonizeProgramInstall_Action = async (event, domain) => {
 
 function hamonizeProgramInstallProc(domain, userId) {
 	return new Promise(function (resolve, reject) {
-		
+
 		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl + " " + domain + " " + userId;
 		console.log("aptRepositoryChkJobShell===========>>>>>>>>>>>>>>>" + aptRepositoryChkJobShell);
 		sudo.exec(aptRepositoryChkJobShell, options,
@@ -265,21 +269,21 @@ function hamonizeProgramInstallProc(domain, userId) {
 				} else {
 					// console.log('stdout---->: ' + stdout);
 					console.log('stderr---->: ' + stderr);
-					if( stderr.trim() == '1942-LDAP' ){
+					if (stderr.trim() == '1942-LDAP') {
 						resolve('N');
-					}else if( stderr.trim() == '1942-AGENT' ){
+					} else if (stderr.trim() == '1942-AGENT') {
 						resolve('N');
-					}else if( stderr.trim() == '1942-OSLOGINOUT' ){
+					} else if (stderr.trim() == '1942-OSLOGINOUT') {
 						resolve('N');
-					}else if( stderr.trim() == '1942-HAMONIZE_ADMIN-TOOL' ){
+					} else if (stderr.trim() == '1942-HAMONIZE_ADMIN-TOOL') {
 						resolve('N');
-					}else if( stderr.trim() == '1942-HAMONIZE_ADMIN-KEYS' ){
+					} else if (stderr.trim() == '1942-HAMONIZE_ADMIN-KEYS') {
 						resolve('N');
-					}else if( stderr.trim() == '1942-HAMONIZE_ADMIN-ETC' ){
+					} else if (stderr.trim() == '1942-HAMONIZE_ADMIN-ETC') {
 						resolve('N');
-					}else if( stderr.trim() == '1942-HAMONIZE_HELP' ){
+					} else if (stderr.trim() == '1942-HAMONIZE_HELP') {
 						resolve('N');
-					}else{
+					} else {
 						resolve("Y");
 					}
 				}
@@ -304,29 +308,18 @@ const hamonizeSystemBackup_Action = async (event) => {
 		let hamonizeSystemBackupProcResult = await hamonizeSystemBackupProc(userId);
 		console.log("hamonizeSystemBackup_Proc==" + hamonizeSystemBackupProcResult);
 
-		// application Uuid create 
-		// let fileDir = "/etc/hamonize/hamonize.appinfo";
-		// let applicationIdChk = await getOsMachineId(fileDir);
-		// if (applicationIdChk == 'N' || applicationIdChk == '') {
-		// 	let uniqid = require('uniqid');
-		// 	let appUUID = uniqid() + (new Date()).getTime().toString(36);
-		// 	const pcUuid = (await si.uuid());
-		// 	console.log("License Add STEP 1-3 ] - MachineId Value is ::: " + pcUuid + ",  App UUID Value is ::: " + appUUID);
 
-		// 	// 파일 저장
-		// 	let createMachineId = await userOsMachineIdWriteFile(pcUuid.os + ":" + appUUID, fileDir);
-		// 	console.log("License Add STEP 1-4 ] - create File  is  ::: " + createMachineId);
-
-		// 	if (createMachineId == 'Y') {
-		// 		// 저장된 파일 정보를 가져온다. 
-		// 		let systemInfoVal = await getOsMachineId(fileDir);
-		// 		console.log("License Add STEP 1-5 ] - create File  is  ::: " + systemInfoVal);
-		// 	}
-		// } else {
-		// 	let systemInfoVal = await getOsMachineId(fileDir);
-		// 	console.log("License Add STEP 1-6 ] - get File  is  ::: " + systemInfoVal);
-		// }
-
+		// START] application Uuid create -----------------//
+		let uniqid = require('uniqid');
+		let appUUID = uniqid() + (new Date()).getTime().toString(36);
+		// const pcUuid = (await si.uuid());
+		const machineIdSync = require('node-machine-id').machineIdSync;
+		let machindid = machineIdSync({
+			original: true
+		});
+		console.log("License Add STEP 1-3 ] - MachineId Value is ::: " + machindid + ",  App UUID Value is ::: " + appUUID);
+		fs.writeFileSync(hamonizeAppUUID_FILE, machindid + "=" + appUUID);
+		// END] application Uuid create -----------------//
 
 		event.sender.send('hamonizeSystemBackup_Result', hamonizeSystemBackupProcResult);
 	} catch (err) {
@@ -393,6 +386,7 @@ function setServerInfo() {
 function initHamonizeJob() {
 	return new Promise(function (resolve, reject) {
 		var initJobShell = "/bin/bash " + __dirname + "/shell/initHamonizeInstall.sh";
+		console.log("initJobShell==========================================================")
 		sudo.exec(initJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
@@ -842,10 +836,10 @@ ipcMain.on('getOrgAuth', (event, authkeyVal) => {
 			}]
 		})
 		.end(function (response) {
-			
+
 
 			if (response.statusCode == 200) {
-			//	// file write 
+				//	// file write 
 				let fileDir = "/etc/hamonize/hamonize_tanent";
 				fs.writeFile(fileDir, response.body, (err) => {
 					if (err) {

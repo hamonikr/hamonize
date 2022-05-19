@@ -39,7 +39,8 @@ ldapSettings() {
         # if [ -f /tmp/debconf-ldap-preseed.txt ]; then
 
         # cat /tmp/debconf-ldap-preseed.txt | debconf-set-selections
-        DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd >/dev/null
+        DEBIAN_FRONTEND=noninteractive apt install -y -q ldap-auth-client nscd >/dev/null
+        # DEBIAN_FRONTEND=noninteractive aptitude install -y -q ldap-auth-client nscd >/dev/null
 
         ## Add /etc/pam.d/common-session
 
@@ -290,6 +291,11 @@ remoteToolSettings() {
     apt-get install libqca-qt5-2-plugins -y >>$LOGFILE
     apt-get install libfakekey0 -y >>$LOGFILE
     apt-get install libqca-qt5-2 -y >>$LOGFILE
+    apt-get install -y libldap-2.4-2 libssl1.1 >>$LOGFILE
+    apt-get install -y libqt5dbus5 libqt5gui5 libqt5network5 libqt5widgets5 libssl1.1 >>$LOGFILE
+
+    wget -P /tmp https://pkg.hamonikr.org/pool/main/q/qtbase-abi-5-12-8/qtbase-abi-5-12-8_1.0_all.deb >>$LOGFILE
+    dpkg -i /tmp/qtbase*.deb >>$LOGFILE
 
     OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
     if [ "${OSGUBUN}" = "HAMONIKR" ] || [ "${OSGUBUN}" = "LINUXMINT" ] || [ "${OSGUBUN}" = "UBUNTU" ]; then
@@ -399,17 +405,21 @@ hamonieTenantAptUrl() {
         sudo apt-get update -y >>$LOGFILE
     fi
 
-    cat /etc/apt/sources.list.d/hamonize.list >> $LOGFILE
-    echo $(grep -rn '$aa' /etc/apt/sources.list.d/hamonize.list | wc -l) >> $LOGFILE
+    cat /etc/apt/sources.list.d/hamonize.list >>$LOGFILE
+    echo $(grep -rn '$aa' /etc/apt/sources.list.d/hamonize.list | wc -l) >>$LOGFILE
 }
 
 Init-HamonizeProgram() {
+
+    # sudo apt-get install libfuse-dev -y >> $LOGFILE
+
     # Ldap Install && Connection -----------------#
     retval=$(ldapSettings)
     if [ "$retval" == 0 ]; then
         echo >&1 "Y"
     else
         echo >&2 "1942-LDAP"
+        echo "ERROR] 1942-LDAP  " >>$LOGFILE
         exit 0
     fi
 
@@ -421,6 +431,7 @@ Init-HamonizeProgram() {
         echo >&1 "Y"
     else
         echo >&2 "1942-USB"
+        echo "ERROR] 1942-USB  " >>$LOGFILE
         exit 0
     fi
     sleep 2
@@ -431,6 +442,7 @@ Init-HamonizeProgram() {
         echo >&1 "Y"
     else
         echo >&2 "1942-AGENT"
+        echo "ERROR] 1942-AGENT  " >>$LOGFILE
         # exit 1
     fi
     sleep 2
@@ -441,6 +453,7 @@ Init-HamonizeProgram() {
         echo >&1 "osLoginoutSettings :: " >>$LOGFILE
     else
         echo >&2 "1942-OSLOGINOUT"
+        echo "ERROR] 1942-OSLOGINOUT  " >>$LOGFILE
         exit 0
     fi
     sleep 2
@@ -451,6 +464,7 @@ Init-HamonizeProgram() {
         echo >&1 "timeshiftSettings :: " >>$LOGFILE
     else
         echo >&2 "1942-TIMESHIFT"
+        echo "ERROR] 1942-TIMESHIFT  " >>$LOGFILE
         exit 0
     fi
     sleep 2
@@ -463,6 +477,7 @@ Init-HamonizeProgram() {
         echo >&1 "telegrafSettings :: " >>$LOGFILE
     else
         echo >&2 "$retval---1942-TELEGRAF"
+        echo "ERROR] 1942-TELEGRAF  " >>$LOGFILE
         exit 0
     fi
     sleep 2
@@ -475,12 +490,15 @@ Init-HamonizeProgram() {
         echo >&1 "remoteToolSettings :: " >>$LOGFILE
     elif [ "$retval" == 3 ]; then
         echo >&2 "$retval---1942-HAMONIZE_ADMIN-TOOL"
+        echo "ERROR] 1942-HAMONIZE_ADMIN-TOOL  " >>$LOGFILE
         exit 0
     elif [ "$retval" == 2 ]; then
         echo >&2 "$retval---1942-HAMONIZE_ADMIN-KEYS"
+        echo "ERROR] 1942-HAMONIZE_ADMIN-KEYS  " >>$LOGFILE
         exit 0
     else
         echo >&2 "$retval---1942-HAMONIZE_ADMIN-ETC"
+        echo "ERROR] 1942-HAMONIZE_ADMIN-ETC  " >>$LOGFILE
         exit 0
     fi
     sleep 2
@@ -493,6 +511,7 @@ Init-HamonizeProgram() {
         echo >&1 "remoteToolSettings :: " >>$LOGFILE
     else
         echo >&2 "$retval---1942-HAMONIZE_HELP"
+        echo "ERROR] 1942-HAMONIZE_HELP  " >>$LOGFILE
         exit 0
     fi
 
@@ -502,5 +521,72 @@ Init-HamonizeProgram() {
     sleep 1
     hamonieTenantAptUrl
 }
+
+echo "$DATETIME ]-------->프로그램 관리 설치를 위한 기본 프로그램 설치 [START]" >>$LOGFILE
+
+
+
+sleep 1
+echo "$DATETIME ]-------->curl install status \n $(dpkg -l aptitude)" >>$LOGFILE
+
+REQUIRED_PKG="make"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG | grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >>$LOGFILE
+    sudo apt-get --yes install $REQUIRED_PKG >>$LOGFILE
+fi
+
+sleep 1
+echo "$DATETIME ]-------->curl install status \n $(dpkg -l make)" >>$LOGFILE
+
+REQUIRED_PKG="curl"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG | grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >>$LOGFILE
+    sudo apt-get --yes install $REQUIRED_PKG >>$LOGFILE
+fi
+
+sleep 1
+echo "$DATETIME ]-------->curl install status \n $(dpkg -l curl)" >>$LOGFILE
+
+REQUIRED_PKG="jq"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG | grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG." >>$LOGFILE
+    sudo apt-get --yes install $REQUIRED_PKG >>$LOGFILE
+fi
+
+sleep 1
+echo "$DATETIME ]-------->jq install status \n $(dpkg -l jq)" >>$LOGFILE
+
+REQUIRED_PKG="openssh-server"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG | grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG." >>$LOGFILE
+    DEBIAN_FRONTEND=noninteractive apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+fi
+
+CHKSSHD=$(grep Port /etc/ssh/sshd_config | grep -c '^Port')
+if [ 0 -eq $CHKSSHD ]; then
+    sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
+    sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
+else
+    Get_sshport=$(grep Port /etc/ssh/sshd_config | grep '^Port')
+    echo "used ssh port :: $Get_sshport" >>$LOGFILE
+    #       sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
+    sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
+fi
+# sudo ufw delete allow ssh
+# sudo ufw allow ssh
+sudo systemctl restart sshd
+sudo systemctl restart ssh
+
+sleep 1
+echo "$DATETIME ]---------->openssh-server install status \n $(dpkg -l openssh-server)" >>$LOGFILE
+echo "$DATETIME ]-------->프로그램 관리 설치를 위한 기본 프로그램 설치 [END]!!! " >>$LOGFILE
 
 Init-HamonizeProgram

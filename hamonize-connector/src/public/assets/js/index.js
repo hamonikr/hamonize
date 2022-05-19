@@ -27,6 +27,8 @@ function install_program_version_chkeck() {
 
 ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 
+	console.log("isChkVal==2222222222222222222222=" + isChkVal);
+
 	if (isChkVal == 'Y') {
 		// 초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.
 		console.log("초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.");
@@ -57,6 +59,27 @@ ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 	} else if (isChkVal == 'U002') {
 		fn_alert("설치 프로그램 업그레이드 중 오류가 발생했습니다. \n 관리자에게 문의 바랍니다.\n Error Code :: [U002]");
 		return false;
+	} else if (isChkVal == "YDONE") {	//	 프로그램 설치 완료 후 재실행 했을경우 
+		document.title = "𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮";
+		$modal.hide();
+		$("#loadingInfoText").text("");
+
+		$("#hmInstallIng").hide();
+
+		$("#hmInstalled").show();
+		$("#hmInstalledBody").show();
+
+
+	} else if (isChkVal == "FREEDONE") {
+		document.title = "𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮";
+		$modal.hide();
+		$("#loadingInfoText").text("");
+
+		$("#hmInstallIng").hide();
+		$("#hmInstallIngBody").hide();
+
+		$("#hmInstalled").show();
+		$("#hmFreeDoneBody").show();
 	}
 
 });
@@ -277,22 +300,99 @@ ipcRenderer.on('getAuthResult', (event, authResult) => {
 
 // 조직정보 
 ipcRenderer.on('getOrgDataResult', (event, orgData) => {
-	var option = "";
-	$("#orglayer").show();
-	$("#authkeylayer").hide();
-	$('#groupName').empty();
+	if ($("#tmpFreeDateDone").val().trim() == 'FREEDONE') {
+		extensionContract();
+	} else {
 
-	var chkCnt = 0;
-	$.each(orgData, function (key, value) {
-		option += "<option>" + value.orgnm + "</option>";
-		chkCnt++;
-	});
-	if (chkCnt == 0) {
-		$("#orglayer").hide();
-		$("#authkeylayer").show();
-		fn_alert("등록된 조직정보가 없습니다. 조직을 등록후 사용해주세요.");
-		// }else{
-		// 	$(".layerpop__container").text("pc가 포함된 조지을 선택하신 후 등록버튼을 클릭해주세요.!!");
+		var option = "";
+		$("#orglayer").show();
+		$("#authkeylayer").hide();
+		$('#groupName').empty();
+
+		var chkCnt = 0;
+		$.each(orgData, function (key, value) {
+			option += "<option>" + value.orgnm + "</option>";
+			chkCnt++;
+		});
+		if (chkCnt == 0) {
+			$("#orglayer").hide();
+			$("#authkeylayer").show();
+			fn_alert("등록된 조직정보가 없습니다. 조직을 등록후 사용해주세요.");
+			// }else{
+			// 	$(".layerpop__container").text("pc가 포함된 조지을 선택하신 후 등록버튼을 클릭해주세요.!!");
+		}
+		$('#groupName').append(option);
+
 	}
-	$('#groupName').append(option);
+});
+
+
+
+
+
+// 기간 만료 후 재인증하는 경우....----------------------------------------#
+// UI 재인증 셋팅 -1
+const hamonizeAuthChkBtn = document.getElementById('hamonizeAuthChkBtn');
+hamonizeAuthChkBtn.addEventListener('click', function (event) {
+	document.title = "𝓗𝓪𝓶𝓸𝓷𝓲𝔃𝓮";
+	$modal.hide();
+	$("#loadingInfoText").text("");
+
+	$("#hmInstallIng").show();
+	$("#hmInstallIngBody").show();
+
+	$("#hmInstalled").hide();
+	$("#hmFreeDoneBody").hide();
+
+
+	$("#tmpFreeDateDone").val("FREEDONE");
+});
+
+
+// UI 재인증 셋팅-2
+function extensionContract(){
+	$modal.hide();
+	$("#loadingInfoText").text("");
+	$("#initLayer").removeClass("active");
+	$("#initLayerBody").removeClass("active");
+	$("#procLayer").addClass("active");
+	$("#procLayerBody").hide();
+	$("#procLayerBody").show();
+
+	initLayer
+
+	$("#infoStepA").text("체크전");
+	$("#infoStepB").text("체크전");
+	$("#infoStepC").text("체크전");
+} 
+// ========== UI 재인증 셋팅 완료 ----------------------------#
+
+// 프로그램 체크 시작.
+// 1. vpn 체크.
+// 2. Ldap
+// 3. Usb protect
+// 4. Hamonie-Agent
+// 5. user loginout
+// 6. timeshift
+// 7. telegraf 
+// 8. Hamonize-admin
+// 9. Hamonize-help
+
+function hamonizeVpnInstall() {
+	$("#stepA").addClass("br animate");
+	ipcRenderer.send('hamonizeVpnInstall', $("#domain").val());
+}
+
+
+ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
+	if (isChkBool == true) {
+		$("#stepA").removeClass("br animate");
+		$("#stepB").addClass("br animate");
+		$("#infoStepA").text("완료");
+		hamonizeProgramInstall();
+	} else {
+		doubleSubmitFlag = false;
+		fn_alert("유효하지 않는 정보입니다. 확인 후 등록해 주시기바랍니다.\n 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.");
+	}
+
 });

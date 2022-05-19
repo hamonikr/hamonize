@@ -28,7 +28,7 @@ const si = require('systeminformation');
 const md5 = require('md5');
 const electronLocalshortcut = require('electron-localshortcut');
 const axios = require('axios')
-const baseurl = "http://192.168.0.76:8080";
+const baseurl = "https://console.hamonize.com";
 // const baseurl = "<Hamonize Center Url>";
 const winHamonize = require('./windowHamonize');
 const fs = require('fs');
@@ -183,6 +183,10 @@ ipcMain.on('shutdown', (event, path) => {
 
 // os check
 var opsys = process.platform;
+
+// NODE_TLS_REJECT_UNAUTHORIZED environment
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 if (opsys == "darwin") {
 	opsys = "MacOS";
 } else if (opsys == "win32" || opsys == "win64") {
@@ -190,7 +194,7 @@ if (opsys == "darwin") {
 } else if (opsys == "linux") {
 	opsys = "Linux";
 }
-console.log(opsys) // I don't know what linux is.
+console.log(opsys) //  don't  linux it.
 
 let ps = "";
 if (opsys == 'Window') {
@@ -221,7 +225,7 @@ function execShellCommand(cmd) {
 
 
 
-const sysInfo = async (event, groupname, sabun, username) => {
+const sysInfo = async (event, groupname, sabun, username, tenant) => {
 	let retData = {}
 	const pcHostname = await execShellCommand('hostname');
 	const cpu = await si.cpu(); // CPU Info
@@ -269,7 +273,7 @@ const sysInfo = async (event, groupname, sabun, username) => {
 
 
 	var unirest = require('unirest');
-	unirest.post(baseurl + '/hmsvc/setPcInfo')
+	unirest.post('https://console.hamonize.com/hmsvc/setPcInfo')
 		.header('content-type', 'application/json')
 		.send({
 			events: [{
@@ -287,13 +291,14 @@ const sysInfo = async (event, groupname, sabun, username) => {
 				memory: raminfo.trim(),
 				deptname: groupname.trim(),
 				sabun: sabun.trim(),
-				username: username.trim()
+				username: username.trim(),
+				domain: tenant.trim()
 
 			}]
 		})
 		.end(function (response) {
-			// console.log("sysInfo.body===" + JSON.stringify(response));
-			// console.log("sysInfo.body===" + response.body);
+			console.log("sysInfo.body===" + JSON.stringify(response));
+			console.log("sysInfo.body===" + response.body);
 			event.sender.send('pcInfoChkProc', response.body);
 		});
 
@@ -341,15 +346,54 @@ function vpnchk() {
 
 ipcMain.on('hamonize_org_settings', (event) => {
 	console.log(`STEP 1. hamonize_org_settings`);
+	// const request = require('request');
+	// request.get('https://console.hamonize.com/hmsvc/commInfoData', function(error, response, body){
+	// 	console.log(response);
+	// 	console.log(body);
+	// 	console.log(error);
+	//   });
+
 	winHamonize.hamonizeServerInfo(baseurl, event);
 });
+
+
+ipcMain.on('getAuth', async (event, authkeyVal) => {
+	let userHomeDirWindow = await execShellCommand('echo %temp%');
+	let windowFolderDirTmp = userHomeDirWindow.trim() + "\\";
+	
+	if(opsys == "Linux" ){
+		windowFolderDirTmp = "/tmp/"
+	}
+
+	winHamonize.getAuthProc(baseurl, authkeyVal, windowFolderDirTmp, event);
+});
+
+// getOrgData(event, baseurl, retData);
+
+ipcMain.on('getOrgData', (event, tenantNm) => {
+
+	winHamonize.getOrgData(tenantNm, event);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //========================================================================
 //== STEP 2. add Client Pc Data Save on Center============================
 //========================================================================
-ipcMain.on('pcInfoChk', (event, groupname, sabun, username) => {
+ipcMain.on('pcInfoChk', (event, groupname, sabun, username, tenantNm) => {
 	mainWindow.setSize(620, 400);
-	sysInfo(event, groupname, sabun, username);
+	sysInfo(event, groupname, sabun, username, tenantNm);
 	// console.log("CenterUrl===" + winHamonize.fn_telegrafConfFile());
 
 });
@@ -359,28 +403,31 @@ ipcMain.on('pcInfoChk', (event, groupname, sabun, username) => {
 //== STEP 3. install_program_Ready  ======================================
 //========================================================================
 
-ipcMain.on('install_program_Ready', (event) => {
+ipcMain.on('install_program_Ready', (event, tenantNm) => {
 	mainWindow.setSize(620, 400);
+	var vpn_used;
 
-	axios.get(baseurl + '/hmsvc/isVpnUsed', '', {
-		headers: {
-			"Content-Type": `application/json`
-		}
-	}).then((res) => {
-		console.log("res.data======" + JSON.stringify(res.data));
-		winHamonize.setVpn_userd(res.data[0]["vpn_used"]);
-	}).catch((error) => {
-		console.log(error);
-	}).then(() => {
-		console.log("vpn_used============+" + winHamonize.getVpn_used());
-		makePsFile(event);
+
+	unirest.get(baseurl + '/hmsvc/isVpnUsed')
+	.header('content-type', 'application/json')
+	.send({
+		events: [{
+			domain: tenantNm.trim()
+		}]
 	})
+	.end(function (response) {
+		var json = response.body;
+		vpn_used = response.body[0]["vpn_used"];
+
+		winHamonize.setVpn_userd(vpn_used);
+		makePsFile(event, tenantNm);
+	});
 
 });
 
 
 // 설치에 필요한 폴더및 프로그램  ps1 파일 생성
-const makePsFile = async (event) => {
+const makePsFile = async (event, tenantNm) => {
 
 	// const userHomeDir = await execShellCommand('echo %userprofile%');
 	// winFolderDir = userHomeDir.trim() + "\\Downloads\\";
@@ -393,7 +440,7 @@ const makePsFile = async (event) => {
 	console.log("mkResult================" + mkResult);
 
 	// H-User(Remote Tool) Run Script File
-	let fn_mk_HUser_RunResult = await winHamonize.fn_mk_HUser_Run(winFolderDir);
+	let fn_mk_HUser_RunResult = await winHamonize.fn_mk_HUser_Run(winFolderDir, tenantNm);
 	console.log("fn_mk_HUser_RunResult================" + fn_mk_HUser_RunResult);
 
 
@@ -402,12 +449,19 @@ const makePsFile = async (event) => {
 	console.log("setInstallProgm============+" + setInstallProgm_result);
 
 	// telegraf 설치 및 설정 
-	let telegrafFile_result = await winHamonize.fn_install_Program_settings_step_telegraf(winFolderDir, winHamonize.winUUID);
+	let telegrafFile_result = await winHamonize.fn_install_Program_settings_step_telegraf(winFolderDir, winHamonize.winUUID, tenantNm);
 	console.log("telegrafFile_result===========++" + telegrafFile_result);
 
 	// GOP Settings
 	let gopFile_result = await winHamonize.fn_install_Program_settings_step_GOP(winFolderDir, winHamonize.getVpn_used(), winHamonize.winUUID);
 	console.log("gopFile_result=====" + gopFile_result);
+
+
+	// Vpn Connection
+	let vpnSettings_result = await winHamonize.fn_VpnConnection(winFolderDir,winHamonize.getVpn_used(), winHamonize.winUUID);
+	console.log("vpnSettings_result================" + vpnSettings_result);
+	
+
 
 
 	event.sender.send('install_program_ReadyProcResult', 'Y');
@@ -430,45 +484,53 @@ const installHamonize = async (event) => {
 	try {
 		let tmpps = "";
 
-		// mkBaseHamonize.ps1
-		console.log("=== mk file & folder === START]");
+		// 기본폴더 생성] mkBaseHamonize.ps1
+		console.log("winFolderDir=========++"+ winFolderDir);
+		console.log("========================== mk file & folder === START]");
 		tmpps = winFolderDir + "mkBaseHamonize.ps1";
 		ps.asyncAddCommand("powershell.exe -ExecutionPolicy Bypass -File " + tmpps);
 		await ps.asyncInvoke();
-		console.log("=== mk file & folder === END]");
+		console.log("========================== mk file & folder === END]");
 
 
-		// programInstallFile.ps1
-		console.log("=== programInstallFile === START]");
+		// 외부 인스톨 파일 설치 (openvpn, hamonize-user)] programInstallFile.ps1
+		console.log("========================== programInstallFile === START]");
 		tmpps = winFolderDir + "programInstallFile.ps1";
 		ps.asyncAddCommand("powershell.exe -ExecutionPolicy Bypass -File " + tmpps);
 		await ps.asyncInvoke();
-		console.log("=== programInstallFile === END]");
+		console.log("========================== programInstallFile === END]");
 
 		// telegraf.ps1
-		console.log("=== telegraf === START]");
+		console.log("========================== telegraf === START]");
 		tmpps = winFolderDir + "telegraf.ps1";
 		ps.asyncAddCommand("powershell.exe -ExecutionPolicy Bypass -File " + tmpps);
 		await ps.asyncInvoke();
-		console.log("=== telegraf === END]");
+		console.log("========================== telegraf === END]");
 
 		// gop.ps1
-		console.log("=== GOP === START]");
+		console.log("========================== GOP === START]");
 		tmpps = winFolderDir + "gop.ps1";
 		ps.asyncAddCommand("powershell.exe -ExecutionPolicy Bypass -File " + tmpps);
 		await ps.asyncInvoke();
-		console.log("=== GOP === END]");
+		console.log("========================== GOP === END]");
 
-
-		// H-User(Romote Tool)run .ps1
-		console.log("=== H-User(Romote Tool)run === START]");
-		tmpps = winFolderDir + "HUserRun.ps1";
+		// vpn config
+		console.log("========================== VPN Config === START]");
+		tmpps = winFolderDir + "HvpnConnections.ps1";
 		ps.asyncAddCommand("powershell.exe -ExecutionPolicy Bypass -File " + tmpps);
 		await ps.asyncInvoke();
+		console.log("========================== VPN Config === END]");
+
+		// Remote Tool Config Settings] H-User(Romote Tool)run .ps1
+		console.log("========================== H-User(Romote Tool)run === START]");
+		console.log("작업중")
+		// tmpps = winFolderDir + "HUserRun.ps1";
+		// ps.asyncAddCommand("powershell.exe -ExecutionPolicy Bypass -File " + tmpps);
+		// await ps.asyncInvoke();
 
 
 		console.log("=== H-User(Romote Tool)run === END]");
-	
+
 
 		console.log("Step4. Install End ");
 

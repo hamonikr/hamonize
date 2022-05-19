@@ -10,8 +10,63 @@ FILEPATH_TMP="/etc/hamonize/propertiesJob/chkpropertiesInfo.hm"
 HWFILE="/etc/hamonize/hwinfo/hwinfo.hm"
 # cat  /dev/null > $LOGFILE
 
-# STEP1. Base File & Folder Creaete ====================================
+
+# STEP 2. 프로그램 관리 설치를 위한 기본 프로그램 설치    ===================================
 #
+echo "$DATETIME ]-------->프로그램 관리 설치를 위한 기본 프로그램 설치 [START]" >> $LOGFILE
+
+
+REQUIRED_PKG="make"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >> $LOGFILE
+    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+fi
+
+sleep 1
+echo "$DATETIME ]-------->curl install status \n `dpkg -l make`" >> $LOGFILE
+
+
+
+REQUIRED_PKG="curl"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >> $LOGFILE
+    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+fi
+
+sleep 1
+echo "$DATETIME ]-------->curl install status \n `dpkg -l curl`" >> $LOGFILE
+
+
+
+REQUIRED_PKG="jq"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
+    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+fi
+
+sleep 1
+echo "$DATETIME ]-------->jq install status \n `dpkg -l jq`">> $LOGFILE
+
+
+
+REQUIRED_PKG="openssh-server"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+echo Checking for $REQUIRED_PKG: $PKG_OK
+if [ "" = "$PKG_OK" ]; then
+    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
+    # sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+    DEBIAN_FRONTEND=noninteractive apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+fi
+
+
+
+# STEP1. Base File & Folder Creaete ====================================
 
 #UUID 생성
 if [ ! -d /etc/hamonize ]; then
@@ -58,7 +113,9 @@ if [ ! -d /var/log/hamonize/ ]; then
     touch /var/log/hamonize/pc_hw_chk/pc_hw_chk.log >/dev/null 2>&1
     
     mkdir /var/log/hamonize/propertiesJob >/dev/null 2>&1
-    touch var/log/hamonize/propertiesJob/propertiesJob.log >/dev/null 2>&1
+    touch /var/log/hamonize/propertiesJob/propertiesJob.log >/dev/null 2>&1
+
+    touch /var/log/hamonize/propertiesJob/hamonize-connector_error.log >/dev/null 2>&1
 fi
 
 
@@ -78,62 +135,3 @@ touch $Log_backup >/dev/null 2>&1
 
 mkdir /var/log/hamonize/agentjob
 touch /var/log/hamonize/agentjob/updp.log
-
-
-# STEP 2. 프로그램 관리 설치를 위한 기본 프로그램 설치    ===================================
-#
-echo "$DATETIME ]-------->프로그램 관리 설치를 위한 기본 프로그램 설치 [START]" >> $LOGFILE
-
-REQUIRED_PKG="curl"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >> $LOGFILE
-    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-fi
-
-sleep 1
-echo "$DATETIME ]-------->curl install status \n `dpkg -l curl`" >> $LOGFILE
-
-
-
-REQUIRED_PKG="jq"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
-    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-fi
-
-# sudo apt-get install jq -y >/dev/null
-sleep 1
-echo "$DATETIME ]-------->jq install status \n `dpkg -l jq`">> $LOGFILE
-
-
-
-REQUIRED_PKG="openssh-server"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
-    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-fi
-
-
-CHKSSHD=`grep Port /etc/ssh/sshd_config  |grep  -c '^Port'`
-if [ 0 -eq $CHKSSHD ];then
-    sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
-    sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
-else
-    Get_sshport=`grep Port /etc/ssh/sshd_config  |grep '^Port'`
-    echo "used ssh port :: $Get_sshport" >> $LOGFILE
-    #       sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
-    sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
-fi
-# sudo ufw delete allow ssh
-# sudo ufw allow ssh
-sudo systemctl restart sshd
-
-sleep 1
-echo "$DATETIME ]---------->openssh-server install status \n `dpkg -l openssh-server`" >> $LOGFILE
-echo "$DATETIME ]-------->프로그램 관리 설치를 위한 기본 프로그램 설치 [END]!!! " >> $LOGFILE

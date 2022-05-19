@@ -1,6 +1,0 @@
-#!/bin/bash
-
-cd  /usr/local/hamonize-connect/
-./hamonize-connect --no-sandbox
-
-#exit 0;
