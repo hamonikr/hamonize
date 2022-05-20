@@ -185,14 +185,13 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 
 // ======== step 4. PC 관리 프로그램 설치... =========================================/
 function hamonizeProgramInstall() {
-	// ipcRenderer.send('hamonizeProgramInstall', 'eden123');
 	ipcRenderer.send('hamonizeProgramInstall', $("#domain").val());
 }
 
-ipcRenderer.on('hamonizeProgramInstall_Result', (event, mkfolderResult) => {
-	console.log("hamonizeProgramInstall_Result===" + mkfolderResult);
+ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
+	console.log("hamonizeProgramInstall_Result===" + programResult);
 
-	if (mkfolderResult == 'Y') {
+	if (programResult == 'Y') {
 		console.log("pc 관리 프로그램 설치 및 셋팅 완료");
 		$("#stepB").removeClass("br animate");
 		$("#stepC").addClass("br animate");
@@ -200,7 +199,7 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, mkfolderResult) => {
 		hamonizeSystemBackup();
 	} else {
 		console.log("false");
-		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005]");
+		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005-"+programResult+"]");
 	}
 
 });

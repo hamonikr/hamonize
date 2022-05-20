@@ -20,7 +20,7 @@ ldapSettings() {
     Ldap_used=$(echo $LDAPInfo | awk -F ":" '{print $1}')
     Ldap_ip=$(echo $LDAPInfo | awk -F ":" '{print $2}')
 
-    if [ $Ldap_used == "Y" ]; then
+    if [ "$Ldap_used" == "Y" ]; then
         echo "Ldap use && Ldap setting" >>$LOGFILE
 
         echo -e " \
@@ -398,15 +398,26 @@ hamonizeServerSettings() {
 }
 
 hamonieTenantAptUrl() {
-    tenantApt="deb http://$APTURL $DOMAININFO main"
-    echo "Tenant Apt url :: $tenantApt" >>$LOGFILE
-    if [ $(grep -rn "$tenantApt" /etc/apt/sources.list.d/hamonize.list | wc -l) == 0 ]; then
+    # tenantApt="$APTURL $DOMAININFO main"
+    # echo "Tenant Apt url :: $tenantApt" >>$LOGFILE
+
+    chkAptList=`cat  /etc/apt/sources.list.d/hamonize.list  | egrep -v '^[[:space:]]*(#.*)?$' | tr -d  ' '`
+    echo $chkAptList
+
+    if [[ "$chkAptList" != *"$DOMAININFO"* ]];then
         echo "deb [arch=amd64] http://$APTURL $DOMAININFO main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
         sudo apt-get update -y >>$LOGFILE
     fi
 
+
+
+    # if [ $(grep -rn "$tenantApt" /etc/apt/sources.list.d/hamonize.list | wc -l) == 0 ]; then
+    #     echo "deb [arch=amd64] http://$APTURL $DOMAININFO main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
+    #     sudo apt-get update -y >>$LOGFILE
+    # fi
+
     cat /etc/apt/sources.list.d/hamonize.list >>$LOGFILE
-    echo $(grep -rn '$aa' /etc/apt/sources.list.d/hamonize.list | wc -l) >>$LOGFILE
+
 }
 
 Init-HamonizeProgram() {
@@ -415,11 +426,65 @@ Init-HamonizeProgram() {
 
     # Ldap Install && Connection -----------------#
     retval=$(ldapSettings)
+    echo "===========================+"+ $retval
     if [ "$retval" == 0 ]; then
         echo >&1 "Y"
+        # echo >&1 "Hamonize Ldap Settings Install-Y" >> $LOGFILE
     else
         echo >&2 "1942-LDAP"
-        echo "ERROR] 1942-LDAP  " >>$LOGFILE
+
+        hmLdapError="/tmp/hm_ldap.error"
+        touch hmLdapError
+        cat /dev/null >$hmLdapError
+
+        echo "##################################################################" >>$hmLdapError
+        echo "####### ERROR] Ldap Settings Fail (error-code: 1942-ldap)  ####### " >>$hmLdapError
+        echo "##################################################################" >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#----------------------------------------------------------------#" >>$hmLdapError
+        echo "#- Chechk Point 1. Install Check ------------------------#" >>$hmLdapError
+        echo "#- Chechk Point 1-1. Package [ldap-auth-client]  ------------------------#" >>$hmLdapError
+        dpkg -l ldap-auth-client >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Point 1-2. Package [nscd] ------------------------#" >>$hmLdapError
+        dpkg -l nscd >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 1-3. Package [sudo-ldap] ------------------------#" >>$hmLdapError
+        dpkg -l sudo-ldap >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 2. Ldap Settings File  Check ------------------------#" >>$hmLdapError
+        echo "#- Check Porint 2-1. sudo-ldap conf file ------------------------#" >>$hmLdapError
+        ls -al /etc/sudo-ldap.conf >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 2-2. ldap conf file  ------------------------# " >>$hmLdapError
+        grep -v "^#" /etc/ldap.conf | sed '/^$/d' >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 2-3. common-passwd file  ------------------------#" >>$hmLdapError
+        grep -v "^#" /etc/pam.d/common-password | sed '/^$/d' >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 2-3. common-session file ------------------------# " >>$hmLdapError
+        grep -v "^#" /etc/pam.d/common-session | sed '/^$/d' >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 2-3. nsswitch.conf file ------------------------# " >>$hmLdapError
+        grep -v "^#" /etc/nsswitch.conf | sed '/^$/d' >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 3. nscd Service Status ------------------------# " >>$hmLdapError
+        service nscd status >>$hmLdapError
+        echo "" >>$hmLdapError
+
+        echo "#- Check Porint 4. ldap sudo Policy ------------------------#" >>$hmLdapError
+        sudo -l -U hamonize >>$hmLdapError
+        echo "" >>$hmLdapError
+
         exit 0
     fi
 
@@ -430,8 +495,28 @@ Init-HamonizeProgram() {
     if [ "$retval" == 0 ]; then
         echo >&1 "Y"
     else
-        echo >&2 "1942-USB"
-        echo "ERROR] 1942-USB  " >>$LOGFILE
+        echo >&2 "1942USB"
+
+        hmUdevError="/tmp/hm_udev.error"
+        touch hmudevError
+        cat /dev/null >$hmUdevError
+
+        echo "##################################################################" >>$hmUdevError
+        echo "####### ERROR] Udev Settings Fail (error-code: 1942-USB)  ####### " >>$hmUdevError
+        echo "##################################################################" >>$hmUdevError
+        echo "" >>$hmUdevError
+
+        echo "#----------------------------------------------------------------#" >>$hmUdevError
+        echo "#- Chechk Point 1. Install Package [udev] Check ------------------------#" >>$hmUdevError
+        dpkg -l udev >>$hmUdevError
+        echo "" >>$hmUdevError
+
+        echo "#- Chechk Point 2. Udev Ruls File Check  ------------------------#" >>$hmUdevError
+        echo "$(ls /etc/udev/rules.d/)" >>$hmUdevError
+        echo "" >>$hmUdevError
+
+        
+
         exit 0
     fi
     sleep 2
@@ -442,18 +527,74 @@ Init-HamonizeProgram() {
         echo >&1 "Y"
     else
         echo >&2 "1942-AGENT"
-        echo "ERROR] 1942-AGENT  " >>$LOGFILE
-        # exit 1
+
+        hmAgentError="/tmp/hm_agent.error"
+        touch hmAgentError
+        cat /dev/null >$hmAgentError
+
+        echo "##################################################################" >>$hmAgentError
+        echo "####### ERROR] Agent Settings Fail (error-code: 1942-AGENT)  ####### " >>$hmAgentError
+        echo "##################################################################" >>$hmAgentError
+        echo "" >>$hmAgentError
+
+        echo "#----------------------------------------------------------------#" >>$hmAgentError
+        echo "#- Chechk Point 1. Install Package [Agent] Check ------------------------#" >>$hmAgentError
+        dpkg -l hamonize-agent >>$hmAgentError
+        echo "" >>$hmAgentError
+
+        echo "#- Chechk Point 2. hamonize-agent service  ------------------------#" >>$hmAgentError
+        service hamonize-agent status >>$hmAgentError
+        echo "" >>$hmAgentError
+
+        echo "#- Chechk Point 3. hamonize-agentmngr service  ------------------------#" >>$hmAgentError
+        service hamonize-agentmngr status >>$hmAgentError
+        echo "" >>$hmAgentError
+
+
+
+        exit 0
     fi
     sleep 2
 
     #==== user loginout -----------------#
     retval=$(osLoginoutSettings)
     if [ "$retval" == 0 ]; then
-        echo >&1 "osLoginoutSettings :: " >>$LOGFILE
+        echo >&1 "Y"
+        # echo >&1 "Hamonize osLoginout Service Install-Y :: "
     else
         echo >&2 "1942-OSLOGINOUT"
-        echo "ERROR] 1942-OSLOGINOUT  " >>$LOGFILE
+
+
+        hmLoginoutError="/tmp/hm_loginout.error"
+        touch hmLoginoutError
+        cat /dev/null >$hmLoginoutError
+
+        echo "##################################################################" >>$hmLoginoutError
+        echo "####### ERROR] Hamonize-loginout Settings Fail (error-code: 1942-OSLOGINOUT)  ####### " >>$hmLoginoutError
+        echo "##################################################################" >>$hmLoginoutError
+        echo "" >>$hmLoginoutError
+
+        echo "#----------------------------------------------------------------#" >>$hmLoginoutError
+        echo "#- Chechk Point 1. login Service Status ------------------------#" >>$hmLoginoutError
+        service hamonize-login status >>$hmLoginoutError
+        echo "" >>$hmLoginoutError
+
+        echo "#----------------------------------------------------------------#" >>$hmLoginoutError
+        echo "#- Chechk Point 2. logout Service Status ------------------------#" >>$hmLoginoutError
+        service hamonize-logout status >>$hmLoginoutError
+        echo "" >>$hmLoginoutError
+
+        echo "#----------------------------------------------------------------#" >>$hmLoginoutError
+        echo "#- Chechk Point 3. login Service  ------------------------#" >>$hmLoginoutError
+        systemctl list-units --all --type=service --no-pager | grep -e hamonize-login >>$hmLoginoutError
+        echo "" >>$hmLoginoutError
+
+        echo "#----------------------------------------------------------------#" >>$hmLoginoutError
+        echo "#- Chechk Point 4. logout Service  ------------------------#" >>$hmLoginoutError
+        systemctl list-units --all --type=service --no-pager | grep -e hamonize-logout >>$hmLoginoutError
+        echo "" >>$hmLoginoutError
+
+
         exit 0
     fi
     sleep 2
@@ -461,10 +602,26 @@ Init-HamonizeProgram() {
     #==== timeshift Install -----------------#
     retval=$(timeshiftSettings)
     if [ "$retval" == 0 ]; then
-        echo >&1 "timeshiftSettings :: " >>$LOGFILE
+        echo >&1 "Y"
+        # echo >&1 "timeshiftSettings :: "
     else
         echo >&2 "1942-TIMESHIFT"
-        echo "ERROR] 1942-TIMESHIFT  " >>$LOGFILE
+
+        hmTimeshiftError="/tmp/hm_loginout.error"
+        touch hmTimeshiftError
+        cat /dev/null >$hmTimeshiftError
+
+        echo "##################################################################" >>$hmTimeshiftError
+        echo "####### ERROR] Timeshift Settings Fail (error-code: 1942-Timeshift)  ####### " >>$hmTimeshiftError
+        echo "##################################################################" >>$hmTimeshiftError
+        echo "" >>$hmTimeshiftError
+
+        echo "#----------------------------------------------------------------#" >>$hmTimeshiftError
+        echo "#- Chechk Point 1. Install Package [Timeshift] Check ------------------------#" >>$hmTimeshiftError
+        dpkg -l timeshift >>$hmTimeshiftError
+        echo "" >>$hmTimeshiftError
+
+
         exit 0
     fi
     sleep 2
@@ -474,10 +631,33 @@ Init-HamonizeProgram() {
     retval=$?
 
     if [ "$retval" == 0 ]; then
-        echo >&1 "telegrafSettings :: " >>$LOGFILE
+        echo >&1 "Y"
+        # echo >&1 "telegrafSettings :: "
     else
         echo >&2 "$retval---1942-TELEGRAF"
-        echo "ERROR] 1942-TELEGRAF  " >>$LOGFILE
+
+        hmTelegrafError="/tmp/hm_telegraf.error"
+        touch hmTelegrafError
+        cat /dev/null >$hmTelegrafError
+
+        echo "##################################################################" >>$hmTelegrafError
+        echo "####### ERROR] Telegraf Fail (error-code: 1942-Telegraf)  ####### " >>$hmTelegrafError
+        echo "##################################################################" >>$hmTelegrafError
+        echo "" >>$hmTelegrafError
+
+        echo "#----------------------------------------------------------------#" >>$hmTelegrafError
+        echo "#- Chechk Point 1. Install Package [Telegraf] Check ------------------------#" >>$hmTelegrafError
+        dpkg -l telegraf >>$hmTelegrafError
+        echo "" >>$hmTelegrafError
+
+        echo "#- Chechk Point 2. Install deb file Check  ------------------------#" >>$hmTelegrafError
+        ls /tmp/telegraf*.deb >>$hmTelegrafError
+        echo "" >>$hmTelegrafError
+
+        echo "#- Chechk Point 3. Telgraf Conf File  ------------------------#" >>$hmTelegrafError
+        grep -v "^#" /etc/telegraf/telegraf.conf |  sed '/^$/d' >>$hmTelegrafError
+        echo "" >>$hmTelegrafError
+
         exit 0
     fi
     sleep 2
@@ -487,18 +667,69 @@ Init-HamonizeProgram() {
     retval=$?
 
     if [ "$retval" == 0 ]; then
-        echo >&1 "remoteToolSettings :: " >>$LOGFILE
+        echo >&1 "Y"
+        # echo >&1 "remoteToolSettings :: " >>$LOGFILE
     elif [ "$retval" == 3 ]; then
         echo >&2 "$retval---1942-HAMONIZE_ADMIN-TOOL"
-        echo "ERROR] 1942-HAMONIZE_ADMIN-TOOL  " >>$LOGFILE
+        echo "ERROR] 1942-HAMONIZE_ADMIN-TOOL  "
+
+        hmHadminError="/tmp/hm_hAdmin.error"
+        touch hmHadminError
+        cat /dev/null >$hmHadminError
+
+        echo "##################################################################" >>$hmHadminError
+        echo "####### ERROR] HAMONIZE_ADMIN-TOOL Settings Fail (error-code: 1942-HAMONIZE_ADMIN-TOOL)  ####### " >>$hmHadminError
+        echo "##################################################################" >>$hmHadminError
+        echo "" >>$hmHadminError
+
+        echo "#----------------------------------------------------------------#" >>$hmHadminError
+        echo "#- Chechk Point 1. Install Package [HAMONIZE_ADMIN] Check ------------------------#" >>$hmHadminError
+        dpkg -l hamonize-admin >>$hmHadminError
+        echo "" >>$hmHadminError
+
+
+        echo "#----------------------------------------------------------------#" >>$hmHadminError
+        echo "#- Chechk Point 2. Install deb file Check ------------------------#" >>$hmHadminError
+        ls /tmp/hamonize-admin*.deb >>$hmHadminError
+        echo "" >>$hmHadminError
+
+
         exit 0
     elif [ "$retval" == 2 ]; then
         echo >&2 "$retval---1942-HAMONIZE_ADMIN-KEYS"
-        echo "ERROR] 1942-HAMONIZE_ADMIN-KEYS  " >>$LOGFILE
+
+        hmHadminError="/tmp/hm_hAdmin.error"
+        touch hmHadminError
+        cat /dev/null >$hmHadminError
+
+        echo "##################################################################" >>$hmHadminError
+        echo "####### ERROR] HAMONIZE_ADMIN-TOOL Settings Fail (error-code: 1942-HAMONIZE_ADMIN-KEY)  ####### " >>$hmHadminError
+        echo "##################################################################" >>$hmHadminError
+        echo "" >>$hmHadminError
+
+        echo "#----------------------------------------------------------------#" >>$hmHadminError
+        echo "#- Chechk Point 1. Install Package [HAMONIZE_ADMIN] Check ------------------------#" >>$hmHadminError
+        hamonize-cli authkeys list >>$hmHadminError
+        echo "" >>$hmHadminError
+        
+
         exit 0
     else
         echo >&2 "$retval---1942-HAMONIZE_ADMIN-ETC"
-        echo "ERROR] 1942-HAMONIZE_ADMIN-ETC  " >>$LOGFILE
+        
+        hmHadminError="/tmp/hm_hAdmin.error"
+        touch hmHadminError
+        cat /dev/null >$hmHadminError
+
+        echo "##################################################################" >>$hmHadminError
+        echo "####### ERROR] HAMONIZE_ADMIN-TOOL Settings Fail (error-code: 1942-HAMONIZE_ADMIN-ETC)  ####### " >>$hmHadminError
+        echo "##################################################################" >>$hmHadminError
+        echo "" >>$hmHadminError
+
+        echo "# Hamonize-Admin Exception Another Case ------------------------------#" >>$hmHadminError
+        echo "# cf. /var/log/hamonize/propertiesJob/propertiesJob.log ------------------------------#" >>$hmHadminError
+       
+
         exit 0
     fi
     sleep 2
@@ -508,23 +739,36 @@ Init-HamonizeProgram() {
     retval=$?
 
     if [ "$retval" == 0 ]; then
-        echo >&1 "remoteToolSettings :: " >>$LOGFILE
+        echo >&1 "Y"
     else
         echo >&2 "$retval---1942-HAMONIZE_HELP"
-        echo "ERROR] 1942-HAMONIZE_HELP  " >>$LOGFILE
+         
+        hmHelpError="/tmp/hm_help.error"
+        touch hmHelpError
+        cat /dev/null >$hmHelpError
+
+        echo "##################################################################" >>$hmHelpError
+        echo "####### ERROR] HAMONIZE_HELP Settings Fail (error-code: 1942-HAMONIZE_HELP)  ####### " >>$hmHelpError
+        echo "##################################################################" >>$hmHelpError
+        echo "" >>$hmHelpError
+
+        echo "# Hamonize-Admin Exception Another Case ------------------------------#" >>$hmHelpError
+        dpkg -l hamonize-help >> >>$hmHelpError
+        echo "" >>$hmHelpError
+
         exit 0
     fi
 
-    ##==== 서버 정보 저장(domain,ip etc) -----------------#
-    ##==== crontab reboot으로 부팅시마다 서버 정보를 파일로 저장한다.
+    # Hamonize Base Server Info Settings
     hamonizeServerSettings
+
     sleep 1
+
+    # Tenant Apt Url Settings
     hamonieTenantAptUrl
 }
 
 echo "$DATETIME ]-------->프로그램 관리 설치를 위한 기본 프로그램 설치 [START]" >>$LOGFILE
-
-
 
 sleep 1
 echo "$DATETIME ]-------->curl install status \n $(dpkg -l aptitude)" >>$LOGFILE
@@ -567,7 +811,7 @@ PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG | grep "install 
 echo Checking for $REQUIRED_PKG: $PKG_OK
 if [ "" = "$PKG_OK" ]; then
     echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG." >>$LOGFILE
-    DEBIAN_FRONTEND=noninteractive apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+    DEBIAN_FRONTEND=noninteractive apt-get --yes install $REQUIRED_PKG >>$LOGFILE
 fi
 
 CHKSSHD=$(grep Port /etc/ssh/sshd_config | grep -c '^Port')

@@ -118,10 +118,9 @@ const hamonizeAppUUID_FILE = "/etc/hamonize/hamonize.appinfo";
 ipcMain.on('install_program_version_chkeck', (event) => {
 	console.log(`STEP 1. install_program_version_chkeck`);
 
-	
+
 	// old Process 
 	install_program_version_chkeckAsync(event);
-
 
 	// new Process Doing
 	// var hamonizeAppUUID_STATS = fs.statSync(hamonizeAppUUID_FILE);
@@ -239,7 +238,7 @@ const hamonizeVpnInstall_Action = async (event, domain) => {
 // # STEP 3. program install
 //========================================================================
 
-ipcMain.on('hamonizeProgramInstall', (event, domain) => {
+ipcMain.on('hamonizeProgramInstall', async (event, domain) => {
 	hamonizeProgramInstall_Action(event, domain);
 });
 const hamonizeProgramInstall_Action = async (event, domain) => {
@@ -267,25 +266,35 @@ function hamonizeProgramInstallProc(domain, userId) {
 					console.log("hamonizeProgramInstallProc Error is " + error);
 					return resolve("N");
 				} else {
-					// console.log('stdout---->: ' + stdout);
-					console.log('stderr---->: ' + stderr);
-					if (stderr.trim() == '1942-LDAP') {
-						resolve('N');
-					} else if (stderr.trim() == '1942-AGENT') {
-						resolve('N');
-					} else if (stderr.trim() == '1942-OSLOGINOUT') {
-						resolve('N');
-					} else if (stderr.trim() == '1942-HAMONIZE_ADMIN-TOOL') {
-						resolve('N');
-					} else if (stderr.trim() == '1942-HAMONIZE_ADMIN-KEYS') {
-						resolve('N');
-					} else if (stderr.trim() == '1942-HAMONIZE_ADMIN-ETC') {
-						resolve('N');
-					} else if (stderr.trim() == '1942-HAMONIZE_HELP') {
-						resolve('N');
+					let tmpReturn = stderr.replace(/(\s*)/g, "");
+					console.log('stderr---->: ' + tmpReturn + "==================");
+
+					if (tmpReturn.search('1942-LDAP') > -1) {
+						return resolve('LDAP');
+					} else if (tmpReturn.search('1942USB') > -1) {
+						return resolve('USB');
+					} else if (tmpReturn.search('1942-AGENT') > -1) {
+						return resolve('AGENT');
+					} else if (tmpReturn.search('1942-OSLOGINOUT') > -1) {
+						return resolve('OS-LOGINOUT');
+					} else if (tmpReturn.search('1942-TIMESHIFT') > -1) {
+						return resolve('OS-TIMESHIFT');
+					} else if (tmpReturn.search('1942-HAMONIZE_ADMIN-TOOL') > -1) {
+						return resolve('HAMONIZE_ADMIN');
+					} else if (tmpReturn.search('1942-HAMONIZE_ADMIN-KEYS') > -1) {
+						return resolve('HAMONIZE_ADMIN');
+					} else if (tmpReturn.search('1942-HAMONIZE_ADMIN-ETC') > -1) {
+						return resolve('HAMONIZE_ADMIN');
+					} else if (tmpReturn.search('1942-HAMONIZE_HELP') > -1) {
+						return resolve('HAMONIZE_HELP');
+					} else if (tmpReturn.search('1942-TELEGRAF') > -1) {
+						return resolve('TELEGRAF');
 					} else {
-						resolve("Y");
+						return resolve("Y");
 					}
+
+					
+
 				}
 			}
 		);
