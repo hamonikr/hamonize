@@ -9,11 +9,6 @@ cat /dev/null >$LOGFILE
 
 UUID=$(cat /etc/hamonize/uuid)
 
-# INFOHM="/etc/hamonize/propertiesJob/propertiesInfo.hm"                <------------- 사용안함
-# CENTERURLINFO=$(cat $INFOHM | grep CENTERURL | awk -F '=' '{print $2}')<------------- 사용안함
-
-# 초기 필수 정보......
-
 
 #  JQ install 
 REQUIRED_PKG="jq"
@@ -23,13 +18,12 @@ if [ "" = "$PKG_OK" ]; then
     echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
     sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
 fi
-
-# sudo apt-get install jq -y >/dev/null
 sleep 1
 echo "$DATETIME ]-------->jq install status \n `dpkg -l jq`">> $LOGFILE
 
 
-CENTERURL="$1/hmsvc/commInfoData"
+CENTERURL="console.hamonize.com/hmsvc/commInfoData"
+# CENTERURL="$1/hmsvc/commInfoData"
 
 DATA_JSON="{\
         \"events\" : [ {\
