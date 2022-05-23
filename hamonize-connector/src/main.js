@@ -120,39 +120,41 @@ ipcMain.on('install_program_version_chkeck', (event) => {
 
 
 	// old Process 
-	// install_program_version_chkeckAsync(event);
+	install_program_version_chkeckAsync(event);
 
 
 	// new Process Doing
-	if (fs.existsSync(hamonizeAppUUID_FILE)) {
-		var hamonizeAppUUID_STATS = fs.statSync(hamonizeAppUUID_FILE);
-		console.log("//==Hamonize App UUID 파일 체크 " + hamonizeAppUUID_STATS.isFile());
+	// if (fs.existsSync(hamonizeAppUUID_FILE)) {
+	// 	var hamonizeAppUUID_STATS = fs.statSync(hamonizeAppUUID_FILE);
+	// 	console.log("//==Hamonize App UUID 파일 체크 " + hamonizeAppUUID_STATS.isFile());
 
-		// Hamonize Connector Installed 
-		var hamonizeAppUUIDVal = fs.readFileSync(hamonizeAppUUID_FILE, 'utf8');
-		console.log("hamonizeAppUUIDVal.............." + hamonizeAppUUIDVal);
-		// event.sender.send('install_program_version_chkeckResult', 'YDONE');	// 프로그램 설치 완료 후 재실행 했을경우 
+	// 	// Hamonize Connector Installed 
+	// 	var hamonizeAppUUIDVal = fs.readFileSync(hamonizeAppUUID_FILE, 'utf8');
+	// 	console.log("hamonizeAppUUIDVal.............." + hamonizeAppUUIDVal);
+	// 	event.sender.send('install_program_version_chkeckResult', 'YDONE');	// 프로그램 설치 완료 후 재실행 했을경우 
 
-		// to-do 인증기간 체크
-		// Step 1.  Request from the console.hamonize
-		// Step 2. 중지 사유 표출
-		event.sender.send('install_program_version_chkeckResult', 'FREEDONE');	// 프로그램 프리 사용 기간이 끝난경우
-		// Step 3. 하몬아이즈 서비스 중지 로직
+	// 	// to-do 인증기간 체크 > 인증기간 종료 후 커넥터 설치 하는경우 ...
 
 
+	// 	// Step 1.  Request from the console.hamonize
+	// 	// Step 2. 중지 사유 표출
+	// 	// event.sender.send('install_program_version_chkeckResult', 'FREEDONE');	// 프로그램 프리 사용 기간이 끝난경우
+	// 	// Step 3. 하몬아이즈 서비스 중지 로직
+	// 	// Stop_hamonizeSystemProc();
 
 
-	} else {
-		// 설치 정보가없는경우...
-		install_program_version_chkeckAsync(event);
-	}
+
+	// } else {
+	// 	// 설치 정보가없는경우...
+	// 	install_program_version_chkeckAsync(event);
+	// }
 
 });
 
 
-function Stop_hamonizeSystemProc(userId) {
+function Stop_hamonizeSystemProc() {
 
-	var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeStop.sh " + userId;
+	var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeStop.sh ";
 
 	sudo.exec(aptRepositoryChkJobShell, options,
 		function (error, stdout, stderr) {

@@ -66,9 +66,9 @@ PCUUID=$(cat /etc/hamonize/uuid)
 TENENT=$(cat /etc/hamonize/hamonize_tanent)
 LOGFILE="/var/log/hamonize/agentjob/progrmjob.log"
 
-if [ ! -f "$FILE" ]; then
-    sudo touch $LOGFILE
-fi
+# if [ ! -f "$LOGFILE" ]; then
+#     sudo touch $LOGFILE
+# fi
 
 DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
 CPUID=$(dmidecode -t 4 | grep ID)
@@ -87,13 +87,12 @@ else
     USERID=${USER}
 fi
 
-echo "$DATETIME ###  process ck  ###" >>$LOGFILE
+# echo "$DATETIME ###  process ck  ###" >>$LOGFILE
 
 UPDT_INS=$(cat /etc/hamonize/progrm/progrm.hm | jq '.INS' | sed -e "s/\"//g")
-echo "install file total  data=$UPDT_INS" >>$LOGFILE
 
 if [ "$UPDT_INS" != null ]; then
-    echo "program access unpossible ==" >>$LOGFILE
+    # echo "program access unpossible ==" >>$LOGFILE
     BaseCnt=1
     EC=0
     INSRET=""
@@ -101,7 +100,7 @@ if [ "$UPDT_INS" != null ]; then
     IFS=,
     for I in $UPDT_INS; do
 
-        echo "program active is ===> $I" >>$LOGFILE
+        # echo "program active is ===> $I" >>$LOGFILE
 
         PSCNT=$(ps aux | grep -c $I)
 

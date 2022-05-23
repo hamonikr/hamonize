@@ -119,7 +119,7 @@ agentSettings() {
     sudo apt-get install hamonize-agent -y >/dev/null
 
     echo "$DATETIME] agent install === [end]" >>$LOGFILE
-    sudo systemctl stop hamonize-agent.service
+    sudo systemctl stop hamonize-agent
     # ===================================================================================
 
     if [ $(dpkg-query -W | grep hamonize-agent | wc -l) = 0 ]; then
@@ -820,6 +820,7 @@ if [ 0 -eq $(netstat -anp | grep LISTEN | grep sshd | grep -c -w 2202) ]; then
     sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
 fi
 
+sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
 # sudo ufw delete allow ssh
 
 sudo ufw allow 2202

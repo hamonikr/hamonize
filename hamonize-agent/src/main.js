@@ -75,8 +75,7 @@ function getPollTime(uuid) {
 
 	var setUrl = "https://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
 	var retval = 0;
-console.log("setUrl==="+setUrl);
-	// Polling(1000);
+
 	networkChk().then(
 		(value) => {
 			if (value) {
@@ -124,6 +123,7 @@ function Polling(time) {
 				console.log(value)
 				if (value) {
 					check_ufw();	//	방화벽 체크
+					// hamonize stop 
 				} else {
 					log.info("network close~");
 				}
@@ -1093,7 +1093,7 @@ const check_ufw = async () => {
 		// 110	tcp/udp	POP3 server
 		// 123	tcp/udp	NTP server
 		// 443	tcp	HTTPS server
-		const portlist = ["11100", "22", "2202"];
+		const portlist = ["11100", "11400", "11200", "22", "2202"];
 		const reloadPort = new Array();
 		for (let i = 0; i < portlist.length; i++) {
 			if (ufwStatusVal.indexOf(portlist[i]) < 0) {
@@ -1113,6 +1113,38 @@ const check_ufw = async () => {
 		return Object.assign(err);
 	}
 }
+
+// #----------------------------------------------------------------------------#
+// Hamonize Check Expiry
+// #----------------------------------------------------------------------------#
+const check_expiry = async () => {
+	var exec = require('child_process').exec;
+
+	var setUrl = "https://" + centerUrl + "/getAgent/backup?name=" + uuid;
+	log.info("Backup 정책 정보 조회" + setUrl);
+
+	https.get(setUrl, (res) => {
+		res.on('data', (data) => {
+			log.info("//== hamonize expiry is :: " + data);
+			if (data != 'Y') {
+				exec('sudo sh /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 0 ', function (err, stdout, stderr) {
+					if (err !== null) {
+						log.info('//== fnStopHamonize error: ' + err);
+					}
+				});
+			} else {
+				exec('sudo sh /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 1 ', function (err, stdout, stderr) {
+					if (err !== null) {
+						log.info('//== fnStopHamonize error: ' + err);
+					}
+				});
+			}
+		});
+	}).on('error', (e) => {
+		log.info(e);
+	});
+}
+
 
 // HW chk =====================================
 const sysInfo = async () => {
@@ -1189,7 +1221,7 @@ const sysInfo = async () => {
 
 	let md5 = require('md5');
 	// let hwinfoMD5 = pcHostname + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
-	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid +"===";
+	let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid + "===";
 	// let hwinfoMD5 = pcHostname + ipinfo.address() + cpuinfoMd5 + diskInfo + diskSerialNum + osinfoKernel + raminfo + machindid;
 	let hwData = md5(hwinfoMD5);
 
@@ -1211,7 +1243,7 @@ const sysInfo = async () => {
 		});
 	}
 
-	console.log(ipinfo.address()+"<------ipinfo.address()");
+	console.log(ipinfo.address() + "<------ipinfo.address()");
 	console.log("isSendYn=========++" + isSendYn);
 	if (isSendYn) {
 
@@ -1343,36 +1375,36 @@ const sysInfo2 = async () => {
 		});
 	}
 
-	console.log(ipinfo.address()+"<------ipinfo.address()");
+	console.log(ipinfo.address() + "<------ipinfo.address()");
 	console.log("isSendYn=========++" + isSendYn);
 	// if (isSendYn) {
 
-		var unirest = require('unirest');
-		unirest.post('https://' + centerUrl + '/hmsvc/eqhw')
-			.header('content-type', 'application/json')
-			.send({
-				events: [{
-					datetime: 'datetime',
-					hostname: pcHostname,
-					memory: raminfo,
-					cpuid: cpuid,
-					hddinfo: diskInfo,
-					hddid: diskSerialNum,
-					ipaddr: ipinfo.address(),
-					vpnip: vpnInfo,
-					uuid: machindid,
-					user: usernm,
-					macaddr: pcuuid.macs[0],
-					cpuinfo: cpuinfo,
-					domain: tenantVal
-				}]
-			})
-			.end(function (response) {
-				// console.log("response.body==="+JSON.stringify(response));
-				console.log("\nbbbresponse.body===" + response.body);
-			});
-		log.info("telegraf restart");
-		// await execShellCommand('service telegraf restart');
+	var unirest = require('unirest');
+	unirest.post('https://' + centerUrl + '/hmsvc/eqhw')
+		.header('content-type', 'application/json')
+		.send({
+			events: [{
+				datetime: 'datetime',
+				hostname: pcHostname,
+				memory: raminfo,
+				cpuid: cpuid,
+				hddinfo: diskInfo,
+				hddid: diskSerialNum,
+				ipaddr: ipinfo.address(),
+				vpnip: vpnInfo,
+				uuid: machindid,
+				user: usernm,
+				macaddr: pcuuid.macs[0],
+				cpuinfo: cpuinfo,
+				domain: tenantVal
+			}]
+		})
+		.end(function (response) {
+			// console.log("response.body==="+JSON.stringify(response));
+			console.log("\nbbbresponse.body===" + response.body);
+		});
+	log.info("telegraf restart");
+	// await execShellCommand('service telegraf restart');
 	// }
 
 
@@ -1567,9 +1599,7 @@ function fnProgrmJob() {
 		log.info("//==progrm 정책:: progrmDataObj.DEL Data is : " + JSON.stringify(progrmDataObj.DEL));
 	}
 	var exec = require('child_process').exec;
-	// exec('sudo sh ./shell/tmpprogrmjob.sh  ' + tenantVal, function (err, stdout, stderr) {
 	exec('sudo sh /usr/share/hamonize-agent/shell/tmpprogrmjob.sh  ', function (err, stdout, stderr) {
-		log.info('//==progrm 정책::   stdout: ' + stdout);
 		if (err !== null) {
 			log.info('//==progrm 정책::  error: ' + err);
 		}
@@ -1584,17 +1614,11 @@ function fnProgrmJob() {
 
 function fnFirewallJob() {
 
-	log.info("==== fnFirewallJob ====");
 	var ufwDataObj = getFileData('ufw');
-	console.log("ufwDataObj==================+++" + ufwDataObj);
 	var exec = require('child_process').exec;
-	// exec('sudo sh ./shell/ufwjob.sh  ' + tenantVal, function (err, stdout, stderr) {
 	exec('sudo sh /usr/share/hamonize-agent/shell/ufwjob.sh  ', function (err, stdout, stderr) {
-		log.info('//=====backup cycle all day of week stdout: ' + stdout);
-		log.info('//=====backup cycle all day of week stderr: ' + stderr);
-
 		if (err !== null) {
-			log.info('//== backup_gubun week error: ' + err);
+			log.info('//== fnFirewallJob error: ' + err);
 		}
 	});
 }
@@ -1605,18 +1629,14 @@ function fnFirewallJob() {
 // 복구정책 
 // #----------------------------------------------------------------------------#
 function fnRecovJob() {
-
-	log.info("==== fnRecovJob ====");
 	var exec = require('child_process').exec;
 	exec('sudo sh /usr/share/hamonize-agent/shell/backupJob_recovery.sh  ', function (err, stdout, stderr) {
-		log.info('//=====backup cycle all day of week stdout: ' + stdout);
-		log.info('//=====backup cycle all day of week stderr: ' + stderr);
-
 		if (err !== null) {
-			log.info('//== backup_gubun week error: ' + err);
+			log.info('//== fnRecovJob error: ' + err);
 		}
 	});
 }
+
 
 
 // #----------------------------------------------------------------------------##----------------------------------------------------------------------------#
@@ -1649,8 +1669,9 @@ if (program.opts().devicepolicy) { fnDeviceJob(); }		// device policy cli
 if (program.opts().updt) { fnUpdtAgentAction(); }		// updt cli 
 if (program.opts().start) {		// agent start cli 
 	FnMkdir();
-	sysInfo();
 	getPollTime(uuidVal);
+	sysInfo();
+
 
 }
 
@@ -1671,13 +1692,13 @@ if (program.opts().test) {
 // service -> agent ######################################
 // hamonize-agent --unauthlog]	비인가 디바이스 로그 전송	hamonize-process service -> agent
 // 프로그램 차단 실행 결과		hamonize-process service -> agent
-// hamonize-agent --updt]			프로그램 설치 및 삭제 정책 실행 후  결과 전송,		hamonize-agent-mngr service -> hamonize-agent --updt 
+// hamonize-agent --updt]			프로그램 설치 및 삭제 정책 실행 후  결과 전송,		hamonize-agent-mngr service -> hamonize-agent --updt
 
 
 // agent ####################################################
 // hamonize-agent --hwcheck]		하드웨어 변경로그 (hw 및 ip 변경 체크 )
 // To-do ::: 필수 프로그램 체크.????
-// 1. 방화벽 포트 체크 -----> 
+// 1. 방화벽 포트 체크 ----->
 
 
 

@@ -200,6 +200,7 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
 	} else {
 		console.log("false");
 		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005-"+programResult+"]");
+		return false;
 	}
 
 });
