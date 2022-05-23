@@ -120,27 +120,53 @@ ipcMain.on('install_program_version_chkeck', (event) => {
 
 
 	// old Process 
-	install_program_version_chkeckAsync(event);
+	// install_program_version_chkeckAsync(event);
+
 
 	// new Process Doing
-	// var hamonizeAppUUID_STATS = fs.statSync(hamonizeAppUUID_FILE);
-	// console.log("//==Hamonize App UUID 파일 체크 " + hamonizeAppUUID_STATS.isFile());
+	if (fs.existsSync(hamonizeAppUUID_FILE)) {
+		var hamonizeAppUUID_STATS = fs.statSync(hamonizeAppUUID_FILE);
+		console.log("//==Hamonize App UUID 파일 체크 " + hamonizeAppUUID_STATS.isFile());
 
-	// // Hamonize Connecotr Install Check  
-	// if (!hamonizeAppUUID_STATS.isFile()) {
-	// 	// Hamonize Connector Not Install 
-	// 	install_program_version_chkeckAsync(event);
-	// }else{
-	// 	// Hamonize Connector Installed 
-	// 	var hamonizeAppUUIDVal = fs.readFileSync(hamonizeAppUUID_FILE, 'utf8');
-	// 	console.log("hamonizeAppUUIDVal.............." + hamonizeAppUUIDVal);
-	// 	// event.sender.send('install_program_version_chkeckResult', 'YDONE');	// 프로그램 설치 완료 후 재실행 했을경우 
-	// 	event.sender.send('install_program_version_chkeckResult', 'FREEDONE');	// 프로그램 프리 사용 기간이 끝난경우
-	// }
+		// Hamonize Connector Installed 
+		var hamonizeAppUUIDVal = fs.readFileSync(hamonizeAppUUID_FILE, 'utf8');
+		console.log("hamonizeAppUUIDVal.............." + hamonizeAppUUIDVal);
+		// event.sender.send('install_program_version_chkeckResult', 'YDONE');	// 프로그램 설치 완료 후 재실행 했을경우 
+
+		// to-do 인증기간 체크
+		// Step 1.  Request from the console.hamonize
+		// Step 2. 중지 사유 표출
+		event.sender.send('install_program_version_chkeckResult', 'FREEDONE');	// 프로그램 프리 사용 기간이 끝난경우
+		// Step 3. 하몬아이즈 서비스 중지 로직
 
 
+
+
+	} else {
+		// 설치 정보가없는경우...
+		install_program_version_chkeckAsync(event);
+	}
 
 });
+
+
+function Stop_hamonizeSystemProc(userId) {
+
+	var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeStop.sh " + userId;
+
+	sudo.exec(aptRepositoryChkJobShell, options,
+		function (error, stdout, stderr) {
+			if (error) {
+				console.log("hamonizeSystemBackupProc error is " + error);
+				return resolve("N");
+			} else {
+				// console.log('stdout: ' + stdout);
+				// console.log('stderr: ' + stderr);
+				resolve("Y");
+			}
+		}
+	);
+}
 
 
 
@@ -293,7 +319,7 @@ function hamonizeProgramInstallProc(domain, userId) {
 						return resolve("Y");
 					}
 
-					
+
 
 				}
 			}

@@ -401,15 +401,13 @@ hamonieTenantAptUrl() {
     # tenantApt="$APTURL $DOMAININFO main"
     # echo "Tenant Apt url :: $tenantApt" >>$LOGFILE
 
-    chkAptList=`cat  /etc/apt/sources.list.d/hamonize.list  | egrep -v '^[[:space:]]*(#.*)?$' | tr -d  ' '`
+    chkAptList=$(cat /etc/apt/sources.list.d/hamonize.list | egrep -v '^[[:space:]]*(#.*)?$' | tr -d ' ')
     echo $chkAptList
 
-    if [[ "$chkAptList" != *"$DOMAININFO"* ]];then
+    if [[ "$chkAptList" != *"$DOMAININFO"* ]]; then
         echo "deb [arch=amd64] http://$APTURL $DOMAININFO main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
         sudo apt-get update -y >>$LOGFILE
     fi
-
-
 
     # if [ $(grep -rn "$tenantApt" /etc/apt/sources.list.d/hamonize.list | wc -l) == 0 ]; then
     #     echo "deb [arch=amd64] http://$APTURL $DOMAININFO main" | sudo tee -a /etc/apt/sources.list.d/hamonize.list
@@ -515,8 +513,6 @@ Init-HamonizeProgram() {
         echo "$(ls /etc/udev/rules.d/)" >>$hmUdevError
         echo "" >>$hmUdevError
 
-        
-
         exit 0
     fi
     sleep 2
@@ -550,8 +546,6 @@ Init-HamonizeProgram() {
         service hamonize-agentmngr status >>$hmAgentError
         echo "" >>$hmAgentError
 
-
-
         exit 0
     fi
     sleep 2
@@ -563,7 +557,6 @@ Init-HamonizeProgram() {
         # echo >&1 "Hamonize osLoginout Service Install-Y :: "
     else
         echo >&2 "1942-OSLOGINOUT"
-
 
         hmLoginoutError="/tmp/hm_loginout.error"
         touch hmLoginoutError
@@ -594,7 +587,6 @@ Init-HamonizeProgram() {
         systemctl list-units --all --type=service --no-pager | grep -e hamonize-logout >>$hmLoginoutError
         echo "" >>$hmLoginoutError
 
-
         exit 0
     fi
     sleep 2
@@ -620,7 +612,6 @@ Init-HamonizeProgram() {
         echo "#- Chechk Point 1. Install Package [Timeshift] Check ------------------------#" >>$hmTimeshiftError
         dpkg -l timeshift >>$hmTimeshiftError
         echo "" >>$hmTimeshiftError
-
 
         exit 0
     fi
@@ -655,7 +646,7 @@ Init-HamonizeProgram() {
         echo "" >>$hmTelegrafError
 
         echo "#- Chechk Point 3. Telgraf Conf File  ------------------------#" >>$hmTelegrafError
-        grep -v "^#" /etc/telegraf/telegraf.conf |  sed '/^$/d' >>$hmTelegrafError
+        grep -v "^#" /etc/telegraf/telegraf.conf | sed '/^$/d' >>$hmTelegrafError
         echo "" >>$hmTelegrafError
 
         exit 0
@@ -687,12 +678,10 @@ Init-HamonizeProgram() {
         dpkg -l hamonize-admin >>$hmHadminError
         echo "" >>$hmHadminError
 
-
         echo "#----------------------------------------------------------------#" >>$hmHadminError
         echo "#- Chechk Point 2. Install deb file Check ------------------------#" >>$hmHadminError
         ls /tmp/hamonize-admin*.deb >>$hmHadminError
         echo "" >>$hmHadminError
-
 
         exit 0
     elif [ "$retval" == 2 ]; then
@@ -711,12 +700,11 @@ Init-HamonizeProgram() {
         echo "#- Chechk Point 1. Install Package [HAMONIZE_ADMIN] Check ------------------------#" >>$hmHadminError
         hamonize-cli authkeys list >>$hmHadminError
         echo "" >>$hmHadminError
-        
 
         exit 0
     else
         echo >&2 "$retval---1942-HAMONIZE_ADMIN-ETC"
-        
+
         hmHadminError="/tmp/hm_hAdmin.error"
         touch hmHadminError
         cat /dev/null >$hmHadminError
@@ -728,7 +716,6 @@ Init-HamonizeProgram() {
 
         echo "# Hamonize-Admin Exception Another Case ------------------------------#" >>$hmHadminError
         echo "# cf. /var/log/hamonize/propertiesJob/propertiesJob.log ------------------------------#" >>$hmHadminError
-       
 
         exit 0
     fi
@@ -742,7 +729,7 @@ Init-HamonizeProgram() {
         echo >&1 "Y"
     else
         echo >&2 "$retval---1942-HAMONIZE_HELP"
-         
+
         hmHelpError="/tmp/hm_help.error"
         touch hmHelpError
         cat /dev/null >$hmHelpError
@@ -753,7 +740,7 @@ Init-HamonizeProgram() {
         echo "" >>$hmHelpError
 
         echo "# Hamonize-Admin Exception Another Case ------------------------------#" >>$hmHelpError
-        dpkg -l hamonize-help >> >>$hmHelpError
+        dpkg -l hamonize-help >>$hmHelpError
         echo "" >>$hmHelpError
 
         exit 0
@@ -814,18 +801,29 @@ if [ "" = "$PKG_OK" ]; then
     DEBIAN_FRONTEND=noninteractive apt-get --yes install $REQUIRED_PKG >>$LOGFILE
 fi
 
-CHKSSHD=$(grep Port /etc/ssh/sshd_config | grep -c '^Port')
-if [ 0 -eq $CHKSSHD ]; then
+# CHKSSHD=$(grep Port /etc/ssh/sshd_config | grep -c '^Port')
+# if [ 0 -eq $CHKSSHD ]; then
+#     sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
+#     sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
+# else
+#     Get_sshport=$(grep Port /etc/ssh/sshd_config | grep '^Port')
+#     echo "used ssh port :: $Get_sshport" >>$LOGFILE
+#     #       sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
+#     sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
+# fi
+
+if [ 0 -eq $(netstat -anp | grep LISTEN | grep sshd | grep -c -w 22) ]; then
     sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
-    sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
-else
-    Get_sshport=$(grep Port /etc/ssh/sshd_config | grep '^Port')
-    echo "used ssh port :: $Get_sshport" >>$LOGFILE
-    #       sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
+fi
+
+if [ 0 -eq $(netstat -anp | grep LISTEN | grep sshd | grep -c -w 2202) ]; then
     sudo sh -c 'echo "Port 2202" >> /etc/ssh/sshd_config'
 fi
+
 # sudo ufw delete allow ssh
-# sudo ufw allow ssh
+
+sudo ufw allow 2202
+sudo ufw allow ssh
 sudo systemctl restart sshd
 sudo systemctl restart ssh
 
