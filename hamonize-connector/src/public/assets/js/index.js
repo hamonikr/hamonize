@@ -189,11 +189,27 @@ function nextStap() {
 
 	initLayer
 
-	setPcinfo();	// pc 정보 등록
+	
+	hamonizeVpnInstall();
 };
 
 
-
+// # vpn install  ====================================/
+function hamonizeVpnInstall() {
+	// $("#stepA").addClass("br animate");
+	ipcRenderer.send('hamonizeVpnInstall', $("#domain").val());
+}
+ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
+	console.log("hamonizeVpnInstall_Result===" + result);
+	if (result == 'Y') {
+		
+		setPcinfo();	// pc 정보 등록
+	} else if (result == 'N002') {
+		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N002]");
+	} else {
+		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.Error Code :: [N4001]");
+	}
+});
 
 
 function setPcinfo() {
@@ -238,7 +254,7 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
 		$("#stepC").addClass("br animate");
 		$("#infoStepB").text("완료");
 
-		hamonizeVpnInstall();
+		hamonizeSystemBackup();
 
 
 	} else {
@@ -248,21 +264,7 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
 	}
 
 });
-// # vpn install  ====================================/
-function hamonizeVpnInstall() {
-	// $("#stepA").addClass("br animate");
-	ipcRenderer.send('hamonizeVpnInstall', $("#domain").val());
-}
-ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
-	console.log("hamonizeVpnInstall_Result===" + result);
-	if (result == 'Y') {
-		hamonizeSystemBackup();
-	} else if (result == 'N002') {
-		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N002]");
-	} else {
-		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.Error Code :: [N4001]");
-	}
-});
+
 
 
 // ======== step 4. 백업... =========================================/
