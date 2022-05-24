@@ -1120,31 +1120,104 @@ const check_ufw = async () => {
 const check_expiry = async () => {
 	var exec = require('child_process').exec;
 
-	var setUrl = "https://" + centerUrl + "/getAgent/backup?name=" + uuid;
-	log.info("Backup 정책 정보 조회" + setUrl);
 
-	https.get(setUrl, (res) => {
-		res.on('data', (data) => {
-			log.info("//== hamonize expiry is :: " + data);
-			if (data != 'Y') {
-				exec('sudo sh /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 0 ', function (err, stdout, stderr) {
+	var setUrl = "https://" + centerUrl + "/hmsvc/isitpossible";
+	log.info("check_expiry 조회" + setUrl);
+	// return status code : Agent -> (Y-사용가능, E-기간만료), Connector ->( N-설치개수 제한 )
+	var unirest = require('unirest');
+	unirest.post(setUrl)
+		.header('content-type', 'application/json')
+		.send({
+			events: [{
+				domain: tenantVal
+			}]
+		})
+		.end(function (response) {
+			// console.log("response.body==="+JSON.stringify(response));
+			console.log("\nbbbresponse.body===" + response.body);
+
+
+			const dataVal = response.body;
+			if (dataVal == 'E') {
+				// Stop Hamonize Modules - 사용기간이 만료되어 서비스 중지를 시킨다. 
+					exec('sudo /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 0 ', function (err, stdout, stderr) {
 					if (err !== null) {
 						log.info('//== fnStopHamonize error: ' + err);
 					}
 				});
-			} else {
-				exec('sudo sh /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 1 ', function (err, stdout, stderr) {
+			} else if (dataVal == 'Y') {	// 사용기간 만료 > 사용 기간 연장 
+				const getExpirtFileValue = getExpirtFile('hamonize.expiry');
+				console.log("getExpirtFileValue===" + getExpirtFileValue + "==");
+				if (getExpirtFileValue == 'N') {
+					console.log("aaaaaaaaaaaaaa");
+					exec('sudo /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 1 ', function (err, stdout, stderr) {
+						if (err !== null) {
+							log.info('//== fnStopHamonize error: ' + err);
+						}
+					});
+				}
+			} else if (dataVal == 'N') {
+				exec('sudo /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 2 ', function (err, stdout, stderr) {
 					if (err !== null) {
 						log.info('//== fnStopHamonize error: ' + err);
 					}
 				});
 			}
+
 		});
-	}).on('error', (e) => {
-		log.info(e);
-	});
+
+
+	// https.get(setUrl, (res) => {
+	// 	res.on('data', (data) => {
+	// 		log.info("//== hamonize expiry is :: " + data);
+
+	// 		data = 'E';
+
+	// 		if (data == 'E') {
+	// 			// Stop Hamonize Modules - 사용기간이 만료되어 서비스 중지를 시킨다. 
+	// 			exec('sudo sh /home/gon/git/hamonize/hamonize-agent/src/shell/hamonizeExpiry.sh 0 ', function (err, stdout, stderr) {
+	// 				// exec('sudo sh /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 0 ', function (err, stdout, stderr) {
+	// 				if (err !== null) {
+	// 					log.info('//== fnStopHamonize error: ' + err);
+	// 				}
+	// 			});
+	// 		} else if (data == 'Y') {	// 사용기간 만료 > 사용 기간 연장 
+
+	// 			const abc = aaa('hamonize.expiry');
+	// 			console.log("abc===" + abc);
+	// 			if (abc == 'N') {
+	// 				exec('sudo sh /home/gon/git/hamonize/hamonize-agent/src/shell/hamonizeExpiry.sh 1 ', function (err, stdout, stderr) {
+	// 					// exec('sudo sh /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 1 ', function (err, stdout, stderr) {
+	// 					if (err !== null) {
+	// 						log.info('//== fnStopHamonize error: ' + err);
+	// 					}
+	// 				});
+	// 			}
+	// 		} else if (data == 'N') {
+	// 			exec('sudo sh /home/gon/git/hamonize/hamonize-agent/src/shell/hamonizeExpiry.sh 2 ', function (err, stdout, stderr) {
+	// 				// exec('sudo sh /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 2 ', function (err, stdout, stderr) {
+	// 				if (err !== null) {
+	// 					log.info('//== fnStopHamonize error: ' + err);
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+	// }).on('error', (e) => {
+	// 	log.info(e);
+	// });
 }
 
+
+
+// hw 변경로그 체크 파일
+function getExpirtFile(filename) {
+	var text = '';
+
+	if (fs.existsSync('/etc/hamonize/' + filename)) {
+		text = fs.readFileSync('/etc/hamonize/' + filename, 'utf8');
+	}
+	return text.trim();
+}
 
 // HW chk =====================================
 const sysInfo = async () => {
@@ -1646,6 +1719,7 @@ const program = new Command();
 
 program
 	.option('--test')
+	.option('--expiry')
 	.option('--updt')
 	.option('--progrmblock')
 	.option('--devicepolicy')
@@ -1679,6 +1753,12 @@ if (program.opts().start) {		// agent start cli
 if (program.opts().test) {
 	sysInfo2();
 }
+
+if (program.opts().expiry) {
+	check_expiry();
+}
+
+
 
 
 

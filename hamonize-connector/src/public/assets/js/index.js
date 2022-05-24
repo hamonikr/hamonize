@@ -27,8 +27,6 @@ function install_program_version_chkeck() {
 
 ipcRenderer.on('install_program_version_chkeckResult', (event, isChkVal) => {
 
-	console.log("isChkVal==2222222222222222222222=" + isChkVal);
-
 	if (isChkVal == 'Y') {
 		// 초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.
 		console.log("초기 폴더 생성후 관리 프로그램 설치에 필요한 툴 설치 완료.");
@@ -107,7 +105,65 @@ pcChkAuthBtn.addEventListener('click', function (event) {
 
 });
 
-// # step 2. 부서번호 체크 ====================================
+
+// 인증결과 
+ipcRenderer.on('getAuthResult', (event, authResult) => {
+	// 조직정보
+	if (authResult == 'N') {
+		fn_alert("Hamonize 인증키 오류입니다. 다시 확인하신후 입력해 주시기바랍니다.");
+	} else {
+		// 인증코드 검증후 리턴받는값 -> 도메인
+		$("#domain").val(authResult);
+
+		// 인증코드 검증 후 사용 갯수체크 
+		ipcRenderer.send('chkHamonizeAppUses', authResult);
+
+	}
+});
+
+// 사용 갯수 
+ipcRenderer.on('chkHamonizeAppUsesResult', (event, ret) => {
+	console.log("ret=====+"+ret);
+	// 사용갯수에 이상이 없다면..
+	if (ret == 'Y') {
+		$(".layerpop__container").text("인증이 완료되었습니다. 조직정보를 불러오는 중입니다.  잠시만 기다려주세요.!!");
+		ipcRenderer.send('getOrgData', $("#domain").val());
+	} else {
+		$(".layerpop__container").text("Hamonize 라이센스에서 허용하는 최대 수량에 도달하여 프로그램 설치가 불가능합니다.");
+		return false;
+	}
+
+});
+
+// 조직정보 
+ipcRenderer.on('getOrgDataResult', (event, orgData) => {
+	if ($("#tmpFreeDateDone").val().trim() == 'FREEDONE') {
+		extensionContract();
+	} else {
+
+		var option = "";
+		$("#orglayer").show();
+		$("#authkeylayer").hide();
+		$('#groupName').empty();
+
+		var chkCnt = 0;
+		$.each(orgData, function (key, value) {
+			option += "<option>" + value.orgnm + "</option>";
+			chkCnt++;
+		});
+		if (chkCnt == 0) {
+			$("#orglayer").hide();
+			$("#authkeylayer").show();
+			fn_alert("등록된 조직정보가 없습니다. 조직을 등록후 사용해주세요.");
+			// }else{
+			// 	$(".layerpop__container").text("pc가 포함된 조지을 선택하신 후 등록버튼을 클릭해주세요.!!");
+		}
+		$('#groupName').append(option);
+
+	}
+});
+
+// # step 2. 조직 선택 ====================================
 const pcChkBtn = document.getElementById('pcChkBtn');
 pcChkBtn.addEventListener('click', function (event) {
 	if (!doubleSubmitFlag) {
@@ -133,26 +189,11 @@ function nextStap() {
 
 	initLayer
 
-	hamonizeVpnInstall();
+	setPcinfo();	// pc 정보 등록
 };
 
 
 
-// # step 3. program Ready ] vpn install  ====================================/
-function hamonizeVpnInstall() {
-	$("#stepA").addClass("br animate");
-	ipcRenderer.send('hamonizeVpnInstall', $("#domain").val());
-}
-ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
-	console.log("hamonizeVpnInstall_Result===" + result);
-	if (result == 'Y') {
-		setPcinfo();
-	} else if (result == 'N002') {
-		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N002]");
-	} else {
-		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.Error Code :: [N4001]");
-	}
-});
 
 
 function setPcinfo() {
@@ -183,7 +224,7 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 });
 
 
-// ======== step 4. PC 관리 프로그램 설치... =========================================/
+// ======== step 3. PC 관리 프로그램 설치... =========================================/
 function hamonizeProgramInstall() {
 	ipcRenderer.send('hamonizeProgramInstall', $("#domain").val());
 }
@@ -196,17 +237,35 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
 		$("#stepB").removeClass("br animate");
 		$("#stepC").addClass("br animate");
 		$("#infoStepB").text("완료");
-		hamonizeSystemBackup();
+
+		hamonizeVpnInstall();
+
+
 	} else {
 		console.log("false");
-		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005-"+programResult+"]");
+		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005-" + programResult + "]");
 		return false;
 	}
 
 });
+// # vpn install  ====================================/
+function hamonizeVpnInstall() {
+	// $("#stepA").addClass("br animate");
+	ipcRenderer.send('hamonizeVpnInstall', $("#domain").val());
+}
+ipcRenderer.on('hamonizeVpnInstall_Result', (event, result) => {
+	console.log("hamonizeVpnInstall_Result===" + result);
+	if (result == 'Y') {
+		hamonizeSystemBackup();
+	} else if (result == 'N002') {
+		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. 관리자에게 문의 바랍니다. Error Code :: [N002]");
+	} else {
+		fn_alert("하모나이즈 환경 셋팅 중 오류가 발견되었습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.Error Code :: [N4001]");
+	}
+});
 
 
-// ======== step 5. 백업... =========================================/
+// ======== step 4. 백업... =========================================/
 // # use timeshift tooll 
 function hamonizeSystemBackup() {
 	ipcRenderer.send('hamonizeSystemBackup');
@@ -286,45 +345,6 @@ function fn_alert(arg) {
 
 
 
-// 인증결과 
-ipcRenderer.on('getAuthResult', (event, authResult) => {
-	// 조직정보
-	if (authResult == 'N') {
-		fn_alert("Hamonize 인증키 오류입니다. 다시 확인하신후 입력해 주시기바랍니다.");
-	} else {
-		$(".layerpop__container").text("인증이 완료되었습니다. 조직정보를 불러오는 중입니다.  잠시만 기다려주세요.!!");
-		$("#domain").val(authResult);
-		ipcRenderer.send('getOrgData', authResult);
-	}
-});
-
-// 조직정보 
-ipcRenderer.on('getOrgDataResult', (event, orgData) => {
-	if ($("#tmpFreeDateDone").val().trim() == 'FREEDONE') {
-		extensionContract();
-	} else {
-
-		var option = "";
-		$("#orglayer").show();
-		$("#authkeylayer").hide();
-		$('#groupName').empty();
-
-		var chkCnt = 0;
-		$.each(orgData, function (key, value) {
-			option += "<option>" + value.orgnm + "</option>";
-			chkCnt++;
-		});
-		if (chkCnt == 0) {
-			$("#orglayer").hide();
-			$("#authkeylayer").show();
-			fn_alert("등록된 조직정보가 없습니다. 조직을 등록후 사용해주세요.");
-			// }else{
-			// 	$(".layerpop__container").text("pc가 포함된 조지을 선택하신 후 등록버튼을 클릭해주세요.!!");
-		}
-		$('#groupName').append(option);
-
-	}
-});
 
 
 
@@ -350,7 +370,7 @@ hamonizeAuthChkBtn.addEventListener('click', function (event) {
 
 
 // UI 재인증 셋팅-2
-function extensionContract(){
+function extensionContract() {
 	$modal.hide();
 	$("#loadingInfoText").text("");
 	$("#initLayer").removeClass("active");
@@ -364,7 +384,7 @@ function extensionContract(){
 	$("#infoStepA").text("체크전");
 	$("#infoStepB").text("체크전");
 	$("#infoStepC").text("체크전");
-} 
+}
 // ========== UI 재인증 셋팅 완료 ----------------------------#
 
 // 프로그램 체크 시작.

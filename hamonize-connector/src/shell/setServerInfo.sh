@@ -49,13 +49,11 @@ fi
 
 
 JQINS=$(echo ${RETDATA} | jq '.pcdata')
-echo $JQINS
 JQCNT=$(echo ${RETDATA} | jq '.pcdata' | jq length)
 
 echo "$DATETIME ]-------->center return val is :: " $JQCNT #>>$LOGFILE
 
 SET=$(seq 0 $(expr $JQCNT - 1))
-echo $SET
 for i in $SET; do
 
         TMP_ORGNM=$(echo ${RETDATA} | jq '.pcdata | .['$i'].svrname' | sed -e "s/\"//g")

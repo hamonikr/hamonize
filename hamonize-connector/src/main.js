@@ -140,7 +140,6 @@ ipcMain.on('install_program_version_chkeck', (event) => {
 	// 	// Step 2. 중지 사유 표출
 	// 	// event.sender.send('install_program_version_chkeckResult', 'FREEDONE');	// 프로그램 프리 사용 기간이 끝난경우
 	// 	// Step 3. 하몬아이즈 서비스 중지 로직
-	// 	// Stop_hamonizeSystemProc();
 
 
 
@@ -152,24 +151,51 @@ ipcMain.on('install_program_version_chkeck', (event) => {
 });
 
 
-function Stop_hamonizeSystemProc() {
 
-	var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeStop.sh ";
 
-	sudo.exec(aptRepositoryChkJobShell, options,
-		function (error, stdout, stderr) {
-			if (error) {
-				console.log("hamonizeSystemBackupProc error is " + error);
-				return resolve("N");
+
+
+const init_hamonize = async (event) => {
+	try {
+
+		// #step 1. 기본 폴더 및 파일 생성 및 기본 프로그램 설치
+		let initJobResult = await initHamonizeJob();
+		console.log("STEP 1. install_program_version_chkeck Result :: " + initJobResult);
+
+		if (initJobResult == 'Y') {
+
+			let setServerInfoResult = await setServerInfo();
+			console.log("setServerInfoResult============" + setServerInfoResult);
+
+			if (setServerInfoResult == 'Y') {
+				// apt repository chk & add ....
+				let aptRepositoryChkResult = await aptRepositoryChkProc();
+				console.log("aptRepositoryChkResult=============================>" + aptRepositoryChkResult);
+
+				// #step 2. 설치 프로그램 버전 체크
+				let installProgramVersionResult = await install_program_version_chkeckProc();
+				console.log("설치 프로그램 버전 체크 Result===============>>>>>>>>>>>>>>>>>" + installProgramVersionResult);
+
+				if (installProgramVersionResult > 0) { // 설치 프로그램 업데이트 필요..
+					event.sender.send('install_program_version_chkeckResult', 'U999');
+
+				} else { // 설치 프로그램 최신버전
+					event.sender.send('install_program_version_chkeckResult', 'Y');
+				}
 			} else {
-				// console.log('stdout: ' + stdout);
-				// console.log('stderr: ' + stderr);
-				resolve("Y");
+				// fail get Agent Server Info 
+				event.sender.send('install_program_ReadyProcResult', 'N004');
 			}
+		} else {
+			// fail create folder 
+			event.sender.send('install_program_version_chkeckResult', 'N001');
 		}
-	);
-}
 
+	} catch (err) {
+		console.log("install_program_version_chkeckProc---" + err);
+		return Object.assign(err);
+	}
+} // Init Hamonize End ------------------------------------------------------------#
 
 
 const install_program_version_chkeckAsync = async (event) => {
@@ -420,6 +446,7 @@ function setServerInfo() {
 
 
 //== init Shell Job  ===========================================
+// 기본 폴더 및 프로그램 설치
 function initHamonizeJob() {
 	return new Promise(function (resolve, reject) {
 		var initJobShell = "/bin/bash " + __dirname + "/shell/initHamonizeInstall.sh";
@@ -637,7 +664,6 @@ function getPublicIp() {
 
 let pcHostNameVal = "";
 const sysInfo = async (event, groupname, sabun, username, domain) => {
-	let retData = {}
 	const pcHostname = await execShellCommand('hostname');
 	pcHostNameVal = pcHostname;
 	const cpu = await si.cpu(); // CPU Info
@@ -892,3 +918,21 @@ ipcMain.on('getOrgAuth', (event, authkeyVal) => {
 		});
 
 });
+
+// Check Hamonize Uses 
+ipcMain.on('chkHamonizeAppUses', (event, domain) => {
+	console.log("domain=====+"+domain);
+
+	unirest.get(baseurl + '/hmsvc/isitpossible')
+		.header('content-type', 'application/json')
+		.send({
+			events: [{
+				domain: domain
+			}]
+		})
+		.end(function (response) {
+			console.log("=========response.body=======+"+ response.body);
+			event.sender.send('chkHamonizeAppUsesResult', response.body);
+		});
+});
+
