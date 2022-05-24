@@ -9,6 +9,9 @@ cat /dev/null >$LOGFILE
 
 UUID=$(cat /etc/hamonize/uuid)
 
+apt-get update 
+sleep 2
+
 
 #  JQ install 
 REQUIRED_PKG="jq"
