@@ -115,7 +115,7 @@ hamonizeServerSettings() {
     sudo cp -r $WORK_PATH/hamonizeInitJob.sh /etc/hamonize/propertiesJob
     sudo sed -i "s/CHANGE_CENTERURL/https:\/\/${IPADDR_SPLIT[1]}/" /etc/hamonize/propertiesJob/hamonizeInitJob.sh
     sudo sed -i '/@reboot/d' /etc/crontab
-    sudo sed -i '$s/$/\n\@reboot root  \/etc\/hamonize\/propertiesJob\/hamonizeInitJob.sh/g' /etc/crontab
+    sudo sed -i '$s/$/\n\@reboot root sleep 60 && \/etc\/hamonize\/propertiesJob\/hamonizeInitJob.sh/g' /etc/crontab
 }
 
 hamonizeHelpSettings() {
@@ -723,8 +723,11 @@ Init_program_package_chk() {
     fi
 
     # Openssh-server Port Settings
-    if [ 0 -eq $(netstat -an | grep -w ":22" | wc -l) ]; then
-        sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
+
+    if [ 0 -ne $(netstat -an | grep -w ":22" | wc -l) ]; then
+        if [ 0 -eq $(cat /etc/ssh/sshd_config | grep -i ^\port | wc -l) ]; then
+            sudo sh -c 'echo "Port 22" >> /etc/ssh/sshd_config'
+        fi
     fi
 
     if [ 0 -eq $(netstat -an | grep -w ":2202" | wc -l) ]; then

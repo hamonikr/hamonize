@@ -154,50 +154,6 @@ ipcMain.on('install_program_version_chkeck', (event) => {
 
 
 
-
-const init_hamonize = async (event) => {
-	try {
-
-		// #step 1. 기본 폴더 및 파일 생성 및 기본 프로그램 설치
-		let initJobResult = await initHamonizeJob();
-		console.log("STEP 1. install_program_version_chkeck Result :: " + initJobResult);
-
-		if (initJobResult == 'Y') {
-
-			let setServerInfoResult = await setServerInfo();
-			console.log("setServerInfoResult============" + setServerInfoResult);
-
-			if (setServerInfoResult == 'Y') {
-				// apt repository chk & add ....
-				let aptRepositoryChkResult = await aptRepositoryChkProc();
-				console.log("aptRepositoryChkResult=============================>" + aptRepositoryChkResult);
-
-				// #step 2. 설치 프로그램 버전 체크
-				let installProgramVersionResult = await install_program_version_chkeckProc();
-				console.log("설치 프로그램 버전 체크 Result===============>>>>>>>>>>>>>>>>>" + installProgramVersionResult);
-
-				if (installProgramVersionResult > 0) { // 설치 프로그램 업데이트 필요..
-					event.sender.send('install_program_version_chkeckResult', 'U999');
-
-				} else { // 설치 프로그램 최신버전
-					event.sender.send('install_program_version_chkeckResult', 'Y');
-				}
-			} else {
-				// fail get Agent Server Info 
-				event.sender.send('install_program_ReadyProcResult', 'N004');
-			}
-		} else {
-			// fail create folder 
-			event.sender.send('install_program_version_chkeckResult', 'N001');
-		}
-
-	} catch (err) {
-		console.log("install_program_version_chkeckProc---" + err);
-		return Object.assign(err);
-	}
-} // Init Hamonize End ------------------------------------------------------------#
-
-
 const install_program_version_chkeckAsync = async (event) => {
 	try {
 

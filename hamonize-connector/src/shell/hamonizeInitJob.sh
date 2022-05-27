@@ -1,4 +1,4 @@
-#!/bin/bash  
+#!/bin/bash
 
 sleep 10
 
@@ -11,11 +11,9 @@ if [ ! -d $LOGFILE ]; then
         touch $LOGFILE
 fi
 
-
 cat /dev/null >$LOGFILE
 
 echo "$DATETIME] resboot==========START" >>$LOGFILE
-
 
 UUID=$(cat /etc/hamonize/uuid)
 
@@ -38,93 +36,98 @@ RETDATA=$(curl -X GET -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application
 echo "$DATETIME ]--------> get data ::: " >>$LOGFILE
 echo "$RETDATA" >>$LOGFILE
 
-WRITE_DATA=""
-FILEPATH_DATA=$(cat ${FILEPATH})
-FILEPATH_BOOL=false
-if [ -z "$FILEPATH_DATA" ]; then
-        FILEPATH_BOOL=true
-fi
-
-
-JQINS=$(echo ${RETDATA} | jq '.pcdata')
-JQCNT=$(echo ${RETDATA} | jq '.pcdata' | jq length)
-
-echo "$DATETIME ]-------->center return val is :: " $JQCNT >>$LOGFILE
-
-SET=$(seq 0 $(expr $JQCNT - 1))
-
-for i in $SET; do
-
-        TMP_ORGNM=$(echo ${RETDATA} | jq '.pcdata | .['$i'].svrname' | sed -e "s/\"//g")
-        TMP_PCIP=$(echo ${RETDATA} | jq '.pcdata | .['$i'].pcip' | sed -e "s/\"//g")
-
-        WRITE_DATA="$TMP_ORGNM=$TMP_PCIP"
-
-        if [ $FILEPATH_BOOL = "true" ]; then
-                echo $WRITE_DATA >>$FILEPATH
-        else
-                echo $WRITE_DATA >>$FILEPATH_TMP
+setHamonizeServer() {
+        WRITE_DATA=""
+        FILEPATH_DATA=$(cat ${FILEPATH})
+        FILEPATH_BOOL=false
+        if [ -z "$FILEPATH_DATA" ]; then
+                FILEPATH_BOOL=true
         fi
 
-done
+        JQINS=$(echo ${RETDATA} | jq '.pcdata')
+        JQCNT=$(echo ${RETDATA} | jq '.pcdata' | jq length)
 
-if [ $FILEPATH_BOOL = "false" ]; then
-        DIFF_VAL=$(diff -q $FILEPATH $FILEPATH_TMP)
+        echo "$DATETIME ]-------->center return val is :: " $JQCNT >>$LOGFILE
 
-        if [ -z "$DIFF_VAL" ]; then
-                rm -fr $FILEPATH_TMP
-        else
-                rm -fr $FILEPATH
-                mv $FILEPATH_TMP $FILEPATH
+        SET=$(seq 0 $(expr $JQCNT - 1))
+
+        for i in $SET; do
+
+                TMP_ORGNM=$(echo ${RETDATA} | jq '.pcdata | .['$i'].svrname' | sed -e "s/\"//g")
+                TMP_PCIP=$(echo ${RETDATA} | jq '.pcdata | .['$i'].pcip' | sed -e "s/\"//g")
+
+                WRITE_DATA="$TMP_ORGNM=$TMP_PCIP"
+
+                if [ $FILEPATH_BOOL = "true" ]; then
+                        echo $WRITE_DATA >>$FILEPATH
+                else
+                        echo $WRITE_DATA >>$FILEPATH_TMP
+                fi
+
+        done
+
+        if [ $FILEPATH_BOOL = "false" ]; then
+                DIFF_VAL=$(diff -q $FILEPATH $FILEPATH_TMP)
+
+                if [ -z "$DIFF_VAL" ]; then
+                        rm -fr $FILEPATH_TMP
+                else
+                        rm -fr $FILEPATH
+                        mv $FILEPATH_TMP $FILEPATH
+                fi
         fi
+
+        echo "$DATETIME ]-------->agent에서 사용하는 rest 서버 정보 저장 [END] " >>$LOGFILE
+}
+
+if [ "" == "$RETDATA" ]; then
+        sleep 10
+        setHamonizeServer
+else
+        setHamonizeServer
 fi
 
-echo "$DATETIME ]-------->agent에서 사용하는 rest 서버 정보 저장 [END] " >>$LOGFILE
 #=== agent & pcmngr upgradle ====
-sudo apt-get update > /dev/null 2>&1
- 
+sudo apt-get update >/dev/null 2>&1
 
 # Hamonize Agent Application =====================================================#
-CHK_AGNET_INSTALLED=`dpkg-query -W | grep hamonize-agent | wc -l`
-echo "agent install checked is =="$CHK_AGNET_INSTALLED >> $LOGFILE
-if [ $CHK_AGNET_INSTALLED = 0  ]; then
-        sudo apt-get install hamonize-agent -y >> $LOGFILE
+CHK_AGNET_INSTALLED=$(dpkg-query -W | grep hamonize-agent | wc -l)
+echo "agent install checked is =="$CHK_AGNET_INSTALLED >>$LOGFILE
+if [ $CHK_AGNET_INSTALLED = 0 ]; then
+        sudo apt-get install hamonize-agent -y >>$LOGFILE
 fi
 
-CHK_AGENT=`apt list --upgradable 2>/dev/null | grep hamonize-agent | wc -l`
-echo "agent upgrade able is =="$CHK_AGENT >> $LOGFILE
-if [ $CHK_AGENT -gt 0  ]; then
+CHK_AGENT=$(apt list --upgradable 2>/dev/null | grep hamonize-agent | wc -l)
+echo "agent upgrade able is =="$CHK_AGENT >>$LOGFILE
+if [ $CHK_AGENT -gt 0 ]; then
         sudo apt-get --only-upgrade install hamonize-agent -y >/dev/null 2>&1
 fi
 
-
 # Hamonize Admin Application =====================================================#
-CHK_ADMIN_INSTALLED=`dpkg-query -W | grep hamonize-admin | wc -l`
-echo "hamonize-admin install checked is =="$CHK_ADMIN_INSTALLED >> $LOGFILE
-if [ $CHK_ADMIN_INSTALLED = 0  ]; then
-        sudo apt-get install hamonize-admin -y >> $LOGFILE
+CHK_ADMIN_INSTALLED=$(dpkg-query -W | grep hamonize-admin | wc -l)
+echo "hamonize-admin install checked is =="$CHK_ADMIN_INSTALLED >>$LOGFILE
+if [ $CHK_ADMIN_INSTALLED = 0 ]; then
+        sudo apt-get install hamonize-admin -y >>$LOGFILE
 fi
 
-CHK_ADMIN=`apt list --upgradable 2>/dev/null | grep hamonize-admin | wc -l`
-echo "hamonize-admin upgrade able is =="$CHK_ADMIN >> $LOGFILE
-if [ $CHK_ADMIN -gt 0  ]; then
-        sudo apt-get --only-upgrade install hamonize-admin -y> /dev/null 2>&1
+CHK_ADMIN=$(apt list --upgradable 2>/dev/null | grep hamonize-admin | wc -l)
+echo "hamonize-admin upgrade able is =="$CHK_ADMIN >>$LOGFILE
+if [ $CHK_ADMIN -gt 0 ]; then
+        sudo apt-get --only-upgrade install hamonize-admin -y >/dev/null 2>&1
 fi
 
 # Hamonize Help Application =====================================================#
-CHK_HAMONIZE_HELP_INSTALLED=`dpkg-query -W | grep hamonize-help | wc -l`
-echo "hamonize-help install checked is =="$CHK_HAMONIZE_HELP_INSTALLED >> $LOGFILE
-if [ $CHK_ADMIN_INSTALLED = 0  ]; then
-        sudo apt-get install hamonize-help -y >> $LOGFILE
+CHK_HAMONIZE_HELP_INSTALLED=$(dpkg-query -W | grep hamonize-help | wc -l)
+echo "hamonize-help install checked is =="$CHK_HAMONIZE_HELP_INSTALLED >>$LOGFILE
+if [ $CHK_ADMIN_INSTALLED = 0 ]; then
+        sudo apt-get install hamonize-help -y >>$LOGFILE
 fi
 
-
-CHK_HAMONIZE_HELP=`apt list --upgradable 2>/dev/null | grep hamonize-help | wc -l`
-echo "hamonize-help upgrade able is =="$CHK_HAMONIZE_HELP >> $LOGFILE
-if [ $CHK_HAMONIZE_HELP -gt 0  ]; then
-        sudo apt-get --only-upgrade install hamonize-help -y> /dev/null 2>&1
+CHK_HAMONIZE_HELP=$(apt list --upgradable 2>/dev/null | grep hamonize-help | wc -l)
+echo "hamonize-help upgrade able is =="$CHK_HAMONIZE_HELP >>$LOGFILE
+if [ $CHK_HAMONIZE_HELP -gt 0 ]; then
+        sudo apt-get --only-upgrade install hamonize-help -y >/dev/null 2>&1
 fi
-
 
 echo "$DATETIME] resboot==========END" >>$LOGFILE
 
@@ -132,3 +135,4 @@ echo "$DATETIME] hamonize-user && admin 필수 포트 allow 11100==========END" 
 sudo ufw allow 11100 >>$LOGFILE
 sudo ufw allow 11400 >>$LOGFILE
 sudo ufw allow 22 >>$LOGFILE
+sudo ufw allow 2202 >>$LOGFILE
