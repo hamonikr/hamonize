@@ -90,7 +90,8 @@ function getPollTime(uuid) {
 							log.info("//== Polling time has changed... " + pollingObj.data);
 							log.info("//====================================");
 
-							retval = pollingObj.data * 1000;
+							// retval = pollingObj.data * 1000;
+							retval = 10000
 							log.info("//== Polling time has result... " + retval);
 							Polling(retval);
 
@@ -1078,9 +1079,6 @@ function os_func() {
 const check_ufw = async () => {
 	try {
 
-		let ufwStatusVal = await execShellCommand("ufw status");
-		console.log(ufwStatusVal);
-
 		// 필수 포트 : 11100, 22
 		// 20	tcp	ftp-data
 		// 21	tcp	ftp server
@@ -1093,11 +1091,17 @@ const check_ufw = async () => {
 		// 110	tcp/udp	POP3 server
 		// 123	tcp/udp	NTP server
 		// 443	tcp	HTTPS server
-		const portlist = ["11100", "11400", "11200", "22", "2202"];
+
+		const portlist = ["11100", "11300", "11400", "11200", "22", "2202"];
 		const reloadPort = new Array();
 		for (let i = 0; i < portlist.length; i++) {
-			if (ufwStatusVal.indexOf(portlist[i]) < 0) {
-				// console.log("portlist[i]==========++" + portlist[i]);
+
+			let ufwStatusVal = await execShellCommand("ufw status |grep ALLOW | grep -w \""+portlist[i]+"\" | wc -l");
+			console.log(ufwStatusVal);
+
+			// if (ufwStatusVal.indexOf(portlist[i]) < 0) {
+			if( ufwStatusVal == 0 ){
+				console.log("portlist[i]==========++" + portlist[i]);
 				reloadPort.push(portlist[i]);
 			}
 		}
@@ -1107,7 +1111,7 @@ const check_ufw = async () => {
 			let p = await execShellCommand(`ufw allow ${loadPort}`);
 		}
 
-
+		await execShellCommand('nscd -i passwd && nscd -i hosts');
 
 	} catch (err) {
 		return Object.assign(err);
@@ -1282,7 +1286,6 @@ const sysInfo = async () => {
 
 	let vpnInfo = '';
 	if (typeof results['tun0'] != 'undefined') {
-		console.log(results['tun0']);  // result ::: [ '10.8.0.2', 'fe80::87f5:686f:a23:1002' ]
 		vpnInfo = results['tun0'][0];
 	}
 
@@ -1316,8 +1319,6 @@ const sysInfo = async () => {
 		});
 	}
 
-	console.log(ipinfo.address() + "<------ipinfo.address()");
-	console.log("isSendYn=========++" + isSendYn);
 	if (isSendYn) {
 
 		var unirest = require('unirest');
