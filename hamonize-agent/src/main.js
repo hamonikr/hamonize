@@ -90,8 +90,7 @@ function getPollTime(uuid) {
 							log.info("//== Polling time has changed... " + pollingObj.data);
 							log.info("//====================================");
 
-							// retval = pollingObj.data * 1000;
-							retval = 10000
+							retval = pollingObj.data * 1000;
 							log.info("//== Polling time has result... " + retval);
 							Polling(retval);
 
