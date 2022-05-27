@@ -13,7 +13,6 @@ $modal = $(".modal");
 // # step 1. install file version check  ====================================
 // 폴더 생성 및 프로그램 설치 진행에 필요한 jq, curl 등 설치
 install_program_version_chkeck();
-// hamonizeSystemBackup();
 
 
 function install_program_version_chkeck() {
@@ -123,7 +122,6 @@ ipcRenderer.on('getAuthResult', (event, authResult) => {
 
 // 사용 갯수 
 ipcRenderer.on('chkHamonizeAppUsesResult', (event, ret) => {
-	console.log("ret=====+"+ret);
 	// 사용갯수에 이상이 없다면..
 	if (ret == 'Y') {
 		$(".layerpop__container").text("인증이 완료되었습니다. 조직정보를 불러오는 중입니다.  잠시만 기다려주세요.!!");
@@ -231,7 +229,8 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 		$("#stepA").removeClass("br animate");
 		$("#stepB").addClass("br animate");
 		$("#infoStepA").text("완료");
-		hamonizeProgramInstall();
+		console.log("aaaaaaaaaaaaaaa")
+		fn_hamonizeProgramInstall();
 	} else {
 		doubleSubmitFlag = false;
 		fn_alert("유효하지 않는 정보입니다. 확인 후 등록해 주시기바랍니다.\n 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.");
@@ -241,7 +240,8 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 
 
 // ======== step 3. PC 관리 프로그램 설치... =========================================/
-function hamonizeProgramInstall() {
+function fn_hamonizeProgramInstall() {
+	console.log("bbbbbbbbbbbbbbbbbbbbbb")
 	ipcRenderer.send('hamonizeProgramInstall', $("#domain").val());
 }
 
@@ -259,7 +259,14 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
 
 	} else {
 		console.log("false");
-		fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005-" + programResult + "]");
+		// fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005-" + programResult + "]");
+
+		
+		$("#initLayerBody").hide();
+		$("#procLayerBody").hide();
+		$("#errorText").html("<p>프로그램 설치 중 오류가 발생했습니다.</p> <br>  관리자에게 문의바랍니다. Error Code :: [N005-" + programResult + "]")
+		$("#ErrorBody").show();
+
 		return false;
 	}
 
@@ -284,6 +291,10 @@ ipcRenderer.on('hamonizeSystemBackup_Result', (event, backupResult) => {
 		$("#procLayerBody").hide();
 		$("#infoStepC").text("완료");
 		$("#EndBody").show();
+		
+		setTimeout(() => {
+			ipcRenderer.send('rebootProc');
+		  }, 5 * 1000); 
 
 	} else {
 		console.log("false");
@@ -291,6 +302,7 @@ ipcRenderer.on('hamonizeSystemBackup_Result', (event, backupResult) => {
 	}
 
 });
+
 
 
 
@@ -308,7 +320,7 @@ ipcRenderer.on('aptRepositoryChkProcResult', (event, mkfolderResult) => {
 
 	if (mkfolderResult == 'Y') {
 		console.log("true");
-		hamonizeProgramInstall();
+		// hamonizeProgramInstall();
 	} else {
 		console.log("false");
 		fn_alert("프로그램 설치 환경 셋팅에 실패했습니다. \n 재실행 후 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.");
@@ -417,4 +429,12 @@ ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
 		fn_alert("유효하지 않는 정보입니다. 확인 후 등록해 주시기바랍니다.\n 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.");
 	}
 
+});
+
+
+
+
+const nowRebootBtn = document.getElementById('nowReboot');
+nowRebootBtn.addEventListener('click', function (event) {
+	ipcRenderer.send('rebootProc');
 });

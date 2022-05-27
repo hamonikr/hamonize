@@ -13,56 +13,58 @@ HWFILE="/etc/hamonize/hwinfo/hwinfo.hm"
 
 # STEP 2. 프로그램 관리 설치를 위한 기본 프로그램 설치    ===================================
 #
+
+echo "$DATETIME ] ===============Init HamonizeInstall Start (hamonize base file & folder Create)==================" >> $LOGFILE
 echo "$DATETIME ]-------->프로그램 관리 설치를 위한 기본 프로그램 설치 [START]" >> $LOGFILE
 
 
-REQUIRED_PKG="make"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >> $LOGFILE
-    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-fi
+# REQUIRED_PKG="make"
+# PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+# echo Checking for $REQUIRED_PKG: $PKG_OK
+# if [ "" = "$PKG_OK" ]; then
+#     echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >> $LOGFILE
+#     sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+# fi
 
-sleep 1
-echo "$DATETIME ]-------->curl install status \n `dpkg -l make`" >> $LOGFILE
-
-
-
-REQUIRED_PKG="curl"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >> $LOGFILE
-    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-fi
-
-sleep 1
-echo "$DATETIME ]-------->curl install status \n `dpkg -l curl`" >> $LOGFILE
+# sleep 1
+# echo "$DATETIME ]-------->curl install status \n `dpkg -l make`" >> $LOGFILE
 
 
 
-REQUIRED_PKG="jq"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
-    sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-fi
+# REQUIRED_PKG="curl"
+# PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+# echo Checking for $REQUIRED_PKG: $PKG_OK
+# if [ "" = "$PKG_OK" ]; then
+#     echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG. \n" >> $LOGFILE
+#     sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+# fi
 
-sleep 1
-echo "$DATETIME ]-------->jq install status \n `dpkg -l jq`">> $LOGFILE
+# sleep 1
+# echo "$DATETIME ]-------->curl install status \n `dpkg -l curl`" >> $LOGFILE
 
 
 
-REQUIRED_PKG="openssh-server"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-    echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
-    # sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-    DEBIAN_FRONTEND=noninteractive apt-get --yes install $REQUIRED_PKG >> $LOGFILE
-fi
+# REQUIRED_PKG="jq"
+# PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+# echo Checking for $REQUIRED_PKG: $PKG_OK
+# if [ "" = "$PKG_OK" ]; then
+#     echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
+#     sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+# fi
+
+# sleep 1
+# echo "$DATETIME ]-------->jq install status \n `dpkg -l jq`">> $LOGFILE
+
+
+
+# REQUIRED_PKG="openssh-server"
+# PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+# echo Checking for $REQUIRED_PKG: $PKG_OK
+# if [ "" = "$PKG_OK" ]; then
+#     echo "$DATETIME ]-------->No $REQUIRED_PKG. Setting up $REQUIRED_PKG.">> $LOGFILE
+#     # sudo apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+#     DEBIAN_FRONTEND=noninteractive apt-get --yes install $REQUIRED_PKG >> $LOGFILE
+# fi
 
 
 
