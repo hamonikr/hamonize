@@ -104,7 +104,7 @@
                                     <ul class="nav nav-tabs" data-tabs="tabs">
                                         <li class="nav-item">
                                             <a class="nav-link active" id="initLayer" href="javascript:;"
-                                                data-toggle="tab">
+                                                data-toggle="tab" >
                                                 <i class="material-icons">PC</i> 정보 입력
                                                 <div class="ripple-container"></div>
                                             </a>
@@ -162,7 +162,7 @@
                                     <div class="col-md-3" id="authkeylayer">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">Hamonize 인증 : </label>
-                                            <input type="text" id="authkey" name="authkey" class="form-control" >        
+                                            <input type="text" id="authkey" name="authkey" value="904113" class="form-control" >        
                                         </div>
                                         <button type="button" id="pcChkAuthBtn" class="btn btn-primary pull-right">등록</button>
                                     </div>
@@ -190,8 +190,7 @@
                                                 <td>
                                                     <div class="form-check">
                                                         <label class="form-check-label">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                checked>
+                                                            <input class="form-check-input" type="checkbox" value="" checked readonly>
                                                             <span class="form-check-sign"><span
                                                                     class="check"></span></span>
                                                         </label>
@@ -208,8 +207,7 @@
                                                 <td>
                                                     <div class="form-check">
                                                         <label class="form-check-label">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                checked>
+                                                            <input class="form-check-input" type="checkbox" value="" checked  readonly>
                                                             <span class="form-check-sign"><span
                                                                     class="check"></span></span>
                                                         </label>
@@ -226,8 +224,7 @@
                                                 <td>
                                                     <div class="form-check">
                                                         <label class="form-check-label">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                checked>
+                                                            <input class="form-check-input" type="checkbox" value="" checked  readonly>
                                                             <span class="form-check-sign"><span
                                                                     class="check"></span></span>
                                                         </label>
@@ -249,7 +246,24 @@
                                         style="height: 150px; text-align: center; margin-top: 20%; font-size: 16px;">
                                         <i class="material-icons">
                                             하모나이즈 프로그램 설치 완료.!
-                                            재부팅해 주시기 바랍니다.
+
+                                            5초 후 컴퓨터가 재부팅됩니다. 
+
+                                            <button type="button" rel="tooltip" title="reboot"
+                                                        class="btn btn-danger btn-link btn-sm"><i
+                                                            class="material-icons">
+                                                            <span id="nowReboot">지금재부팅하기.</span></i></button>
+
+
+                                        </i>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="ErrorBody" style="display: none;">
+                                    <div
+                                        style="height: 150px; text-align: center; margin-top: 16%; font-size: 16px;">
+                                        <i class="material-icons" id="errorText">
+                                           
                                         </i>
                                     </div>
                                 </div>
@@ -277,14 +291,14 @@
 
             <script>
                 $("#procLayerBody").hide();
-                $("#procLayer").click(function () {
-                    $("#procLayerBody").show();
-                    $("#initLayerBody").hide();
-                });
-                $("#initLayer").click(function () {
-                    $("#initLayerBody").show();
-                    $("#procLayerBody").hide();
-                });
+                // $("#procLayer").click(function () {
+                //     $("#procLayerBody").show();
+                //     $("#initLayerBody").hide();
+                // });
+                // $("#initLayer").click(function () {
+                //     $("#initLayerBody").show();
+                //     $("#procLayerBody").hide();
+                // });
             </script>
  
             <script>

@@ -1,0 +1,11 @@
+Package: hamonize-connect
+Version: 1.0.1
+Architecture: amd64
+Maintainer: HamoniKR Team <hamonikr-packages@googlegroups.com>
+Installed-Size: 92864
+Depends: curl, ufw, jq, fuse, libfuse2, net-tools
+Section: unknown
+Priority: optional
+Homepage: https://hamonikr.org
+Description: Agent program that manages pc in Harmonize projects.
+ 하모나이즈 프로젝트에서 pc를 관리하는 에이전트 프로그램입니다.

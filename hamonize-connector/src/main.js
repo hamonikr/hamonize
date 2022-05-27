@@ -42,7 +42,7 @@ function createWindow() {
 		icon: 'icons/png/emb2.png',
 		skipTaskbar: false,
 		'width': 620,
-		'height': 340,
+		'height': 360,
 		frame: true,
 		alwaysOnTop: true,
 		resizable: true,
@@ -246,7 +246,7 @@ const install_program_version_chkeckAsync = async (event) => {
 // # STEP 2. hamonize vpn install
 //========================================================================
 ipcMain.on('hamonizeVpnInstall', (event, domain) => {
-	mainWindow.setSize(620, 540);
+	mainWindow.setSize(620, 447);
 	var vpn_used;
 
 
@@ -293,15 +293,46 @@ const hamonizeVpnInstall_Action = async (event, domain) => {
 //========================================================================
 
 ipcMain.on('hamonizeProgramInstall', async (event, domain) => {
+	console.log("sta1111111111111111111111111111111111111111111111111")
 	hamonizeProgramInstall_Action(event, domain);
 });
 const hamonizeProgramInstall_Action = async (event, domain) => {
 	try {
 		let userId = await execShellCommand("cat /etc/passwd | grep 1000 | awk -F':' '{print $1}' ");
+		console.log("####################userId#########333" + userId);
+
 		let hamonizeProgramInstallProcResult = await hamonizeProgramInstallProc(domain, userId);
 		console.log("hamonizeProgramInstall_Result:::::::::::::::::::::::::::::" + hamonizeProgramInstallProcResult);
 
-		event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
+
+		if (hamonizeProgramInstallProcResult == 'Y') {
+			event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
+		} else {
+
+			// 			http://console.hamonize.com/hmsvc/pcInfoReset
+			// {"events": [{"domain": "domain","uuid": "uuid","errortype": "errortype"}]}
+
+			const machineIdSync = require('node-machine-id').machineIdSync;
+			let machindid = machineIdSync({
+				original: true
+			});
+
+			unirest.post(baseurl + '/hmsvc/pcInfoReset')
+				.header('content-type', 'application/json')
+				.send({
+					events: [{
+						uuid: machindid,
+						errortype: hamonizeProgramInstallProcResult.trim(),
+						domain: domain.trim()
+
+					}]
+				})
+				.end(function (response) {
+					console.log("response.body===========++" + JSON.stringify(response.body));
+					event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
+				});
+
+		}
 
 	} catch (err) {
 		console.log("hamonizeProgramInstall_Action Error---" + err);
@@ -311,9 +342,8 @@ const hamonizeProgramInstall_Action = async (event, domain) => {
 
 function hamonizeProgramInstallProc(domain, userId) {
 	return new Promise(function (resolve, reject) {
-
+		console.log("#############33 program proc action###################")
 		var aptRepositoryChkJobShell = "/bin/bash " + __dirname + "/shell/hamonizeProgramInstall.sh " + baseurl + " " + domain + " " + userId;
-		console.log("aptRepositoryChkJobShell===========>>>>>>>>>>>>>>>" + aptRepositoryChkJobShell);
 		sudo.exec(aptRepositoryChkJobShell, options,
 			function (error, stdout, stderr) {
 				if (error) {
@@ -611,7 +641,6 @@ function install_program_upgradeProc() {
 
 // == pc 정보 체크===
 ipcMain.on('pcInfoChk', (event, groupname, sabun, username, domain) => {
-	mainWindow.setSize(620, 340);
 	sysInfo(event, groupname, sabun, username, domain);
 
 });
@@ -762,7 +791,7 @@ const sysInfo = async (event, groupname, sabun, username, domain) => {
 			}]
 		})
 		.end(function (response) {
-			console.log("response.body===========++" + response.body);
+			console.log("sysinfo() = add  pc info ===========++" + response.body);
 			event.sender.send('pcInfoChkProc', response.body);
 		});
 
@@ -921,7 +950,7 @@ ipcMain.on('getOrgAuth', (event, authkeyVal) => {
 
 // Check Hamonize Uses 
 ipcMain.on('chkHamonizeAppUses', (event, domain) => {
-	console.log("domain=====+"+domain);
+	console.log("domain=====+" + domain);
 
 	unirest.get(baseurl + '/hmsvc/isitpossible')
 		.header('content-type', 'application/json')
@@ -931,8 +960,19 @@ ipcMain.on('chkHamonizeAppUses', (event, domain) => {
 			}]
 		})
 		.end(function (response) {
-			console.log("=========response.body=======+"+ response.body);
+			console.log("=========response.body=======+" + response.body);
 			event.sender.send('chkHamonizeAppUsesResult', response.body);
 		});
 });
 
+
+
+
+ipcMain.on('rebootProc', (event) => {
+	sudo.exec('reboot', options,
+		function (error, stdout, stderr) {
+			if (error) throw error;
+			console.log('stdout: ' + stdout);
+		}
+	);
+});
