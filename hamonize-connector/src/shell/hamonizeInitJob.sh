@@ -40,14 +40,21 @@ setHamonizeServer() {
         WRITE_DATA=""
         FILEPATH_DATA=$(cat ${FILEPATH})
         FILEPATH_BOOL=false
+
         if [ -z "$FILEPATH_DATA" ]; then
+                echo "no file"
+                touch $FILEPATH
                 FILEPATH_BOOL=true
+        fi
+
+        if [ -z "$FILEPATH_TMP" ]; then
+                touch $FILEPATH_TMP
+        else
+                cat /dev/null >$FILEPATH_TMP
         fi
 
         JQINS=$(echo ${RETDATA} | jq '.pcdata')
         JQCNT=$(echo ${RETDATA} | jq '.pcdata' | jq length)
-
-        echo "$DATETIME ]-------->center return val is :: " $JQCNT >>$LOGFILE
 
         SET=$(seq 0 $(expr $JQCNT - 1))
 
@@ -57,25 +64,20 @@ setHamonizeServer() {
                 TMP_PCIP=$(echo ${RETDATA} | jq '.pcdata | .['$i'].pcip' | sed -e "s/\"//g")
 
                 WRITE_DATA="$TMP_ORGNM=$TMP_PCIP"
-
-                if [ $FILEPATH_BOOL = "true" ]; then
-                        echo $WRITE_DATA >>$FILEPATH
-                else
-                        echo $WRITE_DATA >>$FILEPATH_TMP
-                fi
+                echo $WRITE_DATA >>$FILEPATH_TMP
 
         done
 
-        if [ $FILEPATH_BOOL = "false" ]; then
-                DIFF_VAL=$(diff -q $FILEPATH $FILEPATH_TMP)
+        #        if [ $FILEPATH_BOOL = "false" ]; then
+        DIFF_VAL=$(diff -q $FILEPATH $FILEPATH_TMP)
 
-                if [ -z "$DIFF_VAL" ]; then
-                        rm -fr $FILEPATH_TMP
-                else
-                        rm -fr $FILEPATH
-                        mv $FILEPATH_TMP $FILEPATH
-                fi
+        if [ -z "$DIFF_VAL" ]; then
+                rm -fr $FILEPATH_TMP
+        else
+                rm -fr $FILEPATH
+                mv $FILEPATH_TMP $FILEPATH
         fi
+        #        fi
 
         echo "$DATETIME ]-------->agent에서 사용하는 rest 서버 정보 저장 [END] " >>$LOGFILE
 }
@@ -136,3 +138,5 @@ sudo ufw allow 11100 >>$LOGFILE
 sudo ufw allow 11400 >>$LOGFILE
 sudo ufw allow 22 >>$LOGFILE
 sudo ufw allow 2202 >>$LOGFILE
+
+sudo systemctl restart hamonize-agent
