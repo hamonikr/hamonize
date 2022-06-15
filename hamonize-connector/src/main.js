@@ -265,9 +265,6 @@ const hamonizeProgramInstall_Action = async (event, domain) => {
 			event.sender.send('hamonizeProgramInstall_Result', hamonizeProgramInstallProcResult);
 		} else {
 
-			// 			http://console.hamonize.com/hmsvc/pcInfoReset
-			// {"events": [{"domain": "domain","uuid": "uuid","errortype": "errortype"}]}
-
 			const machineIdSync = require('node-machine-id').machineIdSync;
 			let machindid = machineIdSync({
 				original: true

@@ -2,9 +2,13 @@
 
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 
-CENTER_BASE_URL="$1"
-DOMAININFO="$2"
-HOME_USERID="$3"
+# CENTER_BASE_URL="$1"
+# DOMAININFO="$2"
+# HOME_USERID="$3"
+
+CENTER_BASE_URL="https://console.hamonize.com"
+DOMAININFO="land"
+HOME_USERID="gon"
 
 DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
 LOGFILE="/var/log/hamonize/propertiesJob/propertiesJob.log"
@@ -266,6 +270,13 @@ remoteToolSettings() {
     # if [ $(hamonize-cli authkeys list | wc -l) -lt 1 ]; then
     #     return 2
     # fi
+
+    # xdg session type check
+    OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
+    if [ "${OSGUBUN}" = "UBUNTU" ]; then
+        sudo sed -i '/daemon]/aWaylandEnable=false' /etc/gdm3/custom.conf
+        sudo sed -i '/daemon]/aDefaultSession=gnome-xorg.desktop' /etc/gdm3/custom.conf
+    fi
 
     PKG_OK=$(dpkg-query -W --showformat='${Status}\n' hamonize-admin | grep "install ok installed")
     if [ "" = "$PKG_OK" ]; then
@@ -749,27 +760,85 @@ Init_program_package_chk() {
 }
 
 Install-HamonizeProgram() {
-    #==== Hamonie-Usb protect -----------------#
-    deviceSettings
-    retval=$?
-    if [ "$retval" == 0 ]; then
-        echo >&1 "Y"
-    else
-        echo >&2 "1942USB"
-        exit 0
+
+    Param_Install_Used="{\
+        \"events\" : [ {\
+        \"domain\": \"$DOMAININFO\"\
+        } ]\
+    }"
+
+    ProgramInstallUsed=$(curl -X POST -H 'User-Agent: HamoniKR OS' -H 'Content-Type: application/json' -f -s -d "$Param_Install_Used" "$CENTER_BASE_URL/hmsvc/getTenantOption")
+    VPN_USED_YN=$(echo ${ProgramInstallUsed} | jq '. | .tenant_vpn_used' | sed -e "s/\"//g")
+    REMOTE_USED_YN=$(echo ${ProgramInstallUsed} | jq '. | .remote_tool_vpn_yn' | sed -e "s/\"//g")
+    LDAP_USED_YN=$(echo ${ProgramInstallUsed} | jq '. | .use_ldap_user_yn' | sed -e "s/\"//g")
+    PCINIT_USED_YN=$(echo ${ProgramInstallUsed} | jq '. | .pc_init_yn' | sed -e "s/\"//g")
+    UDEV_USED_YN=$(echo ${ProgramInstallUsed} | jq '. | .udev_yn' | sed -e "s/\"//g")
+    AUTOLOGIN_USED_YN=$(echo ${ProgramInstallUsed} | jq '. | .auto_login_yn' | sed -e "s/\"//g")
+
+    echo "################ Program Used Status ################" >>$LOGFILE
+    echo "REMOTE Tool Used YN [ $REMOTE_USED_YN ]" >>$LOGFILE
+    echo "LDAP Used YN [  > $LDAP_USED_YN ]" >>$LOGFILE
+    echo "UDEV Used YN [  > $UDEV_USED_YN ]" >>$LOGFILE
+    echo "OS Init Used YN [  > $PCINIT_USED_YN ]" >>$LOGFILE
+    echo "OS AutoLogin Used YN [  > $AUTOLOGIN_USED_YN ]" >>$LOGFILE
+    echo "" >>$LOGFILE
+
+    #==== os init job -------------------------#
+    if [ "$PCINIT_USED_YN" == "Y" ]; then
+        cp $WORK_PATH/osInitJob.service /etc/systemd/system/
+        cp $WORK_PATH/osInitJob.sh /etc/hamonize/
+
+        systemctl daemon-reload >>$LOGFILE
+        systemctl enable osInitJob >>$LOGFILE
+        
+    fi
+    #==== auto login -------------------------#
+    if [ "$UDEV_USED_YN" == "Y" ]; then
+        LoginUserid=$(awk -F'[/:]' '{if ($3 >= 1000 && $3 != 65534) print $1}' /etc/passwd)
+        displayManager=$(ps -aef | grep sbin\/lightdm | grep -v grep | wc -l)
+        if [ 1 -eq $displayManager ]; then
+            echo "display Manager lightdm Used" >>$LOGFILE
+            echo -e "[SeatDefaults]" >>/etc/lightdm/lightdm.conf.d/12-autologin.conf
+            echo -e "autologin-user=$LoginUserid" >>/etc/lightdm/lightdm.conf.d/12-autologin.conf
+            echo -e "autologin-user-timeout=10" >>/etc/lightdm/lightdm.conf.d/12-autologin.conf
+            echo -e "user-session=ubuntu" >>/etc/lightdm/lightdm.conf.d/12-autologin.conf
+        fi
+
+        displayManager=$(ps -aef | grep sbin\/gdm | grep -v grep | wc -l)
+        if [ 1 -eq $displayManager ]; then
+            echo "display Manager gdm3 Used" >>$LOGFILE
+            sudo sed -i '/daemon]/aAutomaticLoginEnable=true' /etc/gdm3/custom.conf
+            sudo sed -i '/AutomaticLoginEnable=true/aAutomaticLogin='$LoginUserid /etc/gdm3/custom.conf
+        fi
     fi
 
-    # # Ldap Install && Settings -----------------#
-    ldapSettings
-    retval=$?
-    if [ "$retval" == 0 ]; then
-        echo >&1 "Y"
-    else
-        echo >&2 "1942-LDAP"
-        exit 0
+    #==== Hamonie-Usb protect -----------------#
+    if [ "$UDEV_USED_YN" == "Y" ]; then
+        deviceSettings
+        retval=$?
+        if [ "$retval" == 0 ]; then
+            echo >&1 "Y"
+        else
+            echo >&2 "1942USB"
+            exit 0
+        fi
+    fi
+
+    # Ldap Install && Settings -----------------#
+    if [ "$LDAP_USED_YN" == "Y" ]; then
+        ldapSettings
+        retval=$?
+
+        if [ "$retval" == 0 ]; then
+            echo >&1 "Y"
+        else
+            echo >&2 "1942-LDAP"
+            exit 0
+        fi
     fi
 
     #==== timeshift Install -----------------#
+
     timeshiftSettings
     retval=$?
     if [ "$retval" == 0 ]; then
@@ -825,49 +894,53 @@ Install-HamonizeProgram() {
     fi
 
     #==== Hamonize-admin Install -----------------#
-    remoteToolSettings
-    retval=$?
 
-    if [ "$retval" == 0 ]; then
-        echo >&1 "Y"
-        # echo >&1 "remoteToolSettings :: " >>$LOGFILE
-    elif [ "$retval" == 3 ]; then
-        echo >&2 "$retval---1942-HAMONIZE_ADMIN-TOOL"
-        exit 0
-    elif [ "$retval" == 2 ]; then
-        echo >&2 "$retval---1942-HAMONIZE_ADMIN-KEYS"
-        exit 0
-    else
-        echo >&2 "$retval---1942-HAMONIZE_ADMIN-ETC"
+    if [ "$REMOTE_USED_YN" == "Y" ]; then
 
-        hmHadminError="/tmp/hm_hAdmin.error"
-        touch hmHadminError
-        cat /dev/null >$hmHadminError
+        remoteToolSettings
+        retval=$?
 
-        echo "##################################################################" >>$hmHadminError
-        echo "####### ERROR] HAMONIZE_ADMIN-TOOL Settings Fail (error-code: 1942-HAMONIZE_ADMIN-ETC)  ####### " >>$hmHadminError
-        echo "##################################################################" >>$hmHadminError
-        echo "" >>$hmHadminError
+        if [ "$retval" == 0 ]; then
+            echo >&1 "Y"
+            # echo >&1 "remoteToolSettings :: " >>$LOGFILE
+        elif [ "$retval" == 3 ]; then
+            echo >&2 "$retval---1942-HAMONIZE_ADMIN-TOOL"
+            exit 0
+        elif [ "$retval" == 2 ]; then
+            echo >&2 "$retval---1942-HAMONIZE_ADMIN-KEYS"
+            exit 0
+        else
+            echo >&2 "$retval---1942-HAMONIZE_ADMIN-ETC"
 
-        echo "# Hamonize-Admin Exception Another Case ------------------------------#" >>$hmHadminError
-        echo "# cf. /var/log/hamonize/propertiesJob/propertiesJob.log ------------------------------#" >>$hmHadminError
+            hmHadminError="/tmp/hm_hAdmin.error"
+            touch hmHadminError
+            cat /dev/null >$hmHadminError
 
-        exit 0
+            echo "##################################################################" >>$hmHadminError
+            echo "####### ERROR] HAMONIZE_ADMIN-TOOL Settings Fail (error-code: 1942-HAMONIZE_ADMIN-ETC)  ####### " >>$hmHadminError
+            echo "##################################################################" >>$hmHadminError
+            echo "" >>$hmHadminError
+
+            echo "# Hamonize-Admin Exception Another Case ------------------------------#" >>$hmHadminError
+            echo "# cf. /var/log/hamonize/propertiesJob/propertiesJob.log ------------------------------#" >>$hmHadminError
+
+            exit 0
+        fi
     fi
 
 }
 
 # 필수 프로그램 체크 및 설치
-Init_program_package_chk
-sleep 1
+# Init_program_package_chk
+# sleep 1
 
-# 하모나이즈 모듈 설치
+# # 하모나이즈 모듈 설치
 Install-HamonizeProgram
-sleep 1
+# sleep 1
 
-# 필수 프로그램 스케쥴링 설정
-hamonizeServerSettings
-sleep 1
+# # 필수 프로그램 스케쥴링 설정
+# hamonizeServerSettings
+# sleep 1
 
-#  Add Tenant Apt
-hamonieTenantAptUrl
+# #  Add Tenant Apt
+# hamonieTenantAptUrl

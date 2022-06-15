@@ -1,0 +1,11 @@
+[Unit]
+Description=Pre-Shutdown Processes
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/hamonize/osInitJob.sh 
+
+[Install]
+WantedBy=halt.target reboot.target shutdown.target

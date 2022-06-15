@@ -131,7 +131,7 @@ if [ $CHK_HAMONIZE_HELP -gt 0 ]; then
         sudo apt-get --only-upgrade install hamonize-help -y >/dev/null 2>&1
 fi
 
-echo "$DATETIME] resboot==========END" >>$LOGFILE
+
 
 echo "$DATETIME] hamonize-user && admin 필수 포트 allow 11100==========END" >>$LOGFILE
 sudo ufw allow 11100 >>$LOGFILE
@@ -140,3 +140,8 @@ sudo ufw allow 22 >>$LOGFILE
 sudo ufw allow 2202 >>$LOGFILE
 
 sudo systemctl restart hamonize-agent
+
+
+
+echo "$DATETIME] resboot==========END" >>$LOGFILE
+exit 0
