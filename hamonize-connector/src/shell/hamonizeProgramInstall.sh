@@ -790,7 +790,7 @@ Install-HamonizeProgram() {
 
         systemctl daemon-reload >>$LOGFILE
         systemctl enable osInitJob >>$LOGFILE
-        
+
     fi
     #==== auto login -------------------------#
     if [ "$UDEV_USED_YN" == "Y" ]; then
@@ -809,6 +809,12 @@ Install-HamonizeProgram() {
             echo "display Manager gdm3 Used" >>$LOGFILE
             sudo sed -i '/daemon]/aAutomaticLoginEnable=true' /etc/gdm3/custom.conf
             sudo sed -i '/AutomaticLoginEnable=true/aAutomaticLogin='$LoginUserid /etc/gdm3/custom.conf
+        fi
+
+        OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
+        if [ "${OSGUBUN}" = "HAMONIKR" ]; then
+            gsettings set org.cinnamon.desktop.screensaver lock-enabled false
+            gsettings set org.cinnamon.desktop.session idle-delay 0
         fi
     fi
 
