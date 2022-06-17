@@ -33,7 +33,7 @@
     "hamonize"
   ],
   "devDependencies": {
-    "electron": "^13.3.0",
+    "electron": "^15.5.5",
     "electron-builder": "^22.3.2",
     "pkg": "^4.4.0"
   },
