@@ -2,13 +2,9 @@
 
 . /etc/hamonize/propertiesJob/propertiesInfo.hm
 
-# CENTER_BASE_URL="$1"
-# DOMAININFO="$2"
-# HOME_USERID="$3"
-
-CENTER_BASE_URL="https://console.hamonize.com"
-DOMAININFO="land"
-HOME_USERID="gon"
+CENTER_BASE_URL="$1"
+DOMAININFO="$2"
+HOME_USERID="$3"
 
 DATETIME=$(date +'%Y-%m-%d %H:%M:%S')
 LOGFILE="/var/log/hamonize/propertiesJob/propertiesJob.log"
@@ -794,7 +790,7 @@ Install-HamonizeProgram() {
     fi
     #==== auto login -------------------------#
     if [ "$UDEV_USED_YN" == "Y" ]; then
-        LoginUserid=$(awk -F'[/:]' '{if ($3 >= 1000 && $3 != 65534) print $1}' /etc/passwd)
+        LoginUserid=$(awk -F'[/:]' '{if ($3 == 1000 && $3 != 65534) print $1}' /etc/passwd)
         displayManager=$(ps -aef | grep sbin\/lightdm | grep -v grep | wc -l)
         if [ 1 -eq $displayManager ]; then
             echo "display Manager lightdm Used" >>$LOGFILE
@@ -937,16 +933,16 @@ Install-HamonizeProgram() {
 }
 
 # 필수 프로그램 체크 및 설치
-# Init_program_package_chk
-# sleep 1
+ Init_program_package_chk
+ sleep 1
 
 # # 하모나이즈 모듈 설치
 Install-HamonizeProgram
-# sleep 1
+ sleep 1
 
 # # 필수 프로그램 스케쥴링 설정
-# hamonizeServerSettings
-# sleep 1
+ hamonizeServerSettings
+ sleep 1
 
 # #  Add Tenant Apt
-# hamonieTenantAptUrl
+ hamonieTenantAptUrl
