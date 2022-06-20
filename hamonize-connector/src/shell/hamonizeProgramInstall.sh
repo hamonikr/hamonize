@@ -809,8 +809,11 @@ Install-HamonizeProgram() {
 
         OSGUBUN=$(lsb_release -i | awk -F : '{print $2}' | tr [:lower:] [:upper:] | tr -d '\t')
         if [ "${OSGUBUN}" = "HAMONIKR" ]; then
-            gsettings set org.cinnamon.desktop.screensaver lock-enabled false
-            gsettings set org.cinnamon.desktop.session idle-delay 0
+
+            su $LoginUserid /bin/bash -c 'XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus gsettings set org.cinnamon.desktop.session idle-delay 0'
+            su $LoginUserid /bin/bash -c 'XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus gsettings set org.cinnamon.desktop.screensaver lock-enabled false'
+            su $LoginUserid /bin/bash -c 'XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus gsettings set org.cinnamon.settings-daemon.plugins.power lock-on-suspend false'
+
         fi
     fi
 
@@ -933,16 +936,16 @@ Install-HamonizeProgram() {
 }
 
 # 필수 프로그램 체크 및 설치
- Init_program_package_chk
- sleep 1
+Init_program_package_chk
+sleep 1
 
 # # 하모나이즈 모듈 설치
 Install-HamonizeProgram
- sleep 1
+sleep 1
 
 # # 필수 프로그램 스케쥴링 설정
- hamonizeServerSettings
- sleep 1
+hamonizeServerSettings
+sleep 1
 
 # #  Add Tenant Apt
- hamonieTenantAptUrl
+hamonieTenantAptUrl
