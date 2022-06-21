@@ -1,4 +1,4 @@
-#  ![GitHub](<https://img.shields.io/github/license/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/package-json/v/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/stars/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/issues-pr/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/david/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/repo-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/languages/code-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/com/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/org/gon1942/hamonize?style=flat-square>)
+hamonize-admin#  ![GitHub](<https://img.shields.io/github/license/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/package-json/v/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/stars/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/issues-pr/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/david/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/repo-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/languages/code-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/com/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/org/gon1942/hamonize?style=flat-square>)
 
   
 # ![Hamonize](./img/halogo.png)
@@ -85,7 +85,9 @@
 - [🎨 Features](#-features)
 - [🔗 Usecase](#-usecase)
 - [🛠 Pull Request Steps](#-pull-request-steps)
-- [👍 Contributing](#-contributing)
+- [👍 Contributing](https://github.com/hamonikr/hamonize/blob/master/CONTRIBUTING.md)
+
+
 - [📜 License](#-license)
 
 <br>
