@@ -1,4 +1,19 @@
-![GitHub](<https://img.shields.io/github/license/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/package-json/v/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/stars/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/issues-pr/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/david/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/repo-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/github/languages/code-size/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/com/gon1942/hamonize?style=flat-square>) ![GitHub](<https://img.shields.io/travis/org/gon1942/hamonize?style=flat-square>)
+![GitHubLicense](https://img.shields.io/github/license/hamonikr/hamonize)
+![GitHub reposize](https://img.shields.io/github/repo-size/hamonikr/hamonize)
+![GitHubcontributors](https://img.shields.io/github/contributors/hamonikr/hamonize)
+![GitHubstars](https://img.shields.io/github/stars/hamonikr/hamonize?style=social)
+![GitHubforks](https://img.shields.io/github/forks/hamonikr/hamonize?style=social)
+![GitHubissues](https://img.shields.io/github/issues/hamonikr/hamonize?style=social)
+![GitHubwatch](https://img.shields.io/github/watchers/hamonikr/hamonize?style=social)
+
+
+![GitHubbuild](https://img.shields.io/github/workflow/status/hamonikr/hamonize/Hamonize%20CI)
+![GitHubpr](https://img.shields.io/github/issues-pr/hamonikr/hamonize)
+![GitHubprclosed](https://img.shields.io/github/issues-pr-closed/hamonikr/hamonize)
+![GitHubcommit](https://img.shields.io/github/commit-activity/m/hamonikr/hamonize)
+![GitHubDownload](https://img.shields.io/github/downloads/hamonikr/hamonize/total)
+![GitHubRelease](https://img.shields.io/github/v/release/hamonikr/hamonize)
+![GitHubLastCommit](https://img.shields.io/github/last-commit/hamonikr/hamonize)
 
   
 # ![Hamonize](./img/halogo.png)
