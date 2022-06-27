@@ -789,7 +789,7 @@ Install-HamonizeProgram() {
 
     fi
     #==== auto login -------------------------#
-    if [ "$UDEV_USED_YN" == "Y" ]; then
+    if [ "$AUTOLOGIN_USED_YN" == "Y" ]; then
         LoginUserid=$(awk -F'[/:]' '{if ($3 == 1000 && $3 != 65534) print $1}' /etc/passwd)
         displayManager=$(ps -aef | grep sbin\/lightdm | grep -v grep | wc -l)
         if [ 1 -eq $displayManager ]; then
