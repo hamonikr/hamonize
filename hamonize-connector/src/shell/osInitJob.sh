@@ -19,7 +19,7 @@ echo $(/bin/systemctl list-jobs) >>$logfile
 
 sleep 4
 
-if [ $(cat /tmp/.osinitJob | egrep 'reboot.target start' | wc -l) -ne 0 ]; then
+if [ $(cat /var/log/hamonize/osInitJob.log | egrep 'reboot.target start' | wc -l) -ne 0 ]; then
     echo "user os reboot." >>$logfile
 else
     echo "not reboot" >>$logfile
