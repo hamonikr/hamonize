@@ -19,7 +19,7 @@
   "repository": "https://github.com/hamonikr/hamonize",
   "license": "MIT",
   "devDependencies": {
-    "electron": "4.0.0",
+    "electron": "15.5.5",
     "electron-builder": "^22.11.7",
     "pkg": "^4.4.0",
     "standard": "^8.0.0"
