@@ -1,4 +1,4 @@
-<h1 id="badge"> <img alt="GitHub" src="https://img.shields.io/github/license/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/package-json/v/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/stars/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/issues-pr/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/david/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/repo-size/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/github/languages/code-size/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/travis/com/hamonikr/hamonize?style=flat-square"> <img alt="GitHub" src="https://img.shields.io/travis/org/hamonikr/hamonize?style=flat-square"></h1>
+
 
 ![GitHubLicense](https://img.shields.io/github/license/hamonikr/hamonize)
 ![GitHub reposize](https://img.shields.io/github/repo-size/hamonikr/hamonize)
