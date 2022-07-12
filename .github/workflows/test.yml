@@ -1,0 +1,15 @@
+name: 'test badgit'
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: add badges
+        uses: gon1942/badge-it@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          badges: 'gh_license,gh_version, gh_stars, gh_fork, gh_open_issue, gh_open_pr, gh_dependencies, gh_repo_size, gh_code_size, travis_com, travis_org'
+          badge-style: 'flat-square'
