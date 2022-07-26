@@ -47,6 +47,19 @@ elif [ -f "/etc/timeshift.json" ]; then
     FILEPATH="/etc/timeshift.json"
 fi
 
+
+
+if [ ! -f "$FILEPATH" ]; then
+    timeshift -V > /dev/null
+    if [ -f "/etc/timeshift/timeshift.json" ]; then
+        FILEPATH="/etc/timeshift/timeshift.json"
+    elif [ -f "/etc/timeshift.json" ]; then
+        FILEPATH="/etc/timeshift.json"
+    fi
+fi
+
+
+
 echo $FILEPATH >>$Log_backup
 
 # # setting 1. timeshift backup_device_uuid
