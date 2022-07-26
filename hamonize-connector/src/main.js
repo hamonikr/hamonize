@@ -929,3 +929,13 @@ ipcMain.on('rebootProc', (event) => {
 		}
 	);
 });
+
+var fileToTail = "/tmp/backup.log";
+ipcMain.on('files-tail', (event, domain) => {
+        const Tail = require('tail-file');
+        const mytail = new Tail(fileToTail, line => {
+                console.log(line);
+                event.sender.send('files-tail-val', line);
+        });
+});
+

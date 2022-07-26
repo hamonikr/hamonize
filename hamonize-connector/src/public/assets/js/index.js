@@ -260,7 +260,6 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
 	} else {
 		console.log("false");
 		// fn_alert("프로그램 설치 중 오류가 발생했습니다. \n  관리자에게 문의바랍니다. Error Code :: [N005-" + programResult + "]");
-
 		
 		$("#initLayerBody").hide();
 		$("#procLayerBody").hide();
@@ -276,8 +275,36 @@ ipcRenderer.on('hamonizeProgramInstall_Result', (event, programResult) => {
 
 // ======== step 4. 백업... =========================================/
 // # use timeshift tooll 
+
+// $modal.hide();
+// $("#loadingInfoText").text("");
+// $("#initLayer").removeClass("active");
+// $("#initLayerBody").removeClass("active");
+// $("#procLayer").addClass("active");
+// $("#procLayerBody").hide();
+// $("#procLayerBody").show();
+// ###################  백업 완료시 재부팅 주석처리함 ################################
+// hamonizeSystemBackup();
+
+ipcRenderer.on('files-tail-val', (event, ret) => {
+	var retViewDataSplit = '';
+	var chkFirstChar = ret.charAt(0);
+	if( chkFirstChar == ')' ){
+		retViewDataSplit = ret.slice(1);
+	}else{
+		retViewDataSplit = ret;
+	}
+	$("#infoStepC").text(retViewDataSplit);
+});
+
+
+
+
 function hamonizeSystemBackup() {
+	$("#infoStepC").text("디스크 용량 확인중");
 	ipcRenderer.send('hamonizeSystemBackup');
+	setTimeout(() => {  ipcRenderer.send('files-tail'); }, 2000);
+	
 }
 
 ipcRenderer.on('hamonizeSystemBackup_Result', (event, backupResult) => {
@@ -292,9 +319,9 @@ ipcRenderer.on('hamonizeSystemBackup_Result', (event, backupResult) => {
 		$("#infoStepC").text("완료");
 		$("#EndBody").show();
 		
-		setTimeout(() => {
-			ipcRenderer.send('rebootProc');
-		  }, 5 * 1000); 
+		// setTimeout(() => {
+		// 	ipcRenderer.send('rebootProc');
+		//   }, 5 * 1000); 
 
 	} else {
 		console.log("false");
