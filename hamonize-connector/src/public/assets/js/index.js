@@ -319,9 +319,9 @@ ipcRenderer.on('hamonizeSystemBackup_Result', (event, backupResult) => {
 		$("#infoStepC").text("완료");
 		$("#EndBody").show();
 		
-		// setTimeout(() => {
-		// 	ipcRenderer.send('rebootProc');
-		//   }, 5 * 1000); 
+		setTimeout(() => {
+			ipcRenderer.send('rebootProc');
+		}, 5 * 1000); 
 
 	} else {
 		console.log("false");
