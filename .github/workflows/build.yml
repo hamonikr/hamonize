@@ -32,7 +32,7 @@ jobs:
         run: cd hamonize-agent/ && dpkg-buildpackage -b -us -uc -ui
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: hamonize-agent
           path: ./hamonize-agent_*.deb
@@ -59,7 +59,7 @@ jobs:
         run: cd hamonize-connector/ && dpkg-buildpackage -b -us -uc -ui
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: hamonize-connect
           path: ./hamonize-connect_*.deb
@@ -88,7 +88,7 @@ jobs:
           fakeroot ninja package
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: hamonize-admin-${{matrix.dist}}
           path: ./hamonize-admin/build/hamonize-admin_*.deb
@@ -120,7 +120,7 @@ jobs:
           fakeroot ninja package
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: hamonize-user-${{matrix.dist}}
           path: ./hamonize-admin/build/hamonize-user_*.deb
@@ -148,7 +148,7 @@ jobs:
           mv hamonize-*-win64-setup.exe ../
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: hamonize-admin-win
           path: /tmp/build-64/hamonize-*-win64-setup.exe
@@ -166,7 +166,7 @@ jobs:
           mv hamonize-*-win64-setup.exe ../
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: hamonize-user-win
           path: /tmp/build-64-user/hamonize-*-win64-setup.exe
