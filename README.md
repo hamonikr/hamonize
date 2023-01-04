@@ -165,7 +165,7 @@ PR을 생성하기 전에 error가 있는지 확인을 해주세요. error가 �
 * [Code of Conduct](https://github.com/hamonikr/hamonize/blob/master/CODE_OF_CONDUCT.md)
 * [Contributing Guideline](https://github.com/hamonikr/hamonize/blob/master/CONTRIBUTING.md)
 * [Issue Guidelines](https://github.com/hamonikr/hamonize/blob/master/ISSUE_TEMPLATE.md)
-* [Commit Message Template](https://github.com/hamonikr/hamonize/blob/dev/.gitmessage.txt) <br>
+* [Commit Message Template](https://github.com/hamonikr/hamonize/blob/master/.gitmessage.txt) <br>
   
   ```
   Commit Message 사용법. 
