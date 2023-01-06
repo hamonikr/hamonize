@@ -25,11 +25,11 @@ sleep 1
 echo "$DATETIME ]-------->jq install status \n `dpkg -l jq`">> $LOGFILE
 
 
-CENTERURL="console.hamonize.com/hmsvc/commInfoData"
-# CENTERURL="$1/hmsvc/commInfoData"
+# CENTERURL="console.hamonize.com/hmsvc/commInfoData"
+CENTERURL="$1/hmsvc/commInfoData"
 
 DATA_JSON="{\
-        \"events\" : [ {\
+        \"events\" : [ {\ 
         \"uuid\": \"$UUID\"\
         } ]\
 }"

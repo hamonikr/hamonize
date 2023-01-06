@@ -12,5 +12,5 @@ build_node_app:
 	
 
 clean:
-	rm -fv usr/share/hamonize-connect
+	rm -fv usr/share/hamonize-connect/*
 	

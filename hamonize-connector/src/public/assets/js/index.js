@@ -16,7 +16,7 @@ install_program_version_chkeck();
 
 
 function install_program_version_chkeck() {
-	$modal.show();
+	$modal.show(); 
 	popupOpen();
 	$(".layerpop__container").text("프로그램 설치를 위한 버전 확인 중 입니다. 잠시만 기다려주세요.!!");
 
@@ -445,18 +445,18 @@ function hamonizeVpnInstall() {
 }
 
 
-ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
-	if (isChkBool == true) {
-		$("#stepA").removeClass("br animate");
-		$("#stepB").addClass("br animate");
-		$("#infoStepA").text("완료");
-		hamonizeProgramInstall();
-	} else {
-		doubleSubmitFlag = false;
-		fn_alert("유효하지 않는 정보입니다. 확인 후 등록해 주시기바랍니다.\n 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.");
-	}
+// ipcRenderer.on('pcInfoChkProc', (event, isChkBool) => {
+// 	if (isChkBool == true) {
+// 		$("#stepA").removeClass("br animate");
+// 		$("#stepB").addClass("br animate");
+// 		$("#infoStepA").text("완료");
+// 		hamonizeProgramInstall();
+// 	} else {
+// 		doubleSubmitFlag = false;
+// 		fn_alert("유효하지 않는 정보입니다. 확인 후 등록해 주시기바랍니다.\n 지속적으로 문제가 발생할경우 관리자에게 문의바랍니다.");
+// 	}
 
-});
+// });
 
 
 

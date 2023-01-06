@@ -114,8 +114,7 @@
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        "AppImage"
       ],
       "icon": "res/bin/iconshm/",
       "desktop": {

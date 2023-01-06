@@ -73,40 +73,43 @@ let networkChk = async function () {
 function getPollTime(uuid) {
 	log.info("----getPollTime Func start----");
 
-	var setUrl = "https://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&&name=hamonize-agent";
+	var setUrl = "https://" + centerUrl + "/getAgent/setPollTime?uuid=" + uuid + "&name=hamonize-agent";
 	var retval = 0;
 
-	networkChk().then(
-		(value) => {
-			if (value) {
-				https.get(setUrl, (res) => {
-					res.on('data', (data) => {
-						console.log("data===============++" + data);
-						var pollingObj = JSON.parse(data);
+	// networkChk().then(
+	// 	(value) => {
+	// 		if (value) {
+	// 			https.get(setUrl, (res) => {
+	// 				res.on('data', (data) => {
+	// 					console.log("data===============++" + data);
+	// 					var pollingObj = JSON.parse(data);
 
-						if (pollingObj.data != 'nodata') {
-							var pollingObj = JSON.parse(data);
-							log.info("//====================================");
-							log.info("//== Polling time has changed... " + pollingObj.data);
-							log.info("//====================================");
+	// 					if (pollingObj.data != 'nodata') {
+	// 						var pollingObj = JSON.parse(data);
+	// 						log.info("//====================================");
+	// 						log.info("//== Polling time has changed... " + pollingObj.data);
+	// 						log.info("//====================================");
 
-							retval = pollingObj.data * 1000;
-							log.info("//== Polling time has result... " + retval);
-							Polling(retval);
+	// 						retval = pollingObj.data * 1000;
+	// 						log.info("//== Polling time has result... " + retval);
+	// 						Polling(retval);
 
-						} else {
-							Polling(DEFAUT_POLLTIME);
-							log.info("//== Polling time doesn't changes..");
-						}
-					});
-				});
-			} else {
-				log.info("network close~");
-				retval = 10000;
-				Polling(retval);
-			}
-		}
-	);
+	// 					} else {
+	// 						Polling(DEFAUT_POLLTIME);
+	// 						log.info("//== Polling time doesn't changes..");
+	// 					}
+	// 				});
+	// 			});
+	// 		} else {
+	// 			log.info("network close~");
+	// 			retval = 10000;
+	// 			Polling(retval);
+	// 		}
+	// 	}
+	// );
+
+	retval = 10000;
+	Polling(retval);
 }
 
 
@@ -1095,11 +1098,11 @@ const check_ufw = async () => {
 		const reloadPort = new Array();
 		for (let i = 0; i < portlist.length; i++) {
 
-			let ufwStatusVal = await execShellCommand("ufw status |grep ALLOW | grep -w \""+portlist[i]+"\" | wc -l");
+			let ufwStatusVal = await execShellCommand("ufw status |grep ALLOW | grep -w \"" + portlist[i] + "\" | wc -l");
 			console.log(ufwStatusVal);
 
 			// if (ufwStatusVal.indexOf(portlist[i]) < 0) {
-			if( ufwStatusVal == 0 ){
+			if (ufwStatusVal == 0) {
 				console.log("portlist[i]==========++" + portlist[i]);
 				reloadPort.push(portlist[i]);
 			}
@@ -1143,7 +1146,7 @@ const check_expiry = async () => {
 			const dataVal = response.body;
 			if (dataVal == 'E') {
 				// Stop Hamonize Modules - 사용기간이 만료되어 서비스 중지를 시킨다. 
-					exec('sudo /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 0 ', function (err, stdout, stderr) {
+				exec('sudo /usr/share/hamonize-agent/shell/hamonizeExpiry.sh 0 ', function (err, stdout, stderr) {
 					if (err !== null) {
 						log.info('//== fnStopHamonize error: ' + err);
 					}
@@ -1243,29 +1246,33 @@ const sysInfo = async () => {
 	const size = Math.round(disk.size / 1024 / 1024 / 1024);
 	let diskInfo = ` ${disk.vendor} ${disk.name} ${size}GB ${disk.type} (${disk.interfaceType})`;
 	let diskSerialNum = disk.serialNum;
-
+	log.info("cpuinfo.trim().... " + cpuinfo.trim());
 	const os = await si.osInfo(); //OS Info
 	let osinfo = ` ${os.distro} ${os.release} ${os.codename} (${os.platform})`;
+	log.info("osinfo=========++" + osinfo)
 
 	let osinfoKernel = ` ${os.kernel} ${os.arch}`;
+	log.info("=osinfoKernel=====" + osinfoKernel)
 
 	const ram = await si.mem(); // RAM Info
+	log.info("ram=======+" + ram)
 	const totalRam = Math.round(ram.total / 1024 / 1024 / 1024);
+	log.info("totalRam=====++" + totalRam)
 	let raminfo = ` ${totalRam}GB`;
-
+	log.info("raminfo=============++++" + raminfo)
 	const ipinfo = require("ip"); //	get os ip address
+	log.info(" ipinfo========+" + ipinfo.address())
 	const pcuuid = (await si.uuid()); //	 get os mac address 
-
+	log.info("pcuuid =======+" + pcuuid)
 	const machineIdSync = require('node-machine-id').machineIdSync;
 	let machindid = machineIdSync({
 		original: true
 	});
 
-
+	log.info("sysInfo.... ");
 
 
 	const { networkInterfaces } = require('os');
-
 	const nets = networkInterfaces();
 	const results = Object.create(null); // Or just '{}', an empty object
 
@@ -1288,10 +1295,8 @@ const sysInfo = async () => {
 		vpnInfo = results['tun0'][0];
 	}
 
-
-
 	const pcHostname = await execShellCommand('hostname');
-	const cpuid = await execShellCommand('dmidecode -t 4|grep ID');
+	// const cpuid = await execShellCommand('dmidecode -t 4|grep ID');
 	const usernm = await execShellCommand('users');
 
 	let md5 = require('md5');
@@ -1302,8 +1307,8 @@ const sysInfo = async () => {
 
 	const base_hwinfo = getHwpInfo("hwinfo.hm");
 
-	console.log("hwData.trim()=====" + hwData.trim());
-	console.log("base_hwinfo.trim()=========++" + base_hwinfo.trim());
+	log.info("hwData.trim().... " + hwData.trim());
+	log.info("base_hwinfo.trim().... " + base_hwinfo.trim());
 	let isSendYn = false;
 	if (hwData.trim() == base_hwinfo.trim()) {
 
@@ -1318,6 +1323,7 @@ const sysInfo = async () => {
 		});
 	}
 
+
 	if (isSendYn) {
 
 		var unirest = require('unirest');
@@ -1328,7 +1334,7 @@ const sysInfo = async () => {
 					datetime: 'datetime',
 					hostname: pcHostname,
 					memory: raminfo,
-					cpuid: cpuid,
+					cpuid: cpuinfo.trim(),
 					hddinfo: diskInfo,
 					hddid: diskSerialNum,
 					ipaddr: ipinfo.address(),
@@ -1380,6 +1386,8 @@ const sysInfo2 = async () => {
 	let osinfoKernel = ` ${os.kernel} ${os.arch}`;
 
 	const ram = await si.mem(); // RAM Info
+
+	log.info("ram=======+" + ram)
 	const totalRam = Math.round(ram.total / 1024 / 1024 / 1024);
 	let raminfo = ` ${totalRam}GB`;
 
@@ -1392,10 +1400,7 @@ const sysInfo2 = async () => {
 	});
 
 
-
-
 	const { networkInterfaces } = require('os');
-
 	const nets = networkInterfaces();
 	const results = Object.create(null); // Or just '{}', an empty object
 
@@ -1422,7 +1427,7 @@ const sysInfo2 = async () => {
 
 
 	const pcHostname = await execShellCommand('hostname');
-	const cpuid = await execShellCommand('dmidecode -t 4|grep ID');
+	// const cpuid = await execShellCommand('dmidecode -t 4|grep ID');
 	const usernm = await execShellCommand('users');
 
 	let md5 = require('md5');
@@ -1460,7 +1465,7 @@ const sysInfo2 = async () => {
 				datetime: 'datetime',
 				hostname: pcHostname,
 				memory: raminfo,
-				cpuid: cpuid,
+				cpuid: cpuinfo.trim(),
 				hddinfo: diskInfo,
 				hddid: diskSerialNum,
 				ipaddr: ipinfo.address(),
