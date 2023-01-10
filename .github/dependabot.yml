@@ -10,5 +10,5 @@ updates:
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: "Fix"
+      prefix: "<Fix>"
       include: "scope"
