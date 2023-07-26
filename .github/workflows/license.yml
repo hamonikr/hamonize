@@ -3,7 +3,7 @@ name: License Check
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   license_check:
