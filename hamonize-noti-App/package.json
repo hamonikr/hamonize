@@ -21,7 +21,7 @@
   "devDependencies": {
     "electron": "18.3.7",
     "electron-builder": "^22.11.7",
-    "pkg": "^4.4.0",
+    "pkg": "^5.8.1",
     "standard": "^8.0.0"
   },
   "dependencies": {
